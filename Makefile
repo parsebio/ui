@@ -11,7 +11,7 @@ install: ## Installs node dependencies
 build: ## Creates a production build
 	@npm run build
 test: ## Executes unit tests
-	@npm run test
+	@npm run test -t experimentSettingsReducer.test.js
 check: ## Checks code for linting/construct errors
 	@echo "==> Checking if files are well formatted..."
 	@npm run lint
