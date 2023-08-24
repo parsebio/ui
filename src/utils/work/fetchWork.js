@@ -32,14 +32,9 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
     getState,
   );
 
-  // // Then, we may be able to find this in S3.
-  const response = await seekFromS3(ETag, experimentId, body.name);
-
-  if (response) return response;
-
   // If there is no response in S3, dispatch workRequest via the worker
   try {
-    await dispatchWorkRequest(
+    const signedUrl = await dispatchWorkRequest(
       experimentId,
       body,
       timeout,
@@ -50,12 +45,15 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
         ...extras,
       },
     );
+
+    console.log('signedUrlGene');
+    console.log(signedUrl);
+
+    return await seekFromS3(ETag, experimentId, body.name, signedUrl);
   } catch (error) {
     console.error('Error dispatching work request: ', error);
     throw error;
   }
-
-  return await seekFromS3(ETag, experimentId, body.name);
 };
 
 const fetchWork = async (
@@ -119,14 +117,9 @@ const fetchWork = async (
     return data;
   }
 
-  // Then, we may be able to find this in S3.
-  let response = await seekFromS3(ETag, experimentId, body.name);
-
-  if (response) return response;
-
   // If there is no response in S3, dispatch workRequest via the worker
   try {
-    await dispatchWorkRequest(
+    const signedUrl = await dispatchWorkRequest(
       experimentId,
       body,
       timeout,
@@ -138,15 +131,18 @@ const fetchWork = async (
       },
     );
 
-    response = await seekFromS3(ETag, experimentId, body.name);
+    console.log('signedUrlDebug');
+    console.log(signedUrl);
+
+    const response = await seekFromS3(ETag, experimentId, body.name, signedUrl);
+
+    await cache.set(ETag, response);
+
+    return response;
   } catch (error) {
     console.error('Error dispatching work request', error);
     throw error;
   }
-
-  await cache.set(ETag, response);
-
-  return response;
 };
 
 export default fetchWork;

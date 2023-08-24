@@ -28,21 +28,27 @@ const getRemainingWorkerStartTime = (creationTimestamp) => {
   return remainingTime + 60;
 };
 
-const seekFromS3 = async (ETag, experimentId, taskName) => {
-  let response;
-  try {
-    const url = `/v2/workResults/${experimentId}/${ETag}`;
+const seekFromS3 = async (ETag, experimentId, taskName, optionalSignedUrl = null) => {
+  let signedUrl = optionalSignedUrl;
 
-    response = await fetchAPI(url);
-  } catch (e) {
-    if (e.statusCode === httpStatusCodes.NOT_FOUND) {
-      return null;
+  console.log('signedUrlDebug');
+  console.log(signedUrl);
+
+  if (signedUrl === null) {
+    try {
+      const url = `/v2/workResults/${experimentId}/${ETag}`;
+
+      signedUrl = (await fetchAPI(url)).signedUrl;
+    } catch (e) {
+      if (e.statusCode === httpStatusCodes.NOT_FOUND) {
+        return null;
+      }
+
+      throw e;
     }
-
-    throw e;
   }
 
-  const storageResp = await fetch(response.signedUrl);
+  const storageResp = await fetch(signedUrl);
 
   if (!storageResp.ok) {
     throwResponseError(storageResp);
@@ -180,12 +186,7 @@ const dispatchWorkRequest = async (
     });
   });
 
-  const result = Promise.race([timeoutPromise, responsePromise]);
-
-  // TODO switch to using normal WorkRequest for v2 requests
-  logWithDate('workReqDebug');
-
-  await fetchAPI(
+  const { signedUrl } = await fetchAPI(
     `/v2/workRequest/${experimentId}/${ETag}`,
     {
       method: 'POST',
@@ -193,9 +194,14 @@ const dispatchWorkRequest = async (
       body: JSON.stringify(request),
     },
   );
-  // io.emit('WorkRequest-v2', request);
 
-  return result;
+  if (signedUrl !== null) { return signedUrl; }
+
+  await Promise.race([timeoutPromise, responsePromise]);
+
+  // TODO switch to using normal WorkRequest for v2 requests
+  logWithDate('workReqDebug');
+  return null;
 };
 
 export { dispatchWorkRequest, seekFromS3 };
