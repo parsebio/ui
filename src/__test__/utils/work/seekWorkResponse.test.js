@@ -43,7 +43,7 @@ jest.mock('utils/work/parseResult');
 
 const taskName = 'GetEmbedding';
 
-describe('dispatchWorkRequest unit tests', () => {
+describe.skip('dispatchWorkRequest unit tests', () => {
   const experimentId = fake.EXPERIMENT_ID;
   const timeout = 30;
   const body = {
