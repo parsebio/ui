@@ -32,7 +32,7 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
     getState,
   );
 
-  // Then, we may be able to find this in S3.
+  // // Then, we may be able to find this in S3.
   const response = await seekFromS3(ETag, experimentId, body.name);
 
   if (response) return response;

@@ -88,6 +88,22 @@ const getWorkerTimeout = (taskName, defaultTimeout) => {
   }
 };
 
+const logWithDate = (logStr) => {
+  const date = new Date();
+  const hour = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const milliseconds = date.getMilliseconds();
+
+  console.log(
+    `[${(hour < 10) ? `0${hour}` : hour
+    }:${(minutes < 10) ? `0${minutes}` : minutes
+    }:${(seconds < 10) ? `0${seconds}` : seconds
+    }.${(`00${milliseconds}`).slice(-3)
+    }] ${logStr}`,
+  );
+};
+
 const dispatchWorkRequest = async (
   experimentId,
   body,
@@ -167,7 +183,17 @@ const dispatchWorkRequest = async (
   const result = Promise.race([timeoutPromise, responsePromise]);
 
   // TODO switch to using normal WorkRequest for v2 requests
-  io.emit('WorkRequest-v2', request);
+  logWithDate('workReqDebug');
+
+  await fetchAPI(
+    `/v2/workRequest/${experimentId}/${ETag}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(request),
+    },
+  );
+  // io.emit('WorkRequest-v2', request);
 
   return result;
 };
