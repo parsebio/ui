@@ -182,7 +182,7 @@ const dispatchWorkRequest = async (
 
       // If no error, the response should be ready on S3.
       // In this case, return true
-      return resolve();
+      return resolve(response.signedUrl);
     });
   });
 
@@ -197,11 +197,9 @@ const dispatchWorkRequest = async (
 
   if (signedUrl !== null) { return signedUrl; }
 
-  await Promise.race([timeoutPromise, responsePromise]);
-
   // TODO switch to using normal WorkRequest for v2 requests
   logWithDate('workReqDebug');
-  return null;
+  return await Promise.race([timeoutPromise, responsePromise]);
 };
 
 export { dispatchWorkRequest, seekFromS3 };
