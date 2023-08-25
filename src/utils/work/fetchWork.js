@@ -6,6 +6,22 @@ import cache from 'utils/cache';
 import generateETag from 'utils/work/generateETag';
 import { dispatchWorkRequest, seekFromS3 } from 'utils/work/seekWorkResponse';
 
+const logWithDate = (logStr) => {
+  const date = new Date();
+  const hour = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const milliseconds = date.getMilliseconds();
+
+  console.log(
+    `[${(hour < 10) ? `0${hour}` : hour
+    }:${(minutes < 10) ? `0${minutes}` : minutes
+    }:${(seconds < 10) ? `0${seconds}` : seconds
+    }.${(`00${milliseconds}`).slice(-3)
+    }] ${logStr}`,
+  );
+};
+
 // Temporarily using gene expression without local cache
 const fetchGeneExpressionWorkWithoutLocalCache = async (
   experimentId,
@@ -18,9 +34,13 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
   dispatch,
   getState,
 ) => {
+  logWithDate('fetchGeneExpressionWorkWithoutLocalCacheDebug1');
+
   // If new genes are needed, construct payload, try S3 for results,
   // and send out to worker if there's a miss.
   const { pipeline: { startDate: qcPipelineStartDate } } = backendStatus;
+
+  logWithDate('fetchGeneExpressionWorkWithoutLocalCacheDebug2');
 
   const ETag = await generateETag(
     experimentId,
@@ -32,7 +52,7 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
     getState,
   );
 
-  // If there is no response in S3, dispatch workRequest via the worker
+  logWithDate('fetchGeneExpressionWorkWithoutLocalCacheDebug3');
   try {
     const signedUrl = await dispatchWorkRequest(
       experimentId,
@@ -46,10 +66,15 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
       },
     );
 
+    logWithDate('fetchGeneExpressionWorkWithoutLocalCacheDebug4');
+
     console.log('signedUrlGene');
     console.log(signedUrl);
 
-    return await seekFromS3(ETag, experimentId, body.name, signedUrl);
+    const a = await seekFromS3(ETag, experimentId, body.name, signedUrl);
+    logWithDate('fetchGeneExpressionWorkWithoutLocalCacheDebug5');
+
+    return a;
   } catch (error) {
     console.error('Error dispatching work request: ', error);
     throw error;
@@ -70,7 +95,11 @@ const fetchWork = async (
     onETagGenerated = () => { },
   } = optionals;
 
+  logWithDate('fetchWorkDebug1');
+
   const backendStatus = getBackendStatus(experimentId)(getState()).status;
+
+  logWithDate('fetchWorkDebug2');
 
   const { environment } = getState().networkResources;
 
@@ -78,13 +107,19 @@ const fetchWork = async (
     throw new Error('Disabling network interaction on server');
   }
 
+  logWithDate('fetchWorkDebug3');
+
   if (environment === Environment.DEVELOPMENT && !localStorage.getItem('disableCache')) {
     localStorage.setItem('disableCache', 'true');
   }
 
   const { pipeline: { startDate: qcPipelineStartDate } } = backendStatus;
 
+  logWithDate('fetchWorkDebug4');
+
   if (body.name === 'GeneExpression') {
+    logWithDate('fetchWorkDebug5');
+
     return fetchGeneExpressionWorkWithoutLocalCache(
       experimentId,
       timeout,
@@ -97,6 +132,8 @@ const fetchWork = async (
       getState,
     );
   }
+
+  logWithDate('fetchWorkDebug6');
 
   const ETag = await generateETag(
     experimentId,
