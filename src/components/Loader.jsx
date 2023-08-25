@@ -49,11 +49,10 @@ const fastLoad = (message) => (
 );
 
 const Loader = ({ experimentId }) => {
-  // const { data: workerStatus } = useSWR(
-  //   () => (experimentId ? `/v2/experiments/${experimentId}/backendStatus` : null),
-  //   fetchAPI,
-  // );
-  const workerStatus = null;
+  const { data: workerStatus } = useSWR(
+    () => (experimentId ? `/v2/experiments/${experimentId}/backendStatus` : null),
+    fetchAPI,
+  );
 
   if (!workerStatus) {
     return (
