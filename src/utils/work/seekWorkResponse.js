@@ -110,22 +110,6 @@ const getWorkerTimeout = (taskName, defaultTimeout) => {
   }
 };
 
-const logWithDate = (logStr) => {
-  const date = new Date();
-  const hour = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
-  const milliseconds = date.getMilliseconds();
-
-  console.log(
-    `[${(hour < 10) ? `0${hour}` : hour
-    }:${(minutes < 10) ? `0${minutes}` : minutes
-    }:${(seconds < 10) ? `0${seconds}` : seconds
-    }.${(`00${milliseconds}`).slice(-3)
-    }] ${logStr}`,
-  );
-};
-
 const dispatchWorkRequest = async (
   experimentId,
   body,
