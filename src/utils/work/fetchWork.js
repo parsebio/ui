@@ -54,7 +54,7 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
 
   logWithDate('fetchGeneExpressionWorkWithoutLocalCacheDebug3');
   try {
-    const signedUrl = await dispatchWorkRequest(
+    const { signedUrl, data } = await dispatchWorkRequest(
       experimentId,
       body,
       timeout,
@@ -71,7 +71,10 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
     console.log('signedUrlGene');
     console.log(signedUrl);
 
-    const a = await seekFromS3(ETag, experimentId, body.name, signedUrl);
+    console.log('dataDebug');
+    console.log(data);
+
+    const a = data ?? await seekFromS3(ETag, experimentId, body.name, signedUrl);
     logWithDate('fetchGeneExpressionWorkWithoutLocalCacheDebug5');
 
     return a;
@@ -148,15 +151,15 @@ const fetchWork = async (
   onETagGenerated(ETag);
 
   // First, let's try to fetch this information from the local cache.
-  const data = await cache.get(ETag);
+  const cachedData = await cache.get(ETag);
 
-  if (data) {
-    return data;
+  if (cachedData) {
+    return cachedData;
   }
 
   // If there is no response in S3, dispatch workRequest via the worker
   try {
-    const signedUrl = await dispatchWorkRequest(
+    const { signedUrl, data } = await dispatchWorkRequest(
       experimentId,
       body,
       timeout,
@@ -171,7 +174,7 @@ const fetchWork = async (
     console.log('signedUrlDebug');
     console.log(signedUrl);
 
-    const response = await seekFromS3(ETag, experimentId, body.name, signedUrl);
+    const response = data ?? await seekFromS3(ETag, experimentId, body.name, signedUrl);
 
     await cache.set(ETag, response);
 

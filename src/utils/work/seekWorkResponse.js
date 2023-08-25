@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 
 import getAuthJWT from 'utils/getAuthJWT';
 import fetchAPI from 'utils/http/fetchAPI';
-import unpackResult from 'utils/work/unpackResult';
+import unpackResult, { decompressUint8Array } from 'utils/work/unpackResult';
 import parseResult from 'utils/work/parseResult';
 import WorkTimeoutError from 'utils/errors/http/WorkTimeoutError';
 import WorkResponseError from 'utils/errors/http/WorkResponseError';
@@ -180,21 +180,29 @@ const dispatchWorkRequest = async (
   logWithDate('dispatchWorkRequestDebug7');
 
   const responsePromise = new Promise((resolve, reject) => {
-    io.on(`WorkResponse-${ETag}`, (res) => {
-      const { response } = res;
+    io.on(`WorkResponse-${ETag}`, async (res) => {
+      if (typeof res === 'object') {
+        const { response } = res;
 
-      if (response.error) {
-        const { errorCode, userMessage } = response;
-        console.error(errorCode, userMessage);
+        if (response.error) {
+          const { errorCode, userMessage } = response;
+          console.error(errorCode, userMessage);
 
-        return reject(
-          new WorkResponseError(errorCode, userMessage, request),
-        );
+          return reject(
+            new WorkResponseError(errorCode, userMessage, request),
+          );
+        }
+
+        return resolve({ signedUrl: response.signedUrl });
       }
 
-      // If no error, the response should be ready on S3.
-      // In this case, return true
-      return resolve(response.signedUrl);
+      console.log('resDebug');
+      console.log(res);
+
+      const decompressedData = await decompressUint8Array(Uint8Array.from(Buffer.from(res, 'base64')));
+      console.log('decompressedDataDebug');
+      console.log(parseResult(decompressedData));
+      return resolve({ data: parseResult(decompressedData) });
     });
   });
 
@@ -211,7 +219,7 @@ const dispatchWorkRequest = async (
 
   logWithDate('dispatchWorkRequestDebug9');
 
-  if (signedUrl !== null) { return signedUrl; }
+  if (signedUrl !== null) { return { signedUrl }; }
 
   logWithDate('dispatchWorkRequestDebug10');
 
