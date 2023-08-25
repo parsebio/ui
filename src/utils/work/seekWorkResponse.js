@@ -64,6 +64,22 @@ const seekFromS3 = async (ETag, experimentId, taskName, optionalSignedUrl = null
 // current time.
 const getTimeoutDate = (timeout) => dayjs().add(timeout, 's').toISOString();
 
+const logWithDate = (logStr) => {
+  const date = new Date();
+  const hour = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const milliseconds = date.getMilliseconds();
+
+  console.log(
+    `[${(hour < 10) ? `0${hour}` : hour
+    }:${(minutes < 10) ? `0${minutes}` : minutes
+    }:${(seconds < 10) ? `0${seconds}` : seconds
+    }.${(`00${milliseconds}`).slice(-3)
+    }] ${logStr}`,
+  );
+};
+
 // set a timeout and save its ID in the timeoutIds map
 // if there was a timeout for the current ETag, clear it before reseting it
 const setOrRefreshTimeout = (request, timeoutDuration, reject, ETag) => {
@@ -196,12 +212,11 @@ const dispatchWorkRequest = async (
         return resolve({ signedUrl: response.signedUrl });
       }
 
-      console.log('resDebug');
-      console.log(res);
+      logWithDate('resDebug');
 
       const decompressedData = await decompressUint8Array(Uint8Array.from(Buffer.from(res, 'base64')));
-      console.log('decompressedDataDebug');
-      console.log(parseResult(decompressedData));
+      logWithDate('decompressedDataDebug');
+      logWithDate(parseResult(decompressedData));
       return resolve({ data: parseResult(decompressedData) });
     });
   });
