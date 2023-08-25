@@ -117,8 +117,13 @@ const dispatchWorkRequest = async (
   ETag,
   requestProps,
 ) => {
+  logWithDate('dispatchWorkRequestDebug1');
   const { default: connectionPromise } = await import('utils/socketConnection');
+
+  logWithDate('dispatchWorkRequestDebug2');
   const io = await connectionPromise;
+
+  logWithDate('dispatchWorkRequestDebug3');
 
   const { name: taskName } = body;
 
@@ -129,8 +134,11 @@ const dispatchWorkRequest = async (
   // and progresing.
   // this should be removed if we make each request run in a different worker
   const workerTimeoutDate = getWorkerTimeout(taskName, timeout);
+
+  logWithDate('dispatchWorkRequestDebug4');
   const authJWT = await getAuthJWT();
 
+  logWithDate('dispatchWorkRequestDebug5');
   const request = {
     ETag,
     socketId: io.id,
@@ -140,6 +148,8 @@ const dispatchWorkRequest = async (
     body,
     ...requestProps,
   };
+
+  logWithDate('dispatchWorkRequestDebug6');
 
   const timeoutPromise = new Promise((resolve, reject) => {
     setOrRefreshTimeout(request, timeout, reject, ETag);
@@ -167,6 +177,8 @@ const dispatchWorkRequest = async (
     });
   });
 
+  logWithDate('dispatchWorkRequestDebug7');
+
   const responsePromise = new Promise((resolve, reject) => {
     io.on(`WorkResponse-${ETag}`, (res) => {
       const { response } = res;
@@ -186,6 +198,8 @@ const dispatchWorkRequest = async (
     });
   });
 
+  logWithDate('dispatchWorkRequestDebug8');
+
   const { signedUrl } = await fetchAPI(
     `/v2/workRequest/${experimentId}/${ETag}`,
     {
@@ -195,7 +209,11 @@ const dispatchWorkRequest = async (
     },
   );
 
+  logWithDate('dispatchWorkRequestDebug9');
+
   if (signedUrl !== null) { return signedUrl; }
+
+  logWithDate('dispatchWorkRequestDebug10');
 
   // TODO switch to using normal WorkRequest for v2 requests
   logWithDate('workReqDebug');
