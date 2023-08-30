@@ -488,7 +488,7 @@ const MarkerHeatmap = ({ experimentId }) => {
   };
 
   return (
-    <div style={{ display: 'none' }}>
+    <>
       <Header title={plotNames.MARKER_HEATMAP} />
       <PlotContainer
         experimentId={experimentId}
@@ -500,7 +500,7 @@ const MarkerHeatmap = ({ experimentId }) => {
       >
         {renderPlot()}
       </PlotContainer>
-    </div>
+    </>
   );
 };
 
