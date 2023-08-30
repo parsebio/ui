@@ -64,22 +64,6 @@ const seekFromS3 = async (ETag, experimentId, taskName, optionalSignedUrl = null
 // current time.
 const getTimeoutDate = (timeout) => dayjs().add(timeout, 's').toISOString();
 
-const logWithDate = (logStr) => {
-  const date = new Date();
-  const hour = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
-  const milliseconds = date.getMilliseconds();
-
-  console.log(
-    `[${(hour < 10) ? `0${hour}` : hour
-    }:${(minutes < 10) ? `0${minutes}` : minutes
-    }:${(seconds < 10) ? `0${seconds}` : seconds
-    }.${(`00${milliseconds}`).slice(-3)
-    }] ${logStr}`,
-  );
-};
-
 // set a timeout and save its ID in the timeoutIds map
 // if there was a timeout for the current ETag, clear it before reseting it
 const setOrRefreshTimeout = (request, timeoutDuration, reject, ETag) => {
@@ -117,13 +101,9 @@ const dispatchWorkRequest = async (
   ETag,
   requestProps,
 ) => {
-  logWithDate('dispatchWorkRequestDebug1');
   const { default: connectionPromise } = await import('utils/socketConnection');
 
-  logWithDate('dispatchWorkRequestDebug2');
   const io = await connectionPromise;
-
-  logWithDate('dispatchWorkRequestDebug3');
 
   const { name: taskName } = body;
 
@@ -135,10 +115,8 @@ const dispatchWorkRequest = async (
   // this should be removed if we make each request run in a different worker
   const workerTimeoutDate = getWorkerTimeout(taskName, timeout);
 
-  logWithDate('dispatchWorkRequestDebug4');
   const authJWT = await getAuthJWT();
 
-  logWithDate('dispatchWorkRequestDebug5');
   const request = {
     ETag,
     socketId: io.id,
@@ -148,8 +126,6 @@ const dispatchWorkRequest = async (
     body,
     ...requestProps,
   };
-
-  logWithDate('dispatchWorkRequestDebug6');
 
   const timeoutPromise = new Promise((resolve, reject) => {
     setOrRefreshTimeout(request, timeout, reject, ETag);
@@ -177,8 +153,6 @@ const dispatchWorkRequest = async (
     });
   });
 
-  logWithDate('dispatchWorkRequestDebug7');
-
   const responsePromise = new Promise((resolve, reject) => {
     io.on(`WorkResponse-${ETag}`, async (res) => {
       if (typeof res === 'object') {
@@ -196,16 +170,10 @@ const dispatchWorkRequest = async (
         return resolve({ signedUrl: response.signedUrl });
       }
 
-      logWithDate('resDebug');
-
       const decompressedData = await decompressUint8Array(Uint8Array.from(Buffer.from(res, 'base64')));
-      logWithDate('decompressedDataDebug');
-      logWithDate(parseResult(decompressedData));
       return resolve({ data: parseResult(decompressedData) });
     });
   });
-
-  logWithDate('dispatchWorkRequestDebug8');
 
   const { signedUrl } = await fetchAPI(
     `/v2/workRequest/${experimentId}/${ETag}`,
@@ -216,14 +184,9 @@ const dispatchWorkRequest = async (
     },
   );
 
-  logWithDate('dispatchWorkRequestDebug9');
-
   if (signedUrl !== null) { return { signedUrl }; }
 
-  logWithDate('dispatchWorkRequestDebug10');
-
   // TODO switch to using normal WorkRequest for v2 requests
-  logWithDate('workReqDebug');
   return await Promise.race([timeoutPromise, responsePromise]);
 };
 
