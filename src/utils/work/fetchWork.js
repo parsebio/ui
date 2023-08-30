@@ -45,15 +45,7 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
       },
     );
 
-    console.log('signedUrlGene');
-    console.log(signedUrl);
-
-    console.log('dataDebug');
-    console.log(data);
-
-    const a = data ?? await seekFromS3(ETag, experimentId, body.name, signedUrl);
-
-    return a;
+    return data ?? await seekFromS3(ETag, experimentId, body.name, signedUrl);
   } catch (error) {
     console.error('Error dispatching work request: ', error);
     throw error;
