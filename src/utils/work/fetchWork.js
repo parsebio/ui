@@ -45,7 +45,7 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
       },
     );
 
-    return data ?? await seekFromS3(ETag, experimentId, body.name, signedUrl);
+    return data ?? await seekFromS3(body.name, signedUrl);
   } catch (error) {
     console.error('Error dispatching work request: ', error);
     throw error;
@@ -127,7 +127,7 @@ const fetchWork = async (
       },
     );
 
-    const response = data ?? await seekFromS3(ETag, experimentId, body.name, signedUrl);
+    const response = data ?? await seekFromS3(body.name, signedUrl);
 
     await cache.set(ETag, response);
 
