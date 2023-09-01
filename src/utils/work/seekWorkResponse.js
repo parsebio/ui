@@ -31,9 +31,6 @@ const getRemainingWorkerStartTime = (creationTimestamp) => {
 const seekFromS3 = async (ETag, experimentId, taskName, optionalSignedUrl = null) => {
   let signedUrl = optionalSignedUrl;
 
-  console.log('signedUrlDebug');
-  console.log(signedUrl);
-
   if (signedUrl === null) {
     try {
       const url = `/v2/workResults/${experimentId}/${ETag}`;
@@ -155,6 +152,8 @@ const dispatchWorkRequest = async (
 
   const responsePromise = new Promise((resolve, reject) => {
     io.on(`WorkResponse-${ETag}`, async (res) => {
+      // If type is object, then we received a notification with a signedUrl
+      // now we need to fetch the actual result from s3
       if (typeof res === 'object') {
         const { response } = res;
 
@@ -170,12 +169,15 @@ const dispatchWorkRequest = async (
         return resolve({ signedUrl: response.signedUrl });
       }
 
+      // If type isn't object, then we have the actual work result,
+      // no further downloads are necessary, we just need to decompress and return it
       const decompressedData = await decompressUint8Array(Uint8Array.from(Buffer.from(res, 'base64')));
       return resolve({ data: parseResult(decompressedData) });
     });
   });
 
-  const { signedUrl } = await fetchAPI(
+  // TODO test what happens when api throws an error here
+  await fetchAPI(
     `/v2/workRequest/${experimentId}/${ETag}`,
     {
       method: 'POST',
@@ -183,8 +185,6 @@ const dispatchWorkRequest = async (
       body: JSON.stringify(request),
     },
   );
-
-  if (signedUrl !== null) { return { signedUrl }; }
 
   // TODO switch to using normal WorkRequest for v2 requests
   return await Promise.race([timeoutPromise, responsePromise]);
