@@ -29,19 +29,24 @@ const AddMetadataButton = ({ samplesTableRef }) => {
       <Dropdown
         overlay={() => (
           <Menu>
-            <Menu.Item
-              key='add-metadata-column'
-              onClick={() => samplesTableRef.current.createMetadataColumn()}
-            >
-              Create track
-            </Menu.Item>
-            <Menu.Item
-              key='upload-metadata-file'
-              onClick={() => {
-                setUploadModalVisible(true);
-              }}
-            >
-              Upload file
+            <Menu.SubMenu key='sample-level' title='Sample level'>
+              <Menu.Item
+                key='add-metadata-column'
+                onClick={() => samplesTableRef.current.createMetadataColumn()}
+              >
+                Create track
+              </Menu.Item>
+              <Menu.Item
+                key='upload-metadata-file'
+                onClick={() => {
+                  setUploadModalVisible(true);
+                }}
+              >
+                Upload file
+              </Menu.Item>
+            </Menu.SubMenu>
+            <Menu.Item key='cell-level'>
+              Cell level
             </Menu.Item>
           </Menu>
         )}
@@ -50,7 +55,7 @@ const AddMetadataButton = ({ samplesTableRef }) => {
         disabled={activeExperiment.sampleIds?.length === 0 || isSubsetted || selectedTech === sampleTech.SEURAT}
       >
         <Button>
-          Add metadata
+          Add Metadata
         </Button>
       </Dropdown>
       {uploadModalVisible && (

@@ -191,7 +191,7 @@ const FileUploadModal = (props) => {
         </Button>
       )}
     >
-      <Row>
+      {/* <Row>
         <Col span={24}>
           <Space direction='vertical' style={{ width: '100%' }}>
             <Space align='baseline'>
@@ -234,19 +234,20 @@ const FileUploadModal = (props) => {
             </Text>
           </Space>
         </Col>
-      </Row>
+      </Row> */}
 
-      <Row style={{ margin: '1rem 0' }}>
+      <Row>
         <Col span={24}>
           <Title level={4}>
             File Upload:
             <span style={{ color: 'red', marginRight: '2em' }}>*</span>
           </Title>
-          {selectedTech && renderHelpText(selectedTech)}
+          <Space direction='vertical'> --- Help text goes here --- </Space>
+          {/* {selectedTech && renderHelpText(selectedTech)} */}
         </Col>
       </Row>
 
-      <Row>
+      {/* <Row>
         <Col span={24}>
           <Paragraph type='secondary'>
             <i>
@@ -261,7 +262,7 @@ const FileUploadModal = (props) => {
             </i>
           </Paragraph>
         </Col>
-      </Row>
+      </Row> */}
 
       <Row>
         {/* eslint-disable react/jsx-props-no-spreading */}

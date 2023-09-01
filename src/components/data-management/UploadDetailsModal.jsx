@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import {
-  Modal, Button, Col, Row,
+  Modal, Button, Col, Row, Progress,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
@@ -138,16 +138,12 @@ const UploadDetailsModal = (props) => {
 
   return (
     <Modal
-      title={!isNotUploadedModal ? (isSuccessModal ? 'Upload successful' : 'Upload error') : 'File not found'}
+      title={!isNotUploadedModal ? (isSuccessModal ? 'Uploading...' : 'Upload new file') : 'File not found'}
       visible={visible}
       onCancel={onCancel}
       width='40%'
       footer={(
         <Row style={{ width: '100%', justifyContent: 'center' }}>
-          <Col>
-            {/* render retry button only if file was tried to be uploaded */}
-            {!isNotUploadedModal && (isSuccessModal ? downloadButton() : retryButton())}
-          </Col>
           <Col span='2' />
           {replaceButton()}
           <Col />
@@ -163,20 +159,20 @@ const UploadDetailsModal = (props) => {
               {isNotUploadedModal ? 'was not uploaded' : 'has failed to upload'}
             </Row>
           )}
-        <Row style={{ marginTop: '5px', marginBottom: '5px' }}>
+        {/* <Row style={{ marginTop: '5px', marginBottom: '5px' }}>
           <Col span={5}>Sample</Col>
           <Col span={10}>{sampleName}</Col>
-        </Row>
-        <Row style={{ marginTop: '5px', marginBottom: '5px' }}>
+        </Row> */}
+        {/* <Row style={{ marginTop: '5px', marginBottom: '5px' }}>
           <Col span={5}>Category</Col>
           <Col span={10}>{fileCategory}</Col>
-        </Row>
-        {!isNotUploadedModal && (
+        </Row> */}
+        {/* {!isNotUploadedModal && (
           <Row style={{ marginTop: '5px', marginBottom: '5px' }}>
             <Col span={5}>Filename</Col>
             <Col span={10}>{name}</Col>
           </Row>
-        )}
+        )} */}
 
         {
           isSuccessModal ? (
@@ -190,8 +186,10 @@ const UploadDetailsModal = (props) => {
                 </Col>
               </Row>
               <Row style={{ marginTop: '5px', marginBottom: '5px' }}>
-                <Col span={5}>Upload date</Col>
-                <Col span={10}>{fromISODateToFormatted(lastModified)}</Col>
+                <Col span={5}>Progress</Col>
+                <Col span={10}>
+                  <Progress style={{ width: '50%' }} percent={60} size='small' />
+                </Col>
               </Row>
             </>
           )
