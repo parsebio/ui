@@ -6,7 +6,6 @@ import unpackResult, { decompressUint8Array } from 'utils/work/unpackResult';
 import parseResult from 'utils/work/parseResult';
 import WorkTimeoutError from 'utils/errors/http/WorkTimeoutError';
 import WorkResponseError from 'utils/errors/http/WorkResponseError';
-import httpStatusCodes from 'utils/http/httpStatusCodes';
 
 const throwResponseError = (response) => {
   throw new Error(`Error ${response.status}: ${response.text}`, { cause: response });
@@ -28,23 +27,7 @@ const getRemainingWorkerStartTime = (creationTimestamp) => {
   return remainingTime + 60;
 };
 
-const seekFromS3 = async (ETag, experimentId, taskName, optionalSignedUrl = null) => {
-  let signedUrl = optionalSignedUrl;
-
-  if (signedUrl === null) {
-    try {
-      const url = `/v2/workResults/${experimentId}/${ETag}`;
-
-      signedUrl = (await fetchAPI(url)).signedUrl;
-    } catch (e) {
-      if (e.statusCode === httpStatusCodes.NOT_FOUND) {
-        return null;
-      }
-
-      throw e;
-    }
-  }
-
+const seekFromS3 = async (taskName, signedUrl) => {
   const storageResp = await fetch(signedUrl);
 
   if (!storageResp.ok) {
