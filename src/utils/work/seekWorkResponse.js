@@ -6,6 +6,7 @@ import unpackResult, { decompressUint8Array } from 'utils/work/unpackResult';
 import parseResult from 'utils/work/parseResult';
 import WorkTimeoutError from 'utils/errors/http/WorkTimeoutError';
 import WorkResponseError from 'utils/errors/http/WorkResponseError';
+import { updateBackendStatus } from 'redux/actions/backendStatus';
 
 const throwResponseError = (response) => {
   throw new Error(`Error ${response.status}: ${response.text}`, { cause: response });
@@ -80,6 +81,7 @@ const dispatchWorkRequest = async (
   timeout,
   ETag,
   requestProps,
+  dispatch,
 ) => {
   const { default: connectionPromise } = await import('utils/socketConnection');
 
@@ -125,9 +127,17 @@ const dispatchWorkRequest = async (
     // this experiment update is received whenever a worker finishes any work request
     // related to the current experiment. We extend the timeout because we know
     // the worker is alive and was working on another request of our experiment
-    io.on(`Heartbeat-${experimentId}`, () => {
+    io.on(`Heartbeat-${experimentId}`, (message) => {
       const newTimeoutDate = getTimeoutDate(timeout);
       if (newTimeoutDate < workerTimeoutDate) {
+        const status = {
+          worker: {
+            statusCode: message.status_code,
+            userMessage: message.user_message,
+          },
+        };
+        dispatch(updateBackendStatus(experimentId, status));
+
         setOrRefreshTimeout(request, timeout, reject, ETag);
       }
     });

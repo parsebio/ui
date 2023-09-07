@@ -43,6 +43,7 @@ const fetchGeneExpressionWorkWithoutLocalCache = async (
         broadcast,
         ...extras,
       },
+      dispatch,
     );
 
     return data ?? await seekFromS3(body.name, signedUrl);
@@ -125,6 +126,7 @@ const fetchWork = async (
         broadcast,
         ...extras,
       },
+      dispatch,
     );
 
     const response = data ?? await seekFromS3(body.name, signedUrl);
