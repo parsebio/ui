@@ -8,6 +8,22 @@ import WorkTimeoutError from 'utils/errors/http/WorkTimeoutError';
 import WorkResponseError from 'utils/errors/http/WorkResponseError';
 import { updateBackendStatus } from 'redux/actions/backendStatus';
 
+const logWithDate = (logStr) => {
+  const date = new Date();
+  const hour = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const milliseconds = date.getMilliseconds();
+
+  console.log(
+    `[${(hour < 10) ? `0${hour}` : hour
+    }:${(minutes < 10) ? `0${minutes}` : minutes
+    }:${(seconds < 10) ? `0${seconds}` : seconds
+    }.${(`00${milliseconds}`).slice(3)
+    }] ${logStr}`,
+  );
+};
+
 const throwResponseError = (response) => {
   throw new Error(`Error ${response.status}: ${response.text}`, { cause: response });
 };
@@ -34,6 +50,8 @@ const seekFromS3 = async (taskName, signedUrl) => {
   if (!storageResp.ok) {
     throwResponseError(storageResp);
   }
+
+  logWithDate('ReceivedDataFromS3Debug');
 
   const unpackedResult = await unpackResult(storageResp, taskName);
   const parsedResult = parseResult(unpackedResult, taskName);
@@ -162,6 +180,7 @@ const dispatchWorkRequest = async (
         return resolve({ signedUrl: response.signedUrl });
       }
 
+      logWithDate('ReceivedDataFromSocketDebug');
       // If type isn't object, then we have the actual work result,
       // no further downloads are necessary, we just need to decompress and return it
       const decompressedData = await decompressUint8Array(Uint8Array.from(Buffer.from(res, 'base64')));
