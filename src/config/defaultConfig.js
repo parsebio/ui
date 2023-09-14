@@ -23,7 +23,7 @@ const getAccountInfo = (account) => accountInfo[account] || accountInfo.default;
 const config = {
   supportEmail: getAccountInfo(accountId).supportEmail,
   pipelineVersionToRerunQC: 2,
-  workerVersion: 5, // needs to match workerVersion in API
+  workerVersion: 6, // needs to match workerVersion in API
   botToken: getAccountInfo(accountId).botToken,
   feedbackWebhookEndpoint: getAccountInfo(accountId).feedbackWebhookEndpoint,
   referralWebhookEndpoint: getAccountInfo(accountId).referralWebhookEndpoint,
