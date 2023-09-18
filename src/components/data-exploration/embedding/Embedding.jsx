@@ -9,7 +9,7 @@ import {
 } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as vega from 'vega';
-import 'vitessce/dist/es/production/static/css/index.css';
+// import 'vitessce/dist/es/production/static/css/index.css';
 
 import ClusterPopover from 'components/data-exploration/embedding/ClusterPopover';
 import CrossHair from 'components/data-exploration/embedding/CrossHair';
@@ -32,10 +32,18 @@ import {
 } from 'utils/plotUtils';
 import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
 
+// const Vitessce = dynamic(
+//   () => import('vitessce/dist/index.min').then((mod) => mod.Vitessce),
+//   { ssr: false },
+// );
+
+// const Scatterplot = Vitessce.Scatterplot;
+
 const Scatterplot = dynamic(
-  () => import('vitessce/dist/umd/production/scatterplot.min').then((mod) => mod.Scatterplot),
+  () => import('@vitessce/scatterplot-embedding/dist/index').then((mod) => mod.Scatterplot),
   { ssr: false },
 );
+
 
 const INITIAL_ZOOM = 4.00;
 const cellRadiusFromZoom = (zoom) => zoom ** 3 / 50;

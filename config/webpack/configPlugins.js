@@ -4,9 +4,9 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const webpackConfigPlugins = (config, { dev }) => {
   const plugins = [
-    new webpack.IgnorePlugin(
-      /pages.*\/test.*/,
-    ),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /pages.*\/test.*/
+    }),
   ];
 
   if (process.env.NODE_ENV === 'analyse') {

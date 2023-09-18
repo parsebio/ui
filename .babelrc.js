@@ -45,11 +45,17 @@ module.exports = (api) => {
           {
             "preset-env": {
               useBuiltIns: "usage",
-              corejs: 2,
+              corejs: 3,
               targets: {
                 ie: 11
               }
             }
+          }
+        ],
+        [
+          "@babel/preset-env",
+          {
+            "targets": "defaults"
           }
         ]
       ],

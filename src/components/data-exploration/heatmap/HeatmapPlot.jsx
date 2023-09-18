@@ -26,8 +26,16 @@ import { loadCellSets } from 'redux/actions/cellSets';
 
 const COMPONENT_TYPE = 'interactiveHeatmap';
 
+// const Vitessce = dynamic(
+//   () => import('vitessce/dist/index.min').then((mod) => mod.Vitessce),
+//   { ssr: false },
+// );
+
+// const Heatmap = Vitessce.Heatmap;
+
+
 const Heatmap = dynamic(
-  () => import('vitessce/dist/umd/production/heatmap.min').then((mod) => mod.Heatmap),
+  () => import('@vitessce/heatmap/dist/index').then((mod) => mod.Heatmap),
   { ssr: false },
 );
 

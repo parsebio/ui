@@ -31,6 +31,21 @@ const webpackConfigRules = (config, { dev, isServer }) => {
         },
       },
     },
+    {
+      test: /\.less$/,
+      use: [
+        'style-loader',
+        'css-loader',
+        {
+          loader: 'less-loader',
+          options: {
+            lessOptions: {
+              javascriptEnabled: true,
+            },
+          },
+        },
+      ],
+    },
   ];
 
   if (!dev) {
@@ -84,6 +99,21 @@ const webpackConfigRules = (config, { dev, isServer }) => {
   }
 
   config.module.rules.push(...rules);
+
+  // Add Babel loader for JavaScript files
+  const babelLoaderRule = {
+    test: /\.js$/,
+    exclude: /node_modules/,
+    use: {
+      loader: 'babel-loader',
+      options: {
+        presets: ['@babel/preset-env', '@babel/preset-react'],
+      },
+    },
+  };
+
+  // Push the new Babel loader rule to the existing rules array
+  config.module.rules.push(babelLoaderRule);
 
   return config;
 };
