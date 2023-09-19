@@ -5,7 +5,6 @@ import {
   MinusOutlined,
   DownOutlined,
 } from '@ant-design/icons';
-import 'antd/dist/antd.css';
 import {
   Button, Space, Menu, Dropdown,
 } from 'antd';

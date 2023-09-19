@@ -4,11 +4,7 @@ const path = require('path');
 const util = require('util');
 
 const withPlugins = require('next-compose-plugins');
-const less = require('@zeit/next-less');
-const css = require('@zeit/next-css');
-const images = require('next-images');
 
-const lessToJS = require('less-vars-to-js');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -21,13 +17,6 @@ const { AccountId } = require('./src/utils/deploymentInfo');
 
 const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
-// Where your antd-custom.less file lives
-const themeVariables = lessToJS(
-  fs.readFileSync(
-    path.resolve(__dirname, './assets/antd-custom.less'),
-    'utf8',
-  ),
-);
 
 // fix antd bug in dev development
 const devAntd = '@import "~antd/dist/antd.less";\n';
@@ -97,6 +86,9 @@ const nextConfig = {
 
     return final;
   },
+  images: {
+    disableStaticImages: true,
+  },
 };
 
 let accountId = process.env.AWS_ACCOUNT_ID;
@@ -112,15 +104,6 @@ if (isDev) {
 
 module.exports = withPlugins([
   [withBundleAnalyzer],
-  [images],
-  [less, {
-    lessLoaderOptions: {
-      javascriptEnabled: true,
-      modifyVars: themeVariables,
-      localIdentName: '[local]___[hash:base64:5]',
-    },
-  }],
-  [css],
   {
     publicRuntimeConfig: {
       domainName: process.env.DOMAIN_NAME,
