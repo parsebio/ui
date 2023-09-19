@@ -26,10 +26,10 @@ import { loadCellSets } from 'redux/actions/cellSets';
 
 const COMPONENT_TYPE = 'interactiveHeatmap';
 
-const Heatmap = dynamic(
-  () => import('@vitessce/heatmap').then((mod) => mod.Heatmap),
-  { ssr: false },
-);
+// const Heatmap = dynamic(
+//   () => import('@vitessce/heatmap').then((mod) => mod.Heatmap),
+//   { ssr: false },
+// );
 
 // To avoid it sticking to the right too much (the left already has some margin)
 const heatmapRightMargin = 50;

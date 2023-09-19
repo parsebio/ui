@@ -39,10 +39,10 @@ import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSet
 
 // const Scatterplot = Vitessce.Scatterplot;
 
-const Scatterplot = dynamic(
-  () => import('@vitessce/scatterplot').then((mod) => mod.Scatterplot),
-  { ssr: false },
-);
+// const Scatterplot = dynamic(
+//   () => import('@vitessce/scatterplot').then((mod) => mod.Scatterplot),
+//   { ssr: false },
+// );
 
 const INITIAL_ZOOM = 4.00;
 const cellRadiusFromZoom = (zoom) => zoom ** 3 / 50;

@@ -18,7 +18,7 @@ const webpackConfigRules = (config, { dev }) => {
       options: { presets: ['@babel/preset-env', '@babel/preset-react'] },
     },
     {
-      test: /\.(ttf|eot|svg)$/,
+      test: /\.(ttf|eot|svg|png)$/,
       use: {
         loader: 'file-loader',
         options: {
