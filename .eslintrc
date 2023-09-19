@@ -56,7 +56,9 @@
   },
   "extends": [
     "plugin:react/recommended",
-    "airbnb"
+    "airbnb",
+    "eslint:recommended", 
+    "next"
   ],
   "plugins": [
     "react"

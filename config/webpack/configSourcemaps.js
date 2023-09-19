@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-const webpackConfigSourcemaps = (config, { dev, isServer }) => {
+const webpackConfigSourcemaps = (config, { dev }) => {
   // Add the appropriate sourcemap depending on development or production.
   config.devtool = dev ? 'eval-source-map' : 'source-map';
 
