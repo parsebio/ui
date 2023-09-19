@@ -6,12 +6,12 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 
-import ProjectSearchBox from './ProjectSearchBox';
-import ProjectsList from './ProjectsList';
 import PropTypes from 'prop-types';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
+import ProjectsList from './ProjectsList';
+import ProjectSearchBox from './ProjectSearchBox';
 
 const ProjectsListContainer = (props) => {
   const { height, onCreateNewProject } = props;

@@ -384,7 +384,8 @@ describe('DiffExprCompute', () => {
     });
 
     // We have to query the HTML elements and check the containing text directly
-    // because Antd does not directly store the selection values in the value attribue of the input element
+    // because Antd does not directly store the selection values in the value
+    // attribue of the input element
     const cellSet1Selection = selectCellSet1.closest(selectionBoxDivParentSelector);
     const cellSet2Selection = selectCellSet2.closest(selectionBoxDivParentSelector);
     const sampleOrGroupSelection = selectSampleOrGroup.closest(selectionBoxDivParentSelector);

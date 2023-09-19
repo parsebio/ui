@@ -218,7 +218,7 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
 
     return (
       <Space direction='vertical'>
-        { showLegendAlert && numLegendItems > MAX_LEGEND_ITEMS && <PlotLegendAlert />}
+        {showLegendAlert && numLegendItems > MAX_LEGEND_ITEMS && <PlotLegendAlert />}
         <TrajectoryAnalysisPlot
           ref={resetZoomRef}
           experimentId={experimentId}
@@ -359,7 +359,11 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
         }}
         plotInfo={(
           <>
-            Trajectory inference (TI) or pseudotemporal ordering is a computational technique used in single-cell transcriptomics to determine the pattern of a dynamic process experienced by cells and then arrange cells based on their progression through the process by projecting the cells onto an axis called pseudotime. A “trajectory” shows the path of the progression. Currently, Trajectory Analysis is implemented using the
+            Trajectory inference (TI) or pseudotemporal ordering is a computational technique
+            used in single-cell transcriptomics to determine the pattern of a dynamic process
+            experienced by cells and then arrange cells based on their progression through the
+            process by projecting the cells onto an axis called pseudotime. A “trajectory” shows
+            the path of the progression. Currently, Trajectory Analysis is implemented using the
             {' '}
             <a href='https://cole-trapnell-lab.github.io/monocle3/'> Monocle3 </a>
             {' '}

@@ -9,7 +9,7 @@ const { Option, OptGroup } = Select;
 
 const DiffExprSelect = (props) => {
   const {
-    title, option, filterType, onSelectCluster, selectedComparison, cellSets, value
+    title, option, filterType, onSelectCluster, selectedComparison, cellSets, value,
   } = props;
   // Depending on the cell set type specified, set the default name
   const placeholder = filterType === 'metadataCategorical' ? 'sample/group' : 'cell set';
@@ -89,7 +89,7 @@ const DiffExprSelect = (props) => {
 
 DiffExprSelect.defaultProps = {
   value: null,
-}
+};
 
 DiffExprSelect.propTypes = {
   title: PropTypes.string.isRequired,

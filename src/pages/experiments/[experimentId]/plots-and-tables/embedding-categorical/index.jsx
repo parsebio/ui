@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import _ from 'lodash';
 import {
   Collapse,
@@ -174,7 +174,7 @@ const EmbeddingCategoricalPage = ({ experimentId }) => {
         extraControlPanels={renderExtraPanels()}
         defaultActiveKey='group-by'
       >
-        { render() }
+        {render()}
       </PlotContainer>
     </>
   );

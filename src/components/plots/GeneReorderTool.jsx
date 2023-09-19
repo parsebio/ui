@@ -14,7 +14,7 @@ const GeneReorderTool = (props) => {
   const { plotUuid, onDelete } = props;
 
   const dispatch = useDispatch();
-  
+
   const config = useSelector((state) => state.componentConfig[plotUuid]?.config);
 
   // Tree from antd requires format [{key: , title: }], made from gene names from loadedMarkerGenes and config

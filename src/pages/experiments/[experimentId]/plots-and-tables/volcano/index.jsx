@@ -73,7 +73,7 @@ const VolcanoPlotPage = (props) => {
     setPlotData(calculateVolcanoDataPoints(config, diffExprData));
   }, [config, diffExprData]);
 
-  const getMaxNegativeLogPValue = (data) => data.reduce((maxNegativeLogPValue, datum, i) => {
+  const getMaxNegativeLogPValue = (data) => data.reduce((maxNegativeLogPValue, datum) => {
     if (!datum.p_val_adj || datum.p_val_adj === 0) return maxNegativeLogPValue;
     return Math.max(maxNegativeLogPValue, -Math.log10(datum.p_val_adj));
   }, 0);

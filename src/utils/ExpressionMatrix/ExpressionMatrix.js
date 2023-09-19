@@ -134,7 +134,7 @@ class ExpressionMatrix {
       acum[currentSymbol] = index;
       return acum;
     }, {});
-  }
+  };
 
   /**
    * Generates a new index for the geneSymbol
@@ -148,7 +148,7 @@ class ExpressionMatrix {
     this.geneIndexes[geneSymbol] = lastFreeIndex;
 
     return lastFreeIndex;
-  }
+  };
 
   #getExpression = (geneSymbol, cellIndexes, matrix) => {
     const geneIndex = this.geneIndexes[geneSymbol];
@@ -163,7 +163,7 @@ class ExpressionMatrix {
     if (typeof result === 'number') return [result];
     // If its a matrix transform it to an array
     return result.valueOf().flat();
-  }
+  };
 }
 
 export default ExpressionMatrix;

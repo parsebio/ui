@@ -3,8 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
-const withPlugins = require('next-compose-plugins');
+const withAntdLess = require('next-plugin-antd-less');
 
+const lessToJS = require('less-vars-to-js');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -17,18 +18,6 @@ const { AccountId } = require('./src/utils/deploymentInfo');
 
 const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
-
-// fix antd bug in dev development
-const devAntd = '@import "~antd/dist/antd.less";\n';
-const stylesData = fs.readFileSync(
-  path.resolve(__dirname, './assets/_styles.less'),
-  'utf-8',
-);
-fs.writeFileSync(
-  path.resolve(__dirname, './assets/self-styles.less'),
-  isDev ? `${devAntd}${stylesData}` : stylesData,
-  'utf-8',
-);
 
 // fix: prevents error when .css files are required by node
 if (typeof require !== 'undefined') {
@@ -57,8 +46,9 @@ const nextConfig = {
     ];
   },
   experimental: {
-    productionBrowserSourceMaps: true,
+    esmExternals: 'loose',
   },
+  productionBrowserSourceMaps: true,
   webpack: (config, params) => {
     const { dev } = params;
 
@@ -102,12 +92,33 @@ if (isDev) {
   accountId = AccountId[process.env.DEV_ACCOUNT];
 }
 
-module.exports = withPlugins([
+nextConfig.publicRuntimeConfig = {
+  domainName: process.env.DOMAIN_NAME,
+  accountId
+}
+
+// Where your antd-custom.less file lives
+const themeVariables = lessToJS(
+  fs.readFileSync(
+    path.resolve(__dirname, './assets/antd-custom.less'),
+    'utf8',
+  ),
+);
+
+const plugins = [
   [withBundleAnalyzer],
-  {
-    publicRuntimeConfig: {
-      domainName: process.env.DOMAIN_NAME,
-      accountId,
-    },
+  [withAntdLess, {
+    modifyVars: themeVariables,
+    localIdentName: '[local]--[hash:base64:4]',
+  }],
+];
+
+module.exports = () => plugins.reduce(
+  (acc, plugin) => {
+    if (!Array.isArray(plugin)) return plugin(acc);
+
+    const [fn, params] = plugin;
+    return fn(acc, params);
   },
-], nextConfig);
+  nextConfig,
+);

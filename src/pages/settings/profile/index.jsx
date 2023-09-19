@@ -108,7 +108,9 @@ const ProfileSettings = () => {
                 <h2 style={{ marginTop: '16px' }}>Profile settings:</h2>
                 <Form.Item label='Full name'>
                   <Input
-                    onChange={(e) => setChanges({ changedUserAttributes: { name: e.target.value } })}
+                    onChange={(e) => setChanges(
+                      { changedUserAttributes: { name: e.target.value } },
+                    )}
                     placeholder={user.attributes.name}
                   />
                 </Form.Item>
@@ -121,7 +123,9 @@ const ProfileSettings = () => {
                     type='email'
                     // disabled until we can validate the changing of email
                     disabled
-                    onChange={(e) => setChanges({ changedUserAttributes: { email: e.target.value } })}
+                    onChange={(e) => setChanges(
+                      { changedUserAttributes: { email: e.target.value } },
+                    )}
                     placeholder={user.attributes.email}
                   />
                 </Form.Item>
@@ -138,11 +142,15 @@ const ProfileSettings = () => {
                         <Checkbox
                           defaultChecked={user.attributes[agreedEmailsKey] === 'true'}
                           onChange={(e) => setChanges({
-                            changedUserAttributes: { [agreedEmailsKey]: e.target.checked.toString() },
+                            changedUserAttributes: {
+                              [agreedEmailsKey]: e.target.checked.toString(),
+                            },
                           })}
                         />
                         <Text>
-                          I agree to receive updates about new features in Cellenics, research done with Cellenics, and Cellenics community events. (No external marketing.)
+                          I agree to receive updates about new features in Cellenics,
+                          research done with Cellenics, and Cellenics community events.
+                          (No external marketing.)
                         </Text>
                       </Space>
                     </Form.Item>
@@ -154,7 +162,9 @@ const ProfileSettings = () => {
                   help={oldPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { oldPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => setChanges(
+                      { changedPasswordAttributes: { oldPassword: e.target.value } },
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
@@ -164,7 +174,9 @@ const ProfileSettings = () => {
                   help={newPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { newPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => setChanges(
+                      { changedPasswordAttributes: { newPassword: e.target.value } },
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
@@ -174,7 +186,9 @@ const ProfileSettings = () => {
                   help={newPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { confirmNewPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => setChanges(
+                      { changedPasswordAttributes: { confirmNewPassword: e.target.value } },
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>

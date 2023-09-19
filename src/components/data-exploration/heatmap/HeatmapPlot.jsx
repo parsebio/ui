@@ -26,7 +26,6 @@ import { loadCellSets } from 'redux/actions/cellSets';
 
 const COMPONENT_TYPE = 'interactiveHeatmap';
 
-
 const Heatmap = dynamic(
   () => import('@vitessce/heatmap').then((mod) => mod.Heatmap),
   { ssr: false },

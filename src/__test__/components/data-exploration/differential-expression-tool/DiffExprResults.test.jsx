@@ -387,7 +387,10 @@ describe('DiffExprResults', () => {
     const dropdown = component.find('Dropdown');
     const menuInstance = shallow(dropdown.props().overlay);
     menuInstance.at(0).simulate('click');
-    await waitForActions(withResultStore, [DIFF_EXPR_ORDERING_SET, DIFF_EXPR_LOADING, DIFF_EXPR_LOADED]);
+    await waitForActions(
+      withResultStore,
+      [DIFF_EXPR_ORDERING_SET, DIFF_EXPR_LOADING, DIFF_EXPR_LOADED],
+    );
 
     // closing the modal
     const closeButton = component.find('.ant-modal-close');

@@ -330,8 +330,8 @@ const BatchDiffExpression = (props) => {
                       style={{ width: '50%' }}
                       description={(
                         <>
-                          One or more of the selected samples/groups does not contain enough cells in the selected cell set.
-                          Those comparisons will be skipped.
+                          One or more of the selected samples/groups does not contain enough cells
+                          in the selected cell set. Those comparisons will be skipped.
                         </>
                       )}
                       type='warning'
@@ -345,8 +345,9 @@ const BatchDiffExpression = (props) => {
                         style={{ width: '50%' }}
                         description={(
                           <>
-                            For one of more of the comparisons, there are fewer than 3 samples with the minimum number of cells (10).
-                            Only logFC values will be calculated and results should be used for exploratory purposes only.
+                            For one of more of the comparisons, there are fewer than 3 samples with
+                            the minimum number of cells (10). Only logFC values will be calculated
+                            and results should be used for exploratory purposes only.
                           </>
                         )}
                         type='warning'

@@ -410,7 +410,7 @@ const MarkerHeatmap = ({ experimentId }) => {
                 There is no data to show.
               </p>
               <p>
-                Select another option from the 'Select data' menu.
+                Select another option from the `Select data` menu.
               </p>
             </>
           )}
