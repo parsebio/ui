@@ -18,10 +18,24 @@ const webpackConfigPlugins = (config, { dev }) => {
   // Terser and OptimizeCss are automatically loaded in Webpack 4+.
   if (!dev) {
     config.mode = 'production';
+    config.target = 'web'; // to fix the punc error in Terser
 
     config.optimization = {
       ...config.optimization,
       minimize: true,
+    };
+
+    config.externalsType = 'module';
+
+    config.experiments = {
+      ...config.experiments,
+      outputModule: true,
+      // buildHttp: "true",
+    };
+
+    config.output = {
+      ...config.output,
+      environment: { module: true },
     };
   }
 

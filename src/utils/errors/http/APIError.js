@@ -1,8 +1,8 @@
-import http from 'http';
+// import http from 'http'; TODO: fix this properly
 
 class APIError extends Error {
   constructor(statusCode, message, errors) {
-    const name = http.STATUS_CODES[statusCode];
+    const name = "Iva";
     super(`${statusCode} ${name}`);
 
     this.name = name;

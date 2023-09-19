@@ -36,7 +36,7 @@ const webpackConfigRules = (config, { dev }) => {
           mimetype: 'application/font-woff',
         },
       },
-    },
+    }
   ];
 
   if (!dev) {

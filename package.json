@@ -59,7 +59,7 @@
     "@vitessce/scatterplot": "^3.2.1",
     "antd": "^5.9.2",
     "aws-amplify": "^3.3.26",
-    "axios": "^0.21.2",
+    "axios": "^0.21.4",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-import": "^1.9.0",
