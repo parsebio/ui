@@ -2,9 +2,8 @@ import { init, push } from '@socialgouv/matomo-next';
 import Auth from '@aws-amplify/auth';
 
 import { Environment } from './deploymentInfo';
-import getDomainSpecificContent from './getDomainSpecificContent';
 
-const MATOMO_URL = `https://${getDomainSpecificContent('matomoName')}.matomo.cloud`;
+const MATOMO_URL = 'https://biomage.matomo.cloud';
 
 // To test a staging deployment, you'll need to go to matomo.cloud
 // and change the URL there to point to your staging env URL.
@@ -14,17 +13,17 @@ const trackingInfo = {
   [Environment.PRODUCTION]: {
     enabled: true,
     siteId: 1,
-    containerId: getDomainSpecificContent('containerIds')[Environment.PRODUCTION],
+    containerId: 'lkIodjnO',
   },
   [Environment.STAGING]: {
     enabled: false,
     siteId: 2,
-    containerId: getDomainSpecificContent('containerIds')[Environment.STAGING],
+    containerId: 'FX7UBNS6',
   },
   [Environment.DEVELOPMENT]: {
     enabled: false,
     siteId: 3,
-    containerId: getDomainSpecificContent('containerIds')[Environment.DEVELOPMENT],
+    containerId: 'lS8ZRMXJ',
   },
 };
 

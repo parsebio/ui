@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import MultiBackend from 'react-dnd-multi-backend';
 import HTML5ToTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch';
-import getDomainSpecificContent from 'utils/getDomainSpecificContent';
 import {
   BuildOutlined,
   DatabaseOutlined,
@@ -263,7 +262,20 @@ const ContentWrapper = (props) => {
           >
             Cellenics®
           </text>
-          {getDomainSpecificContent('ExtraLogoText')}
+          {/* provided by? TBD */}
+          <text
+            style={{ outlineStyle: 'none' }}
+            fontWeight='400'
+            textRendering='geometricPrecision'
+            fontFamily='IBM Plex Sans'
+            fill='#F0F2F5'
+            fontSize='9.00px'
+            textAnchor='start'
+            dominantBaseline='middle'
+            y='20'
+          >
+            provided by Biomage
+          </text>
         </g>
       </svg>
     </div>

@@ -238,7 +238,7 @@ jobs:
           # We can easily build the image-tag from REF_ID and COMMIT_SHA for non-production releases.
           # But we can not easily create the image tag for production releases, so we're bulding it here
           echo "image-tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
-          # This will take a GitHub repo name like `hms-dbmi-cellenics/releases`
+          # This will take a GitHub repo name like `parsebio/releases`
           # and turns it into `releases`. This will be the name of the
           # ECR repository.
           IMAGE_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F '/' '{print $2}')
