@@ -22,7 +22,7 @@ import Header from 'components/Header';
 import PlotContainer from 'components/plots/PlotContainer';
 import Loader from 'components/Loader';
 import ExportAsCSV from 'components/plots/ExportAsCSV';
-import fileNames from 'utils/fileNames';
+import plotCsvFilename from 'utils/plotCsvFilename';
 import {
   updatePlotConfig,
   loadPlotConfig,
@@ -101,7 +101,7 @@ const DotPlotPage = (props) => {
   const highestGenesLoadedRef = useRef(false);
 
   const experimentName = useSelector((state) => state.experimentSettings.info.experimentName);
-  const csvFileName = fileNames(experimentName, 'DOT_PLOT', [config?.selectedCellSet, config?.selectedPoints]);
+  const csvFileName = plotCsvFilename(experimentName, 'DOT_PLOT', [config?.selectedCellSet, config?.selectedPoints]);
 
   useEffect(() => {
     if (!config) dispatch(loadPlotConfig(experimentId, plotUuid, plotType));
@@ -305,8 +305,9 @@ const DotPlotPage = (props) => {
     if (_.isEmpty(geneData) || !config || highestGenesLoadedRef.current || plotDataLoading) {
       return;
     }
-
-    setHighestDispersionGenes();
+    if (!config.selectedGenes.length) {
+      setHighestDispersionGenes();
+    }
     highestGenesLoadedRef.current = true;
   }, [geneData, config]);
 

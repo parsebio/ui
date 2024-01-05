@@ -65,8 +65,8 @@ const Embedding = (props) => {
   } = cellSets;
 
   const selectedCell = useSelector((state) => state.cellInfo.cellId);
-  const expressionLoading = useSelector((state) => state.genes.expression.loading);
-  const expressionMatrix = useSelector((state) => state.genes.expression.matrix);
+  const expressionLoading = useSelector((state) => state.genes.expression.full.loading);
+  const expressionMatrix = useSelector((state) => state.genes.expression.full.matrix);
 
   const cellCoordinatesRef = useRef({ x: 200, y: 300 });
   const [cellInfoTooltip, setCellInfoTooltip] = useState();
@@ -316,7 +316,7 @@ const Embedding = (props) => {
         {
           data ? (
             <Scatterplot
-              cellColorEncoding="cellSetSelection"
+              cellColorEncoding='cellSetSelection'
               cellOpacity={0.8}
               cellRadius={cellRadius}
               setCellHighlight={setCellHighlight}

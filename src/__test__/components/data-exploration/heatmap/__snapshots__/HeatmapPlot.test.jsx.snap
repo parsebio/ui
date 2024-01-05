@@ -1,31 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`HeatmapPlot Does not display hidden cell sets 1`] = `
-[
-  "testae48e318dab9a1bd0bexperiment",
-  {
-    "cellSetKey": "louvain",
-    "groupByClasses": [
-      "louvain",
-      "sample",
-    ],
-    "hiddenCellSetKeys": [
-      "louvain-3",
-    ],
-    "nGenes": 5,
-    "name": "MarkerHeatmap",
-    "selectedPoints": "All",
-  },
-  900,
-  "5-marker-genes",
-  {
-    "PipelineRunETag": "2021-10-20T12:51:44.755Z",
-    "broadcast": false,
-  },
-  [Function],
-]
-`;
-
 exports[`HeatmapPlot Reacts to cellClass groupby being changed 1`] = `
 Uint8Array [
   90,

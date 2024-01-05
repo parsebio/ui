@@ -38,14 +38,21 @@ import { useAppRouter } from 'utils/AppRouteProvider';
 import experimentUpdatesHandler from 'utils/experimentUpdatesHandler';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import pipelineStatusValues from 'utils/pipelineStatusValues';
-import calculateGem2sRerunStatus from 'utils/data-management/calculateGem2sRerunStatus';
+
 import { DndProvider } from 'react-dnd';
 import { loadSamples } from 'redux/actions/samples';
+import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
 const { Sider } = Layout;
 const { Text } = Typography;
 
 const checkEveryIsValue = (arr, value) => arr.every((item) => item === value);
+
+const backendErrors = [
+  pipelineStatusValues.FAILED,
+  pipelineStatusValues.TIMED_OUT,
+  pipelineStatusValues.ABORTED,
+];
 
 const ContentWrapper = (props) => {
   const dispatch = useDispatch();
@@ -89,8 +96,6 @@ const ContentWrapper = (props) => {
     error: backendError,
     status: backendStatus,
   } = useSelector(getBackendStatus(currentExperimentId));
-  const gem2sBackendStatus = backendStatus?.gem2s;
-  const backendErrors = [pipelineStatusValues.FAILED, pipelineStatusValues.TIMED_OUT, pipelineStatusValues.ABORTED];
 
   const qcStatusKey = backendStatus?.pipeline?.status;
   const qcRunning = qcStatusKey === 'RUNNING';
@@ -104,7 +109,7 @@ const ContentWrapper = (props) => {
 
   const isSeurat = seuratStatusKey && selectedTechnology === 'seurat';
 
-  const seuratBackendStatus = backendStatus?.seurat;
+  const [pipelinesRerunStatus, setPipelinesRerunStatus] = useState(null);
   const seuratRunning = seuratStatusKey === 'RUNNING' && isSeurat;
   const seuratRunningError = backendErrors.includes(seuratStatusKey) && isSeurat;
   const completedSeuratSteps = backendStatus?.seurat?.completedSteps;
@@ -145,29 +150,29 @@ const ContentWrapper = (props) => {
     setBackendStatusRequested(true);
   }, [backendLoading]);
 
-  const [gem2sRerunStatus, setGem2sRerunStatus] = useState(null);
-
   useEffect(() => {
-    if (!experiment) return;
+    if (!experiment || !backendStatus) return;
 
-    const pipelineStatus = calculateGem2sRerunStatus(
-      gem2sBackendStatus, experiment,
+    // The value of backend status is null for new experiments that have never run
+    const setupPipeline = isSeurat ? 'seurat' : 'gem2s';
+    const {
+      pipeline: qcBackendStatus, [setupPipeline]: setupBackendStatus,
+    } = backendStatus ?? {};
+
+    if (
+      !setupBackendStatus
+      || !experiment?.sampleIds?.length > 0
+    ) return;
+
+    setPipelinesRerunStatus(
+      calculatePipelinesRerunStatus(
+        setupBackendStatus,
+        qcBackendStatus,
+        experiment,
+        isSeurat,
+      ),
     );
-
-    setGem2sRerunStatus(pipelineStatus);
-  }, [gem2sBackendStatus, experiment, samples]);
-
-  const [seuratRerunStatus, setSeuratRerunStatus] = useState(null);
-
-  useEffect(() => {
-    if (!experiment) return;
-
-    const pipelineStatus = calculateGem2sRerunStatus(
-      seuratBackendStatus, experiment,
-    );
-
-    setSeuratRerunStatus(pipelineStatus);
-  }, [seuratBackendStatus, experiment, samples]);
+  }, [backendStatus, experiment, samples]);
 
   useEffect(() => {
     dispatch(loadUser());
@@ -181,7 +186,9 @@ const ContentWrapper = (props) => {
     ...(completedSteps && { completedSteps }),
   });
 
-  const gem2sNotCreated = checkEveryIsValue([gem2sStatusKey, seuratStatusKey], pipelineStatusValues.NOT_CREATED);
+  const gem2sNotCreated = checkEveryIsValue(
+    [gem2sStatusKey, seuratStatusKey], pipelineStatusValues.NOT_CREATED,
+  );
 
   const getSeuratStatus = () => {
     if (seuratRunningError) {
@@ -372,11 +379,10 @@ const ContentWrapper = (props) => {
   const menuItemRender = ({
     module, icon, name, disableIfNoExperiment, disabledByPipelineStatus, disabledIfSeuratComplete,
   }) => {
-    const needRunGem2s = !isSeurat && (!gem2sRerunStatus || gem2sRerunStatus.rerun);
-    const needRunSeurat = isSeurat && (!seuratRerunStatus || seuratRerunStatus.rerun);
+    const needRerunPipeline = pipelinesRerunStatus === null || pipelinesRerunStatus.rerun;
 
     const notProcessedExperimentDisable = !routeExperimentId && disableIfNoExperiment
-      && (needRunGem2s || needRunSeurat);
+      && needRerunPipeline;
 
     const pipelineStatusDisable = disabledByPipelineStatus && (
       backendError || gem2sRunning || gem2sRunningError
@@ -394,24 +400,52 @@ const ContentWrapper = (props) => {
       .includes(currentModule) && disableIfNoExperiment;
     const seuratCompleteDisable = disabledIfSeuratComplete && seuratComplete;
 
-    return (
-      <Menu.Item
-        id={module}
-        disabled={notProcessedExperimentDisable || pipelineStatusDisable
-          || seuratCompleteDisable || nonExperimentModule}
-        key={module}
-        icon={icon}
-        onClick={() => navigateTo(
-          module,
-          { experimentId: currentExperimentId },
-        )}
-      >
-        {name}
-      </Menu.Item>
-    );
+    return {
+      key: module,
+      icon,
+      label: name,
+      disabled: notProcessedExperimentDisable || pipelineStatusDisable
+      || seuratCompleteDisable || nonExperimentModule,
+      onClick: () => navigateTo(
+        module,
+        { experimentId: currentExperimentId },
+      ),
+    };
   };
 
   if (!user) return <></>;
+
+  const mainMenuItems = menuLinks
+    .filter((item) => !item.disableIfNoExperiment)
+    .map(menuItemRender);
+
+  const groupMenuItems = menuLinks
+    .filter((item) => item.disableIfNoExperiment)
+    .map(menuItemRender);
+
+  const groupItem = {
+    type: 'group',
+    label: !collapsed && (
+      <Tooltip title={experimentName} placement='right'>
+        <Space direction='vertical' style={{ width: '100%', cursor: 'default' }}>
+          <Text
+            style={{
+              width: '100%',
+              color: '#999999',
+            }}
+            strong
+            ellipsis
+          >
+            {experimentName || 'No analysis'}
+          </Text>
+          {experimentName && <Text style={{ color: '#999999' }}>Current analysis</Text>}
+        </Space>
+      </Tooltip>
+    ),
+    children: groupMenuItems,
+  };
+
+  const menuItems = [...mainMenuItems, groupItem];
 
   return (
     <>
@@ -438,43 +472,10 @@ const ContentWrapper = (props) => {
               <Menu
                 data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
                 theme='dark'
-                selectedKeys={
-                  menuLinks
-                    .filter(({ module }) => module === currentModule)
-                    .map(({ module }) => module)
-                }
+                selectedKeys={menuLinks.filter(({ module }) => module === currentModule).map(({ module }) => module)}
                 mode='inline'
-              >
-                {menuLinks.filter((item) => !item.disableIfNoExperiment).map(menuItemRender)}
-
-                <Menu.ItemGroup
-                  title={!collapsed && (
-                    <Tooltip title={experimentName} placement='right'>
-                      <Space direction='vertical' style={{ width: '100%', cursor: 'default' }}>
-                        <Text
-                          style={{
-                            width: '100%',
-                            color: '#999999',
-                          }}
-                          strong
-                          ellipsis
-                        >
-                          {experimentName || 'No analysis'}
-                        </Text>
-                        {experimentName && (
-                          <Text style={{ color: '#999999' }}>
-                            Current analysis
-                          </Text>
-                        )}
-                      </Space>
-                    </Tooltip>
-
-                  )}
-                >
-                  {menuLinks.filter((item) => item.disableIfNoExperiment).map(menuItemRender)}
-                </Menu.ItemGroup>
-
-              </Menu>
+                items={menuItems}
+              />
             </div>
           </Sider>
           <Layout

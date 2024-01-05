@@ -5,6 +5,7 @@ import {
 } from 'redux/actionTypes/genes';
 
 import fetchWork from 'utils/work/fetchWork';
+import getCellSetsThatAffectDownsampling from 'utils/work/getCellSetsThatAffectDownsampling';
 import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
@@ -14,25 +15,35 @@ const loadMarkerGenes = (
 ) => async (dispatch, getState) => {
   const {
     numGenes = 5,
-    groupedTracks = ['louvain'],
-    selectedCellSet = 'louvain',
+    groupedTracks = ['sample', 'louvain'],
+    selectedCellSetKey = 'louvain',
     selectedPoints = 'All',
     hiddenCellSets = [],
   } = options;
 
+  const cellSets = await getCellSetsThatAffectDownsampling(
+    experimentId, selectedCellSetKey, groupedTracks, dispatch, getState,
+  );
+
+  const downsampleSettings = {
+    selectedCellSet: selectedCellSetKey,
+    groupedTracks,
+    cellSets,
+    selectedPoints,
+    hiddenCellSets: Array.from(hiddenCellSets),
+  };
+
   const body = {
     name: 'MarkerHeatmap',
     nGenes: numGenes,
-    cellSetKey: selectedCellSet,
-    groupByClasses: groupedTracks,
-    selectedPoints,
-    hiddenCellSetKeys: Array.from(hiddenCellSets),
+    downsampleSettings,
   };
 
   try {
     const timeout = getTimeoutForWorkerTask(getState(), 'MarkerHeatmap');
 
-    let requestETag;
+    // TODO ask martin if it's fine to use null as default
+    let requestETag = null;
 
     const {
       orderedGeneNames,
@@ -57,7 +68,7 @@ const loadMarkerGenes = (
 
     // If the ETag is different, that means that a new request was sent in between
     // So we don't need to handle this outdated result
-    if (getState().genes.markers.ETag !== requestETag) {
+    if (getState().genes.expression.downsampled.ETag !== requestETag) {
       return;
     }
 

@@ -1,4 +1,6 @@
-import { render, screen, within } from '@testing-library/react';
+import {
+  render, screen, waitFor, within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import _ from 'lodash';
@@ -7,19 +9,19 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
-import { loadGeneExpression } from 'redux/actions/genes';
+import { loadDownsampledGeneExpression } from 'redux/actions/genes';
 import { makeStore } from 'redux/store';
-import { dispatchWorkRequest } from 'utils/work/seekWorkResponse';
-import expressionDataFAKEGENE from '__test__/data/gene_expression_FAKEGENE.json';
+import fetchWork from 'utils/work/fetchWork';
+
 import markerGenesData2 from '__test__/data/marker_genes_2.json';
 import markerGenesData5 from '__test__/data/marker_genes_5.json';
+import markerGenesData5AndFakeGene from '__test__/data/marker_genes_5_and_FAKE_gene.json';
 import geneList from '__test__/data/paginated_gene_expression.json';
 
 import preloadAll from 'jest-next-dynamic';
 
 import fake from '__test__/test-utils/constants';
 import mockAPI, {
-  dispatchWorkRequestMock,
   generateDefaultMockAPIResponses,
   promiseResponse,
   statusResponse,
@@ -36,22 +38,6 @@ jest.mock('react-resize-detector', () => (props) => {
   return children({ width: 800, height: 800 });
 });
 
-// Mock hash so we can control the ETag that is produced by hash.MD5 when fetching work requests
-// EtagParams is the object that's passed to the function which generates ETag in fetchWork
-jest.mock('object-hash', () => {
-  const objectHash = jest.requireActual('object-hash');
-  const mockWorkResultETag = jest.requireActual('__test__/test-utils/mockWorkResultETag');
-
-  const mockWorkRequestETag = (ETagParams) => {
-    if (ETagParams.body.name === 'ListGenes') return 'ListGenes';
-    return `${ETagParams.body.nGenes}-marker-genes`;
-  };
-
-  const mockGeneExpressionETag = (ETagParams) => `${ETagParams.missingGenesBody.genes.join('-')}-expression`;
-
-  return mockWorkResultETag(objectHash, mockWorkRequestETag, mockGeneExpressionETag);
-});
-
 // Disable local cache
 jest.mock('localforage', () => ({
   getItem: () => Promise.resolve(undefined),
@@ -61,15 +47,11 @@ jest.mock('localforage', () => ({
   length: () => 0,
 }));
 
-jest.mock('utils/work/seekWorkResponse', () => ({
-  __esModule: true,
-  dispatchWorkRequest: jest.fn(),
-}));
+jest.mock('utils/work/fetchWork');
 
 const mockWorkerResponses = {
-  '5-marker-genes': markerGenesData5,
-  '2-marker-genes': markerGenesData2,
-  'FAKEGENE-expression': expressionDataFAKEGENE,
+  'MarkerHeatmap-5': markerGenesData5,
+  GeneExpression: markerGenesData5AndFakeGene,
   ListGenes: geneList,
 };
 
@@ -117,9 +99,12 @@ describe('Marker heatmap plot', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
-    dispatchWorkRequest
+    fetchWork
       .mockReset()
-      .mockImplementation(dispatchWorkRequestMock(mockWorkerResponses));
+      .mockImplementation((_experimentId, body) => {
+        const reqType = body.nGenes ? `${body.name}-${body.nGenes}` : body.name;
+        return mockWorkerResponses[reqType];
+      });
 
     fetchMock.resetMocks();
     fetchMock.doMock();
@@ -152,13 +137,14 @@ describe('Marker heatmap plot', () => {
   });
 
   it('Shows an error message if marker genes failed to load', async () => {
-    dispatchWorkRequest
+    fetchWork
       .mockReset()
       .mockImplementation(
-        (_experimentId, _body, _timeout, ETag) => {
-          if (ETag === '5-marker-genes') return Promise.reject(new Error('Not found'));
+        (_experimentId, body) => {
+          const reqType = body.nGenes ? `${body.name}-${body.nGenes}` : body.name;
+          if (reqType === 'MarkerHeatmap-5') return Promise.reject(new Error('Not found'));
 
-          return workerDataResult(mockWorkerResponses[ETag]);
+          return workerDataResult(mockWorkerResponses[reqType]);
         },
       );
 
@@ -205,17 +191,12 @@ describe('Marker heatmap plot', () => {
   });
 
   it('adds genes correctly into the plot', async () => {
-    dispatchWorkRequest
-      .mockReset()
-      .mockImplementation(dispatchWorkRequestMock(mockWorkerResponses));
-
     await renderHeatmapPage(storeState);
-
     // Add in a new gene
     const genesToLoad = [...markerGenesData5.orderedGeneNames, 'FAKEGENE'];
 
     await act(async () => {
-      await storeState.dispatch(loadGeneExpression(experimentId, genesToLoad, plotUuid, true));
+      await storeState.dispatch(loadDownsampledGeneExpression(experimentId, genesToLoad, plotUuid));
     });
 
     // Get genes displayed in the tree
@@ -227,8 +208,8 @@ describe('Marker heatmap plot', () => {
     expect(within(geneTree).getByText('FAKEGENE')).toBeInTheDocument();
 
     // Check that the genes is ordered correctly.
-    // This means that FAKEGENE should not be the last in the genes list
-    expect(_.isEqual(displayedGenesList, genesToLoad)).toEqual(false);
+    // This means that FAKEGENE should be the last in the genes list
+    expect(displayedGenesList).toEqual(genesToLoad);
   });
 
   it('Shows an information text if a selected cell set does not contain enough number of samples', async () => {
@@ -250,20 +231,22 @@ describe('Marker heatmap plot', () => {
   });
 
   it('Shows an error message if gene expression fails to load', async () => {
-    dispatchWorkRequest
+    fetchWork
       .mockReset()
-      .mockImplementation((_experimentId, _body, _timeout, ETag) => {
-        if (ETag === '5-marker-genes' || ETag === 'ListGenes') return workerDataResult(mockWorkerResponses[ETag]);
-
-        if (ETag === 'FAKEGENE-expression') { return Promise.reject(new Error('Not found')); }
-      });
+      .mockImplementation(
+        (_experimentId, body) => {
+          const reqType = body.nGenes ? `${body.name}-${body.nGenes}` : body.name;
+          if (reqType === 'GeneExpression') return Promise.reject(new Error('Not found'));
+          return mockWorkerResponses[reqType];
+        },
+      );
 
     await renderHeatmapPage(storeState);
 
     const genesToLoad = [...markerGenesData5.orderedGeneNames, 'FAKEGENE'];
 
     await act(async () => {
-      await storeState.dispatch(loadGeneExpression(experimentId, genesToLoad, plotUuid));
+      await storeState.dispatch(loadDownsampledGeneExpression(experimentId, genesToLoad, plotUuid));
     });
 
     // It shouldn't show the plot
@@ -302,29 +285,57 @@ describe('Marker heatmap plot', () => {
   });
 
   it('searches for genes and adds a valid gene', async () => {
-    await renderHeatmapPage(storeState);
+    await act(async () => {
+      await renderHeatmapPage(storeState);
+    });
 
     // check placeholder text is loaded
     expect(screen.getByText('Search for genes...')).toBeInTheDocument();
 
     const searchBox = screen.getByRole('combobox');
 
-    // remove a gene to check if genes can be added
+    await act(() => {
+      // search for genes using lowercase
+      userEvent.type(searchBox, 'tmem');
+    });
+
+    await act(() => {
+      jest.runAllTimers();
+    });
+
+    // Gene Tmem176a that appears as option is disabled because it is already added
+    expect(screen.getByTitle('Tmem176a')).toHaveClass('ant-select-item-option-disabled');
+
+    await act(() => {
+      // search for genes using lowercase
+      userEvent.clear(searchBox);
+    });
+
+    // Remove Tmem176a to check if it can be added afterwards
     const geneTree = screen.getByRole('tree');
     const geneToRemove = within(geneTree).getByText('Tmem176a');
 
     const geneRemoveButton = geneToRemove.nextSibling.firstChild;
 
-    userEvent.click(geneRemoveButton);
+    await act(async () => {
+      userEvent.click(geneRemoveButton);
+    });
 
-    // search for genes using lowercase
-    userEvent.type(searchBox, 'tmem');
+    await act(() => {
+      // search for genes using lowercase
+      userEvent.type(searchBox, 'tmem');
+    });
 
     // antd creates multiple elements for options
     // find option element by title, clicking on element with role='option' does nothing
     const option = screen.getByTitle('Tmem176a');
 
-    await act(async () => {
+    expect(option).toBeInTheDocument();
+    // The gene was removed, so now the option is enabled
+
+    expect(option).not.toHaveClass('ant-select-item-option-disabled');
+
+    act(() => {
       // the element has pointer-events set to 'none', skip check
       // based on https://stackoverflow.com/questions/61080116
       userEvent.click(option, undefined, { skipPointerEventsCheck: true });
@@ -335,10 +346,20 @@ describe('Marker heatmap plot', () => {
 
     const geneAddButton = screen.getByText('Add');
 
-    userEvent.click(geneAddButton);
+    act(() => {
+      userEvent.click(geneAddButton);
+    });
 
-    // check the selected gene was added
-    expect(within(geneTree).getByText('Tmem176a')).toBeInTheDocument();
+    // check the selected gene is being loaded
+    await waitFor(() => {
+      // Check if there is a call with 'GeneExpression' and containing 'Tmem176a' in the genes array
+      const hasGeneExpressionWithTmem176a = fetchWork.mock.calls.some(
+        (call) => call[1].name === 'GeneExpression' && call[1].genes.includes('Tmem176a'),
+      );
+
+      // Assert that such a call exists
+      expect(hasGeneExpressionWithTmem176a).toBeTruthy();
+    });
   });
 
   it('tries to select an already loaded gene and clears the input', async () => {

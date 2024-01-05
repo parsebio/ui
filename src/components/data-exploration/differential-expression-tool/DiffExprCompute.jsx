@@ -100,7 +100,7 @@ const DiffExprCompute = (props) => {
    * Constructs a form item, a `Select` field with selectable clusters.
    */
   const renderClusterSelectorItem = ({
-    title, option, filterType,
+    title, option, filterTypes,
   }) => {
     if (!cellSets.accessible) {
       return (
@@ -113,7 +113,7 @@ const DiffExprCompute = (props) => {
       <DiffExprSelect
         title={title}
         option={option}
-        filterType={filterType}
+        filterTypes={filterTypes}
         onSelectCluster={onSelectCluster}
         selectedComparison={comparisonGroup[selectedComparison]}
         cellSets={cellSets}
@@ -136,8 +136,11 @@ const DiffExprCompute = (props) => {
 
     if (needPValues && canRun !== canRunDiffExprResults.TRUE) {
       return renderAlert('error', ` For the selected comparison, there are fewer than 3 samples with the minimum number of cells (10).
-              Volcano plot requires both p-values and logFC values, therefore the plot cannot be rendered.`);
-    } if (canRun === canRunDiffExprResults.INSUFFCIENT_CELLS_ERROR) {
+              Volcano plot requires both p-values and logFC values, therefore the plot cannot be rendered.
+              You can still run the comparison if your intent is to export the results as CSV.
+              `);
+    }
+    if (canRun === canRunDiffExprResults.INSUFFCIENT_CELLS_ERROR) {
       return renderAlert('error', `One or more of the selected samples/groups does not contain enough cells in the selected cell set.
               Therefore, the analysis can not be run. Select other cell set(s) or samples/groups to compare.`);
     }
@@ -231,20 +234,20 @@ const DiffExprCompute = (props) => {
               renderClusterSelectorItem({
                 title: 'Compare cell set:',
                 option: 'cellSet',
-                filterType: 'cellSets',
+                filterTypes: ['cellSets', 'CLM'],
               })
             }
 
             {renderClusterSelectorItem({
               title: 'and cell set:',
               option: 'compareWith',
-              filterType: 'cellSets',
+              filterTypes: ['cellSets', 'CLM'],
             })}
 
             {renderClusterSelectorItem({
               title: 'within sample/group:',
               option: 'basis',
-              filterType: 'metadataCategorical',
+              filterTypes: ['metadataCategorical', 'CLMPerSample'],
             })}
           </>
         ) : (
@@ -252,19 +255,19 @@ const DiffExprCompute = (props) => {
             {renderClusterSelectorItem({
               title: 'Compare cell set:',
               option: 'basis',
-              filterType: 'cellSets',
+              filterTypes: ['cellSets', 'CLM'],
             })}
 
             {renderClusterSelectorItem({
               title: 'between sample/group:',
               option: 'cellSet',
-              filterType: 'metadataCategorical',
+              filterTypes: ['metadataCategorical', 'CLMPerSample'],
             })}
 
             {renderClusterSelectorItem({
               title: 'and sample/group:',
               option: 'compareWith',
-              filterType: 'metadataCategorical',
+              filterTypes: ['metadataCategorical', 'CLMPerSample'],
             })}
           </>
         )}
@@ -277,8 +280,7 @@ const DiffExprCompute = (props) => {
               || [
                 canRunDiffExprResults.FALSE,
                 canRunDiffExprResults.INSUFFCIENT_CELLS_ERROR,
-              ].includes(canRunDiffExpr())
-            || (needPValues && canRunDiffExpr() !== canRunDiffExprResults.TRUE)}
+              ].includes(canRunDiffExpr())}
             onClick={() => onCompute()}
           >
             Compute

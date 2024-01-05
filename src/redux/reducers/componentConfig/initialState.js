@@ -25,8 +25,8 @@ const embeddingCategoricalInitialConfig = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: 'Umap 1',
-    yAxisText: 'Umap 2',
+    xAxisText: null,
+    yAxisText: null,
     defaultValues: ['x', 'y'],
     offset: 0,
   },
@@ -57,8 +57,8 @@ const embeddingContinuousInitialConfig = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: 'Umap 1',
-    yAxisText: 'Umap 2',
+    xAxisText: null,
+    yAxisText: null,
     defaultValues: ['x', 'y'],
     offset: 10,
   },
@@ -102,7 +102,9 @@ const heatmapInitialConfig = {
   colour: colourBaseState,
   marker: markerBaseState,
   labels: labelBaseState,
-  selectedGenes: [],
+  // When null, this indicates that the value is its initial one
+  // and the marker genes should be loaded
+  selectedGenes: null,
   selectedCellSet: 'louvain',
   selectedPoints: 'All',
   labelColour: 'transparent',
@@ -186,7 +188,7 @@ const frequencyInitialConfig = {
   title: titleBaseState,
   axes: {
     ...axesBaseState,
-    xAxisText: 'Sample',
+    xAxisText: 'Samples',
     yAxisText: 'Proportion',
     xAxisRotateLabels: true,
     offset: 10,
@@ -234,7 +236,7 @@ const violinConfig = {
   colour: colourBaseState,
   marker: markerBaseState,
   labels: labelBaseState,
-  shownGene: 'notSelected',
+  shownGene: null,
   selectedCellSet: 'louvain',
   selectedPoints: 'All',
   selectedPointsVisible: true,
@@ -295,8 +297,8 @@ const trajectoryAnalysisInitialConfig = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: 'Umap 1',
-    yAxisText: 'Umap 2',
+    xAxisText: null,
+    yAxisText: null,
     defaultValues: ['x', 'y'],
   },
   axesRanges: axesRangesBaseState,
@@ -337,8 +339,8 @@ const embeddingPreviewBySampleInitialConfig = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: '',
-    yAxisText: '',
+    xAxisText: null,
+    yAxisText: null,
     defaultValues: ['x', 'y'],
     offset: 10,
   },
@@ -371,8 +373,8 @@ const embeddingPreviewByCellSetsInitialConfig = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: '',
-    yAxisText: '',
+    xAxisText: null,
+    yAxisText: null,
     defaultValues: ['x', 'y'],
     offset: 10,
   },
@@ -403,8 +405,8 @@ const embeddingPreviewMitochondrialContentInitialConfig = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: '',
-    yAxisText: '',
+    xAxisText: null,
+    yAxisText: null,
     defaultValues: ['x', 'y'],
     offset: 10,
   },
@@ -418,7 +420,7 @@ const embeddingPreviewMitochondrialContentInitialConfig = {
   colour: colourBaseState,
   marker: markerBaseState,
   labels: labelBaseState,
-  shownGene: 'notSelected',
+  shownGene: null,
   selectedSample: 'All',
 };
 
@@ -433,8 +435,8 @@ const embeddingPreviewDoubletScoreInitialConfig = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: '',
-    yAxisText: '',
+    xAxisText: null,
+    yAxisText: null,
     defaultValues: ['x', 'y'],
     offset: 10,
   },
@@ -461,8 +463,8 @@ const embeddingPreviewNumOfGenesInitialConfig = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: '',
-    yAxisText: '',
+    xAxisText: null,
+    yAxisText: null,
     defaultValues: ['x', 'y'],
     offset: 10,
   },
@@ -488,8 +490,8 @@ const embeddingPreviewNumOfUmisInitialConfig = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: '',
-    yAxisText: '',
+    xAxisText: null,
+    yAxisText: null,
     defaultValues: ['x', 'y'],
     offset: 10,
   },
@@ -904,11 +906,12 @@ const initialPlotConfigStates = {
   dataIntegrationEmbedding: dataIntegrationEmbeddingInitialConfig,
   dataIntegrationFrequency: dataIntegrationFrequencyInitialConfig,
   dataIntegrationElbow: dataIntegrationElbowPlotInitialConfig,
+  multiView: multiViewInitialConfig,
+
 };
 
 const initialComponentConfigStates = {
   interactiveHeatmap: interactiveHeatmapInitialConfig,
-  multiView: multiViewInitialConfig,
 };
 
 const initialPlotDataState = {
