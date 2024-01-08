@@ -46,6 +46,10 @@ const filterFilesDefaultConstructor = (selectedTech) => async (files) => {
   )));
 };
 
+const getFilePathToDisplayDefaultConstructor = (selectedTech) => (filePath) => (
+  _.trim(Object.values(fileUploadUtils[selectedTech].getFileSampleAndName(filePath)).join('/'), '/')
+);
+
 const getFileSampleAndNameDefault = (filePath) => {
   const [sample, name] = _.takeRight(filePath.split('/'), 2);
 
@@ -99,6 +103,7 @@ const fileUploadUtils = {
     },
     filterFiles: filterFilesDefaultConstructor(sampleTech['10X']),
     getFileSampleAndName: getFileSampleAndNameDefault,
+    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(sampleTech['10X']),
   },
   [sampleTech.SEURAT]: {
     validExtensionTypes: ['.rds'],
@@ -143,6 +148,7 @@ const fileUploadUtils = {
     isNameValid: (fileName) => fileName.toLowerCase().match(/.*expression_data.st(.gz)?$/),
     getCorrespondingType: () => 'rhapsody',
     filterFiles: filterFilesDefaultConstructor(sampleTech.RHAPSODY),
+    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(sampleTech.RHAPSODY),
     getFileSampleAndName: getFileSampleAndNameDefault,
   },
   [sampleTech.H5]: {
@@ -155,6 +161,7 @@ const fileUploadUtils = {
     isNameValid: (fileName) => fileName.toLowerCase().match(/.*matrix.h5(.gz)?$/),
     getCorrespondingType: () => '10x_h5',
     filterFiles: filterFilesDefaultConstructor(sampleTech.H5),
+    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(sampleTech.H5),
     getFileSampleAndName: getFileSampleAndNameDefault,
   },
   [sampleTech.PARSE]: {
@@ -281,6 +288,11 @@ const fileUploadUtils = {
       return await Promise.all(filesToUpload.map((file) => (
         fileObjectToFileRecord(file, sampleTech.PARSE)
       )));
+    },
+    getFilePathToDisplay: (filePath) => {
+      const [sample, filteredState, name] = _.takeRight(_.trim(filePath, '/').split('/'), 3);
+
+      return [sample, filteredState, name].join('/');
     },
     getFileSampleAndName: (filePath) => {
       const [sample, , name] = _.takeRight(filePath.split('/'), 3);

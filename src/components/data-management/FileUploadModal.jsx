@@ -150,8 +150,6 @@ const FileUploadModal = (props) => {
     </>
   );
 
-  const getFilePathToDisplay = (fileObject) => _.trim(Object.values(fileUploadUtils[selectedTech].getFileSampleAndName(fileObject.path)).join('/'), '/');
-
   return (
     <Modal
       title=''
@@ -278,7 +276,6 @@ const FileUploadModal = (props) => {
                 itemLayout='horizontal'
                 grid='{column: 4}'
                 renderItem={(file) => (
-
                   <List.Item
                     key={file.name}
                     style={{ width: '100%' }}
@@ -295,16 +292,14 @@ const FileUploadModal = (props) => {
                           </>
                         )}
                       <Text
-                        ellipsis={{ tooltip: file.name }}
+                        ellipsis={{ tooltip: fileUploadUtils[selectedTech].getFilePathToDisplay(file.fileObject.path) }}
                         style={{ width: '200px' }}
                       >
-                        {getFilePathToDisplay(file.fileObject)}
-
+                        {fileUploadUtils[selectedTech].getFilePathToDisplay(file.fileObject.path)}
                       </Text>
                       <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.name); }} />
                     </Space>
                   </List.Item>
-
                 )}
               />
             </>
