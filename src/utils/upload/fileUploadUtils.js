@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { sampleTech } from 'utils/constants';
 import endUserMessages from 'utils/endUserMessages';
 import handleError from 'utils/http/handleError';
@@ -181,7 +183,91 @@ const fileUploadUtils = {
 
       return fileNameToType[fileName];
     },
-    filterFiles: filterFilesDefault(sampleTech.PARSE),
+    filterFiles: async (files) => {
+      const filteredFiles = files;
+
+      const filesNotInFolder = false;
+
+      // const notSampleNames = ['all-sample', 'all-well', 'All Wells'];
+
+      const sampleNameMatcher = '([^/]+)';
+      const filtered = 'DGE_filtered';
+      const unfiltered = 'DGE_unfiltered';
+
+      const parseUtils = fileUploadUtils[sampleTech.PARSE];
+
+      const unfilteredRegexes = Array.from(parseUtils.acceptedFiles).map((validFileName) => (
+        new RegExp(`${sampleNameMatcher}/${unfiltered}/${validFileName}$`)
+      ));
+
+      const filteredRegexes = Array.from(parseUtils.acceptedFiles).map((validFileName) => (
+        new RegExp(`${sampleNameMatcher}/${filtered}/${validFileName}$`)
+      ));
+
+      console.log('filteredRegexesDebug');
+      console.log(filteredRegexes);
+
+      const DGEFilteredFiles = {};
+      const DGEUnfilteredFiles = {};
+
+      filteredFiles.forEach((fileObject) => {
+        let sampleName;
+
+        const validUnfiltered = unfilteredRegexes.some((regex) => {
+          const result = regex.exec(fileObject.path);
+          sampleName = result?.[1];
+
+          return result;
+        });
+
+        if (validUnfiltered) {
+          DGEUnfilteredFiles[sampleName] = [...(DGEUnfilteredFiles[sampleName] ?? []), fileObject];
+        }
+
+        // if (fileObject.path.includes('all_genes.csv') && fileObject.path.includes('DGE_unfiltered')) {
+        //   console.log('DGEUnfilteredFilesBySample111Debug');
+        //   console.log(DGEUnfilteredFiles);
+        //   console.log('fileObjectDebug');
+        //   console.log(fileObject);
+        // }
+
+        const validFiltered = filteredRegexes.some((regex) => {
+          const result = regex.exec(fileObject.path);
+          sampleName = result?.[1];
+
+          return result;
+        });
+
+        if (validFiltered) {
+          DGEFilteredFiles[sampleName] = [...(DGEFilteredFiles[sampleName] ?? []), fileObject];
+        }
+      });
+
+      console.log('DGEFilteredFilesBySampleDebug');
+      console.log(DGEFilteredFiles);
+      console.log('DGEUnfilteredFilesBySampleDebug');
+      console.log(DGEUnfilteredFiles);
+
+      // // Remove all files that don't fit the current technology's valid names
+      // .filter((file) => fileUploadUtils[sampleTech.PARSE].isNameValid(file.name));
+
+      // filteredFiles = filteredFiles
+      //   // Remove all files that aren't in a folder
+      //   .filter((fileObject) => {
+      //     const inFolder = fileObject.path.includes('/');
+
+      //     filesNotInFolder ||= !inFolder;
+
+      //     return inFolder;
+      //   });
+      // if (filesNotInFolder) {
+      //   handleError('error', endUserMessages.ERROR_FILES_FOLDER);
+      // }
+
+      return await Promise.all(filteredFiles.map((file) => (
+        fileObjectToFileRecord(file, sampleTech.PARSE)
+      )));
+    },
   },
 };
 
