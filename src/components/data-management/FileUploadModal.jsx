@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 
 import config from 'config';
 import { sampleTech } from 'utils/constants';
-import techOptions, { techNamesToDisplay } from 'utils/upload/fileUploadSpecifications';
+import fileUploadSpecifications, { techNamesToDisplay } from 'utils/upload/fileUploadSpecifications';
 import handleError from 'utils/http/handleError';
 import { fileObjectToFileRecord, getFileSampleAndName } from 'utils/upload/processUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
@@ -78,7 +78,7 @@ const FileUploadModal = (props) => {
   // Handle on Drop
   const onDrop = async (acceptedFiles) => {
     // Remove all hidden files
-    let filteredFiles = acceptedFiles
+    const filteredFiles = acceptedFiles
       .filter((file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'));
 
     if (selectedTech === sampleTech.SEURAT) {
@@ -104,27 +104,7 @@ const FileUploadModal = (props) => {
 
       setFilesList([seuratFile]);
     } else {
-      let filesNotInFolder = false;
-
-      filteredFiles = filteredFiles
-        // Remove all files that aren't in a folder
-        .filter((fileObject) => {
-          const inFolder = fileObject.path.includes('/');
-
-          filesNotInFolder ||= !inFolder;
-
-          return inFolder;
-        })
-        // Remove all files that don't fit the current technology's valid names
-        .filter((file) => techOptions[selectedTech].isNameValid(file.name));
-
-      if (filesNotInFolder) {
-        handleError('error', endUserMessages.ERROR_FILES_FOLDER);
-      }
-
-      const newFiles = await Promise.all(filteredFiles.map((file) => (
-        fileObjectToFileRecord(file, selectedTech)
-      )));
+      const newFiles = await fileUploadSpecifications[selectedTech].filterFiles(filteredFiles);
 
       setFilesList([...filesList, ...newFiles]);
     }
@@ -138,7 +118,7 @@ const FileUploadModal = (props) => {
     setFilesList(newArray);
   };
 
-  const { fileUploadParagraphs, dropzoneText, webkitdirectory } = techOptions[selectedTech];
+  const { fileUploadParagraphs, dropzoneText, webkitdirectory } = fileUploadSpecifications[selectedTech];
 
   const renderHelpText = () => (
     <>
@@ -151,7 +131,7 @@ const FileUploadModal = (props) => {
           ))
         }
         <List
-          dataSource={techOptions[selectedTech].inputInfo}
+          dataSource={fileUploadSpecifications[selectedTech].inputInfo}
           size='small'
           itemLayout='vertical'
           bordered

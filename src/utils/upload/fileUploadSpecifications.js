@@ -1,5 +1,8 @@
 import { sampleTech } from 'utils/constants';
+import endUserMessages from 'utils/endUserMessages';
+import handleError from 'utils/http/handleError';
 import sampleFileType from 'utils/sampleFileType';
+import { fileObjectToFileRecord } from 'utils/upload/processUpload';
 
 const techNamesToDisplay = {
   [sampleTech['10X']]: '10X Chromium',
@@ -13,6 +16,32 @@ const matchFileName = (fileName, fileNames) => {
   const regexString = `.*(${Array.from(fileNames).join('|')})$`;
   const regexp = new RegExp(regexString, 'i');
   return regexp.test(fileName);
+};
+
+const filterFilesDefault = (selectedTech) => async (files) => {
+  let filteredFiles = files;
+
+  let filesNotInFolder = false;
+
+  filteredFiles = filteredFiles
+    // Remove all files that aren't in a folder
+    .filter((fileObject) => {
+      const inFolder = fileObject.path.includes('/');
+
+      filesNotInFolder ||= !inFolder;
+
+      return inFolder;
+    })
+    // Remove all files that don't fit the current technology's valid names
+    .filter((file) => fileUploadSpecifications[selectedTech].isNameValid(file.name));
+
+  if (filesNotInFolder) {
+    handleError('error', endUserMessages.ERROR_FILES_FOLDER);
+  }
+
+  return await Promise.all(filteredFiles.map((file) => (
+    fileObjectToFileRecord(file, selectedTech)
+  )));
 };
 
 /* eslint-disable max-len */
@@ -60,6 +89,7 @@ const fileUploadSpecifications = {
 
       return fileNameToType[name];
     },
+    filterFiles: filterFilesDefault(sampleTech['10X']),
   },
   [sampleTech.SEURAT]: {
     validExtensionTypes: ['.rds'],
@@ -86,6 +116,7 @@ const fileUploadSpecifications = {
       );
     },
     getCorrespondingType: () => 'seurat',
+    filterFiles: filterFilesDefault(sampleTech.SEURAT),
   },
   [sampleTech.RHAPSODY]: {
     acceptedFiles: new Set(['expression_data.st', 'expression_data.st.gz']),
@@ -102,6 +133,7 @@ const fileUploadSpecifications = {
     webkitdirectory: '',
     isNameValid: (fileName) => fileName.toLowerCase().match(/.*expression_data.st(.gz)?$/),
     getCorrespondingType: () => 'rhapsody',
+    filterFiles: filterFilesDefault(sampleTech.RHAPSODY),
   },
   [sampleTech.H5]: {
     acceptedFiles: new Set(['matrix.h5', 'matrix.h5.gz']),
@@ -112,6 +144,7 @@ const fileUploadSpecifications = {
     You can change this name later in Data Management.`],
     isNameValid: (fileName) => fileName.toLowerCase().match(/.*matrix.h5(.gz)?$/),
     getCorrespondingType: () => '10x_h5',
+    filterFiles: filterFilesDefault(sampleTech.H5),
   },
   [sampleTech.PARSE]: {
     acceptedFiles: new Set([
@@ -148,6 +181,7 @@ const fileUploadSpecifications = {
 
       return fileNameToType[fileName];
     },
+    filterFiles: filterFilesDefault(sampleTech.PARSE),
   },
 };
 
