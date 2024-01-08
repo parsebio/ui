@@ -192,8 +192,6 @@ const fileUploadUtils = {
 
       const filesNotInFolder = false;
 
-      // const notSampleNames = ['all-sample', 'all-well', 'All Wells'];
-
       const sampleNameMatcher = '([^/]+)';
       const filtered = 'DGE_filtered';
       const unfiltered = 'DGE_unfiltered';
@@ -268,8 +266,12 @@ const fileUploadUtils = {
       //   handleError('error', endUserMessages.ERROR_FILES_FOLDER);
       // }
 
+      const notSampleNames = ['all-sample', 'all-well', 'All Wells'];
+
       // There might be repetitions if they are present as both DGE_filtered and DGE_unfiltered, so skip in that case
-      const sampleNames = [...new Set([...Object.keys(DGEFilteredFiles), ...Object.keys(DGEUnfilteredFiles)])];
+      const sampleNames = [...new Set([...Object.keys(DGEFilteredFiles), ...Object.keys(DGEUnfilteredFiles)])]
+        // Remove names that indicate they are all samples together
+        .filter((sampleName) => !notSampleNames.includes(sampleName));
 
       const filesToUpload = sampleNames.flatMap((sampleName) => (
         DGEUnfilteredFiles[sampleName] ?? DGEFilteredFiles[sampleName]
