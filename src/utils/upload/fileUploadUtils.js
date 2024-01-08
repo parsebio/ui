@@ -206,8 +206,6 @@ const fileUploadUtils = {
     filterFiles: async (files) => {
       const filteredFiles = files;
 
-      const filesNotInFolder = false;
-
       const sampleNameMatcher = '([^/]+)';
       const filtered = 'DGE_filtered';
       const unfiltered = 'DGE_unfiltered';
@@ -239,13 +237,6 @@ const fileUploadUtils = {
           DGEUnfilteredFiles[sampleName] = [...(DGEUnfilteredFiles[sampleName] ?? []), fileObject];
         }
 
-        // if (fileObject.path.includes('all_genes.csv') && fileObject.path.includes('DGE_unfiltered')) {
-        //   console.log('DGEUnfilteredFilesBySample111Debug');
-        //   console.log(DGEUnfilteredFiles);
-        //   console.log('fileObjectDebug');
-        //   console.log(fileObject);
-        // }
-
         const validFiltered = filteredRegexes.some((regex) => {
           const result = regex.exec(fileObject.path);
           sampleName = result?.[1];
@@ -257,22 +248,6 @@ const fileUploadUtils = {
           DGEFilteredFiles[sampleName] = [...(DGEFilteredFiles[sampleName] ?? []), fileObject];
         }
       });
-
-      // // Remove all files that don't fit the current technology's valid names
-      // .filter((file) => fileUploadUtils[sampleTech.PARSE].isNameValid(file.name));
-
-      // filteredFiles = filteredFiles
-      //   // Remove all files that aren't in a folder
-      //   .filter((fileObject) => {
-      //     const inFolder = fileObject.path.includes('/');
-
-      //     filesNotInFolder ||= !inFolder;
-
-      //     return inFolder;
-      //   });
-      // if (filesNotInFolder) {
-      //   handleError('error', endUserMessages.ERROR_FILES_FOLDER);
-      // }
 
       const allSamplesNames = ['all-sample', 'all-well', 'All Wells'];
 
