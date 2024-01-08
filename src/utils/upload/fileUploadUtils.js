@@ -245,11 +245,6 @@ const fileUploadUtils = {
         }
       });
 
-      console.log('DGEFilteredFilesBySampleDebug');
-      console.log(DGEFilteredFiles);
-      console.log('DGEUnfilteredFilesBySampleDebug');
-      console.log(DGEUnfilteredFiles);
-
       // // Remove all files that don't fit the current technology's valid names
       // .filter((file) => fileUploadUtils[sampleTech.PARSE].isNameValid(file.name));
 
