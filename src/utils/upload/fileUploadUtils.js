@@ -204,61 +204,54 @@ const fileUploadUtils = {
       return fileNameToType[fileName];
     },
     filterFiles: async (files) => {
-      const filteredFiles = files;
-
       const sampleNameMatcher = '([^/]+)';
-      const filtered = 'DGE_filtered';
-      const unfiltered = 'DGE_unfiltered';
 
       const parseUtils = fileUploadUtils[sampleTech.PARSE];
 
-      const unfilteredRegexes = Array.from(parseUtils.acceptedFiles).map((validFileName) => (
-        new RegExp(`${sampleNameMatcher}/${unfiltered}/${validFileName}$`)
-      ));
+      // Gets a dirNameDGE and a list to filter over
+      // Returns the same list of files
+      //  The valid ones are in a dictionary ordered by their sample names
+      //  The invalid ones are in a list
+      const getFilesMatching = (dirNameDGE, filesToFilter) => {
+        const validFiles = {};
+        const invalidFiles = [];
 
-      const filteredRegexes = Array.from(parseUtils.acceptedFiles).map((validFileName) => (
-        new RegExp(`${sampleNameMatcher}/${filtered}/${validFileName}$`)
-      ));
+        const regexes = Array.from(parseUtils.acceptedFiles).map((validFileName) => (
+          new RegExp(`${sampleNameMatcher}/${dirNameDGE}/${validFileName}$`)
+        ));
 
-      const DGEFilteredFiles = {};
-      const DGEUnfilteredFiles = {};
+        filesToFilter.forEach((fileObject) => {
+          let sampleName;
 
-      filteredFiles.forEach((fileObject) => {
-        let sampleName;
+          // Check if any of the valid paths match
+          // If one does, extract the sampleName from it
+          const isValid = regexes.some((regex) => {
+            const result = regex.exec(fileObject.path);
+            sampleName = result?.[1];
 
-        const validUnfiltered = unfilteredRegexes.some((regex) => {
-          const result = regex.exec(fileObject.path);
-          sampleName = result?.[1];
+            return result;
+          });
 
-          return result;
+          if (isValid) {
+            validFiles[sampleName] = [...(validFiles[sampleName] ?? []), fileObject];
+          } else {
+            invalidFiles.push(fileObject);
+          }
         });
 
-        if (validUnfiltered) {
-          DGEUnfilteredFiles[sampleName] = [...(DGEUnfilteredFiles[sampleName] ?? []), fileObject];
-        }
+        return { valid: validFiles, invalid: invalidFiles };
+      };
 
-        const validFiltered = filteredRegexes.some((regex) => {
-          const result = regex.exec(fileObject.path);
-          sampleName = result?.[1];
+      const { valid: DGEUnfilteredFiles, invalid } = getFilesMatching('DGE_unfiltered', files);
+      const { valid: DGEFilteredFiles } = getFilesMatching('DGE_filtered', invalid);
 
-          return result;
-        });
-
-        if (validFiltered) {
-          DGEFilteredFiles[sampleName] = [...(DGEFilteredFiles[sampleName] ?? []), fileObject];
-        }
-      });
-
-      const allSamplesNames = ['all-sample', 'all-well', 'All Wells'];
-
-      // There might be repetitions if they are present as both DGE_filtered and DGE_unfiltered, so skip in that case
-      const sampleNames = [...new Set([...Object.keys(DGEFilteredFiles), ...Object.keys(DGEUnfilteredFiles)])]
-        // Only allow sample-specific files, not all samples in one
-        .filter((sampleName) => !allSamplesNames.includes(sampleName));
-
-      const filesToUpload = sampleNames.flatMap((sampleName) => (
-        DGEUnfilteredFiles[sampleName] ?? DGEFilteredFiles[sampleName]
-      ));
+      const filesToUpload = _.uniq([...Object.keys(DGEFilteredFiles), ...Object.keys(DGEUnfilteredFiles)])
+        // Only allow sample-specific files, not all samples in one files
+        .filter((sampleName) => !['all-sample', 'all-well', 'All Wells'].includes(sampleName))
+        // if unfiltered files are present, pick them. Otherwise, pick the filtered files
+        .flatMap((sampleName) => (
+          DGEUnfilteredFiles[sampleName] ?? DGEFilteredFiles[sampleName]
+        ));
 
       return await Promise.all(filesToUpload.map((file) => (
         fileObjectToFileRecord(file, sampleTech.PARSE)
