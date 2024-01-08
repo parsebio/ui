@@ -156,6 +156,8 @@ const fileUploadUtils = {
       'cell_metadata.csv.gz',
       'DGE.mtx',
       'DGE.mtx.gz',
+      'count_matrix.mtx',
+      'count_matrix.mtx.gz',
     ]),
     inputInfo: [
       ['<code>all_genes.csv</code> or <code>all_genes.csv.gz</code>'],
@@ -179,6 +181,8 @@ const fileUploadUtils = {
         'cell_metadata.csv': sampleFileType.BARCODES_PARSE,
         'DGE.mtx.gz': sampleFileType.MATRIX_PARSE,
         'DGE.mtx': sampleFileType.MATRIX_PARSE,
+        'count_matrix.mtx': sampleFileType.MATRIX_PARSE,
+        'count_matrix.mtx.gz': sampleFileType.MATRIX_PARSE,
       };
 
       return fileNameToType[fileName];
@@ -264,7 +268,14 @@ const fileUploadUtils = {
       //   handleError('error', endUserMessages.ERROR_FILES_FOLDER);
       // }
 
-      return await Promise.all(filteredFiles.map((file) => (
+      // There might be repetitions if they are present as both DGE_filtered and DGE_unfiltered, so skip in that case
+      const sampleNames = [...new Set([...Object.keys(DGEFilteredFiles), ...Object.keys(DGEUnfilteredFiles)])];
+
+      const filesToUpload = sampleNames.flatMap((sampleName) => (
+        DGEUnfilteredFiles[sampleName] ?? DGEFilteredFiles[sampleName]
+      ));
+
+      return await Promise.all(filesToUpload.map((file) => (
         fileObjectToFileRecord(file, sampleTech.PARSE)
       )));
     },
