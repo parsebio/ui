@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 
 import config from 'config';
 import { sampleTech } from 'utils/constants';
-import fileUploadSpecifications, { techNamesToDisplay } from 'utils/upload/fileUploadSpecifications';
+import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import handleError from 'utils/http/handleError';
 import { fileObjectToFileRecord, getFileSampleAndName } from 'utils/upload/processUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
@@ -104,7 +104,7 @@ const FileUploadModal = (props) => {
 
       setFilesList([seuratFile]);
     } else {
-      const newFiles = await fileUploadSpecifications[selectedTech].filterFiles(filteredFiles);
+      const newFiles = await fileUploadUtils[selectedTech].filterFiles(filteredFiles);
 
       setFilesList([...filesList, ...newFiles]);
     }
@@ -118,7 +118,7 @@ const FileUploadModal = (props) => {
     setFilesList(newArray);
   };
 
-  const { fileUploadParagraphs, dropzoneText, webkitdirectory } = fileUploadSpecifications[selectedTech];
+  const { fileUploadParagraphs, dropzoneText, webkitdirectory } = fileUploadUtils[selectedTech];
 
   const renderHelpText = () => (
     <>
@@ -131,7 +131,7 @@ const FileUploadModal = (props) => {
           ))
         }
         <List
-          dataSource={fileUploadSpecifications[selectedTech].inputInfo}
+          dataSource={fileUploadUtils[selectedTech].inputInfo}
           size='small'
           itemLayout='vertical'
           bordered

@@ -33,7 +33,7 @@ const filterFilesDefault = (selectedTech) => async (files) => {
       return inFolder;
     })
     // Remove all files that don't fit the current technology's valid names
-    .filter((file) => fileUploadSpecifications[selectedTech].isNameValid(file.name));
+    .filter((file) => fileUploadUtils[selectedTech].isNameValid(file.name));
 
   if (filesNotInFolder) {
     handleError('error', endUserMessages.ERROR_FILES_FOLDER);
@@ -45,7 +45,7 @@ const filterFilesDefault = (selectedTech) => async (files) => {
 };
 
 /* eslint-disable max-len */
-const fileUploadSpecifications = {
+const fileUploadUtils = {
   [sampleTech['10X']]: {
     acceptedFiles: new Set([
       'barcodes.tsv',
@@ -186,4 +186,4 @@ const fileUploadSpecifications = {
 };
 
 export { techNamesToDisplay };
-export default fileUploadSpecifications;
+export default fileUploadUtils;
