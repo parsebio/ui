@@ -20,7 +20,7 @@ const matchFileName = (fileName, fileNames) => {
   return regexp.test(fileName);
 };
 
-const filterFilesDefault = (selectedTech) => async (files) => {
+const filterFilesDefaultConstructor = (selectedTech) => async (files) => {
   let filteredFiles = files;
 
   let filesNotInFolder = false;
@@ -44,6 +44,12 @@ const filterFilesDefault = (selectedTech) => async (files) => {
   return await Promise.all(filteredFiles.map((file) => (
     fileObjectToFileRecord(file, selectedTech)
   )));
+};
+
+const getFileSampleAndNameDefault = (filePath) => {
+  const [sample, name] = _.takeRight(filePath.split('/'), 2);
+
+  return { sample, name };
 };
 
 /* eslint-disable max-len */
@@ -91,7 +97,8 @@ const fileUploadUtils = {
 
       return fileNameToType[name];
     },
-    filterFiles: filterFilesDefault(sampleTech['10X']),
+    filterFiles: filterFilesDefaultConstructor(sampleTech['10X']),
+    getFileSampleAndName: getFileSampleAndNameDefault,
   },
   [sampleTech.SEURAT]: {
     validExtensionTypes: ['.rds'],
@@ -118,7 +125,7 @@ const fileUploadUtils = {
       );
     },
     getCorrespondingType: () => 'seurat',
-    filterFiles: filterFilesDefault(sampleTech.SEURAT),
+    filterFiles: filterFilesDefaultConstructor(sampleTech.SEURAT),
   },
   [sampleTech.RHAPSODY]: {
     acceptedFiles: new Set(['expression_data.st', 'expression_data.st.gz']),
@@ -135,7 +142,8 @@ const fileUploadUtils = {
     webkitdirectory: '',
     isNameValid: (fileName) => fileName.toLowerCase().match(/.*expression_data.st(.gz)?$/),
     getCorrespondingType: () => 'rhapsody',
-    filterFiles: filterFilesDefault(sampleTech.RHAPSODY),
+    filterFiles: filterFilesDefaultConstructor(sampleTech.RHAPSODY),
+    getFileSampleAndName: getFileSampleAndNameDefault,
   },
   [sampleTech.H5]: {
     acceptedFiles: new Set(['matrix.h5', 'matrix.h5.gz']),
@@ -146,7 +154,8 @@ const fileUploadUtils = {
     You can change this name later in Data Management.`],
     isNameValid: (fileName) => fileName.toLowerCase().match(/.*matrix.h5(.gz)?$/),
     getCorrespondingType: () => '10x_h5',
-    filterFiles: filterFilesDefault(sampleTech.H5),
+    filterFiles: filterFilesDefaultConstructor(sampleTech.H5),
+    getFileSampleAndName: getFileSampleAndNameDefault,
   },
   [sampleTech.PARSE]: {
     acceptedFiles: new Set([
@@ -205,9 +214,6 @@ const fileUploadUtils = {
       const filteredRegexes = Array.from(parseUtils.acceptedFiles).map((validFileName) => (
         new RegExp(`${sampleNameMatcher}/${filtered}/${validFileName}$`)
       ));
-
-      console.log('filteredRegexesDebug');
-      console.log(filteredRegexes);
 
       const DGEFilteredFiles = {};
       const DGEUnfilteredFiles = {};
@@ -275,6 +281,11 @@ const fileUploadUtils = {
       return await Promise.all(filesToUpload.map((file) => (
         fileObjectToFileRecord(file, sampleTech.PARSE)
       )));
+    },
+    getFileSampleAndName: (filePath) => {
+      const [sample, , name] = _.takeRight(filePath.split('/'), 3);
+
+      return { sample, name };
     },
   },
 };

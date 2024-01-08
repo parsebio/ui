@@ -22,7 +22,7 @@ import config from 'config';
 import { sampleTech } from 'utils/constants';
 import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import handleError from 'utils/http/handleError';
-import { fileObjectToFileRecord, getFileSampleAndName } from 'utils/upload/processUpload';
+import { fileObjectToFileRecord } from 'utils/upload/processUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import endUserMessages from 'utils/endUserMessages';
 
@@ -150,7 +150,7 @@ const FileUploadModal = (props) => {
     </>
   );
 
-  const getFilePathToDisplay = (fileObject) => _.trim(Object.values(getFileSampleAndName(fileObject.path)).join('/'), '/');
+  const getFilePathToDisplay = (fileObject) => _.trim(Object.values(fileUploadUtils[selectedTech].getFileSampleAndName(fileObject.path)).join('/'), '/');
 
   return (
     <Modal

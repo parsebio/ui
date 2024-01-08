@@ -157,16 +157,10 @@ const getMetadata = (fileName, selectedTech) => {
   return metadata;
 };
 
-const getFileSampleAndName = (filePath) => {
-  const [sample, name] = _.takeRight(filePath.split('/'), 2);
-
-  return { sample, name };
-};
-
 const processUpload = async (filesList, technology, samples, experimentId, dispatch) => {
   // First use map to make it easy to add files in the already existing sample entry
   const samplesMap = filesList.reduce((acc, file) => {
-    const { sample: sampleName, name } = getFileSampleAndName(file.fileObject.path.replace(/[\s]{2,}/ig, ' '));
+    const { sample: sampleName, name } = fileUploadUtils[technology].getFileSampleAndName(file.fileObject.path.replace(/[\s]{2,}/ig, ' '));
 
     const fileType = fileUploadUtils[technology].getCorrespondingType(name);
 
@@ -272,7 +266,6 @@ export {
   fileObjectToFileRecord,
   createAndUploadSampleFile,
   prepareAndUploadFileToS3,
-  getFileSampleAndName,
 };
 
 export default processUpload;
