@@ -181,7 +181,7 @@ const fileUploadUtils = {
     inputInfo: [
       ['<code>all_genes.csv</code> or <code>all_genes.csv.gz</code>'],
       ['<code>cell_metadata.csv</code> or <code>cell_metadata.csv.gz</code>'],
-      ['<code>DGE.mtx</code> or <code>DGE.mtx.gz</code>'],
+      ['<code>count_matrix.mtx</code>, <code>count_matrix.mtx.gz</code>, <code>DGE.mtx</code> or <code>DGE.mtx.gz</code>'],
     ],
     requiredFiles: ['matrixParse', 'barcodesParse', 'featuresParse'],
     fileUploadParagraphs: [
