@@ -463,7 +463,7 @@ describe('FileUploadModal', () => {
     );
 
     // create an all genes file (features)
-    const file = mockFile('all_genes.csv.gz', '/WT13');
+    const file = mockFile('all_genes.csv.gz', '/WT13/DGE_unfiltered');
 
     //  drop it into drop-zone
     await act(async () => {
