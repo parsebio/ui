@@ -82,6 +82,8 @@ const FileUploadModal = (props) => {
       .filter((file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'));
 
     if (selectedTech === sampleTech.SEURAT) {
+      // TODO1 this needs to be further refactored before it is moved into
+      // fileUploadUtils as a filterFiles call, right now it's a bit unnecessarily complicated
       const newFiles = await Promise.all(filteredFiles.map((file) => (
         fileObjectToFileRecord(file, selectedTech)
       )));

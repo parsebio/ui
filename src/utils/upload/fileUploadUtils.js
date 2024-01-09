@@ -130,7 +130,10 @@ const fileUploadUtils = {
       );
     },
     getCorrespondingType: () => 'seurat',
-    filterFiles: filterFilesDefaultConstructor(sampleTech.SEURAT),
+    // For more information on this one check the TODO1 at FileUploadModal
+    filterFiles: () => { throw new Error('Not Implemented'); },
+    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(sampleTech.SEURAT),
+    getFileSampleAndName: getFileSampleAndNameDefault,
   },
   [sampleTech.RHAPSODY]: {
     acceptedFiles: new Set(['expression_data.st', 'expression_data.st.gz']),
