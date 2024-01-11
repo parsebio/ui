@@ -14,12 +14,9 @@ const Environment = {
 const DomainName = {
   BIOMAGE: 'scp.biomage.net',
   BIOMAGE_STAGING: 'scp-staging.biomage.net',
-  HMS: 'cellenics.hms.harvard.edu',
-  HMS_STAGING: 'staging.single-cell-platform.net',
 };
 
 const AccountId = {
-  HMS: '160782110667',
   BIOMAGE: '242905224710',
 };
 
@@ -31,7 +28,7 @@ const ssrGetDeploymentInfo = () => {
   }
 
   if (process.env.NODE_ENV === 'test') {
-    return { environment: Environment.DEVELOPMENT, domainName: DomainName.HMS };
+    return { environment: Environment.DEVELOPMENT, domainName: DomainName.BIOMAGE };
   }
 
   switch (process.env.K8S_ENV) {

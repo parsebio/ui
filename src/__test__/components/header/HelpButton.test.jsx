@@ -50,19 +50,4 @@ describe('HelpButton', () => {
     expect(forumLink).toHaveAttribute('href', 'https://community.biomage.net/');
     expect(forumLink).toHaveAttribute('target', '_blank');
   });
-
-  it('HMS - Renders correctly and pop up shows up when clicked', () => {
-    mockAccountId(AccountId.HMS);
-    renderHelpButton();
-
-    userEvent.click(screen.getByText(/Need help?/i));
-    expect(screen.getByRole('img', { name: 'down' })).toBeDefined();
-
-    expect(screen.getByText(/For 1-2-1 support with your analysis, contact/));
-
-    // Links contain the desired targets
-    const mailToLink = screen.getByText(config.supportEmail).closest('a');
-    expect(mailToLink).toHaveAttribute('href', `mailto: ${config.supportEmail}`);
-    expect(mailToLink).not.toHaveAttribute('target');
-  });
 });
