@@ -6,7 +6,7 @@ on:
   release:
     types:
       - released
-  pull_request_target:
+  pull_request:
     branches:
       - master
     types:
@@ -25,31 +25,10 @@ permissions:
   contents: read
 
 jobs:
-  is-safe-to-run:
-    name: Sensitive jobs are safe to be run
-    runs-on: ubuntu-20.04
-    if: (github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name, 'safe to run')) || github.event_name == 'release' || github.event_name == 'push'
-    steps:
-      - id: is-safe-to-run
-        name: Is safe to run
-        run: |-
-          echo "Safe to run, checks will proceed"
-  is-not-safe-to-run:
-    name: Sensitive jobs aren't labeled safe to be run
-    runs-on: ubuntu-20.04
-    if: (github.event_name == 'pull_request_target' && !contains(github.event.pull_request.labels.*.name, 'safe to run'))
-    steps:
-      - id: is-not-safe-to-run
-        name: The pull request hasn't been labeled safe to run
-        run: |-
-          echo "Pull request not labeled safe to run"
-          exit 1
-
   uncheck-integration-test:
     name: Mark integration test as not run
     runs-on: ubuntu-20.04
-    needs: is-safe-to-run
-    if: github.event_name == 'pull_request_target'
+    if: github.event_name == 'pull_request'
     steps:
       - id: get-pr-body
         name: Get the current PR body
@@ -204,10 +183,10 @@ jobs:
       - id: ref
         name: Format docker tag and repository name.
         run: |-
-          if [ "${{ github.event_name }}" = "pull_request_target" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
             # Construct the PR_GITHUB_REF for our pull request copying GITHUB_REF's format
             # We can't use GITHUB_REF because it is set to master in this event
-            # More info: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target
+            # More info: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
             PR_GITHUB_REF="refs/pull/${{ github.event.pull_request.number }}/merge"
             REF_ID=$(echo $PR_GITHUB_REF | sed 's/\//-/g')
           else
@@ -227,7 +206,7 @@ jobs:
           if [ "${{ github.event_name }}" = "release" ] && [ "${{ github.event.action }}" = "released" ]; then
             COMMIT_SHA=""
             IMAGE_TAG="${REF_ID/refs-tags-/}"
-          elif [ "${{ github.event_name }}" = "pull_request_target" ]; then
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
             COMMIT_SHA="${{ github.sha }}"
             IMAGE_TAG="$REF_ID-$COMMIT_SHA-$TIMESTAMP"
           else
@@ -433,14 +412,14 @@ jobs:
           user_name: Biomage CI/CD
 
       - name: Change name of deployment file for staging deployment
-        if: (github.event_name == 'pull_request_target' || github.event_name == 'push') && matrix.environment == 'staging'
+        if: (github.event_name == 'pull_request' || github.event_name == 'push') && matrix.environment == 'staging'
         env:
           DEPLOYMENT_NAME: ${{ steps.fill-metadata.outputs.deployment-name }}
           REF_ID: ${{ needs.build-docker.outputs.ref-id }}
         run: |-
           mv $DEPLOYMENT_NAME.yaml $REF_ID.yaml
       - name: Push staging deployment template to releases
-        if: (github.event_name == 'pull_request_target' || github.event_name == 'push') && matrix.environment == 'staging'
+        if: (github.event_name == 'pull_request' || github.event_name == 'push') && matrix.environment == 'staging'
         uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
