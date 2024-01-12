@@ -26,6 +26,7 @@ permissions:
 
 jobs:
   uncheck-integration-test:
+    permissions: write-all
     name: Mark integration test as not run
     runs-on: ubuntu-20.04
     if: github.event_name == 'pull_request'
@@ -102,7 +103,7 @@ jobs:
         uses: mattallty/jest-github-action@v1
         env:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           test-command: 'npm run coverage'
           coverage-comment: false
