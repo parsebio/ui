@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: bundle
-          path: .next/analyze/__bundle_analysis.json
+          path: .next/analyze/base/__bundle_analysis.json
       - name: Download base branch bundle stats
         uses: dawidd6/action-download-artifact@v2
         continue-on-error: true
@@ -103,7 +103,7 @@ jobs:
         id: get-comment-body
         if: success() && github.event.number
         run: |
-          body=$(cat .next/analyze/base/__bundle_analysis_comment.txt)
+          body=$(cat .next/analyze/base/ __bundle_analysis_comment.txt)
 
           # This sets multiline strings into the output variable
           # See https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#example-of-a-multiline-string
