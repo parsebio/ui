@@ -66,7 +66,6 @@ jobs:
         with:
           name: bundle
           path: .next/analyze/__bundle_analysis.json
-
       - name: Download base branch bundle stats
         permissions: read-all
         uses: dawidd6/action-download-artifact@v2
@@ -76,7 +75,13 @@ jobs:
           workflow: nextjs_bundle_analysis.yaml
           branch: ${{ github.event.pull_request.base.ref }}
           path: .next/analyze/base
-
+      - name: Check if base branch artifact exists
+        id: check-artifact
+        run: |
+          if [ -f .next/analyze/base/__bundle_analysis.json ]; then
+          echo "ARTIFACT_EXISTS=true" >> $GITHUB_ENV
+          else
+          echo "ARTIFACT_EXISTS=false" >> $GITHUB_ENV
       # And here's the second place - this runs after we have both the current and
       # base branch bundle stats, and will compare them to determine what changed.
       # There are two configurable arguments that come from package.json:
@@ -91,7 +96,7 @@ jobs:
       # Either of these arguments can be changed or removed by editing the `nextBundleAnalysis`
       # entry in your package.json file.
       - name: Compare with base branch bundle
-        if: success() && github.event.number
+        if: env.ARTIFACT_EXISTS == 'true' && success() && github.event.number
         run: ls -laR .next/analyze/base && npx -p nextjs-bundle-analysis compare
 
       - name: Get comment body
