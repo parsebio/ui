@@ -79,7 +79,7 @@ jobs:
         run: |
           if [ -f .next/analyze/base/__bundle_analysis.json ]; then
             echo "ARTIFACT_EXISTS=true" >> $GITHUB_ENV
-          fi
+          
           else
             echo "ARTIFACT_EXISTS=false" >> $GITHUB_ENV
           fi
