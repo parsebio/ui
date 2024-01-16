@@ -63,7 +63,7 @@ const FileUploadModal = (props) => {
 
   const guidanceFileLink = 'https://drive.google.com/file/d/1VPaB-yofuExinY2pXyGEEx-w39_OPubO/view';
 
-  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech.PARSE);
+  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech['10X']);
   const [canUpload, setCanUpload] = useState(false);
   const [filesList, setFilesList] = useState([]);
 
