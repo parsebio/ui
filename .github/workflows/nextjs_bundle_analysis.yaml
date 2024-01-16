@@ -67,7 +67,6 @@ jobs:
           name: bundle
           path: .next/analyze/__bundle_analysis.json
       - name: Download base branch bundle stats
-        permissions: read-all
         uses: dawidd6/action-download-artifact@v2
         continue-on-error: true
         if: success() && github.event.number
