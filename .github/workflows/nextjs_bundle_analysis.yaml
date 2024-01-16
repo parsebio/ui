@@ -78,9 +78,9 @@ jobs:
         id: check-artifact
         run: |
           if [ -f .next/analyze/base/__bundle_analysis.json ]; then
-          echo "ARTIFACT_EXISTS=true" >> $GITHUB_ENV
+            echo "ARTIFACT_EXISTS=true" >> $GITHUB_ENV
           else
-          echo "ARTIFACT_EXISTS=false" >> $GITHUB_ENV
+            echo "ARTIFACT_EXISTS=false" >> $GITHUB_ENV
       # And here's the second place - this runs after we have both the current and
       # base branch bundle stats, and will compare them to determine what changed.
       # There are two configurable arguments that come from package.json:
