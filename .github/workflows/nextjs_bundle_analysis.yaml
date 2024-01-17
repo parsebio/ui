@@ -103,7 +103,7 @@ jobs:
         id: get-comment-body
         if: success() && github.event.number
         run: |
-          body=$(cat .next/analyze/ __bundle_analysis_comment.txt)
+          body=$(cat .next/analyze/__bundle_analysis_comment.txt)
 
           # This sets multiline strings into the output variable
           # See https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#example-of-a-multiline-string
