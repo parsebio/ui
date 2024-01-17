@@ -1,5 +1,7 @@
 name: "Next.js Bundle Analysis"
-
+# if this workflow fails at the get comment body
+# that probably means its the first time its running in this repository
+# in that case you need first to manually run the github workflow in the master branch
 on:
   pull_request:
   push:
@@ -68,20 +70,11 @@ jobs:
           path: .next/analyze/__bundle_analysis.json
       - name: Download base branch bundle stats
         uses: dawidd6/action-download-artifact@v3
-        # continue-on-error: true
         if: success() && github.event.number
         with:
           workflow: nextjs_bundle_analysis.yaml
           branch: ${{ github.event.pull_request.base.ref }}
           path: .next/analyze/base
-      # - name: Check if base branch artifact exists
-      #   id: check-artifact
-      #   run: |
-      #     if [ -f .next/analyze/base/__bundle_analysis.json ]; then
-      #       echo "ARTIFACT_EXISTS=true" >> $GITHUB_ENV
-      #     else
-      #       echo "ARTIFACT_EXISTS=false" >> $GITHUB_ENV
-      #     fi
       # And here's the second place - this runs after we have both the current and
       # base branch bundle stats, and will compare them to determine what changed.
       # There are two configurable arguments that come from package.json:
