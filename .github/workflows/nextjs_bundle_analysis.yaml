@@ -65,23 +65,23 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: bundle
-          path: .next/analyze/base/__bundle_analysis.json
+          path: .next/analyze/__bundle_analysis.json
       - name: Download base branch bundle stats
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v3
         continue-on-error: true
         if: success() && github.event.number
         with:
           workflow: nextjs_bundle_analysis.yaml
           branch: ${{ github.event.pull_request.base.ref }}
           path: .next/analyze/base
-      - name: Check if base branch artifact exists
-        id: check-artifact
-        run: |
-          if [ -f .next/analyze/base/__bundle_analysis.json ]; then
-            echo "ARTIFACT_EXISTS=true" >> $GITHUB_ENV
-          else
-            echo "ARTIFACT_EXISTS=false" >> $GITHUB_ENV
-          fi
+      # - name: Check if base branch artifact exists
+      #   id: check-artifact
+      #   run: |
+      #     if [ -f .next/analyze/base/__bundle_analysis.json ]; then
+      #       echo "ARTIFACT_EXISTS=true" >> $GITHUB_ENV
+      #     else
+      #       echo "ARTIFACT_EXISTS=false" >> $GITHUB_ENV
+      #     fi
       # And here's the second place - this runs after we have both the current and
       # base branch bundle stats, and will compare them to determine what changed.
       # There are two configurable arguments that come from package.json:
@@ -96,14 +96,14 @@ jobs:
       # Either of these arguments can be changed or removed by editing the `nextBundleAnalysis`
       # entry in your package.json file.
       - name: Compare with base branch bundle
-        if: env.ARTIFACT_EXISTS == 'true' && success() && github.event.number
+        if: success() && github.event.number
         run: ls -laR .next/analyze/base && npx -p nextjs-bundle-analysis compare
 
       - name: Get comment body
         id: get-comment-body
         if: success() && github.event.number
         run: |
-          body=$(cat .next/analyze/base/ __bundle_analysis_comment.txt)
+          body=$(cat .next/analyze/ __bundle_analysis_comment.txt)
 
           # This sets multiline strings into the output variable
           # See https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#example-of-a-multiline-string
