@@ -25,7 +25,7 @@ const DataManagementPage = () => {
 
   const activeExperiment = experiments[activeExperimentId];
   const domainName = useSelector((state) => state.networkResources?.domainName);
-
+  console.log('HELLO IM HERE, STAGING WORKS');
   const [newProjectModalVisible, setNewProjectModalVisible] = useState(false);
 
   useEffect(() => {
