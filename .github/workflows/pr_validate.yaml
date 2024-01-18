@@ -86,6 +86,7 @@ jobs:
   run-integration-tests:
     name: Run integration tests
     runs-on: ubuntu-20.04
+    permissions: read-all
     needs: lint-pr-body
     concurrency:
       group: ${{ github.sha }}

@@ -13,6 +13,8 @@ metadata:
 spec:
   interval: 5m0s
   url: FILLED_IN_BY_CI
+  secretRef:
+    name: github-token
   ref:
     branch: FILLED_IN_BY_CI
 ---
