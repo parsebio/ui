@@ -11,7 +11,7 @@ const OverviewMenu = (props) => {
   };
 
   return (
-    <Card style={{ width: '45%' }}>
+    <Card style={{ width: '45%' }} title='The project title here'>
       {Object.keys(wizardSteps).map((key) => (
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1%', width: '100%',
