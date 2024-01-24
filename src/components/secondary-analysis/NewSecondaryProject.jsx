@@ -41,7 +41,12 @@ const NewSecondaryProject = (props) => {
           <Input style={{ width: '70%' }} placeholder='Ex.: Mouse lymph node dataset' />
         </Form.Item>
         <Form.Item
-          label='Parse Biosciences technology details:           '
+          label={(
+            <div>
+              <span style={{ color: 'red' }}>*</span>
+              Parse Biosciences technology details:
+            </div>
+          )}
           name='technologyDetails'
           // rules={[{ required: true, message: 'Please select a technology detail!' }]}
         >
@@ -51,7 +56,11 @@ const NewSecondaryProject = (props) => {
           </Select>
         </Form.Item>
 
-        <Title level={5}>Provide details of your experimental design</Title>
+        <Title level={5}>
+          {' '}
+          <span style={{ color: 'red' }}>*</span>
+          Provide details of your experimental design:
+        </Title>
         <Form.Item
           name='numberOfSamples'
           style={{ marginLeft: '20px' }}
