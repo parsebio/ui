@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   analyze:
-    permissions: read-all
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - id: checkout
