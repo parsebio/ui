@@ -14,6 +14,7 @@ import validateInput, { rules } from 'utils/validateInputs';
 
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
+import fetchAPI from 'utils/http/fetchAPI';
 
 const { TextArea } = Input;
 
@@ -72,6 +73,7 @@ const ReferralButton = () => {
     ] : [];
 
     const referralData = {
+      channel: 'referrals',
       blocks: [
         {
           type: 'section',
@@ -100,12 +102,13 @@ const ReferralButton = () => {
     };
 
     try {
-      const { getReferralWebhookUrl } = await import('utils/slack');
-      const r = await fetch(getReferralWebhookUrl(), {
+      const r = await fetchAPI('/v2/sendSlackMessage', {
         method: 'POST',
-        body: JSON.stringify(referralData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: referralData }),
       });
-
       if (!r.ok) {
         throw new Error('Invalid status code returned.');
       }
