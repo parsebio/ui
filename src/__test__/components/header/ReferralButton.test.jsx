@@ -3,13 +3,15 @@ import {
   render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import '@aws-amplify/auth';
+import fetchAPI from 'utils/http/fetchAPI';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
 import ReferralButton from 'components/header/ReferralButton';
 import '__test__/test-utils/setupTests';
+
+jest.mock('utils/http/fetchAPI');
 
 jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
@@ -21,13 +23,9 @@ jest.mock('@aws-amplify/auth', () => ({
   })),
 }));
 
-enableFetchMocks();
-
 describe('ReferralButton', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    fetchMock.resetMocks();
-    fetchMock.doMock();
   });
 
   it('renders a button correctly without any props', () => {
@@ -71,7 +69,7 @@ describe('ReferralButton', () => {
   });
 
   it('It sends a POST request containing the feedback', async () => {
-    fetchMock.mockResponseOnce(() => Promise.resolve(new Response('OK')));
+    fetchAPI.mockImplementation(() => Promise.resolve(new Response('OK')));
 
     render(<ReferralButton />);
 
@@ -96,9 +94,9 @@ describe('ReferralButton', () => {
 
     fireEvent.click(submitButton);
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(fetchAPI).toHaveBeenCalledTimes(1));
 
-    const feedbackBody = fetchMock.mock.calls[0][1].body;
+    const feedbackBody = fetchAPI.mock.calls[0][1].body;
     expect(feedbackBody).toMatch(emailText);
     expect(feedbackBody).toMatch(messageText);
 
@@ -110,7 +108,7 @@ describe('ReferralButton', () => {
   });
 
   it('It sends an error message on sending POST request fails', async () => {
-    fetchMock.mockRejectOnce(() => Promise.reject(new Error('Some error')));
+    fetchAPI.mockImplementation(() => Promise.reject(new Error('Some error')));
 
     render(<ReferralButton />);
 
@@ -135,7 +133,7 @@ describe('ReferralButton', () => {
 
     fireEvent.click(submitButton);
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(fetchAPI).toHaveBeenCalledTimes(1));
 
     await waitFor(() => expect(pushNotificationMessage).toHaveBeenCalledTimes(1));
     const pushNotificationMessageParams = pushNotificationMessage.mock.calls[0];

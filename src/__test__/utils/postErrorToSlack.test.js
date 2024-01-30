@@ -1,7 +1,7 @@
 import postErrorToSlack from 'utils/postErrorToSlack';
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
+import fetchAPI from 'utils/http/fetchAPI';
 
-enableFetchMocks();
+jest.mock('utils/http/fetchAPI');
 
 const mockError = { message: 'mockMessage', stack: 'Mock error stack' };
 const mockReduxDump = {
@@ -58,31 +58,23 @@ jest.mock('stacktrace-js', () => ({
 describe('PostErrorToSlack', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    fetchMock.resetMocks();
   });
 
   it('Posts requests correctly', async () => {
     await postErrorToSlack(mockError, mockReduxDump);
 
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock.mock.calls[0]).toMatchSnapshot();
+    expect(fetchAPI).toHaveBeenCalledTimes(1);
+    expect(fetchAPI.mock.calls[0]).toMatchSnapshot();
 
-    const { body: formData } = fetchMock.mock.calls[0][1];
-
-    // Check content of body
-    formData.forEach((value, key) => {
-      // Skip if key === token because it contains a token
-      if (key === 'token') return;
-
-      expect(value).toMatchSnapshot();
-    });
+    const { body: formData } = fetchAPI.mock.calls[0][1];
+    expect(formData).toMatchSnapshot();
   });
 
   it('Should not throw an error if POSTing fails', async () => {
-    fetchMock.mockIf(/.*/, () => Promise.resolve(new Response('Server error', { status: 500 })));
+    fetchAPI.mockImplementation(() => Promise.reject(new Error('Failed')));
 
     await postErrorToSlack(mockError, mockReduxDump);
 
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchAPI).toHaveBeenCalledTimes(1);
   });
 });
