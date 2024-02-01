@@ -102,16 +102,14 @@ const ReferralButton = () => {
     };
 
     try {
-      const r = await fetchAPI('/v2/sendSlackMessage', {
+      await fetchAPI('/v2/sendSlackMessage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ data: referralData }),
       });
-      if (!r.ok) {
-        throw new Error('Invalid status code returned.');
-      }
+
       setEmail('');
       setCustomMessage(initialMessage);
       pushNotificationMessage('success', endUserMessages.REFERRAL_SUCCESSFUL);

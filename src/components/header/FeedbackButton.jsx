@@ -89,16 +89,14 @@ const FeedbackButton = () => {
     };
 
     try {
-      const r = await fetchAPI('/v2/sendSlackMessage', {
+      await fetchAPI('/v2/sendSlackMessage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ data: feedbackData }),
       });
-      if (!r.ok) {
-        throw new Error('Invalid status code returned.');
-      }
+
       setFeedbackText('');
       pushNotificationMessage('success', endUserMessages.FEEDBACK_SUCCESSFUL);
     } catch (e) {
