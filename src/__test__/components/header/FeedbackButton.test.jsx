@@ -1,18 +1,20 @@
 import '@testing-library/jest-dom';
 import '__test__/test-utils/setupTests';
 
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import {
   fireEvent,
   render,
   screen,
   waitFor,
 } from '@testing-library/react';
+import fetchAPI from 'utils/http/fetchAPI';
 
 import React from 'react';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import FeedbackButton from 'components/header/FeedbackButton';
+
+jest.mock('utils/http/fetchAPI');
 
 jest.mock('', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => true),
@@ -29,13 +31,9 @@ jest.mock('@aws-amplify/auth', () => ({
   })),
 }));
 
-enableFetchMocks();
-
 describe('FeedbackButton', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    fetchMock.resetMocks();
-    fetchMock.doMock();
   });
 
   it('renders a button correctly without any props', () => {
@@ -58,7 +56,7 @@ describe('FeedbackButton', () => {
   });
 
   it('It sends a POST request containing the feedback', async () => {
-    fetchMock.mockResponseOnce(() => Promise.resolve(new Response('OK')));
+    fetchAPI.mockImplementation(() => Promise.resolve(new Response('OK')));
 
     render(<FeedbackButton />);
 
@@ -82,9 +80,9 @@ describe('FeedbackButton', () => {
 
     fireEvent.click(submitButton);
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(fetchAPI).toHaveBeenCalledTimes(1));
 
-    const feedbackBody = fetchMock.mock.calls[0][1].body;
+    const feedbackBody = fetchAPI.mock.calls[0][1].body;
     expect(feedbackBody).toMatch(feedbackText);
 
     await waitFor(() => expect(pushNotificationMessage).toHaveBeenCalledTimes(1));
@@ -98,7 +96,7 @@ describe('FeedbackButton', () => {
   });
 
   it('It sends an error message on sending POST request fails', async () => {
-    fetchMock.mockRejectOnce(() => Promise.reject(new Error('Some error')));
+    fetchAPI.mockImplementation(() => Promise.reject(new Error('Some error')));
 
     render(<FeedbackButton />);
 
@@ -116,7 +114,7 @@ describe('FeedbackButton', () => {
 
     fireEvent.click(submitButton);
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(fetchAPI).toHaveBeenCalledTimes(1));
 
     await waitFor(() => expect(pushNotificationMessage).toHaveBeenCalledTimes(1));
     const pushNotificationMessageParams = pushNotificationMessage.mock.calls[0];
