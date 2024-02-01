@@ -1,6 +1,6 @@
 import Auth from '@aws-amplify/auth';
 import StackTrace from 'stacktrace-js';
-import { getLoggerBotToken } from 'utils/slack';
+import fetchAPI from './http/fetchAPI';
 
 const extractExperimentId = (url) => {
   const match = url.match(/experiments\/([^/]+)/i);
@@ -76,10 +76,7 @@ const postError = async (errorLog, context) => {
   User: ${user.attributes.name} <${user.attributes.email}> ${user.username}
   Experiment ID: ${experimentId}`;
 
-  const formData = new FormData();
-
   const formFields = {
-    token: getLoggerBotToken(),
     title: `UI Error at ${new Date().toISOString()}`,
     initial_comment: message,
     channels: 'error-logs',
@@ -87,14 +84,13 @@ const postError = async (errorLog, context) => {
     content: errorLog,
   };
 
-  Object.entries(formFields).forEach(([fieldName, value]) => {
-    formData.append(fieldName, value);
-  });
-
   try {
-    const res = await fetch('https://slack.com/api/files.upload', {
+    const res = await fetchAPI('/v2/sendSlackMessage', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ data: formFields, type: 'file' }),
     });
 
     if (!res.ok) {
@@ -113,8 +109,8 @@ const postErrorToSlack = async (errorObject, reduxState) => {
   const timestamp = new Date().toISOString();
   const url = window.location.href;
   const experimentId = extractExperimentId(url);
-  const { networkResources: { environment } } = reduxState;
 
+  const environment = reduxState?.networkResources?.environment || process.env.NODE_ENV;
   const context = {
     user,
     timestamp,

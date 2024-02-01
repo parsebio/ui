@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import { CommentOutlined, DownOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-
+import fetchAPI from 'utils/http/fetchAPI';
 import Auth from '@aws-amplify/auth';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
@@ -21,7 +21,6 @@ const FeedbackButton = () => {
 
   const submitFeedback = async () => {
     setVisible(false);
-
     const pageContext = [
       {
         type: 'mrkdwn',
@@ -70,6 +69,7 @@ const FeedbackButton = () => {
     ] : [];
 
     const feedbackData = {
+      channel: 'feedback',
       blocks: [
         {
           type: 'section',
@@ -89,15 +89,14 @@ const FeedbackButton = () => {
     };
 
     try {
-      const { getFeedbackWebhookUrl } = await import('utils/slack');
-      const r = await fetch(getFeedbackWebhookUrl(), {
+      await fetchAPI('/v2/sendSlackMessage', {
         method: 'POST',
-        body: JSON.stringify(feedbackData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: feedbackData }),
       });
 
-      if (!r.ok) {
-        throw new Error('Invalid status code returned.');
-      }
       setFeedbackText('');
       pushNotificationMessage('success', endUserMessages.FEEDBACK_SUCCESSFUL);
     } catch (e) {
