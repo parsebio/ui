@@ -364,7 +364,8 @@ const CalculationConfig = (props) => {
                     method: value,
                   },
                 });
-                debouncedClustering(resolution);
+
+                dispatch(runCellSetsClustering(experimentId, resolution));
               }}
             >
               <Option value='louvain'>Louvain</Option>
