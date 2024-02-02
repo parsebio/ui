@@ -2,94 +2,15 @@
 
 exports[`PostErrorToSlack Posts requests correctly 1`] = `
 [
-  "https://slack.com/api/files.upload",
+  "/v2/sendSlackMessage",
   {
-    "body": FormData {},
+    "body": "{"data":{"title":"UI Error at 2020-01-01T00:00:00.000Z","initial_comment":"\\n  ⚠  [TEST] Uncaught UI Error - ExpID testae48e318dab9a1bd0bexperiment - 2020-01-01T00:00:00.000Z\\n  URL: http://localhost:3000/experiments/testae48e318dab9a1bd0bexperiment/data-exploration\\n\\n  User: John Doe <fake@email.com> 5152fake-eb52-474c-user-mocke8c8user\\n  Experiment ID: testae48e318dab9a1bd0bexperiment","channels":"error-logs","filename":"UI-error-testae48e318dab9a1bd0bexperiment-2020-01-01T00:00:00.000Z.log","content":"\\n    ===== ERROR STACK =====\\n    Message:\\n    mockMessage\\n    At:\\n    line1\\nline2\\n\\n    === DETAILS ===\\n    User: John Doe <fake@email.com> 5152fake-eb52-474c-user-mocke8c8user\\n    ExperimentID: testae48e318dab9a1bd0bexperiment\\n    URL: http://localhost:3000/experiments/testae48e318dab9a1bd0bexperiment/data-exploration\\n    Timestamp: 2020-01-01T00:00:00.000Z\\n\\n    ===== REDUX STATE =====\\n    {\\n  \\"cellInfo\\": {\\n    \\"focus\\": {\\n      \\"store\\": \\"cellSets\\",\\n      \\"key\\": \\"louvain\\"\\n    },\\n    \\"groupedTrack\\": \\"louvain\\",\\n    \\"selectedTracks\\": [\\n      \\"louvain\\"\\n    ]\\n  },\\n  \\"cellSets\\": {\\n    \\"properies\\": {\\n      \\"louvain-0\\": {\\n        \\"cellIds\\": {}\\n      }\\n    }\\n  },\\n  \\"cellMeta\\": {\\n    \\"mitochondrialContent\\": {\\n      \\"loading\\": true,\\n      \\"error\\": false,\\n      \\"data\\": [\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        \\"...\\"\\n      ]\\n    }\\n  },\\n  \\"networkResources\\": {\\n    \\"environment\\": \\"test\\"\\n  }\\n}"},"type":"file"}",
+    "headers": {
+      "Content-Type": "application/json",
+    },
     "method": "POST",
   },
 ]
 `;
 
-exports[`PostErrorToSlack Posts requests correctly 2`] = `"UI Error at 2020-01-01T00:00:00.000Z"`;
-
-exports[`PostErrorToSlack Posts requests correctly 3`] = `
-"
-  ⚠  [TEST] Uncaught UI Error - ExpID testae48e318dab9a1bd0bexperiment - 2020-01-01T00:00:00.000Z
-  URL: http://localhost:3000/experiments/testae48e318dab9a1bd0bexperiment/data-exploration
-
-  User: John Doe <fake@email.com> 5152fake-eb52-474c-user-mocke8c8user
-  Experiment ID: testae48e318dab9a1bd0bexperiment"
-`;
-
-exports[`PostErrorToSlack Posts requests correctly 4`] = `"error-logs"`;
-
-exports[`PostErrorToSlack Posts requests correctly 5`] = `"UI-error-testae48e318dab9a1bd0bexperiment-2020-01-01T00:00:00.000Z.log"`;
-
-exports[`PostErrorToSlack Posts requests correctly 6`] = `
-"
-    ===== ERROR STACK =====
-    Message:
-    mockMessage
-    At:
-    line1
-line2
-
-    === DETAILS ===
-    User: John Doe <fake@email.com> 5152fake-eb52-474c-user-mocke8c8user
-    ExperimentID: testae48e318dab9a1bd0bexperiment
-    URL: http://localhost:3000/experiments/testae48e318dab9a1bd0bexperiment/data-exploration
-    Timestamp: 2020-01-01T00:00:00.000Z
-
-    ===== REDUX STATE =====
-    {
-  "cellInfo": {
-    "focus": {
-      "store": "cellSets",
-      "key": "louvain"
-    },
-    "groupedTrack": "louvain",
-    "selectedTracks": [
-      "louvain"
-    ]
-  },
-  "cellSets": {
-    "properies": {
-      "louvain-0": {
-        "cellIds": {}
-      }
-    }
-  },
-  "cellMeta": {
-    "mitochondrialContent": {
-      "loading": true,
-      "error": false,
-      "data": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        "..."
-      ]
-    }
-  },
-  "networkResources": {
-    "environment": "test"
-  }
-}"
-`;
+exports[`PostErrorToSlack Posts requests correctly 2`] = `"{"data":{"title":"UI Error at 2020-01-01T00:00:00.000Z","initial_comment":"\\n  ⚠  [TEST] Uncaught UI Error - ExpID testae48e318dab9a1bd0bexperiment - 2020-01-01T00:00:00.000Z\\n  URL: http://localhost:3000/experiments/testae48e318dab9a1bd0bexperiment/data-exploration\\n\\n  User: John Doe <fake@email.com> 5152fake-eb52-474c-user-mocke8c8user\\n  Experiment ID: testae48e318dab9a1bd0bexperiment","channels":"error-logs","filename":"UI-error-testae48e318dab9a1bd0bexperiment-2020-01-01T00:00:00.000Z.log","content":"\\n    ===== ERROR STACK =====\\n    Message:\\n    mockMessage\\n    At:\\n    line1\\nline2\\n\\n    === DETAILS ===\\n    User: John Doe <fake@email.com> 5152fake-eb52-474c-user-mocke8c8user\\n    ExperimentID: testae48e318dab9a1bd0bexperiment\\n    URL: http://localhost:3000/experiments/testae48e318dab9a1bd0bexperiment/data-exploration\\n    Timestamp: 2020-01-01T00:00:00.000Z\\n\\n    ===== REDUX STATE =====\\n    {\\n  \\"cellInfo\\": {\\n    \\"focus\\": {\\n      \\"store\\": \\"cellSets\\",\\n      \\"key\\": \\"louvain\\"\\n    },\\n    \\"groupedTrack\\": \\"louvain\\",\\n    \\"selectedTracks\\": [\\n      \\"louvain\\"\\n    ]\\n  },\\n  \\"cellSets\\": {\\n    \\"properies\\": {\\n      \\"louvain-0\\": {\\n        \\"cellIds\\": {}\\n      }\\n    }\\n  },\\n  \\"cellMeta\\": {\\n    \\"mitochondrialContent\\": {\\n      \\"loading\\": true,\\n      \\"error\\": false,\\n      \\"data\\": [\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        0,\\n        \\"...\\"\\n      ]\\n    }\\n  },\\n  \\"networkResources\\": {\\n    \\"environment\\": \\"test\\"\\n  }\\n}"},"type":"file"}"`;
