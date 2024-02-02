@@ -364,7 +364,6 @@ const CalculationConfig = (props) => {
                     method: value,
                   },
                 });
-
                 dispatch(runCellSetsClustering(experimentId, resolution));
               }}
             >
