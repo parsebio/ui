@@ -25,6 +25,7 @@ import DataProcessingIntercept from 'components/data-processing/DataProcessingIn
  */
 
 const PATH_STUBS = {
+  [modules.SECONDARY_ANALYSIS]: '/secondary-analysis',
   [modules.DATA_MANAGEMENT]: '/data-management',
   [modules.REPOSITORY]: '/repository',
   [modules.DATA_PROCESSING]: '/data-processing',
@@ -35,6 +36,7 @@ const PATH_STUBS = {
 };
 
 const PATHS = {
+  [modules.SECONDARY_ANALYSIS]: `${PATH_STUBS[modules.SECONDARY_ANALYSIS]}`,
   [modules.DATA_MANAGEMENT]: `${PATH_STUBS[modules.DATA_MANAGEMENT]}`,
   [modules.REPOSITORY]: `${PATH_STUBS[modules.REPOSITORY]}`,
   [modules.DATA_PROCESSING]: `/experiments/[experimentId]${PATH_STUBS[modules.DATA_PROCESSING]}`,

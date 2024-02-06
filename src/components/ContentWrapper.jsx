@@ -10,6 +10,7 @@ import {
   DatabaseOutlined,
   FolderOpenOutlined,
   FundViewOutlined,
+  CodeSandboxOutlined,
 } from '@ant-design/icons';
 import {
   Layout,
@@ -315,6 +316,14 @@ const ContentWrapper = (props) => {
   );
 
   const menuLinks = [
+    {
+      module: modules.SECONDARY_ANALYSIS,
+      icon: <CodeSandboxOutlined />,
+      name: 'Secondary Analysis',
+      disableIfNoExperiment: false,
+      disabledByPipelineStatus: true,
+      disabledIfSeuratComplete: false,
+    },
     {
       module: modules.DATA_MANAGEMENT,
       icon: <FolderOpenOutlined />,
