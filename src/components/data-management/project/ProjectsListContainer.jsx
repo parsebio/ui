@@ -14,7 +14,7 @@ import ProjectsList from './ProjectsList';
 import ProjectSearchBox from './ProjectSearchBox';
 
 const ProjectsListContainer = (props) => {
-  const { height, onCreateNewProject } = props;
+  const { height, onCreateNewProject, projectType } = props;
 
   const { navigateTo } = useAppRouter();
   const [filterParam, setFilterParam] = useState(new RegExp('.*', 'i'));
@@ -30,7 +30,7 @@ const ProjectsListContainer = (props) => {
       key: 'copy_from_repository',
       onClick: () => { navigateTo(modules.REPOSITORY); },
     },
-  ]
+  ];
 
   return (
     <Space direction='vertical' style={{ width: '100%' }}>
@@ -44,11 +44,14 @@ const ProjectsListContainer = (props) => {
           type='primary'
           block
         >
-          Create New Project
+          Create New
+          {' '}
+          {projectType === 'secondary' ? 'Run' : 'Project'}
         </Button>
       </Dropdown>
       <ProjectSearchBox onChange={(searchRegex) => setFilterParam(searchRegex)} />
-      <ProjectsList height={height} filter={filterParam} />
+      {projectType !== 'secondary' ? <ProjectsList height={height} filter={filterParam} />
+        : <></>}
     </Space>
   );
 };

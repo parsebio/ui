@@ -46,6 +46,7 @@ const SecondaryAnalysis = () => {
       component: (width, height) => (
         <ProjectsListContainer
           height={height}
+          projectType='secondary'
           onCreateNewProject={() => setCurrentStep('createProject')}
         />
       ),
