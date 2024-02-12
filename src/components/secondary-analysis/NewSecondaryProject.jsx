@@ -9,8 +9,8 @@ const { Option } = Select;
 
 const NewSecondaryProject = (props) => {
   const [form] = Form.useForm();
-  const [selectedKit, setSelectedKit] = useState('wt_mini'); // Default selected kit
-  const [maxSublibraries, setMaxSublibraries] = useState(2);
+  const [selectedKit, setSelectedKit] = useState();
+  const [maxSublibraries, setMaxSublibraries] = useState();
 
   const [numberOfSublibraries, setNumberOfSublibraries] = useState();
   const [numberOfSamples, setNumberOfSamples] = useState();
@@ -77,7 +77,12 @@ const NewSecondaryProject = (props) => {
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div>Select the number of samples:</div>
-            <Select style={{ marginLeft: '10px', width: '20%' }} onChange={setNumberOfSamples} value={numberOfSamples}>
+            <Select
+              style={{ marginLeft: '10px', width: '20%' }}
+              onChange={setNumberOfSamples}
+              value={numberOfSamples}
+              disabled={!selectedKit}
+            >
               {generateOptions(maxSublibraries * 6)}
             </Select>
           </div>
@@ -99,7 +104,12 @@ const NewSecondaryProject = (props) => {
               </a>
               :
             </div>
-            <Select style={{ marginLeft: '10px', width: '20%' }} onChange={setNumberOfSublibraries} value={numberOfSublibraries}>
+            <Select
+              style={{ marginLeft: '10px', width: '20%' }}
+              onChange={setNumberOfSublibraries}
+              value={numberOfSublibraries}
+              disabled={!selectedKit}
+            >
               {generateOptions(maxSublibraries)}
             </Select>
           </div>
