@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Select, Form, Input, Typography,
+  Select, Form, Input, Typography, Space,
 } from 'antd';
 import propTypes from 'prop-types';
 
@@ -14,6 +14,7 @@ const NewSecondaryProject = (props) => {
 
   const [numberOfSublibraries, setNumberOfSublibraries] = useState();
   const [numberOfSamples, setNumberOfSamples] = useState();
+  const [chemistryVersion, setChemistryVersion] = useState();
 
   const generateOptions = (end) => Array.from({ length: end }, (_, i) => i + 1).map((value) => (
     <Option key={value} value={`option${value}`}>{`${value}`}</Option>
@@ -49,7 +50,7 @@ const NewSecondaryProject = (props) => {
         onFinish={(values) => console.log(values)}
       >
         <Form.Item
-          label='Project name:'
+          label='Run name (you can change this later):'
           name='projectName'
         >
           <Input style={{ width: '70%' }} placeholder='Ex.: Mouse lymph node dataset' />
@@ -58,16 +59,29 @@ const NewSecondaryProject = (props) => {
           label='Parse Biosciences technology details:'
           name='technologyDetails'
         >
-          <Select
-            placeholder='Select the kit you used in your experiment'
-            style={{ width: '70%' }}
-            value={selectedKit}
-            onChange={(value) => changeKit(value)} // Update selected kit on change
-          >
-            <Option value='wt_mini'>Evercode WT Mini</Option>
-            <Option value='wt'>Evercode WT</Option>
-            <Option value='wt_mega'>Evercode WT Mega</Option>
-          </Select>
+          <Space direction='vertical'>
+
+            <Select
+              placeholder='Select the kit you used in your experiment'
+              style={{ width: '100%' }}
+              value={selectedKit}
+              onChange={(value) => changeKit(value)} // Update selected kit on change
+            >
+              <Option value='wt_mini'>Evercode WT Mini</Option>
+              <Option value='wt'>Evercode WT</Option>
+              <Option value='wt_mega'>Evercode WT Mega</Option>
+            </Select>
+            <Select
+              placeholder='Select the chemistry version'
+              style={{ width: '100%' }}
+              onChange={(value) => setChemistryVersion(value)}
+              value={chemistryVersion}
+            >
+              <Option value='1'>v1</Option>
+              <Option value='2'>v2</Option>
+              <Option value='3'>v3</Option>
+            </Select>
+          </Space>
         </Form.Item>
 
         <Title level={5}>Provide details of your experimental design:</Title>

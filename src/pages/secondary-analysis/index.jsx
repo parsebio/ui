@@ -83,7 +83,7 @@ const SecondaryAnalysis = () => {
         open={currentStep}
         title={currentStep?.title}
         onOk={onNext}
-        bodyStyle={{ height: '35vh' }}
+        bodyStyle={{ height: '38vh' }}
         onCancel={onCancel}
         footer={[
           <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
