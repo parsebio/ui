@@ -9,29 +9,18 @@ const { Option } = Select;
 const NewSecondaryProject = (props) => {
   const [form] = Form.useForm();
 
-  // const handleOk = () => {
-  //   form
-  //     .validateFields()
-  //     .then((values) => {
-  //       console.log('Received values of form: ', values);
-  //     })
-  //     .catch((info) => {
-  //       console.log('Validate Failed:', info);
-  //     });
-  // };
   return (
     <>
       <Form
         form={form}
         layout='vertical'
         size='middle'
-        style={{ width: '100%', margin: '0 auto' }}
+        style={{ width: '100%', margin: '0 auto', height: '50%' }}
         onFinish={(values) => console.log(values)}
       >
         <Form.Item
           label={(
             <div>
-              <span style={{ color: 'red' }}>*</span>
               Project name:
             </div>
           )}
@@ -43,7 +32,6 @@ const NewSecondaryProject = (props) => {
         <Form.Item
           label={(
             <div>
-              <span style={{ color: 'red' }}>*</span>
               Parse Biosciences technology details:
             </div>
           )}
@@ -58,7 +46,6 @@ const NewSecondaryProject = (props) => {
 
         <Title level={5}>
           {' '}
-          <span style={{ color: 'red' }}>*</span>
           Provide details of your experimental design:
         </Title>
         <Form.Item
@@ -104,8 +91,4 @@ const NewSecondaryProject = (props) => {
   );
 };
 
-NewSecondaryProject.propTypes = {
-  onCancel: propTypes.func.isRequired,
-  onNext: propTypes.func.isRequired,
-};
 export default NewSecondaryProject;

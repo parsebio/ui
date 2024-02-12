@@ -49,16 +49,21 @@ const ProjectsListContainer = (props) => {
           {projectType === 'secondary' ? 'Run' : 'Project'}
         </Button>
       </Dropdown>
-      <ProjectSearchBox onChange={(searchRegex) => setFilterParam(searchRegex)} />
+      <ProjectSearchBox projectType={projectType} onChange={(searchRegex) => setFilterParam(searchRegex)} />
       {projectType !== 'secondary' ? <ProjectsList height={height} filter={filterParam} />
         : <></>}
     </Space>
   );
 };
 
+ProjectsListContainer.defaultProps = {
+  projectType: null,
+};
+
 ProjectsListContainer.propTypes = {
   height: PropTypes.number.isRequired,
   onCreateNewProject: PropTypes.func.isRequired,
+  projectType: PropTypes.string,
 };
 
 export default ProjectsListContainer;

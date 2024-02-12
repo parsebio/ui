@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Modal,
-} from 'antd';
+import { Modal, Button } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import NewSecondaryProject from 'components/secondary-analysis/NewSecondaryProject';
@@ -12,32 +10,44 @@ import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
 
 const SecondaryAnalysis = () => {
-  const [currentStep, setCurrentStep] = useState('createProject');
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
-  const onNext = () => setCurrentStep(secondaryAnalaysisWizardSteps[currentStep].nextStep);
-  const onCancel = () => setCurrentStep(null);
-  const secondaryAnalaysisWizardSteps = {
-    createProject: {
-      render: () => <NewSecondaryProject onNext={onNext} onCancel={onCancel} />,
-      title: 'Experiment details',
-      nextStep: 'uploadSampleLT',
+  const secondaryAnalysisWizardSteps = [
+    {
+      key: 'Run details',
+      render: () => <NewSecondaryProject />,
+      title: 'Create a new Run and provide the Run details:',
     },
-    uploadSampleLT: {
-      render: () => <SampleLTUpload onNext={onNext} onCancel={onCancel} />,
-      title: 'Sample loading table',
-      nextStep: 'selectReferenceGenome',
+    {
+      key: 'Sample loading table',
+      render: () => <SampleLTUpload />,
+      title: 'Upload your sample loading table:',
     },
-    selectReferenceGenome: {
-      render: () => <SelectReferenceGenome onNext={onNext} onCancel={onCancel} />,
+    {
+      key: 'Reference genome',
+      render: () => <SelectReferenceGenome />,
       title: 'Reference genome',
-      nextStep: 'fastQUpload',
     },
-    fastQUpload: {
-      render: () => <UploadFastQ onNext={onNext} onCancel={onCancel} />,
-      title: 'Fastq files',
-      nextStep: null,
+    {
+      key: 'Fastq files',
+      render: () => <UploadFastQ />,
+      title: 'Upload your Fastq files:',
     },
+  ];
+
+  const onNext = () => {
+    setCurrentStepIndex(currentStepIndex + 1);
   };
+
+  const onBack = () => {
+    if (currentStepIndex > 0) {
+      setCurrentStepIndex(currentStepIndex - 1);
+    }
+  };
+
+  const onCancel = () => setCurrentStepIndex(-1); // Use -1 to indicate no step is active
+
+  const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
   const PROJECTS_LIST = 'Runs';
   const PROJECT_DETAILS = 'Run Details';
   const TILE_MAP = {
@@ -47,14 +57,14 @@ const SecondaryAnalysis = () => {
         <ProjectsListContainer
           height={height}
           projectType='secondary'
-          onCreateNewProject={() => setCurrentStep('createProject')}
+          onCreateNewProject={() => setCurrentStepIndex(0)}
         />
       ),
     },
     [PROJECT_DETAILS]: {
       toolbarControls: [],
       component: (width, height) => (
-        <OverviewMenu wizardSteps={secondaryAnalaysisWizardSteps} setCurrentStep={setCurrentStep} />
+        <OverviewMenu wizardSteps={secondaryAnalysisWizardSteps} setCurrentStep={setCurrentStepIndex} />
       ),
     },
   };
@@ -71,13 +81,21 @@ const SecondaryAnalysis = () => {
 
       <Modal
         open={currentStep}
-        title={secondaryAnalaysisWizardSteps[currentStep]?.title}
+        title={currentStep?.title}
         onOk={onNext}
+        bodyStyle={{ height: '35vh' }}
         onCancel={onCancel}
-        okText={currentStep === 'createProject' ? 'Create' : 'Next'}
-        cancelButtonProps={{ style: { display: 'none' } }}
+        footer={[
+          <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
+            Back
+          </Button>,
+          <Button key='submit' type='primary' onClick={onNext}>
+            {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
+          </Button>,
+        ]}
       >
-        {secondaryAnalaysisWizardSteps[currentStep]?.render()}
+
+        {currentStep?.render()}
       </Modal>
       <MultiTileContainer
         tileMap={TILE_MAP}

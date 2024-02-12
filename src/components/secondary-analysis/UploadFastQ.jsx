@@ -21,7 +21,6 @@ const UploadFastQ = (props) => {
         <Form.Item
           label={(
             <div>
-              <span style={{ color: 'red' }}>*</span>
               Upload your Fastq files:
             </div>
           )}
@@ -36,7 +35,7 @@ const UploadFastQ = (props) => {
                 id='dropzone'
               >
                 <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} webkitdirectory='' />
-                <Empty description='drag and drop folders here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                <Empty description='Drag and drop folders here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </div>
             )}
           </Dropzone>
