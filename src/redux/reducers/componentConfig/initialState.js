@@ -129,7 +129,7 @@ const volcanoInitialConfig = {
   spec: '1.0.0',
   legend: {
     ...legendBaseState,
-    position: 'bottom-right',
+    position: 'top-right',
   },
   dimensions: dimensionsBaseState,
   marker: {
@@ -157,7 +157,7 @@ const volcanoInitialConfig = {
   yAxisAuto: true,
   logFoldChangeDomain: 1,
   maxNegativeLogpValueDomain: 50,
-  negLogpValueThreshold: 4,
+  adjPvalueThreshold: 0.05,
   logFoldChangeThreshold: 1,
   logFoldChangeTickCount: 5,
   negativeLogpValueTickCount: 5,
@@ -648,8 +648,8 @@ const classifierKneePlot = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: 'Droplet Rank',
-    yAxisText: 'Droplet #UMIs',
+    xAxisText: 'Barcode Rank',
+    yAxisText: 'Barcode #UMIs',
   },
   axesRanges: {
     ...axesRangesBaseState,

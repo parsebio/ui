@@ -175,7 +175,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
     {
       key: 'classifier',
       name: getUserFriendlyQCStepName('classifier'),
-      description: 'The Classifier filter is based on the ‘emptyDrops’ method which distinguishes between droplets containing cells and ambient RNA. Droplets are filtered based on the False Discovery Rate (FDR) value - the red line on the density plot. In the knee plot, the ‘mixed’ population shown in grey contains some cells that are filtered out and some that remain and can be filtered further in the next filter.',
+      description: 'The Classifier filter is based on the ‘emptyDrops’ method which distinguishes between real cells and background (ambient RNA). Barcodes are filtered based on the False Discovery Rate (FDR) value - the red line on the density plot. In the knee plot, the ‘mixed’ population shown in grey contains some cells that are filtered out and some that remain and can be filtered further in the next filter.',
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
@@ -200,7 +200,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
     {
       key: 'cellSizeDistribution',
       name: getUserFriendlyQCStepName('cellSizeDistribution'),
-      description: 'The number of unique molecular identifiers (#UMIs) per cell distinguishes real cells (high #UMIs per cell) from empty droplets (low #UMIs per cell). This filter is used to detect empty droplets and fine-tunes the Classifier filter. In some datasets this filter might be used instead of the Classifier filter.',
+      description: 'The number of unique molecular identifiers (#UMIs) per cell distinguishes real cells (high #UMIs per cell) from background (low #UMIs per cell). This filter is used to detect background and fine-tunes the Classifier filter. In some datasets this filter might be used instead of the Classifier filter.',
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
@@ -275,7 +275,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       name: getUserFriendlyQCStepName('doubletScores'),
       description: (
         <span>
-          Droplets may contain more than one cell.
+          A single barcode might correspond to more than one cell.
           In such cases, it is not possible to distinguish which reads came from which cell.
           Such “cells” cause problems in the downstream analysis as they appear as an intermediate type.
           “Cells” with a high probability of being a doublet should be excluded.
@@ -329,7 +329,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         <ConfigureEmbedding
           experimentId={expId}
           key={key}
-          onConfigChange={() => onConfigChange(key)}
+          onConfigChange={(settingType) => onConfigChange(settingType)}
           stepHadErrors={getStepHadErrors(key)}
         />
       ),
@@ -695,6 +695,10 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
                   Your navigation within Cellenics will be restricted during this time.
                   Do you want to start?
                 </p>
+                <Alert
+                  message='Note that you will lose all of your annotated cell sets.'
+                  type='warning'
+                />
               </Modal>
             )
         )}
