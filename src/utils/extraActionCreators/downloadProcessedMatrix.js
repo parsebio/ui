@@ -15,8 +15,10 @@ const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => 
     const {
       method: embeddingMethod,
       // embedding is saved in R object if downloading from project created by Seurat object upload
-      useSaved: isSeurat,
+      useSaved,
     } = getState().experimentSettings.processing.configureEmbedding.embeddingSettings;
+
+    const isSeurat = typeof useSaved !== 'undefined' ? !!useSaved : false;
 
     await dispatch(loadEmbedding(experimentId, embeddingMethod, true));
 
@@ -29,6 +31,9 @@ const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => 
       embeddingMethod,
       isSeurat,
     };
+
+    // Print the request body to the console
+    console.log('DEBUG - Request body:', body);
 
     const timeout = getTimeoutForWorkerTask(getState(), taskName);
 
