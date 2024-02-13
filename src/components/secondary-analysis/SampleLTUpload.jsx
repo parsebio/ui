@@ -6,7 +6,7 @@ import {
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
 
-const SampleLTUpload = (props) => {
+const SampleLTUpload = () => {
   const [form] = Form.useForm();
 
   return (
@@ -21,7 +21,6 @@ const SampleLTUpload = (props) => {
         <Form.Item
           label={(
             <div>
-              <span style={{ color: 'red' }}>*</span>
               Upload your sample loading table Excel file:
             </div>
           )}

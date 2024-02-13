@@ -10,39 +10,36 @@ const UploadFastQ = (props) => {
   const [form] = Form.useForm();
 
   return (
-    <>
-      <Form
-        form={form}
-        layout='vertical'
-        size='middle'
-        style={{ width: '100%', margin: '0 auto' }}
-        onFinish={(values) => console.log(values)}
+    <Form
+      form={form}
+      layout='vertical'
+      size='middle'
+      style={{ width: '100%', margin: '0 auto' }}
+      onFinish={(values) => console.log(values)}
+    >
+      <Form.Item
+        label={(
+          <div>
+            Upload your Fastq files:
+          </div>
+        )}
+        name='projectName'
       >
-        <Form.Item
-          label={(
-            <div>
-              <span style={{ color: 'red' }}>*</span>
-              Upload your Fastq files:
+        <Dropzone onDrop={(e) => console.log('DROPPED FILES ', e)} multiple>
+          {({ getRootProps, getInputProps }) => (
+            <div
+              // data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
+              style={{ border: '1px solid #ccc', padding: '2rem 0' }}
+              {...getRootProps({ className: 'dropzone' })}
+              id='dropzone'
+            >
+              <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} webkitdirectory='' />
+              <Empty description='Drag and drop folders here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
             </div>
           )}
-          name='projectName'
-        >
-          <Dropzone onDrop={(e) => console.log('DROPPED FILES ', e)} multiple>
-            {({ getRootProps, getInputProps }) => (
-              <div
-                // data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
-                style={{ border: '1px solid #ccc', padding: '2rem 0' }}
-                {...getRootProps({ className: 'dropzone' })}
-                id='dropzone'
-              >
-                <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} webkitdirectory='' />
-                <Empty description='drag and drop folders here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
-              </div>
-            )}
-          </Dropzone>
-        </Form.Item>
-      </Form>
-    </>
+        </Dropzone>
+      </Form.Item>
+    </Form>
   );
 };
 

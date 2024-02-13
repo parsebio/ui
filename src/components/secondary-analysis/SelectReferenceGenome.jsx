@@ -5,7 +5,7 @@ import {
 } from 'antd';
 
 const { Option } = Select;
-const SelectReferenceGenome = (props) => {
+const SelectReferenceGenome = () => {
   const [form] = Form.useForm();
 
   return (
@@ -20,7 +20,6 @@ const SelectReferenceGenome = (props) => {
         <Form.Item
           label={(
             <div>
-              <span style={{ color: 'red' }}>*</span>
               Select the reference genome:
             </div>
           )}
