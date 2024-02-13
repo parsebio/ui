@@ -59,28 +59,28 @@ const NewSecondaryProject = (props) => {
           label='Parse Biosciences technology details:'
           name='technologyDetails'
         >
-          <Space direction='vertical'>
-
+          <Space direction='vertical' style={{ width: '70%' }}>
             <Select
               placeholder='Select the kit you used in your experiment'
-              style={{ width: '100%' }}
               value={selectedKit}
-              onChange={(value) => changeKit(value)} // Update selected kit on change
-            >
-              <Option value='wt_mini'>Evercode WT Mini</Option>
-              <Option value='wt'>Evercode WT</Option>
-              <Option value='wt_mega'>Evercode WT Mega</Option>
-            </Select>
+              onChange={(value) => changeKit(value)}
+              options={[
+                { label: 'Evercode WT Mini', value: 'wt_mini' },
+                { label: 'Evercode WT', value: 'wt' },
+                { label: 'Evercode WT Mega', value: 'wt_mega' },
+              ]}
+            />
+
             <Select
               placeholder='Select the chemistry version'
-              style={{ width: '100%' }}
               onChange={(value) => setChemistryVersion(value)}
               value={chemistryVersion}
-            >
-              <Option value='1'>v1</Option>
-              <Option value='2'>v2</Option>
-              <Option value='3'>v3</Option>
-            </Select>
+              options={[
+                { label: 'v1', value: '1' },
+                { label: 'v2', value: '2' },
+                { label: 'v3', value: '3' },
+              ]}
+            />
           </Space>
         </Form.Item>
 
