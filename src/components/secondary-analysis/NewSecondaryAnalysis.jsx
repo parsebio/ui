@@ -11,30 +11,26 @@ import {
   Typography,
 } from 'antd';
 
-import { createExperiment } from 'redux/actions/experiments';
-
 import validateInputs, { rules } from 'utils/validateInputs';
 import integrationTestConstants from 'utils/integrationTestConstants';
+import createSecondaryAnalysis from 'redux/actions/secondaryAnalyses/createSecondaryAnalysis';
 
-const { Text, Title, Paragraph } = Typography;
-const { TextArea } = Input;
+const { Text, Title } = Typography;
 
-const NewProjectModal = (props) => {
+const NewSecondaryAnalysis = (props) => {
   const {
     onCreate,
     onCancel,
   } = props;
 
-  const experiments = useSelector(((state) => state.experiments));
-  const { saving, error } = experiments.meta;
+  const secondaryAnalyses = useSelector(((state) => state.secondaryAnalyses));
+  const { saving, error } = secondaryAnalyses.meta;
 
   const dispatch = useDispatch();
   const [projectNames, setProjectNames] = useState(new Set());
   const [projectName, setProjectName] = useState('');
-  const [projectDescription, setProjectDescription] = useState('');
   const [isValidName, setIsValidName] = useState(false);
 
-  const firstTimeFlow = experiments.ids.length === 0;
   const validationChecks = [
     rules.MIN_8_CHARS,
     rules.MIN_2_SEQUENTIAL_CHARS,
@@ -47,8 +43,8 @@ const NewProjectModal = (props) => {
   };
 
   useEffect(() => {
-    setProjectNames(new Set(experiments.ids.map((id) => experiments[id].name.trim())));
-  }, [experiments.ids]);
+    setProjectNames(new Set(secondaryAnalyses.ids.map((id) => secondaryAnalyses[id].name.trim())));
+  }, [secondaryAnalyses.ids]);
 
   useEffect(() => {
     setIsValidName(validateInputs(projectName, validationChecks, validationParams).isValid);
@@ -57,14 +53,14 @@ const NewProjectModal = (props) => {
   const submit = () => {
     setProjectName('');
 
-    dispatch(createExperiment(projectName, projectDescription));
-    onCreate(projectName, projectDescription);
+    dispatch(createSecondaryAnalysis(projectName));
+    onCreate(projectName);
   };
 
   return (
     <Modal
       className={integrationTestConstants.classes.NEW_PROJECT_MODAL}
-      title='Create a new project'
+      title='Create a new run'
       open
       footer={(
         <Button
@@ -77,26 +73,13 @@ const NewProjectModal = (props) => {
             submit();
           }}
         >
-          Create Project
+          Create Run
         </Button>
       )}
       onCancel={onCancel}
     >
       <Space>
-        <Space direction='vertical' style={firstTimeFlow ? { marginTop: '2rem' } : {}}>
-          {firstTimeFlow && (
-            <Title level={3} style={{ textAlign: 'center' }}>
-              Create a project to start analyzing
-              your data in Cellenics
-            </Title>
-          )}
-          <Paragraph>
-            Projects are where you can organize your data into
-            samples, assign metadata, and start your analysis
-            in Cellenics. Name it after the experiment
-            you&apos;re working on.
-          </Paragraph>
-
+        <Space direction='vertical'>
           <Form layout='vertical'>
             <Form.Item
               validateStatus={isValidName ? 'success' : 'error'}
@@ -113,7 +96,7 @@ const NewProjectModal = (props) => {
               )}
               label={(
                 <span>
-                  Project name
+                  Run name
                   {' '}
                   <Text type='secondary'>(You can change this later)</Text>
                 </span>
@@ -137,18 +120,6 @@ const NewProjectModal = (props) => {
                 disabled={saving}
               />
             </Form.Item>
-            <Form.Item
-              label='Project description'
-            >
-              <TextArea
-                data-test-id={integrationTestConstants.ids.PROJECT_DESCRIPTION}
-                onChange={(e) => { setProjectDescription(e.target.value); }}
-                placeholder='Type description'
-                autoSize={{ minRows: 3, maxRows: 5 }}
-                disabled={saving}
-                aria-label='new project description'
-              />
-            </Form.Item>
           </Form>
 
           {
@@ -159,7 +130,7 @@ const NewProjectModal = (props) => {
                     size={50}
                     color='#8f0b10'
                   />
-                  <Text>Creating project...</Text>
+                  <Text>Creating run...</Text>
                 </Space>
               </center>
             )
@@ -180,9 +151,9 @@ const NewProjectModal = (props) => {
   );
 };
 
-NewProjectModal.propTypes = {
+NewSecondaryAnalysis.propTypes = {
   onCreate: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
 
-export default NewProjectModal;
+export default NewSecondaryAnalysis;

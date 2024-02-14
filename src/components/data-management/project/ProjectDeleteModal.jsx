@@ -11,11 +11,10 @@ const { Text, Paragraph } = Typography;
 
 const ProjectDeleteModal = (props) => {
   const {
-    experimentId, onCancel, onDelete,
+    projectName, onCancel, onDelete,
   } = props;
 
   const dispatch = useDispatch();
-  const experimentName = useSelector((state) => state.experiments[experimentId].name);
 
   const [inputExperimentName, setInputExperimentName] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -42,7 +41,6 @@ const ProjectDeleteModal = (props) => {
             key='create'
             disabled={!isValid}
             onClick={() => {
-              dispatch(deleteExperiment(experimentId));
               onDelete();
             }}
           >
@@ -65,7 +63,7 @@ const ProjectDeleteModal = (props) => {
             {' '}
             This will delete the project
             {' '}
-            <Text strong>{experimentName}</Text>
+            <Text strong>{projectName}</Text>
             {', '}
             all of its data sets, metadata,
             analyses, and all other information
@@ -87,10 +85,10 @@ const ProjectDeleteModal = (props) => {
               <Input
                 data-test-id={integrationTestConstants.classes.DELETE_PROJECT_MODAL_INPUT}
                 onChange={(e) => {
-                  setIsValid(experimentName === e.target.value);
+                  setIsValid(projectName === e.target.value);
                   setInputExperimentName(e.target.value);
                 }}
-                placeholder={experimentName}
+                placeholder={projectName}
                 value={inputExperimentName}
               />
             </Form.Item>
@@ -104,7 +102,7 @@ const ProjectDeleteModal = (props) => {
 };
 
 ProjectDeleteModal.propTypes = {
-  experimentId: PropTypes.string.isRequired,
+  projectName: PropTypes.string.isRequired,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
 };

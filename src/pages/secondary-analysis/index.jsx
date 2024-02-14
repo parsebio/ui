@@ -1,39 +1,29 @@
-import React, { useState } from 'react';
-import { Modal, Button } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Form } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
-import NewSecondaryProject from 'components/secondary-analysis/NewSecondaryProject';
+import SecondaryAnalysisDetails from 'components/secondary-analysis/SecondaryAnalysisDetails';
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
+import { useSelector, useDispatch } from 'react-redux';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
 import UploadFastQ from 'components/secondary-analysis/UploadFastQ';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
+import NewSecondaryAnalysis from 'components/secondary-analysis/NewSecondaryAnalysis';
+import loadSecondaryAnalyses from 'redux/actions/secondaryAnalyses/loadSecondaryAnalyses';
 
 const SecondaryAnalysis = () => {
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const dispatch = useDispatch();
+  const [currentStepIndex, setCurrentStepIndex] = useState(null);
+  const [newProjectDetails, setNewProjectDetails] = useState({});
+  const [NewSecondaryAnalysisModalVisible, setNewSecondaryAnalysisModalVisible] = useState(false);
+  const user = useSelector((state) => state.user.current);
 
-  const secondaryAnalysisWizardSteps = [
-    {
-      key: 'Run details',
-      render: () => <NewSecondaryProject />,
-      title: 'Create a new Run and provide the Run details:',
-    },
-    {
-      key: 'Sample loading table',
-      render: () => <SampleLTUpload />,
-      title: 'Upload your sample loading table:',
-    },
-    {
-      key: 'Reference genome',
-      render: () => <SelectReferenceGenome />,
-      title: 'Reference genome',
-    },
-    {
-      key: 'Fastq files',
-      render: () => <UploadFastQ />,
-      title: 'Upload your Fastq files:',
-    },
-  ];
+  const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
+
+  useEffect(() => {
+    if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
+  }, [user]);
 
   const onNext = () => {
     setCurrentStepIndex(currentStepIndex + 1);
@@ -44,8 +34,42 @@ const SecondaryAnalysis = () => {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
-
-  const onCancel = () => setCurrentStepIndex(-1); // Use -1 to indicate no step is active
+  const handleCreateNewProject = () => {
+    // make it patch to the created analysis
+    // const {
+    //   name, kit, chemistryVersion, numOfSamples, numOfSublibraries,
+    // } = newProjectDetails;
+    // console.log('PROJECT DETAILS ', newProjectDetails);
+    // dispatch(createSecondaryAnalysis(name, kit, chemistryVersion, numOfSamples, numOfSublibraries));
+    onNext();
+  };
+  const secondaryAnalysisWizardSteps = [
+    {
+      title: 'Create a new Run and provide the Run details:',
+      key: 'Run details',
+      render: () => <SecondaryAnalysisDetails newProjectDetails={newProjectDetails} setNewProjectDetails={setNewProjectDetails} />,
+      onNext: handleCreateNewProject,
+    },
+    {
+      title: 'Upload your sample loading table:',
+      key: 'Sample loading table',
+      render: () => <SampleLTUpload />,
+      onNext,
+    },
+    {
+      title: 'Reference genome',
+      key: 'Reference genome',
+      render: () => <SelectReferenceGenome />,
+      onNext,
+    },
+    {
+      title: 'Upload your Fastq files:',
+      key: 'Fastq files',
+      render: () => <UploadFastQ />,
+      onNext,
+    },
+  ];
+  const onCancel = () => setCurrentStepIndex(null);
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
   const PROJECTS_LIST = 'Runs';
@@ -56,8 +80,8 @@ const SecondaryAnalysis = () => {
       component: (width, height) => (
         <ProjectsListContainer
           height={height}
-          projectType='secondary'
-          onCreateNewProject={() => setCurrentStepIndex(0)}
+          projectType='secondaryAnalyses'
+          onCreateNewProject={() => setNewSecondaryAnalysisModalVisible(true)}
         />
       ),
     },
@@ -78,18 +102,25 @@ const SecondaryAnalysis = () => {
   return (
     <>
       <Header title='Secondary Analysis' />
+      {NewSecondaryAnalysisModalVisible ? (
+        <NewSecondaryAnalysis
+          onCancel={() => { setNewSecondaryAnalysisModalVisible(false); }}
+          onCreate={() => { setNewSecondaryAnalysisModalVisible(false); setCurrentStepIndex(0); }}
+        />
+      ) : (<></>)}
 
       <Modal
         open={currentStep}
         title={currentStep?.title}
-        onOk={onNext}
+        // onOk={currentStep.onNext}
+        okButtonProps={{ htmlType: 'submit' }}
         bodyStyle={{ height: '38vh' }}
         onCancel={onCancel}
         footer={[
           <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
             Back
           </Button>,
-          <Button key='submit' type='primary' onClick={onNext}>
+          <Button key='submit' type='primary' onClick={currentStep?.onNext}>
             {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
           </Button>,
         ]}

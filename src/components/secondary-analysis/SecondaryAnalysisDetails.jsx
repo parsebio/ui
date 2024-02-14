@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
 import {
-  Select, Form, Input, Typography, Space,
+  Select, Form, Typography, Space,
 } from 'antd';
 import propTypes from 'prop-types';
 
 const { Title } = Typography;
 const { Option } = Select;
 
-const NewSecondaryProject = (props) => {
+const SecondaryAnalysisDetails = (props) => {
+  const { newProjectDetails, setNewProjectDetails } = props;
   const [form] = Form.useForm();
-  const [selectedKit, setSelectedKit] = useState();
   const [maxSublibraries, setMaxSublibraries] = useState();
 
-  const [numberOfSublibraries, setNumberOfSublibraries] = useState();
-  const [numberOfSamples, setNumberOfSamples] = useState();
-  const [chemistryVersion, setChemistryVersion] = useState();
-
   const generateOptions = (end) => Array.from({ length: end }, (_, i) => i + 1).map((value) => (
-    <Option key={value} value={`option${value}`}>{`${value}`}</Option>
+    <Option key={value} value={`${value}`}>{value}</Option>
   ));
+
   const changeKit = (kit) => {
     let newMaxSublibraries;
     switch (kit) {
@@ -32,12 +29,24 @@ const NewSecondaryProject = (props) => {
         newMaxSublibraries = 16;
         break;
       default:
-        console.log('INVALID OPTION SELECTED ');
+        console.log('INVALID OPTION SELECTED');
     }
     setMaxSublibraries(newMaxSublibraries);
-    setNumberOfSamples(newMaxSublibraries * 6);
-    setNumberOfSublibraries(newMaxSublibraries);
-    setSelectedKit(kit);
+    // changing the kit, changes the default selected number of sublibraries and samples
+    setNewProjectDetails({
+      ...newProjectDetails,
+      numOfSamples: newMaxSublibraries * 6,
+      numOfSublibraries: newMaxSublibraries,
+      kit,
+    });
+  };
+
+  // Update handlers for setting values directly in newProjectDetails
+  const handleValueChange = (key, value) => {
+    setNewProjectDetails({
+      ...newProjectDetails,
+      [key]: value,
+    });
   };
 
   return (
@@ -49,12 +58,17 @@ const NewSecondaryProject = (props) => {
         style={{ width: '100%', margin: '0 auto', height: '50%' }}
         onFinish={(values) => console.log(values)}
       >
-        <Form.Item
+        {/* <Form.Item
           label='Run name (you can change this later):'
           name='projectName'
         >
-          <Input style={{ width: '70%' }} placeholder='Ex.: Mouse lymph node dataset' />
-        </Form.Item>
+          <Input
+            style={{ width: '70%' }}
+            value={newProjectDetails.name}
+            onChange={(e) => handleValueChange('name', e.target.value)}
+            placeholder='Ex.: Mouse lymph node dataset'
+          />
+        </Form.Item> */}
         <Form.Item
           label='Parse Biosciences technology details:'
           name='technologyDetails'
@@ -62,7 +76,7 @@ const NewSecondaryProject = (props) => {
           <Space direction='vertical' style={{ width: '70%' }}>
             <Select
               placeholder='Select the kit you used in your experiment'
-              value={selectedKit}
+              value={newProjectDetails.kit}
               onChange={(value) => changeKit(value)}
               options={[
                 { label: 'Evercode WT Mini', value: 'wt_mini' },
@@ -73,8 +87,8 @@ const NewSecondaryProject = (props) => {
 
             <Select
               placeholder='Select the chemistry version'
-              onChange={(value) => setChemistryVersion(value)}
-              value={chemistryVersion}
+              onChange={(value) => handleValueChange('chemistryVersion', value)}
+              value={newProjectDetails.chemistryVersion}
               options={[
                 { label: 'v1', value: '1' },
                 { label: 'v2', value: '2' },
@@ -86,23 +100,23 @@ const NewSecondaryProject = (props) => {
 
         <Title level={5}>Provide details of your experimental design:</Title>
         <Form.Item
-          name='numberOfSamples'
+          name='numOfSamples'
           style={{ marginLeft: '20px' }}
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div>Select the number of samples:</div>
             <Select
               style={{ marginLeft: '10px', width: '20%' }}
-              onChange={setNumberOfSamples}
-              value={numberOfSamples}
-              disabled={!selectedKit}
+              onChange={(value) => handleValueChange('numOfSamples', parseInt(value, 10))}
+              value={newProjectDetails.numOfSamples}
+              disabled={!newProjectDetails.kit}
             >
               {generateOptions(maxSublibraries * 6)}
             </Select>
           </div>
         </Form.Item>
         <Form.Item
-          name='numberOfSublibraries'
+          name='numOfSublibraries'
           style={{ marginLeft: '20px' }}
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -120,9 +134,9 @@ const NewSecondaryProject = (props) => {
             </div>
             <Select
               style={{ marginLeft: '10px', width: '20%' }}
-              onChange={setNumberOfSublibraries}
-              value={numberOfSublibraries}
-              disabled={!selectedKit}
+              onChange={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
+              value={newProjectDetails.numOfSublibraries}
+              disabled={!newProjectDetails.kit}
             >
               {generateOptions(maxSublibraries)}
             </Select>
@@ -133,4 +147,9 @@ const NewSecondaryProject = (props) => {
   );
 };
 
-export default NewSecondaryProject;
+SecondaryAnalysisDetails.propTypes = {
+  newProjectDetails: propTypes.object.isRequired,
+  setNewProjectDetails: propTypes.func.isRequired,
+};
+
+export default SecondaryAnalysisDetails;

@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import '@testing-library/jest-dom';
 import initialState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
 import ProjectsList from 'components/data-management/project/ProjectsList';
-import ProjectCard from 'components/data-management/project/ProjectCard';
+import ExperimentCard from 'components/data-management/project/ExperimentCard';
 import '__test__/test-utils/setupTests';
 
 const mockStore = configureMockStore([thunk]);
@@ -103,7 +103,7 @@ describe('ProjectsList', () => {
     );
 
     // expect the number of experiments to be the same as the one in the list
-    expect(component.find(ProjectCard).length).toEqual(experiments.length);
+    expect(component.find(ExperimentCard).length).toEqual(experiments.length);
   });
 
   it('contains components if there are experiments', () => {
@@ -116,7 +116,7 @@ describe('ProjectsList', () => {
     );
 
     // expect the number of experiments to be the same as the one in the list
-    expect(component.find(ProjectCard).length).toEqual(experiments.length);
+    expect(component.find(ExperimentCard).length).toEqual(experiments.length);
   });
 
   it('Shows all experiments if not given a filter', () => {
@@ -129,7 +129,7 @@ describe('ProjectsList', () => {
     );
 
     // Expect all experiments to be shown
-    expect(component.find(ProjectCard).length).toEqual(experiments.length);
+    expect(component.find(ExperimentCard).length).toEqual(experiments.length);
   });
 
   it('Filters the correct experiment given a filter', () => {
@@ -180,7 +180,7 @@ describe('ProjectsList', () => {
         </Provider>,
       );
 
-      const experiments = component.find(ProjectCard);
+      const experiments = component.find(ExperimentCard);
 
       expect(experiments.length).toEqual(testCase.matchingExperiments.length);
 
@@ -198,7 +198,7 @@ describe('ProjectsList', () => {
     );
 
     // Expect there to be no experiment
-    expect(component.find(ProjectCard).length).toEqual(0);
+    expect(component.find(ExperimentCard).length).toEqual(0);
   });
 
   it('Filter should not break if there is no experiment and the filter is input', () => {
@@ -209,7 +209,7 @@ describe('ProjectsList', () => {
     );
 
     // Expect there to be no experiment
-    expect(component.find(ProjectCard).length).toEqual(0);
+    expect(component.find(ExperimentCard).length).toEqual(0);
   });
 
   it('Filter should work when searching using experimentId', () => {
@@ -222,7 +222,7 @@ describe('ProjectsList', () => {
       </Provider>,
     );
 
-    const filteredExperiments = component.find(ProjectCard);
+    const filteredExperiments = component.find(ExperimentCard);
 
     expect(filteredExperiments.length).toEqual(1);
     expect(filteredExperiments.text()).toMatch(experiment3.name);
@@ -237,7 +237,7 @@ describe('ProjectsList', () => {
       </Provider>,
     );
 
-    const filteredExperiments = component.find(ProjectCard);
+    const filteredExperiments = component.find(ExperimentCard);
 
     expect(filteredExperiments.length).toEqual(1);
     expect(filteredExperiments.text()).toMatch(experiment3.name);

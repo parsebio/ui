@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { modules } from 'utils/constants';
+import { useSelector } from 'react-redux';
 import ProjectsList from './ProjectsList';
 import ProjectSearchBox from './ProjectSearchBox';
 
@@ -32,7 +33,7 @@ const ProjectsListContainer = (props) => {
   ];
 
   // Conditionally render button based on projectType
-  const createButton = projectType === 'secondary' ? (
+  const createButton = projectType === 'secondaryAnalyses' ? (
     <Button
       data-test-id={integrationTestConstants.ids.CREATE_NEW_PROJECT_BUTTON}
       type='primary'
@@ -61,7 +62,7 @@ const ProjectsListContainer = (props) => {
     <Space direction='vertical' style={{ width: '100%' }}>
       {createButton}
       <ProjectSearchBox projectType={projectType} onChange={(searchRegex) => setFilterParam(searchRegex)} />
-      {projectType !== 'secondary' && <ProjectsList height={height} filter={filterParam} />}
+      <ProjectsList height={height} filter={filterParam} projectType={projectType} />
     </Space>
   );
 };

@@ -10,9 +10,11 @@ const OverviewMenu = (props) => {
   return (
     <Card style={{ width: '45%' }} title='The project title here'>
       {wizardSteps.map((step, indx) => (
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1%', width: '100%',
-        }}
+        <div
+          key={step.key}
+          style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1%', width: '100%',
+          }}
         >
           <Title level={5} style={{ marginRight: '10px', marginBottom: 0, lineHeight: 'normal' }}>
             {step.key}
@@ -37,4 +39,5 @@ OverviewMenu.propTypes = {
   wizardSteps: PropTypes.array.isRequired,
   setCurrentStep: PropTypes.func.isRequired,
 };
+
 export default OverviewMenu;

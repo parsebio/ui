@@ -4,7 +4,7 @@ import { loadExperiments } from 'redux/actions/experiments';
 
 import Header from 'components/Header';
 import MultiTileContainer from 'components/MultiTileContainer';
-import NewProjectModal from 'components/data-management/NewProjectModal';
+import NewExperimentModal from 'components/data-management/NewExperimentModal';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import ProjectDetails from 'components/data-management/project/ProjectDetails';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
@@ -26,7 +26,7 @@ const DataManagementPage = () => {
   const activeExperiment = experiments[activeExperimentId];
   const domainName = useSelector((state) => state.networkResources?.domainName);
 
-  const [newProjectModalVisible, setNewProjectModalVisible] = useState(false);
+  const [NewExperimentModalVisible, setNewExperimentModalVisible] = useState(false);
 
   useEffect(() => {
     if (privacyPolicyIsNotAccepted(user, domainName)) return;
@@ -67,7 +67,8 @@ const DataManagementPage = () => {
       component: (width, height) => (
         <ProjectsListContainer
           height={height}
-          onCreateNewProject={() => setNewProjectModalVisible(true)}
+          projectType='experiments'
+          onCreateNewProject={() => setNewExperimentModalVisible(true)}
         />
       ),
     },
@@ -106,10 +107,10 @@ const DataManagementPage = () => {
   return (
     <>
       <Header title='Data Management' />
-      {newProjectModalVisible ? (
-        <NewProjectModal
-          onCancel={() => { setNewProjectModalVisible(false); }}
-          onCreate={() => { setNewProjectModalVisible(false); }}
+      {NewExperimentModalVisible ? (
+        <NewExperimentModal
+          onCancel={() => { setNewExperimentModalVisible(false); }}
+          onCreate={() => { setNewExperimentModalVisible(false); }}
         />
       ) : (<></>)}
       <MultiTileContainer

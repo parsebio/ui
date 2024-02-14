@@ -6,7 +6,7 @@ import {
 import { blue } from '@ant-design/colors';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { updateExperiment, setActiveExperiment } from 'redux/actions/experiments';
+import { updateExperiment, setActiveExperiment, deleteExperiment } from 'redux/actions/experiments';
 import validateInputs, { rules } from 'utils/validateInputs';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import EditableField from 'components/EditableField';
@@ -35,7 +35,7 @@ const activeExperimentStyle = {
 
 const itemTextStyle = { fontWeight: 'bold' };
 
-const ProjectCard = (props) => {
+const ExperimentCard = (props) => {
   const { experimentId } = props;
 
   const dispatch = useDispatch();
@@ -60,18 +60,18 @@ const ProjectCard = (props) => {
     dispatch(updateExperiment(experiment.id, { name: newName.trim() }));
   };
 
-  const deleteExperiment = () => {
-    setDeleteModalVisible(true);
-  };
-
   return (
     <>
       {deleteModalVisible && (
         <ProjectDeleteModal
           key={`${experiment.id}-name`}
+          projectName={experiment.name}
           experimentId={experiment.id}
           onCancel={() => { setDeleteModalVisible(false); }}
-          onDelete={() => { setDeleteModalVisible(false); }}
+          onDelete={() => {
+            dispatch(deleteExperiment(experimentId));
+            setDeleteModalVisible(false);
+          }}
         />
       )}
       <Card
@@ -92,7 +92,7 @@ const ProjectCard = (props) => {
             <EditableField
               value={experiment.name}
               onAfterSubmit={updateExperimentName}
-              onDelete={deleteExperiment}
+              onDelete={() => setDeleteModalVisible(true)}
               validationFunc={
                 (newName) => validateInputs(
                   newName,
@@ -129,8 +129,8 @@ const ProjectCard = (props) => {
   );
 };
 
-ProjectCard.propTypes = {
+ExperimentCard.propTypes = {
   experimentId: PropTypes.string.isRequired,
 };
 
-export default ProjectCard;
+export default ExperimentCard;
