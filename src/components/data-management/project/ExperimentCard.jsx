@@ -66,8 +66,8 @@ const ExperimentCard = (props) => {
         <ProjectDeleteModal
           key={`${experiment.id}-name`}
           projectName={experiment.name}
-          experimentId={experiment.id}
           onCancel={() => { setDeleteModalVisible(false); }}
+          projectType='experiments'
           onDelete={() => {
             dispatch(deleteExperiment(experimentId));
             setDeleteModalVisible(false);

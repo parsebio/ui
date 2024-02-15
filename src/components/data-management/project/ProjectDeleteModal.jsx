@@ -9,11 +9,14 @@ const { Text, Paragraph } = Typography;
 
 const ProjectDeleteModal = (props) => {
   const {
-    projectName, onCancel, onDelete,
+    projectName, onCancel, onDelete, projectType,
   } = props;
 
-  const [inputExperimentName, setInputExperimentName] = useState('');
+  const [inputProjectName, setinputProjectName] = useState('');
   const [isValid, setIsValid] = useState(false);
+
+  const shownName = projectType === 'secondaryAnalyses' ? 'run' : 'project';
+  const associatedFilesInfoText = projectType === 'experiments' ? 'data sets, metadata, analyses' : 'fastq files';
   return (
     <Modal
       className={integrationTestConstants.classes.DELETE_PROJECT_MODAL}
@@ -29,7 +32,9 @@ const ProjectDeleteModal = (props) => {
               setIsValid(false);
             }}
           >
-            Keep project
+            Keep
+            {' '}
+            {shownName}
           </Button>
 
           <Button
@@ -40,7 +45,9 @@ const ProjectDeleteModal = (props) => {
               onDelete();
             }}
           >
-            Permanently delete project
+            Permanently delete
+            {' '}
+            {shownName}
           </Button>
         </Space>
       )}
@@ -57,13 +64,20 @@ const ProjectDeleteModal = (props) => {
           </Paragraph>
           <Paragraph>
             {' '}
-            This will delete the project
+            This will delete the
+            {' '}
+            {shownName}
             {' '}
             <Text strong>{projectName}</Text>
             {', '}
-            all of its data sets, metadata,
-            analyses, and all other information
-            under this project.
+            all of its
+            {' '}
+            {associatedFilesInfoText}
+            , and all other information
+            under this
+            {' '}
+            {shownName}
+            .
           </Paragraph>
 
           <Paragraph>
@@ -76,16 +90,16 @@ const ProjectDeleteModal = (props) => {
 
           <Form layout='vertical'>
             <Form.Item
-              label='Type in the name of the project to confirm:'
+              label={`Type in the name of the ${shownName} to confirm:`}
             >
               <Input
                 data-test-id={integrationTestConstants.classes.DELETE_PROJECT_MODAL_INPUT}
                 onChange={(e) => {
                   setIsValid(projectName === e.target.value);
-                  setInputExperimentName(e.target.value);
+                  setinputProjectName(e.target.value);
                 }}
                 placeholder={projectName}
-                value={inputExperimentName}
+                value={inputProjectName}
               />
             </Form.Item>
           </Form>
@@ -99,6 +113,7 @@ const ProjectDeleteModal = (props) => {
 
 ProjectDeleteModal.propTypes = {
   projectName: PropTypes.string.isRequired,
+  projectType: PropTypes.string.isRequired,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
 };

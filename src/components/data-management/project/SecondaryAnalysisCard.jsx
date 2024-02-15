@@ -66,6 +66,7 @@ const SecondaryAnalysisCard = (props) => {
         <ProjectDeleteModal
           key={`${secondaryAnalysis.id}-name`}
           projectName={secondaryAnalysis.name}
+          projectType='secondaryAnalyses'
           onCancel={() => { setDeleteModalVisible(false); }}
           onDelete={() => {
             dispatch(deleteSecondaryAnalysis(secondaryAnalysisId));
@@ -104,7 +105,7 @@ const SecondaryAnalysisCard = (props) => {
           </Item>
           <Item
             labelStyle={itemTextStyle}
-            label='Fastq fies'
+            label='Fastq files'
           >
             0
             {/* TODO number of fastq files  */}

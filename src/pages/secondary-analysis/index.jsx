@@ -50,7 +50,7 @@ const SecondaryAnalysis = () => {
   } = secondaryAnalysis || {};
   const secondaryAnalysisWizardSteps = [
     {
-      title: 'Create a new Run and provide the Run details:',
+      title: 'Provide the Run details:',
       key: 'Run details',
       render: () => (
         <SecondaryAnalysisDetails
