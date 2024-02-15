@@ -11,7 +11,6 @@ const loadSecondaryAnalyses = () => async (dispatch) => {
 
   try {
     const secondaryAnalyses = await fetchAPI('/v2/secondaryAnalysis');
-    console.log('LOADED ANALYSES FROM API ', secondaryAnalyses);
     dispatch({
       type: SECONDARY_ANALYSES_LOADED,
       payload: {

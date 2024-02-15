@@ -43,7 +43,6 @@ const SecondaryAnalysis = () => {
       dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
       setNewSecondaryAnalysisDetailsDiff({});
     }
-    onNext();
   };
   const {
     numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
@@ -59,7 +58,7 @@ const SecondaryAnalysis = () => {
         />
       ),
       isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
-      onNext: handleUpdateSecondaryAnalysisDetails,
+      onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
       title: 'Upload your sample loading table:',
@@ -78,7 +77,7 @@ const SecondaryAnalysis = () => {
         />
       ),
       isValid: Boolean(refGenome),
-      onNext: handleUpdateSecondaryAnalysisDetails,
+      onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
       title: 'Upload your Fastq files:',
@@ -88,7 +87,7 @@ const SecondaryAnalysis = () => {
       onNext,
     },
   ];
-  const onCancel = () => setCurrentStepIndex(null);
+  const onCancel = () => { setCurrentStepIndex(null); setNewSecondaryAnalysisDetailsDiff({}); };
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
   const PROJECTS_LIST = 'Runs';
@@ -131,7 +130,7 @@ const SecondaryAnalysis = () => {
         title={currentStep?.title}
         okButtonProps={{ htmlType: 'submit' }}
         bodyStyle={{ height: '35vh' }}
-        onCancel={onCancel}
+        onCancel={() => { onCancel(); handleUpdateSecondaryAnalysisDetails(); }}
         footer={[
           <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
             Back

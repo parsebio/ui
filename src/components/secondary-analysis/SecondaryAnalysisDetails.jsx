@@ -11,7 +11,6 @@ const SecondaryAnalysisDetails = (props) => {
   const { setNewSecondaryAnalysisDetailsDiff, secondaryAnalysis } = props;
   const [maxSublibraries, setMaxSublibraries] = useState();
   const [formValues, setFormValues] = useState({});
-  console.log('VALUES ARE', formValues);
 
   useEffect(() => {
     setFormValues(secondaryAnalysis);

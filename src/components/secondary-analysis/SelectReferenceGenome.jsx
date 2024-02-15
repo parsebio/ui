@@ -21,7 +21,6 @@ const SelectReferenceGenome = (props) => {
     setNewSecondaryAnalysisDetailsDiff(newDiff);
     setRefGenome(value);
   };
-  console.log('REF GENOME IS ', refGenome, refGenome === 'Human');
 
   const refGenomes = ['Human', 'Mouse'];
   const refGenomeOptions = refGenomes.map((genome) => ({ label: genome, value: genome }));
