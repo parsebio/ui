@@ -1,27 +1,15 @@
-/* eslint-disable no-param-reassign */
 import fetchAPI from 'utils/http/fetchAPI';
-
-import { v4 as uuidv4 } from 'uuid';
-import {
-  SECONDARY_ANALYSES_CREATED,
-  SECONDARY_ANALYSES_SAVING,
-  SECONDARY_ANALYSES_ERROR,
-} from 'redux/actionTypes/secondaryAnalyses';
-
-import endUserMessages from 'utils/endUserMessages';
-
 import handleError from 'utils/http/handleError';
 
-const createSecondaryAnalysis = (
-  name,
+import {
+  SECONDARY_ANALYSES_SAVING, SECONDARY_ANALYSES_UPDATED, SECONDARY_ANALYSES_ERROR,
+} from 'redux/actionTypes/secondaryAnalyses';
+import endUserMessages from 'utils/endUserMessages';
+
+const updateSecondaryAnalysis = (
+  secondaryAnalysisId,
+  secondaryAnalysisDiff,
 ) => async (dispatch) => {
-  const secondaryAnalysisId = uuidv4();
-
-  const newSecondaryAnalysisProperties = {
-    id: secondaryAnalysisId,
-    name,
-  };
-
   dispatch({
     type: SECONDARY_ANALYSES_SAVING,
   });
@@ -30,18 +18,19 @@ const createSecondaryAnalysis = (
     await fetchAPI(
       `/v2/secondaryAnalysis/${secondaryAnalysisId}`,
       {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newSecondaryAnalysisProperties),
+        body: JSON.stringify(secondaryAnalysisDiff),
       },
     );
 
     dispatch({
-      type: SECONDARY_ANALYSES_CREATED,
+      type: SECONDARY_ANALYSES_UPDATED,
       payload: {
-        secondaryAnalysis: newSecondaryAnalysisProperties,
+        secondaryAnalysisId,
+        secondaryAnalysis: secondaryAnalysisDiff,
       },
     });
   } catch (e) {
@@ -54,8 +43,6 @@ const createSecondaryAnalysis = (
       },
     });
   }
-
-  return Promise.resolve(secondaryAnalysisId);
 };
 
-export default createSecondaryAnalysis;
+export default updateSecondaryAnalysis;

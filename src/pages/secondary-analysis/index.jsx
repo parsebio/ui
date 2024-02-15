@@ -10,16 +10,18 @@ import UploadFastQ from 'components/secondary-analysis/UploadFastQ';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
 import NewSecondaryAnalysis from 'components/secondary-analysis/NewSecondaryAnalysis';
-import loadSecondaryAnalyses from 'redux/actions/secondaryAnalyses/loadSecondaryAnalyses';
+import { loadSecondaryAnalyses, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
-  const [newProjectDetails, setNewProjectDetails] = useState({});
+  const [secondaryAnalysisDetailsDiff, setNewSecondaryAnalysisDetailsDiff] = useState({});
   const [NewSecondaryAnalysisModalVisible, setNewSecondaryAnalysisModalVisible] = useState(false);
   const user = useSelector((state) => state.user.current);
 
   const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
+  const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
+  const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[activeSecondaryAnalysisId]);
 
   useEffect(() => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
@@ -34,38 +36,53 @@ const SecondaryAnalysis = () => {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
-  const handleCreateNewProject = () => {
-    // make it patch to the created analysis
-    // const {
-    //   name, kit, chemistryVersion, numOfSamples, numOfSublibraries,
-    // } = newProjectDetails;
-    // console.log('PROJECT DETAILS ', newProjectDetails);
-    // dispatch(createSecondaryAnalysis(name, kit, chemistryVersion, numOfSamples, numOfSublibraries));
+  const handleUpdateSecondaryAnalysisDetails = () => {
+    if (Object.keys(secondaryAnalysisDetailsDiff).length) {
+      dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
+      setNewSecondaryAnalysisDetailsDiff({});
+    }
     onNext();
   };
+  const {
+    numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
+  } = secondaryAnalysis;
   const secondaryAnalysisWizardSteps = [
     {
       title: 'Create a new Run and provide the Run details:',
       key: 'Run details',
-      render: () => <SecondaryAnalysisDetails newProjectDetails={newProjectDetails} setNewProjectDetails={setNewProjectDetails} />,
-      onNext: handleCreateNewProject,
+      render: () => (
+        <SecondaryAnalysisDetails
+          setNewSecondaryAnalysisDetailsDiff={setNewSecondaryAnalysisDetailsDiff}
+          secondaryAnalysis={secondaryAnalysis}
+        />
+      ),
+      isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
+      onNext: handleUpdateSecondaryAnalysisDetails,
     },
     {
       title: 'Upload your sample loading table:',
       key: 'Sample loading table',
       render: () => <SampleLTUpload />,
+      isValid: false,
       onNext,
     },
     {
       title: 'Reference genome',
       key: 'Reference genome',
-      render: () => <SelectReferenceGenome />,
-      onNext,
+      render: () => (
+        <SelectReferenceGenome
+          setNewSecondaryAnalysisDetailsDiff={setNewSecondaryAnalysisDetailsDiff}
+          secondaryAnalysis={secondaryAnalysis}
+        />
+      ),
+      isValid: Boolean(refGenome),
+      onNext: handleUpdateSecondaryAnalysisDetails,
     },
     {
       title: 'Upload your Fastq files:',
       key: 'Fastq files',
       render: () => <UploadFastQ />,
+      isValid: false,
       onNext,
     },
   ];
@@ -112,9 +129,8 @@ const SecondaryAnalysis = () => {
       <Modal
         open={currentStep}
         title={currentStep?.title}
-        // onOk={currentStep.onNext}
         okButtonProps={{ htmlType: 'submit' }}
-        bodyStyle={{ height: '38vh' }}
+        bodyStyle={{ height: '35vh' }}
         onCancel={onCancel}
         footer={[
           <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>

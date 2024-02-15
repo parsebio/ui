@@ -11,6 +11,7 @@ import SecondaryAnalysisCard from './SecondaryAnalysisCard';
 const windowMargin = 130;// px
 
 const Row = ({
+  // eslint-disable-next-line react/prop-types
   index, data, style, setSize, projectType,
 }) => {
   const rowRef = useRef();

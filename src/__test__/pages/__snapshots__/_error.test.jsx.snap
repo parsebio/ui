@@ -263,6 +263,15 @@ exports[`ErrorPage Should post error to Slack if environment is production 1`] =
         "validating": [],
       },
     },
+    "secondaryAnalyses": {
+      "ids": [],
+      "meta": {
+        "activeSecondaryAnalysisId": null,
+        "error": false,
+        "loading": false,
+        "saving": false,
+      },
+    },
     "user": {
       "current": null,
     },
@@ -531,6 +540,15 @@ exports[`ErrorPage Should post error to Slack if environment is staging 1`] = `
         "loading": false,
         "saving": false,
         "validating": [],
+      },
+    },
+    "secondaryAnalyses": {
+      "ids": [],
+      "meta": {
+        "activeSecondaryAnalysisId": null,
+        "error": false,
+        "loading": false,
+        "saving": false,
       },
     },
     "user": {

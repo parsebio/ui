@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   Modal, Button, Input, Space, Typography, Form, Alert,
 } from 'antd';
-import { deleteExperiment } from 'redux/actions/experiments';
 import integrationTestConstants from 'utils/integrationTestConstants';
 
 const { Text, Paragraph } = Typography;
@@ -13,8 +11,6 @@ const ProjectDeleteModal = (props) => {
   const {
     projectName, onCancel, onDelete,
   } = props;
-
-  const dispatch = useDispatch();
 
   const [inputExperimentName, setInputExperimentName] = useState('');
   const [isValid, setIsValid] = useState(false);

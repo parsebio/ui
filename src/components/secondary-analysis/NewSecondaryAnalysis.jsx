@@ -50,10 +50,10 @@ const NewSecondaryAnalysis = (props) => {
     setIsValidName(validateInputs(projectName, validationChecks, validationParams).isValid);
   }, [projectName, projectNames]);
 
-  const submit = () => {
+  const submit = async () => {
     setProjectName('');
 
-    dispatch(createSecondaryAnalysis(projectName));
+    await dispatch(createSecondaryAnalysis(projectName));
     onCreate(projectName);
   };
 
@@ -69,8 +69,8 @@ const NewSecondaryAnalysis = (props) => {
           key='create'
           block
           disabled={!isValidName}
-          onClick={() => {
-            submit();
+          onClick={async () => {
+            await submit();
           }}
         >
           Create Run
@@ -78,73 +78,71 @@ const NewSecondaryAnalysis = (props) => {
       )}
       onCancel={onCancel}
     >
-      <Space>
-        <Space direction='vertical'>
-          <Form layout='vertical'>
-            <Form.Item
-              validateStatus={isValidName ? 'success' : 'error'}
-              help={(
-                <ul>
-                  {validateInputs(
-                    projectName,
-                    validationChecks,
-                    validationParams,
-                  ).results
-                    .filter((msg) => msg !== true)
-                    .map((msg) => <li>{msg}</li>)}
-                </ul>
-              )}
-              label={(
-                <span>
-                  Run name
-                  {' '}
-                  <Text type='secondary'>(You can change this later)</Text>
-                </span>
-              )}
-              required
-              name='requiredMark'
-            >
-              <Input
-                data-test-id={integrationTestConstants.ids.PROJECT_NAME}
-                aria-label='new project name'
-                onChange={(e) => {
-                  setProjectName(e.target.value.trim());
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && isValidName) {
-                    submit();
-                  }
-                }}
-                placeholder='Ex.: Lung gamma delta T cells'
-                value={projectName}
-                disabled={saving}
-              />
-            </Form.Item>
-          </Form>
+      <Space direction='vertical' style={{ width: '100%' }}>
+        <Form layout='vertical'>
+          <Form.Item
+            validateStatus={isValidName ? 'success' : 'error'}
+            help={(
+              <ul>
+                {validateInputs(
+                  projectName,
+                  validationChecks,
+                  validationParams,
+                ).results
+                  .filter((msg) => msg !== true)
+                  .map((msg) => <li>{msg}</li>)}
+              </ul>
+            )}
+            label={(
+              <span>
+                Run name
+                {' '}
+                <Text type='secondary'>(You can change this later)</Text>
+              </span>
+            )}
+            required
+            name='requiredMark'
+          >
+            <Input
+              data-test-id={integrationTestConstants.ids.PROJECT_NAME}
+              aria-label='new project name'
+              onChange={(e) => {
+                setProjectName(e.target.value.trim());
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && isValidName) {
+                  submit();
+                }
+              }}
+              placeholder='Ex.: Lung gamma delta T cells'
+              value={projectName}
+              disabled={saving}
+            />
+          </Form.Item>
+        </Form>
 
-          {
-            saving && (
-              <center>
-                <Space direction='vertical'>
-                  <ClipLoader
-                    size={50}
-                    color='#8f0b10'
-                  />
-                  <Text>Creating run...</Text>
-                </Space>
-              </center>
-            )
-          }
+        {
+          saving && (
+            <center>
+              <Space direction='vertical'>
+                <ClipLoader
+                  size={50}
+                  color='#8f0b10'
+                />
+                <Text>Creating run...</Text>
+              </Space>
+            </center>
+          )
+        }
 
-          {
-            error && (
-              <Text type='danger' style={{ fontSize: 14 }}>
-                {error}
-              </Text>
-            )
-          }
+        {
+          error && (
+            <Text type='danger' style={{ fontSize: 14 }}>
+              {error}
+            </Text>
+          )
+        }
 
-        </Space>
       </Space>
     </Modal>
 

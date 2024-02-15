@@ -10,7 +10,7 @@ import validateInputs, { rules } from 'utils/validateInputs';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import EditableField from 'components/EditableField';
 import PrettyTime from 'components/PrettyTime';
-import { deleteSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import { deleteSecondaryAnalysis, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import ProjectDeleteModal from 'components/data-management/project/ProjectDeleteModal';
 import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
 
@@ -57,7 +57,7 @@ const SecondaryAnalysisCard = (props) => {
   };
 
   const updateSecondaryAnalysisName = (newName) => {
-    // dispatch(updateExperiment(secondaryAnalysis.id, { name: newName.trim() }));
+    dispatch(updateSecondaryAnalysis(secondaryAnalysis.id, { name: newName.trim() }));
   };
 
   return (
@@ -91,7 +91,7 @@ const SecondaryAnalysisCard = (props) => {
           <Item contentStyle={{ fontWeight: 700, fontSize: 16 }}>
             <EditableField
               value={secondaryAnalysis.name}
-              // onAfterSubmit={updateSecondaryAnalysisName}
+              onAfterSubmit={updateSecondaryAnalysisName}
               onDelete={() => setDeleteModalVisible(true)}
               validationFunc={
                 (newName) => validateInputs(

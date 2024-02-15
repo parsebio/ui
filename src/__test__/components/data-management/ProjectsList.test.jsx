@@ -5,7 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import '@testing-library/jest-dom';
 import initialState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
-import ProjectsList from 'components/data-management/project/ProjectsList';
+import ProjectsList projectType='experiments' from 'components/data-management/project/ProjectsList projectType='experiments'';
 import ExperimentCard from 'components/data-management/project/ExperimentCard';
 import '__test__/test-utils/setupTests';
 
@@ -82,11 +82,11 @@ const filledStore = mockStore({
   },
 });
 
-describe('ProjectsList', () => {
+describe('ProjectsList projectType='experiments'', () => {
   it('renders without options', () => {
     const component = mount(
       <Provider store={initialStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
@@ -98,7 +98,7 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={initialStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
@@ -111,7 +111,7 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={filledStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
@@ -124,7 +124,7 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={filledStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
@@ -176,7 +176,7 @@ describe('ProjectsList', () => {
 
       const component = mount(
         <Provider store={createMockStore(testCase.experimentNames)}>
-          <ProjectsList filter={filter} />
+          <ProjectsList projectType='experiments' filter={filter} />
         </Provider>,
       );
 
@@ -193,7 +193,7 @@ describe('ProjectsList', () => {
   it('Filter should not break if there is no experiment and no filter', () => {
     const component = mount(
       <Provider store={emptyStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
@@ -204,7 +204,7 @@ describe('ProjectsList', () => {
   it('Filter should not break if there is no experiment and the filter is input', () => {
     const component = mount(
       <Provider store={emptyStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
@@ -218,7 +218,7 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={filledStore}>
-        <ProjectsList filter={filter} />
+        <ProjectsList projectType='experiments' filter={filter} />
       </Provider>,
     );
 
@@ -233,7 +233,7 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={filledStore}>
-        <ProjectsList filter={filter} />
+        <ProjectsList projectType='experiments' filter={filter} />
       </Provider>,
     );
 

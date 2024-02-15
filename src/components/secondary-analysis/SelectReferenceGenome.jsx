@@ -1,38 +1,49 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Form, Select,
 } from 'antd';
+import propTypes from 'prop-types';
 
 const { Option } = Select;
-const SelectReferenceGenome = () => {
-  const [form] = Form.useForm();
+const SelectReferenceGenome = (props) => {
+  const { secondaryAnalysis, setNewSecondaryAnalysisDetailsDiff } = props;
+  const [refGenome, setRefGenome] = useState();
+  useEffect(() => {
+    setRefGenome(secondaryAnalysis.refGenome);
+  }, [secondaryAnalysis]);
 
+  const changeRefGenome = (value) => {
+    let newDiff = {};
+    if (secondaryAnalysis.refGenome !== value) {
+      newDiff = { refGenome: value };
+    }
+    setNewSecondaryAnalysisDetailsDiff(newDiff);
+    setRefGenome(value);
+  };
+  console.log('REF GENOME IS ', refGenome, refGenome === 'Human');
+
+  const refGenomes = ['Human', 'Mouse'];
+  const refGenomeOptions = refGenomes.map((genome) => ({ label: genome, value: genome }));
   return (
     <>
-      <Form
-        form={form}
-        layout='vertical'
-        size='middle'
-        style={{ width: '100%', margin: '0 auto' }}
-        onFinish={(values) => console.log(values)}
-      >
-        <Form.Item
-          label={(
-            <div>
-              Select the reference genome:
-            </div>
-          )}
-          name='projectName'
-        >
-          <Select style={{ marginLeft: '10px', width: '90%' }} placeholder='Select the reference genome'>
-            <Option value='sublibrary1'>Human</Option>
-            <Option value='sublibrary2'>Mouse</Option>
-          </Select>
-        </Form.Item>
-      </Form>
+      <div>
+        Select the reference genome:
+      </div>
+
+      <Select
+        style={{ marginLeft: '10px', width: '90%' }}
+        value={refGenome}
+        placeholder='Select the reference genome'
+        onChange={(value) => changeRefGenome(value)}
+        options={refGenomeOptions}
+      />
     </>
   );
+};
+SelectReferenceGenome.propTypes = {
+  setNewSecondaryAnalysisDetailsDiff: propTypes.func.isRequired,
+  secondaryAnalysis: propTypes.object.isRequired,
 };
 
 export default SelectReferenceGenome;
