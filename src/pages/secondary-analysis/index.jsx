@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'antd';
+import {
+  Modal, Button, Empty,
+} from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import SecondaryAnalysisDetails from 'components/secondary-analysis/SecondaryAnalysisDetails';
@@ -45,7 +47,7 @@ const SecondaryAnalysis = () => {
   };
   const {
     numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
-  } = secondaryAnalysis;
+  } = secondaryAnalysis || {};
   const secondaryAnalysisWizardSteps = [
     {
       title: 'Create a new Run and provide the Run details:',
@@ -104,9 +106,7 @@ const SecondaryAnalysis = () => {
     },
     [PROJECT_DETAILS]: {
       toolbarControls: [],
-      component: (width, height) => (
-        <OverviewMenu wizardSteps={secondaryAnalysisWizardSteps} setCurrentStep={setCurrentStepIndex} />
-      ),
+      component: (width, height) => (activeSecondaryAnalysisId ? <OverviewMenu wizardSteps={secondaryAnalysisWizardSteps} setCurrentStep={setCurrentStepIndex} /> : <Empty description='Create a new run to get started' />),
     },
   };
   const windows = {
