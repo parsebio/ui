@@ -87,7 +87,7 @@ const SecondaryAnalysis = () => {
       onNext,
     },
   ];
-  const onCancel = () => { setCurrentStepIndex(null); setNewSecondaryAnalysisDetailsDiff({}); };
+  const onCancel = () => { setCurrentStepIndex(null); };
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
   const PROJECTS_LIST = 'Runs';
