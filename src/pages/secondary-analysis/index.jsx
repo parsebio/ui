@@ -130,25 +130,26 @@ const SecondaryAnalysis = () => {
           onCreate={() => { setNewSecondaryAnalysisModalVisible(false); setCurrentStepIndex(0); }}
         />
       ) : (<></>)}
+      {currentStep && (
+        <Modal
+          open
+          title={currentStep?.title}
+          okButtonProps={{ htmlType: 'submit' }}
+          bodyStyle={{ height: '35vh' }}
+          onCancel={() => { onCancel(); handleUpdateSecondaryAnalysisDetails(); }}
+          footer={[
+            <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
+              Back
+            </Button>,
+            <Button key='submit' type='primary' onClick={currentStep?.onNext}>
+              {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
+            </Button>,
+          ]}
+        >
+          {currentStep?.render()}
+        </Modal>
+      )}
 
-      <Modal
-        open={currentStep}
-        title={currentStep?.title}
-        okButtonProps={{ htmlType: 'submit' }}
-        bodyStyle={{ height: '35vh' }}
-        onCancel={() => { onCancel(); handleUpdateSecondaryAnalysisDetails(); }}
-        footer={[
-          <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
-            Back
-          </Button>,
-          <Button key='submit' type='primary' onClick={currentStep?.onNext}>
-            {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
-          </Button>,
-        ]}
-      >
-
-        {currentStep?.render()}
-      </Modal>
       <MultiTileContainer
         tileMap={TILE_MAP}
         initialArrangement={windows}
