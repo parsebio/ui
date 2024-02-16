@@ -133,7 +133,7 @@ const SecondaryAnalysis = () => {
       {currentStep && (
         <Modal
           open
-          title={currentStep?.title}
+          title={currentStep.title}
           okButtonProps={{ htmlType: 'submit' }}
           bodyStyle={{ height: '35vh' }}
           onCancel={() => { onCancel(); handleUpdateSecondaryAnalysisDetails(); }}
@@ -141,12 +141,12 @@ const SecondaryAnalysis = () => {
             <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
               Back
             </Button>,
-            <Button key='submit' type='primary' onClick={currentStep?.onNext}>
+            <Button key='submit' type='primary' onClick={currentStep.onNext}>
               {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
             </Button>,
           ]}
         >
-          {currentStep?.render()}
+          {currentStep.render()}
         </Modal>
       )}
 
