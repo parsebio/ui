@@ -105,7 +105,13 @@ const SecondaryAnalysis = () => {
     },
     [PROJECT_DETAILS]: {
       toolbarControls: [],
-      component: (width, height) => (activeSecondaryAnalysisId ? <OverviewMenu wizardSteps={secondaryAnalysisWizardSteps} setCurrentStep={setCurrentStepIndex} /> : <Empty description='Create a new run to get started' />),
+      component: () => (activeSecondaryAnalysisId ? (
+        <OverviewMenu
+          wizardSteps={secondaryAnalysisWizardSteps}
+          setCurrentStep={setCurrentStepIndex}
+          title={secondaryAnalysis.name}
+        />
+      ) : <Empty description='Create a new run to get started' />),
     },
   };
   const windows = {

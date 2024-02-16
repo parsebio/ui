@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 const { Title } = Typography;
 
 const OverviewMenu = (props) => {
-  const { wizardSteps, setCurrentStep } = props;
+  const { wizardSteps, setCurrentStep, title } = props;
 
   return (
-    <Card style={{ width: '45%' }} title='The project title here'>
+    <Card style={{ width: '45%' }} title={title}>
       {wizardSteps.map((step, indx) => {
         const status = step.isValid ? <span style={{ color: 'green', marginRight: '10px' }}> complete</span>
           : <span style={{ color: 'red', marginRight: '10px' }}>incomplete</span>;
@@ -43,6 +43,7 @@ const OverviewMenu = (props) => {
 OverviewMenu.propTypes = {
   wizardSteps: PropTypes.array.isRequired,
   setCurrentStep: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default OverviewMenu;
