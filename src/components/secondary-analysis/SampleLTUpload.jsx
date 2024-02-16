@@ -35,7 +35,7 @@ const SampleLTUpload = () => {
                 id='dropzone'
               >
                 <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} webkitdirectory='' />
-                <Empty description='drag and drop xlsm file here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                <Empty description='Drag and drop xlsm file here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </div>
             )}
           </Dropzone>

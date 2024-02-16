@@ -105,10 +105,9 @@ const SecondaryAnalysisDetails = (props) => {
           </Space>
         </Form.Item>
 
-        <Title level={5}>Provide details of your experimental design:</Title>
         <Form.Item
+          label='Provide details of your experimental design:'
           name='numOfSamples'
-          style={{ marginLeft: '20px' }}
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div>Select the number of samples:</div>
@@ -124,7 +123,6 @@ const SecondaryAnalysisDetails = (props) => {
         </Form.Item>
         <Form.Item
           name='numOfSublibraries'
-          style={{ marginLeft: '20px' }}
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div>

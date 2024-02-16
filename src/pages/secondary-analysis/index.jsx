@@ -124,12 +124,12 @@ const SecondaryAnalysis = () => {
   return (
     <>
       <Header title='Secondary Analysis' />
-      {NewSecondaryAnalysisModalVisible ? (
+      {NewSecondaryAnalysisModalVisible && (
         <NewSecondaryAnalysis
           onCancel={() => { setNewSecondaryAnalysisModalVisible(false); }}
           onCreate={() => { setNewSecondaryAnalysisModalVisible(false); setCurrentStepIndex(0); }}
         />
-      ) : (<></>)}
+      ) }
       {currentStep && (
         <Modal
           open

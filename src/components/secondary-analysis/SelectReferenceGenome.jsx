@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import {
-  Form, Select,
+  Select, Space,
 } from 'antd';
 import propTypes from 'prop-types';
 
-const { Option } = Select;
 const SelectReferenceGenome = (props) => {
   const { secondaryAnalysis, setNewSecondaryAnalysisDetailsDiff } = props;
   const [refGenome, setRefGenome] = useState();
@@ -22,14 +21,14 @@ const SelectReferenceGenome = (props) => {
     setRefGenome(value);
   };
 
-  const refGenomes = ['Human', 'Mouse'];
+  const refGenomes = ['Human: GRCh38', 'Mouse: GRCm39'];
   const refGenomeOptions = refGenomes.map((genome) => ({ label: genome, value: genome }));
   return (
     <>
       <div>
         Select the reference genome:
       </div>
-
+      <br />
       <Select
         style={{ marginLeft: '10px', width: '90%' }}
         value={refGenome}
