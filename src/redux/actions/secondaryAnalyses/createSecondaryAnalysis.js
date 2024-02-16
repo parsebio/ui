@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import fetchAPI from 'utils/http/fetchAPI';
-
+import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import {
   SECONDARY_ANALYSES_CREATED,
@@ -16,6 +16,7 @@ const createSecondaryAnalysis = (
   name,
 ) => async (dispatch) => {
   const secondaryAnalysisId = uuidv4();
+  const createdAt = dayjs().toISOString();
 
   const newSecondaryAnalysisProperties = {
     id: secondaryAnalysisId,
@@ -41,7 +42,7 @@ const createSecondaryAnalysis = (
     dispatch({
       type: SECONDARY_ANALYSES_CREATED,
       payload: {
-        secondaryAnalysis: newSecondaryAnalysisProperties,
+        secondaryAnalysis: { ...newSecondaryAnalysisProperties, createdAt },
       },
     });
   } catch (e) {
