@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   Modal, Button, Input, Space, Typography, Form, Alert,
 } from 'antd';
-import { deleteExperiment } from 'redux/actions/experiments';
 import integrationTestConstants from 'utils/integrationTestConstants';
 
 const { Text, Paragraph } = Typography;
 
 const ProjectDeleteModal = (props) => {
   const {
-    experimentId, onCancel, onDelete,
+    projectName, onCancel, onDelete, projectType,
   } = props;
 
-  const dispatch = useDispatch();
-  const experimentName = useSelector((state) => state.experiments[experimentId].name);
-
-  const [inputExperimentName, setInputExperimentName] = useState('');
+  const [inputProjectName, setinputProjectName] = useState('');
   const [isValid, setIsValid] = useState(false);
+
+  const projectTypeInfo = {
+    secondaryAnalyses: {
+      shownName: 'run',
+      associatedFilesInfoText: 'fastq files',
+    },
+    experiments: {
+      shownName: 'project',
+      associatedFilesInfoText: 'data sets, metadata, analyses',
+    },
+  };
+
+  const { shownName, associatedFilesInfoText } = projectTypeInfo[projectType];
+
   return (
     <Modal
       className={integrationTestConstants.classes.DELETE_PROJECT_MODAL}
@@ -34,7 +43,9 @@ const ProjectDeleteModal = (props) => {
               setIsValid(false);
             }}
           >
-            Keep project
+            Keep
+            {' '}
+            {shownName}
           </Button>
 
           <Button
@@ -42,11 +53,12 @@ const ProjectDeleteModal = (props) => {
             key='create'
             disabled={!isValid}
             onClick={() => {
-              dispatch(deleteExperiment(experimentId));
               onDelete();
             }}
           >
-            Permanently delete project
+            Permanently delete
+            {' '}
+            {shownName}
           </Button>
         </Space>
       )}
@@ -63,13 +75,20 @@ const ProjectDeleteModal = (props) => {
           </Paragraph>
           <Paragraph>
             {' '}
-            This will delete the project
+            This will delete the
             {' '}
-            <Text strong>{experimentName}</Text>
+            {shownName}
+            {' '}
+            <Text strong>{projectName}</Text>
             {', '}
-            all of its data sets, metadata,
-            analyses, and all other information
-            under this project.
+            all of its
+            {' '}
+            {associatedFilesInfoText}
+            , and all other information
+            under this
+            {' '}
+            {shownName}
+            .
           </Paragraph>
 
           <Paragraph>
@@ -82,16 +101,16 @@ const ProjectDeleteModal = (props) => {
 
           <Form layout='vertical'>
             <Form.Item
-              label='Type in the name of the project to confirm:'
+              label={`Type in the name of the ${shownName} to confirm:`}
             >
               <Input
                 data-test-id={integrationTestConstants.classes.DELETE_PROJECT_MODAL_INPUT}
                 onChange={(e) => {
-                  setIsValid(experimentName === e.target.value);
-                  setInputExperimentName(e.target.value);
+                  setIsValid(projectName === e.target.value);
+                  setinputProjectName(e.target.value);
                 }}
-                placeholder={experimentName}
-                value={inputExperimentName}
+                placeholder={projectName}
+                value={inputProjectName}
               />
             </Form.Item>
           </Form>
@@ -104,7 +123,8 @@ const ProjectDeleteModal = (props) => {
 };
 
 ProjectDeleteModal.propTypes = {
-  experimentId: PropTypes.string.isRequired,
+  projectName: PropTypes.string.isRequired,
+  projectType: PropTypes.oneOf(['secondaryAnalyses', 'experiment']).isRequired,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
 };

@@ -5,8 +5,8 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import '@testing-library/jest-dom';
 import initialState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
-import ProjectsList from 'components/data-management/project/ProjectsList';
-import ProjectCard from 'components/data-management/project/ProjectCard';
+import ProjectsList projectType='experiments' from 'components/data-management/project/ProjectsList projectType='experiments'';
+import ExperimentCard from 'components/data-management/project/ExperimentCard';
 import '__test__/test-utils/setupTests';
 
 const mockStore = configureMockStore([thunk]);
@@ -82,11 +82,11 @@ const filledStore = mockStore({
   },
 });
 
-describe('ProjectsList', () => {
+describe('ProjectsList projectType='experiments'', () => {
   it('renders without options', () => {
     const component = mount(
       <Provider store={initialStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
@@ -98,12 +98,12 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={initialStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
     // expect the number of experiments to be the same as the one in the list
-    expect(component.find(ProjectCard).length).toEqual(experiments.length);
+    expect(component.find(ExperimentCard).length).toEqual(experiments.length);
   });
 
   it('contains components if there are experiments', () => {
@@ -111,12 +111,12 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={filledStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
     // expect the number of experiments to be the same as the one in the list
-    expect(component.find(ProjectCard).length).toEqual(experiments.length);
+    expect(component.find(ExperimentCard).length).toEqual(experiments.length);
   });
 
   it('Shows all experiments if not given a filter', () => {
@@ -124,12 +124,12 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={filledStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
     // Expect all experiments to be shown
-    expect(component.find(ProjectCard).length).toEqual(experiments.length);
+    expect(component.find(ExperimentCard).length).toEqual(experiments.length);
   });
 
   it('Filters the correct experiment given a filter', () => {
@@ -176,11 +176,11 @@ describe('ProjectsList', () => {
 
       const component = mount(
         <Provider store={createMockStore(testCase.experimentNames)}>
-          <ProjectsList filter={filter} />
+          <ProjectsList projectType='experiments' filter={filter} />
         </Provider>,
       );
 
-      const experiments = component.find(ProjectCard);
+      const experiments = component.find(ExperimentCard);
 
       expect(experiments.length).toEqual(testCase.matchingExperiments.length);
 
@@ -193,23 +193,23 @@ describe('ProjectsList', () => {
   it('Filter should not break if there is no experiment and no filter', () => {
     const component = mount(
       <Provider store={emptyStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
     // Expect there to be no experiment
-    expect(component.find(ProjectCard).length).toEqual(0);
+    expect(component.find(ExperimentCard).length).toEqual(0);
   });
 
   it('Filter should not break if there is no experiment and the filter is input', () => {
     const component = mount(
       <Provider store={emptyStore}>
-        <ProjectsList />
+        <ProjectsList projectType='experiments' />
       </Provider>,
     );
 
     // Expect there to be no experiment
-    expect(component.find(ProjectCard).length).toEqual(0);
+    expect(component.find(ExperimentCard).length).toEqual(0);
   });
 
   it('Filter should work when searching using experimentId', () => {
@@ -218,11 +218,11 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={filledStore}>
-        <ProjectsList filter={filter} />
+        <ProjectsList projectType='experiments' filter={filter} />
       </Provider>,
     );
 
-    const filteredExperiments = component.find(ProjectCard);
+    const filteredExperiments = component.find(ExperimentCard);
 
     expect(filteredExperiments.length).toEqual(1);
     expect(filteredExperiments.text()).toMatch(experiment3.name);
@@ -233,11 +233,11 @@ describe('ProjectsList', () => {
 
     const component = mount(
       <Provider store={filledStore}>
-        <ProjectsList filter={filter} />
+        <ProjectsList projectType='experiments' filter={filter} />
       </Provider>,
     );
 
-    const filteredExperiments = component.find(ProjectCard);
+    const filteredExperiments = component.find(ExperimentCard);
 
     expect(filteredExperiments.length).toEqual(1);
     expect(filteredExperiments.text()).toMatch(experiment3.name);

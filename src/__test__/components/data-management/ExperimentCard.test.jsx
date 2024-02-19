@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
 import initialState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
-import ProjectCard from 'components/data-management/project/ProjectCard';
+import ExperimentCard from 'components/data-management/project/ExperimentCard';
 
 const experimentId = 'experimentId1';
 const experimentName = 'Test Experiment';
@@ -36,7 +36,7 @@ const experimentState = {
 
 const mockStore = configureMockStore([thunk]);
 
-describe('ProjectCard', () => {
+describe('ExperimentCard', () => {
   beforeEach(() => {
     enableFetchMocks();
     fetchMock.resetMocks();
@@ -46,7 +46,7 @@ describe('ProjectCard', () => {
   it('Displays correctly', () => {
     render(
       <Provider store={mockStore(experimentState)}>
-        <ProjectCard experimentId={experimentId} />
+        <ExperimentCard experimentId={experimentId} />
       </Provider>,
     );
 
@@ -66,7 +66,7 @@ describe('ProjectCard', () => {
   it('Displays the delete project modal when delete experiment is clicked', async () => {
     render(
       <Provider store={mockStore(experimentState)}>
-        <ProjectCard experimentId={experimentId} />
+        <ExperimentCard experimentId={experimentId} />
       </Provider>,
     );
 
@@ -81,7 +81,7 @@ describe('ProjectCard', () => {
   it('Updates project name when clicked', async () => {
     render(
       <Provider store={mockStore(experimentState)}>
-        <ProjectCard experimentId={experimentId} />
+        <ExperimentCard experimentId={experimentId} />
       </Provider>,
     );
 

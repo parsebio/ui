@@ -1,38 +1,47 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Form, Select,
+  Select,
 } from 'antd';
+import propTypes from 'prop-types';
 
-const { Option } = Select;
-const SelectReferenceGenome = () => {
-  const [form] = Form.useForm();
+const SelectReferenceGenome = (props) => {
+  const { secondaryAnalysis, onDetailsChanged } = props;
+  const [refGenome, setRefGenome] = useState();
+  useEffect(() => {
+    setRefGenome(secondaryAnalysis.refGenome);
+  }, [secondaryAnalysis]);
 
+  const changeRefGenome = (value) => {
+    let newDiff = {};
+    if (secondaryAnalysis.refGenome !== value) {
+      newDiff = { refGenome: value };
+    }
+    onDetailsChanged(newDiff);
+    setRefGenome(value);
+  };
+
+  const refGenomes = ['Human: GRCh38', 'Mouse: GRCm39'];
+  const refGenomeOptions = refGenomes.map((genome) => ({ label: genome, value: genome }));
   return (
     <>
-      <Form
-        form={form}
-        layout='vertical'
-        size='middle'
-        style={{ width: '100%', margin: '0 auto' }}
-        onFinish={(values) => console.log(values)}
-      >
-        <Form.Item
-          label={(
-            <div>
-              Select the reference genome:
-            </div>
-          )}
-          name='projectName'
-        >
-          <Select style={{ marginLeft: '10px', width: '90%' }} placeholder='Select the reference genome'>
-            <Option value='sublibrary1'>Human</Option>
-            <Option value='sublibrary2'>Mouse</Option>
-          </Select>
-        </Form.Item>
-      </Form>
+      <div>
+        Select the reference genome:
+      </div>
+      <br />
+      <Select
+        style={{ marginLeft: '10px', width: '90%' }}
+        value={refGenome}
+        placeholder='Select the reference genome'
+        onChange={changeRefGenome}
+        options={refGenomeOptions}
+      />
     </>
   );
+};
+SelectReferenceGenome.propTypes = {
+  onDetailsChanged: propTypes.func.isRequired,
+  secondaryAnalysis: propTypes.object.isRequired,
 };
 
 export default SelectReferenceGenome;

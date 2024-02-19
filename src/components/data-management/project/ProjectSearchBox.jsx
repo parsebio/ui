@@ -12,7 +12,7 @@ const ProjectSearchBox = (props) => {
     }, 400),
     [],
   );
-  const tooltipText = projectType === 'secondary' ? 'run' : 'project';
+  const tooltipText = projectType === 'secondaryAnalyses' ? 'run' : 'project';
 
   return (
 

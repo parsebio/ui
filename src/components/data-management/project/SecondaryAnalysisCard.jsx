@@ -6,13 +6,13 @@ import {
 import { blue } from '@ant-design/colors';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { updateExperiment, setActiveExperiment } from 'redux/actions/experiments';
 import validateInputs, { rules } from 'utils/validateInputs';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import EditableField from 'components/EditableField';
 import PrettyTime from 'components/PrettyTime';
-
+import { deleteSecondaryAnalysis, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import ProjectDeleteModal from 'components/data-management/project/ProjectDeleteModal';
+import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
 
 const { Item } = Descriptions;
 
@@ -35,52 +35,53 @@ const activeExperimentStyle = {
 
 const itemTextStyle = { fontWeight: 'bold' };
 
-const ProjectCard = (props) => {
-  const { experimentId } = props;
+const SecondaryAnalysisCard = (props) => {
+  const { secondaryAnalysisId } = props;
 
   const dispatch = useDispatch();
 
-  const experiments = useSelector((state) => state.experiments);
+  const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
-  const { activeExperimentId } = experiments.meta;
-  const experimentCardStyle = activeExperimentId === experimentId
+  const { activeSecondaryAnalysisId } = secondaryAnalyses.meta;
+  const secondaryAnalysisCardStyle = activeSecondaryAnalysisId === secondaryAnalysisId
     ? activeExperimentStyle : inactiveExperimentStyle;
 
-  const experiment = experiments[experimentId];
+  const secondaryAnalysis = secondaryAnalyses[secondaryAnalysisId];
 
-  const experimentNames = experiments.ids.map((id) => experiments[id].name);
+  const secondaryAnalysisNames = secondaryAnalyses.ids.map((id) => secondaryAnalyses[id].name);
 
   const validationParams = {
-    existingNames: experimentNames,
+    existingNames: secondaryAnalysisNames,
   };
 
-  const updateExperimentName = (newName) => {
-    dispatch(updateExperiment(experiment.id, { name: newName.trim() }));
-  };
-
-  const deleteExperiment = () => {
-    setDeleteModalVisible(true);
+  const updateSecondaryAnalysisName = (newName) => {
+    dispatch(updateSecondaryAnalysis(secondaryAnalysis.id, { name: newName.trim() }));
   };
 
   return (
     <>
       {deleteModalVisible && (
         <ProjectDeleteModal
-          key={`${experiment.id}-name`}
-          experimentId={experiment.id}
+          key={`${secondaryAnalysis.id}-name`}
+          projectName={secondaryAnalysis.name}
+          projectType='secondaryAnalyses'
           onCancel={() => { setDeleteModalVisible(false); }}
-          onDelete={() => { setDeleteModalVisible(false); }}
+          onDelete={() => {
+            dispatch(deleteSecondaryAnalysis(secondaryAnalysisId));
+            setDeleteModalVisible(false);
+          }}
         />
       )}
       <Card
         data-test-class={integrationTestConstants.classes.PROJECT_CARD}
-        key={experimentId}
+        key={secondaryAnalysisId}
         type='primary'
-        style={experimentCardStyle}
+        style={secondaryAnalysisCardStyle}
         onClick={() => {
-          dispatch(setActiveExperiment(experiment.id));
+          // set active secondary anlaysis
+          dispatch(setActiveSecondaryAnalysis(secondaryAnalysisId));
         }}
       >
         <Descriptions
@@ -90,9 +91,9 @@ const ProjectCard = (props) => {
         >
           <Item contentStyle={{ fontWeight: 700, fontSize: 16 }}>
             <EditableField
-              value={experiment.name}
-              onAfterSubmit={updateExperimentName}
-              onDelete={deleteExperiment}
+              value={secondaryAnalysis.name}
+              onAfterSubmit={updateSecondaryAnalysisName}
+              onDelete={() => setDeleteModalVisible(true)}
               validationFunc={
                 (newName) => validateInputs(
                   newName,
@@ -104,33 +105,33 @@ const ProjectCard = (props) => {
           </Item>
           <Item
             labelStyle={itemTextStyle}
-            label='Samples'
+            label='Fastq files'
           >
-            {experiment.sampleIds.length}
-
+            0
+            {/* TODO number of fastq files  */}
           </Item>
           <Item
             labelStyle={itemTextStyle}
             label='Created'
           >
-            <PrettyTime isoTime={experiment.createdAt} />
+            <PrettyTime isoTime={secondaryAnalysis.createdAt} />
 
           </Item>
-          <Item
+          {/* <Item
             labelStyle={itemTextStyle}
             label='Modified'
           >
-            <PrettyTime isoTime={experiment.updatedAt} />
+            <PrettyTime isoTime={secondaryAnalysis.updatedAt} />
 
-          </Item>
+          </Item> */}
         </Descriptions>
       </Card>
     </>
   );
 };
 
-ProjectCard.propTypes = {
-  experimentId: PropTypes.string.isRequired,
+SecondaryAnalysisCard.propTypes = {
+  secondaryAnalysisId: PropTypes.string.isRequired,
 };
 
-export default ProjectCard;
+export default SecondaryAnalysisCard;

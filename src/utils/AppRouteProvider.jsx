@@ -9,6 +9,8 @@ import { modules } from 'utils/constants';
 import { loadExperiments, setActiveExperiment, switchExperiment } from 'redux/actions/experiments';
 
 import DataProcessingIntercept from 'components/data-processing/DataProcessingIntercept';
+import loadSecondaryAnalyses from 'redux/actions/secondaryAnalyses/loadSecondaryAnalyses';
+import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
 
 /**
  * AppRouteProvider provides a context which allows for checking and interception
@@ -93,11 +95,18 @@ const AppRouteProvider = (props) => {
       return;
     }
 
-    if (previousRoute.match(PATH_STUBS.DATA_MANAGEMENT)) {
+    if (previousRoute.match(PATH_STUBS.DATA_MANAGEMENT && nextRoute !== PATH_STUBS.SECONDARY_ANALYSIS)) {
       const { experimentId } = params;
       dispatch(switchExperiment(experimentId));
     }
+    if (nextRoute.match(PATH_STUBS.SECONDARY_ANALYSIS)) {
+      await dispatch(loadSecondaryAnalyses());
 
+      // TODO check if this will be needed
+      if (params.secondaryAnalysisId) {
+        dispatch(setActiveSecondaryAnalysis(params.secondaryAnalysisId));
+      }
+    }
     if (nextRoute.match(PATH_STUBS.DATA_MANAGEMENT)) {
       await dispatch(loadExperiments());
 
