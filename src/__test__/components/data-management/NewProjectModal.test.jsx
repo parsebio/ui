@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
-import NewExperimentModal from 'components/data-management/NewExperimentModal';
+import NewProjectModal from 'components/data-management/project/NewProjectModal';
 import '__test__/test-utils/setupTests';
 
 import experimentsInitialState from 'redux/reducers/experiments/initialState';
@@ -36,11 +36,11 @@ const storeWithExperiments = {
 const onCreate = jest.fn();
 const onCancel = jest.fn();
 
-describe('NewExperimentModal', () => {
+describe('NewProjectModal', () => {
   it('renders without options', () => {
     const component = mount(
       <Provider store={mockStore(initialState)}>
-        <NewExperimentModal onCancel={onCancel} onCreate={onCreate} />
+        <NewProjectModal projectType='experiments' onCancel={onCancel} onCreate={onCreate} />
       </Provider>,
     );
     expect(component.exists()).toEqual(true);
@@ -49,7 +49,7 @@ describe('NewExperimentModal', () => {
   it('contains required components for first time flow', () => {
     const component = mount(
       <Provider store={mockStore(initialState)}>
-        <NewExperimentModal onCancel={onCancel} onCreate={onCreate} />
+        <NewProjectModal projectType='experiments' onCancel={onCancel} onCreate={onCreate} />
       </Provider>,
     );
 
@@ -69,7 +69,7 @@ describe('NewExperimentModal', () => {
   it('contains required components for later flows', () => {
     const component = mount(
       <Provider store={mockStore(storeWithExperiments)}>
-        <NewExperimentModal onCancel={onCancel} onCreate={onCreate} />
+        <NewProjectModal projectType='experiments' onCancel={onCancel} onCreate={onCreate} />
       </Provider>,
     );
 
@@ -103,7 +103,7 @@ describe('NewExperimentModal', () => {
 
     const component = mount(
       <Provider store={mockStore(savingState)}>
-        <NewExperimentModal onCancel={onCancel} onCreate={onCreate} />
+        <NewProjectModal projectType='experiments' onCancel={onCancel} onCreate={onCreate} />
       </Provider>,
     );
 
@@ -136,7 +136,7 @@ describe('NewExperimentModal', () => {
 
     const component = mount(
       <Provider store={mockStore(errorState)}>
-        <NewExperimentModal />
+        <NewProjectModal projectType='experiments' />
       </Provider>,
     );
 

@@ -15,8 +15,19 @@ const ProjectDeleteModal = (props) => {
   const [inputProjectName, setinputProjectName] = useState('');
   const [isValid, setIsValid] = useState(false);
 
-  const shownName = projectType === 'secondaryAnalyses' ? 'run' : 'project';
-  const associatedFilesInfoText = projectType === 'experiments' ? 'data sets, metadata, analyses' : 'fastq files';
+  const projectTypeInfo = {
+    secondaryAnalyses: {
+      shownName: 'run',
+      associatedFilesInfoText: 'fastq files',
+    },
+    experiments: {
+      shownName: 'project',
+      associatedFilesInfoText: 'data sets, metadata, analyses',
+    },
+  };
+
+  const { shownName, associatedFilesInfoText } = projectTypeInfo[projectType];
+
   return (
     <Modal
       className={integrationTestConstants.classes.DELETE_PROJECT_MODAL}
@@ -113,7 +124,7 @@ const ProjectDeleteModal = (props) => {
 
 ProjectDeleteModal.propTypes = {
   projectName: PropTypes.string.isRequired,
-  projectType: PropTypes.string.isRequired,
+  projectType: PropTypes.oneOf(['secondaryAnalyses', 'experiment']).isRequired,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
 };

@@ -33,7 +33,7 @@ const SelectReferenceGenome = (props) => {
         style={{ marginLeft: '10px', width: '90%' }}
         value={refGenome}
         placeholder='Select the reference genome'
-        onChange={(value) => changeRefGenome(value)}
+        onChange={changeRefGenome}
         options={refGenomeOptions}
       />
     </>

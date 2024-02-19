@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, Button, Empty,
+  Modal, Button, Empty, Typography,
 } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
@@ -11,14 +11,17 @@ import SelectReferenceGenome from 'components/secondary-analysis/SelectReference
 import UploadFastQ from 'components/secondary-analysis/UploadFastQ';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
-import NewSecondaryAnalysis from 'components/secondary-analysis/NewSecondaryAnalysis';
-import { loadSecondaryAnalyses, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import NewProjectModal from 'components/data-management/project/NewProjectModal';
+import { loadSecondaryAnalyses, updateSecondaryAnalysis, createSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import EditableParagraph from 'components/EditableParagraph';
+
+const { Text } = Typography;
 
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
   const [secondaryAnalysisDetailsDiff, setNewSecondaryAnalysisDetailsDiff] = useState({});
-  const [NewSecondaryAnalysisModalVisible, setNewSecondaryAnalysisModalVisible] = useState(false);
+  const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
   const user = useSelector((state) => state.user.current);
 
   const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
@@ -99,19 +102,37 @@ const SecondaryAnalysis = () => {
         <ProjectsListContainer
           height={height}
           projectType='secondaryAnalyses'
-          onCreateNewProject={() => setNewSecondaryAnalysisModalVisible(true)}
+          onCreateNewProject={() => setNewProjectModalVisible(true)}
         />
       ),
     },
     [PROJECT_DETAILS]: {
       toolbarControls: [],
       component: () => (activeSecondaryAnalysisId ? (
-        <OverviewMenu
-          wizardSteps={secondaryAnalysisWizardSteps}
-          setCurrentStep={setCurrentStepIndex}
-          title={secondaryAnalysis.name}
-        />
-      ) : <Empty description='Create a new run to get started' />),
+        <>
+          {' '}
+          <div style={{ flex: 1, overflowY: 'auto' }}>
+            <Text strong>
+              Description:
+            </Text>
+            <EditableParagraph
+              value={secondaryAnalysis.description}
+              onUpdate={(text) => {
+                if (text !== secondaryAnalysis.description) {
+                  dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, { description: text }));
+                }
+              }}
+            />
+          </div>
+          <OverviewMenu
+            wizardSteps={secondaryAnalysisWizardSteps}
+            setCurrentStep={setCurrentStepIndex}
+            title={secondaryAnalysis.name}
+          />
+
+        </>
+      )
+        : <Empty description='Create a new run to get started' />),
     },
   };
   const windows = {
@@ -124,10 +145,15 @@ const SecondaryAnalysis = () => {
   return (
     <>
       <Header title='Secondary Analysis' />
-      {NewSecondaryAnalysisModalVisible && (
-        <NewSecondaryAnalysis
-          onCancel={() => { setNewSecondaryAnalysisModalVisible(false); }}
-          onCreate={() => { setNewSecondaryAnalysisModalVisible(false); setCurrentStepIndex(0); }}
+      {NewProjectModalVisible && (
+        <NewProjectModal
+          projectType='secondaryAnalyses'
+          onCancel={() => { setNewProjectModalVisible(false); }}
+          onCreate={(name, description) => {
+            setNewProjectModalVisible(false);
+            dispatch(createSecondaryAnalysis(name, description));
+            setCurrentStepIndex(0);
+          }}
         />
       ) }
       {currentStep && (

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Select, Form, Typography, Space,
+  Select, Form, Space,
 } from 'antd';
 import propTypes from 'prop-types';
 
-const { Title } = Typography;
 const { Option } = Select;
 
 const SecondaryAnalysisDetails = (props) => {
@@ -13,6 +12,7 @@ const SecondaryAnalysisDetails = (props) => {
   const [formValues, setFormValues] = useState({});
 
   useEffect(() => {
+    if (!secondaryAnalysis) return;
     setFormValues(secondaryAnalysis);
     calculateMaxSublibraries(secondaryAnalysis.kit);
   }, [secondaryAnalysis]);
@@ -25,48 +25,45 @@ const SecondaryAnalysisDetails = (props) => {
       }
     });
     setNewSecondaryAnalysisDetailsDiff(fieldsToUpdate);
-  }, [formValues]);
+  }, [formValues, secondaryAnalysis, setNewSecondaryAnalysisDetailsDiff]);
 
   const generateOptions = (end) => Array.from({ length: end }, (_, i) => i + 1).map((value) => (
     <Option key={value} value={`${value}`}>{value}</Option>
   ));
 
-  const calculateMaxSublibraries = (kit) => {
-    let newMaxSublibraries;
-    switch (kit) {
-      case 'wt_mini':
-        newMaxSublibraries = 2;
-        break;
-      case 'wt':
-        newMaxSublibraries = 8;
-        break;
-      case 'wt_mega':
-        newMaxSublibraries = 16;
-        break;
-      default:
-        console.log('INVALID OPTION SELECTED');
+  const calculateMaxSublibraries = useCallback((kit) => {
+    const kitToMaxSublibrariesMap = {
+      wt_mini: 2,
+      wt: 8,
+      wt_mega: 16,
+    };
+
+    const newMaxSublibraries = kitToMaxSublibrariesMap[kit];
+    if (!newMaxSublibraries) {
+      console.log('INVALID KIT OPTION SELECTED');
+      return;
     }
     setMaxSublibraries(newMaxSublibraries);
     return newMaxSublibraries;
-  };
+  }, []);
 
-  const changeKit = (kit) => {
+  const changeKit = useCallback((kit) => {
     const newMaxSublibraries = calculateMaxSublibraries(kit);
     // changing the kit, changes the default selected number of sublibraries and samples
-    setFormValues({
-      ...formValues,
+    setFormValues((prevFormValues) => ({
+      ...prevFormValues,
       numOfSamples: newMaxSublibraries * 6,
       numOfSublibraries: newMaxSublibraries,
       kit,
-    });
-  };
+    }));
+  }, [calculateMaxSublibraries]);
 
-  const handleValueChange = (key, value) => {
-    setFormValues({
-      ...formValues,
+  const handleValueChange = useCallback((key, value) => {
+    setFormValues((prevFormValues) => ({
+      ...prevFormValues,
       [key]: value,
-    });
-  };
+    }));
+  }, []);
 
   return (
     <>
@@ -84,7 +81,7 @@ const SecondaryAnalysisDetails = (props) => {
             <Select
               placeholder='Select the kit you used in your experiment'
               value={formValues.kit}
-              onChange={(value) => changeKit(value)}
+              onChange={changeKit}
               options={[
                 { label: 'Evercode WT Mini', value: 'wt_mini' },
                 { label: 'Evercode WT', value: 'wt' },
