@@ -56,7 +56,7 @@ const SecondaryAnalysis = () => {
       key: 'Run details',
       render: () => (
         <SecondaryAnalysisDetails
-          setNewSecondaryAnalysisDetailsDiff={setNewSecondaryAnalysisDetailsDiff}
+          onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
           secondaryAnalysis={secondaryAnalysis}
         />
       ),
@@ -75,7 +75,7 @@ const SecondaryAnalysis = () => {
       key: 'Reference genome',
       render: () => (
         <SelectReferenceGenome
-          setNewSecondaryAnalysisDetailsDiff={setNewSecondaryAnalysisDetailsDiff}
+          onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
           secondaryAnalysis={secondaryAnalysis}
         />
       ),
@@ -149,10 +149,10 @@ const SecondaryAnalysis = () => {
         <NewProjectModal
           projectType='secondaryAnalyses'
           onCancel={() => { setNewProjectModalVisible(false); }}
-          onCreate={(name, description) => {
-            setNewProjectModalVisible(false);
-            dispatch(createSecondaryAnalysis(name, description));
+          onCreate={async (name, description) => {
+            await dispatch(createSecondaryAnalysis(name, description));
             setCurrentStepIndex(0);
+            setNewProjectModalVisible(false);
           }}
         />
       ) }

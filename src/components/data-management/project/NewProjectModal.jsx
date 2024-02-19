@@ -25,7 +25,6 @@ const NewProjectModal = ({ projectType, onCreate, onCancel }) => {
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
   const [isValidName, setIsValidName] = useState(false);
-
   const displayedProjectType = isSecondaryAnalysis ? 'Run' : 'Project';
 
   const firstTimeFlow = projectData.ids.length === 0 && !isSecondaryAnalysis;
@@ -48,9 +47,9 @@ const NewProjectModal = ({ projectType, onCreate, onCancel }) => {
     setIsValidName(validateInputs(projectName, validationChecks, validationParams).isValid);
   }, [projectName, projectNames]);
 
-  const submit = () => {
+  const submit = async () => {
     setProjectName('');
-    onCreate(projectName, projectDescription);
+    await onCreate(projectName, projectDescription);
   };
 
   return (
@@ -65,7 +64,7 @@ const NewProjectModal = ({ projectType, onCreate, onCancel }) => {
           key='create'
           block
           disabled={!isValidName}
-          onClick={submit}
+          onClick={async () => await submit()}
         >
           {`Create ${displayedProjectType}`}
         </Button>

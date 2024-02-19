@@ -111,9 +111,9 @@ const DataManagementPage = () => {
         <NewProjectModal
           projectType='experiments'
           onCancel={() => { setNewProjectModalVisible(false); }}
-          onCreate={(name, description) => {
+          onCreate={async (name, description) => {
+            await dispatch(createExperiment(name, description));
             setNewProjectModalVisible(false);
-            dispatch(createExperiment(name, description));
           }}
         />
       ) : (<></>)}

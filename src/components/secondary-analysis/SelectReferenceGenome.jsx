@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import {
-  Select, Space,
+  Select,
 } from 'antd';
 import propTypes from 'prop-types';
 
 const SelectReferenceGenome = (props) => {
-  const { secondaryAnalysis, setNewSecondaryAnalysisDetailsDiff } = props;
+  const { secondaryAnalysis, onDetailsChanged } = props;
   const [refGenome, setRefGenome] = useState();
   useEffect(() => {
     setRefGenome(secondaryAnalysis.refGenome);
@@ -17,7 +17,7 @@ const SelectReferenceGenome = (props) => {
     if (secondaryAnalysis.refGenome !== value) {
       newDiff = { refGenome: value };
     }
-    setNewSecondaryAnalysisDetailsDiff(newDiff);
+    onDetailsChanged(newDiff);
     setRefGenome(value);
   };
 
@@ -40,7 +40,7 @@ const SelectReferenceGenome = (props) => {
   );
 };
 SelectReferenceGenome.propTypes = {
-  setNewSecondaryAnalysisDetailsDiff: propTypes.func.isRequired,
+  onDetailsChanged: propTypes.func.isRequired,
   secondaryAnalysis: propTypes.object.isRequired,
 };
 

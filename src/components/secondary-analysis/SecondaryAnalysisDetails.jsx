@@ -5,9 +5,14 @@ import {
 import propTypes from 'prop-types';
 
 const { Option } = Select;
+const kitToMaxSublibrariesMap = {
+  wt_mini: 2,
+  wt: 8,
+  wt_mega: 16,
+};
 
 const SecondaryAnalysisDetails = (props) => {
-  const { setNewSecondaryAnalysisDetailsDiff, secondaryAnalysis } = props;
+  const { onDetailsChanged, secondaryAnalysis } = props;
   const [maxSublibraries, setMaxSublibraries] = useState();
   const [formValues, setFormValues] = useState({});
 
@@ -24,20 +29,14 @@ const SecondaryAnalysisDetails = (props) => {
         fieldsToUpdate[key] = formValues[key];
       }
     });
-    setNewSecondaryAnalysisDetailsDiff(fieldsToUpdate);
-  }, [formValues, secondaryAnalysis, setNewSecondaryAnalysisDetailsDiff]);
+    onDetailsChanged(fieldsToUpdate);
+  }, [formValues, secondaryAnalysis, onDetailsChanged]);
 
   const generateOptions = (end) => Array.from({ length: end }, (_, i) => i + 1).map((value) => (
     <Option key={value} value={`${value}`}>{value}</Option>
   ));
 
   const calculateMaxSublibraries = useCallback((kit) => {
-    const kitToMaxSublibrariesMap = {
-      wt_mini: 2,
-      wt: 8,
-      wt_mega: 16,
-    };
-
     const newMaxSublibraries = kitToMaxSublibrariesMap[kit];
     if (!newMaxSublibraries) {
       console.log('INVALID KIT OPTION SELECTED');
@@ -150,7 +149,7 @@ const SecondaryAnalysisDetails = (props) => {
 };
 
 SecondaryAnalysisDetails.propTypes = {
-  setNewSecondaryAnalysisDetailsDiff: propTypes.func.isRequired,
+  onDetailsChanged: propTypes.func.isRequired,
   secondaryAnalysis: propTypes.object.isRequired,
 };
 
