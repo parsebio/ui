@@ -74,16 +74,18 @@ const NewProjectModal = ({ projectType, onCreate, onCancel }) => {
     >
       <Space direction='vertical' style={{ width: '100%' }}>
         {firstTimeFlow && (
-          <>
-            <Title level={3} style={{ textAlign: 'center' }}>
-              Create a project to start analyzing your data in Cellenics
-            </Title>
-            <Paragraph>
-              Projects are where you can organize your data into samples, assign metadata, and start your analysis in Cellenics. Name it after the experiment you're working on.
-            </Paragraph>
-          </>
+          <Title level={3} style={{ textAlign: 'center' }}>
+            Create a project to start analyzing your data in Cellenics
+          </Title>
         )}
-
+        {!isSecondaryAnalysis && (
+          <Paragraph>
+            Projects are where you can organize your data into
+            samples, assign metadata, and start your analysis
+            in Cellenics. Name it after the experiment
+            you&apos;re working on.
+          </Paragraph>
+        )}
         <Form layout='vertical'>
           <Form.Item
             validateStatus={isValidName ? 'success' : 'error'}
