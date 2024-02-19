@@ -224,7 +224,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
     {
       key: 'mitochondrialContent',
       name: getUserFriendlyQCStepName('mitochondrialContent'),
-      description: 'A high percentage of mitochondrial reads is an indicator of cell death. UMIs mapped to mitochondrial genes are calculated as a percentage of total UMIs. The percentage of mitochondrial reads depends on the cell type. The typical cut-off range is 10-50%, with the default cut-off set to 3 median absolute deviations above the median.',
+      description: 'A high percentage of mitochondrial reads is an indicator of cell death. UMIs mapped to mitochondrial genes are calculated as a percentage of total UMIs. The percentage of mitochondrial reads depends on the cell type. The typical cut-off range is 5-30%, with the default cut-off set to 3 median absolute deviations above the median.',
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
@@ -248,7 +248,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
     {
       key: 'numGenesVsNumUmis',
       name: getUserFriendlyQCStepName('numGenesVsNumUmis'),
-      description: 'The number of expressed genes per cell and number of UMIs per cell is expected to have a linear relationship. This filter is used to exclude outliers (e.g. many UMIs originating from only a few genes).',
+      description: 'The number of expressed genes per cell and number of UMIs per cell is expected to have a linear relationship, until the maximum number of genes is reached and the curve tends to plateau. This filter is used to exclude outliers (e.g. many UMIs originating from only a few genes).',
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
