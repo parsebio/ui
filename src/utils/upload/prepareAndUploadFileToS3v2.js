@@ -53,13 +53,12 @@ const prepareAndUploadFileToS3v2 = async (
 const processMultipartUploadv2 = async (
   file, uploadParams, createOnUploadProgressForPart, abortController,
 ) => {
-  const responses = [];
+  const responsesPromises = [];
 
   await streamLoadAndCompressIfNecessary(
     file,
     async (compressedChunk, index) => {
-      // Multipart upload uses 1-based index, so add 1 to
-      const partNumber = index + 1;
+      const partNumber = index;
 
       const partResponse = await putPartInS3v2(
         compressedChunk,
@@ -70,17 +69,47 @@ const processMultipartUploadv2 = async (
         0,
       );
 
-      responses.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
+      responsesPromises.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
     },
     () => {
       // On progress
     },
   );
 
-  return responses;
+  return responsesPromises;
 };
 
-const MAX_RETRIES = 3;
+// const processMultipartUploadv2 = async (
+//   file, signedUrls, createOnUploadProgressForPart, abortController,
+// ) => {
+//   signedUrls.forEach((signedUrl, index) => {
+//     const start = index * FILE_CHUNK_SIZE;
+//     const end = (index + 1) * FILE_CHUNK_SIZE;
+//     const blob = index < signedUrls.length
+//       ? file.fileObject.slice(start, end)
+//       : file.fileObject.slice(start);
+
+//     const req = putPartInS3v2(
+//       blob,
+//       signedUrl,
+//       createOnUploadProgressForPart(index),
+//       abortController,
+//       0,
+//     );
+
+//     promises.push(req);
+//   });
+
+//   const resParts = await Promise.all(promises);
+
+//   return resParts.map((part, index) => ({
+//     ETag: part.headers.etag,
+//     PartNumber: index + 1,
+//   }));
+// };
+
+// const MAX_RETRIES = 3;
+const MAX_RETRIES = 0;
 
 const getSignedUrlForPart = async (uploadParams, partNumber) => {
   const {
