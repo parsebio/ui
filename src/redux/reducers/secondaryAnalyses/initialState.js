@@ -6,6 +6,7 @@ const secondaryAnalysisTemplate = {
   chemistryVersion: null,
   numOfSamples: null,
   numOfSublibraries: null,
+  files: [],
 };
 
 const initialState = {
@@ -16,7 +17,6 @@ const initialState = {
     activeSecondaryAnalysisId: null,
   },
   ids: [],
-  // analyses: [],
 };
 
 export { secondaryAnalysisTemplate };
