@@ -1,12 +1,8 @@
 import { AsyncGzip } from 'fflate';
 import fileReaderStream from 'filereader-stream';
 
-const MB = 1024 * 1024;
-const chunkSize = 128 * MB;
-
-// eslint-disable-next-line arrow-body-style
 const loadFileInStream = async (
-  file, compress, onChunkFinished, onProgress = () => { },
+  file, compress, chunkSize, onChunkLoaded,
 ) => new Promise((resolve, reject) => {
   try {
     // 2GB is the limit to read at once, chrome fails with files bigger than that
@@ -21,7 +17,8 @@ const loadFileInStream = async (
 
     const handleChunkFinished = async (chunk) => {
       partNumber += 1;
-      await onChunkFinished(chunk, partNumber);
+
+      await onChunkLoaded(chunk, partNumber);
 
       pendingChunks -= 1;
 

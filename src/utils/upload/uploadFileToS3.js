@@ -1,7 +1,12 @@
+import _ from 'lodash';
+
 import fetchAPI from 'utils/http/fetchAPI';
 import axios from 'axios';
 import UploadStatus from './UploadStatus';
 import loadFileInStream from './loadFileInStream';
+
+const MB = 1024 * 1024;
+const chunkSize = 128 * MB;
 
 const uploadFileToS3 = async (
   experimentId,
@@ -20,9 +25,6 @@ const uploadFileToS3 = async (
     throw new Error('uploadUrlParams must contain uploadId, fileId, bucket, and key');
   }
 
-  // eslint-disable-next-line no-unused-vars
-  const createOnUploadProgressForPart = (partIndex) => (progress) => { };
-
   try {
     const uploadParams = {
       experimentId,
@@ -31,8 +33,8 @@ const uploadFileToS3 = async (
       key,
     };
 
-    const responses = await processMultipartUploadv2(
-      file, compress, uploadParams, createOnUploadProgressForPart, abortController, onStatusUpdate,
+    const responses = await processMultipartUpload(
+      file, compress, uploadParams, abortController, onStatusUpdate,
     );
 
     await completeMultipartUpload(responses, uploadId, fileId, type);
@@ -43,29 +45,37 @@ const uploadFileToS3 = async (
   }
 };
 
-const processMultipartUploadv2 = async (
-  file, compress, uploadParams, createOnUploadProgressForPart, abortController,
+const processMultipartUpload = async (
+  file, compress, uploadParams, abortController, onStatusUpdate,
 ) => {
   const parts = [];
 
-  const partUploader = async (compressedPart, partNumber) => {
-    const partResponse = await putPartInS3v2(
-      compressedPart,
-      uploadParams,
-      partNumber,
-      createOnUploadProgressForPart(partNumber),
-      abortController,
-    );
+  const totalChunks = Math.ceil(file.size / chunkSize);
 
-    parts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
+  const uploadedPartPercentages = new Array(totalChunks).fill(0);
+
+  const createOnUploadProgress = (partNumber) => (progress) => {
+    // partNumbers are 1-indexed, so we need to subtract 1 for the array index
+    uploadedPartPercentages[partNumber - 1] = progress.progress;
+
+    const percentage = _.mean(uploadedPartPercentages) * 100;
+    onStatusUpdate(UploadStatus.UPLOADING, Math.floor(percentage));
   };
 
   await loadFileInStream(
     file,
     compress,
-    partUploader,
-    () => {
-      // On progress
+    chunkSize,
+    async (compressedPart, partNumber) => {
+      const partResponse = await putPartInS3(
+        compressedPart,
+        uploadParams,
+        partNumber,
+        abortController,
+        createOnUploadProgress(partNumber),
+      );
+
+      parts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
     },
   );
 
@@ -91,14 +101,11 @@ const getSignedUrlForPart = async (uploadParams, partNumber) => {
   return await fetchAPI(url, { method: 'GET' });
 };
 
-const putPartInS3v2 = async (
-  blob, uploadParams, partNumber, onUploadProgress, abortController, currentRetry = 0,
+const putPartInS3 = async (
+  blob, uploadParams, partNumber, abortController, onUploadProgress, currentRetry = 0,
 ) => {
   try {
     const signedUrl = await getSignedUrlForPart(uploadParams, partNumber);
-
-    console.log('signedUrlDebug');
-    console.log(signedUrl);
 
     return await axios.request({
       method: 'put',
@@ -112,8 +119,8 @@ const putPartInS3v2 = async (
     });
   } catch (e) {
     if (currentRetry < MAX_RETRIES) {
-      return await putPartInS3v2(
-        blob, uploadParams, partNumber, onUploadProgress, abortController, currentRetry + 1,
+      return await putPartInS3(
+        blob, uploadParams, partNumber, abortController, onUploadProgress, currentRetry + 1,
       );
     }
 
