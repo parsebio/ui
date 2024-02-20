@@ -1,34 +1,27 @@
 import fetchAPI from 'utils/http/fetchAPI';
 import axios from 'axios';
 import UploadStatus from './UploadStatus';
-import streamLoadAndCompressIfNecessary from './streamLoadAndCompressIfNecessary';
+import loadFileInStream from './loadFileInStream';
 
-const prepareAndUploadFileToS3v2 = async (
+const uploadFileToS3 = async (
   experimentId,
   file,
+  compress,
   uploadUrlParams,
   type,
   abortController,
   onStatusUpdate = () => { },
 ) => {
   const {
-    // signedUrls,
     uploadId, fileId, bucket, key,
   } = uploadUrlParams;
 
+  if (!uploadId || !fileId || !bucket || !key) {
+    throw new Error('uploadUrlParams must contain uploadId, fileId, bucket, and key');
+  }
+
   // eslint-disable-next-line no-unused-vars
   const createOnUploadProgressForPart = (partIndex) => (progress) => { };
-
-  // const uploadedPartSizes = new Array(signedUrls.length).fill(0);
-  // const totalSize = file.size;
-
-  // const createOnUploadProgressForPart = (partIndex) => (progress) => {
-  //   uploadedPartSizes[partIndex] = progress.loaded;
-  //   const totalUploaded = _.sum(uploadedPartSizes);
-  //   const percentProgress = Math.floor((totalUploaded * 100) / totalSize);
-
-  //   onStatusUpdate(UploadStatus.UPLOADING, percentProgress);
-  // };
 
   try {
     const uploadParams = {
@@ -39,7 +32,7 @@ const prepareAndUploadFileToS3v2 = async (
     };
 
     const responses = await processMultipartUploadv2(
-      file, uploadParams, createOnUploadProgressForPart, abortController, onStatusUpdate,
+      file, compress, uploadParams, createOnUploadProgressForPart, abortController, onStatusUpdate,
     );
 
     await completeMultipartUpload(responses, uploadId, fileId, type);
@@ -51,33 +44,33 @@ const prepareAndUploadFileToS3v2 = async (
 };
 
 const processMultipartUploadv2 = async (
-  file, uploadParams, createOnUploadProgressForPart, abortController,
+  file, compress, uploadParams, createOnUploadProgressForPart, abortController,
 ) => {
   const parts = [];
 
-  await streamLoadAndCompressIfNecessary(
+  const partUploader = async (compressedPart, partNumber) => {
+    const partResponse = await putPartInS3v2(
+      compressedPart,
+      uploadParams,
+      partNumber,
+      createOnUploadProgressForPart(partNumber),
+      abortController,
+    );
+
+    parts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
+  };
+
+  await loadFileInStream(
     file,
-    async (compressedChunk, index) => {
-      const partNumber = index;
-
-      const partResponse = await putPartInS3v2(
-        compressedChunk,
-        uploadParams,
-        partNumber,
-        createOnUploadProgressForPart(partNumber),
-        abortController,
-        0,
-      );
-
-      parts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
-    },
+    compress,
+    partUploader,
     () => {
       // On progress
     },
   );
 
   parts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
-    if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, they should be unique');
+    if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
 
     return PartNumber1 > PartNumber2 ? 1 : -1;
   });
@@ -85,37 +78,7 @@ const processMultipartUploadv2 = async (
   return parts;
 };
 
-// const processMultipartUploadv2 = async (
-//   file, signedUrls, createOnUploadProgressForPart, abortController,
-// ) => {
-//   signedUrls.forEach((signedUrl, index) => {
-//     const start = index * FILE_CHUNK_SIZE;
-//     const end = (index + 1) * FILE_CHUNK_SIZE;
-//     const blob = index < signedUrls.length
-//       ? file.fileObject.slice(start, end)
-//       : file.fileObject.slice(start);
-
-//     const req = putPartInS3v2(
-//       blob,
-//       signedUrl,
-//       createOnUploadProgressForPart(index),
-//       abortController,
-//       0,
-//     );
-
-//     promises.push(req);
-//   });
-
-//   const resParts = await Promise.all(promises);
-
-//   return resParts.map((part, index) => ({
-//     ETag: part.headers.etag,
-//     PartNumber: index + 1,
-//   }));
-// };
-
-// const MAX_RETRIES = 3;
-const MAX_RETRIES = 0;
+const MAX_RETRIES = 3;
 
 const getSignedUrlForPart = async (uploadParams, partNumber) => {
   const {
@@ -175,4 +138,4 @@ const completeMultipartUpload = async (parts, uploadId, fileId, type) => {
     });
 };
 
-export default prepareAndUploadFileToS3v2;
+export default uploadFileToS3;
