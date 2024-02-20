@@ -329,7 +329,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         <ConfigureEmbedding
           experimentId={expId}
           key={key}
-          onConfigChange={() => onConfigChange(key)}
+          onConfigChange={(settingType) => onConfigChange(settingType)}
           stepHadErrors={getStepHadErrors(key)}
         />
       ),
@@ -695,6 +695,15 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
                   Your navigation within Cellenics will be restricted during this time.
                   Do you want to start?
                 </p>
+                {
+                  !(changedQCFilters.size === 1 && changedQCFilters.has('embeddingSettings'))
+                && (
+                  <Alert
+                    message='Note that you will lose your previous Louvain or Leiden clusters.'
+                    type='warning'
+                  />
+                )
+                }
               </Modal>
             )
         )}
