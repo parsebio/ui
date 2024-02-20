@@ -14,6 +14,17 @@ class FileUploader {
     createOnUploadProgress,
     onStatusUpdate,
   ) {
+    if (
+      !file
+      || !chunkSize
+      || !uploadParams
+      || !abortController
+      || !createOnUploadProgress
+      || !onStatusUpdate
+    ) {
+      throw new Error('FileUploader: Missing required parameters');
+    }
+
     this.file = file;
     this.compress = compress;
     this.chunkSize = chunkSize;
@@ -117,6 +128,8 @@ class FileUploader {
   #cancelExecution = (status, e) => {
     this.readStream.destroy();
     this.gzipStream.terminate();
+    // eslint-disable-next-line no-unused-expressions
+    this.abortController?.abort();
 
     this.onStatusUpdate(status);
 
