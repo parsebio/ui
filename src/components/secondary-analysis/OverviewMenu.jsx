@@ -12,7 +12,9 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep }) => (
     <Row gutter={[16, 16]}>
       {wizardSteps.map((step, index) => {
         const spanSize = index < 3 ? 8 : 24; // First three cards have span 8, fourth card has span 24
-        const cardStyle = { height: index === 3 ? '350px' : '250px' };
+        const cardStyle = {
+          height: index === 3 ? '350px' : '250px',
+        };
 
         return (
           <Col key={step.key} span={spanSize}>
@@ -20,14 +22,21 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep }) => (
               bordered
               style={cardStyle}
               title={(
-                <>
-                  <Text strong>{step.key}</Text>
+                <div style={{ display: 'flex' }}>
+                  <Text
+                    strong
+                    style={{
+                      overflow: 'auto',
+                    }}
+                  >
+                    {step.key}
+                  </Text>
                   {step.isValid ? (
                     <CheckCircleOutlined style={{ color: 'green', marginLeft: '10px' }} />
                   ) : (
                     <CloseCircleOutlined style={{ color: 'red', marginLeft: '10px' }} />
                   )}
-                </>
+                </div>
               )}
               extra={(
                 <Button

@@ -14,13 +14,14 @@ import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
 import { loadSecondaryAnalyses, updateSecondaryAnalysis, createSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
+import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 
 const { Text, Title } = Typography;
 const camelCaseToTitle = {
   numOfSamples: 'Number of samples',
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
-  kit: 'Kit',
+  kit: 'Kit type',
 };
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
@@ -61,14 +62,13 @@ const SecondaryAnalysis = () => {
       return (
         <div key={key} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
           {title && (
-            <span style={{ marginRight: '8px', fontWeight: 'bold' }}>
-              {title}
-              :
+            <span style={{ fontWeight: 'bold' }}>
+              {`${title}:`}
             </span>
           )}
+          &nbsp;
           <span>
-            {' '}
-            {value || 'Not set'}
+            {value || 'Not selected'}
           </span>
         </div>
       );
@@ -95,9 +95,12 @@ const SecondaryAnalysis = () => {
         />
       ),
       isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
-      renderMainScreenDetails: () => mainScreenDetails({
-        numOfSamples, numOfSublibraries, chemistryVersion, kit,
-      }),
+      renderMainScreenDetails: () => {
+        const kitTitle = kitOptions.find((option) => option.value === kit)?.label;
+        return mainScreenDetails({
+          kit: kitTitle, chemistryVersion, numOfSamples, numOfSublibraries,
+        });
+      },
       onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
