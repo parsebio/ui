@@ -59,15 +59,17 @@ const SecondaryAnalysis = () => {
       const value = detailsObj[key];
       const title = camelCaseToTitle[key];
       return (
-        <div key={key}>
+        <div key={key} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
           {title && (
-            <Text strong>
+            <span style={{ marginRight: '8px', fontWeight: 'bold' }}>
               {title}
               :
-            </Text>
+            </span>
           )}
-          {' '}
-          {value || 'Not set'}
+          <span>
+            {' '}
+            {value || 'Not set'}
+          </span>
         </div>
       );
     });
@@ -84,8 +86,8 @@ const SecondaryAnalysis = () => {
   } = secondaryAnalysis || {};
   const secondaryAnalysisWizardSteps = [
     {
-      title: 'Provide the Run details:',
-      key: 'Run details',
+      title: 'Provide the details of the experimental setup:',
+      key: 'Experimental setup',
       render: () => (
         <SecondaryAnalysisDetails
           onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
