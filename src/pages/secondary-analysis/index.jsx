@@ -21,7 +21,6 @@ const camelCaseToTitle = {
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
   kit: 'Kit',
-  refGenome: 'Reference genome',
 };
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
@@ -58,12 +57,15 @@ const SecondaryAnalysis = () => {
   const mainScreenDetails = (detailsObj) => {
     const view = Object.keys(detailsObj).map((key) => {
       const value = detailsObj[key];
+      const title = camelCaseToTitle[key];
       return (
         <div key={key}>
-          <Text strong>
-            {camelCaseToTitle[key]}
-            :
-          </Text>
+          {title && (
+            <Text strong>
+              {title}
+              :
+            </Text>
+          )}
           {' '}
           {value || 'Not set'}
         </div>
