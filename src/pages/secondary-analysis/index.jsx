@@ -32,6 +32,12 @@ const SecondaryAnalysis = () => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
+  // useEffect(() => {
+  //   if (activeSecondaryAnalysisId && !secondaryAnalysis.files.length) {
+  //     dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
+  //   }
+  // }, [activeSecondaryAnalysisId]);
+
   const onNext = () => {
     setCurrentStepIndex(currentStepIndex + 1);
   };

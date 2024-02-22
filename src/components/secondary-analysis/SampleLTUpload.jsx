@@ -29,7 +29,7 @@ const SampleLTUpload = () => {
           <Dropzone onDrop={(e) => console.log('DROPPED FILES ', e)} multiple>
             {({ getRootProps, getInputProps }) => (
               <div
-                // data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
+                data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
                 style={{ border: '1px solid #ccc', padding: '2rem 0' }}
                 {...getRootProps({ className: 'dropzone' })}
                 id='dropzone'
