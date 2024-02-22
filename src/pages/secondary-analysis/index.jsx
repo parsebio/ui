@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, Button, Empty, Typography, Space,
+  Modal, Button, Empty, Typography, Space, Tooltip,
 } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
@@ -162,14 +162,20 @@ const SecondaryAnalysis = () => {
                     {`Run ID: ${activeSecondaryAnalysisId}`}
                   </Text>
                 </Space>
-                <Button
-                  type='primary'
-                  disabled
-                  size='large'
-                  style={{ marginBottom: '10px' }}
+                {/* todo - tooltip needs to be shown only if the button is disabled */}
+                <Tooltip
+                  overlay='Ensure that all sections are completed in order to proceed with running the pipeline.'
+                  placement='left'
                 >
-                  Run the pipeline
-                </Button>
+                  <Button
+                    type='primary'
+                    disabled
+                    size='large'
+                    style={{ marginBottom: '10px' }}
+                  >
+                    Run the pipeline
+                  </Button>
+                </Tooltip>
               </div>
               <Text strong>Description:</Text>
               <div style={{ flex: 1, overflowY: 'auto' }}>
