@@ -7,10 +7,9 @@ import {
 
 const EditableParagraph = (props) => {
   const { onUpdate, value } = props;
-
   const paragraphEditor = useRef();
 
-  const [text, setText] = useState('');
+  const [text, setText] = useState(value);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -21,9 +20,7 @@ const EditableParagraph = (props) => {
   }, [isEditing]);
 
   useEffect(() => {
-    if (value) {
-      setText(value);
-    }
+    setText(value);
   }, [value]);
 
   const handleUpdate = (e) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, Button, Empty, Typography,
+  Modal, Button, Empty, Typography, Space,
 } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
@@ -15,8 +15,14 @@ import NewProjectModal from 'components/data-management/project/NewProjectModal'
 import { loadSecondaryAnalyses, updateSecondaryAnalysis, createSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 
-const { Text } = Typography;
-
+const { Text, Title } = Typography;
+const camelCaseToTitle = {
+  numOfSamples: 'Number of samples',
+  numOfSublibraries: 'Number of sublibraries',
+  chemistryVersion: 'Chemistry version',
+  kit: 'Kit',
+  refGenome: 'Reference genome',
+};
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
@@ -41,12 +47,36 @@ const SecondaryAnalysis = () => {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
+
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
       dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
       setNewSecondaryAnalysisDetailsDiff({});
     }
   };
+
+  const mainScreenDetails = (detailsObj) => {
+    const view = Object.keys(detailsObj).map((key) => {
+      const value = detailsObj[key];
+      return (
+        <div key={key}>
+          <Text strong>
+            {camelCaseToTitle[key]}
+            :
+          </Text>
+          {' '}
+          {value || 'Not set'}
+        </div>
+      );
+    });
+    return view;
+  };
+  const mainScreenFileDetails = () => (
+    <Empty
+      description='Not uploaded'
+    />
+  );
+
   const {
     numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
   } = secondaryAnalysis || {};
@@ -61,6 +91,9 @@ const SecondaryAnalysis = () => {
         />
       ),
       isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
+      renderMainScreenDetails: () => mainScreenDetails({
+        numOfSamples, numOfSublibraries, chemistryVersion, kit,
+      }),
       onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
@@ -68,6 +101,7 @@ const SecondaryAnalysis = () => {
       key: 'Sample loading table',
       render: () => <SampleLTUpload />,
       isValid: false,
+      renderMainScreenDetails: mainScreenFileDetails,
       onNext,
     },
     {
@@ -80,6 +114,7 @@ const SecondaryAnalysis = () => {
         />
       ),
       isValid: Boolean(refGenome),
+      renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
       onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
@@ -87,6 +122,7 @@ const SecondaryAnalysis = () => {
       key: 'Fastq files',
       render: () => <UploadFastQ />,
       isValid: false,
+      renderMainScreenDetails: mainScreenFileDetails,
       onNext,
     },
   ];
@@ -108,31 +144,53 @@ const SecondaryAnalysis = () => {
     },
     [PROJECT_DETAILS]: {
       toolbarControls: [],
-      component: () => (activeSecondaryAnalysisId ? (
-        <>
-          {' '}
-          <div style={{ flex: 1, overflowY: 'auto' }}>
-            <Text strong>
-              Description:
-            </Text>
-            <EditableParagraph
-              value={secondaryAnalysis.description}
-              onUpdate={(text) => {
-                if (text !== secondaryAnalysis.description) {
-                  dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, { description: text }));
-                }
-              }}
-            />
-          </div>
-          <OverviewMenu
-            wizardSteps={secondaryAnalysisWizardSteps}
-            setCurrentStep={setCurrentStepIndex}
-            title={secondaryAnalysis.name}
-          />
-
-        </>
-      )
-        : <Empty description='Create a new run to get started' />),
+      component: () => (
+        <div style={{
+          display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
+        }}
+        >
+          {activeSecondaryAnalysisId ? (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Title level={4}>{secondaryAnalysis.name}</Title>
+                <Text type='secondary'>
+                  {`Run ID: ${activeSecondaryAnalysisId}`}
+                </Text>
+                <Button
+                  type='primary'
+                  disabled
+                  size='large'
+                  style={{ marginBottom: '10px' }}
+                >
+                  Run the pipeline
+                </Button>
+              </div>
+              <Text strong>Description:</Text>
+              <div style={{ flex: 1, overflowY: 'auto' }}>
+                <EditableParagraph
+                  value={secondaryAnalysis.description || ''}
+                  onUpdate={(text) => {
+                    if (text !== secondaryAnalysis.description) {
+                      dispatch(
+                        updateSecondaryAnalysis(
+                          activeSecondaryAnalysisId,
+                          { description: text },
+                        ),
+                      );
+                    }
+                  }}
+                />
+                <OverviewMenu
+                  wizardSteps={secondaryAnalysisWizardSteps}
+                  setCurrentStep={setCurrentStepIndex}
+                />
+              </div>
+            </>
+          ) : (
+            <Empty description='Create a new run to get started' />
+          )}
+        </div>
+      ),
     },
   };
   const windows = {
