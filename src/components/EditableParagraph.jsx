@@ -1,17 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+  useState, useEffect, useRef, useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
-import {
-  EditOutlined,
-} from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 
 const EditableParagraph = (props) => {
   const { onUpdate, value } = props;
   const paragraphEditor = useRef();
+  const textContainerRef = useRef(null);
 
   const [text, setText] = useState(value);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
   useEffect(() => {
     if (isEditing) {
@@ -22,23 +24,31 @@ const EditableParagraph = (props) => {
   useEffect(() => {
     setText(value);
   }, [value]);
+  const checkOverflow = useCallback(() => {
+    if (textContainerRef.current) {
+      const isOverflow = textContainerRef.current.scrollWidth > textContainerRef.current.clientWidth;
+      setIsOverflowing(isOverflow);
+    }
+  }, [textContainerRef]);
+
+  // used for tracking, whether we should render the 'more' button
+  // happens when the text is overflowing (doesnt fit in the container)
+  useEffect(() => {
+    checkOverflow();
+  }, [text, isExpanded]);
 
   const handleUpdate = (e) => {
     const content = e.target.textContent;
-
     setText(content);
     onUpdate(content);
     setIsEditing(false);
   };
 
   const renderEditor = () => (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-    <p
+    <div
       contentEditable
       ref={paragraphEditor}
-      style={{
-        backgroundColor: 'white',
-      }}
+      style={{ backgroundColor: 'white' }}
       onBlur={(e) => handleUpdate(e)}
       onKeyDown={(e) => {
         if (e.keyCode === 13) {
@@ -48,25 +58,25 @@ const EditableParagraph = (props) => {
       suppressContentEditableWarning
     >
       {text}
-    </p>
+    </div>
   );
 
   const renderEditButton = () => <Button style={{ padding: 0 }} type='link' icon={<EditOutlined />} onClick={() => setIsEditing(true)} />;
 
-  const renderEllipsisLink = () => (
+  const renderEllipsisLink = () => isOverflowing && (
     <Button
       type='link'
       style={{ padding: 0 }}
       onClick={() => setIsExpanded(!isExpanded)}
     >
-      { isExpanded ? 'less' : 'more' }
+      {isExpanded ? 'less' : 'more'}
     </Button>
   );
 
   const renderControls = () => (
     <>
-      { renderEditButton() }
-      { text.length ? renderEllipsisLink() : <></>}
+      {renderEditButton()}
+      {renderEllipsisLink()}
     </>
   );
 
@@ -74,8 +84,8 @@ const EditableParagraph = (props) => {
     if (isExpanded) {
       return (
         <p>
-          { text }
-          { renderControls() }
+          {text}
+          {renderControls()}
         </p>
       );
     }
@@ -83,6 +93,7 @@ const EditableParagraph = (props) => {
     return (
       <div style={{ display: 'flex' }}>
         <div
+          ref={textContainerRef}
           style={{
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -90,9 +101,9 @@ const EditableParagraph = (props) => {
             paddingTop: '0.25em',
           }}
         >
-          { text }
+          {text}
         </div>
-        { renderControls() }
+        {renderControls()}
       </div>
     );
   };
