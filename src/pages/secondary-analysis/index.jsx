@@ -152,10 +152,12 @@ const SecondaryAnalysis = () => {
           {activeSecondaryAnalysisId ? (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Title level={4}>{secondaryAnalysis.name}</Title>
-                <Text type='secondary'>
-                  {`Run ID: ${activeSecondaryAnalysisId}`}
-                </Text>
+                <Space direction='vertical'>
+                  <Title level={4}>{secondaryAnalysis.name}</Title>
+                  <Text type='secondary'>
+                    {`Run ID: ${activeSecondaryAnalysisId}`}
+                  </Text>
+                </Space>
                 <Button
                   type='primary'
                   disabled
