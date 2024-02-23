@@ -55,7 +55,7 @@
     "@socialgouv/matomo-next": "^1.2.2",
     "@vitessce/heatmap": "^3.2.2",
     "@vitessce/scatterplot": "^3.2.2",
-    "antd": "^4.24.8",
+    "antd": "^5.14.2",
     "aws-amplify": "^5.3.11",
     "axios": "^1.6.2",
     "babel-plugin-add-module-exports": "^1.0.4",
