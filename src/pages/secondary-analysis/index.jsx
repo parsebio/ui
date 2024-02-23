@@ -17,7 +17,7 @@ import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 
 const { Text, Title } = Typography;
-const camelCaseToTitle = {
+const keyToTitle = {
   numOfSamples: 'Number of samples',
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
@@ -58,7 +58,7 @@ const SecondaryAnalysis = () => {
   const mainScreenDetails = (detailsObj) => {
     const view = Object.keys(detailsObj).map((key) => {
       const value = detailsObj[key];
-      const title = camelCaseToTitle[key];
+      const title = keyToTitle[key];
       return (
         <div key={key} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
           {title && (
