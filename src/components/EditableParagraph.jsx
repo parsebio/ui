@@ -24,17 +24,14 @@ const EditableParagraph = (props) => {
   useEffect(() => {
     setText(value);
   }, [value]);
-  const checkOverflow = useCallback(() => {
-    if (textContainerRef.current) {
-      const isOverflow = textContainerRef.current.scrollWidth > textContainerRef.current.clientWidth;
-      setIsOverflowing(isOverflow);
-    }
-  }, [textContainerRef]);
 
   // used for tracking, whether we should render the 'more' button
   // happens when the text is overflowing (doesnt fit in the container)
   useEffect(() => {
-    checkOverflow();
+    if (textContainerRef.current) {
+      const isOverflow = textContainerRef.current.scrollWidth > textContainerRef.current.clientWidth;
+      setIsOverflowing(isOverflow);
+    }
   }, [text, isExpanded]);
 
   const handleUpdate = (e) => {
