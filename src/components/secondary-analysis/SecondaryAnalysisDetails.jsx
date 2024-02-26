@@ -3,6 +3,7 @@ import {
   Select, Form, Space,
 } from 'antd';
 import propTypes from 'prop-types';
+import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 
 const { Option } = Select;
 const kitToMaxSublibrariesMap = {
@@ -81,11 +82,7 @@ const SecondaryAnalysisDetails = (props) => {
               placeholder='Select the kit you used in your experiment'
               value={formValues.kit}
               onChange={changeKit}
-              options={[
-                { label: 'Evercode WT Mini', value: 'wt_mini' },
-                { label: 'Evercode WT', value: 'wt' },
-                { label: 'Evercode WT Mega', value: 'wt_mega' },
-              ]}
+              options={kitOptions}
             />
 
             <Select
