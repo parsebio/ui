@@ -14,7 +14,9 @@ import {
   List,
   Tooltip,
 } from 'antd';
-import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
+import {
+  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
+} from '@ant-design/icons';
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
 
@@ -25,6 +27,7 @@ import handleError from 'utils/http/handleError';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import endUserMessages from 'utils/endUserMessages';
+import Expandable from 'components/Expandable';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -53,6 +56,8 @@ const extraHelpText = {
   [sampleTech.PARSE]: () => <></>,
 };
 
+const emptyFiles = { valid: [], invalid: [] };
+
 const FileUploadModal = (props) => {
   const { onUpload, onCancel, currentSelectedTech } = props;
 
@@ -65,14 +70,14 @@ const FileUploadModal = (props) => {
 
   const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech['10X']);
   const [canUpload, setCanUpload] = useState(false);
-  const [filesList, setFilesList] = useState([]);
+  const [files, setFiles] = useState(emptyFiles);
 
   useEffect(() => {
-    setCanUpload(filesList.length && filesList.every((file) => !file.errors));
-  }, [filesList]);
+    setCanUpload(files.valid.length && files.valid.every((file) => !file.errors));
+  }, [files]);
 
   useEffect(() => {
-    setFilesList([]);
+    setFiles(emptyFiles);
   }, [selectedTech]);
 
   // Handle on Drop
@@ -93,7 +98,7 @@ const FileUploadModal = (props) => {
         return;
       }
 
-      const allFiles = [...filesList, ...newFiles];
+      const allFiles = [...files.valid, ...newFiles];
       if (allFiles.length > 1) {
         handleError('error', endUserMessages.ERROR_SEURAT_MULTIPLE_FILES);
       }
@@ -104,20 +109,26 @@ const FileUploadModal = (props) => {
         return;
       }
 
-      setFilesList([seuratFile]);
+      setFiles({ valid: [seuratFile], invalid: [] });
     } else {
-      const newFiles = await fileUploadUtils[selectedTech].filterFiles(filteredFiles);
+      const {
+        valid: newFiles,
+        invalid,
+      } = await fileUploadUtils[selectedTech].filterFiles(filteredFiles);
 
-      setFilesList([...filesList, ...newFiles]);
+      setFiles({
+        valid: [...files.valid, ...newFiles],
+        invalid: [...files.invalid, ...invalid],
+      });
     }
   };
 
   const removeFile = (fileName) => {
-    const newArray = _.cloneDeep(filesList);
+    const newArray = _.cloneDeep(files.valid);
 
     const fileIdx = newArray.findIndex((file) => file.name === fileName);
     newArray.splice(fileIdx, 1);
-    setFilesList(newArray);
+    setFiles({ valid: newArray, invalid: files.invalid });
   };
 
   const { fileUploadParagraphs, dropzoneText, webkitdirectory } = fileUploadUtils[selectedTech];
@@ -166,8 +177,8 @@ const FileUploadModal = (props) => {
           block
           disabled={!canUpload}
           onClick={() => {
-            onUpload(filesList, selectedTech);
-            setFilesList([]);
+            onUpload(files.valid, selectedTech);
+            setFiles(emptyFiles);
           }}
         >
           Upload
@@ -268,12 +279,11 @@ const FileUploadModal = (props) => {
       <Row>
         <Col span={24}>
           {/* eslint-enable react/jsx-props-no-spreading */}
-
-          {filesList.length ? (
+          {files.valid.length ? (
             <>
               <Divider orientation='center'>To upload</Divider>
               <List
-                dataSource={filesList}
+                dataSource={files.valid}
                 size='small'
                 itemLayout='horizontal'
                 grid='{column: 4}'
@@ -306,6 +316,49 @@ const FileUploadModal = (props) => {
               />
             </>
           ) : ''}
+          {files.invalid.length > 0 && (
+            <Expandable
+              style={{ width: '100%' }}
+              expandedContent={(
+                <>
+                  <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Ignored files</Divider>
+                  <List
+                    dataSource={files.invalid}
+                    size='small'
+                    itemLayout='horizontal'
+                    renderItem={(file) => (
+                      <List.Item key={file.path} style={{ height: '100%', width: '100%' }}>
+                        <Space style={{ width: 200, justifyContent: 'center' }}>
+                          <CloseCircleTwoTone twoToneColor='#f5222d' />
+                          <div style={{ width: 200 }}>
+                            <Text
+                              ellipsis={{ tooltip: file.path }}
+                            >
+                              {file.path}
+                            </Text>
+                          </div>
+                        </Space>
+                        <Text style={{ width: '100%', marginLeft: '50px' }}>{file.rejectReason}</Text>
+                      </List.Item>
+                    )}
+                  />
+                </>
+              )}
+              collapsedContent={(
+                <center>
+                  <Divider orientation='center' style={{ color: 'red' }} />
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
+                  <Text>
+                    Some files were ignored, click to display
+                  </Text>
+                </center>
+              )}
+            />
+          )}
         </Col>
       </Row>
     </Modal>
