@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, Button, Empty, Typography,
+  Modal, Button, Empty, Typography, Space, Tooltip,
 } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
@@ -14,9 +14,15 @@ import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
 import { loadSecondaryAnalyses, updateSecondaryAnalysis, createSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
+import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 
-const { Text } = Typography;
-
+const { Text, Title } = Typography;
+const keyToTitle = {
+  numOfSamples: 'Number of samples',
+  numOfSublibraries: 'Number of sublibraries',
+  chemistryVersion: 'Chemistry version',
+  kit: 'Kit type',
+};
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
@@ -41,19 +47,47 @@ const SecondaryAnalysis = () => {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
+
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
       dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
       setNewSecondaryAnalysisDetailsDiff({});
     }
   };
+
+  const mainScreenDetails = (detailsObj) => {
+    const view = Object.keys(detailsObj).map((key) => {
+      const value = detailsObj[key];
+      const title = keyToTitle[key];
+      return (
+        <div key={key} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+          {title && (
+            <span style={{ fontWeight: 'bold' }}>
+              {`${title}:`}
+            </span>
+          )}
+          &nbsp;
+          <span>
+            {value || 'Not selected'}
+          </span>
+        </div>
+      );
+    });
+    return view;
+  };
+  const mainScreenFileDetails = () => (
+    <Empty
+      description='Not uploaded'
+    />
+  );
+
   const {
     numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
   } = secondaryAnalysis || {};
   const secondaryAnalysisWizardSteps = [
     {
-      title: 'Provide the Run details:',
-      key: 'Run details',
+      title: 'Provide the details of the experimental setup:',
+      key: 'Experimental setup',
       render: () => (
         <SecondaryAnalysisDetails
           onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
@@ -61,6 +95,12 @@ const SecondaryAnalysis = () => {
         />
       ),
       isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
+      renderMainScreenDetails: () => {
+        const kitTitle = kitOptions.find((option) => option.value === kit)?.label;
+        return mainScreenDetails({
+          kit: kitTitle, chemistryVersion, numOfSamples, numOfSublibraries,
+        });
+      },
       onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
@@ -68,6 +108,7 @@ const SecondaryAnalysis = () => {
       key: 'Sample loading table',
       render: () => <SampleLTUpload />,
       isValid: false,
+      renderMainScreenDetails: mainScreenFileDetails,
       onNext,
     },
     {
@@ -80,6 +121,7 @@ const SecondaryAnalysis = () => {
         />
       ),
       isValid: Boolean(refGenome),
+      renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
       onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
@@ -87,6 +129,7 @@ const SecondaryAnalysis = () => {
       key: 'Fastq files',
       render: () => <UploadFastQ />,
       isValid: false,
+      renderMainScreenDetails: mainScreenFileDetails,
       onNext,
     },
   ];
@@ -108,31 +151,61 @@ const SecondaryAnalysis = () => {
     },
     [PROJECT_DETAILS]: {
       toolbarControls: [],
-      component: () => (activeSecondaryAnalysisId ? (
-        <>
-          {' '}
-          <div style={{ flex: 1, overflowY: 'auto' }}>
-            <Text strong>
-              Description:
-            </Text>
-            <EditableParagraph
-              value={secondaryAnalysis.description}
-              onUpdate={(text) => {
-                if (text !== secondaryAnalysis.description) {
-                  dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, { description: text }));
-                }
-              }}
-            />
-          </div>
-          <OverviewMenu
-            wizardSteps={secondaryAnalysisWizardSteps}
-            setCurrentStep={setCurrentStepIndex}
-            title={secondaryAnalysis.name}
-          />
-
-        </>
-      )
-        : <Empty description='Create a new run to get started' />),
+      component: () => (
+        <div style={{
+          display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
+        }}
+        >
+          {activeSecondaryAnalysisId ? (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Space direction='vertical'>
+                  <Title level={4}>{secondaryAnalysis.name}</Title>
+                  <Text type='secondary'>
+                    {`Run ID: ${activeSecondaryAnalysisId}`}
+                  </Text>
+                </Space>
+                {/* todo - tooltip needs to be shown only if the button is disabled */}
+                <Tooltip
+                  overlay='Ensure that all sections are completed in order to proceed with running the pipeline.'
+                  placement='left'
+                >
+                  <Button
+                    type='primary'
+                    disabled
+                    size='large'
+                    style={{ marginBottom: '10px' }}
+                  >
+                    Run the pipeline
+                  </Button>
+                </Tooltip>
+              </div>
+              <Text strong>Description:</Text>
+              <div style={{ flex: 1, overflowY: 'auto' }}>
+                <EditableParagraph
+                  value={secondaryAnalysis.description || ''}
+                  onUpdate={(text) => {
+                    if (text !== secondaryAnalysis.description) {
+                      dispatch(
+                        updateSecondaryAnalysis(
+                          activeSecondaryAnalysisId,
+                          { description: text },
+                        ),
+                      );
+                    }
+                  }}
+                />
+                <OverviewMenu
+                  wizardSteps={secondaryAnalysisWizardSteps}
+                  setCurrentStep={setCurrentStepIndex}
+                />
+              </div>
+            </>
+          ) : (
+            <Empty description='Create a new run to get started' />
+          )}
+        </div>
+      ),
     },
   };
   const windows = {

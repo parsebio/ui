@@ -1,49 +1,68 @@
 import React from 'react';
-import { Typography, Button, Card } from 'antd';
+import {
+  Typography, Button, Card, Row, Col, Space,
+} from 'antd';
+import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
-const { Title } = Typography;
+const { Text } = Typography;
 
-const OverviewMenu = (props) => {
-  const { wizardSteps, setCurrentStep, title } = props;
+const OverviewMenu = ({ wizardSteps, setCurrentStep }) => (
+  <Card style={{ maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }}>
+    <Row gutter={[16, 16]}>
+      {wizardSteps.map((step, index) => {
+        const spanSize = index < 3 ? 8 : 24; // First three cards have span 8, fourth card has span 24
+        const cardStyle = {
+          height: index === 3 ? '350px' : '250px',
+        };
 
-  return (
-    <Card style={{ width: '45%' }} title={title}>
-      {wizardSteps.map((step, indx) => {
-        const status = step.isValid ? <span style={{ color: 'green', marginRight: '10px' }}> complete</span>
-          : <span style={{ color: 'red', marginRight: '10px' }}>incomplete</span>;
         return (
-          <div
-            key={step.key}
-            style={{
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1%', width: '100%',
-            }}
-          >
-            <Title level={5} style={{ marginRight: '10px', marginBottom: 0, lineHeight: 'normal' }}>
-              {step.key}
-            </Title>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div>
-                Status:
-                {' '}
-                {status}
-              </div>
-              <Button onClick={() => setCurrentStep(indx)} type='primary'>Edit</Button>
-            </div>
-          </div>
+          <Col key={step.key} span={spanSize}>
+            <Card
+              bordered
+              style={cardStyle}
+              title={(
+                <div style={{ display: 'flex' }}>
+                  <Text
+                    strong
+                    style={{
+                      overflow: 'auto',
+                    }}
+                  >
+                    {step.key}
+                  </Text>
+                  {step.isValid ? (
+                    <CheckCircleOutlined style={{ color: 'green', marginLeft: '10px' }} />
+                  ) : (
+                    <CloseCircleOutlined style={{ color: 'red', marginLeft: '10px' }} />
+                  )}
+                </div>
+              )}
+              extra={(
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setCurrentStep(index);
+                  }}
+                  type='link'
+                />
+              )}
+            >
+              <Space direction='vertical' style={{ width: '100%' }}>
+                {step.renderMainScreenDetails()}
+              </Space>
+            </Card>
+          </Col>
         );
       })}
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-        <Button type='primary' size='large' style={{ width: '30%' }}>Run the pipeline</Button>
-      </div>
-    </Card>
-  );
-};
+    </Row>
+  </Card>
+);
 
 OverviewMenu.propTypes = {
   wizardSteps: PropTypes.array.isRequired,
   setCurrentStep: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
 };
 
 export default OverviewMenu;
