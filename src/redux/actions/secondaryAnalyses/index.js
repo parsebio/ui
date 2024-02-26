@@ -4,6 +4,8 @@ import loadSecondaryAnalyses from './loadSecondaryAnalyses';
 import setActiveSecondaryAnalysis from './setActiveSecondaryAnalysis';
 import updateSecondaryAnalysis from './updateSecondaryAnalysis';
 import loadSecondaryAnalysisFiles from './loadSecondaryAnalysisFiles';
+import uploadSecondaryAnalysisFile from './uploadSecondaryAnalysisFile';
+import updateSecondaryAnalysisFile from './updateSecondaryAnalysisFile';
 
 export {
   createSecondaryAnalysis,
@@ -12,4 +14,6 @@ export {
   setActiveSecondaryAnalysis,
   updateSecondaryAnalysis,
   loadSecondaryAnalysisFiles,
+  uploadSecondaryAnalysisFile,
+  updateSecondaryAnalysisFile,
 };

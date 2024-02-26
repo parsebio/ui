@@ -89,11 +89,11 @@ class FileUploader {
 
   #getSignedUrlForPart = async (partNumber) => {
     const {
-      experimentId, uploadId, bucket, key,
+      projectId, uploadId, bucket, key,
     } = this.uploadParams;
 
     const queryParams = new URLSearchParams({ bucket, key });
-    const url = `/v2/experiments/${experimentId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
+    const url = `/v2/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
 
     return await fetchAPI(url, { method: 'GET' });
   };

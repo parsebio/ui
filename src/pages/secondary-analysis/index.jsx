@@ -12,7 +12,10 @@ import UploadFastQ from 'components/secondary-analysis/UploadFastQ';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
-import { loadSecondaryAnalyses, updateSecondaryAnalysis, createSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import {
+  loadSecondaryAnalyses, updateSecondaryAnalysis,
+  createSecondaryAnalysis, loadSecondaryAnalysisFiles,
+} from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 
 const { Text } = Typography;
@@ -32,11 +35,11 @@ const SecondaryAnalysis = () => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
-  // useEffect(() => {
-  //   if (activeSecondaryAnalysisId && !secondaryAnalysis.files.length) {
-  //     dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
-  //   }
-  // }, [activeSecondaryAnalysisId]);
+  useEffect(() => {
+    if (activeSecondaryAnalysisId && !secondaryAnalysis.files.length) {
+      dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
+    }
+  }, [activeSecondaryAnalysisId]);
 
   const onNext = () => {
     setCurrentStepIndex(currentStepIndex + 1);
@@ -91,7 +94,7 @@ const SecondaryAnalysis = () => {
     {
       title: 'Upload your Fastq files:',
       key: 'Fastq files',
-      render: () => <UploadFastQ />,
+      render: () => <UploadFastQ secondaryAnalysisId={activeSecondaryAnalysisId} />,
       isValid: false,
       onNext,
     },
@@ -167,7 +170,7 @@ const SecondaryAnalysis = () => {
           open
           title={currentStep.title}
           okButtonProps={{ htmlType: 'submit' }}
-          bodyStyle={{ height: '35vh' }}
+          bodyStyle={{ minHeight: '35dvh' }}
           onCancel={() => { onCancel(); handleUpdateSecondaryAnalysisDetails(); }}
           footer={[
             <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>

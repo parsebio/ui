@@ -1,14 +1,49 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Form, Empty,
+  Form, Empty, Divider, List, Space, Typography, Button,
 } from 'antd';
+import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
+import { uploadSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import _ from 'lodash';
+
+const { Text } = Typography;
 
 const UploadFastQ = (props) => {
+  const { secondaryAnalysisId } = props;
   const [form] = Form.useForm();
+  const [filesList, setFilesList] = useState([]);
+  const dispatch = useDispatch();
+  const onUpload = async () => {
+    const promises = [];
+    filesList.forEach((file) => {
+      promises.push(async () => await dispatch(
+        uploadSecondaryAnalysisFile(secondaryAnalysisId, file, 'fastq'),
+      ));
+    });
+    // 5 at a time
+    const chunkedPromises = _.chunk(promises, promises.length);
 
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const promisesChunk of chunkedPromises) {
+      await Promise.all(promisesChunk.map((promise) => promise()));
+    }
+  };
+
+  const onDrop = (files) => {
+    setFilesList(files);
+  };
+
+  const removeFile = (fileName) => {
+    const newArray = _.cloneDeep(filesList);
+
+    const fileIdx = newArray.findIndex((file) => file.name === fileName);
+    newArray.splice(fileIdx, 1);
+    setFilesList(newArray);
+  };
   return (
     <Form
       form={form}
@@ -32,7 +67,7 @@ const UploadFastQ = (props) => {
           FASTQ files from the same Parse experiment that have different Illumina indexes should not be concatenated. These files are separate sublibraries.
           FASTQ files from the same Parse experiment that share identical Illumina indexes must be concatenated. These files belong to the same sublibrary.
         </div>
-        <Dropzone onDrop={(e) => console.log('DROPPED FILES ', e)} multiple>
+        <Dropzone onDrop={onDrop} multiple>
           {({ getRootProps, getInputProps }) => (
             <div
               data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
@@ -45,6 +80,55 @@ const UploadFastQ = (props) => {
             </div>
           )}
         </Dropzone>
+        <Button
+          data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+          type='primary'
+          key='create'
+          block
+          disabled={!filesList.length}
+          onClick={() => {
+            onUpload(filesList);
+            setFilesList([]);
+          }}
+        >
+          Upload
+        </Button>
+        {filesList.length ? (
+          <>
+            <Divider orientation='center'>To upload</Divider>
+            <List
+              dataSource={filesList}
+              size='small'
+              itemLayout='horizontal'
+              grid='{column: 4}'
+              renderItem={(file) => (
+                <List.Item
+                  key={file.name}
+                  style={{ width: '100%' }}
+                >
+                  <Space>
+                    {!file.errors
+                      ? (
+                        <>
+                          <CheckCircleTwoTone twoToneColor='#52c41a' />
+                        </>
+                      ) : (
+                        <>
+                          <CloseCircleTwoTone twoToneColor='#f5222d' />
+                        </>
+                      )}
+                    <Text
+                      style={{ width: '200px' }}
+                    >
+                      {file.name}
+                    </Text>
+                    <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.name); }} />
+                  </Space>
+                </List.Item>
+              )}
+            />
+          </>
+        ) : ''}
       </Form.Item>
     </Form>
   );

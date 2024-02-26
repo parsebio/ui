@@ -1,13 +1,10 @@
 const { default: produce } = require('immer');
 
 const secondaryAnalysisFilesLoaded = produce((draft, action) => {
-  const { files } = action.payload;
-
-  draft.files = {
-    loading: false,
-    error: null,
-    data: files,
-  };
+  const { files, secondaryAnalysisId } = action.payload;
+  files.forEach((file) => {
+    draft[secondaryAnalysisId].files[file.id] = file;
+  });
 });
 
 export default secondaryAnalysisFilesLoaded;

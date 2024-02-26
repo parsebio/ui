@@ -4,7 +4,7 @@ import UploadStatus from './UploadStatus';
 import FileUploader from './FileUploader';
 
 const uploadFileToS3 = async (
-  experimentId,
+  projectId,
   file,
   compress,
   uploadUrlParams,
@@ -21,7 +21,7 @@ const uploadFileToS3 = async (
   }
 
   const partUploadParams = {
-    experimentId,
+    projectId,
     uploadId,
     bucket,
     key,
