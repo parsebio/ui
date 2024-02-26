@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button,
@@ -9,11 +8,12 @@ import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { uploadSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 
 const { Text } = Typography;
 
 const UploadFastQ = (props) => {
-  const { secondaryAnalysisId } = props;
+  const { secondaryAnalysisId, renderFastqFileTable } = props;
   const [form] = Form.useForm();
   const [filesList, setFilesList] = useState([]);
   const dispatch = useDispatch();
@@ -63,9 +63,13 @@ const UploadFastQ = (props) => {
           <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
           .
           <br />
+          <br />
           Important information regarding indexes:
-          FASTQ files from the same Parse experiment that have different Illumina indexes should not be concatenated. These files are separate sublibraries.
-          FASTQ files from the same Parse experiment that share identical Illumina indexes must be concatenated. These files belong to the same sublibrary.
+          <br />
+          <ul>
+            <li>FASTQ files from the same Parse experiment that have different Illumina indexes should not be concatenated. These files are separate sublibraries.</li>
+            <li>FASTQ files from the same Parse experiment that share identical Illumina indexes must be concatenated. These files belong to the same sublibrary.</li>
+          </ul>
         </div>
         <Dropzone onDrop={onDrop} multiple>
           {({ getRootProps, getInputProps }) => (
@@ -129,9 +133,14 @@ const UploadFastQ = (props) => {
             />
           </>
         ) : ''}
+        {renderFastqFileTable()}
       </Form.Item>
     </Form>
   );
+};
+UploadFastQ.propTypes = {
+  secondaryAnalysisId: PropTypes.string.isRequired,
+  renderFastqFileTable: PropTypes.func.isRequired,
 };
 
 export default UploadFastQ;

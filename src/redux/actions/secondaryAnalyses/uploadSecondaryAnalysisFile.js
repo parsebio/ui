@@ -16,15 +16,16 @@ const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
       body: JSON.stringify({ name, size, type }),
     });
     const fileRecord = {
-      ...file,
       id: uploadUrlParams.fileId,
+      name: file.name,
+      size: file.size,
       type,
       upload: {
         status: UploadStatus.UPLOADING,
         progress: 0,
       },
     };
-
+    console.log('FILE RECORD IS ', fileRecord);
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {
