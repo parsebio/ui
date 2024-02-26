@@ -7,7 +7,7 @@ import {
   Modal, Button, Col, Row, Progress,
 } from 'antd';
 import UploadStatus, { messageForStatus } from 'utils/upload/UploadStatus';
-import bytesToSize from 'utils/bytesToSize';
+import bytesToSize from 'utils/styling/bytesToSize';
 
 dayjs.extend(utc);
 
