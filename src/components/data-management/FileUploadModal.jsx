@@ -332,9 +332,9 @@ const FileUploadModal = (props) => {
                           <CloseCircleTwoTone twoToneColor='#f5222d' />
                           <div style={{ width: 200 }}>
                             <Text
-                              ellipsis={{ tooltip: file.path }}
+                              ellipsis={{ tooltip: _.trim(file.path, '/') }}
                             >
-                              {file.path}
+                              {_.trim(file.path, '/')}
                             </Text>
                           </div>
                         </Space>
@@ -353,7 +353,12 @@ const FileUploadModal = (props) => {
                     {' '}
                   </Text>
                   <Text>
-                    Some files were ignored, click to display
+                    {files.invalid.length}
+                    {' '}
+                    file
+                    {files.invalid.length > 1 ? 's were' : ' was'}
+                    {' '}
+                    ignored, click to display
                   </Text>
                 </center>
               )}
