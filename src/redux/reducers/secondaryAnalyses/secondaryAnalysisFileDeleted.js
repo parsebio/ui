@@ -3,6 +3,6 @@ import produce from 'immer';
 const secondaryAnalysisFileDeleted = produce((draft, action) => {
   const { secondaryAnalysisId, fileId } = action.payload;
 
-  delete draft[secondaryAnalysisId].files[fileId];
+  delete draft[secondaryAnalysisId].files.data[fileId];
 });
 export default secondaryAnalysisFileDeleted;
