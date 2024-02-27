@@ -68,6 +68,7 @@ class FileUploader {
       this.#setupReadStreamHandlers();
 
       if (this.compress) {
+        console.log('I AM COMPRESSING');
         this.gzipStream = new AsyncGzip({ level: 1, consume: true });
         this.#setupGzipStreamHandlers();
       }

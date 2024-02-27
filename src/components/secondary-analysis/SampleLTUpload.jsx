@@ -12,20 +12,26 @@ import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { CheckCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
 
-import { uploadSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import { uploadSecondaryAnalysisFile, deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import PropTypes from 'prop-types';
 
 const { Text } = Typography;
 const SampleLTUpload = (props) => {
   const dispatch = useDispatch();
-  const { secondaryAnalysisId, renderUploadedFileDetails } = props;
+  const { secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId } = props;
   const [file, setFile] = useState(false);
+
   const onDrop = async (droppedFile) => {
     setFile(droppedFile[0]);
   };
   const onUpload = async () => {
+    if (uploadedFileId) {
+      dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
+    }
     dispatch(uploadSecondaryAnalysisFile(secondaryAnalysisId, file, 'samplelt'));
   };
+
+  const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';
 
   return (
     <>
@@ -67,7 +73,7 @@ const SampleLTUpload = (props) => {
               setFile(null);
             }}
           >
-            Upload
+            {uploadButtonText}
           </Button>
           {file && (
             <>

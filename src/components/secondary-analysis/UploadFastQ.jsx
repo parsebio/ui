@@ -133,6 +133,8 @@ const UploadFastQ = (props) => {
             />
           </>
         ) : ''}
+        <br />
+        <br />
         {renderFastqFileTable()}
       </Form.Item>
     </Form>

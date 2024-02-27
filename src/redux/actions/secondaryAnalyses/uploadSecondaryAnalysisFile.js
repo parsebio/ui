@@ -25,7 +25,7 @@ const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
         progress: 0,
       },
     };
-    console.log('FILE RECORD IS ', fileRecord);
+
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {

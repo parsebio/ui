@@ -18,7 +18,7 @@ import {
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
-import FileTable from 'components/secondary-analysis/FileTable';
+import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import _ from 'lodash';
 
 const { Text, Title } = Typography;
@@ -115,9 +115,10 @@ const SecondaryAnalysis = () => {
     const filesToDisplay = getFilesByType('fastq');
     if (Object?.keys(filesToDisplay)?.length) {
       return (
-        <FileTable
+        <FastqFileTable
           canEditTable={canEditTable}
           files={filesToDisplay}
+          secondaryAnalysisId={activeSecondaryAnalysisId}
         />
       );
     }
@@ -165,6 +166,7 @@ const SecondaryAnalysis = () => {
         <SampleLTUpload
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderUploadedFileDetails={renderSampleLTFileDetails}
+          uploadedFileId={Object.values(getFilesByType('samplelt'))[0]?.id || null}
         />
       ),
       isValid: areFilesUploaded('samplelt'),
@@ -301,7 +303,7 @@ const SecondaryAnalysis = () => {
           open
           title={currentStep.title}
           okButtonProps={{ htmlType: 'submit' }}
-          bodyStyle={{ minHeight: '35dvh' }}
+          bodyStyle={{ height: '40dvh', overflowY: 'auto' }}
           style={{ minWidth: '70dvh' }}
           onCancel={() => { onCancel(); handleUpdateSecondaryAnalysisDetails(); }}
           footer={[

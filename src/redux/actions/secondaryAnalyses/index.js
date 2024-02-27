@@ -6,6 +6,7 @@ import updateSecondaryAnalysis from './updateSecondaryAnalysis';
 import loadSecondaryAnalysisFiles from './loadSecondaryAnalysisFiles';
 import uploadSecondaryAnalysisFile from './uploadSecondaryAnalysisFile';
 import updateSecondaryAnalysisFile from './updateSecondaryAnalysisFile';
+import deleteSecondaryAnalysisFile from './deleteSecondaryAnalysisFile';
 
 export {
   createSecondaryAnalysis,
@@ -16,4 +17,5 @@ export {
   loadSecondaryAnalysisFiles,
   uploadSecondaryAnalysisFile,
   updateSecondaryAnalysisFile,
+  deleteSecondaryAnalysisFile,
 };
