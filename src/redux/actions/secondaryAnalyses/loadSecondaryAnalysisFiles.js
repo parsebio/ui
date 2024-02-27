@@ -1,9 +1,15 @@
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import { SECONDARY_ANALYSIS_FILES_LOADED } from 'redux/actionTypes/secondaryAnalyses';
+import { SECONDARY_ANALYSIS_FILES_LOADED, SECONDARY_ANALYSIS_FILES_LOADING } from 'redux/actionTypes/secondaryAnalyses';
 import fetchAPI from 'utils/http/fetchAPI';
 
 const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => {
   try {
+    dispatch({
+      type: SECONDARY_ANALYSIS_FILES_LOADING,
+      payload: {
+        secondaryAnalysisId,
+      },
+    });
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADED,

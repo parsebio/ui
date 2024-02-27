@@ -20,6 +20,8 @@ import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import _ from 'lodash';
+import Loader from 'components/Loader';
+import getFilesByType from 'redux/selectors/secondaryAnalyses/getFilesByType';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -41,13 +43,17 @@ const SecondaryAnalysis = () => {
   const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
   const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[activeSecondaryAnalysisId]);
-  const secondaryAnalysisFiles = useSelector((state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files);
+  const secondaryAnalysisFiles = secondaryAnalysis?.files.data || {};
+  const filesLoading = secondaryAnalysis?.files.loading;
+
+  const filesPresent = Object.keys(secondaryAnalysisFiles)?.length || false;
+
   useEffect(() => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
   useEffect(() => {
-    if (activeSecondaryAnalysisId && !secondaryAnalysis.files.length) {
+    if (activeSecondaryAnalysisId && !filesPresent) {
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
     }
   }, [activeSecondaryAnalysisId]);
@@ -60,18 +66,6 @@ const SecondaryAnalysis = () => {
     if (currentStepIndex > 0) {
       setCurrentStepIndex(currentStepIndex - 1);
     }
-  };
-  // todo: move this into redux/selectors
-  const getFilesByType = (fileType) => {
-    if (!secondaryAnalysisFiles) return {};
-    const filteredFiles = _.cloneDeep(secondaryAnalysisFiles);
-    Object.entries(secondaryAnalysisFiles)
-      .forEach(([key, value]) => {
-        if (value.type !== fileType) {
-          delete filteredFiles[key];
-        }
-      });
-    return filteredFiles;
   };
 
   const handleUpdateSecondaryAnalysisDetails = () => {
@@ -102,7 +96,7 @@ const SecondaryAnalysis = () => {
     return view;
   };
   const renderSampleLTFileDetails = () => {
-    const sampleLTFile = Object.values(getFilesByType('samplelt'))[0];
+    const sampleLTFile = Object.values(getFilesByType(secondaryAnalysisFiles, 'samplelt'))[0];
     if (sampleLTFile) {
       const { name, upload } = sampleLTFile;
       return (mainScreenDetails({
@@ -112,7 +106,8 @@ const SecondaryAnalysis = () => {
     return null;
   };
   const renderFastqFileTable = (canEditTable) => {
-    const filesToDisplay = getFilesByType('fastq');
+    const filesToDisplay = getFilesByType(secondaryAnalysisFiles, 'fastq');
+    console.log(filesToDisplay);
     if (Object?.keys(filesToDisplay)?.length) {
       return (
         <FastqFileTable
@@ -125,14 +120,17 @@ const SecondaryAnalysis = () => {
     return null;
   };
 
-  const renderMainScreenFileDetails = (renderFunc) => renderFunc() || (
-    <Empty
-      description='Not uploaded'
-    />
-  );
+  const renderMainScreenFileDetails = (renderFunc) => {
+    if (filesLoading) return <Loader experimentId={activeSecondaryAnalysisId} />;
+    return (renderFunc() || (
+      <Empty
+        description='Not uploaded'
+      />
+    ));
+  };
 
   const areFilesUploaded = (type) => {
-    const files = getFilesByType(type);
+    const files = getFilesByType(secondaryAnalysisFiles, type);
     if (!Object.keys(files).length) return false;
     return Object.values(files).every((file) => file.upload.status === 'uploaded');
   };

@@ -6,7 +6,7 @@ const secondaryAnalysisTemplate = {
   chemistryVersion: null,
   numOfSamples: null,
   numOfSublibraries: null,
-  files: {},
+  files: { data: {} },
 };
 
 const initialState = {

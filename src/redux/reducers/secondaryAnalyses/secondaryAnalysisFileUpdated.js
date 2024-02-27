@@ -1,20 +1,10 @@
-const secondaryAnalysisFileUpdated = (state, action) => {
+import produce from 'immer';
+
+const secondaryAnalysisFileUpdated = produce((draft, action) => {
   const {
     uploadStatus, percentProgress, fileId, secondaryAnalysisId,
   } = action.payload;
-  return {
-    ...state,
-    [secondaryAnalysisId]: {
-      ...state[secondaryAnalysisId],
-      files: {
-        ...state[secondaryAnalysisId].files,
-        [fileId]: {
-          ...state[secondaryAnalysisId].files[fileId],
-          upload: { status: uploadStatus, percentProgress },
-        },
-      },
-    },
-  };
-};
+  draft[secondaryAnalysisId].files.data[fileId].upload = { status: uploadStatus, percentProgress };
+});
 
 export default secondaryAnalysisFileUpdated;

@@ -13,6 +13,7 @@ import PrettyTime from 'components/PrettyTime';
 import { deleteSecondaryAnalysis, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import ProjectDeleteModal from 'components/data-management/project/ProjectDeleteModal';
 import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
+import getFilesByType from 'redux/selectors/secondaryAnalyses/getFilesByType';
 
 const { Item } = Descriptions;
 
@@ -47,11 +48,11 @@ const SecondaryAnalysisCard = (props) => {
   const { activeSecondaryAnalysisId } = secondaryAnalyses.meta;
   const secondaryAnalysisCardStyle = activeSecondaryAnalysisId === secondaryAnalysisId
     ? activeExperimentStyle : inactiveExperimentStyle;
-
   const secondaryAnalysis = secondaryAnalyses[secondaryAnalysisId];
 
   const secondaryAnalysisNames = secondaryAnalyses.ids.map((id) => secondaryAnalyses[id].name);
-
+  const secondaryAnalysisFiles = secondaryAnalysis.files.data;
+  const fastQFilesNumber = Object.keys(getFilesByType(secondaryAnalysisFiles, 'fastq')).length;
   const validationParams = {
     existingNames: secondaryAnalysisNames,
   };
@@ -107,8 +108,7 @@ const SecondaryAnalysisCard = (props) => {
             labelStyle={itemTextStyle}
             label='Fastq files'
           >
-            0
-            {/* TODO number of fastq files  */}
+            {fastQFilesNumber || 0}
           </Item>
           <Item
             labelStyle={itemTextStyle}
