@@ -56,6 +56,7 @@ const FastqFileTable = (props) => {
 
   return (
     <Table
+      size='small'
       columns={columns}
       dataSource={dataSource}
       pagination={false}
