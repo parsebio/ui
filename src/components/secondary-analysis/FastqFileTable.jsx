@@ -11,15 +11,6 @@ const FastqFileTable = (props) => {
   const dispatch = useDispatch();
   const { files, canEditTable, secondaryAnalysisId } = props;
 
-  const truncateText = (text) => {
-    if (!canEditTable || text.length <= 35) {
-      return text;
-    }
-    const start = text.substr(0, 15);
-    const end = text.substr(-15);
-    return `${start}...${end}`;
-  };
-
   const dataSource = Object.values(files).map((file) => ({
     key: file.id,
     name: file.name,
@@ -34,8 +25,9 @@ const FastqFileTable = (props) => {
       dataIndex: 'name',
       width: '60%',
       render: (text, record) => (
-        <Space size='middle'>
-          {truncateText(text)}
+        <div>
+          {text}
+          {' '}
           {canEditTable && (
             <Popconfirm
               title='Are you sure to delete this file?'
@@ -46,7 +38,7 @@ const FastqFileTable = (props) => {
               <DeleteOutlined style={{ color: 'red' }} />
             </Popconfirm>
           )}
-        </Space>
+        </div>
       ),
     }, {
       title: 'Size',
