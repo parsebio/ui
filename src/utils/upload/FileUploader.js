@@ -124,12 +124,17 @@ class FileUploader {
   #setupReadStreamHandlers = () => {
     this.readStream.on('data', async (chunk) => {
       try {
-        this.freeUploadSlots -= 1;
+        navigator.locks.request('freeUploadSlots', async () => {
+          this.freeUploadSlots -= 1;
 
-        if (this.freeUploadSlots <= 0) {
-          // We need to wait for some uploads to finish before we can continue
-          this.readStream.pause();
-        }
+          console.log('thisfreeUploadSlotsLOCKING');
+          console.log(this.freeUploadSlots);
+
+          if (this.freeUploadSlots <= 0) {
+            // We need to wait for some uploads to finish before we can continue
+            this.readStream.pause();
+          }
+        });
 
         if (!this.compress) {
           // If not compressing, the load finishes as soon as the chunk is read
@@ -190,7 +195,12 @@ class FileUploader {
     // To track when all chunks have been uploaded
     this.pendingChunks -= 1;
 
-    this.freeUploadSlots += 1;
+    navigator.locks.request('freeUploadSlots', async () => {
+      console.log('thisfreeUploadSlotsRELEASING');
+      console.log(this.freeUploadSlots);
+      this.freeUploadSlots += 1;
+      this.readStream.resume();
+    });
 
     if (this.pendingChunks === 0) {
       this.resolve(this.uploadedParts);
