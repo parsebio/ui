@@ -13,7 +13,7 @@ import PrettyTime from 'components/PrettyTime';
 import { deleteSecondaryAnalysis, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import ProjectDeleteModal from 'components/data-management/project/ProjectDeleteModal';
 import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
-import getFilesByType from 'redux/selectors/secondaryAnalyses/getFilesByType';
+import _ from 'lodash';
 
 const { Item } = Descriptions;
 
@@ -52,7 +52,9 @@ const SecondaryAnalysisCard = (props) => {
 
   const secondaryAnalysisNames = secondaryAnalyses.ids.map((id) => secondaryAnalyses[id].name);
   const secondaryAnalysisFiles = secondaryAnalysis.files.data;
-  const fastQFilesNumber = Object.keys(getFilesByType(secondaryAnalysisFiles, 'fastq')).length;
+
+  const fastQFilesNumber = Object.keys(_.pickBy(secondaryAnalysisFiles, (file) => file.type === 'fastq')).length || 'N/A';
+
   const validationParams = {
     existingNames: secondaryAnalysisNames,
   };
@@ -81,7 +83,6 @@ const SecondaryAnalysisCard = (props) => {
         type='primary'
         style={secondaryAnalysisCardStyle}
         onClick={() => {
-          // set active secondary anlaysis
           dispatch(setActiveSecondaryAnalysis(secondaryAnalysisId));
         }}
       >
@@ -108,7 +109,7 @@ const SecondaryAnalysisCard = (props) => {
             labelStyle={itemTextStyle}
             label='Fastq files'
           >
-            {fastQFilesNumber || 0}
+            {fastQFilesNumber}
           </Item>
           <Item
             labelStyle={itemTextStyle}
@@ -117,13 +118,6 @@ const SecondaryAnalysisCard = (props) => {
             <PrettyTime isoTime={secondaryAnalysis.createdAt} />
 
           </Item>
-          {/* <Item
-            labelStyle={itemTextStyle}
-            label='Modified'
-          >
-            <PrettyTime isoTime={secondaryAnalysis.updatedAt} />
-
-          </Item> */}
         </Descriptions>
       </Card>
     </>
