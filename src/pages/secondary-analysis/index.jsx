@@ -19,9 +19,10 @@ import {
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
-import _ from 'lodash';
 import Loader from 'components/Loader';
 import getFilesByType from 'redux/selectors/secondaryAnalyses/getFilesByType';
+import UploadStatusView from 'components/UploadStatusView';
+import PrettyTime from 'components/PrettyTime';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -31,6 +32,7 @@ const keyToTitle = {
   kit: 'Kit type',
   name: 'name',
   status: 'status',
+  createdAt: 'uploaded at',
 };
 
 const SecondaryAnalysis = () => {
@@ -80,7 +82,7 @@ const SecondaryAnalysis = () => {
       const value = detailsObj[key];
       const title = keyToTitle[key];
       return (
-        <div key={key} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+        <div key={key} style={{ display: 'flex', marginBottom: '10px' }}>
           {title && (
             <span style={{ fontWeight: 'bold' }}>
               {`${title}:`}
@@ -98,16 +100,16 @@ const SecondaryAnalysis = () => {
   const renderSampleLTFileDetails = () => {
     const sampleLTFile = Object.values(getFilesByType(secondaryAnalysisFiles, 'samplelt'))[0];
     if (sampleLTFile) {
-      const { name, upload } = sampleLTFile;
+      const { name, upload, createdAt } = sampleLTFile;
       return (mainScreenDetails({
-        name, status: upload.status,
+        name, status: <UploadStatusView status={upload.status} />, createdAt: <PrettyTime isoTime={createdAt} />,
       }));
     }
     return null;
   };
   const renderFastqFileTable = (canEditTable) => {
     const filesToDisplay = getFilesByType(secondaryAnalysisFiles, 'fastq');
-    console.log(filesToDisplay);
+
     if (Object?.keys(filesToDisplay)?.length) {
       return (
         <FastqFileTable
@@ -164,7 +166,7 @@ const SecondaryAnalysis = () => {
         <SampleLTUpload
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderUploadedFileDetails={renderSampleLTFileDetails}
-          uploadedFileId={Object.values(getFilesByType('samplelt'))[0]?.id || null}
+          uploadedFileId={Object.keys(getFilesByType(secondaryAnalysisFiles, 'samplelt'))[0]}
         />
       ),
       isValid: areFilesUploaded('samplelt'),
@@ -301,7 +303,7 @@ const SecondaryAnalysis = () => {
           open
           title={currentStep.title}
           okButtonProps={{ htmlType: 'submit' }}
-          bodyStyle={{ height: '40dvh', overflowY: 'auto' }}
+          bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
           style={{ minWidth: '70dvh' }}
           onCancel={() => { onCancel(); handleUpdateSecondaryAnalysisDetails(); }}
           footer={[

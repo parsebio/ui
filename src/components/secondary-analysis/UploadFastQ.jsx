@@ -54,19 +54,18 @@ const UploadFastQ = (props) => {
       >
         <div>
           Upload your Fastq files that are output from bcl2fastq. For each sublibrary, you must have a pair of Fastq files, R1 and R2.
-          The R2 read lengths must be 86bp or greater. Any read in R2 that is less than 86bp long will be discarded by the pipeline.
-          Further details on Fastq file format can be found
+          <br />
+          Note that:
           {' '}
-          <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
-          .
-          <br />
-          <br />
-          Important information regarding indexes:
           <br />
           <ul>
             <li>FASTQ files from the same Parse experiment that have different Illumina indexes should not be concatenated. These files are separate sublibraries.</li>
             <li>FASTQ files from the same Parse experiment that share identical Illumina indexes must be concatenated. These files belong to the same sublibrary.</li>
           </ul>
+          Further details on Fastq file format can be found
+          {' '}
+          <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
+
         </div>
         <Dropzone onDrop={onDrop} multiple>
           {({ getRootProps, getInputProps }) => (

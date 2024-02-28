@@ -3,6 +3,7 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import uploadFileToS3 from 'utils/upload/multipartUpload';
 import { SECONDARY_ANALYSES_ERROR, SECONDARY_ANALYSIS_FILES_LOADED } from 'redux/actionTypes/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
+import dayjs from 'dayjs';
 import updateSecondaryAnalysisFile from './updateSecondaryAnalysisFile';
 
 const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (dispatch) => {
@@ -21,6 +22,7 @@ const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
       name: file.name,
       size: file.size,
       type,
+      createdAt: dayjs().toISOString(),
       upload: {
         status: UploadStatus.UPLOADING,
         progress: 0,

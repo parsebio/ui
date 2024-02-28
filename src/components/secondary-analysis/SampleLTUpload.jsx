@@ -20,7 +20,6 @@ const SampleLTUpload = (props) => {
   const dispatch = useDispatch();
   const { secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId } = props;
   const [file, setFile] = useState(false);
-
   const onDrop = async (droppedFile) => {
     setFile(droppedFile[0]);
   };
