@@ -30,9 +30,9 @@ const keyToTitle = {
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
   kit: 'Kit type',
-  name: 'name',
-  status: 'status',
-  createdAt: 'uploaded at',
+  name: 'File name',
+  status: 'Status',
+  createdAt: 'Uploaded at',
 };
 
 const SecondaryAnalysis = () => {
