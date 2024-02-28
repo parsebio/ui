@@ -13,11 +13,11 @@ const uploadFileToS3 = async (
   onStatusUpdate = () => { },
 ) => {
   const {
-    uploadId, fileId, bucket, key,
+    uploadId, fileKey, bucket, key,
   } = uploadUrlParams;
 
-  if (!uploadId || !fileId || !bucket || !key) {
-    throw new Error('uploadUrlParams must contain uploadId, fileId, bucket, and key');
+  if (!uploadId || !fileKey || !bucket || !key) {
+    throw new Error('uploadUrlParams must contain uploadId, fileKey, bucket, and key');
   }
 
   const partUploadParams = {
@@ -38,7 +38,7 @@ const uploadFileToS3 = async (
   }
 
   try {
-    await completeMultipartUpload(parts, uploadId, fileId, type);
+    await completeMultipartUpload(parts, uploadId, fileKey, type);
 
     onStatusUpdate(UploadStatus.UPLOADED);
   } catch (e) {
@@ -70,11 +70,11 @@ const processMultipartUpload = async (
   return parts;
 };
 
-const completeMultipartUpload = async (parts, uploadId, fileId, type) => {
+const completeMultipartUpload = async (parts, uploadId, fileKey, type) => {
   const requestUrl = '/v2/completeMultipartUpload';
 
   const body = {
-    parts, uploadId, fileId, type,
+    parts, uploadId, fileKey, type,
   };
 
   await fetchAPI(requestUrl,

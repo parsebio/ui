@@ -15,6 +15,7 @@ const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
       },
       body: JSON.stringify({ name, size, type }),
     });
+
     const fileRecord = {
       id: uploadUrlParams.fileId,
       name: file.name,
@@ -34,12 +35,8 @@ const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
       },
     });
 
-    const {
-      fileId,
-    } = uploadUrlParams;
-
     const onUpdateUploadStatus = (status, percentProgress = 0) => {
-      dispatch(updateSecondaryAnalysisFile(secondaryAnalysisId, fileId, status, percentProgress));
+      dispatch(updateSecondaryAnalysisFile(secondaryAnalysisId, uploadUrlParams.fileId, status, percentProgress));
     };
 
     await uploadFileToS3(

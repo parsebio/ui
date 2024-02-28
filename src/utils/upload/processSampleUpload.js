@@ -58,7 +58,7 @@ const createAndUploadSampleFile = async (
     };
 
     const uploadUrlParams = {
-      uploadId, fileId: sampleFileId, bucket, key,
+      uploadId, fileKey: sampleFileId, bucket, key,
     };
 
     await uploadFileToS3(

@@ -71,7 +71,6 @@ const SecondaryAnalysisDetails = (props) => {
         layout='vertical'
         size='middle'
         style={{ width: '100%', margin: '0 auto', height: '50%' }}
-        onFinish={(values) => console.log(values)}
       >
         <Form.Item
           label='Parse Biosciences technology details:'

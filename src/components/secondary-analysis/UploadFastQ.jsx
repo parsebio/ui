@@ -14,7 +14,6 @@ const { Text } = Typography;
 
 const UploadFastQ = (props) => {
   const { secondaryAnalysisId, renderFastqFileTable } = props;
-  const [form] = Form.useForm();
   const [filesList, setFilesList] = useState([]);
   const dispatch = useDispatch();
   const onUpload = async () => {
@@ -46,11 +45,9 @@ const UploadFastQ = (props) => {
   };
   return (
     <Form
-      form={form}
       layout='vertical'
       size='middle'
       style={{ width: '100%', margin: '0 auto' }}
-      onFinish={(values) => console.log(values)}
     >
       <Form.Item
         name='projectName'

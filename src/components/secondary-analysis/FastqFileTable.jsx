@@ -19,13 +19,22 @@ const FastqFileTable = (props) => {
     progress: file.upload.percentProgress,
   }));
 
+  const ellipsisStyle = {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '150px',
+  };
+
   const columns = [
     {
       title: 'File Name',
       dataIndex: 'name',
       render: (text, record) => (
         <Space size='middle'>
-          {text}
+          <div style={ellipsisStyle} title={text}>
+            {text}
+          </div>
           {canEditTable && (
             <Popconfirm
               title='Are you sure to delete this file?'

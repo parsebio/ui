@@ -39,7 +39,6 @@ const SampleLTUpload = (props) => {
         layout='vertical'
         size='middle'
         style={{ width: '100%', margin: '0 auto' }}
-        onFinish={(values) => console.log(values)}
       >
         <Form.Item
           label={(
@@ -107,8 +106,12 @@ const SampleLTUpload = (props) => {
     </>
   );
 };
+SampleLTUpload.defaultProps = {
+  uploadedFileId: null,
+};
 SampleLTUpload.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
   renderUploadedFileDetails: PropTypes.func.isRequired,
+  uploadedFileId: PropTypes.string,
 };
 export default SampleLTUpload;
