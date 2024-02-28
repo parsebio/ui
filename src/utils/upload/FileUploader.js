@@ -39,6 +39,7 @@ class FileUploader {
     this.totalChunks = Math.ceil(file.size / chunkSize);
     this.pendingChunks = this.totalChunks;
 
+    this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
     this.freeUploadSlots = 5;
 
     // Used to assign partNumbers to each chunk
@@ -124,7 +125,7 @@ class FileUploader {
   #setupReadStreamHandlers = () => {
     this.readStream.on('data', async (chunk) => {
       try {
-        navigator.locks.request(`freeUploadSlots${this.uploadParams.uploadId}`, async () => {
+        navigator.locks.request(this.freeUploadSlotsLock, async () => {
           this.freeUploadSlots -= 1;
 
           console.log('thisfreeUploadSlotsLOCKING');
@@ -195,7 +196,7 @@ class FileUploader {
     // To track when all chunks have been uploaded
     this.pendingChunks -= 1;
 
-    navigator.locks.request(`freeUploadSlots${this.uploadParams.uploadId}`, async () => {
+    navigator.locks.request(this.freeUploadSlotsLock, async () => {
       console.log('thisfreeUploadSlotsRELEASING');
       console.log(this.freeUploadSlots);
       this.freeUploadSlots += 1;
