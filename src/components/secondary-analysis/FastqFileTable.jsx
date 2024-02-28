@@ -23,7 +23,7 @@ const FastqFileTable = (props) => {
     {
       title: 'File Name',
       dataIndex: 'name',
-      width: '60%',
+      width: '55%',
       render: (text, record) => (
         <div>
           {text}
@@ -48,7 +48,7 @@ const FastqFileTable = (props) => {
     {
       title: 'Status',
       dataIndex: 'status',
-      width: '20%',
+      width: '25%',
       render: (status, record) => <UploadStatusView status={status} progress={record.progress} />,
     },
   ];
