@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 5;
+
+const second = 1000;
+const baseDelay = 2 * second;
 
 const putInS3 = async (
   blob, signedUrlGenerator, abortController, onUploadProgress, currentRetry = 0,
@@ -18,7 +21,10 @@ const putInS3 = async (
       onUploadProgress,
     });
   } catch (e) {
-    if (currentRetry < MAX_RETRIES) {
+    if (currentRetry <= MAX_RETRIES) {
+      // Incremental backoff, last attempt will be after a 64 seconds backoff
+      await new Promise((resolve) => setTimeout(resolve, baseDelay * (2 ** currentRetry)));
+
       return await putInS3(
         blob, signedUrlGenerator, abortController, onUploadProgress, currentRetry + 1,
       );
