@@ -39,6 +39,8 @@ class FileUploader {
     this.totalChunks = Math.ceil(file.size / chunkSize);
     this.pendingChunks = this.totalChunks;
 
+    this.freeUploadSlots = 5;
+
     // Used to assign partNumbers to each chunk
     this.partNumberIt = 0;
 
@@ -122,6 +124,13 @@ class FileUploader {
   #setupReadStreamHandlers = () => {
     this.readStream.on('data', async (chunk) => {
       try {
+        this.freeUploadSlots -= 1;
+
+        if (this.freeUploadSlots <= 0) {
+          // We need to wait for some uploads to finish before we can continue
+          this.readStream.pause();
+        }
+
         if (!this.compress) {
           // If not compressing, the load finishes as soon as the chunk is read
           await this.#handleChunkLoadFinished(chunk);
@@ -180,6 +189,8 @@ class FileUploader {
 
     // To track when all chunks have been uploaded
     this.pendingChunks -= 1;
+
+    this.freeUploadSlots += 1;
 
     if (this.pendingChunks === 0) {
       this.resolve(this.uploadedParts);
