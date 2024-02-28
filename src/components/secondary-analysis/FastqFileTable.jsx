@@ -11,6 +11,15 @@ const FastqFileTable = (props) => {
   const dispatch = useDispatch();
   const { files, canEditTable, secondaryAnalysisId } = props;
 
+  const truncateText = (text) => {
+    if (!canEditTable || text.length <= 35) {
+      return text;
+    }
+    const start = text.substr(0, 15);
+    const end = text.substr(-15);
+    return `${start}...${end}`;
+  };
+
   const dataSource = Object.values(files).map((file) => ({
     key: file.id,
     name: file.name,
@@ -19,22 +28,14 @@ const FastqFileTable = (props) => {
     progress: file.upload.percentProgress,
   }));
 
-  const ellipsisStyle = {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    maxWidth: '150px',
-  };
-
   const columns = [
     {
       title: 'File Name',
       dataIndex: 'name',
+      width: '60%',
       render: (text, record) => (
         <Space size='middle'>
-          <div style={ellipsisStyle} title={text}>
-            {text}
-          </div>
+          {truncateText(text)}
           {canEditTable && (
             <Popconfirm
               title='Are you sure to delete this file?'
@@ -47,14 +48,15 @@ const FastqFileTable = (props) => {
           )}
         </Space>
       ),
-    },
-    {
+    }, {
       title: 'Size',
       dataIndex: 'size',
+      width: '20%',
     },
     {
       title: 'Status',
       dataIndex: 'status',
+      width: '20%',
       render: (status, record) => <UploadStatusView status={status} progress={record.progress} />,
     },
   ];
