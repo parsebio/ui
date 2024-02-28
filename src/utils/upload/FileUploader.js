@@ -124,7 +124,7 @@ class FileUploader {
   #setupReadStreamHandlers = () => {
     this.readStream.on('data', async (chunk) => {
       try {
-        navigator.locks.request('freeUploadSlots', async () => {
+        navigator.locks.request(`freeUploadSlots${this.uploadParams.uploadId}`, async () => {
           this.freeUploadSlots -= 1;
 
           console.log('thisfreeUploadSlotsLOCKING');
@@ -195,7 +195,7 @@ class FileUploader {
     // To track when all chunks have been uploaded
     this.pendingChunks -= 1;
 
-    navigator.locks.request('freeUploadSlots', async () => {
+    navigator.locks.request(`freeUploadSlots${this.uploadParams.uploadId}`, async () => {
       console.log('thisfreeUploadSlotsRELEASING');
       console.log(this.freeUploadSlots);
       this.freeUploadSlots += 1;
