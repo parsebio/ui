@@ -61,8 +61,6 @@ const FileUploadModal = (props) => {
   const previouslyUploadedSamples = Object.keys(samples)
     .filter((key) => samples[key].experimentId === activeExperimentId);
 
-  const guidanceFileLink = 'https://drive.google.com/file/d/1VPaB-yofuExinY2pXyGEEx-w39_OPubO/view';
-
   const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech['10X']);
   const [canUpload, setCanUpload] = useState(false);
   const [filesList, setFilesList] = useState([]);
@@ -240,7 +238,7 @@ const FileUploadModal = (props) => {
             <span style={{ display: 'block', height: '0.6rem' }} />
             <i>
               More guidance on supported file types and formats is available
-              <a rel='noreferrer' target='_blank' href={guidanceFileLink}> here</a>
+              <a rel='noreferrer' target='_blank' href='https://www.biomage.net/user-guide'> here</a>
               .
             </i>
           </Paragraph>
