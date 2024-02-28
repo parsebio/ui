@@ -5,6 +5,10 @@ const MAX_RETRIES = 5;
 const second = 1000;
 const baseDelay = 2 * second;
 
+const backoff = async (currentRetry) => (
+  new Promise((resolve) => setTimeout(resolve, baseDelay * (2 ** currentRetry)))
+);
+
 const putInS3 = async (
   blob, signedUrlGenerator, abortController, onUploadProgress, currentRetry = 0,
 ) => {
@@ -22,8 +26,8 @@ const putInS3 = async (
     });
   } catch (e) {
     if (currentRetry <= MAX_RETRIES) {
-      // Incremental backoff, last attempt will be after a 64 seconds backoff
-      await new Promise((resolve) => setTimeout(resolve, baseDelay * (2 ** currentRetry)));
+      // Incremental backoff, last attempt will be after waiting 64 seconds (2 seconds * 2 ** 5)
+      await backoff(currentRetry);
 
       return await putInS3(
         blob, signedUrlGenerator, abortController, onUploadProgress, currentRetry + 1,
