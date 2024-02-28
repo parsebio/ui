@@ -1,13 +1,5 @@
-const getFilesByType = (files, type) => {
-  if (!Object.keys(files).length) return {};
-  const filteredFiles = {};
-  Object.entries(files)
-    .forEach(([key, value]) => {
-      if (value?.type === type) {
-        filteredFiles[key] = value;
-      }
-    });
-  return filteredFiles;
-};
+import _ from 'lodash';
+
+const getFilesByType = (files, type) => _.pickBy(files, (file) => file.type === type);
 
 export default getFilesByType;

@@ -10,12 +10,13 @@ import {
 import PropTypes from 'prop-types';
 
 const { Text } = Typography;
-const UploadDivStyle = {
+const uploadDivStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   verticalAlign: 'middle',
 };
+
 const UploadStatusView = ({ status, progress, showDetails }) => {
   if (status === UploadStatus.UPLOADED) {
     return (
@@ -23,7 +24,7 @@ const UploadStatusView = ({ status, progress, showDetails }) => {
         className={styles.hoverSelectCursor}
         onClick={showDetails}
         onKeyDown={showDetails}
-        style={{ ...UploadDivStyle, flexDirection: 'column' }}
+        style={{ ...uploadDivStyle, flexDirection: 'column' }}
       >
         <Text type='success'>{messageForStatus(status)}</Text>
       </div>
@@ -39,7 +40,7 @@ const UploadStatusView = ({ status, progress, showDetails }) => {
     return (
       <div
         style={{
-          ...UploadDivStyle,
+          ...uploadDivStyle,
           flexDirection: 'column',
         }}
       >
@@ -53,7 +54,7 @@ const UploadStatusView = ({ status, progress, showDetails }) => {
     return (
       <div
         className={styles.hoverSelectCursor}
-        style={{ ...UploadDivStyle, flexDirection: 'column' }}
+        style={{ ...uploadDivStyle, flexDirection: 'column' }}
         onClick={showDetails}
         onKeyDown={showDetails}
       >
@@ -69,7 +70,7 @@ const UploadStatusView = ({ status, progress, showDetails }) => {
     ].includes(status)
   ) {
     return (
-      <div style={UploadDivStyle}>
+      <div style={uploadDivStyle}>
         <Text type='danger'>{messageForStatus(status)}</Text>
         {showDetails && (
           <Tooltip placement='bottom' title='Upload missing' mouseLeaveDelay={0}>
