@@ -39,6 +39,7 @@ class FileUploader {
     this.totalChunks = Math.ceil(file.size / chunkSize);
     this.pendingChunks = this.totalChunks;
 
+    // Locks to control the number of simultaneous uploads to avoid taking up too much ram
     this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
     this.freeUploadSlots = 5;
 
