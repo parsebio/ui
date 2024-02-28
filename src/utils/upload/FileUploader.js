@@ -72,7 +72,6 @@ class FileUploader {
       this.#setupReadStreamHandlers();
 
       if (this.compress) {
-        console.log('I AM COMPRESSING');
         this.gzipStream = new AsyncGzip({ level: 1, consume: true });
         this.#setupGzipStreamHandlers();
       }
@@ -126,17 +125,7 @@ class FileUploader {
   #setupReadStreamHandlers = () => {
     this.readStream.on('data', async (chunk) => {
       try {
-        navigator.locks.request(this.freeUploadSlotsLock, async () => {
-          this.freeUploadSlots -= 1;
-
-          console.log('thisfreeUploadSlotsLOCKING');
-          console.log(this.freeUploadSlots);
-
-          if (this.freeUploadSlots <= 0) {
-            // We need to wait for some uploads to finish before we can continue
-            this.readStream.pause();
-          }
-        });
+        await this.#reserveUploadSlot();
 
         if (!this.compress) {
           // If not compressing, the load finishes as soon as the chunk is read
@@ -160,9 +149,11 @@ class FileUploader {
       this.#cancelExecution(UploadStatus.FILE_READ_ERROR, e);
     });
 
-    this.readStream.on('end', () => {
+    this.readStream.on('end', async () => {
       try {
         if (!this.compress) return;
+
+        await this.#reserveUploadSlot();
 
         this.gzipStream.push(this.currentChunk, true);
       } catch (e) {
@@ -190,24 +181,45 @@ class FileUploader {
 
     try {
       await this.#uploadChunk(chunk, this.partNumberIt);
+
+      // To track when all chunks have been uploaded
+      this.pendingChunks -= 1;
+
+      if (this.pendingChunks > 0) {
+        await this.#releaseUploadSlot();
+      }
+
+      if (this.pendingChunks === 0) {
+        this.resolve(this.uploadedParts);
+      }
     } catch (e) {
       this.#cancelExecution(UploadStatus.UPLOAD_ERROR, e);
     }
+  }
 
-    // To track when all chunks have been uploaded
-    this.pendingChunks -= 1;
+  #reserveUploadSlot = async () => (
+    await navigator.locks.request(this.freeUploadSlotsLock, async () => {
+      this.freeUploadSlots -= 1;
 
-    navigator.locks.request(this.freeUploadSlotsLock, async () => {
+      console.log('thisfreeUploadSlotsLOCKING');
+      console.log(this.freeUploadSlots);
+
+      if (this.freeUploadSlots === 0) {
+        // We need to wait for some uploads to finish before we can continue
+        this.readStream.pause();
+      }
+    })
+  )
+
+  #releaseUploadSlot = async () => (
+    await navigator.locks.request(this.freeUploadSlotsLock, async () => {
       console.log('thisfreeUploadSlotsRELEASING');
       console.log(this.freeUploadSlots);
       this.freeUploadSlots += 1;
-      this.readStream.resume();
-    });
 
-    if (this.pendingChunks === 0) {
-      this.resolve(this.uploadedParts);
-    }
-  }
+      this.readStream.resume();
+    })
+  )
 }
 
 export default FileUploader;
