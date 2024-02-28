@@ -25,7 +25,6 @@ import handleError from 'utils/http/handleError';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import endUserMessages from 'utils/endUserMessages';
-import getDomainSpecificContent from 'utils/getDomainSpecificContent';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
