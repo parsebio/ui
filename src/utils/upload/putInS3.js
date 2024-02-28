@@ -3,9 +3,10 @@ import axios from 'axios';
 const MAX_RETRIES = 3;
 
 const putInS3 = async (
-  blob, signedUrl, abortController, onUploadProgress, currentRetry = 0,
+  blob, signedUrlGenerator, abortController, onUploadProgress, currentRetry = 0,
 ) => {
   try {
+    const signedUrl = await signedUrlGenerator();
     return await axios.request({
       method: 'put',
       data: blob,
@@ -19,7 +20,7 @@ const putInS3 = async (
   } catch (e) {
     if (currentRetry < MAX_RETRIES) {
       return await putInS3(
-        blob, signedUrl, abortController, onUploadProgress, currentRetry + 1,
+        blob, signedUrlGenerator, abortController, onUploadProgress, currentRetry + 1,
       );
     }
 
