@@ -21,7 +21,7 @@ const secondaryAnalysesLoaded = produce((draft, action) => {
 
   secondaryAnalyses.forEach((analysis) => {
     draft[analysis.id] = {
-      files: { data: {} },
+      files: { data: {}, loading: false, error: false },
       ...analysis,
     };
   });
