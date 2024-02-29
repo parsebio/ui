@@ -1,22 +1,50 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Form, Empty,
+  Form, Empty, Button,
+  Typography,
+  Space,
+  Divider,
+  List,
 } from 'antd';
+import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
+import { CheckCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
 
-const SampleLTUpload = () => {
-  const [form] = Form.useForm();
+import { uploadSecondaryAnalysisFile, deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import PropTypes from 'prop-types';
+
+const { Text } = Typography;
+const SampleLTUpload = (props) => {
+  const dispatch = useDispatch();
+  const {
+    secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId, setFilesNotUploaded,
+  } = props;
+  const [file, setFile] = useState(false);
+  const onDrop = async (droppedFile) => {
+    setFile(droppedFile[0]);
+  };
+
+  useEffect(() => {
+    setFilesNotUploaded(Boolean(file));
+  }, [file]);
+
+  const beginUpload = async () => {
+    if (uploadedFileId) {
+      dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
+    }
+    dispatch(uploadSecondaryAnalysisFile(secondaryAnalysisId, file, 'samplelt'));
+  };
+
+  const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';
 
   return (
     <>
       <Form
-        form={form}
         layout='vertical'
         size='middle'
         style={{ width: '100%', margin: '0 auto' }}
-        onFinish={(values) => console.log(values)}
       >
         <Form.Item
           label={(
@@ -26,23 +54,74 @@ const SampleLTUpload = () => {
           )}
           name='projectName'
         >
-          <Dropzone onDrop={(e) => console.log('DROPPED FILES ', e)} multiple>
+          <Dropzone onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
               <div
-                // data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
+                data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
                 style={{ border: '1px solid #ccc', padding: '2rem 0' }}
                 {...getRootProps({ className: 'dropzone' })}
                 id='dropzone'
               >
-                <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} webkitdirectory='' />
-                <Empty description='Drag and drop xlsm file here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} />
+                <Empty
+                  description='Drag and drop xlsm file here or click to browse'
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                />
               </div>
             )}
           </Dropzone>
+          <Button
+            data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+            type='primary'
+            key='create'
+            block
+            disabled={!file}
+            onClick={() => {
+              beginUpload();
+              setFile(null);
+            }}
+          >
+            {uploadButtonText}
+          </Button>
+          {file && (
+            <>
+              <Divider orientation='center'>To upload</Divider>
+              <List
+                size='small'
+                itemLayout='horizontal'
+                grid='{column: 4}'
+              >
+                <List.Item
+                  key={file.name}
+                  style={{ width: '100%' }}
+                >
+                  <Space>
+                    <CheckCircleTwoTone twoToneColor='#52c41a' />
+                    <Text
+                      ellipsis={{ tooltip: file.name }}
+                      style={{ width: '200px' }}
+                    >
+                      {file.name}
+                    </Text>
+                    <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { setFile(false); }} />
+                  </Space>
+                </List.Item>
+              </List>
+            </>
+          )}
+          {renderUploadedFileDetails()}
         </Form.Item>
       </Form>
     </>
   );
 };
-
+SampleLTUpload.defaultProps = {
+  uploadedFileId: null,
+};
+SampleLTUpload.propTypes = {
+  secondaryAnalysisId: PropTypes.string.isRequired,
+  renderUploadedFileDetails: PropTypes.func.isRequired,
+  uploadedFileId: PropTypes.string,
+  setFilesNotUploaded: PropTypes.func.isRequired,
+};
 export default SampleLTUpload;

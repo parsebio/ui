@@ -12,9 +12,16 @@ import UploadFastQ from 'components/secondary-analysis/UploadFastQ';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
-import { loadSecondaryAnalyses, updateSecondaryAnalysis, createSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import {
+  loadSecondaryAnalyses, updateSecondaryAnalysis,
+  createSecondaryAnalysis, loadSecondaryAnalysisFiles,
+} from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
+import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
+import UploadStatusView from 'components/UploadStatusView';
+import PrettyTime from 'components/PrettyTime';
+import _ from 'lodash';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -22,31 +29,36 @@ const keyToTitle = {
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
   kit: 'Kit type',
+  name: 'File name',
+  status: 'Status',
+  createdAt: 'Uploaded at',
 };
+
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
   const [secondaryAnalysisDetailsDiff, setNewSecondaryAnalysisDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
+  const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const user = useSelector((state) => state.user.current);
 
   const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
   const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[activeSecondaryAnalysisId]);
+  const secondaryAnalysisFiles = secondaryAnalysis?.files.data ?? {};
+  const filesLoading = secondaryAnalysis?.files.loading;
 
   useEffect(() => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
-  const onNext = () => {
-    setCurrentStepIndex(currentStepIndex + 1);
-  };
-
-  const onBack = () => {
-    if (currentStepIndex > 0) {
-      setCurrentStepIndex(currentStepIndex - 1);
+  useEffect(() => {
+    if (activeSecondaryAnalysisId && _.isEmpty(secondaryAnalysisFiles)) {
+      dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
     }
-  };
+  }, [activeSecondaryAnalysisId]);
+
+  const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
@@ -60,7 +72,7 @@ const SecondaryAnalysis = () => {
       const value = detailsObj[key];
       const title = keyToTitle[key];
       return (
-        <div key={key} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+        <div key={key} style={{ display: 'flex', marginBottom: '10px' }}>
           {title && (
             <span style={{ fontWeight: 'bold' }}>
               {`${title}:`}
@@ -75,11 +87,44 @@ const SecondaryAnalysis = () => {
     });
     return view;
   };
-  const mainScreenFileDetails = () => (
+
+  const renderSampleLTFileDetails = () => {
+    const sampleLTFile = Object.values(getFilesByType('samplelt'))[0];
+
+    if (!sampleLTFile) return null;
+
+    const { name, upload, createdAt } = sampleLTFile;
+    return mainScreenDetails({
+      name, status: <UploadStatusView status={upload.status} />, createdAt: <PrettyTime isoTime={createdAt} />,
+    });
+  };
+
+  const renderFastqFileTable = (canEditTable) => {
+    const filesToDisplay = getFilesByType('fastq');
+
+    if (Object?.keys(filesToDisplay)?.length) {
+      return (
+        <FastqFileTable
+          canEditTable={canEditTable}
+          files={filesToDisplay}
+          secondaryAnalysisId={activeSecondaryAnalysisId}
+        />
+      );
+    }
+    return null;
+  };
+
+  const renderMainScreenFileDetails = (renderFunc) => (renderFunc() || (
     <Empty
       description='Not uploaded'
     />
-  );
+  ));
+
+  const areFilesUploaded = (type) => {
+    const files = getFilesByType(type);
+    if (!Object.keys(files).length) return false;
+    return Object.values(files).every((file) => file.upload.status === 'uploaded');
+  };
 
   const {
     numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
@@ -101,15 +146,21 @@ const SecondaryAnalysis = () => {
           kit: kitTitle, chemistryVersion, numOfSamples, numOfSublibraries,
         });
       },
-      onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
       title: 'Upload your sample loading table:',
       key: 'Sample loading table',
-      render: () => <SampleLTUpload />,
-      isValid: false,
-      renderMainScreenDetails: mainScreenFileDetails,
-      onNext,
+      render: () => (
+        <SampleLTUpload
+          secondaryAnalysisId={activeSecondaryAnalysisId}
+          renderUploadedFileDetails={renderSampleLTFileDetails}
+          uploadedFileId={Object.keys(getFilesByType('samplelt'))[0]}
+          setFilesNotUploaded={setFilesNotUploaded}
+        />
+      ),
+      isValid: areFilesUploaded('samplelt'),
+      isLoading: filesLoading,
+      renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
     },
     {
       title: 'Reference genome',
@@ -122,18 +173,23 @@ const SecondaryAnalysis = () => {
       ),
       isValid: Boolean(refGenome),
       renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
-      onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
       title: 'Upload your Fastq files:',
       key: 'Fastq files',
-      render: () => <UploadFastQ />,
-      isValid: false,
-      renderMainScreenDetails: mainScreenFileDetails,
-      onNext,
+      render: () => (
+        <UploadFastQ
+          secondaryAnalysisId={activeSecondaryAnalysisId}
+          renderFastqFileTable={() => renderFastqFileTable(true)}
+          setFilesNotUploaded={setFilesNotUploaded}
+        />
+      ),
+      isValid: areFilesUploaded('fastq'),
+      isLoading: filesLoading,
+      renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFileTable(false)),
     },
   ];
-  const onCancel = () => { setCurrentStepIndex(null); };
+  const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
   const PROJECTS_LIST = 'Runs';
@@ -158,21 +214,22 @@ const SecondaryAnalysis = () => {
         >
           {activeSecondaryAnalysisId ? (
             <>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
                 <Space direction='vertical'>
                   <Title level={4}>{secondaryAnalysis.name}</Title>
                   <Text type='secondary'>
                     {`Run ID: ${activeSecondaryAnalysisId}`}
                   </Text>
                 </Space>
-                {/* todo - tooltip needs to be shown only if the button is disabled */}
                 <Tooltip
-                  overlay='Ensure that all sections are completed in order to proceed with running the pipeline.'
+                  title={!isAllValid
+                    ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
+                    : undefined}
                   placement='left'
                 >
                   <Button
                     type='primary'
-                    disabled
+                    disabled={!isAllValid}
                     size='large'
                     style={{ marginBottom: '10px' }}
                   >
@@ -214,7 +271,33 @@ const SecondaryAnalysis = () => {
     second: PROJECT_DETAILS,
     splitPercentage: 23,
   };
+  const handleNavigationWithConfirmation = (action) => {
+    if (filesNotUploaded) {
+      Modal.confirm({
+        title: "You have files selected to be uploaded. Click 'upload' or 'replace' to proceed, or discard the files to upload them later.",
+        onOk: () => { action(); setFilesNotUploaded(false); },
+        okText: 'Discard selected files',
+        cancelText: 'I will upload',
+      });
+    } else {
+      action();
+    }
+  };
+  const onNext = () => handleNavigationWithConfirmation(() => {
+    setCurrentStepIndex(currentStepIndex + 1);
+    handleUpdateSecondaryAnalysisDetails();
+  });
 
+  const onBack = () => handleNavigationWithConfirmation(() => {
+    if (currentStepIndex > 0) {
+      setCurrentStepIndex(currentStepIndex - 1);
+    }
+  });
+
+  const onCancel = () => handleNavigationWithConfirmation(() => {
+    setCurrentStepIndex(null);
+    handleUpdateSecondaryAnalysisDetails();
+  });
   return (
     <>
       <Header title='Secondary Analysis' />
@@ -234,13 +317,14 @@ const SecondaryAnalysis = () => {
           open
           title={currentStep.title}
           okButtonProps={{ htmlType: 'submit' }}
-          bodyStyle={{ height: '35vh' }}
-          onCancel={() => { onCancel(); handleUpdateSecondaryAnalysisDetails(); }}
+          bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
+          style={{ minWidth: '70dvh' }}
+          onCancel={onCancel}
           footer={[
             <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
               Back
             </Button>,
-            <Button key='submit' type='primary' onClick={currentStep.onNext}>
+            <Button key='submit' type='primary' onClick={onNext}>
               {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
             </Button>,
           ]}

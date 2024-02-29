@@ -16,6 +16,7 @@ class FileUploader {
     uploadParams,
     abortController,
     onStatusUpdate,
+    retryPolicy,
   ) {
     if (!file
       || !chunkSize
@@ -31,6 +32,8 @@ class FileUploader {
     this.chunkSize = chunkSize;
     this.uploadParams = uploadParams;
 
+    this.retryPolicy = retryPolicy;
+
     // Upload related callbacks and handling
     this.onStatusUpdate = onStatusUpdate;
     this.abortController = abortController;
@@ -38,6 +41,10 @@ class FileUploader {
     // Stream handling
     this.totalChunks = Math.ceil(file.size / chunkSize);
     this.pendingChunks = this.totalChunks;
+
+    // Locks to control the number of simultaneous uploads to avoid taking up too much ram
+    this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
+    this.freeUploadSlots = 5;
 
     // Used to assign partNumbers to each chunk
     this.partNumberIt = 0;
@@ -75,13 +82,12 @@ class FileUploader {
   }
 
   #uploadChunk = async (compressedPart, partNumber) => {
-    const signedUrl = await this.#getSignedUrlForPart(partNumber);
-
     const partResponse = await putInS3(
       compressedPart,
-      signedUrl,
+      () => this.#getSignedUrlForPart(partNumber),
       this.abortController,
       this.#createOnUploadProgress(partNumber),
+      this.retryPolicy,
     );
 
     this.uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
@@ -89,11 +95,11 @@ class FileUploader {
 
   #getSignedUrlForPart = async (partNumber) => {
     const {
-      experimentId, uploadId, bucket, key,
+      projectId, uploadId, bucket, key,
     } = this.uploadParams;
 
     const queryParams = new URLSearchParams({ bucket, key });
-    const url = `/v2/experiments/${experimentId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
+    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
 
     return await fetchAPI(url, { method: 'GET' });
   };
@@ -102,8 +108,8 @@ class FileUploader {
     // partNumbers are 1-indexed, so we need to subtract 1 for the array index
     this.uploadedPartPercentages[partNumber - 1] = progress.progress;
 
-    const percentage = _.mean(this.uploadedPartPercentages) * 100;
-    this.onStatusUpdate(UploadStatus.UPLOADING, Math.floor(percentage));
+    const percentage = (_.mean(this.uploadedPartPercentages) * 100).toFixed(2);
+    this.onStatusUpdate(UploadStatus.UPLOADING, parseFloat(percentage));
   };
 
   #setupGzipStreamHandlers = () => {
@@ -121,6 +127,8 @@ class FileUploader {
   #setupReadStreamHandlers = () => {
     this.readStream.on('data', async (chunk) => {
       try {
+        await this.#reserveUploadSlot();
+
         if (!this.compress) {
           // If not compressing, the load finishes as soon as the chunk is read
           await this.#handleChunkLoadFinished(chunk);
@@ -143,9 +151,11 @@ class FileUploader {
       this.#cancelExecution(UploadStatus.FILE_READ_ERROR, e);
     });
 
-    this.readStream.on('end', () => {
+    this.readStream.on('end', async () => {
       try {
         if (!this.compress) return;
+
+        await this.#reserveUploadSlot();
 
         this.gzipStream.push(this.currentChunk, true);
       } catch (e) {
@@ -173,17 +183,45 @@ class FileUploader {
 
     try {
       await this.#uploadChunk(chunk, this.partNumberIt);
+
+      // To track when all chunks have been uploaded
+      this.pendingChunks -= 1;
+
+      if (this.pendingChunks > 0) {
+        await this.#releaseUploadSlot();
+      }
+
+      if (this.pendingChunks === 0) {
+        this.resolve(this.uploadedParts);
+      }
     } catch (e) {
       this.#cancelExecution(UploadStatus.UPLOAD_ERROR, e);
     }
-
-    // To track when all chunks have been uploaded
-    this.pendingChunks -= 1;
-
-    if (this.pendingChunks === 0) {
-      this.resolve(this.uploadedParts);
-    }
   }
+
+  #reserveUploadSlot = async () => (
+    await navigator.locks.request(this.freeUploadSlotsLock, async () => {
+      this.freeUploadSlots -= 1;
+
+      console.log('thisfreeUploadSlotsLOCKING');
+      console.log(this.freeUploadSlots);
+
+      if (this.freeUploadSlots === 0) {
+        // We need to wait for some uploads to finish before we can continue
+        this.readStream.pause();
+      }
+    })
+  )
+
+  #releaseUploadSlot = async () => (
+    await navigator.locks.request(this.freeUploadSlotsLock, async () => {
+      console.log('thisfreeUploadSlotsRELEASING');
+      console.log(this.freeUploadSlots);
+      this.freeUploadSlots += 1;
+
+      this.readStream.resume();
+    })
+  )
 }
 
 export default FileUploader;

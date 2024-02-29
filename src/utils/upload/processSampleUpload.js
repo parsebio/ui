@@ -43,7 +43,7 @@ const createAndUploadSampleFile = async (
   const fileName = file.fileObject.name;
 
   try {
-    const { uploadId, bucket, key } = await beginSampleFileUpload(
+    const uploadUrlParams = await beginSampleFileUpload(
       experimentId,
       sampleFileId,
       getMetadata(fileName, selectedTech),
@@ -55,10 +55,6 @@ const createAndUploadSampleFile = async (
           experimentId, sampleId, sampleFileId, fileType, status, percentProgress,
         ),
       );
-    };
-
-    const uploadUrlParams = {
-      uploadId, fileId: sampleFileId, bucket, key,
     };
 
     await uploadFileToS3(

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Typography, Button, Card, Row, Col, Space,
+  Typography, Button, Card, Row, Col,
 } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -21,6 +21,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep }) => (
             <Card
               bordered
               style={cardStyle}
+              loading={step.isLoading}
               title={(
                 <div style={{ display: 'flex' }}>
                   <Text
@@ -49,9 +50,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep }) => (
                 />
               )}
             >
-              <Space direction='vertical' style={{ width: '100%' }}>
-                {step.renderMainScreenDetails()}
-              </Space>
+              {step.renderMainScreenDetails()}
             </Card>
           </Col>
         );

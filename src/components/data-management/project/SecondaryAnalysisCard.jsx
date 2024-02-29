@@ -13,6 +13,7 @@ import PrettyTime from 'components/PrettyTime';
 import { deleteSecondaryAnalysis, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import ProjectDeleteModal from 'components/data-management/project/ProjectDeleteModal';
 import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
+import _ from 'lodash';
 
 const { Item } = Descriptions;
 
@@ -47,10 +48,12 @@ const SecondaryAnalysisCard = (props) => {
   const { activeSecondaryAnalysisId } = secondaryAnalyses.meta;
   const secondaryAnalysisCardStyle = activeSecondaryAnalysisId === secondaryAnalysisId
     ? activeExperimentStyle : inactiveExperimentStyle;
-
   const secondaryAnalysis = secondaryAnalyses[secondaryAnalysisId];
 
   const secondaryAnalysisNames = secondaryAnalyses.ids.map((id) => secondaryAnalyses[id].name);
+  const secondaryAnalysisFiles = secondaryAnalysis.files.data;
+
+  const fastQFilesNumber = _.size(_.pickBy(secondaryAnalysisFiles, (file) => file.type === 'fastq'));
 
   const validationParams = {
     existingNames: secondaryAnalysisNames,
@@ -80,7 +83,6 @@ const SecondaryAnalysisCard = (props) => {
         type='primary'
         style={secondaryAnalysisCardStyle}
         onClick={() => {
-          // set active secondary anlaysis
           dispatch(setActiveSecondaryAnalysis(secondaryAnalysisId));
         }}
       >
@@ -107,8 +109,7 @@ const SecondaryAnalysisCard = (props) => {
             labelStyle={itemTextStyle}
             label='Fastq files'
           >
-            0
-            {/* TODO number of fastq files  */}
+            {fastQFilesNumber || 'N/A'}
           </Item>
           <Item
             labelStyle={itemTextStyle}
@@ -117,13 +118,6 @@ const SecondaryAnalysisCard = (props) => {
             <PrettyTime isoTime={secondaryAnalysis.createdAt} />
 
           </Item>
-          {/* <Item
-            labelStyle={itemTextStyle}
-            label='Modified'
-          >
-            <PrettyTime isoTime={secondaryAnalysis.updatedAt} />
-
-          </Item> */}
         </Descriptions>
       </Card>
     </>

@@ -1,11 +1,19 @@
 import axios from 'axios';
 
-const MAX_RETRIES = 3;
+const MAX_RETRIES = 5;
+
+const second = 1000;
+const baseDelay = 2 * second;
+
+const backoff = async (currentRetry) => (
+  new Promise((resolve) => setTimeout(resolve, baseDelay * (2 ** currentRetry)))
+);
 
 const putInS3 = async (
-  blob, signedUrl, abortController, onUploadProgress, currentRetry = 0,
+  blob, signedUrlGenerator, abortController, onUploadProgress, retryPolicy, currentRetry = 0,
 ) => {
   try {
+    const signedUrl = await signedUrlGenerator();
     return await axios.request({
       method: 'put',
       data: blob,
@@ -17,9 +25,14 @@ const putInS3 = async (
       onUploadProgress,
     });
   } catch (e) {
-    if (currentRetry < MAX_RETRIES) {
+    if (currentRetry <= MAX_RETRIES) {
+      if (retryPolicy === 'exponentialBackoff') {
+        // Exponential backoff, last attempt will be after waiting 64 seconds (2 seconds * 2 ** 5)
+        await backoff(currentRetry);
+      }
+
       return await putInS3(
-        blob, signedUrl, abortController, onUploadProgress, currentRetry + 1,
+        blob, signedUrlGenerator, abortController, onUploadProgress, retryPolicy, currentRetry + 1,
       );
     }
 

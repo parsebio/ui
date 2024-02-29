@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import produce, { original } from 'immer';
-
 import _ from 'lodash';
 
 const secondaryAnalysesLoaded = produce((draft, action) => {
@@ -21,7 +20,10 @@ const secondaryAnalysesLoaded = produce((draft, action) => {
   draft.ids = ids;
 
   secondaryAnalyses.forEach((analysis) => {
-    draft[analysis.id] = analysis;
+    draft[analysis.id] = {
+      files: { data: {}, loading: false, error: false },
+      ...analysis,
+    };
   });
 });
 

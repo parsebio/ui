@@ -4,24 +4,25 @@ import UploadStatus from './UploadStatus';
 import FileUploader from './FileUploader';
 
 const uploadFileToS3 = async (
-  experimentId,
+  projectId,
   file,
   compress,
   uploadUrlParams,
   type,
   abortController,
-  onStatusUpdate = () => { },
+  onStatusUpdate,
+  retryPolicy = 'normal',
 ) => {
   const {
-    uploadId, fileId, bucket, key,
+    uploadId, bucket, key,
   } = uploadUrlParams;
 
-  if (!uploadId || !fileId || !bucket || !key) {
-    throw new Error('uploadUrlParams must contain uploadId, fileId, bucket, and key');
+  if (!uploadId || !bucket || !key) {
+    throw new Error('uploadUrlParams must contain uploadId, bucket, and key');
   }
 
   const partUploadParams = {
-    experimentId,
+    projectId,
     uploadId,
     bucket,
     key,
@@ -30,7 +31,7 @@ const uploadFileToS3 = async (
   let parts;
   try {
     parts = await processMultipartUpload(
-      file, compress, partUploadParams, abortController, onStatusUpdate,
+      file, compress, partUploadParams, abortController, onStatusUpdate, retryPolicy,
     );
   } catch (e) {
     // Return silently, the error is handled in the onStatusUpdate callback
@@ -38,7 +39,7 @@ const uploadFileToS3 = async (
   }
 
   try {
-    await completeMultipartUpload(parts, uploadId, fileId, type);
+    await completeMultipartUpload(parts, uploadId, key, type);
 
     onStatusUpdate(UploadStatus.UPLOADED);
   } catch (e) {
@@ -47,7 +48,7 @@ const uploadFileToS3 = async (
 };
 
 const processMultipartUpload = async (
-  file, compress, uploadParams, abortController, onStatusUpdate,
+  file, compress, uploadParams, abortController, onStatusUpdate, retryPolicy,
 ) => {
   const fileUploader = new FileUploader(
     file,
@@ -56,6 +57,7 @@ const processMultipartUpload = async (
     uploadParams,
     abortController,
     onStatusUpdate,
+    retryPolicy,
   );
 
   const parts = await fileUploader.upload();
@@ -70,11 +72,11 @@ const processMultipartUpload = async (
   return parts;
 };
 
-const completeMultipartUpload = async (parts, uploadId, fileId, type) => {
+const completeMultipartUpload = async (parts, uploadId, s3Path, type) => {
   const requestUrl = '/v2/completeMultipartUpload';
 
   const body = {
-    parts, uploadId, fileId, type,
+    parts, uploadId, s3Path, type,
   };
 
   await fetchAPI(requestUrl,
