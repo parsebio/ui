@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Form, Empty, Button,
   Typography,
@@ -18,11 +18,18 @@ import PropTypes from 'prop-types';
 const { Text } = Typography;
 const SampleLTUpload = (props) => {
   const dispatch = useDispatch();
-  const { secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId } = props;
+  const {
+    secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId, setFilesNotUploaded,
+  } = props;
   const [file, setFile] = useState(false);
   const onDrop = async (droppedFile) => {
     setFile(droppedFile[0]);
   };
+
+  useEffect(() => {
+    setFilesNotUploaded(Boolean(file));
+  }, [file]);
+
   const onUpload = async () => {
     if (uploadedFileId) {
       dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
@@ -115,5 +122,6 @@ SampleLTUpload.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
   renderUploadedFileDetails: PropTypes.func.isRequired,
   uploadedFileId: PropTypes.string,
+  setFilesNotUploaded: PropTypes.func.isRequired,
 };
 export default SampleLTUpload;

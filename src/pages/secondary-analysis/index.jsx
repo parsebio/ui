@@ -40,6 +40,7 @@ const SecondaryAnalysis = () => {
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
   const [secondaryAnalysisDetailsDiff, setNewSecondaryAnalysisDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
+  const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const user = useSelector((state) => state.user.current);
 
   const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
@@ -61,16 +62,6 @@ const SecondaryAnalysis = () => {
   }, [activeSecondaryAnalysisId]);
 
   const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
-
-  const onNext = () => {
-    setCurrentStepIndex(currentStepIndex + 1);
-  };
-
-  const onBack = () => {
-    if (currentStepIndex > 0) {
-      setCurrentStepIndex(currentStepIndex - 1);
-    }
-  };
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
@@ -159,7 +150,6 @@ const SecondaryAnalysis = () => {
           kit: kitTitle, chemistryVersion, numOfSamples, numOfSublibraries,
         });
       },
-      onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
       title: 'Upload your sample loading table:',
@@ -169,11 +159,11 @@ const SecondaryAnalysis = () => {
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderUploadedFileDetails={renderSampleLTFileDetails}
           uploadedFileId={Object.keys(getFilesByType('samplelt'))[0]}
+          setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
       isValid: areFilesUploaded('samplelt'),
       renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
-      onNext,
     },
     {
       title: 'Reference genome',
@@ -186,7 +176,6 @@ const SecondaryAnalysis = () => {
       ),
       isValid: Boolean(refGenome),
       renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
-      onNext: () => { handleUpdateSecondaryAnalysisDetails(); onNext(); },
     },
     {
       title: 'Upload your Fastq files:',
@@ -195,11 +184,11 @@ const SecondaryAnalysis = () => {
         <UploadFastQ
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderFastqFileTable={() => renderFastqFileTable(true)}
+          setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
       isValid: areFilesUploaded('fastq'),
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFileTable(false)),
-      onNext,
     },
   ];
   const onCancel = () => { setCurrentStepIndex(null); };
@@ -285,7 +274,34 @@ const SecondaryAnalysis = () => {
     second: PROJECT_DETAILS,
     splitPercentage: 23,
   };
+  const handleNavigationWithConfirmation = (action) => {
+    if (filesNotUploaded) {
+      Modal.confirm({
+        title: "You have files selected to be uploaded. Click 'upload' or 'replace' to proceed, or discard the files to upload them later.",
+        onOk: () => { action(); setFilesNotUploaded(false); },
+        onCancel() {},
+        okText: 'Discard selected files',
+        cancelText: 'I will upload',
+      });
+    } else {
+      action();
+    }
+  };
+  const onNextWithConfirmation = () => handleNavigationWithConfirmation(() => {
+    setCurrentStepIndex(currentStepIndex + 1);
+    handleUpdateSecondaryAnalysisDetails();
+  });
 
+  const onBackWithConfirmation = () => handleNavigationWithConfirmation(() => {
+    if (currentStepIndex > 0) {
+      setCurrentStepIndex(currentStepIndex - 1);
+    }
+  });
+
+  const onCancelWithConfirmation = () => handleNavigationWithConfirmation(() => {
+    onCancel();
+    handleUpdateSecondaryAnalysisDetails();
+  });
   return (
     <>
       <Header title='Secondary Analysis' />
@@ -307,12 +323,12 @@ const SecondaryAnalysis = () => {
           okButtonProps={{ htmlType: 'submit' }}
           bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
           style={{ minWidth: '70dvh' }}
-          onCancel={() => { onCancel(); handleUpdateSecondaryAnalysisDetails(); }}
+          onCancel={onCancelWithConfirmation} // Updated to use the wrapper
           footer={[
-            <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
+            <Button key='back' onClick={onBackWithConfirmation} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
               Back
             </Button>,
-            <Button key='submit' type='primary' onClick={currentStep.onNext}>
+            <Button key='submit' type='primary' onClick={onNextWithConfirmation}>
               {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
             </Button>,
           ]}

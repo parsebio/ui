@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button,
 } from 'antd';
@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 const { Text } = Typography;
 
 const UploadFastQ = (props) => {
-  const { secondaryAnalysisId, renderFastqFileTable } = props;
+  const { secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded } = props;
   const [filesList, setFilesList] = useState([]);
   const dispatch = useDispatch();
   const onUpload = async () => {
@@ -31,6 +31,10 @@ const UploadFastQ = (props) => {
       await Promise.all(promisesChunk.map((promise) => promise()));
     }
   };
+
+  useEffect(() => {
+    setFilesNotUploaded(Boolean(filesList.length));
+  }, [filesList]);
 
   const onDrop = (files) => {
     setFilesList(files);
@@ -139,6 +143,7 @@ const UploadFastQ = (props) => {
 UploadFastQ.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
   renderFastqFileTable: PropTypes.func.isRequired,
+  setFilesNotUploaded: PropTypes.func.isRequired,
 };
 
 export default UploadFastQ;
