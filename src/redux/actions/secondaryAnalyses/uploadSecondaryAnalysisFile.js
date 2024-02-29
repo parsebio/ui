@@ -4,6 +4,7 @@ import uploadFileToS3 from 'utils/upload/multipartUpload';
 import { SECONDARY_ANALYSES_ERROR, SECONDARY_ANALYSIS_FILES_LOADED } from 'redux/actionTypes/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
 import dayjs from 'dayjs';
+import { shouldCompress } from 'utils/upload/fileInspector';
 import updateSecondaryAnalysisFile from './updateSecondaryAnalysisFile';
 
 const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (dispatch) => {
@@ -17,7 +18,7 @@ const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
       body: JSON.stringify({ name, size, type }),
     });
 
-    const fileRecord = {
+    const fileRecordRedux = {
       id: uploadUrlParams.fileId,
       name: file.name,
       size: file.size,
@@ -33,18 +34,19 @@ const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {
         secondaryAnalysisId,
-        files: [fileRecord],
+        files: [fileRecordRedux],
       },
     });
 
     const onUpdateUploadStatus = (status, percentProgress = 0) => {
       dispatch(updateSecondaryAnalysisFile(secondaryAnalysisId, uploadUrlParams.fileId, status, percentProgress));
     };
+    const shouldCompressResponse = await shouldCompress(file);
 
     await uploadFileToS3(
       secondaryAnalysisId,
       file,
-      !file.compressed,
+      shouldCompressResponse,
       uploadUrlParams,
       'secondaryAnalysis',
       new AbortController(),
