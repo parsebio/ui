@@ -27,6 +27,8 @@ import secondaryAnalysisUpdated from './secondaryAnalysisUpdated';
 import secondaryAnalysisFilesLoaded from './secondaryAnalysisFilesLoaded';
 import secondaryAnalysisFileUpdated from './secondaryAnalysisFileUpdated';
 import secondaryAnalysisFileDeleted from './secondaryAnalysisFileDeleted';
+import secondaryAnalysisFilesLoading from './secondaryAnalysisFilesLoading';
+import secondaryAnalysisFileError from './secondaryAnalysisFileError';
 
 const notificationsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -62,36 +64,14 @@ const notificationsReducer = (state = initialState, action) => {
     }
 
     case SECONDARY_ANALYSIS_FILES_LOADING: {
-      const { secondaryAnalysisId } = action.payload;
-      return {
-        ...state,
-        [secondaryAnalysisId]: {
-          ...state[secondaryAnalysisId],
-          files: {
-            ...state[secondaryAnalysisId].files,
-            loading: true,
-            error: null,
-          },
-        },
-      };
+      return secondaryAnalysisFilesLoading(state, action);
     }
     case SECONDARY_ANALYSIS_FILES_LOADED: {
       return secondaryAnalysisFilesLoaded(state, action);
     }
 
     case SECONDARY_ANALYSIS_FILES_ERROR: {
-      const { secondaryAnalysisId } = action.payload;
-      return {
-        ...state,
-        [secondaryAnalysisId]: {
-          ...state[secondaryAnalysisId],
-          files: {
-            ...state[secondaryAnalysisId].files,
-            loading: false,
-            error: action.payload.error,
-          },
-        },
-      };
+      return secondaryAnalysisFileError(state, action);
     }
 
     case SECONDARY_ANALYSIS_FILES_UPDATE: {

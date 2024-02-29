@@ -30,7 +30,7 @@ const SampleLTUpload = (props) => {
     setFilesNotUploaded(Boolean(file));
   }, [file]);
 
-  const onUpload = async () => {
+  const beginUpload = async () => {
     if (uploadedFileId) {
       dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
     }
@@ -77,7 +77,7 @@ const SampleLTUpload = (props) => {
             block
             disabled={!file}
             onClick={() => {
-              onUpload();
+              beginUpload();
               setFile(null);
             }}
           >

@@ -45,17 +45,15 @@ const SecondaryAnalysis = () => {
   const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
   const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[activeSecondaryAnalysisId]);
-  const secondaryAnalysisFiles = secondaryAnalysis?.files.data || {};
+  const secondaryAnalysisFiles = secondaryAnalysis?.files.data ?? {};
   const filesLoading = secondaryAnalysis?.files.loading;
-
-  const filesPresent = Object.keys(secondaryAnalysisFiles)?.length || false;
 
   useEffect(() => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
   useEffect(() => {
-    if (activeSecondaryAnalysisId && !filesPresent) {
+    if (activeSecondaryAnalysisId && _.isEmpty(secondaryAnalysisFiles)) {
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
     }
   }, [activeSecondaryAnalysisId]);
@@ -89,16 +87,18 @@ const SecondaryAnalysis = () => {
     });
     return view;
   };
+
   const renderSampleLTFileDetails = () => {
     const sampleLTFile = Object.values(getFilesByType('samplelt'))[0];
-    if (sampleLTFile) {
-      const { name, upload, createdAt } = sampleLTFile;
-      return (mainScreenDetails({
-        name, status: <UploadStatusView status={upload.status} />, createdAt: <PrettyTime isoTime={createdAt} />,
-      }));
-    }
-    return null;
+
+    if (!sampleLTFile) return null;
+
+    const { name, upload, createdAt } = sampleLTFile;
+    return mainScreenDetails({
+      name, status: <UploadStatusView status={upload.status} />, createdAt: <PrettyTime isoTime={createdAt} />,
+    });
   };
+
   const renderFastqFileTable = (canEditTable) => {
     const filesToDisplay = getFilesByType('fastq');
 

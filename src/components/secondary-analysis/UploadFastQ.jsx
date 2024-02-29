@@ -16,7 +16,8 @@ const UploadFastQ = (props) => {
   const { secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded } = props;
   const [filesList, setFilesList] = useState([]);
   const dispatch = useDispatch();
-  const onUpload = async () => {
+
+  const beginUpload = async () => {
     const promises = [];
     filesList.forEach((file) => {
       promises.push(async () => await dispatch(
@@ -42,9 +43,7 @@ const UploadFastQ = (props) => {
 
   const removeFile = (fileName) => {
     const newArray = _.cloneDeep(filesList);
-
-    const fileIdx = newArray.findIndex((file) => file.name === fileName);
-    newArray.splice(fileIdx, 1);
+    _.remove(newArray, (file) => file.name === fileName);
     setFilesList(newArray);
   };
   return (
@@ -91,13 +90,13 @@ const UploadFastQ = (props) => {
           block
           disabled={!filesList.length}
           onClick={() => {
-            onUpload(filesList);
+            beginUpload(filesList);
             setFilesList([]);
           }}
         >
           Upload
         </Button>
-        {filesList.length ? (
+        {filesList.length > 0 && (
           <>
             <Divider orientation='center'>To upload</Divider>
             <List
@@ -132,7 +131,7 @@ const UploadFastQ = (props) => {
               )}
             />
           </>
-        ) : ''}
+        )}
         <br />
         <br />
         {renderFastqFileTable()}

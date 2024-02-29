@@ -53,7 +53,7 @@ const SecondaryAnalysisCard = (props) => {
   const secondaryAnalysisNames = secondaryAnalyses.ids.map((id) => secondaryAnalyses[id].name);
   const secondaryAnalysisFiles = secondaryAnalysis.files.data;
 
-  const fastQFilesNumber = Object.keys(_.pickBy(secondaryAnalysisFiles, (file) => file.type === 'fastq')).length || 'N/A';
+  const fastQFilesNumber = _.size(_.pickBy(secondaryAnalysisFiles, (file) => file.type === 'fastq'));
 
   const validationParams = {
     existingNames: secondaryAnalysisNames,
@@ -109,7 +109,7 @@ const SecondaryAnalysisCard = (props) => {
             labelStyle={itemTextStyle}
             label='Fastq files'
           >
-            {fastQFilesNumber}
+            {fastQFilesNumber || 'N/A'}
           </Item>
           <Item
             labelStyle={itemTextStyle}
