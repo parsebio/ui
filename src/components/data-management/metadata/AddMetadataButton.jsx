@@ -55,7 +55,7 @@ const AddMetadataButton = ({ samplesTableRef }) => {
         activeExperimentId,
         file,
         !file.compressed,
-        { ...uploadUrlParams, s3Path: uploadUrlParams.fileId },
+        uploadUrlParams,
         'cellLevelMeta',
         new AbortController(),
         onUpdateUploadStatus,
