@@ -191,7 +191,6 @@ const SecondaryAnalysis = () => {
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFileTable(false)),
     },
   ];
-  const onCancel = () => { setCurrentStepIndex(null); };
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
@@ -279,7 +278,6 @@ const SecondaryAnalysis = () => {
       Modal.confirm({
         title: "You have files selected to be uploaded. Click 'upload' or 'replace' to proceed, or discard the files to upload them later.",
         onOk: () => { action(); setFilesNotUploaded(false); },
-        onCancel() {},
         okText: 'Discard selected files',
         cancelText: 'I will upload',
       });
@@ -287,19 +285,19 @@ const SecondaryAnalysis = () => {
       action();
     }
   };
-  const onNextWithConfirmation = () => handleNavigationWithConfirmation(() => {
+  const onNext = () => handleNavigationWithConfirmation(() => {
     setCurrentStepIndex(currentStepIndex + 1);
     handleUpdateSecondaryAnalysisDetails();
   });
 
-  const onBackWithConfirmation = () => handleNavigationWithConfirmation(() => {
+  const onBack = () => handleNavigationWithConfirmation(() => {
     if (currentStepIndex > 0) {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   });
 
-  const onCancelWithConfirmation = () => handleNavigationWithConfirmation(() => {
-    onCancel();
+  const onCancel = () => handleNavigationWithConfirmation(() => {
+    setCurrentStepIndex(null);
     handleUpdateSecondaryAnalysisDetails();
   });
   return (
@@ -323,12 +321,12 @@ const SecondaryAnalysis = () => {
           okButtonProps={{ htmlType: 'submit' }}
           bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
           style={{ minWidth: '70dvh' }}
-          onCancel={onCancelWithConfirmation} // Updated to use the wrapper
+          onCancel={onCancel}
           footer={[
-            <Button key='back' onClick={onBackWithConfirmation} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
+            <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
               Back
             </Button>,
-            <Button key='submit' type='primary' onClick={onNextWithConfirmation}>
+            <Button key='submit' type='primary' onClick={onNext}>
               {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
             </Button>,
           ]}
