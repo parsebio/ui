@@ -19,7 +19,6 @@ import {
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
-import Loader from 'components/Loader';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
@@ -115,14 +114,11 @@ const SecondaryAnalysis = () => {
     return null;
   };
 
-  const renderMainScreenFileDetails = (renderFunc) => {
-    if (filesLoading) return <Loader experimentId={activeSecondaryAnalysisId} />;
-    return (renderFunc() || (
-      <Empty
-        description='Not uploaded'
-      />
-    ));
-  };
+  const renderMainScreenFileDetails = (renderFunc) => (renderFunc() || (
+    <Empty
+      description='Not uploaded'
+    />
+  ));
 
   const areFilesUploaded = (type) => {
     const files = getFilesByType(type);
@@ -163,6 +159,7 @@ const SecondaryAnalysis = () => {
         />
       ),
       isValid: areFilesUploaded('samplelt'),
+      isLoading: filesLoading,
       renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
     },
     {
@@ -188,6 +185,7 @@ const SecondaryAnalysis = () => {
         />
       ),
       isValid: areFilesUploaded('fastq'),
+      isLoading: filesLoading,
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFileTable(false)),
     },
   ];
