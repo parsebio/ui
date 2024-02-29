@@ -108,8 +108,8 @@ class FileUploader {
     // partNumbers are 1-indexed, so we need to subtract 1 for the array index
     this.uploadedPartPercentages[partNumber - 1] = progress.progress;
 
-    const percentage = _.mean(this.uploadedPartPercentages) * 100;
-    this.onStatusUpdate(UploadStatus.UPLOADING, Math.floor(percentage));
+    const percentage = (_.mean(this.uploadedPartPercentages) * 100).toFixed(2);
+    this.onStatusUpdate(UploadStatus.UPLOADING, parseFloat(percentage));
   };
 
   #setupGzipStreamHandlers = () => {
