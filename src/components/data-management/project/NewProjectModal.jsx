@@ -87,7 +87,7 @@ const NewProjectModal = ({ projectType, onCreate, onCancel }) => {
         )}
         <Form layout='vertical'>
           <Form.Item
-            validateStatus={(isValidName || !projectName) ? 'success' : 'error'}
+            validateStatus={(isValidName || projectName.length === 0) ? 'success' : 'error'}
             help={projectName && (
               <ul>
                 {validateInputs(

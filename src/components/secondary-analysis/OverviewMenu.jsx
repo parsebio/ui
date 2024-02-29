@@ -22,7 +22,6 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep }) => (
               bordered
               style={cardStyle}
               loading={step.isLoading}
-              size='small'
               title={(
                 <div style={{ display: 'flex' }}>
                   <Text

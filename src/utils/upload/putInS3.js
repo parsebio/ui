@@ -10,7 +10,7 @@ const backoff = async (currentRetry) => (
 );
 
 const putInS3 = async (
-  blob, signedUrlGenerator, abortController, onUploadProgress, currentRetry = 0,
+  blob, signedUrlGenerator, abortController, onUploadProgress, retryPolicy, currentRetry = 0,
 ) => {
   try {
     const signedUrl = await signedUrlGenerator();
@@ -26,11 +26,13 @@ const putInS3 = async (
     });
   } catch (e) {
     if (currentRetry <= MAX_RETRIES) {
-      // Incremental backoff, last attempt will be after waiting 64 seconds (2 seconds * 2 ** 5)
-      await backoff(currentRetry);
+      if (retryPolicy === 'exponentialBackoff') {
+        // Exponential backoff, last attempt will be after waiting 64 seconds (2 seconds * 2 ** 5)
+        await backoff(currentRetry);
+      }
 
       return await putInS3(
-        blob, signedUrlGenerator, abortController, onUploadProgress, currentRetry + 1,
+        blob, signedUrlGenerator, abortController, onUploadProgress, retryPolicy, currentRetry + 1,
       );
     }
 
