@@ -10,7 +10,8 @@ const uploadFileToS3 = async (
   uploadUrlParams,
   type,
   abortController,
-  onStatusUpdate = () => { },
+  onStatusUpdate,
+  retryPolicy = 'normal',
 ) => {
   const {
     uploadId, bucket, key,
@@ -30,7 +31,7 @@ const uploadFileToS3 = async (
   let parts;
   try {
     parts = await processMultipartUpload(
-      file, compress, partUploadParams, abortController, onStatusUpdate,
+      file, compress, partUploadParams, abortController, onStatusUpdate, retryPolicy,
     );
   } catch (e) {
     // Return silently, the error is handled in the onStatusUpdate callback
@@ -47,7 +48,7 @@ const uploadFileToS3 = async (
 };
 
 const processMultipartUpload = async (
-  file, compress, uploadParams, abortController, onStatusUpdate,
+  file, compress, uploadParams, abortController, onStatusUpdate, retryPolicy,
 ) => {
   const fileUploader = new FileUploader(
     file,
@@ -56,6 +57,7 @@ const processMultipartUpload = async (
     uploadParams,
     abortController,
     onStatusUpdate,
+    retryPolicy,
   );
 
   const parts = await fileUploader.upload();

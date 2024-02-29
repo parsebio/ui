@@ -51,6 +51,7 @@ const uploadSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
       'secondaryAnalysis',
       new AbortController(),
       onUpdateUploadStatus,
+      'exponentialBackoff',
     );
   } catch (e) {
     pushNotificationMessage('error', 'Something went wrong while uploading your file.');

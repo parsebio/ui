@@ -16,6 +16,7 @@ class FileUploader {
     uploadParams,
     abortController,
     onStatusUpdate,
+    retryPolicy,
   ) {
     if (!file
       || !chunkSize
@@ -30,6 +31,8 @@ class FileUploader {
     this.compress = compress;
     this.chunkSize = chunkSize;
     this.uploadParams = uploadParams;
+
+    this.retryPolicy = retryPolicy;
 
     // Upload related callbacks and handling
     this.onStatusUpdate = onStatusUpdate;
@@ -84,6 +87,7 @@ class FileUploader {
       () => this.#getSignedUrlForPart(partNumber),
       this.abortController,
       this.#createOnUploadProgress(partNumber),
+      this.retryPolicy,
     );
 
     this.uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
