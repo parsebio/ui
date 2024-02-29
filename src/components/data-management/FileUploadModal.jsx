@@ -21,13 +21,15 @@ import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
 
 import config from 'config';
+
+import Expandable from 'components/Expandable';
+
 import { sampleTech } from 'utils/constants';
 import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import handleError from 'utils/http/handleError';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import endUserMessages from 'utils/endUserMessages';
-import Expandable from 'components/Expandable';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -324,6 +326,7 @@ const FileUploadModal = (props) => {
                     dataSource={files.invalid}
                     size='small'
                     itemLayout='horizontal'
+                    pagination
                     renderItem={(file) => (
                       <List.Item key={file.path} style={{ height: '100%', width: '100%' }}>
                         <Space style={{ width: 200, justifyContent: 'center' }}>
