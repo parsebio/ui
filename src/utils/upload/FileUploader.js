@@ -79,11 +79,9 @@ class FileUploader {
   }
 
   #uploadChunk = async (compressedPart, partNumber) => {
-    const signedUrl = await this.#getSignedUrlForPart(partNumber);
-
     const partResponse = await putInS3(
       compressedPart,
-      signedUrl,
+      () => this.#getSignedUrlForPart(partNumber),
       this.abortController,
       this.#createOnUploadProgress(partNumber),
     );
