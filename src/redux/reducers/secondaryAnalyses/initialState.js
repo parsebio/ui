@@ -1,14 +1,3 @@
-const secondaryAnalysisTemplate = {
-  name: null,
-  id: null,
-  createdAt: null,
-  kit: null,
-  chemistryVersion: null,
-  numOfSamples: null,
-  numOfSublibraries: null,
-  files: { data: {} },
-};
-
 const initialState = {
   meta: {
     loading: false,
@@ -19,5 +8,4 @@ const initialState = {
   ids: [],
 };
 
-export { secondaryAnalysisTemplate };
 export default initialState;

@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import produce, { original } from 'immer';
 import _ from 'lodash';
-import { secondaryAnalysisTemplate } from './initialState';
 
 const secondaryAnalysesLoaded = produce((draft, action) => {
   const { secondaryAnalyses } = action.payload;
@@ -22,7 +21,7 @@ const secondaryAnalysesLoaded = produce((draft, action) => {
 
   secondaryAnalyses.forEach((analysis) => {
     draft[analysis.id] = {
-      ...secondaryAnalysisTemplate,
+      files: { data: {} },
       ...analysis,
     };
   });
