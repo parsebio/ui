@@ -26,7 +26,7 @@ const createSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
         progress: 0,
       },
     };
-    console.log('FILE UPLOAD REDUX ', fileRecordRedux);
+
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {
