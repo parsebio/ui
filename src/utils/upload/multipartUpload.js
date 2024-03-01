@@ -14,7 +14,7 @@ const uploadFileToS3 = async (
   retryPolicy = 'normal',
 ) => {
   const {
-    uploadId, bucket, key,
+    uploadId, bucket, key, resumeUpload,
   } = uploadUrlParams;
 
   if (!uploadId || !bucket || !key) {
@@ -26,6 +26,7 @@ const uploadFileToS3 = async (
     uploadId,
     bucket,
     key,
+    resumeUpload,
   };
 
   let parts;

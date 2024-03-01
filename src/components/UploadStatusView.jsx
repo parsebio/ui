@@ -17,7 +17,9 @@ const uploadDivStyle = {
   verticalAlign: 'middle',
 };
 
-const UploadStatusView = ({ status, progress, showDetails }) => {
+const UploadStatusView = ({
+  status, progress, showDetails, resumeUpload,
+}) => {
   if (status === UploadStatus.QUEUED) {
     return (
       <div style={uploadDivStyle}>
@@ -96,17 +98,34 @@ const UploadStatusView = ({ status, progress, showDetails }) => {
       </div>
     );
   }
+  if (UploadStatus.RESUME_UPLOAD === status) {
+    return (
+      <div style={uploadDivStyle}>
+        <Text type='warning'>{messageForStatus(status)}</Text>
+        {resumeUpload && (
+          <Button
+            size='large'
+            shape='link'
+            icon={<UploadOutlined />}
+            onClick={resumeUpload}
+          />
+        )}
+      </div>
+    );
+  }
 };
 
 UploadStatusView.defaultProps = {
   progress: undefined,
   showDetails: null,
+  resumeUpload: null,
 };
 
 UploadStatusView.propTypes = {
   status: PropTypes.string.isRequired,
   progress: PropTypes.number,
   showDetails: PropTypes.func,
+  resumeUpload: PropTypes.func,
 };
 
 export default UploadStatusView;

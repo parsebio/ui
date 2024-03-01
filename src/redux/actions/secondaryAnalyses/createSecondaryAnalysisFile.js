@@ -1,8 +1,9 @@
 import fetchAPI from 'utils/http/fetchAPI';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import { SECONDARY_ANALYSES_ERROR, SECONDARY_ANALYSIS_FILES_LOADED } from 'redux/actionTypes/secondaryAnalyses';
+import { SECONDARY_ANALYSIS_FILES_ERROR, SECONDARY_ANALYSIS_FILES_LOADED } from 'redux/actionTypes/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
 import dayjs from 'dayjs';
+import cache from 'utils/cache';
 
 const createSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (dispatch) => {
   const { name, size } = file;
@@ -35,11 +36,19 @@ const createSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
       },
     });
 
+    // saving file to cache for 1 week to be able to retrieve it later for resume upload
+
+    const fileRecordCache = {
+      file,
+      uploadUrlParams,
+    };
+    await cache.set(uploadUrlParams.fileId, fileRecordCache, 168 * 3600);
+
     return uploadUrlParams;
   } catch (e) {
     pushNotificationMessage('error', 'Something went wrong while uploading your file.');
     dispatch({
-      type: SECONDARY_ANALYSES_ERROR,
+      type: SECONDARY_ANALYSIS_FILES_ERROR,
       payload: {
         secondaryAnalysisId,
         error: e,

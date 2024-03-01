@@ -64,6 +64,16 @@ class FileUploader {
   }
 
   async upload() {
+    if (this.uploadParams.resumeUpload) {
+      const nextPartNumber = await this.#getNextPartNumber();
+
+      // setting all previous parts as uploaded
+      this.uploadedPartPercentages.fill(1, 0, nextPartNumber - 1);
+
+      this.partNumberIt = nextPartNumber - 1;
+      this.pendingChunks = this.totalChunks - this.partNumberIt;
+    }
+
     return new Promise((resolve, reject) => {
       this.resolve = resolve;
       this.reject = reject;
@@ -103,6 +113,16 @@ class FileUploader {
 
     return await fetchAPI(url, { method: 'GET' });
   };
+
+  #getNextPartNumber = async () => {
+    const {
+      projectId, uploadId, bucket, key,
+    } = this.uploadParams;
+    const queryParams = new URLSearchParams({ bucket, key });
+    const url = `/v2/projects/${projectId}/upload/${uploadId}/getNextPartNumber?${queryParams}`;
+
+    return await fetchAPI(url, { method: 'GET' });
+  }
 
   #createOnUploadProgress = (partNumber) => (progress) => {
     // partNumbers are 1-indexed, so we need to subtract 1 for the array index

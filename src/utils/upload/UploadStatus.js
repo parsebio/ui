@@ -8,6 +8,7 @@ const UploadStatus = {
   FILE_READ_ABORTED: 'fileReadAborted',
   QUEUED: 'queued',
   DROP_AGAIN: 'dropAgain',
+  RESUME_UPLOAD: 'resumeUpload',
 };
 
 const message = {
@@ -19,7 +20,8 @@ const message = {
   [UploadStatus.FILE_READ_ERROR]: 'File read error',
   [UploadStatus.FILE_READ_ABORTED]: 'File read aborted',
   [UploadStatus.QUEUED]: 'Queued',
-  [UploadStatus.DROP_AGAIN]: 'Drop file to continue',
+  [UploadStatus.DROP_AGAIN]: 'Drop file again',
+  [UploadStatus.RESUME_UPLOAD]: 'Click to resume',
 };
 
 const messageForStatus = (uploadStatus) => message[uploadStatus];

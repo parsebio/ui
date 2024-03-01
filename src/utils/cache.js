@@ -97,6 +97,7 @@ class BrowserCache {
       if (!this.tail) {
         this.tail = key;
       }
+      console.log('CACHE IS SET');
       return true;
     } catch (error) {
       console.trace(error);

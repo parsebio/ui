@@ -15,6 +15,7 @@ const uploadSecondaryAnalysisFile = async (
   };
 
   const shouldCompress = await getShouldCompress(file);
+
   return uploadFileToS3(
     secondaryAnalysisId,
     file,
