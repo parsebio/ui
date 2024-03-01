@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
-import SecondaryAnalysisDetails from 'components/secondary-analysis/SecondaryAnalysisDetails';
+import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
 import { useSelector, useDispatch } from 'react-redux';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
@@ -134,7 +134,7 @@ const SecondaryAnalysis = () => {
       title: 'Provide the details of the experimental setup:',
       key: 'Experimental setup',
       render: () => (
-        <SecondaryAnalysisDetails
+        <SecondaryAnalysisSettings
           onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
           secondaryAnalysis={secondaryAnalysis}
         />
@@ -192,10 +192,11 @@ const SecondaryAnalysis = () => {
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
-  const PROJECTS_LIST = 'Runs';
-  const PROJECT_DETAILS = 'Run Details';
+  const ANALYSIS_LIST = 'Runs';
+  const ANALYSIS_DETAILS = 'Run Details';
+
   const TILE_MAP = {
-    [PROJECTS_LIST]: {
+    [ANALYSIS_LIST]: {
       toolbarControls: [],
       component: (width, height) => (
         <ProjectsListContainer
@@ -205,7 +206,7 @@ const SecondaryAnalysis = () => {
         />
       ),
     },
-    [PROJECT_DETAILS]: {
+    [ANALYSIS_DETAILS]: {
       toolbarControls: [],
       component: () => (
         <div style={{
@@ -265,12 +266,14 @@ const SecondaryAnalysis = () => {
       ),
     },
   };
+
   const windows = {
     direction: 'row',
-    first: PROJECTS_LIST,
-    second: PROJECT_DETAILS,
+    first: ANALYSIS_LIST,
+    second: ANALYSIS_DETAILS,
     splitPercentage: 23,
   };
+
   const handleNavigationWithConfirmation = (action) => {
     if (filesNotUploaded) {
       Modal.confirm({
@@ -283,6 +286,7 @@ const SecondaryAnalysis = () => {
       action();
     }
   };
+
   const onNext = () => handleNavigationWithConfirmation(() => {
     setCurrentStepIndex(currentStepIndex + 1);
     handleUpdateSecondaryAnalysisDetails();
@@ -298,6 +302,7 @@ const SecondaryAnalysis = () => {
     setCurrentStepIndex(null);
     handleUpdateSecondaryAnalysisDetails();
   });
+
   return (
     <>
       <Header title='Secondary Analysis' />
@@ -311,7 +316,7 @@ const SecondaryAnalysis = () => {
             setNewProjectModalVisible(false);
           }}
         />
-      ) }
+      )}
       {currentStep && (
         <Modal
           open
