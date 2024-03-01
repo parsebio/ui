@@ -6,9 +6,10 @@ import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-des
 import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
-import { uploadSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import { createSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
+import uploadSecondaryAnalysisFile from 'utils/secondary-analysis/uploadSecondaryAnalysisFile';
 
 const { Text } = Typography;
 
@@ -18,19 +19,17 @@ const UploadFastQ = (props) => {
   const dispatch = useDispatch();
 
   const beginUpload = async () => {
-    const promises = [];
-    filesList.forEach((file) => {
-      promises.push(async () => await dispatch(
-        uploadSecondaryAnalysisFile(secondaryAnalysisId, file, 'fastq'),
-      ));
-    });
-    // 5 at a time
-    const chunkedPromises = _.chunk(promises, promises.length);
+    // Save all files first and get uploadUrlParams for each
+    const uploadUrlParamsList = await Promise.all(filesList
+      .map((file) => dispatch(createSecondaryAnalysisFile(secondaryAnalysisId, file, 'fastq'))));
 
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const promisesChunk of chunkedPromises) {
-      await Promise.all(promisesChunk.map((promise) => promise()));
-    }
+    // upload files one by one using the corresponding uploadUrlParams
+    await uploadUrlParamsList.reduce(async (promiseChain, uploadUrlParams, index) => {
+    // Ensure the previous upload is completed
+      await promiseChain;
+      const file = filesList[index];
+      return uploadSecondaryAnalysisFile(file, secondaryAnalysisId, uploadUrlParams, dispatch);
+    }, Promise.resolve()); // Start with an initially resolved promise
   };
 
   useEffect(() => {
