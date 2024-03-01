@@ -22,6 +22,7 @@ import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
+import AnalysisDetails from 'components/data-management/project/AnalysisDetails';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -208,60 +209,68 @@ const SecondaryAnalysis = () => {
     },
     [ANALYSIS_DETAILS]: {
       toolbarControls: [],
-      component: () => (
+      component: (width, height) => (
         <div style={{
           display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
         }}
         >
-          {activeSecondaryAnalysisId ? (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
-                <Space direction='vertical'>
-                  <Title level={4}>{secondaryAnalysis.name}</Title>
-                  <Text type='secondary'>
-                    {`Run ID: ${activeSecondaryAnalysisId}`}
-                  </Text>
-                </Space>
-                <Tooltip
-                  title={!isAllValid
-                    ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                    : undefined}
-                  placement='left'
-                >
-                  <Button
-                    type='primary'
-                    disabled={!isAllValid}
-                    size='large'
-                    style={{ marginBottom: '10px' }}
-                  >
-                    Run the pipeline
-                  </Button>
-                </Tooltip>
-              </div>
-              <Text strong>Description:</Text>
-              <div style={{ flex: 1, overflowY: 'auto' }}>
-                <EditableParagraph
-                  value={secondaryAnalysis.description || ''}
-                  onUpdate={(text) => {
-                    if (text !== secondaryAnalysis.description) {
-                      dispatch(
-                        updateSecondaryAnalysis(
-                          activeSecondaryAnalysisId,
-                          { description: text },
-                        ),
-                      );
-                    }
-                  }}
-                />
-                <OverviewMenu
-                  wizardSteps={secondaryAnalysisWizardSteps}
-                  setCurrentStep={setCurrentStepIndex}
-                />
-              </div>
-            </>
-          ) : (
-            <Empty description='Create a new run to get started' />
+          {activeSecondaryAnalysisId && (
+            <AnalysisDetails
+              width={width}
+              height={height}
+            />
           )}
+
+          {/* {activeSecondaryAnalysisId
+            ? (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
+                  <Space direction='vertical'>
+                    <Title level={4}>{secondaryAnalysis.name}</Title>
+                    <Text type='secondary'>
+                      {`Run ID: ${activeSecondaryAnalysisId}`}
+                    </Text>
+                  </Space>
+                  <Tooltip
+                    title={!isAllValid
+                      ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
+                      : undefined}
+                    placement='left'
+                  >
+                    <Button
+                      type='primary'
+                      disabled={!isAllValid}
+                      size='large'
+                      style={{ marginBottom: '10px' }}
+                    >
+                      Run the pipeline
+                    </Button>
+                  </Tooltip>
+                </div>
+                <Text strong>Description:</Text>
+                <div style={{ flex: 1, overflowY: 'auto' }}>
+                  <EditableParagraph
+                    value={secondaryAnalysis.description || ''}
+                    onUpdate={(text) => {
+                      if (text !== secondaryAnalysis.description) {
+                        dispatch(
+                          updateSecondaryAnalysis(
+                            activeSecondaryAnalysisId,
+                            { description: text },
+                          ),
+                        );
+                      }
+                    }}
+                  />
+                  <OverviewMenu
+                    wizardSteps={secondaryAnalysisWizardSteps}
+                    setCurrentStep={setCurrentStepIndex}
+                  />
+                </div>
+              </>
+            ) : (
+              <Empty description='Create a new run to get started' />
+            )} */}
         </div>
       ),
     },
