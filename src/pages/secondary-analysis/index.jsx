@@ -37,7 +37,7 @@ const keyToTitle = {
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
-  const [secondaryAnalysisDetailsDiff, setNewSecondaryAnalysisDetailsDiff] = useState({});
+  const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const user = useSelector((state) => state.user.current);
@@ -63,7 +63,7 @@ const SecondaryAnalysis = () => {
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
       dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
-      setNewSecondaryAnalysisDetailsDiff({});
+      setSecondaryAnalysisDetailsDiff({});
     }
   };
 
@@ -135,7 +135,7 @@ const SecondaryAnalysis = () => {
       key: 'Experimental setup',
       render: () => (
         <SecondaryAnalysisDetails
-          onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
+          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
           secondaryAnalysis={secondaryAnalysis}
         />
       ),
@@ -167,7 +167,7 @@ const SecondaryAnalysis = () => {
       key: 'Reference genome',
       render: () => (
         <SelectReferenceGenome
-          onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
+          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
           secondaryAnalysis={secondaryAnalysis}
         />
       ),
@@ -311,7 +311,7 @@ const SecondaryAnalysis = () => {
             setNewProjectModalVisible(false);
           }}
         />
-      ) }
+      )}
       {currentStep && (
         <Modal
           open
