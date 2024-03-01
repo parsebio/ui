@@ -192,10 +192,11 @@ const SecondaryAnalysis = () => {
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
-  const PROJECTS_LIST = 'Runs';
-  const PROJECT_DETAILS = 'Run Details';
+  const ANALYSIS_LIST = 'Runs';
+  const ANALYSIS_DETAILS = 'Run Details';
+
   const TILE_MAP = {
-    [PROJECTS_LIST]: {
+    [ANALYSIS_LIST]: {
       toolbarControls: [],
       component: (width, height) => (
         <ProjectsListContainer
@@ -205,7 +206,7 @@ const SecondaryAnalysis = () => {
         />
       ),
     },
-    [PROJECT_DETAILS]: {
+    [ANALYSIS_DETAILS]: {
       toolbarControls: [],
       component: () => (
         <div style={{
@@ -268,8 +269,8 @@ const SecondaryAnalysis = () => {
 
   const windows = {
     direction: 'row',
-    first: PROJECTS_LIST,
-    second: PROJECT_DETAILS,
+    first: ANALYSIS_LIST,
+    second: ANALYSIS_DETAILS,
     splitPercentage: 23,
   };
 
