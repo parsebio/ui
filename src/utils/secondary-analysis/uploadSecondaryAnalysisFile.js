@@ -1,4 +1,4 @@
-import { shouldCompress } from 'utils/upload/fileInspector';
+import { getShouldCompress } from 'utils/upload/fileInspector';
 import uploadFileToS3 from 'utils/upload/multipartUpload';
 import { updateSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 
@@ -14,11 +14,11 @@ const uploadSecondaryAnalysisFile = async (
     ));
   };
 
-  const shouldCompressResponse = await shouldCompress(file);
+  const shouldCompress = await getShouldCompress(file);
   return uploadFileToS3(
     secondaryAnalysisId,
     file,
-    shouldCompressResponse,
+    shouldCompress,
     uploadUrlParams,
     'secondaryAnalysis',
     new AbortController(),

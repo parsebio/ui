@@ -11,10 +11,12 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => 
         secondaryAnalysisId,
       },
     });
-    const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
+    const files = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
 
-    const changeStatusIfUploading = response.map((file) => {
-      if (file.upload.status === 'uploading') {
+    // If the file upload status is 'uploading' in sql, we need to change it
+    // since that status is not correct anymore after a page refresh
+    const filesForUI = files.map((file) => {
+      if (file.upload.status === UploadStatus.UPLOADING) {
         file.upload.status = UploadStatus.DROP_AGAIN;
       }
       return file;
@@ -24,7 +26,7 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => 
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {
         secondaryAnalysisId,
-        files: changeStatusIfUploading,
+        files: filesForUI,
       },
     });
   } catch (e) {
