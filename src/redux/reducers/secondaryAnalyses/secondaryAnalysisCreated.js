@@ -1,12 +1,10 @@
-import { secondaryAnalysisTemplate } from 'redux/reducers/secondaryAnalyses/initialState';
-
 const secondaryAnalysisCreated = (state, action) => {
   const {
     secondaryAnalysis,
   } = action.payload;
 
   const newSecondaryAnalysis = {
-    ...secondaryAnalysisTemplate,
+    files: { data: {}, loading: false, error: false },
     ...secondaryAnalysis,
   };
 
