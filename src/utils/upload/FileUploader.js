@@ -68,7 +68,10 @@ class FileUploader {
       const nextPartNumber = await this.#getNextPartNumber();
 
       // setting all previous parts as uploaded
-      this.uploadedPartPercentages.fill(1, 0, nextPartNumber - 1);
+      // this.uploadedPartPercentages.fill(1, 0, nextPartNumber - 1);
+      for (let i = 0; i < nextPartNumber; i += 1) {
+        this.uploadedPartPercentages[i] = 1;
+      }
 
       this.partNumberIt = nextPartNumber - 1;
       this.pendingChunks = this.totalChunks - this.partNumberIt;
@@ -107,8 +110,10 @@ class FileUploader {
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
-
-    const queryParams = new URLSearchParams({ bucket, key });
+    const queryParams = new URLSearchParams({
+      bucket,
+      key: encodeURIComponent(key),
+    });
     const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
 
     return await fetchAPI(url, { method: 'GET' });
@@ -118,7 +123,12 @@ class FileUploader {
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
-    const queryParams = new URLSearchParams({ bucket, key });
+
+    const queryParams = new URLSearchParams({
+      bucket,
+      key: encodeURIComponent(key),
+    });
+
     const url = `/v2/projects/${projectId}/upload/${uploadId}/getNextPartNumber?${queryParams}`;
 
     return await fetchAPI(url, { method: 'GET' });

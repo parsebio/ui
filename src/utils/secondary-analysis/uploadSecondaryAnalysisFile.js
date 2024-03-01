@@ -1,6 +1,7 @@
 import { getShouldCompress } from 'utils/upload/fileInspector';
 import uploadFileToS3 from 'utils/upload/multipartUpload';
 import { updateSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import UploadStatus from 'utils/upload/UploadStatus';
 
 const uploadSecondaryAnalysisFile = async (
   file,
@@ -15,6 +16,7 @@ const uploadSecondaryAnalysisFile = async (
   };
 
   const shouldCompress = await getShouldCompress(file);
+  onUpdateUploadStatus(UploadStatus.UPLOADING);
 
   return uploadFileToS3(
     secondaryAnalysisId,
