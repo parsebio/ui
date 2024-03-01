@@ -265,12 +265,14 @@ const SecondaryAnalysis = () => {
       ),
     },
   };
+
   const windows = {
     direction: 'row',
     first: PROJECTS_LIST,
     second: PROJECT_DETAILS,
     splitPercentage: 23,
   };
+
   const handleNavigationWithConfirmation = (action) => {
     if (filesNotUploaded) {
       Modal.confirm({
@@ -283,6 +285,7 @@ const SecondaryAnalysis = () => {
       action();
     }
   };
+
   const onNext = () => handleNavigationWithConfirmation(() => {
     setCurrentStepIndex(currentStepIndex + 1);
     handleUpdateSecondaryAnalysisDetails();
@@ -298,6 +301,7 @@ const SecondaryAnalysis = () => {
     setCurrentStepIndex(null);
     handleUpdateSecondaryAnalysisDetails();
   });
+
   return (
     <>
       <Header title='Secondary Analysis' />
