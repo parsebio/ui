@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
-import SecondaryAnalysisDetails from 'components/secondary-analysis/SecondaryAnalysisDetails';
+import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
 import { useSelector, useDispatch } from 'react-redux';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
@@ -134,7 +134,7 @@ const SecondaryAnalysis = () => {
       title: 'Provide the details of the experimental setup:',
       key: 'Experimental setup',
       render: () => (
-        <SecondaryAnalysisDetails
+        <SecondaryAnalysisSettings
           onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
           secondaryAnalysis={secondaryAnalysis}
         />
