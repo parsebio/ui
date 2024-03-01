@@ -56,8 +56,12 @@ const UploadStatusView = ({ status, progress, showDetails }) => {
       </div>
     );
   }
-
-  if (status === UploadStatus.UPLOAD_ERROR) {
+  if (
+    [
+      UploadStatus.UPLOAD_ERROR,
+      UploadStatus.DROP_AGAIN,
+    ].includes(status)
+  ) {
     return (
       <div
         className={styles.hoverSelectCursor}
