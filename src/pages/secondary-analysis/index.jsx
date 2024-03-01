@@ -311,7 +311,7 @@ const SecondaryAnalysis = () => {
             setNewProjectModalVisible(false);
           }}
         />
-      ) }
+      )}
       {currentStep && (
         <Modal
           open
