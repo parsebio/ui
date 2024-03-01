@@ -6,6 +6,7 @@ const UploadStatus = {
   FILE_NOT_FOUND: 'fileNotFound',
   FILE_READ_ERROR: 'fileReadError',
   FILE_READ_ABORTED: 'fileReadAborted',
+  QUEUED: 'queued',
 };
 
 const message = {
@@ -16,6 +17,7 @@ const message = {
   [UploadStatus.FILE_NOT_FOUND]: 'File not found',
   [UploadStatus.FILE_READ_ERROR]: 'File read error',
   [UploadStatus.FILE_READ_ABORTED]: 'File read aborted',
+  [UploadStatus.QUEUED]: 'Queued',
 };
 
 const messageForStatus = (uploadStatus) => message[uploadStatus];

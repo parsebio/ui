@@ -11,9 +11,9 @@ import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { CheckCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
-
-import { uploadSecondaryAnalysisFile, deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import { createSecondaryAnalysisFile, deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import PropTypes from 'prop-types';
+import uploadSecondaryAnalysisFile from 'utils/secondary-analysis/uploadSecondaryAnalysisFile';
 
 const { Text } = Typography;
 const SampleLTUpload = (props) => {
@@ -34,7 +34,8 @@ const SampleLTUpload = (props) => {
     if (uploadedFileId) {
       dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
     }
-    dispatch(uploadSecondaryAnalysisFile(secondaryAnalysisId, file, 'samplelt'));
+    const uploadUrlParams = await dispatch(createSecondaryAnalysisFile(secondaryAnalysisId, file, 'samplelt'));
+    await uploadSecondaryAnalysisFile(file, secondaryAnalysisId, uploadUrlParams, dispatch);
   };
 
   const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';

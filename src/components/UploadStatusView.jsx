@@ -1,7 +1,7 @@
 import React from 'react';
 import UploadStatus, { messageForStatus } from 'utils/upload/UploadStatus';
 import {
-  Typography, Progress, Tooltip, Button, Upload,
+  Typography, Progress, Tooltip, Button,
 } from 'antd';
 import styles from 'components/data-management/SamplesTableCells.module.css';
 import {
@@ -18,6 +18,13 @@ const uploadDivStyle = {
 };
 
 const UploadStatusView = ({ status, progress, showDetails }) => {
+  if (status === UploadStatus.QUEUED) {
+    return (
+      <div style={uploadDivStyle}>
+        <Text type='secondary'>{messageForStatus(status)}</Text>
+      </div>
+    );
+  }
   if (status === UploadStatus.UPLOADED) {
     return (
       <div
