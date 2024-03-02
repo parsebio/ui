@@ -20,6 +20,7 @@ const uploadDivStyle = {
 const UploadStatusView = ({
   status, progress, showDetails, resumeUpload,
 }) => {
+  // todo use file id to determine if file is in cache and can be resumed
   if (status === UploadStatus.QUEUED) {
     return (
       <div style={uploadDivStyle}>
