@@ -14,11 +14,16 @@ import {
   List,
   Tooltip,
 } from 'antd';
-import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
+import {
+  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
+} from '@ant-design/icons';
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
 
 import config from 'config';
+
+import Expandable from 'components/Expandable';
+
 import { sampleTech } from 'utils/constants';
 import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import handleError from 'utils/http/handleError';
@@ -53,6 +58,8 @@ const extraHelpText = {
   [sampleTech.PARSE]: () => <></>,
 };
 
+const emptyFiles = { valid: [], invalid: [] };
+
 const FileUploadModal = (props) => {
   const { onUpload, onCancel, currentSelectedTech } = props;
 
@@ -61,18 +68,16 @@ const FileUploadModal = (props) => {
   const previouslyUploadedSamples = Object.keys(samples)
     .filter((key) => samples[key].experimentId === activeExperimentId);
 
-  const guidanceFileLink = 'https://drive.google.com/file/d/1VPaB-yofuExinY2pXyGEEx-w39_OPubO/view';
-
   const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech['10X']);
   const [canUpload, setCanUpload] = useState(false);
-  const [filesList, setFilesList] = useState([]);
+  const [files, setFiles] = useState(emptyFiles);
 
   useEffect(() => {
-    setCanUpload(filesList.length && filesList.every((file) => !file.errors));
-  }, [filesList]);
+    setCanUpload(files.valid.length && files.valid.every((file) => !file.errors));
+  }, [files]);
 
   useEffect(() => {
-    setFilesList([]);
+    setFiles(emptyFiles);
   }, [selectedTech]);
 
   // Handle on Drop
@@ -93,7 +98,7 @@ const FileUploadModal = (props) => {
         return;
       }
 
-      const allFiles = [...filesList, ...newFiles];
+      const allFiles = [...files.valid, ...newFiles];
       if (allFiles.length > 1) {
         handleError('error', endUserMessages.ERROR_SEURAT_MULTIPLE_FILES);
       }
@@ -104,20 +109,26 @@ const FileUploadModal = (props) => {
         return;
       }
 
-      setFilesList([seuratFile]);
+      setFiles({ valid: [seuratFile], invalid: [] });
     } else {
-      const newFiles = await fileUploadUtils[selectedTech].filterFiles(filteredFiles);
+      const {
+        valid: newFiles,
+        invalid,
+      } = await fileUploadUtils[selectedTech].filterFiles(filteredFiles);
 
-      setFilesList([...filesList, ...newFiles]);
+      setFiles({
+        valid: [...files.valid, ...newFiles],
+        invalid: [...files.invalid, ...invalid],
+      });
     }
   };
 
   const removeFile = (fileName) => {
-    const newArray = _.cloneDeep(filesList);
+    const newArray = _.cloneDeep(files.valid);
 
     const fileIdx = newArray.findIndex((file) => file.name === fileName);
     newArray.splice(fileIdx, 1);
-    setFilesList(newArray);
+    setFiles({ valid: newArray, invalid: files.invalid });
   };
 
   const { fileUploadParagraphs, dropzoneText, webkitdirectory } = fileUploadUtils[selectedTech];
@@ -166,8 +177,8 @@ const FileUploadModal = (props) => {
           block
           disabled={!canUpload}
           onClick={() => {
-            onUpload(filesList, selectedTech);
-            setFilesList([]);
+            onUpload(files.valid, selectedTech);
+            setFiles(emptyFiles);
           }}
         >
           Upload
@@ -240,7 +251,7 @@ const FileUploadModal = (props) => {
             <span style={{ display: 'block', height: '0.6rem' }} />
             <i>
               More guidance on supported file types and formats is available
-              <a rel='noreferrer' target='_blank' href={guidanceFileLink}> here</a>
+              <a rel='noreferrer' target='_blank' href='https://www.biomage.net/user-guide'> here</a>
               .
             </i>
           </Paragraph>
@@ -268,12 +279,11 @@ const FileUploadModal = (props) => {
       <Row>
         <Col span={24}>
           {/* eslint-enable react/jsx-props-no-spreading */}
-
-          {filesList.length ? (
+          {files.valid.length ? (
             <>
               <Divider orientation='center'>To upload</Divider>
               <List
-                dataSource={filesList}
+                dataSource={files.valid}
                 size='small'
                 itemLayout='horizontal'
                 grid='{column: 4}'
@@ -306,6 +316,55 @@ const FileUploadModal = (props) => {
               />
             </>
           ) : ''}
+          {files.invalid.length > 0 && (
+            <Expandable
+              style={{ width: '100%' }}
+              expandedContent={(
+                <>
+                  <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Ignored files</Divider>
+                  <List
+                    dataSource={files.invalid}
+                    size='small'
+                    itemLayout='horizontal'
+                    pagination
+                    renderItem={(file) => (
+                      <List.Item key={file.path} style={{ height: '100%', width: '100%' }}>
+                        <Space style={{ width: 200, justifyContent: 'center' }}>
+                          <CloseCircleTwoTone twoToneColor='#f5222d' />
+                          <div style={{ width: 200 }}>
+                            <Text
+                              ellipsis={{ tooltip: _.trim(file.path, '/') }}
+                            >
+                              {_.trim(file.path, '/')}
+                            </Text>
+                          </div>
+                        </Space>
+                        <Text style={{ width: '100%', marginLeft: '50px' }}>{file.rejectReason}</Text>
+                      </List.Item>
+                    )}
+                  />
+                </>
+              )}
+              collapsedContent={(
+                <center style={{ cursor: 'pointer' }}>
+                  <Divider orientation='center' style={{ color: 'red' }} />
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
+                  <Text>
+                    {files.invalid.length}
+                    {' '}
+                    file
+                    {files.invalid.length > 1 ? 's were' : ' was'}
+                    {' '}
+                    ignored, click to display
+                  </Text>
+                </center>
+              )}
+            />
+          )}
         </Col>
       </Row>
     </Modal>
