@@ -34,7 +34,7 @@ const SampleLTUpload = (props) => {
     if (uploadedFileId) {
       dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
     }
-    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], 'samplelt', dispatch);
+    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], [], 'samplelt', dispatch);
   };
 
   const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';

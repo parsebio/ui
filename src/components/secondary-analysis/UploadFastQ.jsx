@@ -4,7 +4,8 @@ import {
 } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
-import Dropzone from 'react-dropzone';
+// import Dropzone from 'react-dropzone';
+// import { fromEvent } from 'file-selector';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';
@@ -15,50 +16,40 @@ const { Text } = Typography;
 
 const UploadFastQ = (props) => {
   const { secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded } = props;
-  const [filesList, setFilesList] = useState([]);
+  const [fileHandlesList, setFileHandlesList] = useState([]);
   const dispatch = useDispatch();
 
   const beginUpload = async () => {
-    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, 'fastq', dispatch);
+    const filesList = await Promise.all(fileHandlesList.map(async (handle) => handle.getFile()));
+
+    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandlesList, 'fastq', dispatch);
   };
 
   useEffect(() => {
-    setFilesNotUploaded(Boolean(filesList.length));
-  }, [filesList]);
+    setFilesNotUploaded(Boolean(setFileHandlesList.length));
+  }, [fileHandlesList]);
 
-  // const onDrop = (files) => {
-  //   setFilesList(files);
-  // };
+  const handleFileSelection = async () => {
+    try {
+      const handles = await window.showOpenFilePicker({ multiple: true });
+      setFileHandlesList(handles);
+    } catch (err) {
+      console.error('Error picking files:', err);
+    }
+  };
 
   window.addEventListener('drop', async (e) => {
-    // Prevent navigation.
     e.preventDefault();
 
-    console.log('edataTransferitemsDebug');
-    console.log(e.dataTransfer.items);
-
     const systemHandles = await Promise.all(Object.entries(e.dataTransfer.items)
-      .map(async ([key, item]) => {
-        console.log('keyDebug');
-        console.log(key);
-        console.log('itemDebug');
-        console.log(item);
-
-        return await item.getAsFileSystemHandle();
-      }));
-
-    const files = await Promise.all(systemHandles.map(async (handle) => handle.getFile()));
-    console.log('filesDebug');
-    console.log(files);
-
-    await fromEvent(files[0]);
-    setFilesList(files);
+      .map(async ([key, item]) => (item.getAsFileSystemHandle())));
+    setFileHandlesList(systemHandles);
   });
 
   const removeFile = (fileName) => {
-    const newArray = _.cloneDeep(filesList);
+    const newArray = _.cloneDeep(fileHandlesList);
     _.remove(newArray, (file) => file.name === fileName);
-    setFilesList(newArray);
+    setFileHandlesList(newArray);
   };
   return (
     <Form
@@ -84,37 +75,35 @@ const UploadFastQ = (props) => {
           <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
         </div>
-        <Dropzone onDrop={() => { }} multiple>
-          {({ getRootProps, getInputProps }) => (
-            <div
-              data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
-              style={{ border: '1px solid #ccc', padding: '2rem 0' }}
-              {...getRootProps({ className: 'dropzone' })}
-              id='dropzone'
-            >
-              <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} webkitdirectory='' />
-              <Empty description='Drag and drop folders here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            </div>
-          )}
-        </Dropzone>
+
+        <div
+          onClick={handleFileSelection}
+          onKeyDown={handleFileSelection}
+          data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
+          style={{ border: '1px solid #ccc', padding: '2rem 0' }}
+          className='dropzone'
+          id='dropzone'
+        >
+          <Empty description='Drag and drop folders here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        </div>
         <Button
           data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
           type='primary'
           key='create'
           block
-          disabled={!filesList.length}
+          disabled={!fileHandlesList.length}
           onClick={() => {
-            beginUpload(filesList);
-            setFilesList([]);
+            beginUpload(fileHandlesList);
+            setFileHandlesList([]);
           }}
         >
           Upload
         </Button>
-        {filesList.length > 0 && (
+        {fileHandlesList.length > 0 && (
           <>
             <Divider orientation='center'>To upload</Divider>
             <List
-              dataSource={filesList}
+              dataSource={fileHandlesList}
               size='small'
               itemLayout='horizontal'
               grid='{column: 4}'

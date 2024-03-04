@@ -32,9 +32,12 @@ const uploadSecondaryAnalysisFile = async (
 };
 
 const createAndUploadSecondaryAnalysisFiles = async (
-  secondaryAnalysisId, filesList, type, dispatch) => {
+  secondaryAnalysisId, filesList, handlesList = [], type, dispatch) => {
   const uploadUrlParamsList = await Promise.all(
-    filesList.map((file) => dispatch(createSecondaryAnalysisFile(secondaryAnalysisId, file, type))),
+    filesList.map(async (file, index) => {
+      const handle = handlesList[index] ?? null;
+      return dispatch(createSecondaryAnalysisFile(secondaryAnalysisId, file, type, handle));
+    }),
   );
 
   // Upload files one by one using the corresponding uploadUrlParams
@@ -45,11 +48,17 @@ const createAndUploadSecondaryAnalysisFiles = async (
     return uploadSecondaryAnalysisFile(file, secondaryAnalysisId, uploadUrlParams, dispatch);
   }, Promise.resolve()); // Start with an initially resolved promise
 };
-
 const resumeUpload = async (secondaryAnalysisId, fileId, dispatch) => {
-  const cachedFile = await cache.get(fileId);
+  const { uploadUrlParams, fileHandle } = await cache.get(fileId); // Assuming fileHandle is stored, not file
 
-  const { file, uploadUrlParams } = cachedFile;
+  // Request permission to access the file
+  const permissionStatus = await fileHandle.requestPermission({ mode: 'read' });
+  if (permissionStatus !== 'granted') {
+    throw new Error('Permission to access the file was not granted');
+  }
+
+  const file = await fileHandle.getFile();
+
   await uploadSecondaryAnalysisFile(
     file, secondaryAnalysisId, { ...uploadUrlParams, resumeUpload: true }, dispatch,
   );
