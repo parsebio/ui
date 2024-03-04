@@ -5,6 +5,7 @@ import {
 import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
+
 import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -25,9 +26,34 @@ const UploadFastQ = (props) => {
     setFilesNotUploaded(Boolean(filesList.length));
   }, [filesList]);
 
-  const onDrop = (files) => {
+  // const onDrop = (files) => {
+  //   setFilesList(files);
+  // };
+
+  window.addEventListener('drop', async (e) => {
+    // Prevent navigation.
+    e.preventDefault();
+
+    console.log('edataTransferitemsDebug');
+    console.log(e.dataTransfer.items);
+
+    const systemHandles = await Promise.all(Object.entries(e.dataTransfer.items)
+      .map(async ([key, item]) => {
+        console.log('keyDebug');
+        console.log(key);
+        console.log('itemDebug');
+        console.log(item);
+
+        return await item.getAsFileSystemHandle();
+      }));
+
+    const files = await Promise.all(systemHandles.map(async (handle) => handle.getFile()));
+    console.log('filesDebug');
+    console.log(files);
+
+    await fromEvent(files[0]);
     setFilesList(files);
-  };
+  });
 
   const removeFile = (fileName) => {
     const newArray = _.cloneDeep(filesList);
@@ -58,7 +84,7 @@ const UploadFastQ = (props) => {
           <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
         </div>
-        <Dropzone onDrop={onDrop} multiple>
+        <Dropzone onDrop={() => { }} multiple>
           {({ getRootProps, getInputProps }) => (
             <div
               data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
