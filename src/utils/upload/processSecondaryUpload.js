@@ -48,6 +48,7 @@ const createAndUploadSecondaryAnalysisFiles = async (
 
 const resumeUpload = async (secondaryAnalysisId, fileId, dispatch) => {
   const cachedFile = await cache.get(fileId);
+
   const { file, uploadUrlParams } = cachedFile;
   await uploadSecondaryAnalysisFile(
     file, secondaryAnalysisId, { ...uploadUrlParams, resumeUpload: true }, dispatch,

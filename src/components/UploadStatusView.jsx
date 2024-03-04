@@ -99,18 +99,19 @@ const UploadStatusView = ({
       </div>
     );
   }
-  if (UploadStatus.RESUME_UPLOAD === status) {
+  if (![
+    UploadStatus.UPLOADING,
+    UploadStatus.UPLOADED,
+  ].includes(status) && resumeUpload) {
     return (
       <div style={uploadDivStyle}>
         <Text type='warning'>{messageForStatus(status)}</Text>
-        {resumeUpload && (
-          <Button
-            size='large'
-            shape='link'
-            icon={<UploadOutlined />}
-            onClick={resumeUpload}
-          />
-        )}
+        <Button
+          size='large'
+          shape='link'
+          icon={<UploadOutlined />}
+          onClick={resumeUpload}
+        />
       </div>
     );
   }
