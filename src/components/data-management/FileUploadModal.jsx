@@ -220,11 +220,7 @@ const FileUploadModal = (props) => {
             </Space>
             <Text type='secondary'>
               <i>
-                Is your dataset generated using another single cell RNA-seq technology (e.g. Nadia, inDrop, etc.)? Email us to find out if we can support your data:
-                <a href={`mailto:${config.supportEmail}`}>
-                  {' '}
-                  {config.supportEmail}
-                </a>
+                Don't have data in an accepted format? Reach out to us using the feedback button at the top of the page.
               </i>
             </Text>
           </Space>
@@ -242,6 +238,7 @@ const FileUploadModal = (props) => {
       </Row>
 
       <Row>
+<<<<<<< HEAD
         <Col span={24}>
           <Paragraph type='secondary'>
             <i>
@@ -259,6 +256,8 @@ const FileUploadModal = (props) => {
       </Row>
 
       <Row>
+=======
+>>>>>>> biomage-org/master
         {/* eslint-disable react/jsx-props-no-spreading */}
         <Col span={24}>
           <Dropzone onDrop={onDrop} multiple>
