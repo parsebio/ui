@@ -26,7 +26,7 @@ const UploadFastQ = (props) => {
   };
 
   useEffect(() => {
-    setFilesNotUploaded(Boolean(setFileHandlesList.length));
+    setFilesNotUploaded(Boolean(fileHandlesList.length));
   }, [fileHandlesList]);
 
   const handleFileSelection = async () => {
