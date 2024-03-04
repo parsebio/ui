@@ -36,12 +36,12 @@ const createSecondaryAnalysisFile = (secondaryAnalysisId, file, type) => async (
       },
     });
 
-    // saving file to cache for 1 week to be able to retrieve it later for resume upload
-
     const fileRecordCache = {
       file,
       uploadUrlParams,
     };
+
+    // saving file to cache for 1 week to be able to retrieve it later for resume upload
     await cache.set(uploadUrlParams.fileId, fileRecordCache, 168 * 3600);
 
     return uploadUrlParams;

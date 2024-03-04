@@ -20,7 +20,6 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => 
     const filesForUI = await Promise.all(files.map(async (file) => {
       if (file.upload.status === UPLOADING) {
         const isFileInCache = await cache.get(file.id);
-        console.log('IS FILE IN CACHE', isFileInCache, file.id);
         file.upload.status = isFileInCache ? RESUME_UPLOAD : DROP_AGAIN;
       }
       return file;

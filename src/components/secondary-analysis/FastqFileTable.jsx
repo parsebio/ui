@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
-import { Table, Space, Popconfirm } from 'antd';
+import React from 'react';
+import { Table, Popconfirm } from 'antd';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import bytesToSize from 'utils/styling/bytesToSize';
 import { DeleteOutlined } from '@ant-design/icons';
 import UploadStatusView from 'components/UploadStatusView';
-import uploadSecondaryAnalysisFile from 'utils/secondary-analysis/uploadSecondaryAnalysisFile';
-import cache from 'utils/cache';
+import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
 const FastqFileTable = (props) => {
   const dispatch = useDispatch();
@@ -20,14 +19,6 @@ const FastqFileTable = (props) => {
     status: file.upload.status,
     progress: file.upload.percentProgress,
   }));
-
-  const resumeUpload = async (fileId) => {
-    const cachedFile = await cache.get(fileId);
-    const { file, uploadUrlParams } = cachedFile;
-    await uploadSecondaryAnalysisFile(
-      file, secondaryAnalysisId, { ...uploadUrlParams, resumeUpload: true }, dispatch,
-    );
-  };
 
   const columns = [
     {
@@ -63,7 +54,7 @@ const FastqFileTable = (props) => {
         <UploadStatusView
           status={status}
           progress={record.progress}
-          resumeUpload={async () => await resumeUpload(record.key)}
+          resumeUpload={async () => await resumeUpload(secondaryAnalysisId, record.key, dispatch)}
         />
       ),
     },

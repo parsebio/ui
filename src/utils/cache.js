@@ -93,7 +93,9 @@ class BrowserCache {
     }
     console.log('CACHE 3', key, value, ttl, this.size, this.maxSize, this.head, this.tail, this.lru);
     try {
-      await localForage.setItem(key, { value, ttl });
+      const yes = await localForage.setItem(key, { value, ttl });
+      console.log('CACHE ITEM SET', key, yes);
+
       this._insert(key);
       console.log('CACHE 4');
 

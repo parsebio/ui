@@ -6,10 +6,9 @@ import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-des
 import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
-import { createSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import uploadSecondaryAnalysisFile from 'utils/secondary-analysis/uploadSecondaryAnalysisFile';
+import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 
 const { Text } = Typography;
 
@@ -19,17 +18,7 @@ const UploadFastQ = (props) => {
   const dispatch = useDispatch();
 
   const beginUpload = async () => {
-    // Save all files first and get uploadUrlParams for each
-    const uploadUrlParamsList = await Promise.all(filesList
-      .map((file) => dispatch(createSecondaryAnalysisFile(secondaryAnalysisId, file, 'fastq'))));
-
-    // upload files one by one using the corresponding uploadUrlParams
-    await uploadUrlParamsList.reduce(async (promiseChain, uploadUrlParams, index) => {
-    // Ensure the previous upload is completed
-      await promiseChain;
-      const file = filesList[index];
-      return uploadSecondaryAnalysisFile(file, secondaryAnalysisId, uploadUrlParams, dispatch);
-    }, Promise.resolve()); // Start with an initially resolved promise
+    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, 'fastq', dispatch);
   };
 
   useEffect(() => {
