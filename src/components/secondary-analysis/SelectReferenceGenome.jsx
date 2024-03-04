@@ -7,7 +7,7 @@ import propTypes from 'prop-types';
 
 import genomes from 'utils/genomes.json';
 
-const genomeOptions = genomes.map((genome) => ({ label: genome, value: genome }));
+const genomeOptions = genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name }));
 
 const SelectReferenceGenome = (props) => {
   const { secondaryAnalysis, onDetailsChanged } = props;

@@ -1,4 +1,4 @@
 [
-  "GRCh38",
-  "GRCm39"
+  { "name": "GRCh38", "species": "human" },
+  { "name": "GRCm39", "species": "mouse" }
 ]
