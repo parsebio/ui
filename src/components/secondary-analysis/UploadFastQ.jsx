@@ -18,7 +18,9 @@ import Expandable from 'components/Expandable';
 const { Text } = Typography;
 
 const UploadFastQ = (props) => {
-  const { secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded } = props;
+  const {
+    secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded, secondaryAnalysisFiles,
+  } = props;
   const [filesList, setFilesList] = useState([]);
   const emptyFiles = { valid: [], invalid: [] };
   const [files, setFiles] = useState(emptyFiles);
@@ -55,9 +57,18 @@ const UploadFastQ = (props) => {
     invalidFiles = [..._.difference(validFiles, validExtension)
       .map((file) => ({ path: file.path, rejectReason: 'Not a .fastq or .fastq.gz file.' })), ...invalidFiles];
 
+    const alreadyUploadedFiles = Object.values(secondaryAnalysisFiles).map((item) => item.name);
+    const notDuplicatedFiles = validExtension.filter((file) => !alreadyUploadedFiles.includes(file.name));
+
+    invalidFiles = [..._.difference(validExtension, notDuplicatedFiles)
+      .map((file) => ({ path: file.path, rejectReason: 'File already uploaded.' })), ...invalidFiles];
+
+    const valid = notDuplicatedFiles.filter((file) => !files.valid.some((validFile) => validFile.name === file.name));
+    invalidFiles = invalidFiles.filter((file) => !files.invalid.some((invalidFile) => invalidFile.name === file.name));
+
     // Add definition of invalid
     setFiles({
-      valid: [...files.valid, ...validExtension],
+      valid: [...files.valid, ...valid],
       invalid: [...files.invalid, ...invalidFiles],
     });
   };
@@ -217,6 +228,7 @@ UploadFastQ.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
   renderFastqFileTable: PropTypes.func.isRequired,
   setFilesNotUploaded: PropTypes.func.isRequired,
+  secondaryAnalysisFiles: PropTypes.object.isRequired,
 };
 
 export default UploadFastQ;

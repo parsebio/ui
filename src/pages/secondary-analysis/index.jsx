@@ -182,6 +182,7 @@ const SecondaryAnalysis = () => {
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderFastqFileTable={() => renderFastqFileTable(true)}
           setFilesNotUploaded={setFilesNotUploaded}
+          secondaryAnalysisFiles={secondaryAnalysisFiles}
         />
       ),
       isValid: areFilesUploaded('fastq'),
