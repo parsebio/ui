@@ -36,12 +36,6 @@ const UploadStatusView = ({
         style={{ ...uploadDivStyle, flexDirection: 'column' }}
       >
         <Text type='success'>{messageForStatus(status)}</Text>
-        <Button
-          size='large'
-          shape='link'
-          icon={<UploadOutlined />}
-          onClick={resumeUpload}
-        />
       </div>
     );
   }
