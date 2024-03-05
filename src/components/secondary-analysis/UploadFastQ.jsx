@@ -4,8 +4,6 @@ import {
 } from 'antd';
 import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
-// import Dropzone from 'react-dropzone';
-// import { fromEvent } from 'file-selector';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';

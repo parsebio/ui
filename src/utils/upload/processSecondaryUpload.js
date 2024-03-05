@@ -49,7 +49,7 @@ const createAndUploadSecondaryAnalysisFiles = async (
   }, Promise.resolve()); // Start with an initially resolved promise
 };
 const resumeUpload = async (secondaryAnalysisId, fileId, dispatch) => {
-  const { uploadUrlParams, fileHandle } = await cache.get(fileId); // Assuming fileHandle is stored, not file
+  const { uploadUrlParams, fileHandle } = await cache.get(fileId);
 
   // Request permission to access the file
   const permissionStatus = await fileHandle.requestPermission({ mode: 'read' });

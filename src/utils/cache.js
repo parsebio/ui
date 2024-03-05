@@ -82,22 +82,16 @@ class BrowserCache {
   // set value should not be used independently as it might cause cache poisoning
   // ttl is set to 12 hours by default
   async set(key, value, ttl = 43200) {
-    console.log('CACHE 1');
     if (this.size >= this.maxSize) {
       await this._remove(this.tail);
     }
-    console.log('CACHE 2', value);
     if (ttl && typeof ttl === 'number') {
       // eslint-disable-next-line no-param-reassign
       ttl = Math.round(ttl * 1000 + Date.now());
     }
-    console.log('CACHE 3', key, value, ttl, this.size, this.maxSize, this.head, this.tail, this.lru);
     try {
-      const yes = await localForage.setItem(key, { value, ttl });
-      console.log('CACHE ITEM SET', key, yes);
-
+      await localForage.setItem(key, { value, ttl });
       this._insert(key);
-      console.log('CACHE 4');
 
       if (!this.tail) {
         this.tail = key;
