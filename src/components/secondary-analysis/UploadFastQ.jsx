@@ -57,7 +57,7 @@ const UploadFastQ = (props) => {
         return entry;
       } if (entry.kind === 'directory') {
         const subFiles = await getAllFilesFromDirectory(entry);
-        return await getAllFilesFromDirectory(subFiles);
+        return subFiles;
       }
     }));
     setFileHandlesList(files.flat());
