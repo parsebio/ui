@@ -1,12 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Button } from 'antd';
 
 import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
 
 import { layout } from 'utils/constants';
+import fetchAPI from 'utils/http/fetchAPI';
+import downloadFromUrl from 'utils/downloadFromUrl';
 
 const paddingTop = layout.PANEL_PADDING;
 const paddingBottom = layout.PANEL_PADDING;
@@ -19,12 +22,19 @@ const AnalysisDetails = ({ width, height }) => {
   const {
     activeSecondaryAnalysisId: activeAnalysisId,
   } = useSelector((state) => state.secondaryAnalyses.meta);
-  // const activeAnalysis = useSelector((state) => state.experiments[activeAnalysisId]);
 
   useEffect(() => {
     if (!activeAnalysisId) return;
 
     dispatch(loadSecondaryAnalysisStatus(activeAnalysisId));
+  }, [activeAnalysisId]);
+
+  const downloadAllOutputs = useCallback(async () => {
+    if (!activeAnalysisId) return;
+
+    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${activeAnalysisId}/output`);
+
+    downloadFromUrl(signedUrl, 'all_outputs.zip');
   }, [activeAnalysisId]);
 
   return (
@@ -36,12 +46,14 @@ const AnalysisDetails = ({ width, height }) => {
         height: height - layout.PANEL_HEADING_HEIGHT - paddingTop - paddingBottom,
       }}
     >
-      <div style={{
+      <Button type='primary' onClick={downloadAllOutputs}>
+        Download all outputs
+      </Button>
+      {/* <div style={{
         display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
       }}
       >
-        toihrmbortimhrtoinm
-      </div>
+      </div> */}
     </div>
   );
 };
