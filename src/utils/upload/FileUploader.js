@@ -65,16 +65,17 @@ class FileUploader {
 
   async upload() {
     if (this.uploadParams.resumeUpload) {
-      const nextPartNumber = await this.#getNextPartNumber();
-
+      const uploadedParts = await this.#getUploadedParts();
+      const nextPartNumber = uploadedParts.length + 1;
       // setting all previous parts as uploaded
       // this.uploadedPartPercentages.fill(1, 0, nextPartNumber - 1);
-      for (let i = 0; i < nextPartNumber; i += 1) {
+      for (let i = 0; i < nextPartNumber - 1; i += 1) {
         this.uploadedPartPercentages[i] = 1;
+        this.uploadedParts.push(uploadedParts[i]);
       }
 
       this.partNumberIt = nextPartNumber - 1;
-      this.pendingChunks = this.totalChunks - this.partNumberIt;
+      this.pendingChunks = this.totalChunks - nextPartNumber + 1;
     }
 
     return new Promise((resolve, reject) => {
@@ -107,7 +108,7 @@ class FileUploader {
   }
 
   #getSignedUrlForPart = async (partNumber) => {
-    console.log('TOTAL CHUNKS ARE ', this.totalChunks, 'AND PART NUMBER IS ', partNumber);
+    console.log('TOTAL CHUNKS ARE ', this.totalChunks, 'AND PART NUMBER IS ', partNumber, ' pending chunks ', this.pendingChunks);
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
@@ -120,7 +121,7 @@ class FileUploader {
     return await fetchAPI(url, { method: 'GET' });
   };
 
-  #getNextPartNumber = async () => {
+  #getUploadedParts = async () => {
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
@@ -130,7 +131,7 @@ class FileUploader {
       key,
     });
 
-    const url = `/v2/projects/${projectId}/upload/${uploadId}/getNextPartNumber?${queryParams}`;
+    const url = `/v2/projects/${projectId}/upload/${uploadId}/getUploadedParts?${queryParams}`;
 
     return await fetchAPI(url, { method: 'GET' });
   }
@@ -211,21 +212,23 @@ class FileUploader {
     // This assigns a part number to each chunk that arrives
     // They are read in order, so it should be safe
     this.partNumberIt += 1;
-
     try {
       await this.#uploadChunk(chunk, this.partNumberIt);
 
       // To track when all chunks have been uploaded
       this.pendingChunks -= 1;
+      console.log('FILE CHUNK LOAD FINISHED ', this.pendingChunks, 'part number it ', this.partNumberIt, ' total chunks ', this.totalChunks);
 
       if (this.pendingChunks > 0) {
         await this.#releaseUploadSlot();
       }
 
       if (this.pendingChunks === 0) {
+        console.log('IM RESOLVING');
         this.resolve(this.uploadedParts);
       }
     } catch (e) {
+      console.log('CANCELLING EXECUTION ', e);
       this.#cancelExecution(UploadStatus.UPLOAD_ERROR, e);
     }
   }

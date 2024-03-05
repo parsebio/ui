@@ -25,6 +25,7 @@ const putInS3 = async (
       onUploadProgress,
     });
   } catch (e) {
+    console.log('Error while uploading to S3', e);
     if (currentRetry <= MAX_RETRIES) {
       if (retryPolicy === 'exponentialBackoff') {
         // Exponential backoff, last attempt will be after waiting 64 seconds (2 seconds * 2 ** 5)

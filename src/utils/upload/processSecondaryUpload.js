@@ -23,7 +23,7 @@ const uploadSecondaryAnalysisFile = async (
   return uploadFileToS3(
     secondaryAnalysisId,
     file,
-    shouldCompress,
+    false,
     uploadUrlParams,
     'secondaryAnalysis',
     new AbortController(),
