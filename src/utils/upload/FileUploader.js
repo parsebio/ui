@@ -107,6 +107,7 @@ class FileUploader {
   }
 
   #getSignedUrlForPart = async (partNumber) => {
+    console.log('TOTAL CHUNKS ARE ', this.totalChunks, 'AND PART NUMBER IS ', partNumber);
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
@@ -236,7 +237,7 @@ class FileUploader {
       console.log('thisfreeUploadSlotsLOCKING');
       console.log(this.freeUploadSlots);
 
-      if (this.freeUploadSlots === 0) {
+      if (this.freeUploadSlots <= 0) {
         // We need to wait for some uploads to finish before we can continue
         this.readStream.pause();
       }
