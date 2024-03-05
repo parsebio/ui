@@ -44,20 +44,21 @@ const UploadFastQ = (props) => {
   }, [files]);
 
   const onDrop = (newFiles) => {
-    const filteredFiles = newFiles
-      .filter((file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'))
-      .filter((file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'));
+    const validFiles = newFiles
+      .filter((file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'));
 
-    const invalid = _.difference(newFiles, filteredFiles)
-      .map((file) => ({ path: file.path, rejectReason: 'Invalid file path. Check the instructions in the modal for more information' }));
+    let invalidFiles = _.difference(newFiles, validFiles)
+      .map((file) => ({ path: file.path, rejectReason: 'Files starting with "." or "MACOSX" are hidden or system.' }));
 
-    console.log('FILES');
-    console.log(filteredFiles);
+    const validExtension = validFiles.filter((file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'));
+
+    invalidFiles = [..._.difference(validFiles, validExtension)
+      .map((file) => ({ path: file.path, rejectReason: 'Not a .fastq or .fastq.gz file.' })), ...invalidFiles];
 
     // Add definition of invalid
     setFiles({
-      valid: [...files.valid, ...filteredFiles],
-      invalid: [...files.invalid, ...invalid],
+      valid: [...files.valid, ...validExtension],
+      invalid: [...files.invalid, ...invalidFiles],
     });
   };
 
