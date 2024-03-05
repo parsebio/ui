@@ -89,6 +89,7 @@ class BrowserCache {
       // eslint-disable-next-line no-param-reassign
       ttl = Math.round(ttl * 1000 + Date.now());
     }
+
     try {
       await localForage.setItem(key, { value, ttl });
       this._insert(key);
@@ -96,7 +97,6 @@ class BrowserCache {
       if (!this.tail) {
         this.tail = key;
       }
-      console.log('CACHE IS SET');
       return true;
     } catch (error) {
       console.trace(error);
