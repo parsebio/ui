@@ -25,7 +25,6 @@ const UploadFastQ = (props) => {
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandlesList.length));
   }, [fileHandlesList]);
-
   const getAllFilesFromDirectory = async (directoryHandle) => {
     const files = [];
     for await (const entry of directoryHandle.values()) {
@@ -52,17 +51,16 @@ const UploadFastQ = (props) => {
   const onDrop = async (e) => {
     e.preventDefault();
     const { items } = e.dataTransfer;
-    const files = [];
-    for (const item of items) {
+    const files = await Promise.all(Array.from(items).map(async (item) => {
       const entry = await item.getAsFileSystemHandle();
       if (entry.kind === 'file') {
-        files.push(entry);
-      } else if (entry.kind === 'directory') {
-        const directoryFiles = await getAllFilesFromDirectory(entry);
-        files.push(...directoryFiles);
+        return entry;
+      } if (entry.kind === 'directory') {
+        const subFiles = await getAllFilesFromDirectory(entry);
+        return await getAllFilesFromDirectory(subFiles);
       }
-    }
-    setFileHandlesList(files);
+    }));
+    setFileHandlesList(files.flat());
   };
 
   useEffect(() => {
