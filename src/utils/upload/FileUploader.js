@@ -44,7 +44,7 @@ class FileUploader {
 
     // Locks to control the number of simultaneous uploads to avoid taking up too much ram
     this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
-    this.freeUploadSlots = 2;
+    this.freeUploadSlots = 5;
 
     // Used to assign partNumbers to each chunk
     this.partNumberIt = 0;
@@ -64,6 +64,7 @@ class FileUploader {
   }
 
   async upload() {
+    let offset = 0;
     if (this.uploadParams.resumeUpload) {
       const uploadedParts = await this.#getUploadedParts();
       const nextPartNumber = uploadedParts.length + 1;
@@ -76,6 +77,7 @@ class FileUploader {
 
       this.partNumberIt = nextPartNumber - 1;
       this.pendingChunks = this.totalChunks - nextPartNumber + 1;
+      offset = this.partNumberIt * this.chunkSize;
     }
 
     return new Promise((resolve, reject) => {
@@ -83,7 +85,7 @@ class FileUploader {
       this.reject = reject;
 
       this.readStream = filereaderStream(
-        this.file?.fileObject || this.file, { chunkSize: this.chunkSize },
+        this.file?.fileObject || this.file, { chunkSize: this.chunkSize, offset },
       );
 
       this.#setupReadStreamHandlers();
@@ -159,6 +161,7 @@ class FileUploader {
   #setupReadStreamHandlers = () => {
     this.readStream.on('data', async (chunk) => {
       try {
+        console.log('stream on DATA event');
         await this.#reserveUploadSlot();
 
         if (!this.compress) {
@@ -186,6 +189,7 @@ class FileUploader {
     this.readStream.on('end', async () => {
       try {
         if (!this.compress) return;
+        console.log('stream on END event');
 
         await this.#reserveUploadSlot();
 
@@ -239,7 +243,9 @@ class FileUploader {
 
       console.log('thisfreeUploadSlotsLOCKING');
       console.log(this.freeUploadSlots);
-
+      // if (this.freeUploadSlots < 0) {
+      //   throw new Error('freeUploadSlots should not be less than 0');
+      // }
       if (this.freeUploadSlots <= 0) {
         // We need to wait for some uploads to finish before we can continue
         this.readStream.pause();
