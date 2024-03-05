@@ -82,7 +82,7 @@ const UploadFastQ = (props) => {
           className='dropzone'
           id='dropzone'
         >
-          <Empty description='Drag and drop folders here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
         </div>
         <Button
           data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
