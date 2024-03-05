@@ -19,7 +19,6 @@ const UploadFastQ = (props) => {
 
   const beginUpload = async () => {
     const filesList = await Promise.all(fileHandlesList.map(async (handle) => handle.getFile()));
-
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandlesList, 'fastq', dispatch);
   };
 
@@ -27,22 +26,50 @@ const UploadFastQ = (props) => {
     setFilesNotUploaded(Boolean(fileHandlesList.length));
   }, [fileHandlesList]);
 
+  const getAllFilesFromDirectory = async (directoryHandle) => {
+    const files = [];
+    for await (const entry of directoryHandle.values()) {
+      if (entry.kind === 'file') {
+        files.push(entry);
+      } else if (entry.kind === 'directory') {
+        const nestedFiles = await getAllFilesFromDirectory(entry);
+        files.push(...nestedFiles);
+      }
+    }
+    return files;
+  };
+
   const handleFileSelection = async () => {
     try {
-      const handles = await window.showOpenFilePicker({ multiple: true });
+      const opts = { multiple: true };
+      const handles = await window.showOpenFilePicker(opts);
       setFileHandlesList(handles);
     } catch (err) {
       console.error('Error picking files:', err);
     }
   };
 
-  window.addEventListener('drop', async (e) => {
+  const onDrop = async (e) => {
     e.preventDefault();
+    const { items } = e.dataTransfer;
+    const files = [];
+    for (const item of items) {
+      const entry = await item.getAsFileSystemHandle();
+      if (entry.kind === 'file') {
+        files.push(entry);
+      } else if (entry.kind === 'directory') {
+        const directoryFiles = await getAllFilesFromDirectory(entry);
+        files.push(...directoryFiles);
+      }
+    }
+    setFileHandlesList(files);
+  };
 
-    const systemHandles = await Promise.all(Object.entries(e.dataTransfer.items)
-      .map(async ([key, item]) => (item.getAsFileSystemHandle())));
-    setFileHandlesList(systemHandles);
-  });
+  useEffect(() => {
+    const dropzone = document.getElementById('dropzone');
+    dropzone.addEventListener('drop', onDrop);
+    return () => dropzone.removeEventListener('drop', onDrop);
+  }, []);
 
   const removeFile = (fileName) => {
     const newArray = _.cloneDeep(fileHandlesList);
