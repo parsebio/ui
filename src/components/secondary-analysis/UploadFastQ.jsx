@@ -21,7 +21,6 @@ const UploadFastQ = (props) => {
   const {
     secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded, secondaryAnalysisFiles,
   } = props;
-  const [filesList, setFilesList] = useState([]);
   const emptyFiles = { valid: [], invalid: [] };
   const [files, setFiles] = useState(emptyFiles);
 

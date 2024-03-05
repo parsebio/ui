@@ -10,10 +10,11 @@ import {
 import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
-import { CheckCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
+import { CheckCircleTwoTone, DeleteOutlined, WarningOutlined } from '@ant-design/icons';
 import { createSecondaryAnalysisFile, deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import PropTypes from 'prop-types';
 import uploadSecondaryAnalysisFile from 'utils/secondary-analysis/uploadSecondaryAnalysisFile';
+import _ from 'lodash';
 
 const { Text } = Typography;
 const SampleLTUpload = (props) => {
@@ -22,8 +23,28 @@ const SampleLTUpload = (props) => {
     secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId, setFilesNotUploaded,
   } = props;
   const [file, setFile] = useState(false);
+  const [failedDrop, setFailedDrop] = useState(false);
+  const [multipleFiles, setMultipleFiles] = useState(false);
+
   const onDrop = async (droppedFile) => {
-    setFile(droppedFile[0]);
+    const validFiles = droppedFile
+      .filter((f) => !f.name.startsWith('.') && !f.name.startsWith('__MACOSX') && f.name.endsWith('.xlsm'));
+
+    const invalidFiles = _.difference(droppedFile, validFiles);
+
+    if (invalidFiles.length > 0) {
+      setFailedDrop(true);
+    } else {
+      setFailedDrop(false);
+    }
+
+    if (validFiles.length > 1) {
+      setMultipleFiles(true);
+    } else {
+      setMultipleFiles(false);
+    }
+
+    setFile(validFiles[0]);
   };
 
   useEffect(() => {
@@ -55,6 +76,31 @@ const SampleLTUpload = (props) => {
           )}
           name='projectName'
         >
+          {(failedDrop || multipleFiles) && (
+            <div>
+              <center style={{ cursor: 'pointer' }}>
+                <Divider orientation='center' style={{ color: 'red' }} />
+                <Text type='danger'>
+                  {' '}
+                  <WarningOutlined />
+                  {' '}
+                </Text>
+                {multipleFiles && (
+                  <Text>
+                    More than one Sample Loading Table was detected, only one will be used.
+                    <br />
+                  </Text>
+                )}
+                {failedDrop && (
+                  <Text>
+                    Invalid Sample Loading Table was detected. Extension must be .xlsm.
+                  </Text>
+                )}
+              </center>
+              <br />
+            </div>
+          )}
+
           <Dropzone onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
               <div
