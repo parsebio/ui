@@ -3,6 +3,7 @@ import uploadFileToS3 from 'utils/upload/multipartUpload';
 import { updateSecondaryAnalysisFile, createSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
+import pushNotificationMessage from 'utils/pushNotificationMessage';
 
 const uploadSecondaryAnalysisFile = async (
   file,
@@ -49,19 +50,24 @@ const createAndUploadSecondaryAnalysisFiles = async (
   }, Promise.resolve()); // Start with an initially resolved promise
 };
 const resumeUpload = async (secondaryAnalysisId, fileId, dispatch) => {
-  const { uploadUrlParams, fileHandle } = await cache.get(fileId);
+  try {
+    const { uploadUrlParams, fileHandle } = await cache.get(fileId);
 
-  // Request permission to access the file
-  const permissionStatus = await fileHandle.requestPermission({ mode: 'read' });
-  if (permissionStatus !== 'granted') {
-    throw new Error('Permission to access the file was not granted');
+    // Request permission to access the file
+    const permissionStatus = await fileHandle.requestPermission({ mode: 'read' });
+    if (permissionStatus !== 'granted') {
+      throw new Error('Permission to access the file was not granted');
+    }
+
+    const file = await fileHandle.getFile();
+
+    await uploadSecondaryAnalysisFile(
+      file, secondaryAnalysisId, { ...uploadUrlParams, resumeUpload: true }, dispatch,
+    );
+  } catch (e) {
+    console.trace('Error resuming upload:', e);
+    pushNotificationMessage('error', 'We could not resume the upload of this file. The file might be deleted or moved to another directory');
   }
-
-  const file = await fileHandle.getFile();
-
-  await uploadSecondaryAnalysisFile(
-    file, secondaryAnalysisId, { ...uploadUrlParams, resumeUpload: true }, dispatch,
-  );
 };
 
 export { resumeUpload, createAndUploadSecondaryAnalysisFiles };
