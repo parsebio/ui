@@ -64,6 +64,7 @@ const AnalysisDetails = ({ analysisId }) => {
               value: reportName,
             }
           ))}
+          value={selectedReport}
           placeholder='Select a report'
           onChange={setSelectedReport}
           style={{ width: '300px' }}
