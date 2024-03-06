@@ -59,7 +59,10 @@ const ContentWrapper = (props) => {
 
   const [collapsed, setCollapsed] = useState(false);
 
-  const { routeExperimentId, experimentData, children } = props;
+  const {
+    routeExperimentId, routeAnalysisId, experimentData, children,
+  } = props;
+
   const { navigateTo, currentModule } = useAppRouter();
 
   const currentExperimentIdRef = useRef(routeExperimentId);
@@ -325,6 +328,14 @@ const ContentWrapper = (props) => {
       disabledIfSeuratComplete: false,
     },
     {
+      module: modules.SECONDARY_ANALYSIS_OUTPUT,
+      icon: <CodeSandboxOutlined />,
+      name: 'Secondary Analysis Output',
+      disableIfNoExperiment: false,
+      disabledByPipelineStatus: true,
+      disabledIfSeuratComplete: false,
+    },
+    {
       module: modules.DATA_MANAGEMENT,
       icon: <FolderOpenOutlined />,
       name: 'Data Management',
@@ -426,7 +437,7 @@ const ContentWrapper = (props) => {
       icon,
       label: name,
       disabled: notProcessedExperimentDisable || pipelineStatusDisable
-      || seuratCompleteDisable || nonExperimentModule,
+        || seuratCompleteDisable || nonExperimentModule,
       onClick: () => navigateTo(
         module,
         { experimentId: currentExperimentId },
@@ -512,12 +523,14 @@ const ContentWrapper = (props) => {
 
 ContentWrapper.propTypes = {
   routeExperimentId: PropTypes.string,
+  routeAnalysisId: PropTypes.string,
   experimentData: PropTypes.object,
   children: PropTypes.node,
 };
 
 ContentWrapper.defaultProps = {
   routeExperimentId: null,
+  routeAnalysisId: null,
   experimentData: null,
   children: null,
 };

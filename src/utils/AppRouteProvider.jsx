@@ -28,6 +28,7 @@ import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiv
 
 const PATH_STUBS = {
   [modules.SECONDARY_ANALYSIS]: '/secondary-analysis',
+  [modules.SECONDARY_ANALYSIS_OUTPUT]: '/status',
   [modules.DATA_MANAGEMENT]: '/data-management',
   [modules.REPOSITORY]: '/repository',
   [modules.DATA_PROCESSING]: '/data-processing',
@@ -39,6 +40,7 @@ const PATH_STUBS = {
 
 const PATHS = {
   [modules.SECONDARY_ANALYSIS]: `${PATH_STUBS[modules.SECONDARY_ANALYSIS]}`,
+  [modules.SECONDARY_ANALYSIS_OUTPUT]: `/secondary-analysis/[analysisId]${PATH_STUBS[modules.SECONDARY_ANALYSIS_OUTPUT]}`,
   [modules.DATA_MANAGEMENT]: `${PATH_STUBS[modules.DATA_MANAGEMENT]}`,
   [modules.REPOSITORY]: `${PATH_STUBS[modules.REPOSITORY]}`,
   [modules.DATA_PROCESSING]: `/experiments/[experimentId]${PATH_STUBS[modules.DATA_PROCESSING]}`,
@@ -79,7 +81,9 @@ const AppRouteProvider = (props) => {
   };
 
   const handleRouteChange = async (previousRoute, module, params, ignoreIntercepts, hardLoad) => {
-    const nextRoute = PATHS[module].replace('[experimentId]', params.experimentId);
+    const nextRoute = PATHS[module]
+      .replace('[experimentId]', params.experimentId)
+      .replace('[analysisId]', params.analysisId);
 
     if (nextRoute.match(PATH_STUBS.REPOSITORY)) {
       router.push(nextRoute);

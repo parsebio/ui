@@ -55,8 +55,11 @@ const addDashesToExperimentId = (experimentId) => experimentId.replace(/(.{8})(.
 
 const WrappedApp = ({ Component, pageProps }) => {
   const { httpError, amplifyConfig } = pageProps;
+
+  console.log('httpErrorDebug');
+  console.log(httpError);
   const router = useRouter();
-  const { experimentId: urlExperimentId } = router.query;
+  const { experimentId: urlExperimentId, analysisId } = router.query;
 
   // If the experimentId exists (we are not is data management) and
   // is the old version (without dashes), then add them
@@ -145,10 +148,12 @@ const WrappedApp = ({ Component, pageProps }) => {
       <AppRouteProvider>
         <ContentWrapper
           routeExperimentId={experimentId}
+          routeAnalysisId={analysisId}
           experimentData={experimentData}
         >
           <Component
             experimentId={experimentId}
+            analysisId={analysisId}
             experimentData={experimentData}
             {...pageProps}
           />
@@ -179,6 +184,8 @@ const WrappedApp = ({ Component, pageProps }) => {
 
 /* eslint-disable global-require */
 WrappedApp.getInitialProps = async ({ Component, ctx }) => {
+  console.log('ComponentDebug');
+  console.log(Component);
   const {
     store, req, query, res, err,
   } = ctx;

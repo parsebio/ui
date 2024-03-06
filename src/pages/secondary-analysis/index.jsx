@@ -22,7 +22,6 @@ import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
-import AnalysisDetails from 'components/data-management/project/AnalysisDetails';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -209,19 +208,12 @@ const SecondaryAnalysis = () => {
     },
     [ANALYSIS_DETAILS]: {
       toolbarControls: [],
-      component: (width, height) => (
+      component: () => (
         <div style={{
           display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
         }}
         >
-          {activeSecondaryAnalysisId && (
-            <AnalysisDetails
-              width={width}
-              height={height}
-            />
-          )}
-
-          {/* {activeSecondaryAnalysisId
+          {activeSecondaryAnalysisId
             ? (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
@@ -270,7 +262,7 @@ const SecondaryAnalysis = () => {
               </>
             ) : (
               <Empty description='Create a new run to get started' />
-            )} */}
+            )}
         </div>
       ),
     },
