@@ -44,26 +44,26 @@ const UploadFastQ = (props) => {
     setFilesNotUploaded(Boolean(files.valid.length));
   }, [files]);
 
+  const alreadyUploadedFiles = Object.values(secondaryAnalysisFiles).map((item) => item.name);
+  const validators = [
+    { validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'), rejectReason: 'Files starting with "." or "MACOSX" are hidden or system.' },
+    { validate: (file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'), rejectReason: 'Not a .fastq or .fastq.gz file.' },
+    { validate: (file) => !alreadyUploadedFiles.includes(file.name), rejectReason: 'File already uploaded.' },
+  ];
+
   const onDrop = (newFiles) => {
-    const validFiles = newFiles
-      .filter((file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'));
+    let invalidFiles = [];
+    const validFiles = newFiles.filter((newFile) => {
+      const validatorThatRejected = validators.find((validator) => !validator.validate(newFile));
+      if (validatorThatRejected) {
+        invalidFiles.push({ rejectReason: validatorThatRejected.rejectReason, path: newFile.path });
+        return false;
+      }
+      return true;
+    });
 
-    let invalidFiles = _.difference(newFiles, validFiles)
-      .map((file) => ({ path: file.path, rejectReason: 'Files starting with "." or "MACOSX" are hidden or system.' }));
-
-    const validExtension = validFiles.filter((file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'));
-
-    invalidFiles = [..._.difference(validFiles, validExtension)
-      .map((file) => ({ path: file.path, rejectReason: 'Not a .fastq or .fastq.gz file.' })), ...invalidFiles];
-
-    const alreadyUploadedFiles = Object.values(secondaryAnalysisFiles).map((item) => item.name);
-    const notDuplicatedFiles = validExtension.filter((file) => !alreadyUploadedFiles.includes(file.name));
-
-    invalidFiles = [..._.difference(validExtension, notDuplicatedFiles)
-      .map((file) => ({ path: file.path, rejectReason: 'File already uploaded.' })), ...invalidFiles];
-
-    const valid = notDuplicatedFiles.filter((file) => !files.valid.some((validFile) => validFile.name === file.name));
-    invalidFiles = invalidFiles.filter((file) => !files.invalid.some((invalidFile) => invalidFile.name === file.name));
+    const valid = validFiles.filter((file) => !files.valid.some((validFile) => validFile.name === file.name));
+    invalidFiles = invalidFiles.filter((file) => !files.invalid.some((invalidFile) => invalidFile.path === file.path));
 
     // Add definition of invalid
     setFiles({
