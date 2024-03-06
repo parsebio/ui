@@ -2,7 +2,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Select } from 'antd';
+import {
+  Button, Select, Space,
+} from 'antd';
 import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
 
 import fetchAPI from 'utils/http/fetchAPI';
@@ -54,19 +56,22 @@ const AnalysisDetails = ({ analysisId }) => {
 
   return (
     <>
-      <Select
-        options={Object.entries(reportOptions).map(([reportName]) => (
-          {
-            label: reportName,
-            value: reportName,
-          }
-        ))}
-        placeholder='Select a report'
-        onChange={setSelectedReport}
-      />
-      <Button type='primary' onClick={downloadAllOutputs}>
-        Download all outputs
-      </Button>
+      <Space style={{ marginTop: '5px', marginBottom: '5px', marginLeft: '20px' }}>
+        <Select
+          options={Object.entries(reportOptions).map(([reportName]) => (
+            {
+              label: reportName,
+              value: reportName,
+            }
+          ))}
+          placeholder='Select a report'
+          onChange={setSelectedReport}
+        />
+        <Button type='primary' onClick={downloadAllOutputs}>
+          Download all outputs
+        </Button>
+      </Space>
+
       <iframe src={null} srcDoc={reportOptions[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
 
