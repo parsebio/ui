@@ -27,6 +27,10 @@ import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiv
  */
 
 const PATH_REGEX = {
+  // TODO The order of this matters because setCurrentModule
+  // This is something that needs to be refactored,
+  // we shouldn't depend on order of an object's entries
+  // Objects don't guarantee preservation of any kind of order
   [modules.SECONDARY_ANALYSIS_OUTPUT]: '/status',
   [modules.SECONDARY_ANALYSIS]: '/secondary-analysis',
   [modules.DATA_MANAGEMENT]: '/data-management',
