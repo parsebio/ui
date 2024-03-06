@@ -61,7 +61,7 @@ const AppRouteProvider = (props) => {
 
   useEffect(() => {
     const [moduleName] = Object.entries(PATH_REGEX).find(
-      ([, path]) => { console.log('pathDebug', path, 'router.pathname', router.pathname, router.pathname.match(path)); return router.pathname.match(path); },
+      ([, path]) => router.pathname.match(path),
     );
 
     setCurrentModule(moduleName);
