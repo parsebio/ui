@@ -99,7 +99,7 @@ const AppRouteProvider = (props) => {
       return;
     }
 
-    if (previousRoute.match(PATH_REGEX.DATA_MANAGEMENT && nextRoute !== PATH_REGEX.SECONDARY_ANALYSIS)) {
+    if (previousRoute.match(PATH_REGEX.DATA_MANAGEMENT) && !nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS)) {
       const { experimentId } = params;
       dispatch(switchExperiment(experimentId));
     }
