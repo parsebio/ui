@@ -342,7 +342,7 @@ const ContentWrapper = (props) => {
     {
       module: modules.SECONDARY_ANALYSIS_OUTPUT,
       icon: <CodeSandboxOutlined />,
-      name: 'Secondary Analysis Output',
+      name: 'Pipeline Output',
       disableIfNoExperiment: false,
       disabledByPipelineStatus: true,
       disabledIfSeuratComplete: false,
