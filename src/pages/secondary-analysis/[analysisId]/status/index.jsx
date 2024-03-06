@@ -66,6 +66,7 @@ const AnalysisDetails = ({ analysisId }) => {
           ))}
           placeholder='Select a report'
           onChange={setSelectedReport}
+          style={{ width: '300px' }}
         />
         <Button type='primary' onClick={downloadAllOutputs}>
           Download all outputs
