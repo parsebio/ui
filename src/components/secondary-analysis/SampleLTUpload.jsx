@@ -15,6 +15,7 @@ import { createSecondaryAnalysisFile, deleteSecondaryAnalysisFile } from 'redux/
 import PropTypes from 'prop-types';
 import uploadSecondaryAnalysisFile from 'utils/secondary-analysis/uploadSecondaryAnalysisFile';
 import _ from 'lodash';
+import endUserMessages from 'utils/endUserMessages';
 
 const { Text } = Typography;
 const SampleLTUpload = (props) => {
@@ -23,27 +24,19 @@ const SampleLTUpload = (props) => {
     secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId, setFilesNotUploaded,
   } = props;
   const [file, setFile] = useState(false);
-  const [failedDrop, setFailedDrop] = useState(false);
-  const [multipleFiles, setMultipleFiles] = useState(false);
+  const [invalidInputWarnings, setInvalidInputWarnings] = useState([]);
 
-  const onDrop = async (droppedFile) => {
-    const validFiles = droppedFile
+  const onDrop = async (droppedFiles) => {
+    const warnings = [];
+    const validFiles = droppedFiles
       .filter((f) => !f.name.startsWith('.') && !f.name.startsWith('__MACOSX') && f.name.endsWith('.xlsm'));
 
-    const invalidFiles = _.difference(droppedFile, validFiles);
+    const invalidFiles = _.difference(droppedFiles, validFiles);
 
-    if (invalidFiles.length > 0) {
-      setFailedDrop(true);
-    } else {
-      setFailedDrop(false);
-    }
+    if (invalidFiles.length > 0) warnings.push(endUserMessages.ERROR_MULTIPLE_SLT_FILES);
+    if (validFiles.length > 1) warnings.push(endUserMessages.ERROR_FAILED_SLT_FILES);
 
-    if (validFiles.length > 1) {
-      setMultipleFiles(true);
-    } else {
-      setMultipleFiles(false);
-    }
-
+    setInvalidInputWarnings(warnings);
     setFile(validFiles[0]);
   };
 
@@ -76,31 +69,25 @@ const SampleLTUpload = (props) => {
           )}
           name='projectName'
         >
-          {(failedDrop || multipleFiles) && (
+          {(invalidInputWarnings.length > 0) && (
             <div>
-              <center style={{ cursor: 'pointer' }}>
-                <Divider orientation='center' style={{ color: 'red' }} />
-                <Text type='danger'>
-                  {' '}
-                  <WarningOutlined />
-                  {' '}
-                </Text>
-                {multipleFiles && (
+              {invalidInputWarnings.map((warning) => (
+                <center style={{ cursor: 'pointer' }}>
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
                   <Text>
-                    More than one Sample Loading Table was detected, only one will be used.
+                    {' '}
+                    {warning}
                     <br />
                   </Text>
-                )}
-                {failedDrop && (
-                  <Text>
-                    Invalid Sample Loading Table was detected. Extension must be .xlsm.
-                  </Text>
-                )}
-              </center>
+                </center>
+              ))}
               <br />
             </div>
           )}
-
           <Dropzone onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
               <div

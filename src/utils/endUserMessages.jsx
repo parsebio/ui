@@ -43,6 +43,8 @@ export default {
   ERROR_STARTING_PIPLELINE: 'We couldn\'t start working on your data.',
   ERROR_SIGN_IN: 'We couldn\'t sign you in. Please try again.',
   ERROR_DOWNLOADING_SEURAT_OBJECT: 'We couldn\'t get the processed Seurat object.',
+  ERROR_MULTIPLE_SLT_FILES: 'More than one Sample Loading Table was detected, only one will be used.',
+  ERROR_FAILED_SLT_FILES: 'Some of the uploaded files were invalid. Extension of the Sample Loading Table must be .xlsm',
   FEEDBACK_ERROR: 'We couldn\'t process your feedback. Please try submitting again.',
   FEEDBACK_SUCCESSFUL: 'Your feedback has been successfully sent. Thank you!',
   REFERRAL_ERROR: 'We couldn\'t process your referral. Please try submitting again.',
