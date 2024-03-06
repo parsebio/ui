@@ -56,8 +56,6 @@ const addDashesToExperimentId = (experimentId) => experimentId.replace(/(.{8})(.
 const WrappedApp = ({ Component, pageProps }) => {
   const { httpError, amplifyConfig } = pageProps;
 
-  console.log('httpErrorDebug');
-  console.log(httpError);
   const router = useRouter();
   const { experimentId: urlExperimentId, analysisId } = router.query;
 
@@ -184,8 +182,6 @@ const WrappedApp = ({ Component, pageProps }) => {
 
 /* eslint-disable global-require */
 WrappedApp.getInitialProps = async ({ Component, ctx }) => {
-  console.log('ComponentDebug');
-  console.log(Component);
   const {
     store, req, query, res, err,
   } = ctx;

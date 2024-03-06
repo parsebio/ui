@@ -29,20 +29,9 @@ const getHtmlsFromZip = async (fileBlob) => {
 };
 
 const AnalysisDetails = ({ analysisId }) => {
-  const dispatch = useDispatch();
-
-  console.log('analysisIdDebug');
-  console.log(analysisId);
-
   const [reportHtmls, setReportHtmls] = useState(null);
 
   const [reportHeight, setReportHeight] = useState(null);
-
-  // useEffect(() => {
-  //   if (!analysisId) return;
-
-  //   dispatch(loadSecondaryAnalysisStatus(analysisId));
-  // }, [analysisId]);
 
   const getReports = useCallback(async () => {
     const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/reports`);
@@ -71,7 +60,7 @@ const AnalysisDetails = ({ analysisId }) => {
     {
       key: fileName,
       label: fileName,
-      children: (<iframe srcDoc={data} title='My Document' style={{ height: reportHeight, width: '100%' }} />),
+      children: (<iframe src={null} srcDoc={data} title='My Document' style={{ height: reportHeight, width: '100%', display: 'block' }} />),
     }
   ));
 
@@ -92,27 +81,6 @@ const AnalysisDetails = ({ analysisId }) => {
       </ReactResizeDetector>
     </>
   );
-
-  // return (
-  //   // The height of this div has to be fixed to enable sample scrolling
-  //   <div
-  //     id='secondary-analysis-details'
-  //     style={{
-  //       width: width - paddingLeft - paddingRight,
-  //       height: height - layout.PANEL_HEADING_HEIGHT - paddingTop - paddingBottom,
-  //     }}
-  //   >
-
-  //     {
-  //       items && <Tabs defaultActiveKey='1' items={items} style={{ height: '100%' }} />
-  //     }
-  //     {/* <div style={{
-  //       display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
-  //     }}
-  //     >
-  //     </div> */}
-  //   </div>
-  // );
 };
 
 AnalysisDetails.propTypes = {
