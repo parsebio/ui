@@ -59,11 +59,18 @@ const ContentWrapper = (props) => {
 
   const [collapsed, setCollapsed] = useState(false);
 
-  const { routeExperimentId, experimentData, children } = props;
+  const {
+    routeExperimentId, routeAnalysisId, experimentData, children,
+  } = props;
+
   const { navigateTo, currentModule } = useAppRouter();
 
   const currentExperimentIdRef = useRef(routeExperimentId);
+  const currentAnalysisIdRef = useRef(routeAnalysisId);
   const selectedExperimentID = useSelector((state) => state?.experiments?.meta?.activeExperimentId);
+  const selectedAnalysisID = useSelector(
+    (state) => state?.secondaryAnalyses?.meta?.activeSecondaryAnalysisId,
+  );
 
   const domainName = useSelector((state) => state.networkResources.domainName);
   const user = useSelector((state) => state.user.current);
@@ -86,6 +93,14 @@ const ContentWrapper = (props) => {
 
     currentExperimentIdRef.current = routeExperimentId;
   }, [currentModule, selectedExperimentID, routeExperimentId]);
+
+  useEffect(() => {
+    if (currentModule === modules.SECONDARY_ANALYSIS) {
+      currentAnalysisIdRef.current = selectedAnalysisID;
+    } else if (currentModule === modules.SECONDARY_ANALYSIS_OUTPUT) {
+      currentAnalysisIdRef.current = routeAnalysisId;
+    }
+  }, [currentModule, selectedAnalysisID]);
 
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
@@ -325,6 +340,14 @@ const ContentWrapper = (props) => {
       disabledIfSeuratComplete: false,
     },
     {
+      module: modules.SECONDARY_ANALYSIS_OUTPUT,
+      icon: <CodeSandboxOutlined />,
+      name: 'Pipeline Output',
+      disableIfNoExperiment: false,
+      disabledByPipelineStatus: true,
+      disabledIfSeuratComplete: false,
+    },
+    {
       module: modules.DATA_MANAGEMENT,
       icon: <FolderOpenOutlined />,
       name: 'Data Management',
@@ -426,10 +449,10 @@ const ContentWrapper = (props) => {
       icon,
       label: name,
       disabled: notProcessedExperimentDisable || pipelineStatusDisable
-      || seuratCompleteDisable || nonExperimentModule,
+        || seuratCompleteDisable || nonExperimentModule,
       onClick: () => navigateTo(
         module,
-        { experimentId: currentExperimentId },
+        { experimentId: currentExperimentId, analysisId: currentAnalysisIdRef.current },
       ),
     };
   };
@@ -512,12 +535,14 @@ const ContentWrapper = (props) => {
 
 ContentWrapper.propTypes = {
   routeExperimentId: PropTypes.string,
+  routeAnalysisId: PropTypes.string,
   experimentData: PropTypes.object,
   children: PropTypes.node,
 };
 
 ContentWrapper.defaultProps = {
   routeExperimentId: null,
+  routeAnalysisId: null,
   experimentData: null,
   children: null,
 };

@@ -220,55 +220,56 @@ const SecondaryAnalysis = () => {
           display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
         }}
         >
-          {activeSecondaryAnalysisId ? (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
-                <Space direction='vertical'>
-                  <Title level={4}>{secondaryAnalysis.name}</Title>
-                  <Text type='secondary'>
-                    {`Run ID: ${activeSecondaryAnalysisId}`}
-                  </Text>
-                </Space>
-                <Tooltip
-                  title={!isAllValid
-                    ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                    : undefined}
-                  placement='left'
-                >
-                  <Button
-                    type='primary'
-                    disabled={!isAllValid}
-                    size='large'
-                    style={{ marginBottom: '10px' }}
+          {activeSecondaryAnalysisId
+            ? (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
+                  <Space direction='vertical'>
+                    <Title level={4}>{secondaryAnalysis.name}</Title>
+                    <Text type='secondary'>
+                      {`Run ID: ${activeSecondaryAnalysisId}`}
+                    </Text>
+                  </Space>
+                  <Tooltip
+                    title={!isAllValid
+                      ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
+                      : undefined}
+                    placement='left'
                   >
-                    Run the pipeline
-                  </Button>
-                </Tooltip>
-              </div>
-              <Text strong>Description:</Text>
-              <div style={{ flex: 1, overflowY: 'auto' }}>
-                <EditableParagraph
-                  value={secondaryAnalysis.description || ''}
-                  onUpdate={(text) => {
-                    if (text !== secondaryAnalysis.description) {
-                      dispatch(
-                        updateSecondaryAnalysis(
-                          activeSecondaryAnalysisId,
-                          { description: text },
-                        ),
-                      );
-                    }
-                  }}
-                />
-                <OverviewMenu
-                  wizardSteps={secondaryAnalysisWizardSteps}
-                  setCurrentStep={setCurrentStepIndex}
-                />
-              </div>
-            </>
-          ) : (
-            <Empty description='Create a new run to get started' />
-          )}
+                    <Button
+                      type='primary'
+                      disabled={!isAllValid}
+                      size='large'
+                      style={{ marginBottom: '10px' }}
+                    >
+                      Run the pipeline
+                    </Button>
+                  </Tooltip>
+                </div>
+                <Text strong>Description:</Text>
+                <div style={{ flex: 1, overflowY: 'auto' }}>
+                  <EditableParagraph
+                    value={secondaryAnalysis.description || ''}
+                    onUpdate={(text) => {
+                      if (text !== secondaryAnalysis.description) {
+                        dispatch(
+                          updateSecondaryAnalysis(
+                            activeSecondaryAnalysisId,
+                            { description: text },
+                          ),
+                        );
+                      }
+                    }}
+                  />
+                  <OverviewMenu
+                    wizardSteps={secondaryAnalysisWizardSteps}
+                    setCurrentStep={setCurrentStepIndex}
+                  />
+                </div>
+              </>
+            ) : (
+              <Empty description='Create a new run to get started' />
+            )}
         </div>
       ),
     },
