@@ -5,7 +5,7 @@ import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
 
 const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => {
-  const { RESUME_UPLOAD, DROP_AGAIN, UPLOADING } = UploadStatus;
+  const { UPLOAD_PAUSED, DROP_AGAIN, UPLOADING } = UploadStatus;
   try {
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADING,
@@ -20,7 +20,7 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => 
     const filesForUI = await Promise.all(files.map(async (file) => {
       if (file.upload.status === UPLOADING) {
         const isFileInCache = await cache.get(file.id);
-        file.upload.status = isFileInCache ? RESUME_UPLOAD : DROP_AGAIN;
+        file.upload.status = isFileInCache ? UPLOAD_PAUSED : DROP_AGAIN;
       }
       return file;
     }));

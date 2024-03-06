@@ -25,6 +25,7 @@ const UploadFastQ = (props) => {
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandlesList.length));
   }, [fileHandlesList]);
+
   const getAllFilesFromDirectory = async (directoryHandle) => {
     const files = [];
     for await (const entry of directoryHandle.values()) {
@@ -48,6 +49,8 @@ const UploadFastQ = (props) => {
     }
   };
 
+  // we save the file handles to the cache
+  // The dropzone component couldn't be used as it doesn't support file handle
   const onDrop = async (e) => {
     e.preventDefault();
     const { items } = e.dataTransfer;

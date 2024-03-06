@@ -237,9 +237,7 @@ class FileUploader {
 
       console.log('thisfreeUploadSlotsLOCKING');
       console.log(this.freeUploadSlots);
-      // if (this.freeUploadSlots < 0) {
-      //   throw new Error('freeUploadSlots should not be less than 0');
-      // }
+
       if (this.freeUploadSlots <= 0) {
         // We need to wait for some uploads to finish before we can continue
         this.readStream.pause();
