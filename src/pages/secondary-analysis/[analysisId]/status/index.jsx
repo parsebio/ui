@@ -62,7 +62,7 @@ const AnalysisDetails = ({ analysisId }) => {
   const downloadAllOutputs = useCallback(async () => {
     if (!analysisId) return;
 
-    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/status`);
+    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/output`);
 
     downloadFromUrl(signedUrl, 'all_outputs.zip');
   }, [analysisId]);
@@ -76,19 +76,21 @@ const AnalysisDetails = ({ analysisId }) => {
   ));
 
   return (
-    <ReactResizeDetector
-      handleHeight
-      refreshMode='throttle'
-      refreshRate={500}
-      onResize={(height) => { setReportHeight(height); }}
-    >
-
-      {items && <Tabs centered defaultActiveKey='1' items={items} style={{ width: '100%' }} />}
-
-      <Button type='primary' onClick={downloadAllOutputs}>
+    <>
+      <Button type='primary' onClick={downloadAllOutputs} style={{ width: '200px', marginLeft: 'auto' }}>
         Download all outputs
       </Button>
-    </ReactResizeDetector>
+      <ReactResizeDetector
+        handleHeight
+        refreshMode='throttle'
+        refreshRate={500}
+        onResize={(height) => { setReportHeight(height); }}
+      >
+
+        {items && <Tabs centered defaultActiveKey='1' items={items} style={{ width: '100%' }} />}
+
+      </ReactResizeDetector>
+    </>
   );
 
   // return (
