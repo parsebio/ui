@@ -66,7 +66,11 @@ const ContentWrapper = (props) => {
   const { navigateTo, currentModule } = useAppRouter();
 
   const currentExperimentIdRef = useRef(routeExperimentId);
+  const currentAnalysisIdRef = useRef(routeAnalysisId);
   const selectedExperimentID = useSelector((state) => state?.experiments?.meta?.activeExperimentId);
+  const selectedAnalysisID = useSelector(
+    (state) => state?.secondaryAnalyses?.meta?.activeSecondaryAnalysisId,
+  );
 
   const domainName = useSelector((state) => state.networkResources.domainName);
   const user = useSelector((state) => state.user.current);
@@ -89,6 +93,14 @@ const ContentWrapper = (props) => {
 
     currentExperimentIdRef.current = routeExperimentId;
   }, [currentModule, selectedExperimentID, routeExperimentId]);
+
+  useEffect(() => {
+    if (currentModule === modules.SECONDARY_ANALYSIS) {
+      currentAnalysisIdRef.current = selectedAnalysisID;
+    } else if (currentModule === modules.SECONDARY_ANALYSIS_OUTPUT) {
+      currentAnalysisIdRef.current = routeAnalysisId;
+    }
+  }, [currentModule, selectedAnalysisID]);
 
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
@@ -440,7 +452,7 @@ const ContentWrapper = (props) => {
         || seuratCompleteDisable || nonExperimentModule,
       onClick: () => navigateTo(
         module,
-        { experimentId: currentExperimentId },
+        { experimentId: currentExperimentId, analysisId: currentAnalysisIdRef.current },
       ),
     };
   };
