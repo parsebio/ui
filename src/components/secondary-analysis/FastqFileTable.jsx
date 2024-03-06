@@ -6,7 +6,6 @@ import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import bytesToSize from 'utils/styling/bytesToSize';
 import { DeleteOutlined } from '@ant-design/icons';
 import UploadStatusView from 'components/UploadStatusView';
-import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
 const FastqFileTable = (props) => {
   const dispatch = useDispatch();
@@ -54,7 +53,8 @@ const FastqFileTable = (props) => {
         <UploadStatusView
           status={status}
           progress={record.progress}
-          resumeUpload={async () => await resumeUpload(secondaryAnalysisId, record.key, dispatch)}
+          fileId={record.key}
+          secondaryAnalysisId={secondaryAnalysisId}
         />
       ),
     },

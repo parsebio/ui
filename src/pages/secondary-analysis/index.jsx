@@ -99,7 +99,8 @@ const SecondaryAnalysis = () => {
       name,
       status: <UploadStatusView
         status={upload.status}
-        resumeUpload={async () => await resumeUpload(activeSecondaryAnalysisId, sampleLTFile.id, dispatch)}
+        fileId={sampleLTFile.id}
+        secondaryAnalysisId={activeSecondaryAnalysisId}
       />,
       createdAt: <PrettyTime isoTime={createdAt} />,
     });

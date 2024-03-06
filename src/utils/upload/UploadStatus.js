@@ -21,7 +21,7 @@ const message = {
   [UploadStatus.FILE_READ_ABORTED]: 'File read aborted',
   [UploadStatus.QUEUED]: 'Queued',
   [UploadStatus.DROP_AGAIN]: 'Drop file again',
-  [UploadStatus.RESUME_UPLOAD]: 'Click to resume',
+  [UploadStatus.RESUME_UPLOAD]: 'Upload paused',
 };
 
 const messageForStatus = (uploadStatus) => message[uploadStatus];
