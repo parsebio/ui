@@ -14,12 +14,6 @@ import { loadSecondaryAnalyses, loadSecondaryAnalysisStatus } from 'redux/action
 import { layout } from 'utils/constants';
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
-import _ from 'lodash';
-
-const paddingTop = layout.PANEL_PADDING;
-const paddingBottom = layout.PANEL_PADDING;
-const paddingRight = layout.PANEL_PADDING;
-const paddingLeft = layout.PANEL_PADDING;
 
 const getHtmlsFromZip = async (fileBlob) => {
   const zipReader = new ZipReader(new BlobReader(fileBlob));
@@ -73,8 +67,6 @@ const AnalysisDetails = ({ analysisId }) => {
     downloadFromUrl(signedUrl, 'all_outputs.zip');
   }, [analysisId]);
 
-  // const reportHeight = height - layout.PANEL_HEADING_HEIGHT - paddingTop - paddingBottom;
-
   const items = reportHtmls?.map(({ fileName, data }) => (
     {
       key: fileName,
@@ -93,6 +85,9 @@ const AnalysisDetails = ({ analysisId }) => {
 
       {items && <Tabs centered defaultActiveKey='1' items={items} style={{ width: '100%' }} />}
 
+      <Button type='primary' onClick={downloadAllOutputs}>
+        Download all outputs
+      </Button>
     </ReactResizeDetector>
   );
 
@@ -105,9 +100,7 @@ const AnalysisDetails = ({ analysisId }) => {
   //       height: height - layout.PANEL_HEADING_HEIGHT - paddingTop - paddingBottom,
   //     }}
   //   >
-  //     {/* <Button type='primary' onClick={downloadAllOutputs}>
-  //       Download all outputs
-  //     </Button> */}
+
   //     {
   //       items && <Tabs defaultActiveKey='1' items={items} style={{ height: '100%' }} />
   //     }
