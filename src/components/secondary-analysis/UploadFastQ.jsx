@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import uploadSecondaryAnalysisFile from 'utils/secondary-analysis/uploadSecondaryAnalysisFile';
 
 import Expandable from 'components/Expandable';
+import endUserMessages from 'utils/endUserMessages';
 
 const { Text } = Typography;
 
@@ -46,9 +47,9 @@ const UploadFastQ = (props) => {
 
   const alreadyUploadedFiles = Object.values(secondaryAnalysisFiles).map((item) => item.name);
   const validators = [
-    { validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'), rejectReason: 'Files starting with "." or "MACOSX" are hidden or system.' },
-    { validate: (file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'), rejectReason: 'Not a .fastq or .fastq.gz file.' },
-    { validate: (file) => !alreadyUploadedFiles.includes(file.name), rejectReason: 'File already uploaded.' },
+    { validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'), rejectReason: endUserMessages.ERROR_HIDDEN_FILE },
+    { validate: (file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'), rejectReason: endUserMessages.ERROR_NOT_FASTQ },
+    { validate: (file) => !alreadyUploadedFiles.includes(file.name), rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED },
   ];
 
   const onDrop = (newFiles) => {
