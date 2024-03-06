@@ -110,7 +110,6 @@ class FileUploader {
   }
 
   #getSignedUrlForPart = async (partNumber) => {
-    console.log('TOTAL CHUNKS ARE ', this.totalChunks, 'AND PART NUMBER IS ', partNumber, ' pending chunks ', this.pendingChunks);
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
@@ -161,7 +160,6 @@ class FileUploader {
   #setupReadStreamHandlers = () => {
     this.readStream.on('data', async (chunk) => {
       try {
-        console.log('stream on DATA event');
         await this.#reserveUploadSlot();
 
         if (!this.compress) {
@@ -189,7 +187,6 @@ class FileUploader {
     this.readStream.on('end', async () => {
       try {
         if (!this.compress) return;
-        console.log('stream on END event');
 
         await this.#reserveUploadSlot();
 
@@ -221,18 +218,15 @@ class FileUploader {
 
       // To track when all chunks have been uploaded
       this.pendingChunks -= 1;
-      console.log('FILE CHUNK LOAD FINISHED ', this.pendingChunks, 'part number it ', this.partNumberIt, ' total chunks ', this.totalChunks);
 
       if (this.pendingChunks > 0) {
         await this.#releaseUploadSlot();
       }
 
       if (this.pendingChunks === 0) {
-        console.log('IM RESOLVING');
         this.resolve(this.uploadedParts);
       }
     } catch (e) {
-      console.log('CANCELLING EXECUTION ', e);
       this.#cancelExecution(UploadStatus.UPLOAD_ERROR, e);
     }
   }
