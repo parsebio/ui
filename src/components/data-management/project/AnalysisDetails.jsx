@@ -3,16 +3,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
+import { Button, Tabs, TabsProps } from 'antd';
 import {
   BlobReader, BlobWriter, TextWriter, ZipReader,
 } from '@zip.js/zip.js';
 
 import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
+import 'components/data-management/project/AnalysisDetails.module.css';
 
 import { layout } from 'utils/constants';
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
+import _ from 'lodash';
 
 const paddingTop = layout.PANEL_PADDING;
 const paddingBottom = layout.PANEL_PADDING;
@@ -22,11 +24,12 @@ const paddingLeft = layout.PANEL_PADDING;
 const getHtmlsFromZip = async (fileBlob) => {
   const zipReader = new ZipReader(new BlobReader(fileBlob));
   const entries = await zipReader.getEntries();
-  console.log('entriesDebug');
-  console.log(entries);
 
   const htmlEntries = entries.filter(({ filename }) => filename.endsWith('.html'));
-  const htmls = await Promise.all(htmlEntries.map((entry) => entry.getData(new TextWriter())));
+  const htmls = await Promise.all(htmlEntries.map(async (entry) => ({
+    fileName: entry.filename,
+    data: await entry.getData(new TextWriter()),
+  })));
 
   return htmls;
 };
@@ -60,10 +63,20 @@ const AnalysisDetails = ({ width, height }) => {
   const downloadAllOutputs = useCallback(async () => {
     if (!activeAnalysisId) return;
 
-    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${activeAnalysisId}/output`);
+    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${activeAnalysisId}/status`);
 
     downloadFromUrl(signedUrl, 'all_outputs.zip');
   }, [activeAnalysisId]);
+
+  const reportHeight = height - layout.PANEL_HEADING_HEIGHT - paddingTop - paddingBottom;
+
+  const items = reportHtmls?.map(({ fileName, data }) => (
+    {
+      key: fileName,
+      label: fileName,
+      children: (<iframe srcDoc={data} title='My Document' style={{ width: '100%', height: reportHeight }} />),
+    }
+  ));
 
   return (
     // The height of this div has to be fixed to enable sample scrolling
@@ -74,13 +87,11 @@ const AnalysisDetails = ({ width, height }) => {
         height: height - layout.PANEL_HEADING_HEIGHT - paddingTop - paddingBottom,
       }}
     >
-      <Button type='primary' onClick={downloadAllOutputs}>
+      {/* <Button type='primary' onClick={downloadAllOutputs}>
         Download all outputs
-      </Button>
+      </Button> */}
       {
-        reportHtmls && reportHtmls.map((html) => (
-          <iframe srcDoc={html} title='My Document' />
-        ))
+        items && <Tabs defaultActiveKey='1' items={items} style={{ height: '100%' }} />
       }
       {/* <div style={{
         display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
