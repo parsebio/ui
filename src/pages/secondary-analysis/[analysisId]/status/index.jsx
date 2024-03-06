@@ -1,17 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useCallback, useEffect, useState } from 'react';
-import ReactResizeDetector from 'react-resize-detector';
-import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, Tabs, TabsProps } from 'antd';
-import {
-  BlobReader, BlobWriter, TextWriter, ZipReader,
-} from '@zip.js/zip.js';
+import { Button, Select } from 'antd';
+import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
 
-import { loadSecondaryAnalyses, loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
-
-import { layout } from 'utils/constants';
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 
@@ -20,18 +13,17 @@ const getHtmlsFromZip = async (fileBlob) => {
   const entries = await zipReader.getEntries();
 
   const htmlEntries = entries.filter(({ filename }) => filename.endsWith('.html'));
-  const htmls = await Promise.all(htmlEntries.map(async (entry) => ({
-    fileName: entry.filename,
-    data: await entry.getData(new TextWriter()),
-  })));
+  const htmlsArray = await Promise.all(htmlEntries.map(async (entry) => (
+    [entry.filename, await entry.getData(new TextWriter())]
+  )));
 
-  return htmls;
+  return Object.fromEntries(htmlsArray);
 };
 
 const AnalysisDetails = ({ analysisId }) => {
-  const [reportHtmls, setReportHtmls] = useState(null);
+  const [reportOptions, setReportOptions] = useState(null);
 
-  const [reportHeight, setReportHeight] = useState(null);
+  const [selectedReport, setSelectedReport] = useState(null);
 
   const getReports = useCallback(async () => {
     const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/reports`);
@@ -39,7 +31,9 @@ const AnalysisDetails = ({ analysisId }) => {
     const response = await fetch(signedUrl);
     const zip = await response.blob();
     const htmls = await getHtmlsFromZip(zip);
-    setReportHtmls(htmls);
+
+    setReportOptions(htmls);
+    setSelectedReport(Object.keys(htmls)[0]);
   }, [analysisId]);
 
   useEffect(() => {
@@ -56,30 +50,26 @@ const AnalysisDetails = ({ analysisId }) => {
     downloadFromUrl(signedUrl, 'all_outputs.zip');
   }, [analysisId]);
 
-  const items = reportHtmls?.map(({ fileName, data }) => (
-    {
-      key: fileName,
-      label: fileName,
-      children: (<iframe src={null} srcDoc={data} title='My Document' style={{ height: reportHeight, width: '100%', display: 'block' }} />),
-    }
-  ));
+  if (selectedReport === null) return <></>;
 
   return (
     <>
-      <Button type='primary' onClick={downloadAllOutputs} style={{ width: '200px', marginLeft: 'auto' }}>
+      <Select
+        options={Object.entries(reportOptions).map(([reportName]) => (
+          {
+            label: reportName,
+            value: reportName,
+          }
+        ))}
+        placeholder='Select a report'
+        onChange={setSelectedReport}
+      />
+      <Button type='primary' onClick={downloadAllOutputs}>
         Download all outputs
       </Button>
-      <ReactResizeDetector
-        handleHeight
-        refreshMode='throttle'
-        refreshRate={500}
-        onResize={(height) => { setReportHeight(height); }}
-      >
-
-        {items && <Tabs centered defaultActiveKey='1' items={items} style={{ width: '100%' }} />}
-
-      </ReactResizeDetector>
+      <iframe src={null} srcDoc={reportOptions[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
+
   );
 };
 
