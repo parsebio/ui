@@ -13,6 +13,8 @@ import {
   SECONDARY_ANALYSIS_FILES_ERROR,
   SECONDARY_ANALYSIS_FILES_UPDATE,
   SECONDARY_ANALYSIS_FILES_DELETE,
+  SECONDARY_ANALYSIS_STATUS_LOADING,
+  SECONDARY_ANALYSIS_STATUS_LOADED,
 } from '../../actionTypes/secondaryAnalyses';
 
 import secondaryAnalysesLoading from './secondaryAnalysesLoading';
@@ -29,6 +31,9 @@ import secondaryAnalysisFileUpdated from './secondaryAnalysisFileUpdated';
 import secondaryAnalysisFileDeleted from './secondaryAnalysisFileDeleted';
 import secondaryAnalysisFilesLoading from './secondaryAnalysisFilesLoading';
 import secondaryAnalysisFileError from './secondaryAnalysisFileError';
+
+import secondaryAnalysisStatusLoading from './secondaryAnalysisStatusLoading';
+import secondaryAnalysisStatusLoaded from './secondaryAnalysisStatusLoaded';
 
 const notificationsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -80,6 +85,14 @@ const notificationsReducer = (state = initialState, action) => {
 
     case SECONDARY_ANALYSIS_FILES_DELETE: {
       return secondaryAnalysisFileDeleted(state, action);
+    }
+
+    case SECONDARY_ANALYSIS_STATUS_LOADING: {
+      return secondaryAnalysisStatusLoading(state, action);
+    }
+
+    case SECONDARY_ANALYSIS_STATUS_LOADED: {
+      return secondaryAnalysisStatusLoaded(state, action);
     }
 
     default: {

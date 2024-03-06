@@ -5,6 +5,7 @@ const secondaryAnalysisCreated = (state, action) => {
 
   const newSecondaryAnalysis = {
     files: { data: {}, loading: false, error: false },
+    status: { current: null, loading: false, error: false },
     ...secondaryAnalysis,
   };
 
