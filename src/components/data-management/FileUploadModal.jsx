@@ -220,9 +220,7 @@ const FileUploadModal = (props) => {
             </Space>
             <Text type='secondary'>
               <i>
-                Don't have data in an accepted format?
-                {' '}
-                {getDomainSpecificContent('helpMessage')}
+                Don't have data in an accepted format? Reach out to us using the feedback button at the top of the page.
               </i>
             </Text>
           </Space>

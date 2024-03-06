@@ -161,9 +161,7 @@ const MetadataUploadModal = (props) => {
         <Col span={24}>
           <Paragraph type='secondary'>
             <i>
-              Don’t have the data in an accepted format?
-              {' '}
-              {getDomainSpecificContent('helpMessage')}
+              Don’t have the data in an accepted format? Reach out to us using the feedback button at the top of the page.
             </i>
           </Paragraph>
         </Col>
