@@ -239,7 +239,6 @@ const SecondaryAnalysis = () => {
                     <Button
                       type='primary'
                       disabled={!isAllValid}
-                      size='large'
                       style={{ marginBottom: '10px' }}
                     >
                       Run the pipeline
