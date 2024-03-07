@@ -104,11 +104,10 @@ const UploadFastQ = (props) => {
   const removeFile = (fileName) => {
     setFileHandles((prevState) => {
       const newValid = _.filter(prevState.valid, (file) => file.name !== fileName);
-      const newInvalid = _.filter(prevState.invalid, (file) => file.name !== fileName);
 
       return {
         valid: newValid,
-        invalid: newInvalid,
+        invalid: fileHandles.invalid,
       };
     });
   };
