@@ -28,16 +28,19 @@ const SampleLTUpload = (props) => {
 
   const onDrop = async (droppedFiles) => {
     const warnings = [];
-    const validFiles = droppedFiles
-      .filter((f) => !f.name.startsWith('.') && !f.name.startsWith('__MACOSX') && f.name.endsWith('.xlsm'));
 
-    const invalidFiles = _.difference(droppedFiles, validFiles);
+    const validFiles = droppedFiles.filter((f) => f.name.endsWith('.xlsm'));
 
-    if (invalidFiles.length > 0) warnings.push(endUserMessages.ERROR_MULTIPLE_SLT_FILES);
-    if (validFiles.length > 1) warnings.push(endUserMessages.ERROR_FAILED_SLT_FILES);
+    if (validFiles.length === 0) {
+      warnings.push(endUserMessages.ERROR_FAILED_SLT_FILE);
+    }
+    if (validFiles.length > 1) {
+      warnings.push(endUserMessages.ERROR_MULTIPLE_SLT_FILES);
+      validFiles.splice(1); // Keep only the first valid file
+    }
 
     setInvalidInputWarnings(warnings);
-    setFile(validFiles[0]);
+    setFile(validFiles.length > 0 ? validFiles[0] : false);
   };
 
   useEffect(() => {
