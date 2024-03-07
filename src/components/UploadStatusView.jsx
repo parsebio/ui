@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import UploadStatus, { messageForStatus } from 'utils/upload/UploadStatus';
+import { useDispatch } from 'react-redux';
 import {
   Typography, Progress, Tooltip, Button,
 } from 'antd';
 import styles from 'components/data-management/SamplesTableCells.module.css';
 import {
-  UploadOutlined,
+  UploadOutlined, CaretRightFilled,
+
 } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import cache from 'utils/cache';
+import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
 const { Text } = Typography;
 const uploadDivStyle = {
@@ -17,7 +21,36 @@ const uploadDivStyle = {
   verticalAlign: 'middle',
 };
 
-const UploadStatusView = ({ status, progress, showDetails }) => {
+const UploadStatusView = ({
+  status, progress, showDetails, fileId, secondaryAnalysisId,
+}) => {
+  const dispatch = useDispatch();
+  const [fileInCache, setFileInCache] = useState(null);
+
+  useEffect(() => {
+    if (fileId && secondaryAnalysisId && status === UploadStatus.UPLOAD_PAUSED) {
+      const file = cache.get(fileId) ?? null;
+      setFileInCache(file);
+    }
+  }, [fileId]);
+
+  if (status === UploadStatus.UPLOAD_PAUSED && fileInCache) {
+    return (
+      <div style={uploadDivStyle}>
+        <Text type='warning'>{messageForStatus(status)}</Text>
+        <Tooltip
+          title='Click to resume'
+        >
+          <Button
+            size='large'
+            shape='link'
+            icon={<CaretRightFilled />}
+            onClick={async () => await resumeUpload(secondaryAnalysisId, fileId, dispatch)}
+          />
+        </Tooltip>
+      </div>
+    );
+  }
   if (status === UploadStatus.QUEUED) {
     return (
       <div style={uploadDivStyle}>
@@ -101,12 +134,16 @@ const UploadStatusView = ({ status, progress, showDetails }) => {
 UploadStatusView.defaultProps = {
   progress: undefined,
   showDetails: null,
+  fileId: null,
+  secondaryAnalysisId: null,
 };
 
 UploadStatusView.propTypes = {
   status: PropTypes.string.isRequired,
   progress: PropTypes.number,
   showDetails: PropTypes.func,
+  fileId: PropTypes.string,
+  secondaryAnalysisId: PropTypes.string,
 };
 
 export default UploadStatusView;

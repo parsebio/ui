@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Space, Popconfirm } from 'antd';
+import { Table, Popconfirm } from 'antd';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
@@ -49,7 +49,14 @@ const FastqFileTable = (props) => {
       title: 'Status',
       dataIndex: 'status',
       width: '25%',
-      render: (status, record) => <UploadStatusView status={status} progress={record.progress} />,
+      render: (status, record) => (
+        <UploadStatusView
+          status={status}
+          progress={record.progress}
+          fileId={record.key}
+          secondaryAnalysisId={secondaryAnalysisId}
+        />
+      ),
     },
   ];
 

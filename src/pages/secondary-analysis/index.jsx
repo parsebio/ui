@@ -22,6 +22,7 @@ import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
+import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -95,7 +96,13 @@ const SecondaryAnalysis = () => {
 
     const { name, upload, createdAt } = sampleLTFile;
     return mainScreenDetails({
-      name, status: <UploadStatusView status={upload.status} />, createdAt: <PrettyTime isoTime={createdAt} />,
+      name,
+      status: <UploadStatusView
+        status={upload.status}
+        fileId={sampleLTFile.id}
+        secondaryAnalysisId={activeSecondaryAnalysisId}
+      />,
+      createdAt: <PrettyTime isoTime={createdAt} />,
     });
   };
 

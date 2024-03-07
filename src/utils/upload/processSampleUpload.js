@@ -56,15 +56,17 @@ const createAndUploadSampleFile = async (
         ),
       );
     };
-
+    const options = {
+      compress: !file.compressed,
+    };
     await uploadFileToS3(
       experimentId,
       file,
-      !file.compressed,
       uploadUrlParams,
       'sample',
       abortController,
       updateSampleFileUploadProgress,
+      options,
     );
   } catch (e) {
     dispatch(updateSampleFileUpload(
