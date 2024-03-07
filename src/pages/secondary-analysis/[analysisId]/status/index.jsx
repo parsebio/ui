@@ -5,34 +5,23 @@ import PropTypes from 'prop-types';
 import {
   Button, Select, Space,
 } from 'antd';
-import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
 
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
-
-const getHtmlsFromZip = async (fileBlob) => {
-  const zipReader = new ZipReader(new BlobReader(fileBlob));
-  const entries = await zipReader.getEntries();
-
-  const htmlEntries = entries.filter(({ filename }) => filename.endsWith('.html'));
-  const htmlsArray = await Promise.all(htmlEntries.map(async (entry) => (
-    [entry.filename, await entry.getData(new TextWriter())]
-  )));
-
-  return Object.fromEntries(htmlsArray);
-};
+import usePolling from 'utils/customHooks/usePolling';
+import { useDispatch } from 'react-redux';
+import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
+import getReports from 'pages/secondary-analysis/[analysisId]/status/getReports';
 
 const AnalysisDetails = ({ analysisId }) => {
+  const dispatch = useDispatch();
+
   const [reportOptions, setReportOptions] = useState(null);
 
   const [selectedReport, setSelectedReport] = useState(null);
 
-  const getReports = useCallback(async () => {
-    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/reports`);
-
-    const response = await fetch(signedUrl);
-    const zip = await response.blob();
-    const htmls = await getHtmlsFromZip(zip);
+  const setupReports = useCallback(async () => {
+    const htmls = await getReports();
 
     setReportOptions(htmls);
     setSelectedReport(Object.keys(htmls)[0]);
@@ -41,7 +30,7 @@ const AnalysisDetails = ({ analysisId }) => {
   useEffect(() => {
     if (!analysisId) return;
 
-    getReports();
+    setupReports();
   }, [analysisId]);
 
   const downloadAllOutputs = useCallback(async () => {
@@ -53,6 +42,10 @@ const AnalysisDetails = ({ analysisId }) => {
   }, [analysisId]);
 
   if (selectedReport === null) return <></>;
+
+  usePolling(async () => {
+    await dispatch(loadSecondaryAnalysisStatus(analysisId));
+  }, [analysisId]);
 
   return (
     <>
