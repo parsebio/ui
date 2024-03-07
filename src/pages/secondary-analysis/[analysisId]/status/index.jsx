@@ -20,7 +20,7 @@ import { fastLoad } from 'components/Loader';
 const AnalysisDetails = ({ analysisId }) => {
   const dispatch = useDispatch();
 
-  const [reportOptions, setReportOptions] = useState(null);
+  const [reports, setReports] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[analysisId]);
@@ -28,7 +28,7 @@ const AnalysisDetails = ({ analysisId }) => {
   const setupReports = useCallback(async () => {
     const htmls = await getReports(analysisId);
 
-    setReportOptions(htmls);
+    setReports(htmls);
     setSelectedReport(Object.keys(htmls)[0]);
   }, [analysisId]);
 
@@ -39,10 +39,10 @@ const AnalysisDetails = ({ analysisId }) => {
   }, [Boolean(secondaryAnalysis)]);
 
   useEffect(() => {
-    if (secondaryAnalysis?.status.current !== 'finished') return;
+    if (secondaryAnalysis.status.current !== 'finished') return;
 
     setupReports();
-  }, [analysisId]);
+  }, [secondaryAnalysis.status.current]);
 
   const downloadAllOutputs = useCallback(async () => {
     const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/output`);
@@ -66,7 +66,7 @@ const AnalysisDetails = ({ analysisId }) => {
     return 'Analysis still running';
   }
 
-  if (reportOptions === null) {
+  if (reports === null) {
     return fastLoad('Getting reports...');
   }
 
@@ -74,7 +74,7 @@ const AnalysisDetails = ({ analysisId }) => {
     <>
       <Space style={{ marginTop: '5px', marginBottom: '5px', marginLeft: '20px' }}>
         <Select
-          options={Object.entries(reportOptions).map(([reportName]) => (
+          options={Object.entries(reports).map(([reportName]) => (
             {
               label: reportName,
               value: reportName,
@@ -90,7 +90,7 @@ const AnalysisDetails = ({ analysisId }) => {
         </Button>
       </Space>
 
-      <iframe src={null} srcDoc={reportOptions[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
+      <iframe src={null} srcDoc={reports[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
 
   );
