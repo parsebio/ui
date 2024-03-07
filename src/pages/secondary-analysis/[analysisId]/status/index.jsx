@@ -41,11 +41,11 @@ const AnalysisDetails = ({ analysisId }) => {
     downloadFromUrl(signedUrl, 'all_outputs.zip');
   }, [analysisId]);
 
-  if (selectedReport === null) return <></>;
-
   usePolling(async () => {
     await dispatch(loadSecondaryAnalysisStatus(analysisId));
   }, [analysisId]);
+
+  if (selectedReport === null) return <></>;
 
   return (
     <>
