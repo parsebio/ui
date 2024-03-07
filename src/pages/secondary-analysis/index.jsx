@@ -22,6 +22,7 @@ import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
+import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
 const { Text, Title } = Typography;
@@ -249,6 +250,7 @@ const SecondaryAnalysis = () => {
                       disabled={!isAllValid}
                       size='large'
                       style={{ marginBottom: '10px' }}
+                      onClick={() => dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))}
                     >
                       Run the pipeline
                     </Button>
