@@ -113,28 +113,36 @@ class FileUploader {
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
-    const queryParams = new URLSearchParams({
-      bucket,
-      key,
-    });
-    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
+    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
 
-    return await fetchAPI(url, { method: 'GET' });
+    return await fetchAPI(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        bucket,
+        key,
+      }),
+    });
   };
 
   #getUploadedParts = async () => {
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
+    const url = `/v2/projects/${projectId}/upload/${uploadId}/getUploadedParts`;
 
-    const queryParams = new URLSearchParams({
-      bucket,
-      key,
+    return await fetchAPI(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        bucket,
+        key,
+      }),
     });
-
-    const url = `/v2/projects/${projectId}/upload/${uploadId}/getUploadedParts?${queryParams}`;
-
-    return await fetchAPI(url, { method: 'GET' });
   }
 
   #createOnUploadProgress = (partNumber) => (progress) => {
