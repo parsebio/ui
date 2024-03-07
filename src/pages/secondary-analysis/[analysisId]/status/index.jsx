@@ -19,13 +19,13 @@ const getHtmlUrlsFromZip = async (fileBlob) => {
   const entries = await zipReader.getEntries();
 
   const htmlEntries = entries.filter(({ filename }) => filename.endsWith('.html'));
-  const htmlsUrls = await Promise.all(htmlEntries.map(
+  const htmlUrls = await Promise.all(htmlEntries.map(
     async (entry) => (
       [entry.filename, createUrlFromSrc(await entry.getData(new TextWriter()))]
     ),
   ));
 
-  return Object.fromEntries(htmlsUrls);
+  return Object.fromEntries(htmlUrls);
 };
 
 const AnalysisDetails = ({ analysisId }) => {
