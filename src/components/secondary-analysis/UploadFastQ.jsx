@@ -53,23 +53,23 @@ const UploadFastQ = (props) => {
   ];
 
   const onDrop = (newFiles) => {
-    let invalidFiles = [];
+    const invalidFiles = [];
     const validFiles = newFiles.filter((newFile) => {
-      const validatorThatRejected = validators.find((validator) => !validator.validate(newFile));
-      if (validatorThatRejected) {
-        invalidFiles.push({ rejectReason: validatorThatRejected.rejectReason, path: newFile.path });
+      const rejectedValidator = validators.find((validator) => !validator.validate(newFile));
+      if (rejectedValidator) {
+        invalidFiles.push({ rejectReason: rejectedValidator.rejectReason, path: newFile.path });
         return false;
       }
       return true;
     });
 
-    const valid = validFiles.filter((file) => !files.valid.some((validFile) => validFile.name === file.name));
-    invalidFiles = invalidFiles.filter((file) => !files.invalid.some((invalidFile) => invalidFile.path === file.path));
+    // const valid = validFiles.filter((file) => !files.valid.some((validFile) => validFile.name === file.name));
+    // invalidFiles = invalidFiles.filter((file) => !files.invalid.some((invalidFile) => invalidFile.path === file.path));
 
     // Add definition of invalid
     setFiles({
-      valid: [...files.valid, ...valid],
-      invalid: [...files.invalid, ...invalidFiles],
+      valid: _.uniqBy([...files.valid, ...validFiles], 'path'),
+      invalid: _.uniqBy([...files.invalid, ...invalidFiles], 'path'),
     });
   };
 
