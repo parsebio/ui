@@ -334,11 +334,8 @@ const FileUploadModal = (props) => {
                   </Text>
                   <Text>
                     {files.invalid.length}
-                    {' '}
-                    file
-                    {files.invalid.length > 1 ? 's were' : ' was'}
-                    {' '}
-                    ignored, click to display
+                    {files.invalid.length > 1 ? 'files were ' : ' file was '}
+                    ignored. Click to display
                   </Text>
                 </center>
               )}

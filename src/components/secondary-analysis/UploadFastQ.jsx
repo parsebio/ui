@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button,
 } from 'antd';
-import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
+import {
+  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
+} from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
@@ -10,56 +12,87 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 
+import Expandable from 'components/Expandable';
+import endUserMessages from 'utils/endUserMessages';
+
 const { Text } = Typography;
 
 const UploadFastQ = (props) => {
-  const { secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded } = props;
-  const [fileHandlesList, setFileHandlesList] = useState([]);
+  const {
+    secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded, secondaryAnalysisFiles,
+  } = props;
+  const emptyFiles = { valid: [], invalid: [] };
+  const [fileHandles, setFileHandles] = useState(emptyFiles);
+
   const dispatch = useDispatch();
 
   const beginUpload = async () => {
-    const filesList = await Promise.all(fileHandlesList.map(async (handle) => handle.getFile()));
-    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandlesList, 'fastq', dispatch);
+    const filesList = await Promise.all(fileHandles.valid.map(async (handle) => handle.getFile()));
+    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
   };
 
   useEffect(() => {
-    setFilesNotUploaded(Boolean(fileHandlesList.length));
-  }, [fileHandlesList]);
+    setFilesNotUploaded(Boolean(fileHandles.valid.length));
+  }, [fileHandles]);
+
+  const validateAndSetFiles = async (fileHandlesList) => {
+    const alreadyUploadedFiles = Object.values(secondaryAnalysisFiles).map((item) => item.name);
+
+    const validators = [
+      { validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'), rejectReason: endUserMessages.ERROR_HIDDEN_FILE },
+      { validate: (file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'), rejectReason: endUserMessages.ERROR_NOT_FASTQ },
+      { validate: (file) => !alreadyUploadedFiles.includes(file.name), rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED },
+    ];
+
+    const invalidFiles = [];
+    const validFiles = fileHandlesList.filter((newFile) => {
+      const rejectedValidator = validators.find((validator) => !validator.validate(newFile));
+      if (rejectedValidator) {
+        invalidFiles.push({ rejectReason: rejectedValidator.rejectReason, name: newFile.name });
+        return false;
+      }
+      return true;
+    });
+
+    setFileHandles((prevState) => ({
+      valid: _.uniqBy([...prevState.valid, ...validFiles], 'name'),
+      invalid: _.uniqBy([...prevState.invalid, ...invalidFiles], 'name'),
+    }));
+  };
 
   const handleFileSelection = async () => {
     try {
       const opts = { multiple: true };
       const handles = await window.showOpenFilePicker(opts);
-      setFileHandlesList(handles);
+      return validateAndSetFiles(handles);
     } catch (err) {
       console.error('Error picking files:', err);
     }
   };
-
   // we save the file handles to the cache
   // The dropzone component couldn't be used as it doesn't support file handle
   const getAllFiles = async (entry) => {
-    const files = [];
+    const subFiles = [];
     if (entry.kind === 'file') {
-      files.push(entry);
+      subFiles.push(entry);
     } else if (entry.kind === 'directory') {
       for await (const currEntry of entry.values()) {
         const nestedFiles = await getAllFiles(currEntry);
-        files.push(...nestedFiles);
+        subFiles.push(...nestedFiles);
       }
     }
-    return files;
+    return subFiles;
   };
 
   const onDrop = async (e) => {
     e.preventDefault();
     const { items } = e.dataTransfer;
-    const files = await Promise.all(Array.from(items).map(async (item) => {
+    const newFiles = await Promise.all(Array.from(items).map(async (item) => {
       const entry = await item.getAsFileSystemHandle();
       const subFiles = await getAllFiles(entry);
       return subFiles;
     }));
-    setFileHandlesList(files.flat());
+    return validateAndSetFiles(newFiles.flat());
   };
 
   useEffect(() => {
@@ -69,10 +102,16 @@ const UploadFastQ = (props) => {
   }, []);
 
   const removeFile = (fileName) => {
-    const newArray = _.cloneDeep(fileHandlesList);
-    _.remove(newArray, (file) => file.name === fileName);
-    setFileHandlesList(newArray);
+    setFileHandles((prevState) => {
+      const newValid = _.filter(prevState.valid, (file) => file.name !== fileName);
+
+      return {
+        valid: newValid,
+        invalid: fileHandles.invalid,
+      };
+    });
   };
+
   return (
     <Form
       layout='vertical'
@@ -97,6 +136,58 @@ const UploadFastQ = (props) => {
           <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
         </div>
+        {fileHandles.invalid.length > 0 && (
+          <div>
+            <Expandable
+              style={{ width: '100%' }}
+              expandedContent={(
+                <>
+                  <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Ignored files</Divider>
+                  <List
+                    dataSource={fileHandles.invalid}
+                    size='small'
+                    itemLayout='horizontal'
+                    pagination
+                    renderItem={(file) => (
+                      <List.Item key={file.name} style={{ height: '100%', width: '100%' }}>
+                        <Space style={{ width: 200, justifyContent: 'center' }}>
+                          <CloseCircleTwoTone twoToneColor='#f5222d' />
+                          <div style={{ width: 200 }}>
+                            <Text
+                              ellipsis={{ tooltip: file.name }}
+                            >
+                              {file.name}
+                            </Text>
+                          </div>
+                        </Space>
+                        <Text style={{ width: '100%', marginLeft: '50px' }}>{file.rejectReason}</Text>
+                      </List.Item>
+                    )}
+                  />
+                </>
+              )}
+              collapsedContent={(
+                <center style={{ cursor: 'pointer' }}>
+                  <Divider orientation='center' style={{ color: 'red' }} />
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
+                  <Text>
+                    {fileHandles.invalid.length}
+                    {' '}
+                    file
+                    {fileHandles.invalid.length > 1 ? 's were' : ' was'}
+                    {' '}
+                    ignored, click to display
+                  </Text>
+                </center>
+              )}
+            />
+            <br />
+          </div>
+        )}
 
         <div
           onClick={handleFileSelection}
@@ -113,19 +204,19 @@ const UploadFastQ = (props) => {
           type='primary'
           key='create'
           block
-          disabled={!fileHandlesList.length}
+          disabled={!fileHandles.valid.length}
           onClick={() => {
-            beginUpload(fileHandlesList);
-            setFileHandlesList([]);
+            beginUpload(fileHandles.valid);
+            setFileHandles(emptyFiles);
           }}
         >
           Upload
         </Button>
-        {fileHandlesList.length > 0 && (
+        {fileHandles.valid.length > 0 && (
           <>
             <Divider orientation='center'>To upload</Divider>
             <List
-              dataSource={fileHandlesList}
+              dataSource={fileHandles.valid}
               size='small'
               itemLayout='horizontal'
               grid='{column: 4}'
@@ -168,6 +259,7 @@ UploadFastQ.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
   renderFastqFileTable: PropTypes.func.isRequired,
   setFilesNotUploaded: PropTypes.func.isRequired,
+  secondaryAnalysisFiles: PropTypes.object.isRequired,
 };
 
 export default UploadFastQ;

@@ -73,7 +73,14 @@ const SecondaryAnalysis = () => {
       const value = detailsObj[key];
       const title = keyToTitle[key];
       return (
-        <div key={key} style={{ display: 'flex', marginBottom: '10px' }}>
+        <div
+          key={key}
+          style={{
+            display: 'flex',
+            marginBottom: '10px',
+            overflow: 'hidden',
+          }}
+        >
           {title && (
             <span style={{ fontWeight: 'bold' }}>
               {`${title}:`}
@@ -189,6 +196,7 @@ const SecondaryAnalysis = () => {
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderFastqFileTable={() => renderFastqFileTable(true)}
           setFilesNotUploaded={setFilesNotUploaded}
+          secondaryAnalysisFiles={secondaryAnalysisFiles}
         />
       ),
       isValid: areFilesUploaded('fastq'),
