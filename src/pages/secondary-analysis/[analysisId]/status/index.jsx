@@ -9,16 +9,17 @@ import {
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
-import { useDispatch } from 'react-redux';
-import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadSecondaryAnalyses, loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[analysisId]/status/getReports';
 
 const AnalysisDetails = ({ analysisId }) => {
   const dispatch = useDispatch();
 
   const [reportOptions, setReportOptions] = useState(null);
-
   const [selectedReport, setSelectedReport] = useState(null);
+
+  const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[analysisId]);
 
   const setupReports = useCallback(async () => {
     const htmls = await getReports();
@@ -41,7 +42,13 @@ const AnalysisDetails = ({ analysisId }) => {
     downloadFromUrl(signedUrl, 'all_outputs.zip');
   }, [analysisId]);
 
+  useEffect(() => {
+    dispatch(loadSecondaryAnalyses());
+  });
+
   usePolling(async () => {
+    if (!secondaryAnalysis) return;
+
     await dispatch(loadSecondaryAnalysisStatus(analysisId));
   }, [analysisId]);
 
