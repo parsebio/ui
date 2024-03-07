@@ -4,7 +4,7 @@ import {
 } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
-import SecondaryAnalysisDetails from 'components/secondary-analysis/SecondaryAnalysisDetails';
+import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
 import { useSelector, useDispatch } from 'react-redux';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
@@ -22,6 +22,7 @@ import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
+import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -95,7 +96,13 @@ const SecondaryAnalysis = () => {
 
     const { name, upload, createdAt } = sampleLTFile;
     return mainScreenDetails({
-      name, status: <UploadStatusView status={upload.status} />, createdAt: <PrettyTime isoTime={createdAt} />,
+      name,
+      status: <UploadStatusView
+        status={upload.status}
+        fileId={sampleLTFile.id}
+        secondaryAnalysisId={activeSecondaryAnalysisId}
+      />,
+      createdAt: <PrettyTime isoTime={createdAt} />,
     });
   };
 
@@ -134,7 +141,7 @@ const SecondaryAnalysis = () => {
       title: 'Provide the details of the experimental setup:',
       key: 'Experimental setup',
       render: () => (
-        <SecondaryAnalysisDetails
+        <SecondaryAnalysisSettings
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
           secondaryAnalysis={secondaryAnalysis}
         />
@@ -192,10 +199,11 @@ const SecondaryAnalysis = () => {
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
-  const PROJECTS_LIST = 'Runs';
-  const PROJECT_DETAILS = 'Run Details';
+  const ANALYSIS_LIST = 'Runs';
+  const ANALYSIS_DETAILS = 'Run Details';
+
   const TILE_MAP = {
-    [PROJECTS_LIST]: {
+    [ANALYSIS_LIST]: {
       toolbarControls: [],
       component: (width, height) => (
         <ProjectsListContainer
@@ -205,72 +213,75 @@ const SecondaryAnalysis = () => {
         />
       ),
     },
-    [PROJECT_DETAILS]: {
+    [ANALYSIS_DETAILS]: {
       toolbarControls: [],
       component: () => (
         <div style={{
           display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
         }}
         >
-          {activeSecondaryAnalysisId ? (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
-                <Space direction='vertical'>
-                  <Title level={4}>{secondaryAnalysis.name}</Title>
-                  <Text type='secondary'>
-                    {`Run ID: ${activeSecondaryAnalysisId}`}
-                  </Text>
-                </Space>
-                <Tooltip
-                  title={!isAllValid
-                    ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                    : undefined}
-                  placement='left'
-                >
-                  <Button
-                    type='primary'
-                    disabled={!isAllValid}
-                    size='large'
-                    style={{ marginBottom: '10px' }}
+          {activeSecondaryAnalysisId
+            ? (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
+                  <Space direction='vertical'>
+                    <Title level={4}>{secondaryAnalysis.name}</Title>
+                    <Text type='secondary'>
+                      {`Run ID: ${activeSecondaryAnalysisId}`}
+                    </Text>
+                  </Space>
+                  <Tooltip
+                    title={!isAllValid
+                      ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
+                      : undefined}
+                    placement='left'
                   >
-                    Run the pipeline
-                  </Button>
-                </Tooltip>
-              </div>
-              <Text strong>Description:</Text>
-              <div style={{ flex: 1, overflowY: 'auto' }}>
-                <EditableParagraph
-                  value={secondaryAnalysis.description || ''}
-                  onUpdate={(text) => {
-                    if (text !== secondaryAnalysis.description) {
-                      dispatch(
-                        updateSecondaryAnalysis(
-                          activeSecondaryAnalysisId,
-                          { description: text },
-                        ),
-                      );
-                    }
-                  }}
-                />
-                <OverviewMenu
-                  wizardSteps={secondaryAnalysisWizardSteps}
-                  setCurrentStep={setCurrentStepIndex}
-                />
-              </div>
-            </>
-          ) : (
-            <Empty description='Create a new run to get started' />
-          )}
+                    <Button
+                      type='primary'
+                      disabled={!isAllValid}
+                      size='large'
+                      style={{ marginBottom: '10px' }}
+                    >
+                      Run the pipeline
+                    </Button>
+                  </Tooltip>
+                </div>
+                <Text strong>Description:</Text>
+                <div style={{ flex: 1, overflowY: 'auto' }}>
+                  <EditableParagraph
+                    value={secondaryAnalysis.description || ''}
+                    onUpdate={(text) => {
+                      if (text !== secondaryAnalysis.description) {
+                        dispatch(
+                          updateSecondaryAnalysis(
+                            activeSecondaryAnalysisId,
+                            { description: text },
+                          ),
+                        );
+                      }
+                    }}
+                  />
+                  <OverviewMenu
+                    wizardSteps={secondaryAnalysisWizardSteps}
+                    setCurrentStep={setCurrentStepIndex}
+                  />
+                </div>
+              </>
+            ) : (
+              <Empty description='Create a new run to get started' />
+            )}
         </div>
       ),
     },
   };
+
   const windows = {
     direction: 'row',
-    first: PROJECTS_LIST,
-    second: PROJECT_DETAILS,
+    first: ANALYSIS_LIST,
+    second: ANALYSIS_DETAILS,
     splitPercentage: 23,
   };
+
   const handleNavigationWithConfirmation = (action) => {
     if (filesNotUploaded) {
       Modal.confirm({
@@ -283,6 +294,7 @@ const SecondaryAnalysis = () => {
       action();
     }
   };
+
   const onNext = () => handleNavigationWithConfirmation(() => {
     setCurrentStepIndex(currentStepIndex + 1);
     handleUpdateSecondaryAnalysisDetails();
@@ -298,6 +310,7 @@ const SecondaryAnalysis = () => {
     setCurrentStepIndex(null);
     handleUpdateSecondaryAnalysisDetails();
   });
+
   return (
     <>
       <Header title='Secondary Analysis' />

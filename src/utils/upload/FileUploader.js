@@ -11,12 +11,11 @@ import UploadStatus from 'utils/upload/UploadStatus';
 class FileUploader {
   constructor(
     file,
-    compress,
     chunkSize,
     uploadParams,
     abortController,
     onStatusUpdate,
-    retryPolicy,
+    options,
   ) {
     if (!file
       || !chunkSize
@@ -26,12 +25,13 @@ class FileUploader {
     ) {
       throw new Error('FileUploader: Missing required parameters');
     }
+    const { resumeUpload, compress, retryPolicy = 'normal' } = options;
 
     this.file = file;
     this.compress = compress;
     this.chunkSize = chunkSize;
     this.uploadParams = uploadParams;
-
+    this.resumeUpload = resumeUpload;
     this.retryPolicy = retryPolicy;
 
     // Upload related callbacks and handling
@@ -44,7 +44,7 @@ class FileUploader {
 
     // Locks to control the number of simultaneous uploads to avoid taking up too much ram
     this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
-    this.freeUploadSlots = 5;
+    this.freeUploadSlots = 3;
 
     // Used to assign partNumbers to each chunk
     this.partNumberIt = 0;
@@ -64,12 +64,28 @@ class FileUploader {
   }
 
   async upload() {
+    let offset = 0;
+    if (this.resumeUpload) {
+      const uploadedParts = await this.#getUploadedParts();
+      const nextPartNumber = uploadedParts.length + 1;
+      // setting all previous parts as uploaded
+      // this.uploadedPartPercentages.fill(1, 0, nextPartNumber - 1);
+      for (let i = 0; i < nextPartNumber - 1; i += 1) {
+        this.uploadedPartPercentages[i] = 1;
+        this.uploadedParts.push(uploadedParts[i]);
+      }
+
+      this.partNumberIt = nextPartNumber - 1;
+      this.pendingChunks = this.totalChunks - nextPartNumber + 1;
+      offset = this.partNumberIt * this.chunkSize;
+    }
+
     return new Promise((resolve, reject) => {
       this.resolve = resolve;
       this.reject = reject;
 
       this.readStream = filereaderStream(
-        this.file?.fileObject || this.file, { chunkSize: this.chunkSize },
+        this.file?.fileObject || this.file, { chunkSize: this.chunkSize, offset },
       );
 
       this.#setupReadStreamHandlers();
@@ -97,12 +113,29 @@ class FileUploader {
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
-
-    const queryParams = new URLSearchParams({ bucket, key });
+    const queryParams = new URLSearchParams({
+      bucket,
+      key,
+    });
     const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
 
     return await fetchAPI(url, { method: 'GET' });
   };
+
+  #getUploadedParts = async () => {
+    const {
+      projectId, uploadId, bucket, key,
+    } = this.uploadParams;
+
+    const queryParams = new URLSearchParams({
+      bucket,
+      key,
+    });
+
+    const url = `/v2/projects/${projectId}/upload/${uploadId}/getUploadedParts?${queryParams}`;
+
+    return await fetchAPI(url, { method: 'GET' });
+  }
 
   #createOnUploadProgress = (partNumber) => (progress) => {
     // partNumbers are 1-indexed, so we need to subtract 1 for the array index
@@ -180,7 +213,6 @@ class FileUploader {
     // This assigns a part number to each chunk that arrives
     // They are read in order, so it should be safe
     this.partNumberIt += 1;
-
     try {
       await this.#uploadChunk(chunk, this.partNumberIt);
 
@@ -206,7 +238,7 @@ class FileUploader {
       console.log('thisfreeUploadSlotsLOCKING');
       console.log(this.freeUploadSlots);
 
-      if (this.freeUploadSlots === 0) {
+      if (this.freeUploadSlots <= 0) {
         // We need to wait for some uploads to finish before we can continue
         this.readStream.pause();
       }

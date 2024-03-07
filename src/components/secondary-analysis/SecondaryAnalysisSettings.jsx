@@ -12,7 +12,7 @@ const kitToMaxSublibrariesMap = {
   wt_mega: 16,
 };
 
-const SecondaryAnalysisDetails = (props) => {
+const SecondaryAnalysisSettings = (props) => {
   const { onDetailsChanged, secondaryAnalysis } = props;
   const [maxSublibraries, setMaxSublibraries] = useState();
   const [formValues, setFormValues] = useState({});
@@ -144,9 +144,9 @@ const SecondaryAnalysisDetails = (props) => {
   );
 };
 
-SecondaryAnalysisDetails.propTypes = {
+SecondaryAnalysisSettings.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
   secondaryAnalysis: propTypes.object.isRequired,
 };
 
-export default SecondaryAnalysisDetails;
+export default SecondaryAnalysisSettings;
