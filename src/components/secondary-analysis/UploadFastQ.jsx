@@ -51,17 +51,26 @@ const UploadFastQ = (props) => {
 
   // we save the file handles to the cache
   // The dropzone component couldn't be used as it doesn't support file handle
+  const getAllFiles = async (entry) => {
+    const files = [];
+    if (entry.kind === 'file') {
+      files.push(entry);
+    } else if (entry.kind === 'directory') {
+      for await (const currEntry of entry.values()) {
+        const nestedFiles = await getAllFiles(currEntry);
+        files.push(...nestedFiles);
+      }
+    }
+    return files;
+  };
+
   const onDrop = async (e) => {
     e.preventDefault();
     const { items } = e.dataTransfer;
     const files = await Promise.all(Array.from(items).map(async (item) => {
       const entry = await item.getAsFileSystemHandle();
-      if (entry.kind === 'file') {
-        return entry;
-      } if (entry.kind === 'directory') {
-        const subFiles = await getAllFilesFromDirectory(entry);
-        return subFiles;
-      }
+      const subFiles = await getAllFiles(entry);
+      return subFiles;
     }));
     setFileHandlesList(files.flat());
   };

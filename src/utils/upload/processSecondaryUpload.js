@@ -56,7 +56,8 @@ const resumeUpload = async (secondaryAnalysisId, fileId, dispatch) => {
     // Request permission to access the file
     const permissionStatus = await fileHandle.requestPermission({ mode: 'read' });
     if (permissionStatus !== 'granted') {
-      throw new Error('Permission to access the file was not granted');
+      // If permission is not granted, throw a specific error for permission.
+      throw new Error('PermissionError: Permission to access the file was not granted');
     }
 
     const file = await fileHandle.getFile();
@@ -66,7 +67,11 @@ const resumeUpload = async (secondaryAnalysisId, fileId, dispatch) => {
     );
   } catch (e) {
     console.trace('Error resuming upload:', e);
-    pushNotificationMessage('error', 'We could not resume the upload of this file. The file might be deleted or moved to another directory');
+    if (e.message.startsWith('PermissionError')) {
+      pushNotificationMessage('error', 'Permission to access the file was not granted. Please check the file permissions and try again.');
+    } else {
+      pushNotificationMessage('error', 'We could not resume the upload of this file. The file might be deleted, renamed or moved to another directory');
+    }
   }
 };
 
