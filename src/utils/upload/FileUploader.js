@@ -44,7 +44,7 @@ class FileUploader {
 
     // Locks to control the number of simultaneous uploads to avoid taking up too much ram
     this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
-    this.freeUploadSlots = 5;
+    this.freeUploadSlots = 3;
 
     // Used to assign partNumbers to each chunk
     this.partNumberIt = 0;
