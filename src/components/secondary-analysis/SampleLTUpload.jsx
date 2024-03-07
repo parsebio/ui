@@ -10,9 +10,11 @@ import {
 import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
-import { CheckCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
+import { CheckCircleTwoTone, DeleteOutlined, WarningOutlined } from '@ant-design/icons';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
+import endUserMessages from 'utils/endUserMessages';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 
 const { Text } = Typography;
@@ -22,8 +24,23 @@ const SampleLTUpload = (props) => {
     secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId, setFilesNotUploaded,
   } = props;
   const [file, setFile] = useState(false);
-  const onDrop = async (droppedFile) => {
-    setFile(droppedFile[0]);
+  const [invalidInputWarnings, setInvalidInputWarnings] = useState([]);
+
+  const onDrop = async (droppedFiles) => {
+    const warnings = [];
+
+    const validFiles = droppedFiles.filter((f) => f.name.endsWith('.xlsm'));
+
+    if (validFiles.length === 0) {
+      warnings.push(endUserMessages.ERROR_FAILED_SLT_FILE);
+    }
+    if (validFiles.length > 1) {
+      warnings.push(endUserMessages.ERROR_MULTIPLE_SLT_FILES);
+      validFiles.splice(1); // Keep only the first valid file
+    }
+
+    setInvalidInputWarnings(warnings);
+    setFile(validFiles.length > 0 ? validFiles[0] : false);
   };
 
   useEffect(() => {
@@ -54,6 +71,25 @@ const SampleLTUpload = (props) => {
           )}
           name='projectName'
         >
+          {(invalidInputWarnings.length > 0) && (
+            <div>
+              {invalidInputWarnings.map((warning) => (
+                <center style={{ cursor: 'pointer' }}>
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
+                  <Text>
+                    {' '}
+                    {warning}
+                    <br />
+                  </Text>
+                </center>
+              ))}
+              <br />
+            </div>
+          )}
           <Dropzone onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
               <div
