@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect, useCallback, useRef,
+} from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip,
 } from 'antd';
@@ -14,7 +16,7 @@ import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
 import {
   loadSecondaryAnalyses, updateSecondaryAnalysis,
-  createSecondaryAnalysis, loadSecondaryAnalysisFiles,
+  createSecondaryAnalysis, loadSecondaryAnalysisFiles, loadSecondaryAnalysisStatus,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
@@ -22,7 +24,7 @@ import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
-import { resumeUpload } from 'utils/upload/processSecondaryUpload';
+import Loader from 'components/Loader';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -49,6 +51,10 @@ const SecondaryAnalysis = () => {
   const secondaryAnalysisFiles = secondaryAnalysis?.files.data ?? {};
   const filesLoading = secondaryAnalysis?.files.loading;
 
+  const secondaryAnalysisStatusLoading = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status.loading,
+  );
+
   useEffect(() => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
   }, [user]);
@@ -57,6 +63,24 @@ const SecondaryAnalysis = () => {
     if (activeSecondaryAnalysisId && _.isEmpty(secondaryAnalysisFiles)) {
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
     }
+  }, [activeSecondaryAnalysisId]);
+
+  const timeRef = useRef(null);
+
+  const pollStatus = useCallback(() => {
+    timeRef.current = setTimeout(async () => {
+      console.log(`loading status ${activeSecondaryAnalysisId}`);
+      // Wait until current fetch finished before starting the timer for the next one
+      await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
+      pollStatus();
+    }, 5000);
+  }, [activeSecondaryAnalysisId]);
+
+  useEffect(() => {
+    pollStatus();
+
+    // When we leave this page, stop polling
+    return () => clearTimeout(timeRef.current);
   }, [activeSecondaryAnalysisId]);
 
   const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
@@ -220,8 +244,8 @@ const SecondaryAnalysis = () => {
           display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
         }}
         >
-          {activeSecondaryAnalysisId
-            ? (
+          {
+            activeSecondaryAnalysisId ? (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
                   <Space direction='vertical'>
@@ -240,6 +264,7 @@ const SecondaryAnalysis = () => {
                       type='primary'
                       disabled={!isAllValid}
                       style={{ marginBottom: '10px' }}
+                      loading={secondaryAnalysisStatusLoading}
                     >
                       Run the pipeline
                     </Button>
@@ -266,9 +291,8 @@ const SecondaryAnalysis = () => {
                   />
                 </div>
               </>
-            ) : (
-              <Empty description='Create a new run to get started' />
-            )}
+            ) : <Empty description='Create a new run to get started' />
+          }
         </div>
       ),
     },
