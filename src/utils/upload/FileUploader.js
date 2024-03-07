@@ -11,12 +11,11 @@ import UploadStatus from 'utils/upload/UploadStatus';
 class FileUploader {
   constructor(
     file,
-    compress,
     chunkSize,
     uploadParams,
     abortController,
     onStatusUpdate,
-    retryPolicy,
+    options,
   ) {
     if (!file
       || !chunkSize
@@ -26,12 +25,13 @@ class FileUploader {
     ) {
       throw new Error('FileUploader: Missing required parameters');
     }
+    const { resumeUpload, compress, retryPolicy = 'normal' } = options;
 
     this.file = file;
     this.compress = compress;
     this.chunkSize = chunkSize;
     this.uploadParams = uploadParams;
-
+    this.resumeUpload = resumeUpload;
     this.retryPolicy = retryPolicy;
 
     // Upload related callbacks and handling
@@ -65,7 +65,7 @@ class FileUploader {
 
   async upload() {
     let offset = 0;
-    if (this.uploadParams.resumeUpload) {
+    if (this.resumeUpload) {
       const uploadedParts = await this.#getUploadedParts();
       const nextPartNumber = uploadedParts.length + 1;
       // setting all previous parts as uploaded
