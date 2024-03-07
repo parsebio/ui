@@ -24,7 +24,7 @@ import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
-import Loader from 'components/Loader';
+import usePolling from 'utils/customHooks/usePolling';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -65,23 +65,9 @@ const SecondaryAnalysis = () => {
     }
   }, [activeSecondaryAnalysisId]);
 
-  const timeRef = useRef(null);
-
-  const pollStatus = useCallback(() => {
-    timeRef.current = setTimeout(async () => {
-      console.log(`loading status ${activeSecondaryAnalysisId}`);
-      // Wait until current fetch finished before starting the timer for the next one
-      await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
-      pollStatus();
-    }, 5000);
-  }, [activeSecondaryAnalysisId]);
-
-  useEffect(() => {
-    pollStatus();
-
-    // When we leave this page, stop polling
-    return () => clearTimeout(timeRef.current);
-  }, [activeSecondaryAnalysisId]);
+  usePolling(async () => {
+    await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
+  }, [activeSecondaryAnalysisId], { intervalMs: 5000 });
 
   const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
 
