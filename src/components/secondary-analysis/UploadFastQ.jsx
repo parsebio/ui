@@ -63,10 +63,6 @@ const UploadFastQ = (props) => {
       return true;
     });
 
-    // const valid = validFiles.filter((file) => !files.valid.some((validFile) => validFile.name === file.name));
-    // invalidFiles = invalidFiles.filter((file) => !files.invalid.some((invalidFile) => invalidFile.path === file.path));
-
-    // Add definition of invalid
     setFiles({
       valid: _.uniqBy([...files.valid, ...validFiles], 'path'),
       invalid: _.uniqBy([...files.invalid, ...invalidFiles], 'path'),
