@@ -23,6 +23,7 @@ import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
+import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -38,7 +39,7 @@ const keyToTitle = {
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
-  const [secondaryAnalysisDetailsDiff, setNewSecondaryAnalysisDetailsDiff] = useState({});
+  const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const user = useSelector((state) => state.user.current);
@@ -64,7 +65,7 @@ const SecondaryAnalysis = () => {
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
       dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
-      setNewSecondaryAnalysisDetailsDiff({});
+      setSecondaryAnalysisDetailsDiff({});
     }
   };
 
@@ -96,7 +97,13 @@ const SecondaryAnalysis = () => {
 
     const { name, upload, createdAt } = sampleLTFile;
     return mainScreenDetails({
-      name, status: <UploadStatusView status={upload.status} />, createdAt: <PrettyTime isoTime={createdAt} />,
+      name,
+      status: <UploadStatusView
+        status={upload.status}
+        fileId={sampleLTFile.id}
+        secondaryAnalysisId={activeSecondaryAnalysisId}
+      />,
+      createdAt: <PrettyTime isoTime={createdAt} />,
     });
   };
 
@@ -136,7 +143,7 @@ const SecondaryAnalysis = () => {
       key: 'Experimental setup',
       render: () => (
         <SecondaryAnalysisSettings
-          onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
+          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
           secondaryAnalysis={secondaryAnalysis}
         />
       ),
@@ -168,7 +175,7 @@ const SecondaryAnalysis = () => {
       key: 'Reference genome',
       render: () => (
         <SelectReferenceGenome
-          onDetailsChanged={setNewSecondaryAnalysisDetailsDiff}
+          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
           secondaryAnalysis={secondaryAnalysis}
         />
       ),
@@ -214,56 +221,57 @@ const SecondaryAnalysis = () => {
           display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
         }}
         >
-          {activeSecondaryAnalysisId ? (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
-                <Space direction='vertical'>
-                  <Title level={4}>{secondaryAnalysis.name}</Title>
-                  <Text type='secondary'>
-                    {`Run ID: ${activeSecondaryAnalysisId}`}
-                  </Text>
-                </Space>
-                <Tooltip
-                  title={!isAllValid
-                    ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                    : undefined}
-                  placement='left'
-                >
-                  <Button
-                    type='primary'
-                    disabled={!isAllValid}
-                    size='large'
-                    style={{ marginBottom: '10px' }}
-                    onClick={() => dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))}
+          {activeSecondaryAnalysisId
+            ? (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
+                  <Space direction='vertical'>
+                    <Title level={4}>{secondaryAnalysis.name}</Title>
+                    <Text type='secondary'>
+                      {`Run ID: ${activeSecondaryAnalysisId}`}
+                    </Text>
+                  </Space>
+                  <Tooltip
+                    title={!isAllValid
+                      ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
+                      : undefined}
+                    placement='left'
                   >
-                    Run the pipeline
-                  </Button>
-                </Tooltip>
-              </div>
-              <Text strong>Description:</Text>
-              <div style={{ flex: 1, overflowY: 'auto' }}>
-                <EditableParagraph
-                  value={secondaryAnalysis.description || ''}
-                  onUpdate={(text) => {
-                    if (text !== secondaryAnalysis.description) {
-                      dispatch(
-                        updateSecondaryAnalysis(
-                          activeSecondaryAnalysisId,
-                          { description: text },
-                        ),
-                      );
-                    }
-                  }}
-                />
-                <OverviewMenu
-                  wizardSteps={secondaryAnalysisWizardSteps}
-                  setCurrentStep={setCurrentStepIndex}
-                />
-              </div>
-            </>
-          ) : (
-            <Empty description='Create a new run to get started' />
-          )}
+                    <Button
+                      type='primary'
+                      disabled={!isAllValid}
+                      size='large'
+                      style={{ marginBottom: '10px' }}
+                      onClick={() => dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))}
+                    >
+                      Run the pipeline
+                    </Button>
+                  </Tooltip>
+                </div>
+                <Text strong>Description:</Text>
+                <div style={{ flex: 1, overflowY: 'auto' }}>
+                  <EditableParagraph
+                    value={secondaryAnalysis.description || ''}
+                    onUpdate={(text) => {
+                      if (text !== secondaryAnalysis.description) {
+                        dispatch(
+                          updateSecondaryAnalysis(
+                            activeSecondaryAnalysisId,
+                            { description: text },
+                          ),
+                        );
+                      }
+                    }}
+                  />
+                  <OverviewMenu
+                    wizardSteps={secondaryAnalysisWizardSteps}
+                    setCurrentStep={setCurrentStepIndex}
+                  />
+                </div>
+              </>
+            ) : (
+              <Empty description='Create a new run to get started' />
+            )}
         </div>
       ),
     },
