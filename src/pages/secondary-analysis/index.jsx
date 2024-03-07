@@ -68,7 +68,7 @@ const SecondaryAnalysis = () => {
 
   usePolling(async () => {
     await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
-  }, [activeSecondaryAnalysisId], { intervalMs: 5000 });
+  }, [activeSecondaryAnalysisId], { interval: 5000 });
 
   const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
 

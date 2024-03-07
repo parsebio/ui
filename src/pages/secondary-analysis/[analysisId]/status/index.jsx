@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-props-no-spreading */
+import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -12,6 +13,7 @@ import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadSecondaryAnalyses, loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[analysisId]/status/getReports';
+import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 
 const AnalysisDetails = ({ analysisId }) => {
   const dispatch = useDispatch();
@@ -22,14 +24,23 @@ const AnalysisDetails = ({ analysisId }) => {
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[analysisId]);
 
   const setupReports = useCallback(async () => {
-    const htmls = await getReports();
+    const htmls = await getReports(analysisId);
 
     setReportOptions(htmls);
     setSelectedReport(Object.keys(htmls)[0]);
   }, [analysisId]);
 
+  useConditionalEffect(() => {
+    if (!secondaryAnalysis) { return; }
+
+    dispatch(loadSecondaryAnalysisStatus(analysisId));
+  }, [Boolean(secondaryAnalysis)]);
+
   useEffect(() => {
-    if (!analysisId) return;
+    if (
+      !secondaryAnalysis
+      || secondaryAnalysis?.status.current !== 'COMPLETED'
+    ) return;
 
     setupReports();
   }, [analysisId]);
@@ -44,13 +55,11 @@ const AnalysisDetails = ({ analysisId }) => {
 
   useEffect(() => {
     dispatch(loadSecondaryAnalyses());
-  });
+  }, []);
 
   usePolling(async () => {
-    if (!secondaryAnalysis) return;
-
     await dispatch(loadSecondaryAnalysisStatus(analysisId));
-  }, [analysisId]);
+  }, [analysisId], { interval: 5000 });
 
   if (selectedReport === null) return <></>;
 

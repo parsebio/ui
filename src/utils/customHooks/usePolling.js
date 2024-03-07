@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 
 const usePolling = (callback, dependencies, options = {}) => {
-  const { intervalMs = 30000, lazy = false } = options;
+  const { interval = 30000, lazy = false } = options;
 
   const timerRef = useRef(null);
 
@@ -10,7 +10,7 @@ const usePolling = (callback, dependencies, options = {}) => {
       // Wait until current fetch finished before starting the timer for the next one
       await callback();
       scheduleCallback();
-    }, intervalMs);
+    }, interval);
   }, dependencies);
 
   useEffect(() => {
