@@ -5,6 +5,10 @@ import {
 } from 'antd';
 import propTypes from 'prop-types';
 
+import genomes from 'utils/genomes.json';
+
+const genomeOptions = genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name }));
+
 const SelectReferenceGenome = (props) => {
   const { secondaryAnalysis, onDetailsChanged } = props;
   const [refGenome, setRefGenome] = useState();
@@ -21,8 +25,6 @@ const SelectReferenceGenome = (props) => {
     setRefGenome(value);
   };
 
-  const refGenomes = ['Human: GRCh38', 'Mouse: GRCm39'];
-  const refGenomeOptions = refGenomes.map((genome) => ({ label: genome, value: genome }));
   return (
     <>
       <div>
@@ -34,7 +36,7 @@ const SelectReferenceGenome = (props) => {
         value={refGenome}
         placeholder='Select the reference genome'
         onChange={changeRefGenome}
-        options={refGenomeOptions}
+        options={genomeOptions}
       />
     </>
   );
