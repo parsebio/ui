@@ -13,7 +13,6 @@ import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[analysisId]/status/getReports';
-import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
 
@@ -31,12 +30,6 @@ const AnalysisDetails = ({ analysisId }) => {
     setReports(htmls);
     setSelectedReport(Object.keys(htmls)[0]);
   }, [analysisId]);
-
-  useConditionalEffect(() => {
-    if (!secondaryAnalysis) { return; }
-
-    dispatch(loadSecondaryAnalysisStatus(analysisId));
-  }, [Boolean(secondaryAnalysis)]);
 
   useEffect(() => {
     if (secondaryAnalysis.status.current !== 'finished') return;
