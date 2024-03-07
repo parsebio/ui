@@ -62,6 +62,7 @@ const SecondaryAnalysis = () => {
   useEffect(() => {
     if (activeSecondaryAnalysisId && _.isEmpty(secondaryAnalysisFiles)) {
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
+      dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
     }
   }, [activeSecondaryAnalysisId]);
 
