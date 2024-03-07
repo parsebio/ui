@@ -115,7 +115,7 @@ class FileUploader {
     } = this.uploadParams;
     const queryParams = new URLSearchParams({
       bucket,
-      key,
+      key: encodeURIComponent(key),
     });
     const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
 
@@ -129,7 +129,7 @@ class FileUploader {
 
     const queryParams = new URLSearchParams({
       bucket,
-      key,
+      key: encodeURIComponent(key),
     });
 
     const url = `/v2/projects/${projectId}/upload/${uploadId}/getUploadedParts?${queryParams}`;
