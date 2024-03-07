@@ -165,7 +165,7 @@ const NewProjectModal = ({ projectType, onCreate, onCancel }) => {
 };
 
 NewProjectModal.propTypes = {
-  projectType: PropTypes.oneOf(['secondaryAnalyses', 'experiment']).isRequired,
+  projectType: PropTypes.oneOf(['secondaryAnalyses', 'experiments']).isRequired,
   onCreate: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };

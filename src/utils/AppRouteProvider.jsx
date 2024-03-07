@@ -26,7 +26,12 @@ import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiv
  * as it will bypass the route checks and middlewares.
  */
 
-const PATH_STUBS = {
+const PATH_REGEX = {
+  // TODO The order of this matters because setCurrentModule
+  // This is something that needs to be refactored,
+  // we shouldn't depend on order of an object's entries
+  // Objects don't guarantee preservation of any kind of order
+  [modules.SECONDARY_ANALYSIS_OUTPUT]: '/status',
   [modules.SECONDARY_ANALYSIS]: '/secondary-analysis',
   [modules.DATA_MANAGEMENT]: '/data-management',
   [modules.REPOSITORY]: '/repository',
@@ -38,13 +43,14 @@ const PATH_STUBS = {
 };
 
 const PATHS = {
-  [modules.SECONDARY_ANALYSIS]: `${PATH_STUBS[modules.SECONDARY_ANALYSIS]}`,
-  [modules.DATA_MANAGEMENT]: `${PATH_STUBS[modules.DATA_MANAGEMENT]}`,
-  [modules.REPOSITORY]: `${PATH_STUBS[modules.REPOSITORY]}`,
-  [modules.DATA_PROCESSING]: `/experiments/[experimentId]${PATH_STUBS[modules.DATA_PROCESSING]}`,
-  [modules.DATA_EXPLORATION]: `/experiments/[experimentId]${PATH_STUBS[modules.DATA_EXPLORATION]}`,
-  [modules.PLOTS_AND_TABLES]: `/experiments/[experimentId]${PATH_STUBS[modules.PLOTS_AND_TABLES]}`,
-  [modules.SETTINGS]: `${PATH_STUBS[modules.DATA_MANAGEMENT]}/[settingsName]`,
+  [modules.SECONDARY_ANALYSIS]: `${PATH_REGEX[modules.SECONDARY_ANALYSIS]}`,
+  [modules.SECONDARY_ANALYSIS_OUTPUT]: `/secondary-analysis/[analysisId]${PATH_REGEX[modules.SECONDARY_ANALYSIS_OUTPUT]}`,
+  [modules.DATA_MANAGEMENT]: `${PATH_REGEX[modules.DATA_MANAGEMENT]}`,
+  [modules.REPOSITORY]: `${PATH_REGEX[modules.REPOSITORY]}`,
+  [modules.DATA_PROCESSING]: `/experiments/[experimentId]${PATH_REGEX[modules.DATA_PROCESSING]}`,
+  [modules.DATA_EXPLORATION]: `/experiments/[experimentId]${PATH_REGEX[modules.DATA_EXPLORATION]}`,
+  [modules.PLOTS_AND_TABLES]: `/experiments/[experimentId]${PATH_REGEX[modules.PLOTS_AND_TABLES]}`,
+  [modules.SETTINGS]: `${PATH_REGEX[modules.DATA_MANAGEMENT]} /[settingsName]`,
 };
 
 const AppRouterContext = React.createContext(null);
@@ -58,7 +64,7 @@ const AppRouteProvider = (props) => {
   const [currentModule, setCurrentModule] = useState(module.DATA_MANAGEMENT);
 
   useEffect(() => {
-    const [moduleName] = Object.entries(PATH_STUBS).find(
+    const [moduleName] = Object.entries(PATH_REGEX).find(
       ([, path]) => router.pathname.match(path),
     );
 
@@ -79,15 +85,17 @@ const AppRouteProvider = (props) => {
   };
 
   const handleRouteChange = async (previousRoute, module, params, ignoreIntercepts, hardLoad) => {
-    const nextRoute = PATHS[module].replace('[experimentId]', params.experimentId);
+    const nextRoute = PATHS[module]
+      .replace('[experimentId]', params.experimentId)
+      .replace('[analysisId]', params.analysisId);
 
-    if (nextRoute.match(PATH_STUBS.REPOSITORY)) {
+    if (nextRoute.match(PATH_REGEX.REPOSITORY)) {
       router.push(nextRoute);
       return;
     }
 
     if (
-      previousRoute.match(PATH_STUBS.DATA_PROCESSING)
+      previousRoute.match(PATH_REGEX.DATA_PROCESSING)
       && changedQCFilters.size > 0
       && !ignoreIntercepts
     ) {
@@ -95,11 +103,12 @@ const AppRouteProvider = (props) => {
       return;
     }
 
-    if (previousRoute.match(PATH_STUBS.DATA_MANAGEMENT && nextRoute !== PATH_STUBS.SECONDARY_ANALYSIS)) {
+    if (previousRoute.match(PATH_REGEX.DATA_MANAGEMENT) && !nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS)) {
       const { experimentId } = params;
       dispatch(switchExperiment(experimentId));
     }
-    if (nextRoute.match(PATH_STUBS.SECONDARY_ANALYSIS)) {
+
+    if (nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS)) {
       await dispatch(loadSecondaryAnalyses());
 
       // TODO check if this will be needed
@@ -107,7 +116,8 @@ const AppRouteProvider = (props) => {
         dispatch(setActiveSecondaryAnalysis(params.secondaryAnalysisId));
       }
     }
-    if (nextRoute.match(PATH_STUBS.DATA_MANAGEMENT)) {
+
+    if (nextRoute.match(PATH_REGEX.DATA_MANAGEMENT)) {
       await dispatch(loadExperiments());
 
       if (params.experimentId) {

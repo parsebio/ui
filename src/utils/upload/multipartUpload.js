@@ -6,12 +6,11 @@ import FileUploader from './FileUploader';
 const uploadFileToS3 = async (
   projectId,
   file,
-  compress,
   uploadUrlParams,
   type,
   abortController,
   onStatusUpdate,
-  retryPolicy = 'normal',
+  options,
 ) => {
   const {
     uploadId, bucket, key,
@@ -31,7 +30,7 @@ const uploadFileToS3 = async (
   let parts;
   try {
     parts = await processMultipartUpload(
-      file, compress, partUploadParams, abortController, onStatusUpdate, retryPolicy,
+      file, partUploadParams, abortController, onStatusUpdate, options,
     );
   } catch (e) {
     // Return silently, the error is handled in the onStatusUpdate callback
@@ -48,16 +47,15 @@ const uploadFileToS3 = async (
 };
 
 const processMultipartUpload = async (
-  file, compress, uploadParams, abortController, onStatusUpdate, retryPolicy,
+  file, uploadParams, abortController, onStatusUpdate, options,
 ) => {
   const fileUploader = new FileUploader(
     file,
-    compress,
     fileUploadConfig.chunkSize,
     uploadParams,
     abortController,
     onStatusUpdate,
-    retryPolicy,
+    options,
   );
 
   const parts = await fileUploader.upload();
