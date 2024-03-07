@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadSecondaryAnalyses, loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[analysisId]/status/getReports';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
+import PreloadContent from 'components/PreloadContent';
+import Loader from 'components/Loader';
 
 const AnalysisDetails = ({ analysisId }) => {
   const dispatch = useDispatch();
@@ -39,7 +41,7 @@ const AnalysisDetails = ({ analysisId }) => {
   useEffect(() => {
     if (
       !secondaryAnalysis
-      || secondaryAnalysis?.status.current !== 'COMPLETED'
+      || secondaryAnalysis?.status.current !== 'finished'
     ) return;
 
     setupReports();
@@ -53,15 +55,25 @@ const AnalysisDetails = ({ analysisId }) => {
     downloadFromUrl(signedUrl, 'all_outputs.zip');
   }, [analysisId]);
 
-  useEffect(() => {
-    dispatch(loadSecondaryAnalyses());
-  }, []);
-
   usePolling(async () => {
     await dispatch(loadSecondaryAnalysisStatus(analysisId));
   }, [analysisId]);
 
-  if (selectedReport === null) return <></>;
+  if (!secondaryAnalysis || secondaryAnalysis?.status.loading) {
+    return <PreloadContent />;
+  }
+
+  if (secondaryAnalysis.status.current === 'NOT_CREATED') {
+    return "Analysis hasn't been created yet";
+  }
+
+  if (secondaryAnalysis.status.current === 'running') {
+    return 'Analysis still running';
+  }
+
+  if (reportOptions === null) {
+    return <Loader />;
+  }
 
   return (
     <>
