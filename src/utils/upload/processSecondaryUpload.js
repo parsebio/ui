@@ -10,6 +10,7 @@ const uploadSecondaryAnalysisFile = async (
   secondaryAnalysisId,
   uploadUrlParams,
   dispatch,
+  resumeUpload = false,
 ) => {
   const onUpdateUploadStatus = (status, percentProgress = 0) => {
     dispatch(updateSecondaryAnalysisFile(
@@ -20,15 +21,20 @@ const uploadSecondaryAnalysisFile = async (
   const shouldCompress = await getShouldCompress(file);
   onUpdateUploadStatus(UploadStatus.UPLOADING);
 
+  const options = {
+    retryPolicy: 'exponentialBackoff',
+    resumeUpload,
+    compress: shouldCompress,
+  };
+
   return uploadFileToS3(
     secondaryAnalysisId,
     file,
-    shouldCompress,
     uploadUrlParams,
     'secondaryAnalysis',
     new AbortController(),
     onUpdateUploadStatus,
-    'exponentialBackoff',
+    options,
   );
 };
 
@@ -63,7 +69,7 @@ const resumeUpload = async (secondaryAnalysisId, fileId, dispatch) => {
     const file = await fileHandle.getFile();
 
     await uploadSecondaryAnalysisFile(
-      file, secondaryAnalysisId, { ...uploadUrlParams, resumeUpload: true }, dispatch,
+      file, secondaryAnalysisId, uploadUrlParams, dispatch, true,
     );
   } catch (e) {
     console.trace('Error resuming upload:', e);

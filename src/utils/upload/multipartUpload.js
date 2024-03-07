@@ -6,16 +6,17 @@ import FileUploader from './FileUploader';
 const uploadFileToS3 = async (
   projectId,
   file,
-  compress,
   uploadUrlParams,
   type,
   abortController,
   onStatusUpdate,
-  retryPolicy = 'normal',
+  options,
 ) => {
   const {
-    uploadId, bucket, key, resumeUpload,
+    uploadId, bucket, key,
   } = uploadUrlParams;
+
+  const { resumeUpload, compress, retryPolicy = 'normal' } = options;
 
   if (!uploadId || !bucket || !key) {
     throw new Error('uploadUrlParams must contain uploadId, bucket, and key');
