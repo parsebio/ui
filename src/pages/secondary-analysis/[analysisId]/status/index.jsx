@@ -63,7 +63,7 @@ const AnalysisDetails = ({ analysisId }) => {
     return <PreloadContent />;
   }
 
-  if (secondaryAnalysis.status.current === 'NOT_CREATED') {
+  if (secondaryAnalysis.status.current === 'not_created') {
     return "Analysis hasn't been created yet";
   }
 
