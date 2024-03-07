@@ -11,11 +11,11 @@ import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadSecondaryAnalyses, loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
+import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[analysisId]/status/getReports';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import PreloadContent from 'components/PreloadContent';
-import Loader from 'components/Loader';
+import { fastLoad } from 'components/Loader';
 
 const AnalysisDetails = ({ analysisId }) => {
   const dispatch = useDispatch();
@@ -39,17 +39,12 @@ const AnalysisDetails = ({ analysisId }) => {
   }, [Boolean(secondaryAnalysis)]);
 
   useEffect(() => {
-    if (
-      !secondaryAnalysis
-      || secondaryAnalysis?.status.current !== 'finished'
-    ) return;
+    if (secondaryAnalysis?.status.current !== 'finished') return;
 
     setupReports();
   }, [analysisId]);
 
   const downloadAllOutputs = useCallback(async () => {
-    if (!analysisId) return;
-
     const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/output`);
 
     downloadFromUrl(signedUrl, 'all_outputs.zip');
@@ -59,7 +54,7 @@ const AnalysisDetails = ({ analysisId }) => {
     await dispatch(loadSecondaryAnalysisStatus(analysisId));
   }, [analysisId]);
 
-  if (!secondaryAnalysis || secondaryAnalysis?.status.loading) {
+  if (secondaryAnalysis?.status.loading) {
     return <PreloadContent />;
   }
 
@@ -72,7 +67,7 @@ const AnalysisDetails = ({ analysisId }) => {
   }
 
   if (reportOptions === null) {
-    return <Loader />;
+    return fastLoad('Getting reports...');
   }
 
   return (
