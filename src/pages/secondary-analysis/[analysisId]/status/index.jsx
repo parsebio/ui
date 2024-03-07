@@ -59,7 +59,7 @@ const AnalysisDetails = ({ analysisId }) => {
 
   usePolling(async () => {
     await dispatch(loadSecondaryAnalysisStatus(analysisId));
-  }, [analysisId], { interval: 5000 });
+  }, [analysisId]);
 
   if (selectedReport === null) return <></>;
 
