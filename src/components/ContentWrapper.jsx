@@ -353,8 +353,12 @@ const ContentWrapper = (props) => {
       icon: <CodeSandboxOutlined />,
       name: 'Pipeline Output',
       getDisabled: () => (
-        analysisStatus
-        && currentModule === modules.SECONDARY_ANALYSIS && analysisStatus === 'not_created'
+        !activeSecondaryAnalysisId
+        || (analysisStatus
+          && analysisStatus === 'not_created'
+          && currentModule === modules.SECONDARY_ANALYSIS
+        )
+
       ),
       disableIfNoExperiment: false,
       disabledByPipelineStatus: true,
