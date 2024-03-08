@@ -51,9 +51,11 @@ const SecondaryAnalysis = () => {
   const secondaryAnalysisFiles = secondaryAnalysis?.files.data ?? {};
   const filesLoading = secondaryAnalysis?.files.loading;
 
-  const secondaryAnalysisStatusLoading = useSelector(
-    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status.loading,
+  const { loading: statusLoading, current: currentStatus } = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
   );
+
+  const pipelineCanBeRun = currentStatus === 'not_created';
 
   useEffect(() => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
@@ -250,14 +252,24 @@ const SecondaryAnalysis = () => {
                       : undefined}
                     placement='left'
                   >
-                    <Button
-                      type='primary'
-                      disabled={!isAllValid}
-                      style={{ marginBottom: '10px' }}
-                      loading={secondaryAnalysisStatusLoading}
-                    >
-                      Run the pipeline
-                    </Button>
+                    {pipelineCanBeRun ? (
+                      <Button
+                        type='primary'
+                        disabled={!isAllValid}
+                        style={{ marginBottom: '10px' }}
+                        loading={statusLoading}
+                      >
+                        Run the pipeline
+                      </Button>
+                    ) : (
+                      <Button
+                        type='primary'
+                        style={{ marginBottom: '10px' }}
+                        loading={statusLoading}
+                      >
+                        Go to status
+                      </Button>
+                    )}
                   </Tooltip>
                 </div>
                 <Text strong>Description:</Text>
@@ -278,6 +290,7 @@ const SecondaryAnalysis = () => {
                   <OverviewMenu
                     wizardSteps={secondaryAnalysisWizardSteps}
                     setCurrentStep={setCurrentStepIndex}
+                    editable={pipelineCanBeRun}
                   />
                 </div>
               </>
