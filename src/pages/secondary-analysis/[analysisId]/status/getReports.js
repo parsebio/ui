@@ -18,8 +18,8 @@ const getHtmlUrlsFromZip = async (fileBlob) => {
   return Object.fromEntries(htmlUrls);
 };
 
-const getReports = async (analysisId) => {
-  const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/reports`);
+const getReports = async (secondaryAnalysisId) => {
+  const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/reports`);
 
   const response = await fetch(signedUrl);
   const zip = await response.blob();

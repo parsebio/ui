@@ -8,7 +8,7 @@ import httpStatusCodes from 'utils/http/httpStatusCodes';
 
 const getAnalysisInfo = async (context, store, Auth) => {
   const { req, query } = context;
-  const { analysisId } = query;
+  const { secondaryAnalysisId } = query;
 
   if (store.getState().apiUrl) return;
 
@@ -26,7 +26,7 @@ const getAnalysisInfo = async (context, store, Auth) => {
 
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
-  const secondaryAnalysis = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}`,
+  const secondaryAnalysis = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`,
     {},
     { uiUrl: url, jwt });
 

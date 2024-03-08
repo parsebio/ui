@@ -471,7 +471,7 @@ const ContentWrapper = (props) => {
         || seuratCompleteDisable || nonExperimentModule || getDisabled(),
       onClick: () => navigateTo(
         module,
-        { experimentId: currentExperimentId, analysisId: currentAnalysisIdRef.current },
+        { experimentId: currentExperimentId, secondaryAnalysisId: currentAnalysisIdRef.current },
       ),
     };
   };

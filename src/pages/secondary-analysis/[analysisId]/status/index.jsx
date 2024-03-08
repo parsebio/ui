@@ -11,14 +11,14 @@ import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
-import getReports from 'pages/secondary-analysis/[analysisId]/status/getReports';
+import getReports from 'pages/secondary-analysis/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 
-const AnalysisDetails = ({ analysisId }) => {
+const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
 
   const { navigateTo } = useAppRouter();
@@ -26,14 +26,14 @@ const AnalysisDetails = ({ analysisId }) => {
   const [reports, setReports] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
 
-  const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[analysisId]);
+  const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
 
   const setupReports = useCallback(async () => {
-    const htmlUrls = await getReports(analysisId);
+    const htmlUrls = await getReports(secondaryAnalysisId);
 
     setReports(htmlUrls);
     setSelectedReport(Object.keys(htmlUrls)[0]);
-  }, [analysisId]);
+  }, [secondaryAnalysisId]);
 
   useEffect(() => {
     if (secondaryAnalysis.status.current !== 'finished') return;
@@ -42,14 +42,14 @@ const AnalysisDetails = ({ analysisId }) => {
   }, [secondaryAnalysis.status.current]);
 
   const downloadAllOutputs = useCallback(async () => {
-    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/output`);
+    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/output`);
 
     downloadFromUrl(signedUrl, 'all_outputs.zip');
-  }, [analysisId]);
+  }, [secondaryAnalysisId]);
 
   usePolling(async () => {
-    await dispatch(loadSecondaryAnalysisStatus(analysisId));
-  }, [analysisId]);
+    await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
+  }, [secondaryAnalysisId]);
 
   const renderDownloadAllOutputsButton = () => (
     <Button type='primary' onClick={downloadAllOutputs}>
@@ -132,7 +132,7 @@ const AnalysisDetails = ({ analysisId }) => {
 };
 
 AnalysisDetails.propTypes = {
-  analysisId: PropTypes.string.isRequired,
+  secondaryAnalysisId: PropTypes.string.isRequired,
 };
 
 export default AnalysisDetails;

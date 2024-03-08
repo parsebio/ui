@@ -304,7 +304,7 @@ const SecondaryAnalysis = () => {
                           onClick={() => (
                             navigateTo(
                               modules.SECONDARY_ANALYSIS_OUTPUT,
-                              { analysisId: activeSecondaryAnalysisId },
+                              { secondaryAnalysisId: activeSecondaryAnalysisId },
                             )
                           )}
                         >
