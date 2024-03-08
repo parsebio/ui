@@ -66,7 +66,7 @@ const SecondaryAnalysis = () => {
   );
 
   const pipelineCanBeRun = ['not_created', 'failed', 'cancelled', 'expired'].includes(currentStatus);
-  const pipelineStatusCanBeSeen = currentStatus !== 'not_created';
+  const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useEffect(() => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
@@ -276,7 +276,7 @@ const SecondaryAnalysis = () => {
                         </Button>
                       )}
 
-                      {pipelineStatusCanBeSeen && (
+                      {pipelineRunAccessible && (
                         <Button
                           type='primary'
                           style={{ marginBottom: '10px' }}
