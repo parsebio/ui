@@ -25,6 +25,8 @@ import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
 import usePolling from 'utils/customHooks/usePolling';
+import { modules } from 'utils/constants';
+import { useAppRouter } from 'utils/AppRouteProvider';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -85,6 +87,8 @@ const SecondaryAnalysis = () => {
   usePolling(async () => {
     await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
   }, [activeSecondaryAnalysisId]);
+
+  const { navigateTo } = useAppRouter();
 
   const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
 
@@ -283,6 +287,12 @@ const SecondaryAnalysis = () => {
                           type='primary'
                           style={{ marginBottom: '10px' }}
                           loading={statusLoading}
+                          onClick={() => (
+                            navigateTo(
+                              modules.SECONDARY_ANALYSIS_OUTPUT,
+                              { analysisId: activeSecondaryAnalysisId },
+                            )
+                          )}
                         >
                           Go to output
                         </Button>
