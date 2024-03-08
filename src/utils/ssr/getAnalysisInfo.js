@@ -6,7 +6,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import APIError from 'utils/errors/http/APIError';
 import httpStatusCodes from 'utils/http/httpStatusCodes';
 
-const getExperimentInfo = async (context, store, Auth) => {
+const getAnalysisInfo = async (context, store, Auth) => {
   const { req, query } = context;
   const { analysisId } = query;
 
@@ -45,4 +45,4 @@ const getExperimentInfo = async (context, store, Auth) => {
   return {};
 };
 
-export default getExperimentInfo;
+export default getAnalysisInfo;
