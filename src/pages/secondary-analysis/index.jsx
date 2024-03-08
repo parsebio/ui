@@ -27,6 +27,7 @@ import _ from 'lodash';
 import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
+import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -59,7 +60,9 @@ const SecondaryAnalysis = () => {
 
   const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
   const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
-  const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[activeSecondaryAnalysisId]);
+  const secondaryAnalysis = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId],
+  );
   const secondaryAnalysisFiles = secondaryAnalysis?.files.data ?? {};
   const filesLoading = secondaryAnalysis?.files.loading;
 
@@ -104,7 +107,14 @@ const SecondaryAnalysis = () => {
       const value = detailsObj[key];
       const title = keyToTitle[key];
       return (
-        <div key={key} style={{ display: 'flex', marginBottom: '10px' }}>
+        <div
+          key={key}
+          style={{
+            display: 'flex',
+            marginBottom: '10px',
+            overflow: 'hidden',
+          }}
+        >
           {title && (
             <span style={{ fontWeight: 'bold' }}>
               {`${title}:`}
@@ -220,6 +230,7 @@ const SecondaryAnalysis = () => {
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderFastqFileTable={() => renderFastqFileTable(true)}
           setFilesNotUploaded={setFilesNotUploaded}
+          secondaryAnalysisFiles={secondaryAnalysisFiles}
         />
       ),
       isValid: areFilesUploaded('fastq'),
@@ -277,6 +288,9 @@ const SecondaryAnalysis = () => {
                           disabled={!isAllValid}
                           style={{ marginBottom: '10px' }}
                           loading={statusLoading}
+                          onClick={
+                            () => dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
+                          }
                         >
                           Run the pipeline
                         </Button>
@@ -298,7 +312,6 @@ const SecondaryAnalysis = () => {
                         </Button>
                       )}
                     </Space>
-
                   </Tooltip>
                 </div>
                 <Text strong>Description:</Text>

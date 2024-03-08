@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space, Typography,
+  Button, Select, Space,
 } from 'antd';
 
 import fetchAPI from 'utils/http/fetchAPI';
@@ -29,10 +29,10 @@ const AnalysisDetails = ({ analysisId }) => {
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[analysisId]);
 
   const setupReports = useCallback(async () => {
-    const htmls = await getReports(analysisId);
+    const htmlUrls = await getReports(analysisId);
 
-    setReports(htmls);
-    setSelectedReport(Object.keys(htmls)[0]);
+    setReports(htmlUrls);
+    setSelectedReport(Object.keys(htmlUrls)[0]);
   }, [analysisId]);
 
   useEffect(() => {
@@ -125,7 +125,7 @@ const AnalysisDetails = ({ analysisId }) => {
         {renderDownloadAllOutputsButton()}
       </Space>
 
-      <iframe src={null} srcDoc={reports[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
+      <iframe src={reports[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
 
   );

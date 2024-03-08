@@ -28,13 +28,19 @@ const UploadStatusView = ({
   const [fileInCache, setFileInCache] = useState(null);
 
   useEffect(() => {
-    if (fileId && secondaryAnalysisId && status === UploadStatus.UPLOAD_PAUSED) {
+    if (fileId && secondaryAnalysisId && [
+      UploadStatus.UPLOAD_ERROR,
+      UploadStatus.UPLOAD_PAUSED,
+    ].includes(status)) {
       const file = cache.get(fileId) ?? null;
       setFileInCache(file);
     }
-  }, [fileId]);
+  }, [fileId, status]);
 
-  if (status === UploadStatus.UPLOAD_PAUSED && fileInCache) {
+  if (fileInCache && [
+    UploadStatus.UPLOAD_ERROR,
+    UploadStatus.UPLOAD_PAUSED,
+  ].includes(status)) {
     return (
       <div style={uploadDivStyle}>
         <Text type='warning'>{messageForStatus(status)}</Text>
