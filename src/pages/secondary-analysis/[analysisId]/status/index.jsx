@@ -54,15 +54,11 @@ const AnalysisDetails = ({ analysisId }) => {
     return <PreloadContent />;
   }
 
-  if (secondaryAnalysis.status.current === 'not_created') {
-    return "Analysis hasn't been created yet";
-  }
-
-  if (secondaryAnalysis.status.current === 'running') {
-    return (
-
-      <center style={{ width: '100%', height: '100%' }}>
-        <Space style={{ height: '100%' }}>
+  if (secondaryAnalysis.status.current !== 'finished') {
+    const messages = {
+      not_created: <Paragraph style={{ fontSize: '20px', width: '100%' }}>{'Analysis hasn\'t been executed yet'}</Paragraph>,
+      running: (
+        <>
           {fastLoad('')}
           <Paragraph style={{ fontSize: '20px', width: '50%' }}>
             The pipeline is running. You cannot change any settings until the run completes
@@ -72,9 +68,16 @@ const AnalysisDetails = ({ analysisId }) => {
             To elect to receive an email notification when your
             pipeline run is complete, ensure the toggle below is enabled.
           </Paragraph>
+        </>
+      ),
+    };
+
+    return (
+      <center style={{ width: '100%', height: '100%' }}>
+        <Space style={{ height: '100%' }}>
+          {messages[secondaryAnalysis.status.current]}
         </Space>
       </center>
-
     );
   }
 
