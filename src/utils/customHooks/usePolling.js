@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-const usePolling = (callback, dependencies, options = {}) => {
-  const { interval = 30000, lazy = false } = options;
-
+const usePolling = (callback, dependencies, interval = 30000) => {
   const timerRef = useRef(null);
 
   const scheduleCallback = useCallback(() => {
