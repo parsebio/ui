@@ -10,9 +10,6 @@ const getAnalysisInfo = async (context, store, Auth) => {
   const { req, query } = context;
   const { analysisId } = query;
 
-  console.log('analysisIdDebug');
-  console.log(analysisId);
-
   if (store.getState().apiUrl) return;
 
   let user;

@@ -15,12 +15,13 @@ import getReports from 'pages/secondary-analysis/[analysisId]/status/getReports'
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
 import Paragraph from 'antd/lib/typography/Paragraph';
-import Loader from 'react-spinners/BarLoader';
-
-const { Text } = Typography;
+import { useAppRouter } from 'utils/AppRouteProvider';
+import { modules } from 'utils/constants';
 
 const AnalysisDetails = ({ analysisId }) => {
   const dispatch = useDispatch();
+
+  const { navigateTo } = useAppRouter();
 
   const [reports, setReports] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
@@ -62,7 +63,12 @@ const AnalysisDetails = ({ analysisId }) => {
 
   if (secondaryAnalysis.status.current !== 'finished') {
     const messages = {
-      not_created: <Paragraph style={{ fontSize: '20px', width: '100%' }}>{'Analysis hasn\'t been executed yet'}</Paragraph>,
+      not_created: (
+        <Space direction='vertical'>
+          <Paragraph style={{ fontSize: '20px', width: '100%' }}>{'Analysis hasn\'t been executed yet'}</Paragraph>
+          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Analyses</Button>
+        </Space>
+      ),
       failed: (
         <Space direction='vertical'>
           <Paragraph style={{ fontSize: '20px', width: '100%' }}>
