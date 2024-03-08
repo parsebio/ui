@@ -50,6 +50,12 @@ const AnalysisDetails = ({ analysisId }) => {
     await dispatch(loadSecondaryAnalysisStatus(analysisId));
   }, [analysisId]);
 
+  const renderDownloadAllOutputsButton = () => (
+    <Button type='primary' onClick={downloadAllOutputs}>
+      Download all outputs
+    </Button>
+  );
+
   if (secondaryAnalysis?.status.loading) {
     return <PreloadContent />;
   }
@@ -57,6 +63,16 @@ const AnalysisDetails = ({ analysisId }) => {
   if (secondaryAnalysis.status.current !== 'finished') {
     const messages = {
       not_created: <Paragraph style={{ fontSize: '20px', width: '100%' }}>{'Analysis hasn\'t been executed yet'}</Paragraph>,
+      failed: (
+        <Space direction='vertical'>
+          <Paragraph style={{ fontSize: '20px', width: '100%' }}>
+            Your pipeline run failed.
+            The error logs can be accessed by downloading the pipeline output files.
+
+          </Paragraph>
+          {renderDownloadAllOutputsButton()}
+        </Space>
+      ),
       running: (
         <>
           {fastLoad('')}
@@ -100,9 +116,7 @@ const AnalysisDetails = ({ analysisId }) => {
           onChange={setSelectedReport}
           style={{ width: '300px' }}
         />
-        <Button type='primary' onClick={downloadAllOutputs}>
-          Download all outputs
-        </Button>
+        {renderDownloadAllOutputsButton()}
       </Space>
 
       <iframe src={null} srcDoc={reports[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
