@@ -1,10 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-props-no-spreading */
-import _ from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space,
+  Button, Select, Space, Typography,
 } from 'antd';
 
 import fetchAPI from 'utils/http/fetchAPI';
@@ -15,6 +14,10 @@ import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[analysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
+import Paragraph from 'antd/lib/typography/Paragraph';
+import Loader from 'react-spinners/BarLoader';
+
+const { Text } = Typography;
 
 const AnalysisDetails = ({ analysisId }) => {
   const dispatch = useDispatch();
@@ -55,8 +58,24 @@ const AnalysisDetails = ({ analysisId }) => {
     return "Analysis hasn't been created yet";
   }
 
-  if (secondaryAnalysis.status.current === 'running') {
-    return 'Analysis still running';
+  if (true || secondaryAnalysis.status.current === 'running') {
+    return (
+
+      <center style={{ width: '100%', height: '100%' }}>
+        <Space style={{ height: '100%' }}>
+          {fastLoad('')}
+          <Paragraph style={{ fontSize: '20px', width: '50%' }}>
+            The pipeline is running. You cannot change any settings until the run completes
+            <br />
+            <br />
+            <br />
+            To elect to receive an email notification when your
+            pipeline run is complete, ensure the toggle below is enabled.
+          </Paragraph>
+        </Space>
+      </center>
+
+    );
   }
 
   if (reports === null) {
