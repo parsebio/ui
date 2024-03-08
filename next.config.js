@@ -53,8 +53,8 @@ const nextConfig = {
         permanent: false,
       },
       {
-        source: '/secondary-analysis/:analysisId',
-        destination: '/secondary-analysis/:analysisId/status',
+        source: '/secondary-analysis/:secondaryAnalysisId',
+        destination: '/secondary-analysis/:secondaryAnalysisId/status',
         permanent: false,
       },
       {

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect,
+} from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip,
 } from 'antd';
@@ -14,7 +16,7 @@ import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
 import {
   loadSecondaryAnalyses, updateSecondaryAnalysis,
-  createSecondaryAnalysis, loadSecondaryAnalysisFiles,
+  createSecondaryAnalysis, loadSecondaryAnalysisFiles, loadSecondaryAnalysisStatus,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
@@ -22,8 +24,10 @@ import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
+import usePolling from 'utils/customHooks/usePolling';
+import { modules } from 'utils/constants';
+import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
-import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -36,6 +40,16 @@ const keyToTitle = {
   createdAt: 'Uploaded at',
 };
 
+const pipelineStatusToDisplay = {
+  not_created: 'Not started yet',
+  created: 'Created',
+  failed: 'Failed',
+  cancelled: 'Cancelled',
+  expired: 'Failed',
+  running: 'Running',
+  finished: 'Finished',
+};
+
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
@@ -46,19 +60,38 @@ const SecondaryAnalysis = () => {
 
   const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
   const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
-  const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[activeSecondaryAnalysisId]);
+  const secondaryAnalysis = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId],
+  );
   const secondaryAnalysisFiles = secondaryAnalysis?.files.data ?? {};
   const filesLoading = secondaryAnalysis?.files.loading;
+
+  const { loading: statusLoading, current: currentStatus } = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
+  );
+
+  const pipelineCanBeRun = ['not_created', 'failed', 'cancelled', 'expired'].includes(currentStatus);
+  const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useEffect(() => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
   useEffect(() => {
+    if (activeSecondaryAnalysisId) {
+      dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
+    }
+
     if (activeSecondaryAnalysisId && _.isEmpty(secondaryAnalysisFiles)) {
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
     }
   }, [activeSecondaryAnalysisId]);
+
+  usePolling(async () => {
+    await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
+  }, [activeSecondaryAnalysisId]);
+
+  const { navigateTo } = useAppRouter();
 
   const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
 
@@ -229,8 +262,8 @@ const SecondaryAnalysis = () => {
           display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
         }}
         >
-          {activeSecondaryAnalysisId
-            ? (
+          {
+            activeSecondaryAnalysisId ? (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
                   <Space direction='vertical'>
@@ -245,15 +278,40 @@ const SecondaryAnalysis = () => {
                       : undefined}
                     placement='left'
                   >
-                    <Button
-                      type='primary'
-                      disabled={!isAllValid}
-                      size='large'
-                      style={{ marginBottom: '10px' }}
-                      onClick={() => dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))}
-                    >
-                      Run the pipeline
-                    </Button>
+                    <Space align='baseline'>
+                      <Text strong style={{ marginRight: '10px' }}>
+                        {`Current status: ${pipelineStatusToDisplay[currentStatus]}`}
+                      </Text>
+                      {pipelineCanBeRun && (
+                        <Button
+                          type='primary'
+                          disabled={!isAllValid}
+                          style={{ marginBottom: '10px' }}
+                          loading={statusLoading}
+                          onClick={
+                            () => dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
+                          }
+                        >
+                          Run the pipeline
+                        </Button>
+                      )}
+
+                      {pipelineRunAccessible && (
+                        <Button
+                          type='primary'
+                          style={{ marginBottom: '10px' }}
+                          loading={statusLoading}
+                          onClick={() => (
+                            navigateTo(
+                              modules.SECONDARY_ANALYSIS_OUTPUT,
+                              { secondaryAnalysisId: activeSecondaryAnalysisId },
+                            )
+                          )}
+                        >
+                          Go to output
+                        </Button>
+                      )}
+                    </Space>
                   </Tooltip>
                 </div>
                 <Text strong>Description:</Text>
@@ -274,12 +332,12 @@ const SecondaryAnalysis = () => {
                   <OverviewMenu
                     wizardSteps={secondaryAnalysisWizardSteps}
                     setCurrentStep={setCurrentStepIndex}
+                    editable={pipelineCanBeRun}
                   />
                 </div>
               </>
-            ) : (
-              <Empty description='Create a new run to get started' />
-            )}
+            ) : <Empty description='Create a new run to get started' />
+          }
         </div>
       ),
     },

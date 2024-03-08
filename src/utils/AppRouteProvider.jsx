@@ -44,7 +44,7 @@ const PATH_REGEX = {
 
 const PATHS = {
   [modules.SECONDARY_ANALYSIS]: `${PATH_REGEX[modules.SECONDARY_ANALYSIS]}`,
-  [modules.SECONDARY_ANALYSIS_OUTPUT]: `/secondary-analysis/[analysisId]${PATH_REGEX[modules.SECONDARY_ANALYSIS_OUTPUT]}`,
+  [modules.SECONDARY_ANALYSIS_OUTPUT]: `/secondary-analysis/[secondaryAnalysisId]${PATH_REGEX[modules.SECONDARY_ANALYSIS_OUTPUT]}`,
   [modules.DATA_MANAGEMENT]: `${PATH_REGEX[modules.DATA_MANAGEMENT]}`,
   [modules.REPOSITORY]: `${PATH_REGEX[modules.REPOSITORY]}`,
   [modules.DATA_PROCESSING]: `/experiments/[experimentId]${PATH_REGEX[modules.DATA_PROCESSING]}`,
@@ -87,7 +87,7 @@ const AppRouteProvider = (props) => {
   const handleRouteChange = async (previousRoute, module, params, ignoreIntercepts, hardLoad) => {
     const nextRoute = PATHS[module]
       .replace('[experimentId]', params.experimentId)
-      .replace('[analysisId]', params.analysisId);
+      .replace('[secondaryAnalysisId]', params.secondaryAnalysisId);
 
     if (nextRoute.match(PATH_REGEX.REPOSITORY)) {
       router.push(nextRoute);
@@ -108,7 +108,7 @@ const AppRouteProvider = (props) => {
       dispatch(switchExperiment(experimentId));
     }
 
-    if (nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS)) {
+    if (nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS) && !nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS_OUTPUT)) {
       await dispatch(loadSecondaryAnalyses());
 
       // TODO check if this will be needed

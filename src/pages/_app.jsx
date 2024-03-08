@@ -57,7 +57,7 @@ const WrappedApp = ({ Component, pageProps }) => {
   const { httpError, amplifyConfig } = pageProps;
 
   const router = useRouter();
-  const { experimentId: urlExperimentId, analysisId } = router.query;
+  const { experimentId: urlExperimentId, secondaryAnalysisId } = router.query;
 
   // If the experimentId exists (we are not is data management) and
   // is the old version (without dashes), then add them
@@ -146,12 +146,12 @@ const WrappedApp = ({ Component, pageProps }) => {
       <AppRouteProvider>
         <ContentWrapper
           routeExperimentId={experimentId}
-          routeAnalysisId={analysisId}
+          routeAnalysisId={secondaryAnalysisId}
           experimentData={experimentData}
         >
           <Component
             experimentId={experimentId}
-            analysisId={analysisId}
+            secondaryAnalysisId={secondaryAnalysisId}
             experimentData={experimentData}
             {...pageProps}
           />
@@ -217,6 +217,11 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
     if (query?.experimentId) {
       const { default: getExperimentInfo } = (await import('utils/ssr/getExperimentInfo'));
       await getExperimentInfo(ctx, store, Auth);
+    }
+
+    if (query?.secondaryAnalysisId) {
+      const { default: getAnalysisInfo } = (await import('utils/ssr/getAnalysisInfo'));
+      await getAnalysisInfo(ctx, store, Auth);
     }
 
     return { pageProps: { ...pageProps, amplifyConfig } };

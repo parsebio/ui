@@ -1,3 +1,6 @@
+import { HYDRATE } from 'next-redux-wrapper';
+
+import _ from 'lodash';
 import initialState from './initialState';
 import {
   SECONDARY_ANALYSES_CREATED,
@@ -93,6 +96,23 @@ const notificationsReducer = (state = initialState, action) => {
 
     case SECONDARY_ANALYSIS_STATUS_LOADED: {
       return secondaryAnalysisStatusLoaded(state, action);
+    }
+
+    case HYDRATE: {
+      const { secondaryAnalyses } = action.payload;
+
+      const { activeSecondaryAnalysisId } = secondaryAnalyses.meta;
+
+      if (activeSecondaryAnalysisId) {
+        const newState = _.cloneDeep(state);
+
+        newState.meta.activeSecondaryAnalysisId = activeSecondaryAnalysisId;
+        newState[activeSecondaryAnalysisId] = secondaryAnalyses[activeSecondaryAnalysisId];
+
+        return newState;
+      }
+
+      return state;
     }
 
     default: {
