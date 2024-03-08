@@ -5,21 +5,27 @@ import PropTypes from 'prop-types';
 import {
   Button, Select, Space,
 } from 'antd';
-import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
+import {
+  BlobReader, TextWriter, ZipReader,
+} from '@zip.js/zip.js';
 
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 
-const getHtmlsFromZip = async (fileBlob) => {
+const createUrlFromSrc = (htmlCode) => `data:text/html;charset=UTF-8,${encodeURIComponent(htmlCode)}`;
+
+const getHtmlUrlsFromZip = async (fileBlob) => {
   const zipReader = new ZipReader(new BlobReader(fileBlob));
   const entries = await zipReader.getEntries();
 
   const htmlEntries = entries.filter(({ filename }) => filename.endsWith('.html'));
-  const htmlsArray = await Promise.all(htmlEntries.map(async (entry) => (
-    [entry.filename, await entry.getData(new TextWriter())]
-  )));
+  const htmlUrls = await Promise.all(htmlEntries.map(
+    async (entry) => (
+      [entry.filename, createUrlFromSrc(await entry.getData(new TextWriter()))]
+    ),
+  ));
 
-  return Object.fromEntries(htmlsArray);
+  return Object.fromEntries(htmlUrls);
 };
 
 const AnalysisDetails = ({ analysisId }) => {
@@ -32,10 +38,10 @@ const AnalysisDetails = ({ analysisId }) => {
 
     const response = await fetch(signedUrl);
     const zip = await response.blob();
-    const htmls = await getHtmlsFromZip(zip);
+    const htmlUrls = await getHtmlUrlsFromZip(zip);
 
-    setReportOptions(htmls);
-    setSelectedReport(Object.keys(htmls)[0]);
+    setReportOptions(htmlUrls);
+    setSelectedReport(Object.keys(htmlUrls)[0]);
   }, [analysisId]);
 
   useEffect(() => {
@@ -74,7 +80,7 @@ const AnalysisDetails = ({ analysisId }) => {
         </Button>
       </Space>
 
-      <iframe src={null} srcDoc={reportOptions[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
+      <iframe src={reportOptions[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
 
   );
