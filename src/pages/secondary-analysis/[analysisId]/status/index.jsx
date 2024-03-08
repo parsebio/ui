@@ -58,7 +58,7 @@ const AnalysisDetails = ({ analysisId }) => {
     return "Analysis hasn't been created yet";
   }
 
-  if (true || secondaryAnalysis.status.current === 'running') {
+  if (secondaryAnalysis.status.current === 'running') {
     return (
 
       <center style={{ width: '100%', height: '100%' }}>
