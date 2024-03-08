@@ -267,7 +267,7 @@ const SecondaryAnalysis = () => {
                         style={{ marginBottom: '10px' }}
                         loading={statusLoading}
                       >
-                        Go to status
+                        Go to output
                       </Button>
                     )}
                   </Tooltip>
