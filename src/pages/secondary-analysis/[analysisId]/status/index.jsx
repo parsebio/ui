@@ -80,7 +80,6 @@ const AnalysisDetails = ({ analysisId }) => {
         </Button>
       </Space>
 
-      <base target='_top' href='https://example.com/' />
       <iframe src={reportOptions[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
 
