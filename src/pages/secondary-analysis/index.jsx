@@ -264,7 +264,9 @@ const SecondaryAnalysis = () => {
                     placement='left'
                   >
                     <Space align='baseline'>
-                      <Text>{`Current status: ${pipelineStatusToDisplay[currentStatus]}`}</Text>
+                      <Text style={{ marginRight: '20px' }}>
+                        {`Current status: ${pipelineStatusToDisplay[currentStatus]}`}
+                      </Text>
                       {pipelineCanBeRun && (
                         <Button
                           type='primary'
