@@ -37,6 +37,16 @@ const keyToTitle = {
   createdAt: 'Uploaded at',
 };
 
+const pipelineStatusToDisplay = {
+  not_created: 'not started yet',
+  created: 'created',
+  failed: 'failed',
+  cancelled: 'cancelled',
+  expired: 'failed',
+  running: 'running',
+  finished: 'finished',
+};
+
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
@@ -55,7 +65,8 @@ const SecondaryAnalysis = () => {
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
   );
 
-  const pipelineCanBeRun = ['not_created', 'failed', 'cancelled'].includes(currentStatus);
+  const pipelineCanBeRun = ['not_created', 'failed', 'cancelled', 'expired'].includes(currentStatus);
+  const pipelineStatusCanBeSeen = currentStatus !== 'not_created';
 
   useEffect(() => {
     if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
@@ -252,24 +263,30 @@ const SecondaryAnalysis = () => {
                       : undefined}
                     placement='left'
                   >
-                    {pipelineCanBeRun ? (
-                      <Button
-                        type='primary'
-                        disabled={!isAllValid}
-                        style={{ marginBottom: '10px' }}
-                        loading={statusLoading}
-                      >
-                        Run the pipeline
-                      </Button>
-                    ) : (
-                      <Button
-                        type='primary'
-                        style={{ marginBottom: '10px' }}
-                        loading={statusLoading}
-                      >
-                        Go to output
-                      </Button>
-                    )}
+                    <Space align='baseline'>
+                      <Text>{`Current status: ${pipelineStatusToDisplay[currentStatus]}`}</Text>
+                      {pipelineCanBeRun && (
+                        <Button
+                          type='primary'
+                          disabled={!isAllValid}
+                          style={{ marginBottom: '10px' }}
+                          loading={statusLoading}
+                        >
+                          Run the pipeline
+                        </Button>
+                      )}
+
+                      {pipelineStatusCanBeSeen && (
+                        <Button
+                          type='primary'
+                          style={{ marginBottom: '10px' }}
+                          loading={statusLoading}
+                        >
+                          Go to output
+                        </Button>
+                      )}
+                    </Space>
+
                   </Tooltip>
                 </div>
                 <Text strong>Description:</Text>
