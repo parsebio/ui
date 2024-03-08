@@ -38,13 +38,13 @@ const keyToTitle = {
 };
 
 const pipelineStatusToDisplay = {
-  not_created: 'not started yet',
-  created: 'created',
-  failed: 'failed',
-  cancelled: 'cancelled',
-  expired: 'failed',
-  running: 'running',
-  finished: 'finished',
+  not_created: 'Not started yet',
+  created: 'Created',
+  failed: 'Failed',
+  cancelled: 'Cancelled',
+  expired: 'Failed',
+  running: 'Running',
+  finished: 'Finished',
 };
 
 const SecondaryAnalysis = () => {
