@@ -19,6 +19,8 @@ const launchSecondaryAnalysis = (secondaryAnalysisId) => async (dispatch) => {
       type: SECONDARY_ANALYSES_ERROR,
       payload: { error: errorMessage },
     });
+
+    throw error;
   }
 };
 
