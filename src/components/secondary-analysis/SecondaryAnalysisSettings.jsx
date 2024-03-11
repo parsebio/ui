@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Select, Form, Space,
+  Select, Form, Space, InputNumber,
 } from 'antd';
 import propTypes from 'prop-types';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
@@ -103,14 +103,15 @@ const SecondaryAnalysisSettings = (props) => {
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div>Select the number of samples:</div>
-            <Select
+            <InputNumber
               style={{ marginLeft: '10px', width: '20%' }}
+              max={maxSublibraries * 6}
+              min={1}
+              controls={false}
               onChange={(value) => handleValueChange('numOfSamples', parseInt(value, 10))}
               value={formValues.numOfSamples}
               disabled={!formValues.kit}
-            >
-              {generateOptions(maxSublibraries * 6)}
-            </Select>
+            />
           </div>
         </Form.Item>
         <Form.Item
@@ -129,14 +130,15 @@ const SecondaryAnalysisSettings = (props) => {
               </a>
               :
             </div>
-            <Select
+            <InputNumber
               style={{ marginLeft: '10px', width: '20%' }}
+              max={maxSublibraries}
+              min={1}
+              controls={false}
               onChange={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
               value={formValues.numOfSublibraries}
               disabled={!formValues.kit}
-            >
-              {generateOptions(maxSublibraries)}
-            </Select>
+            />
           </div>
         </Form.Item>
       </Form>
