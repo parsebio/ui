@@ -62,7 +62,7 @@ class FileUploader {
 
     this.currentChunk = null;
 
-    this.#subscribeToAbortSignal(this.abortController.signal);
+    this.#subscribeToAbortSignal();
   }
 
   async upload() {
@@ -99,8 +99,8 @@ class FileUploader {
     });
   }
 
-  #subscribeToAbortSignal = (signal) => {
-    signal.addEventListener('abort', () => this.#cleanupExecution());
+  #subscribeToAbortSignal = () => {
+    this.abortController.signal.addEventListener('abort', () => this.#cleanupExecution());
   }
 
   #uploadChunk = async (compressedPart, partNumber) => {
