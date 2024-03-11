@@ -27,42 +27,49 @@ const SliderWithInput = (props) => {
 
   const stepToSet = step ?? max / 200;
 
+  const slider = (
+    <Slider
+      value={localValue}
+      min={min}
+      max={max}
+      onChange={setLocalValue}
+      onAfterChange={handleChange}
+      step={stepToSet}
+      disabled={disabled}
+      style={{
+        minWidth: 100, display: 'inline-block', flexGrow: 100, margin: '0.5em',
+      }}
+    />
+  );
+
+  const input = (
+    <InputNumber
+      value={localValue}
+      min={min}
+      max={max}
+      onChange={(changedValue) => {
+        if (changedValue === value) { return; }
+
+        const changedValueWithinBounds = Math.min(Math.max(changedValue, min), max);
+
+        setLocalValue(changedValueWithinBounds);
+
+        debouncedOnChange(changedValueWithinBounds);
+      }}
+      onPressEnter={() => { handleChange(localValue); }}
+      onStep={(newValue) => {
+        handleChange(newValue);
+      }}
+      step={stepToSet}
+      disabled={disabled}
+      style={{ width: 80, display: 'inline-block' }}
+    />
+  );
+
   return (
     <Space align='start'>
-      <Slider
-        value={localValue}
-        min={min}
-        max={max}
-        onChange={setLocalValue}
-        onAfterChange={handleChange}
-        step={stepToSet}
-        disabled={disabled}
-        style={{
-          minWidth: 100, display: 'inline-block', flexGrow: 100, margin: '0.5em',
-        }}
-      />
-
-      <InputNumber
-        value={localValue}
-        min={min}
-        max={max}
-        onChange={(changedValue) => {
-          if (changedValue === value) { return; }
-
-          const changedValueWithinBounds = Math.min(Math.max(changedValue, min), max);
-
-          setLocalValue(changedValueWithinBounds);
-
-          debouncedOnChange(changedValueWithinBounds);
-        }}
-        onPressEnter={() => { handleChange(localValue); }}
-        onStep={(newValue) => {
-          handleChange(newValue);
-        }}
-        step={stepToSet}
-        disabled={disabled}
-        style={{ width: 80, display: 'inline-block' }}
-      />
+      {slider}
+      {input}
     </Space>
   );
 };

@@ -4,6 +4,7 @@ import {
 } from 'antd';
 import propTypes from 'prop-types';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
+import SliderWithInput from 'components/SliderWithInput';
 
 const { Option } = Select;
 const kitToMaxSublibrariesMap = {
@@ -32,10 +33,6 @@ const SecondaryAnalysisSettings = (props) => {
     });
     onDetailsChanged(fieldsToUpdate);
   }, [formValues, secondaryAnalysis, onDetailsChanged]);
-
-  const generateOptions = (end) => Array.from({ length: end }, (_, i) => i + 1).map((value) => (
-    <Option key={value} value={`${value}`}>{value}</Option>
-  ));
 
   const calculateMaxSublibraries = useCallback((kit) => {
     const newMaxSublibraries = kitToMaxSublibrariesMap[kit];
@@ -103,14 +100,14 @@ const SecondaryAnalysisSettings = (props) => {
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div>Select the number of samples:</div>
-            <InputNumber
-              style={{ marginLeft: '10px', width: '20%' }}
-              max={maxSublibraries * 6}
+            <SliderWithInput
+              style={{ marginLeft: '20px', width: '20%' }}
               min={1}
-              controls={false}
-              onChange={(value) => handleValueChange('numOfSamples', parseInt(value, 10))}
+              max={maxSublibraries * 6}
               value={formValues.numOfSamples}
+              onUpdate={(value) => handleValueChange('numOfSamples', parseInt(value, 10))}
               disabled={!formValues.kit}
+              step={1}
             />
           </div>
         </Form.Item>
@@ -118,7 +115,7 @@ const SecondaryAnalysisSettings = (props) => {
           name='numOfSublibraries'
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div>
+            <div style={{ marginRight: '20px' }}>
               Select the number of
               {' '}
               <a
@@ -130,14 +127,14 @@ const SecondaryAnalysisSettings = (props) => {
               </a>
               :
             </div>
-            <InputNumber
-              style={{ marginLeft: '10px', width: '20%' }}
-              max={maxSublibraries}
+            <SliderWithInput
+              style={{ marginLeft: '20px', width: '20%' }}
               min={1}
-              controls={false}
-              onChange={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
+              max={maxSublibraries}
               value={formValues.numOfSublibraries}
+              onUpdate={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
               disabled={!formValues.kit}
+              step={1}
             />
           </div>
         </Form.Item>
