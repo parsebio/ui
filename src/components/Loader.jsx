@@ -45,7 +45,7 @@ const fastLoad = (message) => (
     </div>
     <p style={{ textAlign: 'center' }}>
       <Text>
-        {message || "We're getting your data ..."}
+        {message ?? "We're getting your data ..."}
       </Text>
     </p>
   </div>

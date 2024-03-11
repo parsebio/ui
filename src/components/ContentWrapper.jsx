@@ -112,6 +112,11 @@ const ContentWrapper = (props) => {
     status: backendStatus,
   } = useSelector(getBackendStatus(currentExperimentId));
 
+  const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
+  const { loading: analysisStatusLoading, current: analysisStatus } = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
+  );
+
   const qcStatusKey = backendStatus?.pipeline?.status;
   const qcRunning = qcStatusKey === 'RUNNING';
   const qcRunningError = backendErrors.includes(qcStatusKey);
@@ -335,6 +340,10 @@ const ContentWrapper = (props) => {
       module: modules.SECONDARY_ANALYSIS,
       icon: <CodeSandboxOutlined />,
       name: 'Secondary Analysis',
+      getDisabled: () => (
+        analysisStatus
+        && currentModule === modules.SECONDARY_ANALYSIS_OUTPUT && analysisStatus === 'running'
+      ),
       disableIfNoExperiment: false,
       disabledByPipelineStatus: true,
       disabledIfSeuratComplete: false,
@@ -343,6 +352,14 @@ const ContentWrapper = (props) => {
       module: modules.SECONDARY_ANALYSIS_OUTPUT,
       icon: <CodeSandboxOutlined />,
       name: 'Pipeline Output',
+      getDisabled: () => (
+        !activeSecondaryAnalysisId
+        || (analysisStatus
+          && analysisStatus === 'not_created'
+          && currentModule === modules.SECONDARY_ANALYSIS
+        )
+
+      ),
       disableIfNoExperiment: false,
       disabledByPipelineStatus: true,
       disabledIfSeuratComplete: false,
@@ -421,7 +438,13 @@ const ContentWrapper = (props) => {
   };
 
   const menuItemRender = ({
-    module, icon, name, disableIfNoExperiment, disabledByPipelineStatus, disabledIfSeuratComplete,
+    module,
+    icon,
+    name,
+    disableIfNoExperiment,
+    disabledByPipelineStatus,
+    disabledIfSeuratComplete,
+    getDisabled = () => false,
   }) => {
     const needRerunPipeline = pipelinesRerunStatus === null || pipelinesRerunStatus.rerun;
 
@@ -449,10 +472,10 @@ const ContentWrapper = (props) => {
       icon,
       label: name,
       disabled: notProcessedExperimentDisable || pipelineStatusDisable
-        || seuratCompleteDisable || nonExperimentModule,
+        || seuratCompleteDisable || nonExperimentModule || getDisabled(),
       onClick: () => navigateTo(
         module,
-        { experimentId: currentExperimentId, analysisId: currentAnalysisIdRef.current },
+        { experimentId: currentExperimentId, secondaryAnalysisId: currentAnalysisIdRef.current },
       ),
     };
   };
