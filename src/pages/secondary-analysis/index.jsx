@@ -56,8 +56,6 @@ const SecondaryAnalysis = () => {
   const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
-  const [buttonClicked, setButtonClicked] = useState(false);
-
   const user = useSelector((state) => state.user.current);
 
   const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
@@ -289,20 +287,10 @@ const SecondaryAnalysis = () => {
                           type='primary'
                           disabled={!isAllValid}
                           style={{ marginBottom: '10px' }}
-                          loading={statusLoading || buttonClicked}
-                          onClick={() => {
-                            setButtonClicked(true);
-                            dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
-                              .then(() => {
-                                navigateTo(
-                                  modules.SECONDARY_ANALYSIS_OUTPUT,
-                                  { secondaryAnalysisId: activeSecondaryAnalysisId },
-                                );
-                              })
-                              .catch(() => {
-                                setButtonClicked(false);
-                              });
-                          }}
+                          loading={statusLoading}
+                          onClick={
+                            () => dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
+                          }
                         >
                           Run the pipeline
                         </Button>
@@ -312,14 +300,13 @@ const SecondaryAnalysis = () => {
                         <Button
                           type='primary'
                           style={{ marginBottom: '10px' }}
-                          loading={statusLoading || buttonClicked}
-                          onClick={() => {
-                            setButtonClicked(true);
+                          loading={statusLoading}
+                          onClick={() => (
                             navigateTo(
                               modules.SECONDARY_ANALYSIS_OUTPUT,
                               { secondaryAnalysisId: activeSecondaryAnalysisId },
-                            );
-                          }}
+                            )
+                          )}
                         >
                           Go to output
                         </Button>
