@@ -7,19 +7,19 @@ import {
   SECONDARY_ANALYSES_ERROR,
 } from 'redux/actionTypes/secondaryAnalyses';
 
-const loadSecondaryAnalysisStatus = (analysisId) => async (dispatch) => {
+const loadSecondaryAnalysisStatus = (secondaryAnalysisId) => async (dispatch) => {
   dispatch({
     type: SECONDARY_ANALYSIS_STATUS_LOADING,
-    payload: { analysisId },
+    payload: { secondaryAnalysisId },
   });
 
   try {
-    const status = await fetchAPI(`/v2/secondaryAnalysis/${analysisId}/executionStatus`);
+    const status = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/executionStatus`);
 
     dispatch({
       type: SECONDARY_ANALYSIS_STATUS_LOADED,
       payload: {
-        analysisId,
+        secondaryAnalysisId,
         status,
       },
     });

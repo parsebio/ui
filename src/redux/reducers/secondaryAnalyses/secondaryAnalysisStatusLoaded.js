@@ -2,10 +2,10 @@
 import produce from 'immer';
 
 const secondaryAnalysesLoaded = produce((draft, action) => {
-  const { analysisId, status } = action.payload;
+  const { secondaryAnalysisId, status } = action.payload;
 
-  draft[analysisId].status.current = status;
-  draft[analysisId].status.loading = false;
+  draft[secondaryAnalysisId].status.current = status;
+  draft[secondaryAnalysisId].status.loading = false;
 });
 
 export default secondaryAnalysesLoaded;
