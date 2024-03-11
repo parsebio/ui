@@ -17,6 +17,7 @@ import NewProjectModal from 'components/data-management/project/NewProjectModal'
 import {
   loadSecondaryAnalyses, updateSecondaryAnalysis,
   createSecondaryAnalysis, loadSecondaryAnalysisFiles, loadSecondaryAnalysisStatus,
+  launchSecondaryAnalysis,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
@@ -27,7 +28,6 @@ import _ from 'lodash';
 import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
-import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 
 const { Text, Title } = Typography;
 const keyToTitle = {

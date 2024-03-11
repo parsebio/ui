@@ -10,7 +10,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
+import { loadSecondaryAnalysisStatus, cancelSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
@@ -90,6 +90,16 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             To elect to receive an email notification when your
             pipeline run is complete, ensure the toggle below is enabled.
           </Paragraph>
+          <Button
+            type='primary'
+            style={{ marginBottom: '10px' }}
+            onClick={
+              () => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))
+            }
+          >
+            Run the pipeline
+          </Button>
+          <></>
         </>
       ),
     };
