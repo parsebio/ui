@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space,
+  Button, Select, Space, Popconfirm,
 } from 'antd';
 
 import fetchAPI from 'utils/http/fetchAPI';
@@ -90,15 +90,14 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             To elect to receive an email notification when your
             pipeline run is complete, ensure the toggle below is enabled.
           </Paragraph>
-          <Button
-            type='primary'
-            style={{ marginBottom: '10px' }}
-            onClick={
-              () => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))
-            }
+          <Popconfirm
+            title='Are you sure you want to cancel this pipeline run?'
+            onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
+            okText='Yes'
+            cancelText='No'
           >
-            Run the pipeline
-          </Button>
+            <Button type='danger'>Cancel Run</Button>
+          </Popconfirm>
           <></>
         </>
       ),
