@@ -89,15 +89,18 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             <br />
             To elect to receive an email notification when your
             pipeline run is complete, ensure the toggle below is enabled.
+            <br />
           </Paragraph>
-          <Popconfirm
-            title='Are you sure you want to cancel this pipeline run?'
-            onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
-            okText='Yes'
-            cancelText='No'
-          >
-            <Button type='danger'>Cancel Run</Button>
-          </Popconfirm>
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <Popconfirm
+              title='Are you sure you want to cancel this pipeline run?'
+              onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
+              okText='Yes'
+              cancelText='No'
+            >
+              <Button type='danger'>Cancel Run</Button>
+            </Popconfirm>
+          </div>
           <></>
         </>
       ),
