@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 const { Text } = Typography;
 
-const OverviewMenu = ({ wizardSteps, setCurrentStep }) => (
+const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => (
   <Card style={{ maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }}>
     <Row gutter={[16, 16]}>
       {wizardSteps.map((step, index) => {
@@ -39,7 +39,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep }) => (
                   )}
                 </div>
               )}
-              extra={(
+              extra={editable && (
                 <Button
                   icon={<EditOutlined />}
                   onClick={(event) => {
@@ -62,6 +62,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep }) => (
 OverviewMenu.propTypes = {
   wizardSteps: PropTypes.array.isRequired,
   setCurrentStep: PropTypes.func.isRequired,
+  editable: PropTypes.bool.isRequired,
 };
 
 export default OverviewMenu;
