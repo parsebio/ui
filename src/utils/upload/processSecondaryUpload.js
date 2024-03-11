@@ -1,4 +1,4 @@
-import { getShouldCompress } from 'utils/upload/fileInspector';
+// import { getShouldCompress } from 'utils/upload/fileInspector';
 import uploadFileToS3 from 'utils/upload/multipartUpload';
 import { updateSecondaryAnalysisFile, createSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
@@ -18,13 +18,14 @@ const uploadSecondaryAnalysisFile = async (
     ));
   };
 
-  const shouldCompress = await getShouldCompress(file);
+  // before adding compression, make sure uncompressed files are saved with .gz at the end
+  // const shouldCompress = await getShouldCompress(file);
   onUpdateUploadStatus(UploadStatus.UPLOADING);
 
   const options = {
     retryPolicy: 'exponentialBackoff',
     resumeUpload,
-    compress: shouldCompress,
+    compress: false,
   };
 
   return uploadFileToS3(
@@ -39,7 +40,8 @@ const uploadSecondaryAnalysisFile = async (
 };
 
 const createAndUploadSecondaryAnalysisFiles = async (
-  secondaryAnalysisId, filesList, handlesList = [], type, dispatch) => {
+  secondaryAnalysisId, filesList, handlesList = [], type, dispatch,
+) => {
   const uploadUrlParamsList = await Promise.all(
     filesList.map(async (file, index) => {
       const handle = handlesList[index] ?? null;
