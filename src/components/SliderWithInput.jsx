@@ -10,7 +10,7 @@ import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
 
 const SliderWithInput = (props) => {
   const {
-    min, max, value, onUpdate, disabled, step,
+    min, max, value, onUpdate, disabled, step, debounceTime,
   } = props;
 
   const [, handleChange] = useUpdateThrottled(onUpdate, value);
@@ -18,7 +18,7 @@ const SliderWithInput = (props) => {
   const [localValue, setLocalValue] = useState(value);
 
   const debouncedOnChange = useCallback(
-    _.debounce((changedValue) => handleChange(changedValue), 1000), [],
+    _.debounce((changedValue) => handleChange(changedValue), debounceTime), [],
   );
 
   useEffect(() => {
@@ -81,11 +81,13 @@ SliderWithInput.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   step: PropTypes.number,
+  debounceTime: PropTypes.number,
 };
 
 SliderWithInput.defaultProps = {
   disabled: false,
   step: null,
+  debounceTime: 1000,
 };
 
 export default SliderWithInput;

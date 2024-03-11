@@ -94,50 +94,54 @@ const SecondaryAnalysisSettings = (props) => {
           </Space>
         </Form.Item>
 
-        <Form.Item
-          label='Provide details of your experimental design:'
-          name='numOfSamples'
-        >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div>Select the number of samples:</div>
-            <SliderWithInput
-              style={{ marginLeft: '20px', width: '20%' }}
-              min={1}
-              max={maxSublibraries * 6}
-              value={formValues.numOfSamples}
-              onUpdate={(value) => handleValueChange('numOfSamples', parseInt(value, 10))}
-              disabled={!formValues.kit}
-              step={1}
-            />
-          </div>
-        </Form.Item>
-        <Form.Item
-          name='numOfSublibraries'
-        >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ marginRight: '20px' }}>
-              Select the number of
-              {' '}
-              <a
-                href='https://support.parsebiosciences.com/hc/en-us/articles/360052394312-What-is-a-sublibrary-'
-                target='_blank'
-                rel='noreferrer'
-              >
-                sublibraries
-              </a>
-              :
-            </div>
-            <SliderWithInput
-              style={{ marginLeft: '20px', width: '20%' }}
-              min={1}
-              max={maxSublibraries}
-              value={formValues.numOfSublibraries}
-              onUpdate={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
-              disabled={!formValues.kit}
-              step={1}
-            />
-          </div>
-        </Form.Item>
+        {formValues.kit && (
+          <>
+            <Form.Item
+              label='Provide details of your experimental design:'
+              name='numOfSamples'
+            >
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ marginRight: '5px' }}>Select the number of samples:</div>
+                <SliderWithInput
+                  style={{ marginLeft: '20px', width: '20%' }}
+                  min={1}
+                  max={maxSublibraries * 6}
+                  value={formValues.numOfSamples}
+                  onUpdate={(value) => handleValueChange('numOfSamples', parseInt(value, 10))}
+                  step={1}
+                  debounceTime={0}
+                />
+              </div>
+            </Form.Item>
+            <Form.Item
+              name='numOfSublibraries'
+            >
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ marginRight: '5px' }}>
+                  Select the number of
+                  {' '}
+                  <a
+                    href='https://support.parsebiosciences.com/hc/en-us/articles/360052394312-What-is-a-sublibrary-'
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    sublibraries
+                  </a>
+                  :
+                </div>
+                <SliderWithInput
+                  style={{ marginLeft: '20px', width: '20%' }}
+                  min={1}
+                  max={maxSublibraries}
+                  value={formValues.numOfSublibraries}
+                  onUpdate={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
+                  step={1}
+                  debounceTime={0}
+                />
+              </div>
+            </Form.Item>
+          </>
+        )}
       </Form>
     </>
   );
