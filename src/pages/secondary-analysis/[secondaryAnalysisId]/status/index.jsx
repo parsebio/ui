@@ -81,29 +81,30 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       ),
       running: (
         <>
-          {fastLoad('')}
-          <Paragraph style={{ fontSize: '20px', width: '50%' }}>
-            The pipeline is running. You cannot change any settings until the run completes
-            <br />
-            <br />
-            <br />
-            To elect to receive an email notification when your
-            pipeline run is complete, ensure the toggle below is enabled.
-            <br />
-          </Paragraph>
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <Popconfirm
-              title='Are you sure you want to cancel this pipeline run?'
-              onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
-              okText='Yes'
-              cancelText='No'
-            >
-              <Button type='danger'>Cancel Run</Button>
-            </Popconfirm>
+          <div>
+            {fastLoad('')}
+            <Paragraph style={{ fontSize: '20px', width: '50%' }}>
+              The pipeline is running. You cannot change any settings until the run completes
+              <br />
+              <br />
+              <br />
+              To elect to receive an email notification when your
+              pipeline run is complete, ensure the toggle below is enabled.
+              <br />
+            </Paragraph>
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+              <Popconfirm
+                title='Are you sure you want to cancel this pipeline run?'
+                onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
+                okText='Yes'
+                cancelText='No'
+              >
+                <Button type='danger'>Cancel Run</Button>
+              </Popconfirm>
+            </div>
           </div>
           <></>
-        </>
-      ),
+        </>),
     };
 
     return (
