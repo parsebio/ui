@@ -62,7 +62,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   }
   if (secondaryAnalysis.status.current !== 'finished') {
     const messages = {
-      not_createdd: (
+      not_created: (
         <Space direction='vertical'>
           <Paragraph style={{ fontSize: '20px', width: '100%' }}>{'Analysis hasn\'t been executed yet'}</Paragraph>
           <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipelines</Button>
@@ -95,7 +95,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           {renderDownloadAllOutputsButton()}
         </Space>
       ),
-      not_created: (
+      running: (
         <>
           <div>
             {fastLoad('')}
