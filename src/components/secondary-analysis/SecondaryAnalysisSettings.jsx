@@ -13,25 +13,24 @@ const kitToMaxSublibrariesMap = {
 };
 
 const SecondaryAnalysisSettings = (props) => {
-  const { onDetailsChanged, secondaryAnalysis } = props;
+  const { onDetailsChanged, secondaryAnalysisDetails } = props;
   const [maxSublibraries, setMaxSublibraries] = useState();
   const [formValues, setFormValues] = useState({});
 
   useEffect(() => {
-    if (!secondaryAnalysis) return;
-    setFormValues(secondaryAnalysis);
-    calculateMaxSublibraries(secondaryAnalysis.kit);
-  }, [secondaryAnalysis]);
+    setFormValues(secondaryAnalysisDetails);
+    calculateMaxSublibraries(secondaryAnalysisDetails.kit);
+  }, []);
 
   useEffect(() => {
     const fieldsToUpdate = {};
     Object.keys(formValues).forEach((key) => {
-      if (secondaryAnalysis[key] !== formValues[key]) {
+      if (secondaryAnalysisDetails[key] !== formValues[key]) {
         fieldsToUpdate[key] = formValues[key];
       }
     });
     onDetailsChanged(fieldsToUpdate);
-  }, [formValues, secondaryAnalysis, onDetailsChanged]);
+  }, [formValues, onDetailsChanged]);
 
   const generateOptions = (end) => Array.from({ length: end }, (_, i) => i + 1).map((value) => (
     <Option key={value} value={`${value}`}>{value}</Option>
@@ -146,7 +145,7 @@ const SecondaryAnalysisSettings = (props) => {
 
 SecondaryAnalysisSettings.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
-  secondaryAnalysis: propTypes.object.isRequired,
+  secondaryAnalysisDetails: propTypes.object.isRequired,
 };
 
 export default SecondaryAnalysisSettings;
