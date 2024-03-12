@@ -2,7 +2,11 @@ import UploadStatus from 'utils/upload/UploadStatus';
 import fetchAPI from 'utils/http/fetchAPI';
 import { SECONDARY_ANALYSIS_FILES_UPDATE } from 'redux/actionTypes/secondaryAnalyses';
 
-const updateSecondaryAnalysisFile = (secondaryAnalysisId, fileId, uploadStatus, percentProgress) => async (dispatch) => {
+const updateSecondaryAnalysisFile = (
+  secondaryAnalysisId, fileId, uploadStatus, extras = {},
+) => async (dispatch) => {
+  const { percentProgress = 0, abortController = null } = extras;
+
   if (uploadStatus !== UploadStatus.UPLOADING) {
     const url = `/v2/secondaryAnalysis/${secondaryAnalysisId}/files`;
     const body = { uploadStatus, id: fileId };
@@ -29,6 +33,7 @@ const updateSecondaryAnalysisFile = (secondaryAnalysisId, fileId, uploadStatus, 
       return;
     }
   }
+
   dispatch({
     type: SECONDARY_ANALYSIS_FILES_UPDATE,
     payload: {
@@ -36,6 +41,7 @@ const updateSecondaryAnalysisFile = (secondaryAnalysisId, fileId, uploadStatus, 
       uploadStatus,
       fileId,
       percentProgress,
+      abortController,
     },
   });
 };

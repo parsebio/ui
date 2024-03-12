@@ -12,15 +12,20 @@ const uploadSecondaryAnalysisFile = async (
   dispatch,
   resumeUpload = false,
 ) => {
-  const onUpdateUploadStatus = (status, percentProgress = 0) => {
-    dispatch(updateSecondaryAnalysisFile(
-      secondaryAnalysisId, uploadUrlParams.fileId, status, percentProgress,
-    ));
-  };
+  const abortController = new AbortController();
 
   // before adding compression, make sure uncompressed files are saved with .gz at the end
   // const shouldCompress = await getShouldCompress(file);
-  onUpdateUploadStatus(UploadStatus.UPLOADING);
+
+  dispatch(updateSecondaryAnalysisFile(
+    secondaryAnalysisId, uploadUrlParams.fileId, UploadStatus.UPLOADING, { abortController },
+  ));
+
+  const onUpdateUploadStatus = (status, percentProgress) => {
+    dispatch(updateSecondaryAnalysisFile(
+      secondaryAnalysisId, uploadUrlParams.fileId, status, { percentProgress },
+    ));
+  };
 
   const options = {
     retryPolicy: 'exponentialBackoff',
@@ -33,7 +38,7 @@ const uploadSecondaryAnalysisFile = async (
     file,
     uploadUrlParams,
     'secondaryAnalysis',
-    new AbortController(),
+    abortController,
     onUpdateUploadStatus,
     options,
   );
