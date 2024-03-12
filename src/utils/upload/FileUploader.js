@@ -61,6 +61,8 @@ class FileUploader {
     this.uploadedPartPercentages = new Array(this.totalChunks).fill(0);
 
     this.currentChunk = null;
+
+    this.#subscribeToAbortSignal();
   }
 
   async upload() {
@@ -95,6 +97,10 @@ class FileUploader {
         this.#setupGzipStreamHandlers();
       }
     });
+  }
+
+  #subscribeToAbortSignal = () => {
+    this.abortController.signal.addEventListener('abort', () => this.#cleanupExecution());
   }
 
   #uploadChunk = async (compressedPart, partNumber) => {
@@ -160,7 +166,7 @@ class FileUploader {
 
         await this.#handleChunkLoadFinished(chunk);
       } catch (e) {
-        this.#cancelExecution(UploadStatus.FILE_READ_ERROR, e);
+        this.#abortUpload(UploadStatus.FILE_READ_ERROR, e);
       }
     };
   }
@@ -184,12 +190,12 @@ class FileUploader {
 
         this.currentChunk = chunk;
       } catch (e) {
-        this.#cancelExecution(UploadStatus.FILE_READ_ERROR, e);
+        this.#abortUpload(UploadStatus.FILE_READ_ERROR, e);
       }
     });
 
     this.readStream.on('error', (e) => {
-      this.#cancelExecution(UploadStatus.FILE_READ_ERROR, e);
+      this.#abortUpload(UploadStatus.FILE_READ_ERROR, e);
     });
 
     this.readStream.on('end', async () => {
@@ -200,21 +206,23 @@ class FileUploader {
 
         this.gzipStream.push(this.currentChunk, true);
       } catch (e) {
-        this.#cancelExecution(UploadStatus.FILE_READ_ERROR, e);
+        this.#abortUpload(UploadStatus.FILE_READ_ERROR, e);
       }
     });
   }
 
-  #cancelExecution = (status, e) => {
-    this.readStream.destroy();
-
-    this.gzipStream?.terminate();
+  #abortUpload = (status, e) => {
     this.abortController?.abort();
 
     this.onStatusUpdate(status);
 
     this.reject(e);
     console.error(e);
+  }
+
+  #cleanupExecution = () => {
+    this.readStream.destroy();
+    this.gzipStream?.terminate();
   }
 
   #handleChunkLoadFinished = async (chunk) => {
@@ -235,7 +243,7 @@ class FileUploader {
         this.resolve(this.uploadedParts);
       }
     } catch (e) {
-      this.#cancelExecution(UploadStatus.UPLOAD_ERROR, e);
+      this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
     }
   }
 

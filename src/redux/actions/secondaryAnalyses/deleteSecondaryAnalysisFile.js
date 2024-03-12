@@ -1,7 +1,12 @@
 import fetchAPI from 'utils/http/fetchAPI';
 import { SECONDARY_ANALYSIS_FILES_DELETE, SECONDARY_ANALYSES_ERROR } from 'redux/actionTypes/secondaryAnalyses';
 
-const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (dispatch) => {
+const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (dispatch, getState) => {
+  // Abort upload if it is ongoing
+  // eslint-disable-next-line no-unused-expressions
+  getState().secondaryAnalyses[secondaryAnalysisId].files.data[fileId].upload
+    .abortController?.abort();
+
   try {
     await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`, {
       method: 'DELETE',
