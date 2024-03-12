@@ -25,6 +25,8 @@ const launchSecondaryAnalysis = (secondaryAnalysisId) => async (dispatch) => {
         status: 'failed',
       },
     });
+
+    throw error;
   }
 };
 
