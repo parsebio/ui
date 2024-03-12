@@ -1,17 +1,17 @@
 import fetchAPI from 'utils/http/fetchAPI';
-import { SECONDARY_ANALYSES_CANCELLED, SECONDARY_ANALYSES_ERROR } from 'redux/actionTypes/secondaryAnalyses';
+import { SECONDARY_ANALYSIS_STATUS_LOADED, SECONDARY_ANALYSES_ERROR } from 'redux/actionTypes/secondaryAnalyses';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 
 const cancelSecondaryAnalysis = (secondaryAnalysisId) => async (dispatch) => {
   try {
-    const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/cancel`, {
+    await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/cancel`, {
       method: 'POST',
     });
 
     dispatch({
-      type: SECONDARY_ANALYSES_CANCELLED,
-      payload: response,
+      type: SECONDARY_ANALYSIS_STATUS_LOADED,
+      payload: { secondaryAnalysisId, status: 'cancelled' },
     });
   } catch (error) {
     const errorMessage = handleError(error, endUserMessages.ERROR_CANCELLING_SECONDARY_ANALYSIS);

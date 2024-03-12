@@ -69,6 +69,12 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Analyses</Button>
         </Space>
       ),
+      cancelled: (
+        <Space direction='vertical'>
+          <Paragraph style={{ fontSize: '20px', width: '100%' }}>Analysis has been cancelled.</Paragraph>
+          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Analyses</Button>
+        </Space>
+      ),
       failed: (
         <Space direction='vertical'>
           <Paragraph style={{ fontSize: '20px', width: '100%' }}>
