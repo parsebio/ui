@@ -186,7 +186,9 @@ const SecondaryAnalysis = () => {
       render: () => (
         <SecondaryAnalysisSettings
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          secondaryAnalysis={secondaryAnalysis}
+          secondaryAnalysisDetails={{
+            numOfSamples, numOfSublibraries, chemistryVersion, kit,
+          }}
         />
       ),
       isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
@@ -218,7 +220,7 @@ const SecondaryAnalysis = () => {
       render: () => (
         <SelectReferenceGenome
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          secondaryAnalysis={secondaryAnalysis}
+          previousGenome={refGenome}
         />
       ),
       isValid: Boolean(refGenome),
