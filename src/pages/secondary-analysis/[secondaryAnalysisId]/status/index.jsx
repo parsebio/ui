@@ -3,14 +3,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space,
+  Button, Select, Space, Switch,
 } from 'antd';
 
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadSecondaryAnalysisStatus } from 'redux/actions/secondaryAnalyses';
+import { loadSecondaryAnalysisStatus, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
@@ -60,13 +60,23 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   if (secondaryAnalysis?.status.loading) {
     return <PreloadContent />;
   }
-
   if (secondaryAnalysis.status.current !== 'finished') {
     const messages = {
       not_created: (
         <Space direction='vertical'>
           <Paragraph style={{ fontSize: '20px', width: '100%' }}>{'Analysis hasn\'t been executed yet'}</Paragraph>
           <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Analyses</Button>
+        </Space>
+      ),
+      created: (
+        <Space direction='vertical'>
+          {fastLoad('')}
+          <Paragraph style={{ fontSize: '20px', width: '100%' }}>
+            The pipeline is launching
+            .
+            <br />
+            You cannot change any settings until the run completes
+          </Paragraph>
         </Space>
       ),
       failed: (
@@ -80,9 +90,9 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         </Space>
       ),
       running: (
-        <>
+        <Space direction='vertical'>
           {fastLoad('')}
-          <Paragraph style={{ fontSize: '20px', width: '50%' }}>
+          <Paragraph style={{ fontSize: '20px', width: '100%' }}>
             The pipeline is running. You cannot change any settings until the run completes
             <br />
             <br />
@@ -90,7 +100,13 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             To elect to receive an email notification when your
             pipeline run is complete, ensure the toggle below is enabled.
           </Paragraph>
-        </>
+          <Switch
+            checked={secondaryAnalysis.notifyByEmail}
+            onChange={(value) => dispatch(
+              updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail: value }),
+            )}
+          />
+        </Space>
       ),
     };
 
