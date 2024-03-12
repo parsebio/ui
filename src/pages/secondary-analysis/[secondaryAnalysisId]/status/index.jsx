@@ -71,7 +71,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       ),
       cancelled: (
         <Space direction='vertical'>
-          <Paragraph style={{ fontSize: '20px', width: '100%' }}>Analysis has been cancelled.</Paragraph>
+          <Paragraph style={{ fontSize: '20px', width: '100%' }}>Your pipeline run has been cancelled.</Paragraph>
           <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Analyses</Button>
         </Space>
       ),
