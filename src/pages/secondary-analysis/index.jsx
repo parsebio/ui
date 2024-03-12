@@ -69,7 +69,8 @@ const SecondaryAnalysis = () => {
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
   );
 
-  const pipelineCanBeRun = ['not_created', 'failed', 'cancelled', 'expired'].includes(currentStatus);
+  const pipelineCanBeRun = true;
+  // const pipelineCanBeRun = ['not_created', 'failed', 'cancelled', 'expired'].includes(currentStatus);
   const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useEffect(() => {
