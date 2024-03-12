@@ -15,6 +15,8 @@ const getHtmlUrlsFromZip = async (fileBlob) => {
       let blob = await entry.getData(new BlobWriter());
 
       // Set its 'type' property to 'text/html'
+      // Otherwise, Object.CreateObjectURL will read it as a string instead of an html
+      // And instead of rendering a report, it renders the report's code
       blob = blob.slice(0, blob.size, 'text/html');
 
       return [entry.filename, blob];
