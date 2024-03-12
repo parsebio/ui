@@ -10,6 +10,7 @@ import createSecondaryAnalysisFile from './createSecondaryAnalysisFile';
 import updateSecondaryAnalysisFile from './updateSecondaryAnalysisFile';
 import deleteSecondaryAnalysisFile from './deleteSecondaryAnalysisFile';
 import launchSecondaryAnalysis from './launchSecondaryAnalysis';
+import cancelSecondaryAnalysis from './cancelSecondaryAnalysis';
 
 export {
   loadSecondaryAnalyses,
@@ -24,4 +25,5 @@ export {
   updateSecondaryAnalysisFile,
   deleteSecondaryAnalysisFile,
   launchSecondaryAnalysis,
+  cancelSecondaryAnalysis,
 };

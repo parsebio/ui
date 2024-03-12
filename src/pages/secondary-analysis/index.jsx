@@ -26,6 +26,7 @@ import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
 import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'utils/constants';
+import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 
 const { Text, Title } = Typography;
@@ -51,6 +52,7 @@ const pipelineStatusToDisplay = {
 
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
+  const navigateTo = useAppRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
   const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
@@ -69,8 +71,7 @@ const SecondaryAnalysis = () => {
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
   );
 
-  const pipelineCanBeRun = true;
-  // const pipelineCanBeRun = ['not_created', 'failed', 'cancelled', 'expired'].includes(currentStatus);
+  const pipelineCanBeRun = !['created', 'running'].includes(currentStatus);
   const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useEffect(() => {

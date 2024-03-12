@@ -3,14 +3,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space, Switch,
+  Button, Select, Space, Switch, Popconfirm,
 } from 'antd';
 
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadSecondaryAnalysisStatus, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import { loadSecondaryAnalysisStatus, updateSecondaryAnalysis, cancelSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
@@ -62,10 +62,16 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   }
   if (secondaryAnalysis.status.current !== 'finished') {
     const messages = {
-      not_created: (
+      not_createdd: (
         <Space direction='vertical'>
           <Paragraph style={{ fontSize: '20px', width: '100%' }}>{'Analysis hasn\'t been executed yet'}</Paragraph>
-          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Analyses</Button>
+          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipelines</Button>
+        </Space>
+      ),
+      cancelled: (
+        <Space direction='vertical'>
+          <Paragraph style={{ fontSize: '20px', width: '100%' }}>Your pipeline run has been cancelled.</Paragraph>
+          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipelines</Button>
         </Space>
       ),
       created: (
@@ -89,25 +95,38 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           {renderDownloadAllOutputsButton()}
         </Space>
       ),
-      running: (
-        <Space direction='vertical'>
-          {fastLoad('')}
-          <Paragraph style={{ fontSize: '20px', width: '100%' }}>
-            The pipeline is running. You cannot change any settings until the run completes
-            <br />
-            <br />
-            <br />
-            To elect to receive an email notification when your
-            pipeline run is complete, ensure the toggle below is enabled.
-          </Paragraph>
-          <Switch
-            checked={secondaryAnalysis.notifyByEmail}
-            onChange={(value) => dispatch(
-              updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail: value }),
-            )}
-          />
-        </Space>
-      ),
+      not_created: (
+        <>
+          <div>
+            {fastLoad('')}
+            <Paragraph style={{ fontSize: '20px', width: '50%' }}>
+              The pipeline is running. You cannot change any settings until the run completes
+              <br />
+              <br />
+              <br />
+              To elect to receive an email notification when your
+              pipeline run is complete, ensure the toggle below is enabled.
+              <br />
+            </Paragraph>
+            <Switch
+              checked={secondaryAnalysis.notifyByEmail}
+              onChange={(value) => dispatch(
+                updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail: value }),
+              )}
+            />
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+              <Popconfirm
+                title='Are you sure you want to cancel this pipeline run?'
+                onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
+                okText='Yes'
+                cancelText='No'
+              >
+                <Button type='danger'>Cancel Run</Button>
+              </Popconfirm>
+            </div>
+          </div>
+          <></>
+        </>),
     };
 
     return (
