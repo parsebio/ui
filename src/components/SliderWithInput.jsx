@@ -50,7 +50,7 @@ const SliderWithInput = (props) => {
       onChange={(changedValue) => {
         if (changedValue === value) { return; }
 
-        const changedValueWithinBounds = Math.min(Math.max(changedValue, min), max);
+        const changedValueWithinBounds = _.clamp(changedValue, min, max);
 
         setLocalValue(changedValueWithinBounds);
 

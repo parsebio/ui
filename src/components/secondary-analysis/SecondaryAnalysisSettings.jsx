@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Select, Form, Space, InputNumber,
+  Select, Form, Space,
 } from 'antd';
 import propTypes from 'prop-types';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 import SliderWithInput from 'components/SliderWithInput';
 
-const { Option } = Select;
 const kitToMaxSublibrariesMap = {
   wt_mini: 2,
   wt: 8,
