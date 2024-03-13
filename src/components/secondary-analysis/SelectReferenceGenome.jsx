@@ -10,15 +10,15 @@ import genomes from 'utils/genomes.json';
 const genomeOptions = genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name }));
 
 const SelectReferenceGenome = (props) => {
-  const { secondaryAnalysis, onDetailsChanged } = props;
+  const { previousGenome, onDetailsChanged } = props;
   const [refGenome, setRefGenome] = useState();
   useEffect(() => {
-    setRefGenome(secondaryAnalysis.refGenome);
-  }, [secondaryAnalysis]);
+    setRefGenome(previousGenome);
+  }, []);
 
   const changeRefGenome = (value) => {
     let newDiff = {};
-    if (secondaryAnalysis.refGenome !== value) {
+    if (previousGenome !== value) {
       newDiff = { refGenome: value };
     }
     onDetailsChanged(newDiff);
@@ -41,9 +41,12 @@ const SelectReferenceGenome = (props) => {
     </>
   );
 };
+SelectReferenceGenome.defaultProps = {
+  previousGenome: '',
+};
 SelectReferenceGenome.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
-  secondaryAnalysis: propTypes.object.isRequired,
+  previousGenome: propTypes.string,
 };
 
 export default SelectReferenceGenome;

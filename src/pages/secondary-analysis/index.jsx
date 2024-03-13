@@ -52,6 +52,7 @@ const pipelineStatusToDisplay = {
 
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
+  const { navigateTo } = useAppRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
   const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
@@ -92,8 +93,6 @@ const SecondaryAnalysis = () => {
   usePolling(async () => {
     await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
   }, [activeSecondaryAnalysisId]);
-
-  const { navigateTo } = useAppRouter();
 
   const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
 
@@ -186,7 +185,9 @@ const SecondaryAnalysis = () => {
       render: () => (
         <SecondaryAnalysisSettings
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          secondaryAnalysis={secondaryAnalysis}
+          secondaryAnalysisDetails={{
+            numOfSamples, numOfSublibraries, chemistryVersion, kit,
+          }}
         />
       ),
       isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
@@ -218,7 +219,7 @@ const SecondaryAnalysis = () => {
       render: () => (
         <SelectReferenceGenome
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          secondaryAnalysis={secondaryAnalysis}
+          previousGenome={refGenome}
         />
       ),
       isValid: Boolean(refGenome),
