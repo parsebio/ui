@@ -1,10 +1,19 @@
+/* eslint-disable no-param-reassign */
 import produce from 'immer';
 
 const secondaryAnalysisFileUpdated = produce((draft, action) => {
   const {
-    uploadStatus, percentProgress, fileId, secondaryAnalysisId,
+    uploadStatus, fileId, secondaryAnalysisId, percentProgress, abortController,
   } = action.payload;
-  draft[secondaryAnalysisId].files.data[fileId].upload = { status: uploadStatus, percentProgress };
+
+  const { upload: uploadDraft } = draft[secondaryAnalysisId].files.data[fileId];
+
+  uploadDraft.status = uploadStatus;
+  uploadDraft.percentProgress = percentProgress;
+
+  if (abortController) {
+    uploadDraft.abortController = abortController;
+  }
 });
 
 export default secondaryAnalysisFileUpdated;
