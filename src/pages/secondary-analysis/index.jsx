@@ -52,7 +52,7 @@ const pipelineStatusToDisplay = {
 
 const SecondaryAnalysis = () => {
   const dispatch = useDispatch();
-  const navigateTo = useAppRouter();
+  const { navigateTo } = useAppRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
   const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
