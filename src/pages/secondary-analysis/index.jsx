@@ -90,11 +90,11 @@ const SecondaryAnalysis = () => {
     }
   }, [activeSecondaryAnalysisId]);
 
-  if (['running', 'created'].includes(secondaryAnalysis?.status?.current)) {
-    usePolling(async () => {
-      await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
-    }, [activeSecondaryAnalysisId, secondaryAnalysis.status.current]);
-  }
+  usePolling(async () => {
+    if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
+
+    await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
+  }, [activeSecondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
   const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
 
