@@ -4,8 +4,8 @@ import {
 } from 'antd';
 import propTypes from 'prop-types';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
+import SliderWithInput from 'components/SliderWithInput';
 
-const { Option } = Select;
 const kitToMaxSublibrariesMap = {
   wt_mini: 2,
   wt: 8,
@@ -31,10 +31,6 @@ const SecondaryAnalysisSettings = (props) => {
     });
     onDetailsChanged(fieldsToUpdate);
   }, [formValues, onDetailsChanged]);
-
-  const generateOptions = (end) => Array.from({ length: end }, (_, i) => i + 1).map((value) => (
-    <Option key={value} value={`${value}`}>{value}</Option>
-  ));
 
   const calculateMaxSublibraries = useCallback((kit) => {
     const newMaxSublibraries = kitToMaxSublibrariesMap[kit];
@@ -96,48 +92,56 @@ const SecondaryAnalysisSettings = (props) => {
           </Space>
         </Form.Item>
 
-        <Form.Item
-          label='Provide details of your experimental design:'
-          name='numOfSamples'
-        >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div>Select the number of samples:</div>
-            <Select
-              style={{ marginLeft: '10px', width: '20%' }}
-              onChange={(value) => handleValueChange('numOfSamples', parseInt(value, 10))}
-              value={formValues.numOfSamples}
-              disabled={!formValues.kit}
+        {formValues.kit && (
+          <>
+            <Form.Item
+              label='Provide details of your experimental design:'
+              name='numOfSamples'
             >
-              {generateOptions(maxSublibraries * 6)}
-            </Select>
-          </div>
-        </Form.Item>
-        <Form.Item
-          name='numOfSublibraries'
-        >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div>
-              Select the number of
-              {' '}
-              <a
-                href='https://support.parsebiosciences.com/hc/en-us/articles/360052394312-What-is-a-sublibrary-'
-                target='_blank'
-                rel='noreferrer'
-              >
-                sublibraries
-              </a>
-              :
-            </div>
-            <Select
-              style={{ marginLeft: '10px', width: '20%' }}
-              onChange={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
-              value={formValues.numOfSublibraries}
-              disabled={!formValues.kit}
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ marginRight: '5px' }}>Select the number of samples:</div>
+                <SliderWithInput
+                  style={{ marginLeft: '20px', width: '20%' }}
+                  min={1}
+                  max={maxSublibraries * 6}
+                  value={formValues.numOfSamples}
+                  onUpdate={(value) => handleValueChange('numOfSamples', parseInt(value, 10))}
+                  disabled={!formValues.kit}
+                  step={1}
+                  debounceTime={0}
+                />
+              </div>
+            </Form.Item>
+            <Form.Item
+              name='numOfSublibraries'
             >
-              {generateOptions(maxSublibraries)}
-            </Select>
-          </div>
-        </Form.Item>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ marginRight: '5px' }}>
+                  Select the number of
+                  {' '}
+                  <a
+                    href='https://support.parsebiosciences.com/hc/en-us/articles/360052394312-What-is-a-sublibrary-'
+                    target='_blank'
+                    rel='noreferrer'
+                  >
+                    sublibraries
+                  </a>
+                  :
+                </div>
+                <SliderWithInput
+                  style={{ marginLeft: '20px', width: '20%' }}
+                  min={1}
+                  max={maxSublibraries}
+                  value={formValues.numOfSublibraries}
+                  onUpdate={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
+                  disabled={!formValues.kit}
+                  step={1}
+                  debounceTime={0}
+                />
+              </div>
+            </Form.Item>
+          </>
+        )}
       </Form>
     </>
   );
