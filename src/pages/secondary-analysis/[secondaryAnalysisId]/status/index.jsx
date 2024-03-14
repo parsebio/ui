@@ -162,7 +162,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         {renderDownloadAllOutputsButton()}
       </Space>
 
-      <iframe src={reports[selectedReport]} title='My Document' style={{ height: '100%', width: '100%' }} />
+      <iframe src={URL.createObjectURL(reports[selectedReport])} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
 
   );
