@@ -47,9 +47,11 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     downloadFromUrl(signedUrl, 'all_outputs.zip');
   }, [secondaryAnalysisId]);
 
-  usePolling(async () => {
-    await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
-  }, [secondaryAnalysisId]);
+  if (['running', 'created'].includes(secondaryAnalysis?.status?.current)) {
+    usePolling(async () => {
+      await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
+    }, [secondaryAnalysisId, secondaryAnalysis.status.current]);
+  }
 
   const renderDownloadAllOutputsButton = () => (
     <Button type='primary' onClick={downloadAllOutputs}>
