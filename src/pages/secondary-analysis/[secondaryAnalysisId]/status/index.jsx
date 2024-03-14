@@ -48,8 +48,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   }, [secondaryAnalysisId]);
 
   usePolling(async () => {
+    if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
+
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
-  }, [secondaryAnalysisId]);
+  }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
   const renderDownloadAllOutputsButton = () => (
     <Button type='primary' onClick={downloadAllOutputs}>
