@@ -17,6 +17,7 @@ import { fastLoad } from 'components/Loader';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
+import writeToFileURL from 'utils/upload/writeToFileURL';
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
@@ -41,11 +42,16 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     setupReports();
   }, [secondaryAnalysis.status.current]);
 
-  const downloadAllOutputs = useCallback(async () => {
-    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/output`);
-
-    downloadFromUrl(signedUrl, 'all_outputs.zip');
-  }, [secondaryAnalysisId]);
+  const downloadOutput = useCallback(async () => {
+    if (secondaryAnalysis?.status?.current === 'finished') {
+      const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/output`);
+      downloadFromUrl(signedUrl, 'all_outputs.zip');
+    } else {
+      const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logFile`, {}, { parseJson: false });
+      const logsFile = await logsResponse.arrayBuffer();
+      downloadFromUrl(writeToFileURL(logsFile), `${secondaryAnalysisId}.log`);
+    }
+  }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
@@ -53,15 +59,16 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
-  const renderDownloadAllOutputsButton = () => (
-    <Button type='primary' onClick={downloadAllOutputs}>
-      Download all outputs
+  const renderDownloadOutputButton = () => (
+    <Button type='primary' onClick={downloadOutput}>
+      Download output
     </Button>
   );
 
   if (secondaryAnalysis?.status.loading) {
     return <PreloadContent />;
   }
+
   if (secondaryAnalysis.status.current !== 'finished') {
     const messages = {
       not_created: (
@@ -94,7 +101,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             The error logs can be accessed by downloading the pipeline output files.
 
           </Paragraph>
-          {renderDownloadAllOutputsButton()}
+          {renderDownloadOutputButton()}
         </Space>
       ),
       running: (
@@ -159,7 +166,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           onChange={setSelectedReport}
           style={{ width: '300px' }}
         />
-        {renderDownloadAllOutputsButton()}
+        {renderDownloadOutputButton()}
       </Space>
 
       <iframe src={URL.createObjectURL(reports[selectedReport])} title='My Document' style={{ height: '100%', width: '100%' }} />
