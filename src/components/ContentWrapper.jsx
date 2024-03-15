@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect, useState, useRef, useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -199,6 +201,7 @@ const ContentWrapper = (props) => {
   }, []);
 
   if (!user) return <></>;
+
   const getStatusObject = (type, status, message = null, completedSteps = null) => ({
     type,
     status,

@@ -37,10 +37,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   }, [secondaryAnalysisId]);
 
   useEffect(() => {
-    if (secondaryAnalysis.status.current !== 'finished') return;
+    if (secondaryAnalysis?.status.current !== 'finished') return;
 
     setupReports();
-  }, [secondaryAnalysis.status.current]);
+  }, [secondaryAnalysis?.status.current]);
 
   const downloadOutput = useCallback(async () => {
     if (secondaryAnalysis?.status?.current === 'finished') {
@@ -65,11 +65,11 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     </Button>
   );
 
-  if (secondaryAnalysis?.status.loading) {
+  if (!secondaryAnalysis || secondaryAnalysis?.status.loading) {
     return <PreloadContent />;
   }
 
-  if (secondaryAnalysis.status.current !== 'finished') {
+  if (secondaryAnalysis?.status.current !== 'finished') {
     const messages = {
       not_created: (
         <Space direction='vertical'>
