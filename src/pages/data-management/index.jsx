@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadExperiments, createExperiment } from 'redux/actions/experiments';
 
@@ -13,13 +13,9 @@ import ExampleExperimentsSpace from 'components/data-management/ExampleExperimen
 import Loader from 'components/Loader';
 import { privacyPolicyIsNotAccepted } from 'utils/deploymentInfo';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
-import { useAppRouter } from 'utils/AppRouteProvider';
-import cache from 'utils/cache';
 
 const DataManagementPage = () => {
   const dispatch = useDispatch();
-
-  const { navigateToUrl } = useAppRouter();
 
   const samples = useSelector((state) => state.samples);
 
@@ -61,20 +57,6 @@ const DataManagementPage = () => {
 
     dispatch(loadBackendStatus(activeExperimentId));
   }, [activeExperimentId, activeExperiment, user]);
-
-  const redirectIfNecessary = useCallback(async () => {
-    const redirectUrl = await cache.get('redirectUrl');
-
-    if (redirectUrl) {
-      await cache.remove('redirectUrl');
-
-      await navigateToUrl(redirectUrl);
-    }
-  });
-
-  useEffect(() => {
-    redirectIfNecessary();
-  }, []);
 
   const PROJECTS_LIST = 'Projects';
   const PROJECT_DETAILS = 'Project Details';
