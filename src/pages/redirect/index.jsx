@@ -6,7 +6,7 @@ import cache from 'utils/cache';
 const { useAppRouter } = require('utils/AppRouteProvider');
 
 const RedirectPage = () => {
-  const { hardNavigateToUrl } = useAppRouter();
+  const { forceNavigateToUrl } = useAppRouter();
 
   const redirect = useCallback(async () => {
     let redirectUrl = await cache.get('redirectUrl');
@@ -17,7 +17,7 @@ const RedirectPage = () => {
       redirectUrl = '/';
     }
 
-    await hardNavigateToUrl(redirectUrl);
+    await forceNavigateToUrl(redirectUrl);
   });
 
   useEffect(() => {

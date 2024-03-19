@@ -139,12 +139,12 @@ const AppRouteProvider = (props) => {
     hardLoad = false,
   ) => handleRouteChange(router.pathname, module, params, ignoreIntercepts, hardLoad);
 
-  const hardNavigateToUrl = async (url) => {
+  const forceNavigateToUrl = async (url) => {
     window.location = url;
   };
 
   return (
-    <AppRouterContext.Provider value={{ navigateTo, currentModule, hardNavigateToUrl }}>
+    <AppRouterContext.Provider value={{ navigateTo, currentModule, forceNavigateToUrl }}>
       {renderIntercept ?? <></>}
       {children}
     </AppRouterContext.Provider>
