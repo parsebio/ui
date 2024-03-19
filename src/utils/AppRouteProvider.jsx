@@ -1,5 +1,5 @@
 import React, {
-  useContext, useState, useEffect,
+  useContext, useState, useEffect, useCallback,
 } from 'react';
 import propTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,6 +11,7 @@ import { loadExperiments, setActiveExperiment, switchExperiment } from 'redux/ac
 import DataProcessingIntercept from 'components/data-processing/DataProcessingIntercept';
 import loadSecondaryAnalyses from 'redux/actions/secondaryAnalyses/loadSecondaryAnalyses';
 import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
+import cache from 'utils/cache';
 
 /**
  * AppRouteProvider provides a context which allows for checking and interception
@@ -138,8 +139,12 @@ const AppRouteProvider = (props) => {
     hardLoad = false,
   ) => handleRouteChange(router.pathname, module, params, ignoreIntercepts, hardLoad);
 
+  const forceNavigateToUrl = async (url) => {
+    window.location = url;
+  };
+
   return (
-    <AppRouterContext.Provider value={{ navigateTo, currentModule }}>
+    <AppRouterContext.Provider value={{ navigateTo, currentModule, forceNavigateToUrl }}>
       {renderIntercept ?? <></>}
       {children}
     </AppRouterContext.Provider>

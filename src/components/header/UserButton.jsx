@@ -13,6 +13,7 @@ import { resetTrackingId } from 'utils/tracking';
 import handleError from 'utils/http/handleError';
 import { loadUser } from 'redux/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
+import signIn from 'utils/signIn';
 
 const UserButton = () => {
   const dispatch = useDispatch();
@@ -93,7 +94,7 @@ const UserButton = () => {
   ) : (
     <Button
       type='dashed'
-      onClick={() => Auth.federatedSignIn()}
+      onClick={() => signIn()}
     >
       Sign in
     </Button>

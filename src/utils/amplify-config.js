@@ -3,7 +3,10 @@ import getAWSRegion from './getAWSRegion';
 const configure = (userPoolId, identityPoolId, userPoolClientDetails) => {
   const redirectProtocol = (process.env.NODE_ENV === 'development') ? 'http:' : 'https:';
   const usingProtocol = (url) => url.startsWith(redirectProtocol);
-  const signInRedirect = userPoolClientDetails.CallbackURLs.filter(usingProtocol)[0];
+
+  const callbackURLs = userPoolClientDetails.CallbackURLs.filter(usingProtocol);
+  const signInRedirect = callbackURLs.find((url) => url.endsWith('/redirect')) ?? callbackURLs[0];
+
   const signOutRedirect = userPoolClientDetails.LogoutURLs.filter(usingProtocol)[0];
 
   const authConfig = {
