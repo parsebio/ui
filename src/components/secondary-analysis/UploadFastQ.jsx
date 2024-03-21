@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button,
 } from 'antd';
@@ -14,6 +14,8 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 
 import Expandable from 'components/Expandable';
 import endUserMessages from 'utils/endUserMessages';
+import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
+import generateApiToken from 'utils/apiToken/generateApiToken';
 
 const { Text } = Typography;
 
@@ -112,147 +114,174 @@ const UploadFastQ = (props) => {
     });
   };
 
+  const [tokenExists, setTokenExists] = useState(null);
+  const [newToken, setNewToken] = useState(null);
+
+  const updateApiTokenStatus = useCallback(async () => {
+    const exists = await getApiTokenExists();
+    setTokenExists(exists);
+  }, []);
+
+  const generateNewToken = useCallback(async () => {
+    console.log('tokenExistsDebug');
+    console.log(tokenExists);
+    const token = await generateApiToken(tokenExists);
+    setNewToken(token);
+  }, [tokenExists]);
+
+  useEffect(() => {
+    console.log('holahola');
+    updateApiTokenStatus();
+  }, []);
+
   return (
-    <Form
-      layout='vertical'
-      size='middle'
-      style={{ width: '100%', margin: '0 auto' }}
-    >
-      <Form.Item
-        name='projectName'
+    <>
+      <>
+        {`tokenExists: ${tokenExists}`}
+        <Button loading={_.isNil(tokenExists)} onClick={generateNewToken}>GENERATE TOKEN</Button>
+        <Text>{newToken}</Text>
+      </>
+      <Form
+        layout='vertical'
+        size='middle'
+        style={{ width: '100%', margin: '0 auto' }}
       >
-        <div>
-          Upload your Fastq files that are output from bcl2fastq. For each sublibrary, you must have a pair of Fastq files, R1 and R2.
-          <br />
-          Note that:
-          {' '}
-          <br />
-          <ul>
-            <li>FASTQ files from the same Parse experiment that have different Illumina indexes should not be concatenated. These files are separate sublibraries.</li>
-            <li>FASTQ files from the same Parse experiment that share identical Illumina indexes must be concatenated. These files belong to the same sublibrary.</li>
-          </ul>
-          Further details on Fastq file format can be found
-          {' '}
-          <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
-
-        </div>
-        {fileHandles.invalid.length > 0 && (
+        <Form.Item
+          name='projectName'
+        >
           <div>
-            <Expandable
-              style={{ width: '100%' }}
-              expandedContent={(
-                <>
-                  <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Ignored files</Divider>
-                  <List
-                    dataSource={fileHandles.invalid}
-                    size='small'
-                    itemLayout='horizontal'
-                    pagination
-                    renderItem={(file) => (
-                      <List.Item key={file.name} style={{ height: '100%', width: '100%' }}>
-                        <Space style={{ width: 200, justifyContent: 'center' }}>
-                          <CloseCircleTwoTone twoToneColor='#f5222d' />
-                          <div style={{ width: 200 }}>
-                            <Text
-                              ellipsis={{ tooltip: file.name }}
-                            >
-                              {file.name}
-                            </Text>
-                          </div>
-                        </Space>
-                        <Text style={{ width: '100%', marginLeft: '50px' }}>{file.rejectReason}</Text>
-                      </List.Item>
-                    )}
-                  />
-                </>
-              )}
-              collapsedContent={(
-                <center style={{ cursor: 'pointer' }}>
-                  <Divider orientation='center' style={{ color: 'red' }} />
-                  <Text type='danger'>
-                    {' '}
-                    <WarningOutlined />
-                    {' '}
-                  </Text>
-                  <Text>
-                    {fileHandles.invalid.length}
-                    {' '}
-                    file
-                    {fileHandles.invalid.length > 1 ? 's were' : ' was'}
-                    {' '}
-                    ignored, click to display
-                  </Text>
-                </center>
-              )}
-            />
+            Upload your Fastq files that are output from bcl2fastq. For each sublibrary, you must have a pair of Fastq files, R1 and R2.
             <br />
-          </div>
-        )}
+            Note that:
+            {' '}
+            <br />
+            <ul>
+              <li>FASTQ files from the same Parse experiment that have different Illumina indexes should not be concatenated. These files are separate sublibraries.</li>
+              <li>FASTQ files from the same Parse experiment that share identical Illumina indexes must be concatenated. These files belong to the same sublibrary.</li>
+            </ul>
+            Further details on Fastq file format can be found
+            {' '}
+            <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
-        <div
-          onClick={handleFileSelection}
-          onKeyDown={handleFileSelection}
-          data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
-          style={{ border: '1px solid #ccc', padding: '2rem 0' }}
-          className='dropzone'
-          id='dropzone'
-        >
-          <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        </div>
-        <Button
-          data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
-          type='primary'
-          key='create'
-          block
-          disabled={!fileHandles.valid.length}
-          onClick={() => {
-            beginUpload(fileHandles.valid);
-            setFileHandles(emptyFiles);
-          }}
-        >
-          Upload
-        </Button>
-        {fileHandles.valid.length > 0 && (
-          <>
-            <Divider orientation='center'>To upload</Divider>
-            <List
-              dataSource={fileHandles.valid}
-              size='small'
-              itemLayout='horizontal'
-              grid='{column: 4}'
-              renderItem={(file) => (
-                <List.Item
-                  key={file.name}
-                  style={{ width: '100%' }}
-                >
-                  <Space>
-                    {!file.errors
-                      ? (
-                        <>
-                          <CheckCircleTwoTone twoToneColor='#52c41a' />
-                        </>
-                      ) : (
-                        <>
-                          <CloseCircleTwoTone twoToneColor='#f5222d' />
-                        </>
+          </div>
+          {fileHandles.invalid.length > 0 && (
+            <div>
+              <Expandable
+                style={{ width: '100%' }}
+                expandedContent={(
+                  <>
+                    <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Ignored files</Divider>
+                    <List
+                      dataSource={fileHandles.invalid}
+                      size='small'
+                      itemLayout='horizontal'
+                      pagination
+                      renderItem={(file) => (
+                        <List.Item key={file.name} style={{ height: '100%', width: '100%' }}>
+                          <Space style={{ width: 200, justifyContent: 'center' }}>
+                            <CloseCircleTwoTone twoToneColor='#f5222d' />
+                            <div style={{ width: 200 }}>
+                              <Text
+                                ellipsis={{ tooltip: file.name }}
+                              >
+                                {file.name}
+                              </Text>
+                            </div>
+                          </Space>
+                          <Text style={{ width: '100%', marginLeft: '50px' }}>{file.rejectReason}</Text>
+                        </List.Item>
                       )}
-                    <Text
-                      style={{ width: '200px' }}
-                    >
-                      {file.name}
+                    />
+                  </>
+                )}
+                collapsedContent={(
+                  <center style={{ cursor: 'pointer' }}>
+                    <Divider orientation='center' style={{ color: 'red' }} />
+                    <Text type='danger'>
+                      {' '}
+                      <WarningOutlined />
+                      {' '}
                     </Text>
-                    <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.name); }} />
-                  </Space>
-                </List.Item>
-              )}
-            />
-          </>
-        )}
-        <br />
-        <br />
-        {renderFastqFileTable()}
-      </Form.Item>
-    </Form>
+                    <Text>
+                      {fileHandles.invalid.length}
+                      {' '}
+                      file
+                      {fileHandles.invalid.length > 1 ? 's were' : ' was'}
+                      {' '}
+                      ignored, click to display
+                    </Text>
+                  </center>
+                )}
+              />
+              <br />
+            </div>
+          )}
+
+          <div
+            onClick={handleFileSelection}
+            onKeyDown={handleFileSelection}
+            data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
+            style={{ border: '1px solid #ccc', padding: '2rem 0' }}
+            className='dropzone'
+            id='dropzone'
+          >
+            <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          </div>
+          <Button
+            data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+            type='primary'
+            key='create'
+            block
+            disabled={!fileHandles.valid.length}
+            onClick={() => {
+              beginUpload(fileHandles.valid);
+              setFileHandles(emptyFiles);
+            }}
+          >
+            Upload
+          </Button>
+          {fileHandles.valid.length > 0 && (
+            <>
+              <Divider orientation='center'>To upload</Divider>
+              <List
+                dataSource={fileHandles.valid}
+                size='small'
+                itemLayout='horizontal'
+                grid='{column: 4}'
+                renderItem={(file) => (
+                  <List.Item
+                    key={file.name}
+                    style={{ width: '100%' }}
+                  >
+                    <Space>
+                      {!file.errors
+                        ? (
+                          <>
+                            <CheckCircleTwoTone twoToneColor='#52c41a' />
+                          </>
+                        ) : (
+                          <>
+                            <CloseCircleTwoTone twoToneColor='#f5222d' />
+                          </>
+                        )}
+                      <Text
+                        style={{ width: '200px' }}
+                      >
+                        {file.name}
+                      </Text>
+                      <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.name); }} />
+                    </Space>
+                  </List.Item>
+                )}
+              />
+            </>
+          )}
+          <br />
+          <br />
+          {renderFastqFileTable()}
+        </Form.Item>
+      </Form>
+    </>
   );
 };
 UploadFastQ.propTypes = {
