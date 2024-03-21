@@ -24,6 +24,8 @@ const EditableField = (props) => {
     validationFunc,
     onEditing,
     formatter,
+    isDisabled,
+    message,
     onDelete,
   } = props;
 
@@ -137,8 +139,9 @@ const EditableField = (props) => {
         {
           showEdit
             ? (
-              <Tooltip placement='top' title='Edit' mouseLeaveDelay={0} ref={editButton}>
+              <Tooltip placement='top' title={message} mouseLeaveDelay={0} ref={editButton}>
                 <Button
+                  disabled={isDisabled}
                   aria-label='Edit'
                   size='small'
                   shape='circle'
@@ -163,8 +166,9 @@ const EditableField = (props) => {
           {
             deleteEnabled
               ? (
-                <Tooltip placement='top' title='Delete' mouseLeaveDelay={0}>
+                <Tooltip placement='top' title={message} mouseLeaveDelay={0}>
                   <Button
+                    disabled={isDisabled}
                     data-test-class={integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON}
                     aria-label='Delete'
                     size='small'
@@ -197,6 +201,8 @@ EditableField.defaultProps = {
   showEdit: true,
   deleteEnabled: true,
   defaultEditing: false,
+  isDisabled: false,
+  message: 'Edit',
   formatter: (value) => value,
 };
 
@@ -211,6 +217,8 @@ EditableField.propTypes = {
   showEdit: PropTypes.bool,
   renderBold: PropTypes.bool,
   defaultEditing: PropTypes.bool,
+  isDisabled: PropTypes.bool,
+  message: PropTypes.string,
   formatter: PropTypes.func,
 };
 
