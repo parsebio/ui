@@ -448,35 +448,27 @@ const ContentWrapper = (props) => {
   };
 
   const getTertiaryModuleDisabled = (module) => {
-    let disableIfNoExperiment; let disabledByPipelineStatus; let
-      disabledIfSeuratComplete;
+    let disableIfNoExperiment = false;
+    let disabledByPipelineStatus = false;
+    let disabledIfSeuratComplete = false;
 
     switch (module) {
-      case modules.DATA_MANAGEMENT:
-        disableIfNoExperiment = false;
-        disabledByPipelineStatus = false;
-        disabledIfSeuratComplete = false;
-        break;
       case modules.DATA_PROCESSING:
         disableIfNoExperiment = true;
-        disabledByPipelineStatus = false;
         disabledIfSeuratComplete = true;
         break;
       case modules.DATA_EXPLORATION:
         disableIfNoExperiment = true;
         disabledByPipelineStatus = true;
-        disabledIfSeuratComplete = false;
         break;
       case modules.PLOTS_AND_TABLES:
         disableIfNoExperiment = true;
         disabledByPipelineStatus = true;
-        disabledIfSeuratComplete = false;
         break;
       default:
         break;
     }
     const needRerunPipeline = pipelinesRerunStatus === null || pipelinesRerunStatus.rerun;
-
     const notProcessedExperimentDisable = !routeExperimentId && disableIfNoExperiment
     && needRerunPipeline;
 
