@@ -542,9 +542,8 @@ const ContentWrapper = (props) => {
             <Text
               style={{
                 width: '100%',
-                color: '#999999',
+                color: 'grey',
               }}
-              strong
               ellipsis
             >
               {selectedProjectText}
