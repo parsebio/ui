@@ -70,7 +70,7 @@ const FastqFileTable = (props) => {
       columns={columns}
       dataSource={dataSource}
       pagination={false}
-      scroll={{ y: 200 }}
+      scroll={{ y: 320 }}
     />
   );
 };
