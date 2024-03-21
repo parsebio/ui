@@ -2,7 +2,7 @@ import React, {
   useState, useEffect,
 } from 'react';
 import {
-  Modal, Button, Empty, Typography, Space, Tooltip,
+  Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm,
 } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
@@ -249,6 +249,58 @@ const SecondaryAnalysis = () => {
   const ANALYSIS_LIST = 'Runs';
   const ANALYSIS_DETAILS = 'Run Details';
 
+  const LaunchAnalysisButton = () => {
+    const firstTimeLaunch = currentStatus === "not_created";
+    const launchAnalysis = () => {
+      setButtonClicked(true);
+      dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
+        .then(() => {
+          navigateTo(
+            modules.SECONDARY_ANALYSIS_OUTPUT,
+            { secondaryAnalysisId: activeSecondaryAnalysisId },
+          );
+        })
+        .catch(() => {
+          setButtonClicked(false);
+        });
+    }
+
+    if (firstTimeLaunch) {
+      return (
+        <Button
+          type='primary'
+          disabled={!isAllValid}
+          style={{ marginBottom: '10px' }}
+          loading={statusLoading || buttonClicked}
+          onClick={() => launchAnalysis()}
+        >
+          Run the pipeline
+        </Button>
+      )
+    }
+
+    return (
+      <Popconfirm
+        title="This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to start the pipeline?"
+        disabled={!isAllValid}
+        onConfirm={() => launchAnalysis()}
+        okText='Yes'
+        cancelText='No'
+        placement='bottom'
+        overlayStyle={{ maxWidth: '250px' }}
+      >
+        <Button
+          type='primary'
+          disabled={!isAllValid}
+          style={{ marginBottom: '10px' }}
+          loading={statusLoading || buttonClicked}
+        >
+          Rerun the pipeline
+        </Button>
+      </Popconfirm>
+    )
+  }
+
   const TILE_MAP = {
     [ANALYSIS_LIST]: {
       toolbarControls: [],
@@ -288,27 +340,7 @@ const SecondaryAnalysis = () => {
                         {`Current status: ${pipelineStatusToDisplay[currentStatus]}`}
                       </Text>
                       {pipelineCanBeRun && (
-                        <Button
-                          type='primary'
-                          disabled={!isAllValid}
-                          style={{ marginBottom: '10px' }}
-                          loading={statusLoading || buttonClicked}
-                          onClick={() => {
-                            setButtonClicked(true);
-                            dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
-                              .then(() => {
-                                navigateTo(
-                                  modules.SECONDARY_ANALYSIS_OUTPUT,
-                                  { secondaryAnalysisId: activeSecondaryAnalysisId },
-                                );
-                              })
-                              .catch(() => {
-                                setButtonClicked(false);
-                              });
-                          }}
-                        >
-                          Run the pipeline
-                        </Button>
+                        <LaunchAnalysisButton></LaunchAnalysisButton>
                       )}
 
                       {pipelineRunAccessible && (
