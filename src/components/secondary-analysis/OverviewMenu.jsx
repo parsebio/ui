@@ -8,12 +8,12 @@ import PropTypes from 'prop-types';
 const { Text } = Typography;
 
 const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => (
-  <Card style={{ maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }}>
+  <Card style={{ maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }} size='small'>
     <Row gutter={[16, 16]}>
       {wizardSteps.map((step, index) => {
         const spanSize = index < 3 ? 8 : 24; // First three cards have span 8, fourth card has span 24
         const cardStyle = {
-          height: index === 3 ? '350px' : '250px',
+          height: index === 3 ? '50vh' : '24vh',
         };
 
         return (
@@ -22,21 +22,25 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => (
               bordered
               style={cardStyle}
               loading={step.isLoading}
+              size='small'
               title={(
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Text
                     strong
                     style={{
-                      overflow: 'auto',
+                      fontSize: '17px',
+                      overflowX: 'auto',
                     }}
                   >
                     {step.key}
                   </Text>
-                  {step.isValid ? (
-                    <CheckCircleOutlined style={{ color: 'green', marginLeft: '10px' }} />
-                  ) : (
-                    <CloseCircleOutlined style={{ color: 'red', marginLeft: '10px' }} />
-                  )}
+                  <div>
+                    {step.isValid ? (
+                      <CheckCircleOutlined style={{ color: 'green', marginLeft: '10px', fontSize: '17px' }} />
+                    ) : (
+                      <CloseCircleOutlined style={{ color: 'red', marginLeft: '10px', fontSize: '17px' }} />
+                    )}
+                  </div>
                 </div>
               )}
               extra={editable && (
