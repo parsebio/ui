@@ -508,8 +508,7 @@ const ContentWrapper = (props) => {
     selectedProjectText,
     isDisabled,
   }) => {
-    const onClick = (e, targetModule) => {
-      e.stopPropagation();
+    const onClick = (targetModule) => {
       navigateTo(targetModule, {
         experimentId: currentExperimentId,
         secondaryAnalysisId: currentAnalysisIdRef.current,
@@ -524,14 +523,16 @@ const ContentWrapper = (props) => {
           style={{
             width: '100%',
           }}
-          onClick={(e) => onClick(e, module)}
-          onKeyDown={(e) => onClick(e, module)}
+          onClick={() => onClick(module)}
+          onKeyDown={() => onClick(module)}
         >
           {name}
         </div>),
       disabled: isDisabled,
+      onClick: () => onClick(module),
       children: [
         {
+          type: 'group',
           key: 'active project',
           label: (
             <Text
@@ -549,11 +550,9 @@ const ContentWrapper = (props) => {
         ...items?.map((item) => ({
           key: item.module,
           icon: item.icon,
+          onClick: () => onClick(item.module),
           label: (
-            <div
-              onClick={(e) => onClick(e, item.module)}
-              onKeyDown={(e) => onClick(e, item.module)}
-            >
+            <div>
               {item.name}
             </div>),
           disabled: item.isDisabled,
@@ -566,7 +565,6 @@ const ContentWrapper = (props) => {
   if (!user) return <></>;
 
   const menuItems = menuLinks
-    .filter((item) => !item.disableIfNoExperiment)
     .map(menuItemRender);
 
   return (
