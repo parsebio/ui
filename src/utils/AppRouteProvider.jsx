@@ -103,7 +103,8 @@ const AppRouteProvider = (props) => {
       setRenderIntercept(availableIntercepts.DATA_PROCESSING(nextRoute));
       return;
     }
-    if (nextRoute.match('experiments')) {
+
+    if (previousRoute.match(PATH_REGEX.DATA_MANAGEMENT) && nextRoute.match('experiments')) {
       const { experimentId } = params;
       dispatch(switchExperiment(experimentId));
     }
