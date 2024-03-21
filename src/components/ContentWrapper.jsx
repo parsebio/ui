@@ -454,7 +454,7 @@ const ContentWrapper = (props) => {
     switch (module) {
       case modules.DATA_MANAGEMENT:
         disableIfNoExperiment = false;
-        disabledByPipelineStatus = true;
+        disabledByPipelineStatus = false;
         disabledIfSeuratComplete = false;
         break;
       case modules.DATA_PROCESSING:
@@ -508,29 +508,41 @@ const ContentWrapper = (props) => {
     selectedProjectText,
     isDisabled,
   }) => {
-    const onClick = (targetModule) => {
+  // Enhanced onClick handler to check for disabled state
+    const onClick = (e, targetModule, isItemDisabled) => {
+      if (isItemDisabled) {
+        return;
+      }
+      e.stopPropagation();
       navigateTo(targetModule, {
         experimentId: currentExperimentId,
         secondaryAnalysisId: currentAnalysisIdRef.current,
       });
     };
 
+    // Main menu item
     const renderedItem = {
       key: module,
-      icon,
+      icon: React.cloneElement(icon, {
+        onClick: (e) => onClick(e, module, isDisabled),
+      }),
       label: (
         <div
           style={{
             width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            cursor: isDisabled ? 'not-allowed' : 'pointer',
           }}
-          onClick={() => onClick(module)}
-          onKeyDown={() => onClick(module)}
+          onClick={(e) => onClick(e, module, isDisabled)}
         >
-          {name}
-        </div>),
+          <span>{name}</span>
+          <span />
+        </div>
+      ),
       disabled: isDisabled,
-      onClick: () => onClick(module),
-      children: [
+      children: !collapsed ? [
         {
           type: 'group',
           key: 'active project',
@@ -550,18 +562,22 @@ const ContentWrapper = (props) => {
         ...items?.map((item) => ({
           key: item.module,
           icon: item.icon,
-          onClick: () => onClick(item.module),
           label: (
-            <div>
+            <div
+              style={{
+                cursor: item.isDisabled ? 'not-allowed' : 'pointer',
+              }}
+              onClick={(event) => onClick(event, item.module, item.isDisabled)}
+            >
               {item.name}
-            </div>),
+            </div>
+          ),
           disabled: item.isDisabled,
         })),
-      ],
+      ] : undefined,
     };
     return renderedItem;
   };
-
   if (!user) return <></>;
 
   const menuItems = menuLinks
@@ -583,7 +599,7 @@ const ContentWrapper = (props) => {
             width={210}
             theme='dark'
             mode='inline'
-            collapsible={false}
+            collapsible
             collapsed={collapsed}
             onCollapse={(collapse) => setCollapsed(collapse)}
           >

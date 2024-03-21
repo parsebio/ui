@@ -105,7 +105,6 @@ const AppRouteProvider = (props) => {
     }
     if (nextRoute.match('experiments')) {
       const { experimentId } = params;
-      console.log('EXPERIMENTID SWITCHING', experimentId);
       dispatch(switchExperiment(experimentId));
     }
 
