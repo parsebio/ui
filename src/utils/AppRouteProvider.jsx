@@ -103,9 +103,9 @@ const AppRouteProvider = (props) => {
       setRenderIntercept(availableIntercepts.DATA_PROCESSING(nextRoute));
       return;
     }
-
-    if (previousRoute.match(PATH_REGEX.DATA_MANAGEMENT) && !nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS)) {
+    if (nextRoute.match('experiments')) {
       const { experimentId } = params;
+      console.log('EXPERIMENTID SWITCHING', experimentId);
       dispatch(switchExperiment(experimentId));
     }
 

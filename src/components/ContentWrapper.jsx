@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {
-  useEffect, useState, useRef, useCallback,
+  useEffect, useState, useRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,8 +17,6 @@ import {
 import {
   Layout,
   Menu,
-  Space,
-  Tooltip,
   Typography,
 } from 'antd';
 
@@ -107,6 +105,7 @@ const ContentWrapper = (props) => {
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
   const experimentName = experimentData?.experimentName || experiment?.name;
+  const secondaryAnalysisName = useSelector((state) => state?.secondaryAnalyses?.[currentAnalysisIdRef.current]?.name);
 
   const {
     loading: backendLoading,
@@ -342,62 +341,70 @@ const ContentWrapper = (props) => {
     {
       module: modules.SECONDARY_ANALYSIS,
       icon: <CodeSandboxOutlined />,
-      name: 'Secondary Analysis',
-      getDisabled: () => (
-        analysisStatus
+      name: 'Pipeline',
+      selectedProjectText: secondaryAnalysisName || 'No run',
+      get isDisabled() {
+        return (
+          analysisStatus
         && currentModule === modules.SECONDARY_ANALYSIS_OUTPUT && analysisStatus === 'running'
-      ),
-      disableIfNoExperiment: false,
-      disabledByPipelineStatus: true,
-      disabledIfSeuratComplete: false,
-    },
-    {
-      module: modules.SECONDARY_ANALYSIS_OUTPUT,
-      icon: <CodeSandboxOutlined />,
-      name: 'Pipeline Output',
-      getDisabled: () => (
-        !activeSecondaryAnalysisId
-        || (analysisStatus
-          && analysisStatus === 'not_created'
-          && currentModule === modules.SECONDARY_ANALYSIS
-        )
+        );
+      },
+      items: [
+        {
+          module: modules.SECONDARY_ANALYSIS_OUTPUT,
+          name: 'Pipeline Output',
+          get isDisabled() {
+            return (
+              !activeSecondaryAnalysisId
+                || (analysisStatus
+                  && analysisStatus === 'not_created'
+                  && currentModule === modules.SECONDARY_ANALYSIS
+                )
+            );
+          },
+        },
+      ],
+      get isUserInModule() {
+        const { module } = this;
+        const { items } = this;
+        return currentModule === module || items.some((item) => item.module === currentModule);
+      },
 
-      ),
-      disableIfNoExperiment: false,
-      disabledByPipelineStatus: true,
-      disabledIfSeuratComplete: false,
     },
     {
       module: modules.DATA_MANAGEMENT,
       icon: <FolderOpenOutlined />,
-      name: 'Data Management',
-      disableIfNoExperiment: false,
-      disabledByPipelineStatus: true,
-      disabledIfSeuratComplete: false,
-    },
-    {
-      module: modules.DATA_PROCESSING,
-      icon: <BuildOutlined />,
-      name: 'Data Processing',
-      disableIfNoExperiment: true,
-      disabledByPipelineStatus: false,
-      disabledIfSeuratComplete: true,
-    },
-    {
-      module: modules.DATA_EXPLORATION,
-      icon: <FundViewOutlined />,
-      name: 'Data Exploration',
-      disableIfNoExperiment: true,
-      disabledByPipelineStatus: true,
-      disabledIfSeuratComplete: false,
-    },
-    {
-      module: modules.PLOTS_AND_TABLES,
-      icon: <DatabaseOutlined />,
-      name: 'Plots and Tables',
-      disableIfNoExperiment: true,
-      disabledByPipelineStatus: true,
-      disabledIfSeuratComplete: false,
+      name: 'Insights',
+      selectedProjectText: experimentName || 'No analysis',
+      get isDisabled() { return getTertiaryModuleDisabled(this.module); },
+      items: [
+        {
+          module: modules.DATA_PROCESSING,
+          icon: <BuildOutlined />,
+          name: 'Data Processing',
+          get isDisabled() { return getTertiaryModuleDisabled(this.module); },
+
+        },
+        {
+          module: modules.DATA_EXPLORATION,
+          icon: <FundViewOutlined />,
+          name: 'Data Exploration',
+          get isDisabled() { return getTertiaryModuleDisabled(this.module); },
+
+        },
+        {
+          module: modules.PLOTS_AND_TABLES,
+          icon: <DatabaseOutlined />,
+          name: 'Plots and Tables',
+          get isDisabled() { return getTertiaryModuleDisabled(this.module); },
+
+        },
+      ],
+      get isUserInModule() {
+        const { module } = this;
+        const { items } = this;
+        return currentModule === module || items.some((item) => item.module === currentModule);
+      },
     },
   ];
 
@@ -440,82 +447,127 @@ const ContentWrapper = (props) => {
     return children;
   };
 
-  const menuItemRender = ({
-    module,
-    icon,
-    name,
-    disableIfNoExperiment,
-    disabledByPipelineStatus,
-    disabledIfSeuratComplete,
-    getDisabled = () => false,
-  }) => {
+  const getTertiaryModuleDisabled = (module) => {
+    let disableIfNoExperiment; let disabledByPipelineStatus; let
+      disabledIfSeuratComplete;
+
+    switch (module) {
+      case modules.DATA_MANAGEMENT:
+        disableIfNoExperiment = false;
+        disabledByPipelineStatus = true;
+        disabledIfSeuratComplete = false;
+        break;
+      case modules.DATA_PROCESSING:
+        disableIfNoExperiment = true;
+        disabledByPipelineStatus = false;
+        disabledIfSeuratComplete = true;
+        break;
+      case modules.DATA_EXPLORATION:
+        disableIfNoExperiment = true;
+        disabledByPipelineStatus = true;
+        disabledIfSeuratComplete = false;
+        break;
+      case modules.PLOTS_AND_TABLES:
+        disableIfNoExperiment = true;
+        disabledByPipelineStatus = true;
+        disabledIfSeuratComplete = false;
+        break;
+      default:
+        break;
+    }
     const needRerunPipeline = pipelinesRerunStatus === null || pipelinesRerunStatus.rerun;
 
     const notProcessedExperimentDisable = !routeExperimentId && disableIfNoExperiment
-      && needRerunPipeline;
+    && needRerunPipeline;
 
     const pipelineStatusDisable = disabledByPipelineStatus && (
       backendError || gem2sRunning || gem2sRunningError
-      || waitingForQcToLaunch || qcRunning || qcRunningError
-      || seuratRunning || seuratRunningError
+    || waitingForQcToLaunch || qcRunning || qcRunningError
+    || seuratRunning || seuratRunningError
     );
 
     const {
       DATA_EXPLORATION, DATA_MANAGEMENT, DATA_PROCESSING, PLOTS_AND_TABLES,
     } = modules;
 
-    // disable links if user is not in one of the experiment analysis modules
     const nonExperimentModule = ![DATA_EXPLORATION,
       DATA_MANAGEMENT, DATA_PROCESSING, PLOTS_AND_TABLES]
       .includes(currentModule) && disableIfNoExperiment;
+
     const seuratCompleteDisable = disabledIfSeuratComplete && seuratComplete;
 
-    return {
+    return notProcessedExperimentDisable || pipelineStatusDisable
+    || seuratCompleteDisable || nonExperimentModule;
+  };
+
+  const menuItemRender = ({
+    module,
+    items,
+    icon,
+    name,
+    selectedProjectText,
+    isDisabled,
+  }) => {
+    const onClick = (e, targetModule) => {
+      e.stopPropagation();
+      navigateTo(targetModule, {
+        experimentId: currentExperimentId,
+        secondaryAnalysisId: currentAnalysisIdRef.current,
+      });
+    };
+
+    const renderedItem = {
       key: module,
       icon,
-      label: name,
-      disabled: notProcessedExperimentDisable || pipelineStatusDisable
-        || seuratCompleteDisable || nonExperimentModule || getDisabled(),
-      onClick: () => navigateTo(
-        module,
-        { experimentId: currentExperimentId, secondaryAnalysisId: currentAnalysisIdRef.current },
-      ),
+      label: (
+        <div
+          style={{
+            width: '100%',
+          }}
+          onClick={(e) => onClick(e, module)}
+          onKeyDown={(e) => onClick(e, module)}
+        >
+          {name}
+        </div>),
+      disabled: isDisabled,
+      children: [
+        {
+          key: 'active project',
+          label: (
+            <Text
+              style={{
+                width: '100%',
+                color: '#999999',
+              }}
+              strong
+              ellipsis
+            >
+              {selectedProjectText}
+            </Text>
+          ),
+        },
+        ...items?.map((item) => ({
+          key: item.module,
+          icon: item.icon,
+          label: (
+            <div
+              onClick={(e) => onClick(e, item.module)}
+              onKeyDown={(e) => onClick(e, item.module)}
+            >
+              {item.name}
+            </div>),
+          disabled: item.isDisabled,
+        })),
+      ],
     };
+    return renderedItem;
   };
 
   if (!user) return <></>;
 
-  const mainMenuItems = menuLinks
+  const menuItems = menuLinks
     .filter((item) => !item.disableIfNoExperiment)
     .map(menuItemRender);
-
-  const groupMenuItems = menuLinks
-    .filter((item) => item.disableIfNoExperiment)
-    .map(menuItemRender);
-
-  const groupItem = {
-    type: 'group',
-    label: !collapsed && (
-      <Tooltip title={experimentName} placement='right'>
-        <Space direction='vertical' style={{ width: '100%', cursor: 'default' }}>
-          <Text
-            style={{
-              width: '100%',
-              color: '#999999',
-            }}
-            strong
-            ellipsis
-          >
-            {experimentName || 'No analysis'}
-          </Text>
-          {experimentName && <Text style={{ color: '#999999' }}>Current analysis</Text>}
-        </Space>
-      </Tooltip>
-    ),
-    children: groupMenuItems,
-  };
-
-  const menuItems = [...mainMenuItems, groupItem];
 
   return (
     <>
@@ -533,7 +585,7 @@ const ContentWrapper = (props) => {
             width={210}
             theme='dark'
             mode='inline'
-            collapsible
+            collapsible={false}
             collapsed={collapsed}
             onCollapse={(collapse) => setCollapsed(collapse)}
           >
@@ -545,6 +597,7 @@ const ContentWrapper = (props) => {
                 selectedKeys={menuLinks.filter(({ module }) => module === currentModule).map(({ module }) => module)}
                 mode='inline'
                 items={menuItems}
+                openKeys={menuLinks.filter((item) => item.isUserInModule).map((item) => item.module)}
               />
             </div>
           </Sider>
