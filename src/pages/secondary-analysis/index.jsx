@@ -281,7 +281,7 @@ const SecondaryAnalysis = () => {
 
     return (
       <Popconfirm
-        title="This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to start the pipeline?"
+        title="This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?"
         disabled={!isAllValid}
         onConfirm={() => launchAnalysis()}
         okText='Yes'
@@ -290,7 +290,6 @@ const SecondaryAnalysis = () => {
         overlayStyle={{ maxWidth: '250px' }}
       >
         <Button
-          type='primary'
           disabled={!isAllValid}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
