@@ -448,9 +448,6 @@ const ContentWrapper = (props) => {
         disabledIfSeuratComplete = true;
         break;
       case modules.DATA_EXPLORATION:
-        disableIfNoExperiment = true;
-        disabledByPipelineStatus = true;
-        break;
       case modules.PLOTS_AND_TABLES:
         disableIfNoExperiment = true;
         disabledByPipelineStatus = true;
