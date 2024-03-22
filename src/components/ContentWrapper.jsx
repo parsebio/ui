@@ -10,10 +10,11 @@ import MultiBackend from 'react-dnd-multi-backend';
 import HTML5ToTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch';
 import {
   BuildOutlined,
-  DatabaseOutlined,
-  FolderOpenOutlined,
   FundViewOutlined,
-  CodeSandboxOutlined,
+  BarChartOutlined,
+  NodeExpandOutlined,
+  FileDoneOutlined,
+  DotChartOutlined,
 } from '@ant-design/icons';
 import {
   Layout,
@@ -46,6 +47,7 @@ import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipeli
 
 const { Sider } = Layout;
 const { Text } = Typography;
+const { Item, SubMenu, ItemGroup } = Menu;
 
 const checkEveryIsValue = (arr, value) => arr.every((item) => item === value);
 
@@ -343,19 +345,16 @@ const ContentWrapper = (props) => {
   const menuLinks = [
     {
       module: modules.SECONDARY_ANALYSIS,
-      icon: <CodeSandboxOutlined />,
+      icon: <NodeExpandOutlined />,
       name: 'Pipeline',
-      selectedProjectText: secondaryAnalysisName || 'No run',
-      get isDisabled() {
-        return (
-          analysisStatus
-        && currentModule === modules.SECONDARY_ANALYSIS_OUTPUT && analysisStatus === 'running'
-        );
-      },
+      selectedProjectText: secondaryAnalysisName || 'No run selected',
+      isDisabled: false,
       items: [
         {
           module: modules.SECONDARY_ANALYSIS_OUTPUT,
           name: 'Pipeline Output',
+          icon: <FileDoneOutlined />,
+
           get isDisabled() {
             return (
               !activeSecondaryAnalysisId
@@ -370,9 +369,9 @@ const ContentWrapper = (props) => {
     },
     {
       module: modules.DATA_MANAGEMENT,
-      icon: <FolderOpenOutlined />,
+      icon: <DotChartOutlined />,
       name: 'Insights',
-      selectedProjectText: experimentName || 'No analysis',
+      selectedProjectText: experimentName || 'No project selected',
       get isDisabled() { return getTertiaryModuleDisabled(this.module); },
       items: [
         {
@@ -391,7 +390,7 @@ const ContentWrapper = (props) => {
         },
         {
           module: modules.PLOTS_AND_TABLES,
-          icon: <DatabaseOutlined />,
+          icon: <BarChartOutlined />,
           name: 'Plots and Tables',
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
         },
@@ -491,46 +490,23 @@ const ContentWrapper = (props) => {
     selectedProjectText,
     isDisabled,
   }) => {
-  // Enhanced onClick handler to check for disabled state
-    const onClick = (e, targetModule, isItemDisabled) => {
-      if (isItemDisabled) {
-        return;
-      }
-      e.stopPropagation();
+    const onClick = (targetModule) => {
       navigateTo(targetModule, {
         experimentId: currentExperimentId,
         secondaryAnalysisId: currentAnalysisIdRef.current,
       });
     };
-
-    // Main menu item
-    const renderedItem = {
-      key: module,
-      icon: React.cloneElement(icon, {
-        onClick: (e) => onClick(e, module, isDisabled),
-      }),
-      label: (
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            cursor: isDisabled ? 'not-allowed' : 'pointer',
-          }}
-          onClick={(e) => onClick(e, module, isDisabled)}
-          onKeyDown={(e) => onClick(e, module, isDisabled)}
-        >
-          <span>{name}</span>
-          <span />
-        </div>
-      ),
-      disabled: isDisabled,
-      children: !collapsed ? [
-        {
-          type: 'group',
-          key: 'active project',
-          label: (
+    return (
+      <SubMenu
+        key={module}
+        title={name}
+        icon={icon}
+        disabled={isDisabled}
+        onTitleClick={() => onClick(module)}
+      >
+        <ItemGroup
+          key='active project'
+          title={(
             <Text
               style={{
                 width: '100%',
@@ -540,28 +516,25 @@ const ContentWrapper = (props) => {
             >
               {selectedProjectText}
             </Text>
-          ),
-        },
-        ...items?.map((item) => ({
-          key: item.module,
-          icon: item.icon,
-          label: (
-            <div
-              style={{
-                cursor: item.isDisabled ? 'not-allowed' : 'pointer',
+          )}
+        >
+          {!collapsed && items.map((item) => (
+            <Item
+              key={item.module}
+              disabled={item.isDisabled}
+              icon={item.icon}
+              onClick={() => {
+                onClick(item.module);
               }}
-              onClick={(event) => onClick(event, item.module, item.isDisabled)}
-              onKeyDown={(event) => onClick(event, item.module, item.isDisabled)}
             >
               {item.name}
-            </div>
-          ),
-          disabled: item.isDisabled,
-        })),
-      ] : undefined,
-    };
-    return renderedItem;
+            </Item>
+          ))}
+        </ItemGroup>
+      </SubMenu>
+    );
   };
+
   if (!user) return <></>;
 
   const menuItems = menuLinks
@@ -595,13 +568,13 @@ const ContentWrapper = (props) => {
               <Menu
                 data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
                 theme='dark'
-                selectedKeys={menuLinks.filter(({ module }) => module === currentModule)
-                  .map(({ module }) => module)}
+                selectedKeys={[currentModule]}
                 mode='inline'
-                items={menuItems}
                 openKeys={menuLinks.filter((item) => isUserInModule(item.module,
                   item.items || [])).map((item) => item.module)}
-              />
+              >
+                {menuItems}
+              </Menu>
             </div>
           </Sider>
           <Layout
