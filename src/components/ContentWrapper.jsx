@@ -1,3 +1,4 @@
+/* eslint-disable react/no-this-in-sfc */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {
   useEffect, useState, useRef,
@@ -105,7 +106,9 @@ const ContentWrapper = (props) => {
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
   const experimentName = experimentData?.experimentName || experiment?.name;
-  const secondaryAnalysisName = useSelector((state) => state?.secondaryAnalyses?.[currentAnalysisIdRef.current]?.name);
+  const secondaryAnalysisName = useSelector(
+    (state) => state?.secondaryAnalyses?.[currentAnalysisIdRef.current]?.name,
+  );
 
   const {
     loading: backendLoading,
@@ -114,7 +117,7 @@ const ContentWrapper = (props) => {
   } = useSelector(getBackendStatus(currentExperimentId));
 
   const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
-  const { loading: analysisStatusLoading, current: analysisStatus } = useSelector(
+  const { current: analysisStatus } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
   );
 
@@ -364,12 +367,6 @@ const ContentWrapper = (props) => {
           },
         },
       ],
-      get isUserInModule() {
-        const { module } = this;
-        const { items } = this;
-        return currentModule === module || items.some((item) => item.module === currentModule);
-      },
-
     },
     {
       module: modules.DATA_MANAGEMENT,
@@ -397,14 +394,8 @@ const ContentWrapper = (props) => {
           icon: <DatabaseOutlined />,
           name: 'Plots and Tables',
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
-
         },
       ],
-      get isUserInModule() {
-        const { module } = this;
-        const { items } = this;
-        return currentModule === module || items.some((item) => item.module === currentModule);
-      },
     },
   ];
 
@@ -528,6 +519,7 @@ const ContentWrapper = (props) => {
             cursor: isDisabled ? 'not-allowed' : 'pointer',
           }}
           onClick={(e) => onClick(e, module, isDisabled)}
+          onKeyDown={(e) => onClick(e, module, isDisabled)}
         >
           <span>{name}</span>
           <span />
@@ -559,6 +551,7 @@ const ContentWrapper = (props) => {
                 cursor: item.isDisabled ? 'not-allowed' : 'pointer',
               }}
               onClick={(event) => onClick(event, item.module, item.isDisabled)}
+              onKeyDown={(event) => onClick(event, item.module, item.isDisabled)}
             >
               {item.name}
             </div>
@@ -573,6 +566,9 @@ const ContentWrapper = (props) => {
 
   const menuItems = menuLinks
     .map(menuItemRender);
+
+  const isUserInModule = (module, items) => currentModule === module
+  || items.some((item) => item.module === currentModule);
 
   return (
     <>
@@ -599,10 +595,12 @@ const ContentWrapper = (props) => {
               <Menu
                 data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
                 theme='dark'
-                selectedKeys={menuLinks.filter(({ module }) => module === currentModule).map(({ module }) => module)}
+                selectedKeys={menuLinks.filter(({ module }) => module === currentModule)
+                  .map(({ module }) => module)}
                 mode='inline'
                 items={menuItems}
-                openKeys={menuLinks.filter((item) => item.isUserInModule).map((item) => item.module)}
+                openKeys={menuLinks.filter((item) => isUserInModule(item.module,
+                  item.items || [])).map((item) => item.module)}
               />
             </div>
           </Sider>
