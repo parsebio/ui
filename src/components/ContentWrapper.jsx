@@ -504,33 +504,35 @@ const ContentWrapper = (props) => {
         disabled={isDisabled}
         onTitleClick={() => onClick(module)}
       >
-        <ItemGroup
-          key='active project'
-          title={(
-            <Text
-              style={{
-                width: '100%',
-                color: 'grey',
-              }}
-              ellipsis
-            >
-              {selectedProjectText}
-            </Text>
-          )}
-        >
-          {!collapsed && items.map((item) => (
-            <Item
-              key={item.module}
-              disabled={item.isDisabled}
-              icon={item.icon}
-              onClick={() => {
-                onClick(item.module);
-              }}
-            >
-              {item.name}
-            </Item>
-          ))}
-        </ItemGroup>
+        {!collapsed && (
+          <ItemGroup
+            key='active project'
+            title={(
+              <Text
+                style={{
+                  width: '100%',
+                  color: 'grey',
+                }}
+                ellipsis
+              >
+                {selectedProjectText}
+              </Text>
+            )}
+          >
+            {items.map((item) => (
+              <Item
+                key={item.module}
+                disabled={item.isDisabled}
+                icon={item.icon}
+                onClick={() => {
+                  onClick(item.module);
+                }}
+              >
+                {item.name}
+              </Item>
+            ))}
+          </ItemGroup>
+        )}
       </SubMenu>
     );
   };
