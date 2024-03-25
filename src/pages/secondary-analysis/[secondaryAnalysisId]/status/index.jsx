@@ -33,7 +33,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     const htmlUrls = await getReports(secondaryAnalysisId);
 
     setReports(htmlUrls);
-    const defaultReport = Object.keys(htmlUrls).find((key) => key.includes('all-sample_analysis_summary.html')) || Object.keys(htmlUrls)[0];
+    const defaultReport = Object.keys(htmlUrls).find((key) => key === 'all-sample_analysis_summary.html') || Object.keys(htmlUrls)[0];
     setSelectedReport(defaultReport);
   }, [secondaryAnalysisId]);
 
