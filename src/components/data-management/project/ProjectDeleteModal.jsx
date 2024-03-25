@@ -124,7 +124,7 @@ const ProjectDeleteModal = (props) => {
 
 ProjectDeleteModal.propTypes = {
   projectName: PropTypes.string.isRequired,
-  projectType: PropTypes.oneOf(['secondaryAnalyses', 'experiment']).isRequired,
+  projectType: PropTypes.oneOf(['secondaryAnalyses', 'experiments']).isRequired,
   onCancel: PropTypes.func,
   onDelete: PropTypes.func,
 };
