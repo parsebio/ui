@@ -339,7 +339,7 @@ const SecondaryAnalysis = () => {
                         {`Current status: ${pipelineStatusToDisplay[currentStatus]}`}
                       </Text>
                       {pipelineCanBeRun && (
-                        <LaunchAnalysisButton></LaunchAnalysisButton>
+                        <LaunchAnalysisButton />
                       )}
 
                       {pipelineRunAccessible && (
