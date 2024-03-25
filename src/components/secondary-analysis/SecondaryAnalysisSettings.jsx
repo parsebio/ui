@@ -35,7 +35,6 @@ const SecondaryAnalysisSettings = (props) => {
   const calculateMaxSublibraries = useCallback((kit) => {
     const newMaxSublibraries = kitToMaxSublibrariesMap[kit];
     if (!newMaxSublibraries) {
-      console.log('INVALID KIT OPTION SELECTED');
       return;
     }
     setMaxSublibraries(newMaxSublibraries);
