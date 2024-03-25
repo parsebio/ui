@@ -100,7 +100,7 @@ const SecondaryAnalysisCard = (props) => {
         >
           <Item contentStyle={{ fontWeight: 700, fontSize: 16 }}>
             <EditableField
-              isDisabled={anyFileUploadingForAnyAnalysis}
+              disabled={anyFileUploadingForAnyAnalysis}
               message={anyFileUploadingForAnyAnalysis ? 'Project details can not be modified while files are uploading.' : undefined}
               value={secondaryAnalysis.name}
               onAfterSubmit={updateSecondaryAnalysisName}
