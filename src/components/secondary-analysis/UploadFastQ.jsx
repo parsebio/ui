@@ -130,7 +130,6 @@ const UploadFastQ = (props) => {
   }, [tokenExists]);
 
   useEffect(() => {
-    console.log('holahola');
     updateApiTokenStatus();
   }, []);
 
