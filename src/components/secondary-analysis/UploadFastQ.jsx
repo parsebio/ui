@@ -317,6 +317,26 @@ const UploadFastQ = (props) => {
             )
             : 'To upload files via the command line, you need to generate a token.'}
           <Button loading={_.isNil(tokenExists)} onClick={generateNewToken}>{tokenExists ? 'Refresh token' : 'Generate token'}</Button>
+          <Divider />
+          <Text>
+            To perform a command-line upload, download this script:
+            <br />
+            <a href='/parse-upload.py' download>script-parse.py</a>
+            <br />
+
+            Run the script with the following command:
+            <br />
+            <Paragraph>
+              <pre>
+                {`python script-parse.py --token ${newToken || 'YOUR_TOKEN'} 
+  --run_id ${secondaryAnalysisId}
+  -file /path/to/fastq/file_1
+  -file /path/to/fastq/file_2
+  -f ...
+`}
+              </pre>
+            </Paragraph>
+          </Text>
         </Space>
       ),
     },

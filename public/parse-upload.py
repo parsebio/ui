@@ -361,7 +361,7 @@ def show_files_to_upload_warning(file_paths):
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args) -> UploadTracker:
-    non_resumable_args = args.analysis_id or args.files_paths
+    non_resumable_args = args.run_id or args.file
     
     if (non_resumable_args and args.resume):
         raise Exception("If resuming a previous upload, only -r / --resume flag and -t / --token are needed, nothing else is allowed")
@@ -372,10 +372,10 @@ def prepare_upload(args) -> UploadTracker:
     resume = args.resume or show_resume_option()
 
     if (not resume):
-        if not args.analysis_id:
+        if not args.run_id:
             raise Exception("Analysis ID is required")
         
-        if not args.files_paths:
+        if not args.file:
             raise Exception("At least one file is required")
 
     upload_tracker = None
@@ -383,9 +383,9 @@ def prepare_upload(args) -> UploadTracker:
         upload_tracker = UploadTracker.fromResumeFile(args.token)
     else:
         # Take list of glob patterns and expand and flatten them into a list of files
-        files = [file for glob_pattern in args.files_paths for file in glob.glob(glob_pattern)]
+        files = [file for glob_pattern in args.file for file in glob.glob(glob_pattern)]
 
-        upload_tracker = UploadTracker.fromScratch(args.analysis_id, files, args.token)
+        upload_tracker = UploadTracker.fromScratch(args.run_id, files, args.token)
 
     # Check that the files look like fastqs
     for file_path in upload_tracker.file_paths:
@@ -399,9 +399,9 @@ def prepare_upload(args) -> UploadTracker:
 
 def main():
     parser = argparse.ArgumentParser(description='Perform a multipart upload to S3.')
-    parser.add_argument('-id', '--analysis_id', required=False, help='The pipeline id')
+    parser.add_argument('-id', '--run_id', required=False, help='The run id')
     parser.add_argument('-t', '--token', required=False, default=os.environ.get('PARSE_CLOUD_TOKEN'), help='The upload token, can be obtained from the browser application')
-    parser.add_argument('-f', '--files_paths', nargs='*', required=False, help='A space-separated list of files, glob patterns are accepted')
+    parser.add_argument('-f', '--file', nargs='*', required=False, help='A space-separated list of files, glob patterns are accepted')
     parser.add_argument('-r', '--resume', action='store_true', help='Resume an interrupted upload')
     
     args = parser.parse_args()
