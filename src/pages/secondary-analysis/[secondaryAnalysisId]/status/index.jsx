@@ -34,8 +34,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
     setReports(htmlUrls);
     // default to all-sample report
-    const defaultReport = htmlUrls['all-sample_analysis_summary.html'] ?? Object.keys(htmlUrls)[0];
-    setSelectedReport(defaultReport);
+    setSelectedReport(htmlUrls['all-sample_analysis_summary.html'] ?? Object.keys(htmlUrls)[0]);
   }, [secondaryAnalysisId]);
 
   useEffect(() => {
