@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Form, Empty, Divider, List, Space, Typography, Button, Tabs,
+  Form, Empty, Divider, List, Space, Typography, Button, Tabs, Alert,
 } from 'antd';
 import {
   CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
@@ -288,21 +288,25 @@ const UploadFastQ = (props) => {
       children: (
         <Space direction='vertical'>
           {newToken && (
-            <>
-              <Text>
-                Token generated:
-                {' '}
-                {
-                  <Text keyboard>
-                    {newToken}
+            <Alert
+              message={(
+                <>
+                  <Text>
+                    Token generated:
+                    {' '}
+                    {
+                      <Text keyboard>
+                        {newToken}
+                      </Text>
+                    }
                   </Text>
-                }
-              </Text>
-              <Text>
-                {'Don\'t forget to save this token, as it will not be displayed again.'}
-              </Text>
-              <Divider />
-            </>
+                  <br />
+                  <Text>
+                    {'Don\'t forget to save this token as it will not be displayed again.'}
+                  </Text>
+                </>
+              )}
+            />
           )}
           {tokenExists || newToken
             ? (
@@ -321,18 +325,27 @@ const UploadFastQ = (props) => {
           <Text>
             To perform a command-line upload, download this script:
             <br />
-            <a href='/parse-upload.py' download>script-parse.py</a>
+            <a href='/parse-upload.py' download>parse-upload.py</a>
             <br />
 
             Run the script with the following command:
             <br />
-            <Paragraph>
+            <Paragraph copyable={{
+              text: `python parse-upload.py \\
+  --token ${newToken || 'YOUR_TOKEN'} \\
+  --run_id ${secondaryAnalysisId} \\
+  --file /path/to/fastq/file_1 \\
+  --file /path/to/fastq/file_2 \\
+  --file ...`,
+            }}
+            >
               <pre>
-                {`python script-parse.py --token ${newToken || 'YOUR_TOKEN'} 
-  --run_id ${secondaryAnalysisId}
-  -file /path/to/fastq/file_1
-  -file /path/to/fastq/file_2
-  -f ...
+                {`python parse-upload.py \\
+  --token ${newToken || 'YOUR_TOKEN'} \\
+  --run_id ${secondaryAnalysisId} \\
+  --file /path/to/fastq/file_1 \\
+  --file /path/to/fastq/file_2 \\
+  --file ...
 `}
               </pre>
             </Paragraph>
