@@ -295,7 +295,7 @@ const UploadFastQ = (props) => {
                     Token generated:
                     {' '}
                     {
-                      <Text keyboard>
+                      <Text keyboard copyable>
                         {newToken}
                       </Text>
                     }
