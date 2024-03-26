@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import produce from 'immer';
 
 const secondaryAnalysisFilesLoadingReducer = produce((draft, action) => {

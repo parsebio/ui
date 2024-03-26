@@ -1,5 +1,5 @@
 import fetchAPI from 'utils/http/fetchAPI';
-import { SECONDARY_ANALYSIS_STATUS_LOADED, SECONDARY_ANALYSES_ERROR } from 'redux/actionTypes/secondaryAnalyses';
+import { SECONDARY_ANALYSIS_STATUS_LOADED } from 'redux/actionTypes/secondaryAnalyses';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 
