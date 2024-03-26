@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Card, Descriptions,
@@ -51,9 +51,16 @@ const SecondaryAnalysisCard = (props) => {
   const secondaryAnalysis = secondaryAnalyses[secondaryAnalysisId];
 
   const secondaryAnalysisNames = secondaryAnalyses.ids.map((id) => secondaryAnalyses[id].name);
-  const secondaryAnalysisFiles = secondaryAnalysis.files.data;
 
-  const fastQFilesNumber = _.size(_.pickBy(secondaryAnalysisFiles, (file) => file.type === 'fastq'));
+  const anyFileUploadingForAnyAnalysis = useMemo(() => (
+    Object.values(secondaryAnalyses).some((analysis) => {
+      const anyFileUploading = Object.values(analysis?.files?.data || {})
+        .map((fileData) => fileData.upload.status)
+        .some((status) => status === 'uploading');
+
+      return anyFileUploading;
+    })
+  ), [secondaryAnalyses]);
 
   const validationParams = {
     existingNames: secondaryAnalysisNames,
@@ -93,6 +100,8 @@ const SecondaryAnalysisCard = (props) => {
         >
           <Item contentStyle={{ fontWeight: 700, fontSize: 16 }}>
             <EditableField
+              disabled={anyFileUploadingForAnyAnalysis}
+              message={anyFileUploadingForAnyAnalysis ? 'Project details can not be modified while files are uploading.' : undefined}
               value={secondaryAnalysis.name}
               onAfterSubmit={updateSecondaryAnalysisName}
               onDelete={() => setDeleteModalVisible(true)}
@@ -104,12 +113,6 @@ const SecondaryAnalysisCard = (props) => {
                 ).isValid
               }
             />
-          </Item>
-          <Item
-            labelStyle={itemTextStyle}
-            label='Fastq files'
-          >
-            {fastQFilesNumber || 'N/A'}
           </Item>
           <Item
             labelStyle={itemTextStyle}

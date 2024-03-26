@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const { default: produce } = require('immer');
 
 const secondaryAnalysisFilesLoaded = produce((draft, action) => {
