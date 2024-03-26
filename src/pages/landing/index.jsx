@@ -13,7 +13,6 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchLastVisitedPage = async () => {
       const lastVisitedPage = await localStorage.getItem('lastVisitedPage');
-      console.log('lastVisitedPagee ', lastVisitedPage);
       if (lastVisitedPage) {
         navigateTo(lastVisitedPage);
       } else {

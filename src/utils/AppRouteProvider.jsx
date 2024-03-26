@@ -76,7 +76,7 @@ const AppRouteProvider = (props) => {
     if (router.pathname.startsWith('/experiments') || router.pathname === '/data-management') {
       localStorage.setItem('lastVisitedPage', modules.DATA_MANAGEMENT);
     } else if (router.pathname.startsWith('/secondary-analysis')) {
-      localStorage.setItem('lastVisitedPage', modules.SECONDARY_ANALYSIS, 86400 * 182);
+      localStorage.setItem('lastVisitedPage', modules.SECONDARY_ANALYSIS);
     }
   }, [router.pathname]);
 
