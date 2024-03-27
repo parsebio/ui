@@ -157,9 +157,12 @@ class ProgressDisplayer:
         self.progress += 1
         self._display_progress()
 
+    def show_completing(self):
+        sys.stdout.write(f"\r\033[KCompleting upload, this could take a few minutes with larger files")
+
     def finish(self):
-        self.progress = self.total
-        
+        sys.stdout.write(ERASE_CURRENT_LINE)
+        sys.stdout.write(FLUSH_UPPER_LINE)
         sys.stdout.write(ERASE_CURRENT_LINE)
         sys.stdout.write(f"\rUploaded file {self.file_path}\n")
         print()  # Move to the next line
@@ -185,6 +188,10 @@ class FileUploader:
         self.file_path = current_file
         self.parts_offset = parts_offset
 
+        file_size = os.path.getsize(self.file_path)
+        amount_of_parts = math.ceil(file_size/PART_SIZE)
+        self.progress_displayer = ProgressDisplayer(amount_of_parts, parts_offset, current_file)
+
         # These will be obtained from begin_multipart_upload()
         self.upload_id = None
         self.key = None
@@ -204,9 +211,9 @@ class FileUploader:
         signed_url = response.json()
         return signed_url
 
-    def complete_multipart_upload(self, parts) -> None:
-        sys.stdout.write(f"\r\033[KCompleting upload, this could take a few minutes with larger files")
-        
+    def complete_multipart_upload(self, parts) -> None:        
+        self.progress_displayer.show_completing()
+
         response = requests.post(
             f"{base_url}/analysis/{self.analysis_id}/cliUpload/CompleteMultipartUpload",
             headers={"X-Api-Token": f"Bearer {self.api_token}"},
@@ -217,10 +224,6 @@ class FileUploader:
                 "fileId": self.file_id,
             },
         )
-
-        sys.stdout.write(ERASE_CURRENT_LINE)
-        sys.stdout.write(FLUSH_UPPER_LINE)
-        sys.stdout.flush()
 
         if response.status_code != 200:
             # TODO Add retry mechanic
@@ -259,11 +262,7 @@ class FileUploader:
             
     # Uploads a file in parts, beginning from the parts_offset
     def upload_file(self) -> None:
-        file_size = os.path.getsize(self.file_path)
-        amount_of_parts = math.ceil(file_size/PART_SIZE)
-        
-        progress_displayer = ProgressDisplayer(amount_of_parts, self.parts_offset, self.file_path)
-        progress_displayer.begin()
+        self.progress_displayer.begin()
 
         upload_params = self.upload_tracker.get_upload_params()
 
@@ -282,14 +281,14 @@ class FileUploader:
                 etag = self.upload_part(part, part_number)
 
                 self.upload_tracker.part_uploaded(part_number, etag)
-                progress_displayer.increment()
+                self.progress_displayer.increment()
 
                 part = file.read(PART_SIZE)
                 part_number += 1
 
         self.complete_multipart_upload(self.upload_tracker.get_parts_etags())
         self.upload_tracker.file_uploaded()
-        progress_displayer.finish()
+        self.progress_displayer.finish()
 
 def upload_all_files(upload_tracker: UploadTracker) -> None:
     while not upload_tracker.is_finished():
