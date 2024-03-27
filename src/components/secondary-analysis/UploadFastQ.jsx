@@ -320,7 +320,7 @@ const UploadFastQ = (props) => {
               </>
             )
             : 'To upload files via the command line, you need to generate a token.'}
-          <Button loading={_.isNil(tokenExists)} onClick={generateNewToken}>{tokenExists ? 'Refresh token' : 'Generate token'}</Button>
+          <Button loading={_.isNil(tokenExists)} onClick={generateNewToken}>{(tokenExists || newToken) ? 'Refresh token' : 'Generate token'}</Button>
           <Divider />
           <Text>
             To perform a command-line upload, download this script:
