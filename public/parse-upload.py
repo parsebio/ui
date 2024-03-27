@@ -288,14 +288,13 @@ class FileUploader:
                 part_number += 1
 
         self.complete_multipart_upload(self.upload_tracker.get_parts_etags())
+        self.upload_tracker.file_uploaded()
         progress_displayer.finish()
 
 def upload_all_files(upload_tracker: UploadTracker) -> None:
     while not upload_tracker.is_finished():
         uploader = FileUploader(upload_tracker)
         uploader.upload_file()
-
-        upload_tracker.file_uploaded()
     
     # Finished upload, so wipe the resume files
     UploadTracker.wipe_current_upload()
