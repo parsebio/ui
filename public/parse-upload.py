@@ -25,8 +25,8 @@ RESUME_PARAMS_PATH = "resume_params.txt"
 ETAGS_PATH = "part_etags.txt"
 
 CURSOR_UP_ONE = "\x1b[1A" 
-ERASE_LINE = "\x1b[2K"
-FLUSH_TWO_LINES = CURSOR_UP_ONE + ERASE_LINE
+ERASE_CURRENT_LINE = "\x1b[2K"
+FLUSH_UPPER_LINE = CURSOR_UP_ONE + ERASE_CURRENT_LINE
 
 def wipe_file(file_path):
     with open(file_path, "w"):
@@ -159,9 +159,8 @@ class ProgressDisplayer:
 
     def finish(self):
         self.progress = self.total
-        self._display_progress()
         
-        sys.stdout.write(FLUSH_TWO_LINES)
+        sys.stdout.write(ERASE_CURRENT_LINE)
         sys.stdout.write(f"\rUploaded file {self.file_path}\n")
         print()  # Move to the next line
 
@@ -169,17 +168,22 @@ class ProgressDisplayer:
         percentage = (self.progress / self.total) * 100 
         progress_bar = '#' * int(percentage // 2)
 
-        sys.stdout.write(FLUSH_TWO_LINES)
+        sys.stdout.write(FLUSH_UPPER_LINE)
         
         sys.stdout.write(f"\rUploading file {self.file_path}\n")
         sys.stdout.write(f"\rProgress: [{progress_bar:<50}] {percentage:.2f}%")
 
 # Manages the upload of a single file
 class FileUploader:
-    def __init__(self, analysis_id, api_token, upload_tracker: UploadTracker) -> None:
+    def __init__(self, upload_tracker: UploadTracker) -> None:        
+        (analysis_id, current_file, parts_offset) = upload_tracker.get_current_progress()
+
         self.analysis_id = analysis_id
-        self.api_token = api_token
+        self.api_token = upload_tracker.api_token
         self.upload_tracker = upload_tracker
+        
+        self.file_path = current_file
+        self.parts_offset = parts_offset
 
         # These will be obtained from begin_multipart_upload()
         self.upload_id = None
@@ -201,7 +205,6 @@ class FileUploader:
         return signed_url
 
     def complete_multipart_upload(self, parts) -> None:
-        sys.stdout.flush()
         sys.stdout.write(f"\r\033[KCompleting upload, this could take a few minutes with larger files")
         
         response = requests.post(
@@ -214,6 +217,10 @@ class FileUploader:
                 "fileId": self.file_id,
             },
         )
+
+        sys.stdout.write(ERASE_CURRENT_LINE)
+        sys.stdout.write(FLUSH_UPPER_LINE)
+        sys.stdout.flush()
 
         if response.status_code != 200:
             # TODO Add retry mechanic
@@ -251,13 +258,12 @@ class FileUploader:
             return etag
             
     # Uploads a file in parts, beginning from the parts_offset
-    def upload_file(self, file_path: str, parts_offset: int) -> None:
-        file_size = os.path.getsize(file_path)
+    def upload_file(self) -> None:
+        file_size = os.path.getsize(self.file_path)
         amount_of_parts = math.ceil(file_size/PART_SIZE)
         
-        progress_displayer = ProgressDisplayer(amount_of_parts, parts_offset, file_path)
+        progress_displayer = ProgressDisplayer(amount_of_parts, self.parts_offset, self.file_path)
         progress_displayer.begin()
-
 
         upload_params = self.upload_tracker.get_upload_params()
 
@@ -265,12 +271,12 @@ class FileUploader:
         self.key = upload_params["key"]
         self.file_id = upload_params["fileId"]
 
-        with open(file_path, 'rb') as file:
-            file.seek(parts_offset * PART_SIZE)
+        with open(self.file_path, 'rb') as file:
+            file.seek(self.parts_offset * PART_SIZE)
             part = file.read(PART_SIZE)
 
             # part_number is 1-indexed
-            part_number = parts_offset + 1
+            part_number = self.parts_offset + 1
 
             while part:
                 etag = self.upload_part(part, part_number)
@@ -281,15 +287,13 @@ class FileUploader:
                 part = file.read(PART_SIZE)
                 part_number += 1
 
-        progress_displayer.finish()
         self.complete_multipart_upload(self.upload_tracker.get_parts_etags())
+        progress_displayer.finish()
 
-def upload_all_files(api_token: str, upload_tracker: UploadTracker) -> None:
+def upload_all_files(upload_tracker: UploadTracker) -> None:
     while not upload_tracker.get_finished():
-        (analysis_id, current_file, parts_offset) = upload_tracker.get_current_progress()
-        
-        uploader = FileUploader(analysis_id, api_token, upload_tracker)
-        uploader.upload_file(current_file, parts_offset)
+        uploader = FileUploader(upload_tracker)
+        uploader.upload_file()
 
         upload_tracker.file_uploaded()
     
@@ -396,7 +400,7 @@ def prepare_upload(args) -> UploadTracker:
                 raise Exception(f"File {file} does not end with .fastq.gz, only gzip compressed fastq files are supported")
 
         upload_tracker = UploadTracker.fromScratch(args.run_id, files, args.token)
-      
+
 
     if (not resume):
         show_files_to_upload_warning(upload_tracker.file_paths)
@@ -415,7 +419,7 @@ def main():
     try :
         upload_tracker = prepare_upload(args)
         
-        upload_all_files(args.token, upload_tracker)
+        upload_all_files(upload_tracker)
     except Exception as e:
         print()
         print(e)
