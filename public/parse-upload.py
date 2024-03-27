@@ -390,12 +390,13 @@ def prepare_upload(args) -> UploadTracker:
         # Take list of glob patterns and expand and flatten them into a list of files
         files = [file for glob_pattern in args.file for file in glob.glob(glob_pattern)]
 
-        upload_tracker = UploadTracker.fromScratch(args.run_id, files, args.token)
+        # Check that the files look like fastqs
+        for file in files:
+            if (not file.endswith(".fastq.gz")):
+                raise Exception(f"File {file} does not end with .fastq.gz, only gzip compressed fastq files are supported")
 
-    # Check that the files look like fastqs
-    for file_path in upload_tracker.file_paths:
-        if (not file_path.endswith(".fastq.gz")):
-            raise Exception(f"File {file_path} does not end with .fastq.gz, only gzip compressed fastq files are supported")
+        upload_tracker = UploadTracker.fromScratch(args.run_id, files, args.token)
+      
 
     if (not resume):
         show_files_to_upload_warning(upload_tracker.file_paths)
