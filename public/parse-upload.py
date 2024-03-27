@@ -40,7 +40,7 @@ def get_resume_params_from_file():
         lines = file.read().splitlines()
 
         if len(lines) != 6:
-            raise Exception(f"Resume params file {RESUME_PARAMS_PATH} corrupted")
+            raise Exception(f"Resume params file {RESUME_PARAMS_PATH} corrupted. Delete the files that didn't finish and upload them without resume")
 
         analysis_id = lines[0]
         upload_params = json.loads(lines[1])
