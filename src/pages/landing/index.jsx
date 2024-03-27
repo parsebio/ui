@@ -29,7 +29,10 @@ const LandingPage = () => {
       }}
       >
         <Space direction='vertical'>
-          <Title level={2}>Welcome to the Parse Biosciences cloud analysis platform!</Title>
+          <div style={{ textAlign: 'center', width: '100%' }}>
+            <Title level={2}>Welcome to the Parse Biosciences cloud analysis platform!</Title>
+          </div>
+          <br />
           <Card
             style={{
               width: '100%',
