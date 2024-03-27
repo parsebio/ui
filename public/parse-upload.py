@@ -163,7 +163,6 @@ class ProgressDisplayer:
     def finish(self):
         sys.stdout.write(ERASE_CURRENT_LINE)
         sys.stdout.write(FLUSH_UPPER_LINE)
-        sys.stdout.write(ERASE_CURRENT_LINE)
         sys.stdout.write(f"\rUploaded file {self.file_path}\n")
         print()  # Move to the next line
 
