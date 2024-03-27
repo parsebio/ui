@@ -15,8 +15,8 @@ PART_SIZE: int = 64 * 1024 * 1024
 MAX_RETRIES = 1 # Max number of retries to upload each PART_SIZE part
 # MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
 
-# base_url = "https://api-martinfosco-ui76-api51-db.scp-staging.biomage.net/v2"
-base_url = "http://localhost:3000/v2"
+base_url = "https://api-martinfosco-ui76-api51-db.scp-staging.biomage.net/v2"
+# base_url = "http://localhost:3000/v2"
 
 RESUME_PARAMS_PATH = "resume_params.txt"
 ETAGS_PATH = "part_etags.txt"
