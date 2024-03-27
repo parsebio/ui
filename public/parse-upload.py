@@ -44,7 +44,7 @@ def get_resume_params_from_file():
 
         analysis_id = lines[0]
         upload_params = json.loads(lines[1])
-        current_file_created = bool(lines[2])
+        current_file_created = lines[2] == "True"
         file_paths = lines[3].split(',')
         current_file_index = int(lines[4])
         parts_offset = int(lines[5])
@@ -82,7 +82,7 @@ class UploadTracker:
             parts_offset,
             current_file_created
         ) = get_resume_params_from_file()
-        
+
         return cls(analysis_id, file_paths, current_file_index, parts_offset, upload_params, current_file_created, api_token)
 
     @classmethod
