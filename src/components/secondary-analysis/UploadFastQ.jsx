@@ -334,19 +334,16 @@ const UploadFastQ = (props) => {
               text: `python parse-upload.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
-  --file /path/to/fastq/file_1 \\
-  --file /path/to/fastq/file_2 \\
-  --file ...`,
+  --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
+  `,
             }}
             >
               <pre>
                 {`python parse-upload.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
-  --file /path/to/fastq/file_1 \\
-  --file /path/to/fastq/file_2 \\
-  --file ...
-`}
+  --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
+  `}
               </pre>
             </Paragraph>
           </Text>

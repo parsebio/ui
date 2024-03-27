@@ -292,6 +292,7 @@ def upload_all_files(api_token: str, upload_tracker: UploadTracker) -> None:
     
     # Finished upload, so wipe the resume files
     UploadTracker.wipe_current_upload()
+    print()
     print("Upload completed successfully!")
 
 def begin_multipart_upload(analysis_id, file_path, api_token) -> dict:
