@@ -120,7 +120,7 @@ class UploadTracker:
             lines = file.read().splitlines()
             return [{'PartNumber': int(line.split(',')[0]), 'ETag': line.split(',')[1].strip("")} for line in lines]
     
-    def get_finished(self):
+    def is_finished(self):
         return self.current_file_index >= len(self.file_paths)
 
     def file_uploaded(self):
@@ -291,7 +291,7 @@ class FileUploader:
         progress_displayer.finish()
 
 def upload_all_files(upload_tracker: UploadTracker) -> None:
-    while not upload_tracker.get_finished():
+    while not upload_tracker.is_finished():
         uploader = FileUploader(upload_tracker)
         uploader.upload_file()
 
