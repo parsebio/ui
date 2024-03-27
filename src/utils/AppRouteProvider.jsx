@@ -72,6 +72,14 @@ const AppRouteProvider = (props) => {
     setCurrentModule(moduleName);
   }, [router.pathname]);
 
+  useEffect(() => {
+    if (router.pathname.startsWith('/experiments') || router.pathname === '/data-management') {
+      localStorage.setItem('lastVisitedPage', modules.DATA_MANAGEMENT);
+    } else if (router.pathname.startsWith('/secondary-analysis')) {
+      localStorage.setItem('lastVisitedPage', modules.SECONDARY_ANALYSIS);
+    }
+  }, [router.pathname]);
+
   const changedQCFilters = useSelector(
     (state) => state.experimentSettings.processing.meta.changedQCFilters,
   );

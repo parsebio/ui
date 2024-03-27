@@ -49,7 +49,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/secondary-analysis',
+        destination: '/landing',
         permanent: false,
       },
       {
