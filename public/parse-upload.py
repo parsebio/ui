@@ -102,7 +102,7 @@ class UploadTracker:
             ]))
 
     def get_upload_params(self) -> dict:
-        if (self.upload_params == None or not self.current_file_created):
+        if (not self.current_file_created):
             self.upload_params = begin_multipart_upload(self.analysis_id, self.file_paths[self.current_file_index], self.api_token)
             self.current_file_created = True
             self.save_progress()
