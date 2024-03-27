@@ -26,7 +26,7 @@ ETAGS_PATH = "part_etags.txt"
 
 CURSOR_UP_ONE = "\x1b[1A" 
 ERASE_CURRENT_LINE = "\x1b[2K"
-FLUSH_UPPER_LINE = CURSOR_UP_ONE + ERASE_CURRENT_LINE
+ERASE_UPPER_LINE = CURSOR_UP_ONE + ERASE_CURRENT_LINE
 
 def wipe_file(file_path):
     with open(file_path, "w"):
@@ -162,7 +162,7 @@ class ProgressDisplayer:
 
     def finish(self):
         sys.stdout.write(ERASE_CURRENT_LINE)
-        sys.stdout.write(FLUSH_UPPER_LINE)
+        sys.stdout.write(ERASE_UPPER_LINE)
         sys.stdout.write(f"\rUploaded file {self.file_path}\n")
         print()  # Move to the next line
 
@@ -170,7 +170,7 @@ class ProgressDisplayer:
         percentage = (self.progress / self.total) * 100 
         progress_bar = '#' * int(percentage // 2)
 
-        sys.stdout.write(FLUSH_UPPER_LINE)
+        sys.stdout.write(ERASE_UPPER_LINE)
         
         sys.stdout.write(f"\rUploading file {self.file_path}\n")
         sys.stdout.write(f"\rProgress: [{progress_bar:<50}] {percentage:.2f}%")
