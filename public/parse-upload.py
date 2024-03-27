@@ -51,6 +51,29 @@ def get_resume_params_from_file():
 
         return (analysis_id, upload_params, file_paths, current_file_index, parts_offset, current_file_created)
 
+def with_retry(func, try_number = 0):
+    try:
+        return func()
+    except Exception as e:
+        if try_number >= MAX_RETRIES:
+            raise e
+        
+        wait_seconds = 2**try_number
+
+        sys.stdout.flush()
+        sys.stdout.write(f"\r\033[KError uploading, retrying in {wait_seconds} seconds")
+        sys.stdout.flush()
+
+        time.sleep(wait_seconds)
+        
+        result = with_retry(func, try_number + 1)
+
+        # Clear the error message
+        sys.stdout.write("\r\033[K")
+        sys.stdout.flush()
+
+        return result
+
 # Manages 
 # - the parameters required for upload,
 # - the upload progress (both parts and files)
@@ -204,7 +227,6 @@ class FileUploader:
         )
         
         if response.status_code != 200:
-            # TODO Add retry mechanic
             raise Exception(f"Failed to get signed url for part {part_number}: {response.text}")
 
         signed_url = response.json()
@@ -225,39 +247,17 @@ class FileUploader:
         )
 
         if response.status_code != 200:
-            # TODO Add retry mechanic
             raise Exception(f"Failed to complete upload for file {self.file_id}: {response.text}")
 
-    def upload_part(self, part, part_number, try_number = 0) -> str:
-        try:
-            signed_url = self.get_signed_url_for_part(part_number)
+    def upload_part(self, part, part_number) -> str:
+        signed_url = self.get_signed_url_for_part(part_number)
 
-            response = requests.put(signed_url, data=part)
+        response = requests.put(signed_url, data=part)
 
-            if response.status_code != 200:
-                raise Exception(f"Failed to upload part {part_number}: {response.text}")
+        if response.status_code != 200:
+            raise Exception(f"Failed to upload part {part_number}: {response.text}")
 
-            return response.headers['ETag']
-
-        except Exception as e:
-            if try_number >= MAX_RETRIES:
-                raise e
-
-            wait_seconds = 2**try_number
-
-            sys.stdout.flush()
-            sys.stdout.write(f"\r\033[KError uploading, retrying in {wait_seconds} seconds")
-            sys.stdout.flush()
-
-            time.sleep(wait_seconds)
-
-            etag = self.upload_part(part, part_number, try_number + 1)
-
-            # Clear the error message
-            sys.stdout.write("\r\033[K")
-            sys.stdout.flush()
-
-            return etag
+        return response.headers['ETag']
             
     # Uploads a file in parts, beginning from the parts_offset
     def upload_file(self) -> None:
@@ -277,15 +277,18 @@ class FileUploader:
             part_number = self.parts_offset + 1
 
             while part:
-                etag = self.upload_part(part, part_number)
-
+                etag = with_retry(lambda: self.upload_part(part, part_number))
+                
                 self.upload_tracker.part_uploaded(part_number, etag)
                 self.progress_displayer.increment()
 
                 part = file.read(PART_SIZE)
                 part_number += 1
 
-        self.complete_multipart_upload(self.upload_tracker.get_parts_etags())
+
+        etags = self.upload_tracker.get_parts_etags()
+        with_retry(lambda: self.complete_multipart_upload(etags))
+        
         self.upload_tracker.file_uploaded()
         self.progress_displayer.finish()
 
