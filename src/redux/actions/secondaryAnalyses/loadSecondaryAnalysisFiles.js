@@ -34,7 +34,7 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => 
       },
     });
   } catch (e) {
-    pushNotificationMessage('error', 'We could not load the secondary analysis files for this run.');
+    pushNotificationMessage('error', 'We could not load the pipeline files for this run.');
     console.log(e);
   }
 };

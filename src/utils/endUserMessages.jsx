@@ -70,6 +70,6 @@ export default {
   SHARE_FAILURE: 'We weren\'t able to share the project',
   ERROR_CLONING_DEFAULT: 'We couldn\'t clone the project.',
   ERROR_CLONING_PIPELINE_LOCKED: 'We couldn\'t clone the project because data processing is currently running, wait until it finishes and try again',
-  ERROR_LAUNCHING_SECONDARY_ANALYSIS: 'There was a problem launching the secondary analysis.',
+  ERROR_LAUNCHING_SECONDARY_ANALYSIS: 'There was a problem launching the pipeline.',
   ERROR_CANCELLING_SECONDARY_ANALYSIS: 'There was a problem cancelling your analysis.',
 };
