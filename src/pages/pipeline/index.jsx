@@ -50,7 +50,7 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
-const SecondaryAnalysis = () => {
+const Pipeline = () => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
@@ -469,4 +469,4 @@ const SecondaryAnalysis = () => {
   );
 };
 
-export default SecondaryAnalysis;
+export default Pipeline;
