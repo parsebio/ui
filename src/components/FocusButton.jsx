@@ -40,7 +40,7 @@ const FocusButton = (props) => {
         ref={buttonRef}
       >
         {focused
-          ? (<EyeTwoTone style={{ cursor: 'pointer' }} />)
+          ? (<EyeTwoTone twoToneColor='#9966b8' style={{ cursor: 'pointer' }} />)
           : (<EyeOutlined style={{ cursor: 'pointer' }} />)}
       </Button>
     </Tooltip>

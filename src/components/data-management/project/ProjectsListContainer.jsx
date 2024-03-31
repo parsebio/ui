@@ -30,7 +30,7 @@ const ProjectsListContainer = (props) => {
       key: 'copy_from_repository',
       onClick: () => { navigateTo(modules.REPOSITORY); },
     },
-  ]
+  ];
 
   return (
     <Space direction='vertical' style={{ width: '100%' }}>

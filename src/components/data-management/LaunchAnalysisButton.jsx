@@ -141,6 +141,7 @@ const LaunchAnalysisButton = () => {
       <Button
         data-test-id={integrationTestConstants.ids.PROCESS_PROJECT_BUTTON}
         type='primary'
+        style={{ background: '#B6007c' }}
         disabled={disabled}
         onClick={onClick}
         loading={loading}

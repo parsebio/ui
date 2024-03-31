@@ -17,6 +17,7 @@ import {
   Space,
   Tooltip,
   Typography,
+  ConfigProvider,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
@@ -238,7 +239,7 @@ const ContentWrapper = (props) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(315deg, #5B070A 0%, #8f0b10 30%, #A80D12 100%)',
+        background: 'linear-gradient(315deg, #9966b8 0%, #4c067e 30%, #25003b 100%)',
         paddingTop: '10px',
         paddingBottom: '10px',
         pointerEvents: 'none',
@@ -247,34 +248,34 @@ const ContentWrapper = (props) => {
     >
       <svg xmlns='http://www.w3.org/2000/svg' width={200} height={50}>
         <defs id='svg_document_defs'>
-          <style id='IBM Plex Sans_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css?family=IBM+Plex+Sans);</style>
+          <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g transform='translate(20, 25)'>
           <text
             style={{ outlineStyle: 'none' }}
             fontWeight='500'
             textRendering='geometricPrecision'
-            fontFamily='IBM Plex Sans'
+            fontFamily='M Plus 2'
             fill='#F0F2F5'
             fontSize='25.00px'
             textAnchor='start'
             dominantBaseline='middle'
           >
-            Cellenics®
+            TrailMaker
           </text>
           {/* provided by? TBD */}
           <text
             style={{ outlineStyle: 'none' }}
             fontWeight='400'
             textRendering='geometricPrecision'
-            fontFamily='IBM Plex Sans'
+            fontFamily='M Plus 2'
             fill='#F0F2F5'
             fontSize='9.00px'
             textAnchor='start'
             dominantBaseline='middle'
             y='20'
           >
-            provided by Biomage
+            provided by Parse Biosciences
           </text>
         </g>
       </svg>
@@ -284,7 +285,7 @@ const ContentWrapper = (props) => {
   const SmallLogo = () => (
     <div
       style={{
-        background: 'linear-gradient(315deg, #5B070A 0%, #8f0b10 30%, #A80D12 100%)',
+        background: 'linear-gradient(315deg, #9966b8 0%, #4c067e 30%, #25003b 100%)',
         paddingTop: '8px',
         paddingBottom: '8px',
         pointerEvents: 'none',
@@ -293,7 +294,7 @@ const ContentWrapper = (props) => {
     >
       <svg xmlns='http://www.w3.org/2000/svg' width={100} height={30}>
         <defs id='svg_document_defs'>
-          <style id='IBM Plex Sans_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css?family=IBM+Plex+Sans);</style>
+          <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g>
           <text
@@ -301,13 +302,13 @@ const ContentWrapper = (props) => {
             x='40px'
             fontWeight='500'
             textRendering='geometricPrecision'
-            fontFamily='IBM Plex Sans'
+            fontFamily='M Plus 2'
             y='24px'
             fill='#F0F2F5'
             fontSize='25.00px'
             textAnchor='middle'
           >
-            Cs
+            TM
           </text>
         </g>
       </svg>
@@ -467,36 +468,50 @@ const ContentWrapper = (props) => {
           <PrivacyPolicyIntercept user={user} onOk={() => dispatch(loadUser())} />
         )}
         <BrowserAlert />
+
         <Layout style={{ minHeight: '100vh' }}>
           <Sider
             style={{
-              overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
+              background: '#11001b', overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
             }}
             width={210}
             theme='dark'
             mode='inline'
             collapsible
             collapsed={collapsed}
+            /* onMouseEnter={() => setCollapsed(false)}
+            onMouseLeave={() => setCollapsed(true)} */
             onCollapse={(collapse) => setCollapsed(collapse)}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              {collapsed ? <SmallLogo /> : <BigLogo />}
-              <Menu
-                data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
-                theme='dark'
-                selectedKeys={menuLinks.filter(({ module }) => module === currentModule).map(({ module }) => module)}
-                mode='inline'
-                items={menuItems}
-              />
+            <div style={{
+              display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between',
+            }}
+            >
+
+              <div>
+                {collapsed ? <SmallLogo /> : <BigLogo />}
+                <Menu
+                  style={{ background: '#11001b' }}
+                  data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
+                  theme='dark'
+                  selectedKeys={menuLinks.filter(({ module }) => module === currentModule).map(({ module }) => module)}
+                  items={menuItems}
+                />
+              </div>
+
             </div>
+
           </Sider>
+
           <Layout
             style={!collapsed ? { marginLeft: '210px' } : { marginLeft: '80px' }} // this is the collapsed width for our sider
           >
             {renderContent()}
           </Layout>
         </Layout>
+
       </DndProvider>
+
     </>
   );
 };

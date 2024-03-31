@@ -26,11 +26,12 @@ const Header = (props) => {
       <NextSeo
         title={experimentData ? `${title} · ${truncateText(experimentName)}` : title}
       />
-
       <PageHeader
         className={integrationTestConstants.classes.PAGE_HEADER}
         title={title}
-        style={{ width: '100%', paddingTop: '10px', paddingBottom: '10px' }}
+        style={{
+          width: '100%', paddingTop: '10px', paddingBottom: '10px',
+        }}
         extra={(
           <Space size='large'>
             <Space>

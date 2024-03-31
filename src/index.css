@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap');
+
+* {
+    font-family: 'M Plus 2' !important;
+}
+
+.ant-btn-primary {
+    background-color: #11001b !important; /* New background color */
+    border-color: #B6007C !important; /* New border color */
+    color: white !important;
+    text-shadow: none !important;
+  }
+
+  .ant-btn-primary:hover {
+    background-color: #B6007C !important; /* Background color on hover */
+    color: white !important; /* Text color on hover */
+    border-color: #B6007C !important; /* Border color on hover to maintain consistency */
+}
+
+.ant-menu-item-selected {
+    background-color:#B6007C !important;
+}
+
+.ant-layout-sider-trigger{
+    background-color: #11001b !important;
+}
+
+button {
+    border-radius: 0.25rem !important;
+}
+
+.even-row .ant-table-cell {
+    background-color: #E5E5F1 !important; /* Light gray color for even rows */
+    /* background-color: #DFCEE8 !important;*/
+    
+}
+
+
+.ant-table-thead .ant-table-cell{
+   /* background-color: #9966b8 !important;  */
+   background-color: #C4BCDC !important;
+}
+
+
+/* Colod of text in active tabs (e.g cell sets) */
+.ant-tabs-tab-active .ant-tabs-tab-btn{
+    color: #b6007c !important;
+}
+
+/* Colod of ink bar in active tabs (e.g cell sets) */
+.ant-tabs-ink-bar{
+    background: #b6007c !important;
+}

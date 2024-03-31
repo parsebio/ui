@@ -1,6 +1,8 @@
 import '../../assets/self-styles.less';
 import '../../assets/nprogress.css';
 
+import "../index.css"
+
 import Amplify, { Credentials } from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';

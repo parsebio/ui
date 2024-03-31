@@ -332,7 +332,7 @@ const HeatmapPlot = (props) => {
         theme='light'
         width={width - heatmapRightMargin}
         height={height - heatmapBottomMargin}
-        colormap='plasma'
+        colormap='magma'
         colormapRange={[0.0, 1.0]}
         setColorEncoding={() => { }}
         uint8ObsFeatureMatrix={heatmapData.expressionMatrix.matrix}
