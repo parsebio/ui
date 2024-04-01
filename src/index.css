@@ -1,29 +1,32 @@
 
-/*
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap');
 
 * {
     font-family: 'M Plus 2' !important;
 }
 
-.ant-btn-primary {
-    background-color: #B6007C !important; /* New background color 
-    border-color: #B6007C !important; 
-    color: white !important;
-    text-shadow: none !important;
-  }
+/* moving between modules resets ConfigProvider */ 
 
-  .ant-btn-primary:hover {
-    background-color: #B6007C !important;
-    color: white !important; /* 
-    border-color: #B6007C !important; 
+.ant-btn-primary {
+  background-color: #B6007C !important; 
+  border-color: #B6007C !important; 
+  color: white !important;
+  text-shadow: none !important;
+}
+
+.ant-btn-primary:hover {
+  background-color: #B6007C !important;
+  color: white !important; 
+  border-color: #B6007C !important; 
 }
 
 .ant-btn-default:hover {
-    color: #B6007C !important;  
-    border-color: #B6007C !important; 
+  color: #B6007C !important;  
+  border-color: #B6007C !important; 
 }
 
+
+/* Radio buttons are not receiving the ConfigProvider change */ 
 .ant-radio-checked .ant-radio-inner{
     border-color: #B6007C !important ;
   }
@@ -35,8 +38,9 @@
   .ant-radio:hover .ant-radio-inner {
     border-color: #B6007C !important;
   }
-  
 
+
+/* Need special color for menu selected and sider trigger */
 .ant-menu-item-selected {
     background-color:#9966b8 !important;
 }
@@ -49,30 +53,27 @@ button {
     border-radius: 0.25rem !important;
 }
 
+
+/* Table changes */ 
 .even-row .ant-table-cell {
     background-color: #E5E5F1 !important;
     background-color: #DFCEE8 !important;
     
 }
 
-
-.ant-table-thead .ant-table-cell{
+.gene-table .ant-table-header .ant-table-cell{
     background-color: #9966b8 !important;  
    background-color: #C4BCDC !important;
 }
 
 
-
+/* Highlight changes */
 .ant-tabs-tab-active .ant-tabs-tab-btn{
     color: #9966b8 !important;
 }
-
-
 .ant-tabs-ink-bar{
     background: #9966b8 !important;
 }
-
-
 
 
 /* Antd slider 
@@ -111,4 +112,5 @@ button {
     --antd-wave-shadow-color: red !important;
   }
   
+
 */

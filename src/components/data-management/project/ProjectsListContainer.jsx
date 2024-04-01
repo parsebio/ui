@@ -1,5 +1,6 @@
 import {
   Button,
+  ConfigProvider,
   Dropdown,
   Menu,
   Space,
@@ -33,23 +34,25 @@ const ProjectsListContainer = (props) => {
   ];
 
   return (
-    <Space direction='vertical' style={{ width: '100%' }}>
-      <Dropdown
-        menu={{ items: menuItems }}
-        trigger={['click']}
-        placement='bottomRight'
-      >
-        <Button
-          data-test-id={integrationTestConstants.ids.CREATE_NEW_PROJECT_BUTTON}
-          type='primary'
-          block
+    <ConfigProvider>
+      <Space direction='vertical' style={{ width: '100%' }}>
+        <Dropdown
+          menu={{ items: menuItems }}
+          trigger={['click']}
+          placement='bottomRight'
         >
-          Create New Project
-        </Button>
-      </Dropdown>
-      <ProjectSearchBox onChange={(searchRegex) => setFilterParam(searchRegex)} />
-      <ProjectsList height={height} filter={filterParam} />
-    </Space>
+          <Button
+            data-test-id={integrationTestConstants.ids.CREATE_NEW_PROJECT_BUTTON}
+            type='primary'
+            block
+          >
+            Create New Project
+          </Button>
+        </Dropdown>
+        <ProjectSearchBox onChange={(searchRegex) => setFilterParam(searchRegex)} />
+        <ProjectsList height={height} filter={filterParam} />
+      </Space>
+    </ConfigProvider>
   );
 };
 
