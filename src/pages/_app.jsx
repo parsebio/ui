@@ -1,8 +1,8 @@
 import '../../assets/self-styles.less';
 import '../../assets/nprogress.css';
 
-import 'antd/dist/antd.variable.min.css';
 import '../index.css';
+import 'antd/dist/antd.variable.min.css';
 
 import Amplify, { Credentials } from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
@@ -148,7 +148,9 @@ const WrappedApp = ({ Component, pageProps }) => {
 
     // Otherwise, load the page inside the content wrapper.
     return (
+
       <AppRouteProvider>
+
         <ContentWrapper
           routeExperimentId={experimentId}
           experimentData={experimentData}
@@ -159,7 +161,9 @@ const WrappedApp = ({ Component, pageProps }) => {
             {...pageProps}
           />
         </ContentWrapper>
+
       </AppRouteProvider>
+
     );
   };
 
@@ -178,14 +182,7 @@ const WrappedApp = ({ Component, pageProps }) => {
       <TagManager
         environment={environment}
       />
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: '#b6007c',
-            colorInfo: '#b6007c',
-          },
-        }}
-      >
+      <ConfigProvider>
         {mainContent(Component, pageProps)}
       </ConfigProvider>
     </>
