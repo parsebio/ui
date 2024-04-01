@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Tabs, Button, Dropdown,
+  ConfigProvider,
 } from 'antd';
 import { DownOutlined, PictureOutlined, ToolOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -175,30 +176,39 @@ const ExplorationViewPage = ({
 
   return (
     <>
-      <Header
-        experimentId={experimentId}
-        experimentData={experimentData}
-        title='Data Exploration'
-        extra={[(
-          <Dropdown
-            trigger={['click']}
-            key='search-menu-dropdown'
-            overlay={searchMenu}
-            open={addMenuVisible}
-            onOpenChange={(visible) => setAddMenuVisible(visible)}
-          >
-            <Button type='primary' onClick={() => setAddMenuVisible(!addMenuVisible)}>
-              Add
-              {' '}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
-        )]}
-      />
-      <MultiTileContainer
-        tileMap={TILE_MAP}
-        initialArrangement={windows}
-      />
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: '#b6007c',
+            colorInfo: '#b6007c',
+          },
+        }}
+      >
+        <Header
+          experimentId={experimentId}
+          experimentData={experimentData}
+          title='Data Exploration'
+          extra={[(
+            <Dropdown
+              trigger={['click']}
+              key='search-menu-dropdown'
+              overlay={searchMenu}
+              open={addMenuVisible}
+              onOpenChange={(visible) => setAddMenuVisible(visible)}
+            >
+              <Button type='primary' onClick={() => setAddMenuVisible(!addMenuVisible)}>
+                Add
+                {' '}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
+          )]}
+        />
+        <MultiTileContainer
+          tileMap={TILE_MAP}
+          initialArrangement={windows}
+        />
+      </ConfigProvider>
     </>
   );
 };

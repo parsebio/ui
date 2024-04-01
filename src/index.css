@@ -1,3 +1,5 @@
+
+/*
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap');
 
 * {
@@ -5,20 +7,38 @@
 }
 
 .ant-btn-primary {
-    background-color: #11001b !important; /* New background color */
-    border-color: #B6007C !important; /* New border color */
+    background-color: #B6007C !important; /* New background color 
+    border-color: #B6007C !important; 
     color: white !important;
     text-shadow: none !important;
   }
 
   .ant-btn-primary:hover {
-    background-color: #B6007C !important; /* Background color on hover */
-    color: white !important; /* Text color on hover */
-    border-color: #B6007C !important; /* Border color on hover to maintain consistency */
+    background-color: #B6007C !important;
+    color: white !important; /* 
+    border-color: #B6007C !important; 
 }
 
+.ant-btn-default:hover {
+    color: #B6007C !important;  
+    border-color: #B6007C !important; 
+}
+
+.ant-radio-checked .ant-radio-inner{
+    border-color: #B6007C !important ;
+  }
+  
+  .ant-radio-checked .ant-radio-inner:after{
+    background-color: #B6007C  !important;
+  }
+  
+  .ant-radio:hover .ant-radio-inner {
+    border-color: #B6007C !important;
+  }
+  
+
 .ant-menu-item-selected {
-    background-color:#B6007C !important;
+    background-color:#9966b8 !important;
 }
 
 .ant-layout-sider-trigger{
@@ -30,24 +50,65 @@ button {
 }
 
 .even-row .ant-table-cell {
-    background-color: #E5E5F1 !important; /* Light gray color for even rows */
-    /* background-color: #DFCEE8 !important;*/
+    background-color: #E5E5F1 !important;
+    background-color: #DFCEE8 !important;
     
 }
 
 
 .ant-table-thead .ant-table-cell{
-   /* background-color: #9966b8 !important;  */
+    background-color: #9966b8 !important;  
    background-color: #C4BCDC !important;
 }
 
 
-/* Colod of text in active tabs (e.g cell sets) */
+
 .ant-tabs-tab-active .ant-tabs-tab-btn{
-    color: #b6007c !important;
+    color: #9966b8 !important;
 }
 
-/* Colod of ink bar in active tabs (e.g cell sets) */
+
 .ant-tabs-ink-bar{
-    background: #b6007c !important;
+    background: #9966b8 !important;
 }
+
+
+
+
+/* Antd slider 
+
+  
+  .slider-handle-color-focus-shadow {
+    border-color: brown !important;
+    background-color: chartreuse !important;
+    color: red !important;
+    --antd-wave-shadow-color: red !important;
+  }
+  
+  .ant-slider-handle {
+    border-color: brown !important;
+    background-color: rgb(15, 15, 15) !important;
+    box-shadow: 0 0 0 5px  fade(rgb(122, 122, 122),12%);
+    --antd-wave-shadow-color: red !important;
+  }
+  
+  .ant-slider-handle:focus {
+    border-color: brown !important;
+    background-color: rgb(15, 15, 15) !important;
+  
+    --antd-wave-shadow-color: red !important;
+  }
+  .ant-slider-handle-dragging {
+    border-color: brown !important;
+    background-color: chartreuse !important;
+    --antd-wave-shadow-color: red !important;
+    outline: none;
+  }
+  
+  .ant-slider-handle-click-focused:hover {
+    background-color: rgb(0, 0, 0) !important;
+    border: rgb(0, 0, 0) !important;
+    --antd-wave-shadow-color: red !important;
+  }
+  
+*/

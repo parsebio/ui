@@ -1,11 +1,13 @@
 import '../../assets/self-styles.less';
 import '../../assets/nprogress.css';
 
-import "../index.css"
+import 'antd/dist/antd.variable.min.css';
+import '../index.css';
 
 import Amplify, { Credentials } from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
+import { ConfigProvider } from 'antd';
 import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
@@ -23,6 +25,8 @@ import UnauthorizedPage from 'pages/401';
 import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
+
+ConfigProvider.config({ theme: { primaryColor: '#f00' } });
 
 const mockCredentialsForInframock = () => {
   Credentials.get = async () => ({
@@ -174,7 +178,16 @@ const WrappedApp = ({ Component, pageProps }) => {
       <TagManager
         environment={environment}
       />
-      {mainContent(Component, pageProps)}
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: '#b6007c',
+            colorInfo: '#b6007c',
+          },
+        }}
+      >
+        {mainContent(Component, pageProps)}
+      </ConfigProvider>
     </>
   );
 };

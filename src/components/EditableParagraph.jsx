@@ -52,7 +52,7 @@ const EditableParagraph = (props) => {
     </p>
   );
 
-  const renderEditButton = () => <Button style={{ padding: 0 }} type='link' icon={<EditOutlined />} onClick={() => setIsEditing(true)} />;
+  const renderEditButton = () => <Button style={{ padding: 0 }} type='link' icon={<EditOutlined style={{ color: '#B6007C' }} />} onClick={() => setIsEditing(true)} />;
 
   const renderEllipsisLink = () => (
     <Button

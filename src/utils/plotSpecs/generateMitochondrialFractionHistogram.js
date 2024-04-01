@@ -119,7 +119,7 @@ const generateSpec = (config, plotData) => {
         type: 'ordinal',
         range:
           [
-            'green', 'blue',
+            '#9966b8', 'gray',
           ],
         domain: ['Alive', 'Dead'],
       },

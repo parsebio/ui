@@ -3,6 +3,7 @@ import {
   Dropdown,
   Menu,
   Space,
+  ConfigProvider,
 } from 'antd';
 import React, { useState } from 'react';
 import { useAppRouter } from 'utils/AppRouteProvider';
@@ -33,23 +34,32 @@ const ProjectsListContainer = (props) => {
   ];
 
   return (
-    <Space direction='vertical' style={{ width: '100%' }}>
-      <Dropdown
-        menu={{ items: menuItems }}
-        trigger={['click']}
-        placement='bottomRight'
-      >
-        <Button
-          data-test-id={integrationTestConstants.ids.CREATE_NEW_PROJECT_BUTTON}
-          type='primary'
-          block
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#b6007c',
+          colorInfo: '#b6007c',
+        },
+      }}
+    >
+      <Space direction='vertical' style={{ width: '100%' }}>
+        <Dropdown
+          menu={{ items: menuItems }}
+          trigger={['click']}
+          placement='bottomRight'
         >
-          Create New Project
-        </Button>
-      </Dropdown>
-      <ProjectSearchBox onChange={(searchRegex) => setFilterParam(searchRegex)} />
-      <ProjectsList height={height} filter={filterParam} />
-    </Space>
+          <Button
+            data-test-id={integrationTestConstants.ids.CREATE_NEW_PROJECT_BUTTON}
+            type='primary'
+            block
+          >
+            Create New Project
+          </Button>
+        </Dropdown>
+        <ProjectSearchBox onChange={(searchRegex) => setFilterParam(searchRegex)} />
+        <ProjectsList height={height} filter={filterParam} />
+      </Space>
+    </ConfigProvider>
   );
 };
 
