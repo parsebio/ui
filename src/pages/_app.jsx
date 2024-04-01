@@ -2,7 +2,6 @@ import '../../assets/self-styles.less';
 import '../../assets/nprogress.css';
 
 import '../index.css';
-import 'antd/dist/antd.variable.min.css';
 
 import Amplify, { Credentials } from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
@@ -26,7 +25,19 @@ import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
 
-ConfigProvider.config({ theme: { primaryColor: '#b6007c', infoColor: '#b6007c' } });
+import 'antd/dist/antd.variable.min.css';
+
+ConfigProvider.config({
+  theme: {
+    primaryColor: '#b6007c',
+    infoColor: '#b6007c',
+    components: {
+      Radio: {
+        primaryColor: '#b6007c',
+      },
+    },
+  },
+});
 
 const mockCredentialsForInframock = () => {
   Credentials.get = async () => ({

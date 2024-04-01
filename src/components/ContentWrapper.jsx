@@ -17,7 +17,6 @@ import {
   Space,
   Tooltip,
   Typography,
-  ConfigProvider,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
