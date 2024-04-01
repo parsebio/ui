@@ -143,6 +143,7 @@ const ContinuousEmbeddingPage = ({ experimentId }) => {
         experimentId={experimentId}
         plotUuid={selectedPlotUuid}
         plotType={plotType}
+        plotName={plotNames.CONTINUOUS_EMBEDDING}
         plotStylingConfig={plotStylingConfig}
         extraControlPanels={renderExtraPanels()}
         defaultActiveKey='view-multiple-plots'

@@ -498,6 +498,7 @@ const DotPlotPage = (props) => {
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.DOT_PLOT}
         plotStylingConfig={plotStylingConfig}
         extraToolbarControls={<ExportAsCSV data={getCSVData()} filename={csvFileName} />}
         extraControlPanels={renderExtraPanels()}

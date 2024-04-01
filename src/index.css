@@ -5,8 +5,12 @@
     font-family: 'M Plus 2' !important;
 }
 
-/* moving between modules resets ConfigProvider */ 
+a {
+  color: #1677ff !important;
+}
 
+/* moving between modules resets ConfigProvider */ 
+/*
 .ant-btn-primary {
   background-color: #B6007C !important; 
   border-color: #B6007C !important; 
@@ -24,9 +28,10 @@
   color: #B6007C !important;  
   border-color: #B6007C !important; 
 }
-
+*
 
 /* Radio buttons are not receiving the ConfigProvider change */ 
+
 .ant-radio-checked .ant-radio-inner{
     border-color: #B6007C !important ;
   }

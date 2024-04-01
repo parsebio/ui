@@ -26,6 +26,7 @@ const Header = (props) => {
       <NextSeo
         title={experimentData ? `${title} · ${truncateText(experimentName)}` : title}
       />
+      {/*
       <PageHeader
         className={integrationTestConstants.classes.PAGE_HEADER}
         title={title}
@@ -49,6 +50,7 @@ const Header = (props) => {
           </Space>
         )}
       />
+        */}
     </>
   );
 };

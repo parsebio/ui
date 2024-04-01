@@ -149,6 +149,7 @@ const ViolinIndex = ({ experimentId }) => {
         experimentId={experimentId}
         plotUuid={selectedPlotUuid}
         plotType={plotType}
+        plotName={plotNames.VIOLIN_PLOT}
         plotStylingConfig={plotStylingConfig}
         plotInfo='In order to rename existing clusters or create new ones, use the cell set tool, located in the Data Exploration page.'
         extraControlPanels={renderExtraPanels()}

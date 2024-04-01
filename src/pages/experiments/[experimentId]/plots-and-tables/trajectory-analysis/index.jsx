@@ -272,6 +272,7 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.TRAJECTORY_ANALYSIS}
         plotStylingConfig={plotStylingConfig}
         extraToolbarControls={renderExtraToolbarControls()}
         defaultActiveKey='trajectory-analysis'
