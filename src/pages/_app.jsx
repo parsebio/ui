@@ -31,11 +31,6 @@ ConfigProvider.config({
   theme: {
     primaryColor: '#b6007c',
     infoColor: '#b6007c',
-    components: {
-      Radio: {
-        primaryColor: '#b6007c',
-      },
-    },
   },
 });
 

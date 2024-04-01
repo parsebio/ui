@@ -13,19 +13,6 @@ import { loadSamples } from 'redux/actions/samples';
 import ExampleExperimentsSpace from 'components/data-management/ExampleExperimentsSpace';
 import Loader from 'components/Loader';
 import { privacyPolicyIsNotAccepted } from 'utils/deploymentInfo';
-import { ConfigProvider } from 'antd';
-
-ConfigProvider.config({
-  theme: {
-    primaryColor: '#b6007c',
-    infoColor: '#b6007c',
-    components: {
-      Radio: {
-        primaryColor: '#b6007c',
-      },
-    },
-  },
-});
 
 const DataManagementPage = () => {
   const dispatch = useDispatch();
@@ -118,19 +105,17 @@ const DataManagementPage = () => {
 
   return (
     <>
-      <ConfigProvider>
-        <Header title='Data Management' />
-        {newProjectModalVisible ? (
-          <NewProjectModal
-            onCancel={() => { setNewProjectModalVisible(false); }}
-            onCreate={() => { setNewProjectModalVisible(false); }}
-          />
-        ) : (<></>)}
-        <MultiTileContainer
-          tileMap={TILE_MAP}
-          initialArrangement={windows}
+      <Header title='Data Management' />
+      {newProjectModalVisible ? (
+        <NewProjectModal
+          onCancel={() => { setNewProjectModalVisible(false); }}
+          onCreate={() => { setNewProjectModalVisible(false); }}
         />
-      </ConfigProvider>
+      ) : (<></>)}
+      <MultiTileContainer
+        tileMap={TILE_MAP}
+        initialArrangement={windows}
+      />
     </>
   );
 };
