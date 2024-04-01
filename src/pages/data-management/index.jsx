@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ConfigProvider } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadExperiments } from 'redux/actions/experiments';
 
@@ -106,26 +105,17 @@ const DataManagementPage = () => {
 
   return (
     <>
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: '#b6007c',
-            colorInfo: '#b6007c',
-          },
-        }}
-      >
-        <Header title='Data Management' />
-        {newProjectModalVisible ? (
-          <NewProjectModal
-            onCancel={() => { setNewProjectModalVisible(false); }}
-            onCreate={() => { setNewProjectModalVisible(false); }}
-          />
-        ) : (<></>)}
-        <MultiTileContainer
-          tileMap={TILE_MAP}
-          initialArrangement={windows}
+      <Header title='Data Management' />
+      {newProjectModalVisible ? (
+        <NewProjectModal
+          onCancel={() => { setNewProjectModalVisible(false); }}
+          onCreate={() => { setNewProjectModalVisible(false); }}
         />
-      </ConfigProvider>
+      ) : (<></>)}
+      <MultiTileContainer
+        tileMap={TILE_MAP}
+        initialArrangement={windows}
+      />
     </>
   );
 };

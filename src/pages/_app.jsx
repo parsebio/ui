@@ -26,7 +26,7 @@ import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
 
-ConfigProvider.config({ theme: { primaryColor: '#f00' } });
+ConfigProvider.config({ theme: { primaryColor: '#b6007c', infoColor: '#b6007c' } });
 
 const mockCredentialsForInframock = () => {
   Credentials.get = async () => ({

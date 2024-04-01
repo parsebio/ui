@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Button, Tooltip, Popconfirm, Typography, Space, ConfigProvider,
+  Button, Tooltip, Popconfirm, Typography, Space,
 } from 'antd';
 import _ from 'lodash';
 
@@ -13,8 +13,6 @@ import integrationTestConstants from 'utils/integrationTestConstants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 import { WarningOutlined } from '@ant-design/icons';
-
-ConfigProvider.config({ theme: { primaryColor: '#f00' } });
 
 const { Text } = Typography;
 
@@ -140,35 +138,28 @@ const LaunchAnalysisButton = () => {
     } = props;
 
     return (
-      <ConfigProvider
-        theme={{
-          colorPrimary: '#b6007c',
-          colorInfo: '#b6007c',
-        }}
+      <Button
+        data-test-id={integrationTestConstants.ids.PROCESS_PROJECT_BUTTON}
+        type='primary'
+        disabled={disabled}
+        onClick={onClick}
+        loading={loading}
       >
-        <Button
-          data-test-id={integrationTestConstants.ids.PROCESS_PROJECT_BUTTON}
-          type='primary'
-          disabled={disabled}
-          onClick={onClick}
-          loading={loading}
-        >
 
-          {
-            getAnyFileUploadFailed() ? (
-              <Space>
-                <Text type='danger'>
-                  <WarningOutlined />
-                </Text>
-                {text}
-              </Space>
-            ) : (
-              text
-            )
-          }
+        {
+          getAnyFileUploadFailed() ? (
+            <Space>
+              <Text type='danger'>
+                <WarningOutlined />
+              </Text>
+              {text}
+            </Space>
+          ) : (
+            text
+          )
+        }
 
-        </Button>
-      </ConfigProvider>
+      </Button>
     );
   };
 
