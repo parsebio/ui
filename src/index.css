@@ -10,10 +10,11 @@ a {
 }
 
 /* moving between modules resets ConfigProvider */ 
+
 /*
 .ant-btn-primary {
-  background-color: #B6007C !important; 
-  border-color: #B6007C !important; 
+  background-color: #9966b8 !important; 
+  border-color: #9966b8 !important; 
   color: white !important;
   text-shadow: none !important;
 }
@@ -28,20 +29,20 @@ a {
   color: #B6007C !important;  
   border-color: #B6007C !important; 
 }
-*
+*/
 
 /* Radio buttons are not receiving the ConfigProvider change */ 
 
 .ant-radio-checked .ant-radio-inner{
-    border-color: #B6007C !important ;
+    border-color: #9966b8 !important ;
   }
   
   .ant-radio-checked .ant-radio-inner:after{
-    background-color: #B6007C  !important;
+    background-color: #9966b8  !important;
   }
   
   .ant-radio:hover .ant-radio-inner {
-    border-color: #B6007C !important;
+    border-color: #9966b8 !important;
   }
 
 
@@ -62,12 +63,10 @@ button {
 /* Table changes */ 
 .even-row .ant-table-cell {
     background-color: #E5E5F1 !important;
-    background-color: #DFCEE8 !important;
     
 }
 
 .gene-table .ant-table-header .ant-table-cell{
-    background-color: #9966b8 !important;  
    background-color: #C4BCDC !important;
 }
 

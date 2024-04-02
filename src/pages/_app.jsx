@@ -29,7 +29,7 @@ import 'antd/dist/antd.variable.min.css';
 
 ConfigProvider.config({
   theme: {
-    primaryColor: '#b6007c',
+    primaryColor: '#9966b8',
     infoColor: '#b6007c',
   },
 });
