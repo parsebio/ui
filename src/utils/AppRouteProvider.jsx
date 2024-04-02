@@ -33,7 +33,7 @@ const PATH_REGEX = {
   // we shouldn't depend on order of an object's entries
   // Objects don't guarantee preservation of any kind of order
   [modules.SECONDARY_ANALYSIS_OUTPUT]: '/status',
-  [modules.SECONDARY_ANALYSIS]: '/secondary-analysis',
+  [modules.SECONDARY_ANALYSIS]: '/pipeline',
   [modules.DATA_MANAGEMENT]: '/data-management',
   [modules.REPOSITORY]: '/repository',
   [modules.DATA_PROCESSING]: '/data-processing',
@@ -45,7 +45,7 @@ const PATH_REGEX = {
 
 const PATHS = {
   [modules.SECONDARY_ANALYSIS]: `${PATH_REGEX[modules.SECONDARY_ANALYSIS]}`,
-  [modules.SECONDARY_ANALYSIS_OUTPUT]: `/secondary-analysis/[secondaryAnalysisId]${PATH_REGEX[modules.SECONDARY_ANALYSIS_OUTPUT]}`,
+  [modules.SECONDARY_ANALYSIS_OUTPUT]: `/pipeline/[secondaryAnalysisId]${PATH_REGEX[modules.SECONDARY_ANALYSIS_OUTPUT]}`,
   [modules.DATA_MANAGEMENT]: `${PATH_REGEX[modules.DATA_MANAGEMENT]}`,
   [modules.REPOSITORY]: `${PATH_REGEX[modules.REPOSITORY]}`,
   [modules.DATA_PROCESSING]: `/experiments/[experimentId]${PATH_REGEX[modules.DATA_PROCESSING]}`,
@@ -75,7 +75,7 @@ const AppRouteProvider = (props) => {
   useEffect(() => {
     if (router.pathname.startsWith('/experiments') || router.pathname === '/data-management') {
       localStorage.setItem('lastVisitedPage', modules.DATA_MANAGEMENT);
-    } else if (router.pathname.startsWith('/secondary-analysis')) {
+    } else if (router.pathname.startsWith('/pipeline')) {
       localStorage.setItem('lastVisitedPage', modules.SECONDARY_ANALYSIS);
     }
   }, [router.pathname]);
