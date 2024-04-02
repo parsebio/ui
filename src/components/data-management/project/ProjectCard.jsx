@@ -28,9 +28,9 @@ const inactiveExperimentStyle = {
 };
 
 const activeExperimentStyle = {
-  backgroundColor: 'white',
+  backgroundColor: '#F5F0F8',
   cursor: 'pointer',
-  border: '2px solid #B6007C',
+  border: '2px solid #9966b8',
 };
 
 const itemTextStyle = { fontWeight: 'bold' };
