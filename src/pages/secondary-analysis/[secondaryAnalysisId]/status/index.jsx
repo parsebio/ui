@@ -12,7 +12,7 @@ import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loadSecondaryAnalysisStatus, updateSecondaryAnalysis,
-  cancelSecondaryAnalysis, loadSecondaryAnalyses,
+  cancelSecondaryAnalysis,
 } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/secondary-analysis/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
@@ -46,12 +46,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
     setupReports();
   }, [secondaryAnalysis?.status.current]);
-
-  useEffect(() => {
-    if (!secondaryAnalysis) {
-      dispatch(loadSecondaryAnalyses());
-    }
-  }, []);
 
   const downloadOutput = useCallback(async () => {
     if (secondaryAnalysis?.status?.current === 'finished') {
