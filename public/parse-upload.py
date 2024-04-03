@@ -307,7 +307,7 @@ class FileUploader:
         if response.status_code != 200:
             raise Exception(f"Failed to upload part {part_number}: {response.text}")
 
-        return response.headers['etag']
+        return response.headers["ETag"]
             
     # Uploads a file in parts, beginning from the parts_offset
     def upload_file(self) -> None:
