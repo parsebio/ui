@@ -5,7 +5,7 @@ import {
 import {
   CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
 } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';
@@ -19,7 +19,7 @@ const { Text } = Typography;
 
 const UploadFastQ = (props) => {
   const {
-    secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded, secondaryAnalysisFiles,
+    secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded,
   } = props;
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
@@ -30,6 +30,11 @@ const UploadFastQ = (props) => {
     const filesList = await Promise.all(fileHandles.valid.map(async (handle) => handle.getFile()));
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
   };
+
+  const secondaryAnalysisFiles = useSelector(
+    (state) => state.secondaryAnalyses[secondaryAnalysisId]?.files.data ?? {},
+    _.isEqual,
+  );
 
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));
@@ -259,7 +264,6 @@ UploadFastQ.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
   renderFastqFileTable: PropTypes.func.isRequired,
   setFilesNotUploaded: PropTypes.func.isRequired,
-  secondaryAnalysisFiles: PropTypes.object.isRequired,
 };
 
 export default UploadFastQ;

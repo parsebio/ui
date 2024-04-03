@@ -77,11 +77,6 @@ const Pipeline = () => {
     _.isEqual,
   );
 
-  const secondaryAnalysisFiles = useSelector(
-    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.data ?? {},
-    _.isEqual,
-  );
-
   const filesLoading = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.loading ?? {},
     _.isEqual,
@@ -118,7 +113,7 @@ const Pipeline = () => {
       dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
     }
 
-    if (activeSecondaryAnalysisId && _.isEmpty(secondaryAnalysisFiles)) {
+    if (activeSecondaryAnalysisId) {
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
     }
   }, [activeSecondaryAnalysisId]);
@@ -272,7 +267,6 @@ const Pipeline = () => {
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderFastqFileTable={() => renderFastqFileTable(true)}
           setFilesNotUploaded={setFilesNotUploaded}
-          secondaryAnalysisFiles={secondaryAnalysisFiles}
         />
       ),
       isValid: allFilesUploaded(fastqFiles),
