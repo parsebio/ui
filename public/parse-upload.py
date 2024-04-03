@@ -1,5 +1,6 @@
 import argparse
-import requests
+import urllib.request
+import urllib.error
 import os
 import sys
 import time
@@ -73,6 +74,56 @@ def with_retry(func, try_number = 0):
         sys.stdout.flush()
 
         return result
+
+class HTTPResponse:
+    def __init__(self, response, response_data: bytes | None = None) -> None:
+        self._response = response
+        self._response_data = response_data
+        self._is_error = isinstance(self._response, urllib.error.HTTPError)
+    
+    def json(self):
+        if (self._response_data == None):
+            raise Exception("No data to parse into json")
+
+        return json.loads(self._response_data)
+    
+    @property 
+    def text(self):
+        return self._response.reason
+
+    @property
+    def headers(self):
+        return dict(self._response.getheaders())
+
+    @property
+    def status_code(self):
+        if (self._is_error):
+            self._response.code
+
+        return self._response.status
+
+def http_put_part(signed_url, data):
+    headers = {"Content-Type": "application/octet-stream"}
+    request = urllib.request.Request(signed_url, data=data, headers=headers, method="PUT")
+
+    try:
+        with urllib.request.urlopen(request) as response:
+            return HTTPResponse(response)
+
+    except urllib.error.HTTPError as e:
+        return HTTPResponse(e)
+
+def http_post(url, headers, json_data = {}) -> HTTPResponse:
+    headers["Content-Type"] = "application/json"
+    data = json.dumps(json_data).encode("utf-8")
+    request = urllib.request.Request(url, data=data, headers=headers, method="POST")
+
+    try:
+        with urllib.request.urlopen(request) as response:
+            return HTTPResponse(response, response.read())
+
+    except urllib.error.HTTPError as e:
+        return HTTPResponse(e)
 
 # Manages 
 # - the parameters required for upload,
@@ -220,25 +271,24 @@ class FileUploader:
         self.file_id = None
 
     def get_signed_url_for_part(self, part_number) -> str:
-        response = requests.post(
+        response = http_post(
             f"{base_url}/analysis/{self.analysis_id}/cliUpload/{self.upload_id}/part/{part_number}/signedUrl",
-            headers={"x-api-token": f"Bearer {self.api_token}"},
-            json={"key": self.key},
+            {"x-api-token": f"Bearer {self.api_token}"},
+            json_data={"key": self.key},
         )
         
         if response.status_code != 200:
             raise Exception(f"Failed to get signed url for part {part_number}: {response.text}")
 
-        signed_url = response.json()
-        return signed_url
+        return response.json()
 
     def complete_multipart_upload(self, parts) -> None:        
         self.progress_displayer.show_completing()
 
-        response = requests.post(
+        response = http_post(
             f"{base_url}/analysis/{self.analysis_id}/cliUpload/CompleteMultipartUpload",
-            headers={"X-Api-Token": f"Bearer {self.api_token}"},
-            json={
+            {"X-Api-Token": f"Bearer {self.api_token}"},
+            json_data={
                 "key": self.key,
                 "uploadId": self.upload_id,
                 "parts": parts,
@@ -252,12 +302,12 @@ class FileUploader:
     def upload_part(self, part, part_number) -> str:
         signed_url = self.get_signed_url_for_part(part_number)
 
-        response = requests.put(signed_url, data=part)
+        response = http_put_part(signed_url, part)
 
         if response.status_code != 200:
             raise Exception(f"Failed to upload part {part_number}: {response.text}")
 
-        return response.headers['ETag']
+        return response.headers['etag']
             
     # Uploads a file in parts, beginning from the parts_offset
     def upload_file(self) -> None:
@@ -308,15 +358,17 @@ def begin_multipart_upload(analysis_id, file_path, api_token) -> dict:
 
         url = f"{base_url}/analysis/{analysis_id}/cliUpload/begin"
 
-        response = requests.post(
+        response = http_post(
             url,
-            headers={"X-Api-Token": f"Bearer {api_token}"},
-            json={"name": file_name, "size": file_size},
+            {"X-Api-Token": f"Bearer {api_token}"},
+            json_data={"name": file_name, "size": file_size},
         )
 
         if response.status_code != 200:
             if (response.status_code == 409):
                 raise Exception(f"File {file_path} already exists in the pipeline, please remove the existing one before uploading a new one")
+            if (response.status_code == 404):
+                raise Exception(f"Analysis {analysis_id} not found")
 
             raise Exception(f"Failed to begin upload for file {file_path}: {response.text}")
 
