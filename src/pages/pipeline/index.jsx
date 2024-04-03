@@ -107,7 +107,7 @@ const Pipeline = () => {
   );
 
   const filesLoading = useSelector(
-    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.loading ?? {},
+    (state) => false, // state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.loading ?? {},
     _.isEqual,
     // () => true,
   );
