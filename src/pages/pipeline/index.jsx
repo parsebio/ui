@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect,
+  useState, useEffect, useCallback,
 } from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm,
@@ -53,6 +53,34 @@ const pipelineStatusToDisplay = {
 const SAMPLE_LOADING_TABLE = 'samplelt';
 const FASTQ = 'fastq';
 
+const mainScreenDetails = (detailsObj) => {
+  const view = Object.keys(detailsObj).map((key) => {
+    const value = detailsObj[key];
+    const title = keyToTitle[key];
+    return (
+      <div
+        key={key}
+        style={{
+          display: 'flex',
+          marginBottom: '10px',
+          overflow: 'hidden',
+        }}
+      >
+        {title && (
+          <span style={{ fontWeight: 'bold' }}>
+            {`${title}:`}
+          </span>
+        )}
+        &nbsp;
+        <span>
+          {value || 'Not selected'}
+        </span>
+      </div>
+    );
+  });
+  return view;
+};
+
 const Pipeline = () => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
@@ -75,11 +103,13 @@ const Pipeline = () => {
   const secondaryAnalysis = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId],
     _.isEqual,
+    // () => true,
   );
 
   const filesLoading = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.loading ?? {},
     _.isEqual,
+    // () => true,
   );
 
   const currentSecondaryAnalysisStatus = useSelector(
@@ -140,34 +170,6 @@ const Pipeline = () => {
     }
   };
 
-  const mainScreenDetails = (detailsObj) => {
-    const view = Object.keys(detailsObj).map((key) => {
-      const value = detailsObj[key];
-      const title = keyToTitle[key];
-      return (
-        <div
-          key={key}
-          style={{
-            display: 'flex',
-            marginBottom: '10px',
-            overflow: 'hidden',
-          }}
-        >
-          {title && (
-            <span style={{ fontWeight: 'bold' }}>
-              {`${title}:`}
-            </span>
-          )}
-          &nbsp;
-          <span>
-            {value || 'Not selected'}
-          </span>
-        </div>
-      );
-    });
-    return view;
-  };
-
   const renderSampleLTFileDetails = () => {
     if (!sampleLTFile) return null;
 
@@ -212,6 +214,7 @@ const Pipeline = () => {
   const {
     numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
   } = secondaryAnalysis || {};
+
   const secondaryAnalysisWizardSteps = [
     {
       title: 'Provide the details of the experimental setup:',
