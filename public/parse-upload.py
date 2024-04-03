@@ -211,8 +211,8 @@ class FileUploader:
         self.parts_offset = parts_offset
 
         file_size = os.path.getsize(self.file_path)
-        amount_of_parts = math.ceil(file_size/PART_SIZE)
-        self.progress_displayer = ProgressDisplayer(amount_of_parts, parts_offset, current_file)
+        number_of_parts = math.ceil(file_size/PART_SIZE)
+        self.progress_displayer = ProgressDisplayer(number_of_parts, parts_offset, current_file)
 
         # These will be obtained from begin_multipart_upload()
         self.upload_id = None
