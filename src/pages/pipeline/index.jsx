@@ -66,9 +66,10 @@ const Pipeline = () => {
 
   const user = useSelector((state) => state.user.current);
 
-  const secondaryAnalysisIds = useSelector((state) => state.secondaryAnalyses.ids);
+  const secondaryAnalysisIds = useSelector((state) => state.secondaryAnalyses.ids, _.isEqual);
   const activeSecondaryAnalysisId = useSelector(
     (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
+    _.isEqual,
   );
 
   const secondaryAnalysis = useSelector(
@@ -76,20 +77,30 @@ const Pipeline = () => {
     _.isEqual,
   );
 
+  const secondaryAnalysisFiles = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.data ?? {},
+    _.isEqual,
+  );
+
+  const filesLoading = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.loading ?? {},
+    _.isEqual,
+  );
+
   const currentSecondaryAnalysisStatus = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status?.current,
+    _.isEqual,
   );
 
   const sampleLTFile = useSelector(
     (state) => Object.values(_.pickBy(state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.data, (file) => file.type === SAMPLE_LOADING_TABLE))[0],
+    _.isEqual,
   );
 
   const fastqFiles = useSelector(
     (state) => _.pickBy(state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.data, (file) => file.type === FASTQ),
+    _.isEqual,
   );
-
-  const secondaryAnalysisFiles = secondaryAnalysis?.files.data ?? {};
-  const filesLoading = secondaryAnalysis?.files.loading;
 
   const { loading: statusLoading, current: currentStatus } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
