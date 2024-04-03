@@ -50,7 +50,7 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
-const SecondaryAnalysis = () => {
+const Pipeline = () => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
@@ -428,7 +428,7 @@ const SecondaryAnalysis = () => {
 
   return (
     <>
-      <Header title='Secondary Analysis' />
+      <Header title='Pipeline' />
       {NewProjectModalVisible && (
         <NewProjectModal
           projectType='secondaryAnalyses'
@@ -469,4 +469,4 @@ const SecondaryAnalysis = () => {
   );
 };
 
-export default SecondaryAnalysis;
+export default Pipeline;
