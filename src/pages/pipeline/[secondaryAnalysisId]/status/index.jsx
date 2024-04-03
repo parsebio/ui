@@ -18,7 +18,7 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
-import { switchExperiment } from 'redux/actions/experiments';
+import { loadExperiments, switchExperiment } from 'redux/actions/experiments';
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
@@ -30,6 +30,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
   const associatedExperimentId = secondaryAnalysis?.experimentId;
+  const associatedExperiment = useSelector((state) => state.experiments[associatedExperimentId]);
   const setupReports = useCallback(async () => {
     const htmlUrls = await getReports(secondaryAnalysisId);
 
@@ -170,7 +171,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         />
         {renderDownloadOutputButton()}
         {associatedExperimentId && (
-          <Button onClick={() => {
+          <Button onClick={async () => {
+            if (!associatedExperiment) {
+              await dispatch(loadExperiments());
+            }
             dispatch(switchExperiment(associatedExperimentId));
             navigateTo(modules.DATA_EXPLORATION,
               { experimentId: associatedExperimentId });
