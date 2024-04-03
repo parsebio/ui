@@ -10,11 +10,8 @@ import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  loadSecondaryAnalysisStatus, updateSecondaryAnalysis,
-  cancelSecondaryAnalysis,
-} from 'redux/actions/secondaryAnalyses';
-import getReports from 'pages/secondary-analysis/[secondaryAnalysisId]/status/getReports';
+import { loadSecondaryAnalysisStatus, updateSecondaryAnalysis, cancelSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import getReports from 'pages/pipeline/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
 import Paragraph from 'antd/lib/typography/Paragraph';
