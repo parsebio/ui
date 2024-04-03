@@ -58,7 +58,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
-    console.log('LOADING STATUS');
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
