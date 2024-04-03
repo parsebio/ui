@@ -118,10 +118,9 @@ const Pipeline = () => {
     _.isEqual,
   );
 
-  const filesLoading = useSelector(
-    () => false, // state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.loading ?? {},
+  const filesInitialLoading = useSelector(
+    (state) => _.isNil(state.secondaryAnalyses[activeSecondaryAnalysisId]?.files?.data),
     _.isEqual,
-    // () => true,
   );
 
   const currentSecondaryAnalysisStatus = useSelector(
@@ -257,7 +256,7 @@ const Pipeline = () => {
         />
       ),
       isValid: allFilesUploaded([sampleLTFile]),
-      isLoading: filesLoading,
+      isLoading: filesInitialLoading,
       renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
     },
     {
@@ -283,7 +282,7 @@ const Pipeline = () => {
         />
       ),
       isValid: allFilesUploaded(fastqFiles),
-      isLoading: filesLoading,
+      isLoading: filesInitialLoading,
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFileTable(false)),
     },
   ];
