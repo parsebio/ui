@@ -32,6 +32,10 @@ const getSelectedMetadataTracks = (...params) => (state) => (
   componentConfigSelectors.getSelectedMetadataTracks(...params)(state)
 );
 
+const getFilesByType = (...params) => (state) => (
+  componentConfigSelectors.getSelectedMetadataTracks(...params)(state)
+);
+
 export {
   getBackendStatus,
   getCellSets,

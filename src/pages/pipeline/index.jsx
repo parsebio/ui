@@ -50,6 +50,9 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
+const SAMPLE_LOADING_TABLE = 'samplelt';
+const FASTQ = 'fastq';
+
 const Pipeline = () => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
@@ -59,13 +62,32 @@ const Pipeline = () => {
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
 
+  console.log('SecondaryAnalysisDebug');
+
   const user = useSelector((state) => state.user.current);
 
-  const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
-  const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
+  const secondaryAnalysisIds = useSelector((state) => state.secondaryAnalyses.ids);
+  const activeSecondaryAnalysisId = useSelector(
+    (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
+  );
+
   const secondaryAnalysis = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId],
+    _.isEqual,
   );
+
+  const currentSecondaryAnalysisStatus = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status?.current,
+  );
+
+  const sampleLTFile = useSelector(
+    (state) => Object.values(_.pickBy(state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.data, (file) => file.type === SAMPLE_LOADING_TABLE))[0],
+  );
+
+  const fastqFiles = useSelector(
+    (state) => _.pickBy(state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.data, (file) => file.type === FASTQ),
+  );
+
   const secondaryAnalysisFiles = secondaryAnalysis?.files.data ?? {};
   const filesLoading = secondaryAnalysis?.files.loading;
 
@@ -77,7 +99,7 @@ const Pipeline = () => {
   const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useEffect(() => {
-    if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
+    if (secondaryAnalysisIds.length === 0) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
   useEffect(() => {
@@ -90,13 +112,20 @@ const Pipeline = () => {
     }
   }, [activeSecondaryAnalysisId]);
 
+  // Poll for status
   usePolling(async () => {
-    if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
+    if (!['running', 'created'].includes(currentSecondaryAnalysisStatus)) return;
 
     await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
-  }, [activeSecondaryAnalysisId, secondaryAnalysis?.status?.current]);
+  }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
 
-  const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
+  // Poll for files (in case the cli is uploading)
+  usePolling(async () => {
+    // If executing, no need to get files updates
+    if (['running', 'created'].includes(currentSecondaryAnalysisStatus)) return;
+
+    await dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
+  }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus], 5000);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
@@ -134,8 +163,6 @@ const Pipeline = () => {
   };
 
   const renderSampleLTFileDetails = () => {
-    const sampleLTFile = Object.values(getFilesByType('samplelt'))[0];
-
     if (!sampleLTFile) return null;
 
     const { name, upload, createdAt } = sampleLTFile;
@@ -151,13 +178,11 @@ const Pipeline = () => {
   };
 
   const renderFastqFileTable = (canEditTable) => {
-    const filesToDisplay = getFilesByType('fastq');
-
-    if (Object?.keys(filesToDisplay)?.length) {
+    if (Object?.keys(fastqFiles)?.length) {
       return (
         <FastqFileTable
           canEditTable={canEditTable}
-          files={filesToDisplay}
+          files={fastqFiles}
           secondaryAnalysisId={activeSecondaryAnalysisId}
         />
       );
@@ -171,10 +196,11 @@ const Pipeline = () => {
     />
   ));
 
-  const areFilesUploaded = (type) => {
-    const files = getFilesByType(type);
-    if (!Object.keys(files).length) return false;
-    return Object.values(files).every((file) => file.upload.status === 'uploaded');
+  const allFilesUploaded = (files) => {
+    if (!files || Object.keys(files).length === 0) return false;
+    console.log('filesDebug');
+    console.log(files);
+    return Object.values(files).every((file) => file?.upload?.status === 'uploaded');
   };
 
   const {
@@ -207,11 +233,11 @@ const Pipeline = () => {
         <SampleLTUpload
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderUploadedFileDetails={renderSampleLTFileDetails}
-          uploadedFileId={Object.keys(getFilesByType('samplelt'))[0]}
+          uploadedFileId={sampleLTFile?.id}
           setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
-      isValid: areFilesUploaded('samplelt'),
+      isValid: allFilesUploaded([sampleLTFile]),
       isLoading: filesLoading,
       renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
     },
@@ -238,7 +264,7 @@ const Pipeline = () => {
           secondaryAnalysisFiles={secondaryAnalysisFiles}
         />
       ),
-      isValid: areFilesUploaded('fastq'),
+      isValid: allFilesUploaded(fastqFiles),
       isLoading: filesLoading,
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFileTable(false)),
     },
@@ -250,7 +276,7 @@ const Pipeline = () => {
   const ANALYSIS_DETAILS = 'Run Details';
 
   const LaunchAnalysisButton = () => {
-    const firstTimeLaunch = currentStatus === "not_created";
+    const firstTimeLaunch = currentStatus === 'not_created';
     const launchAnalysis = () => {
       setButtonClicked(true);
       dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
@@ -263,7 +289,7 @@ const Pipeline = () => {
         .catch(() => {
           setButtonClicked(false);
         });
-    }
+    };
 
     if (firstTimeLaunch) {
       return (
@@ -276,12 +302,12 @@ const Pipeline = () => {
         >
           Run the pipeline
         </Button>
-      )
+      );
     }
 
     return (
       <Popconfirm
-        title="This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?"
+        title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
         disabled={!isAllValid}
         onConfirm={() => launchAnalysis()}
         okText='Yes'
@@ -297,8 +323,8 @@ const Pipeline = () => {
           Rerun the pipeline
         </Button>
       </Popconfirm>
-    )
-  }
+    );
+  };
 
   const TILE_MAP = {
     [ANALYSIS_LIST]: {
