@@ -19,6 +19,7 @@ import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
 import { loadExperiments, switchExperiment } from 'redux/actions/experiments';
+import { loadBackendStatus } from 'redux/actions/backendStatus';
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
@@ -175,6 +176,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             if (!associatedExperiment) {
               await dispatch(loadExperiments());
             }
+            await dispatch(loadBackendStatus(associatedExperimentId));
             dispatch(switchExperiment(associatedExperimentId));
             navigateTo(modules.DATA_EXPLORATION,
               { experimentId: associatedExperimentId });
