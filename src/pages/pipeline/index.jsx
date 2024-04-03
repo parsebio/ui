@@ -81,6 +81,8 @@ const mainScreenDetails = (detailsObj) => {
   return view;
 };
 
+const analysisDetailsKeys = ['name', 'description', 'numOfSamples', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+
 const Pipeline = () => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
@@ -100,14 +102,24 @@ const Pipeline = () => {
     _.isEqual,
   );
 
-  const secondaryAnalysis = useSelector(
-    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId],
+  const {
+    name: analysisName,
+    description: analysisDescription,
+    numOfSamples,
+    numOfSublibraries,
+    chemistryVersion,
+    kit,
+    refGenome,
+  } = useSelector(
+    (state) => _.pick(
+      state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {},
+      analysisDetailsKeys,
+    ),
     _.isEqual,
-    // () => true,
   );
 
   const filesLoading = useSelector(
-    (state) => false, // state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.loading ?? {},
+    () => false, // state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.loading ?? {},
     _.isEqual,
     // () => true,
   );
@@ -211,9 +223,9 @@ const Pipeline = () => {
     return Object.values(files).every((file) => file?.upload?.status === 'uploaded');
   };
 
-  const {
-    numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
-  } = secondaryAnalysis || {};
+  // const {
+  //   numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
+  // } = secondaryAnalysis || {};
 
   const secondaryAnalysisWizardSteps = [
     {
@@ -221,10 +233,8 @@ const Pipeline = () => {
       key: 'Experimental setup',
       render: () => (
         <SecondaryAnalysisSettings
+          secondaryAnalysisId={activeSecondaryAnalysisId}
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          secondaryAnalysisDetails={{
-            numOfSamples, numOfSublibraries, chemistryVersion, kit,
-          }}
         />
       ),
       isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
@@ -357,7 +367,7 @@ const Pipeline = () => {
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
                   <Space direction='vertical'>
-                    <Title level={4}>{secondaryAnalysis.name}</Title>
+                    <Title level={4}>{analysisName}</Title>
                     <Text type='secondary'>
                       {`Run ID: ${activeSecondaryAnalysisId}`}
                     </Text>
@@ -398,9 +408,9 @@ const Pipeline = () => {
                 <Text strong>Description:</Text>
                 <div style={{ flex: 1, overflowY: 'auto' }}>
                   <EditableParagraph
-                    value={secondaryAnalysis.description || ''}
+                    value={analysisDescription ?? ''}
                     onUpdate={(text) => {
-                      if (text !== secondaryAnalysis.description) {
+                      if (text !== analysisDescription) {
                         dispatch(
                           updateSecondaryAnalysis(
                             activeSecondaryAnalysisId,
