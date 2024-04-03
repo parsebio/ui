@@ -359,7 +359,9 @@ def show_resume_option():
     return False
 
 def show_files_to_upload_warning(file_paths):
-    # Print the files that will be uploaded dand wait for the user to say "yes
+    if len(file_paths) == 0:
+        raise Exception("No valid files found to upload, please check the --file parameter values or use --help for more information")
+
     print("New upload: the following files will be uploaded:")
     print("\n".join(file_paths))
     print("")
