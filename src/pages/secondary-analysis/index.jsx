@@ -250,20 +250,20 @@ const SecondaryAnalysis = () => {
   const ANALYSIS_DETAILS = 'Run Details';
 
   const LaunchAnalysisButton = () => {
-    const firstTimeLaunch = currentStatus === "not_created";
+    const firstTimeLaunch = currentStatus === 'not_created';
     const launchAnalysis = () => {
       setButtonClicked(true);
       dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
         .then(() => {
           navigateTo(
             modules.SECONDARY_ANALYSIS_OUTPUT,
-            { secondaryAnalysisId: activeSecondaryAnalysisId },
+            { secondaryAnalysisId: activeSecondaryAnalysisId }, false, true,
           );
         })
         .catch(() => {
           setButtonClicked(false);
         });
-    }
+    };
 
     if (firstTimeLaunch) {
       return (
@@ -276,12 +276,12 @@ const SecondaryAnalysis = () => {
         >
           Run the pipeline
         </Button>
-      )
+      );
     }
 
     return (
       <Popconfirm
-        title="This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?"
+        title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
         disabled={!isAllValid}
         onConfirm={() => launchAnalysis()}
         okText='Yes'
@@ -297,8 +297,8 @@ const SecondaryAnalysis = () => {
           Rerun the pipeline
         </Button>
       </Popconfirm>
-    )
-  }
+    );
+  };
 
   const TILE_MAP = {
     [ANALYSIS_LIST]: {
@@ -351,7 +351,7 @@ const SecondaryAnalysis = () => {
                             setButtonClicked(true);
                             navigateTo(
                               modules.SECONDARY_ANALYSIS_OUTPUT,
-                              { secondaryAnalysisId: activeSecondaryAnalysisId },
+                              { secondaryAnalysisId: activeSecondaryAnalysisId }, false, true,
                             );
                           }}
                         >

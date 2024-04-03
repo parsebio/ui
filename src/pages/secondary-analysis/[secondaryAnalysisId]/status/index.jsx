@@ -21,6 +21,7 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
+import { switchExperiment } from 'redux/actions/experiments';
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
@@ -173,8 +174,11 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         />
         {renderDownloadOutputButton()}
         {associatedExperimentId && (
-          <Button onClick={() => navigateTo(modules.DATA_EXPLORATION,
-            { experimentId: associatedExperimentId })}
+          <Button onClick={() => {
+            dispatch(switchExperiment(associatedExperimentId));
+            navigateTo(modules.DATA_EXPLORATION,
+              { experimentId: associatedExperimentId });
+          }}
           >
             Go to Insights downstream analysis
           </Button>
