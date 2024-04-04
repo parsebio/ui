@@ -14,6 +14,7 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 
 import Expandable from 'components/Expandable';
 import endUserMessages from 'utils/endUserMessages';
+import { getFastQFiles } from 'redux/selectors';
 
 const { Text } = Typography;
 
@@ -31,17 +32,16 @@ const UploadFastQ = (props) => {
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
   };
 
-  const secondaryAnalysisFiles = useSelector(
-    (state) => state.secondaryAnalyses[secondaryAnalysisId]?.files.data ?? {},
-    _.isEqual,
-  );
+  const secondaryAnalysisFiles = useSelector(getFastQFiles(secondaryAnalysisId));
 
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));
   }, [fileHandles]);
 
-  const validateAndSetFiles = async (fileHandlesList) => {
-    const alreadyUploadedFiles = Object.values(secondaryAnalysisFiles).map((item) => item.name);
+  // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
+  // is not updated when used inside a event listener
+  const validateAndSetFiles = async (fileHandlesList, secondaryAnalysisFilesUpdated) => {
+    const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated).map((item) => item.name);
 
     const validators = [
       { validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'), rejectReason: endUserMessages.ERROR_HIDDEN_FILE },
@@ -69,7 +69,7 @@ const UploadFastQ = (props) => {
     try {
       const opts = { multiple: true };
       const handles = await window.showOpenFilePicker(opts);
-      return validateAndSetFiles(handles);
+      return validateAndSetFiles(handles, secondaryAnalysisFiles);
     } catch (err) {
       console.error('Error picking files:', err);
     }
@@ -97,14 +97,15 @@ const UploadFastQ = (props) => {
       const subFiles = await getAllFiles(entry);
       return subFiles;
     }));
-    return validateAndSetFiles(newFiles.flat());
+
+    return validateAndSetFiles(newFiles.flat(), secondaryAnalysisFiles);
   };
 
   useEffect(() => {
     const dropzone = document.getElementById('dropzone');
     dropzone.addEventListener('drop', onDrop);
     return () => dropzone.removeEventListener('drop', onDrop);
-  }, []);
+  }, [secondaryAnalysisFiles]);
 
   const removeFile = (fileName) => {
     setFileHandles((prevState) => {
