@@ -24,8 +24,11 @@ const ProjectMenu = () => {
   const [shareExperimentModalVisible, setShareExperimentModalVisible] = useState(false);
   const selectedTech = samples[activeExperiment?.sampleIds[0]]?.type;
 
-  const linkedSecondaryAnalysisId = activeExperiment.secondaryAnalysisId;
-  const isLatestSecondaryExecution = activeExperiment.isLatestExecution;
+  const {
+    secondaryAnalysisId: linkedSecondaryAnalysisId,
+    isLatestExecution: isLatestSecondaryExecution,
+  } = activeExperiment;
+
   const { navigateTo } = useAppRouter();
   const uploadFiles = (filesList, sampleType) => {
     processSampleUpload(filesList, sampleType, samples, activeExperimentId, dispatch);
@@ -52,8 +55,8 @@ const ProjectMenu = () => {
           <div>
             <Tooltip
               title={!isLatestSecondaryExecution ? 'The pipeline run associated with this project is not available as the run has been overwritten by a more recent run with altered settings.' : `This Project was generated from a run in the Pipeline module of the platform.
-              Click  to view the results and reports from the associated
-              pipeline run:`}
+              Click to view the results and reports from the associated
+              pipeline run`}
               placement='top'
             >
               <Button
