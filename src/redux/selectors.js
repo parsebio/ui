@@ -6,6 +6,7 @@ import * as backendSelectors from './selectors/backendStatus';
 import * as cellSetsSelectors from './selectors/cellSets';
 import * as genesSelectors from './selectors/genes';
 import * as componentConfigSelectors from './selectors/componentConfig';
+import * as secondaryAnalysesSelectors from './selectors/secondaryAnalyses';
 
 const getBackendStatus = (...params) => (state) => (
   backendSelectors.getBackendStatus(...params)(state.backendStatus));
@@ -28,11 +29,15 @@ const getPlotConfigs = (...params) => (state) => (
 const getGeneList = (...params) => (state) => (
   genesSelectors.getGeneList(...params)(state.genes));
 
-const getSelectedMetadataTracks = (...params) => (state) => (
-  componentConfigSelectors.getSelectedMetadataTracks(...params)(state)
+const getFastQFiles = (...params) => (state) => (
+  secondaryAnalysesSelectors.getFastQFiles(...params)(state.secondaryAnalyses)
 );
 
-const getFilesByType = (...params) => (state) => (
+const getSampleLTFile = (...params) => (state) => (
+  secondaryAnalysesSelectors.getSampleLTFile(...params)(state.secondaryAnalyses)
+);
+
+const getSelectedMetadataTracks = (...params) => (state) => (
   componentConfigSelectors.getSelectedMetadataTracks(...params)(state)
 );
 
@@ -45,4 +50,6 @@ export {
   getPlotConfigs,
   getGeneList,
   getSelectedMetadataTracks,
+  getFastQFiles,
+  getSampleLTFile,
 };

@@ -1,6 +1,4 @@
-import React, {
-  useState, useEffect, useCallback,
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm,
 } from 'antd';
@@ -28,6 +26,7 @@ import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
+import { getSampleLTFile, getFastQFiles } from 'redux/selectors';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -49,9 +48,6 @@ const pipelineStatusToDisplay = {
   running: 'Running',
   finished: 'Finished',
 };
-
-const SAMPLE_LOADING_TABLE = 'samplelt';
-const FASTQ = 'fastq';
 
 const mainScreenDetails = (detailsObj) => {
   const view = Object.keys(detailsObj).map((key) => {
@@ -126,15 +122,8 @@ const Pipeline = () => {
     _.isEqual,
   );
 
-  const sampleLTFile = useSelector(
-    (state) => Object.values(_.pickBy(state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.data, (file) => file.type === SAMPLE_LOADING_TABLE))[0],
-    _.isEqual,
-  );
-
-  const fastqFiles = useSelector(
-    (state) => _.pickBy(state.secondaryAnalyses[activeSecondaryAnalysisId]?.files.data, (file) => file.type === FASTQ),
-    _.isEqual,
-  );
+  const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
+  const fastqFiles = useSelector(getFastQFiles(activeSecondaryAnalysisId), _.isEqual);
 
   const { loading: statusLoading, current: currentStatus } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
