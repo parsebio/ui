@@ -172,15 +172,17 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         />
         {renderDownloadOutputButton()}
         {associatedExperimentId && (
-          <Button onClick={async () => {
-            if (!associatedExperiment) {
-              await dispatch(loadExperiments());
-            }
-            await dispatch(loadBackendStatus(associatedExperimentId));
-            dispatch(switchExperiment(associatedExperimentId));
-            navigateTo(modules.DATA_EXPLORATION,
-              { experimentId: associatedExperimentId });
-          }}
+          <Button
+            onClick={async () => {
+              if (!associatedExperiment) {
+                await dispatch(loadExperiments());
+              }
+              await dispatch(loadBackendStatus(associatedExperimentId));
+              dispatch(switchExperiment(associatedExperimentId));
+              navigateTo(modules.DATA_EXPLORATION,
+                { experimentId: associatedExperimentId });
+            }}
+            type='primary'
           >
             Go to Insights downstream analysis
           </Button>
