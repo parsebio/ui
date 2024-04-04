@@ -106,8 +106,7 @@ const Pipeline = () => {
     refGenome,
   } = useSelector(
     (state) => _.pick(
-      state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {},
-      analysisDetailsKeys,
+      state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {}, analysisDetailsKeys,
     ),
     _.isEqual,
   );
