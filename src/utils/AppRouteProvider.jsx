@@ -61,8 +61,6 @@ const AppRouteProvider = (props) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  console.log('AppRouteProviderDebug');
-
   const [renderIntercept, setRenderIntercept] = useState(null);
   const [currentModule, setCurrentModule] = useState(module.DATA_MANAGEMENT);
 

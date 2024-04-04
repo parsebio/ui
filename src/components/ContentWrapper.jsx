@@ -60,7 +60,6 @@ const backendErrors = [
 ];
 
 const ContentWrapper = (props) => {
-  console.log('ContentWrapperDebug');
   const dispatch = useDispatch();
 
   const [collapsed, setCollapsed] = useState(false);
