@@ -117,7 +117,7 @@ const AppRouteProvider = (props) => {
       dispatch(switchExperiment(experimentId));
     }
 
-    if (nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS)) {
+    if (nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS) && !nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS_OUTPUT)) {
       await dispatch(loadSecondaryAnalyses());
 
       // TODO check if this will be needed
@@ -133,7 +133,7 @@ const AppRouteProvider = (props) => {
         dispatch(setActiveExperiment(params.experimentId));
       }
     }
-    if (hardLoad) {
+    if (hardLoad || nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS_OUTPUT)) {
       window.location = nextRoute;
     } else {
       router.push(nextRoute);

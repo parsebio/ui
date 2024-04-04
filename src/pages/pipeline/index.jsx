@@ -257,7 +257,7 @@ const Pipeline = () => {
         .then(() => {
           navigateTo(
             modules.SECONDARY_ANALYSIS_OUTPUT,
-            { secondaryAnalysisId: activeSecondaryAnalysisId }, false, true,
+            { secondaryAnalysisId: activeSecondaryAnalysisId },
           );
         })
         .catch(() => {
@@ -351,7 +351,7 @@ const Pipeline = () => {
                             setButtonClicked(true);
                             navigateTo(
                               modules.SECONDARY_ANALYSIS_OUTPUT,
-                              { secondaryAnalysisId: activeSecondaryAnalysisId }, false, true,
+                              { secondaryAnalysisId: activeSecondaryAnalysisId },
                             );
                           }}
                         >

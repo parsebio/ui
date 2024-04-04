@@ -488,13 +488,10 @@ const ContentWrapper = (props) => {
     isDisabled,
   }) => {
     const onClick = (targetModule) => {
-      // using hard load because we need to load the analysis info on the secondary analysi outputss page
-      // without hardLoad the secondaryAnalysisId is not present in the query (see _app.jsx file - loadAnalysisInfo)
-      const hardLoad = targetModule === modules.SECONDARY_ANALYSIS_OUTPUT;
       navigateTo(targetModule, {
         experimentId: currentExperimentId,
         secondaryAnalysisId: currentAnalysisIdRef.current,
-      }, false, hardLoad);
+      });
     };
     return (
       <SubMenu
