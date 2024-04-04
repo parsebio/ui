@@ -125,8 +125,6 @@ const UploadFastQ = (props) => {
   }, []);
 
   const generateNewToken = useCallback(async () => {
-    console.log('tokenExistsDebug');
-    console.log(tokenExists);
     const token = await generateApiToken(tokenExists);
     setNewToken(token);
   }, [tokenExists]);
