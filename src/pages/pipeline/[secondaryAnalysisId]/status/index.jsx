@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space, Switch, Popconfirm,
+  Button, Select, Space, Switch, Popconfirm, Menu, Dropdown, Tooltip,
 } from 'antd';
 
 import fetchAPI from 'utils/http/fetchAPI';
@@ -18,6 +18,8 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
+
+import { DownOutlined, WarningOutlined } from '@ant-design/icons';
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
@@ -44,11 +46,29 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     setupReports();
   }, [secondaryAnalysis?.status.current]);
 
-  const downloadOutput = useCallback(async () => {
+  const downloadOutput = useCallback(async (value) => {
     if (secondaryAnalysis?.status?.current === 'finished') {
-      const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/output`);
-      downloadFromUrl(signedUrl, 'all_outputs.zip');
-    } else {
+      switch (value) {
+        case 'all': {
+          const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadAll`);
+          downloadFromUrl(signedUrl, 'all_outputs.zip');
+          break;
+        }
+        case 'combined': {
+          const combinedSignedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadCombined`);
+          downloadFromUrl(combinedSignedUrl, 'combined_output.zip');
+          break;
+        }
+        case 'reports': {
+          const reportsSignedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/reports`);
+          downloadFromUrl(reportsSignedUrl, 'reports.zip');
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    } else if (value === 'logs') {
       const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logFile`, {}, { parseJson: false });
       const logsFile = await logsResponse.arrayBuffer();
       downloadFromUrl(writeToFileURL(logsFile), `${secondaryAnalysisId}.log`);
@@ -61,9 +81,93 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
+  const menuItems = [
+    {
+      key: 'combined',
+      onClick: (e) => {
+        e.domEvent.stopPropagation();
+        downloadOutput('combined');
+      },
+      label: (
+        <Tooltip
+          title='Download combined output files'
+          placement='right'
+          mouseEnterDelay={0.05}
+        >
+          <Space>
+            Combined Output
+          </Space>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 'reports',
+      onClick: (e) => {
+        e.domEvent.stopPropagation();
+        downloadOutput('reports');
+      },
+      label: (
+        <Tooltip
+          title='Download report files'
+          placement='right'
+          mouseEnterDelay={0.05}
+        >
+          <Space>
+            Reports
+          </Space>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 'all',
+      onClick: (e) => {
+        e.domEvent.stopPropagation();
+        downloadOutput('all');
+      },
+      label: (
+
+        <Tooltip
+          title={(
+            <>
+              <WarningOutlined />
+              {' '}
+              Warning: Downloading all output files might take a long time.
+            </>
+          )}
+          placement='right'
+          mouseEnterDelay={0.05}
+          overlayStyle={{
+            background: '#B6007C',
+          }}
+        >
+          <Space>
+            All files
+          </Space>
+        </Tooltip>
+      ),
+    },
+  ];
+
   const renderDownloadOutputButton = () => (
-    <Button type='primary' onClick={downloadOutput}>
-      Download output
+    <Dropdown
+      trigger={['click']}
+      menu={{
+        items: menuItems,
+      }}
+    >
+      <Button type='primary'>
+        Download Output
+        <DownOutlined />
+      </Button>
+    </Dropdown>
+  );
+
+  const renderDownloadLogsButton = () => (
+    <Button type='primary' onClick={() => downloadOutput('logs')}>
+      Download Logs
+      {' '}
+      <DownOutlined />
+      {' '}
     </Button>
   );
 
@@ -103,7 +207,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             The error logs can be accessed by downloading the pipeline output files.
 
           </Paragraph>
-          {renderDownloadOutputButton()}
+          {renderDownloadLogsButton()}
         </Space>
       ),
       running: (
