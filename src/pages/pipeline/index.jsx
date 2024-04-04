@@ -215,8 +215,6 @@ const Pipeline = () => {
 
   const allFilesUploaded = (files) => {
     if (!files || Object.keys(files).length === 0) return false;
-    console.log('filesDebug');
-    console.log(files);
     return Object.values(files).every((file) => file?.upload?.status === 'uploaded');
   };
 

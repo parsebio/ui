@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+import _ from 'lodash';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { SECONDARY_ANALYSIS_FILES_LOADED, SECONDARY_ANALYSIS_FILES_LOADING } from 'redux/actionTypes/secondaryAnalyses';
 import fetchAPI from 'utils/http/fetchAPI';
@@ -16,16 +17,15 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
         secondaryAnalysisId,
       },
     });
+
     const files = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
 
-    // If the file upload status is 'uploading' in sql, we need to change it
-    // since that status is not correct anymore after a page refresh
     const filesForRedux = await Promise.all(files
-      // If we already have a status in redux and it's uploading, then we
-      // are performing the upload, so don't update this one
       .filter((file) => filesInRedux[file.id]?.upload?.status.current !== UPLOADING)
       .map(async (file) => {
-        const statusInRedux = filesInRedux[file.id]?.upload?.status;
+        // If the file upload status is 'uploading' in sql, we need to store something else in redux
+        // since that status is not correct if the upload is not performed in this case
+        const statusInRedux = filesInRedux[file.id]?.upload?.status.current;
         if (statusInRedux === UPLOADING) return;
 
         if (file.upload.status === UPLOADING) {
@@ -33,6 +33,7 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
 
           file.upload.status = isFileInCache ? PAUSED : DROP_AGAIN;
         }
+
         return file;
       }));
 
