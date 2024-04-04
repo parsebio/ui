@@ -5,7 +5,9 @@ import fetchAPI from 'utils/http/fetchAPI';
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
 
-const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => {
+const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, getState) => {
+  const filesInRedux = getState().secondaryAnalyses[secondaryAnalysisId].files?.data ?? {};
+
   const { UPLOAD_PAUSED, DROP_AGAIN, UPLOADING } = UploadStatus;
   try {
     dispatch({
@@ -18,19 +20,27 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => 
 
     // If the file upload status is 'uploading' in sql, we need to change it
     // since that status is not correct anymore after a page refresh
-    const filesForUI = await Promise.all(files.map(async (file) => {
-      if (file.upload.status === UPLOADING) {
-        const isFileInCache = await cache.get(file.id);
-        file.upload.status = isFileInCache ? UPLOAD_PAUSED : DROP_AGAIN;
-      }
-      return file;
-    }));
+    const filesForRedux = await Promise.all(files
+      // If we already have a status in redux and it's uploading, then we
+      // are performing the upload, so don't update this one
+      .filter((file) => filesInRedux[file.id]?.upload?.status !== UPLOADING)
+      .map(async (file) => {
+        const statusInRedux = filesInRedux[file.id]?.upload?.status;
+        if (statusInRedux === UPLOADING) return;
+
+        if (file.upload.status === UPLOADING) {
+          const isFileInCache = await cache.get(file.id);
+
+          file.upload.status = isFileInCache ? UPLOAD_PAUSED : DROP_AGAIN;
+        }
+        return file;
+      }));
 
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {
         secondaryAnalysisId,
-        files: filesForUI,
+        files: filesForRedux,
       },
     });
   } catch (e) {
