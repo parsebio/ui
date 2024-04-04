@@ -15,7 +15,7 @@ const FastqFileTable = (props) => {
     key: file.id,
     name: file.name,
     size: bytesToSize(file.size),
-    status: file.upload.status,
+    status: file.upload.status.current,
     progress: file.upload.percentProgress,
   }));
 
