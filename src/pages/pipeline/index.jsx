@@ -158,7 +158,7 @@ const Pipeline = () => {
     if (['running', 'created'].includes(currentSecondaryAnalysisStatus)) return;
 
     await dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
-  }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus], 5000);
+  }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
