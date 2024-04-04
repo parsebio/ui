@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Space, Typography, Button, Tooltip,
+  Space, Typography, Button,
 } from 'antd';
 import {
   cloneExperiment, updateExperiment, loadExperiments, setActiveExperiment,
@@ -12,8 +12,7 @@ import {
 
 import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
-import { layout, modules } from 'utils/constants';
-import { useAppRouter } from 'utils/AppRouteProvider';
+import { layout } from 'utils/constants';
 
 import SamplesTable from 'components/data-management/SamplesTable';
 import ProjectMenu from 'components/data-management/project/ProjectMenu';
@@ -31,10 +30,6 @@ const ProjectDetails = ({ width, height }) => {
 
   const { activeExperimentId } = useSelector((state) => state.experiments.meta);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
-
-  const linkedSecondaryAnalysisId = activeExperiment.secondaryAnalysisId;
-  const isLatestSecondaryExecution = activeExperiment.isLatestExecution;
-  const { navigateTo } = useAppRouter();
 
   const samplesTableRef = useRef();
 
@@ -74,29 +69,6 @@ const ProjectDetails = ({ width, height }) => {
             {`Project ID: ${activeExperimentId}`}
           </Text>
         </div>
-        {linkedSecondaryAnalysisId && (
-          <div>
-            <Text>
-              This Project was generated from a run in the Pipeline module of the platform.
-              Click “Go to Pipeline Outputs” to view the results and reports from the associated
-              pipeline run:
-            </Text>
-            <br />
-            <Tooltip
-              title={!isLatestSecondaryExecution ? 'The pipeline run associated with this project is not available as the run has been overwritten by a more recent run with altered settings.' : ''}
-              placement='top'
-            >
-              <Button
-                disabled={!isLatestSecondaryExecution}
-                type='primary'
-                onClick={() => navigateTo(modules.SECONDARY_ANALYSIS_OUTPUT,
-                  { secondaryAnalysisId: linkedSecondaryAnalysisId })}
-              >
-                Go to Pipeline Outputs
-              </Button>
-            </Tooltip>
-          </div>
-        )}
         <div style={{ flex: 1, overflowY: 'auto' }}>
           <Text strong>
             Description:
