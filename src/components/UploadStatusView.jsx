@@ -57,6 +57,13 @@ const UploadStatusView = ({
       </div>
     );
   }
+  if (status === UploadStatus.EXPIRED) {
+    return (
+      <div style={uploadDivStyle}>
+        <Text type='danger'>{messageForStatus(status)}</Text>
+      </div>
+    );
+  }
   if (status === UploadStatus.QUEUED) {
     return (
       <div style={uploadDivStyle}>
