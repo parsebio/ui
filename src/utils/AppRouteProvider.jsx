@@ -117,7 +117,7 @@ const AppRouteProvider = (props) => {
       dispatch(switchExperiment(experimentId));
     }
 
-    if (nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS) && !nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS_OUTPUT)) {
+    if (nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS)) {
       await dispatch(loadSecondaryAnalyses());
 
       // TODO check if this will be needed
