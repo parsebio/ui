@@ -92,8 +92,6 @@ const Pipeline = () => {
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
 
-  console.log('SecondaryAnalysisDebug');
-
   const user = useSelector((state) => state.user.current);
 
   const secondaryAnalysisIds = useSelector((state) => state.secondaryAnalyses.ids, _.isEqual);

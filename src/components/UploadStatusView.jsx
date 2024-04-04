@@ -30,7 +30,7 @@ const UploadStatusView = ({
   useEffect(() => {
     if (fileId && secondaryAnalysisId && [
       UploadStatus.UPLOAD_ERROR,
-      UploadStatus.UPLOAD_PAUSED,
+      UploadStatus.PAUSED,
     ].includes(status)) {
       const file = cache.get(fileId) ?? null;
       setFileInCache(file);
@@ -39,7 +39,7 @@ const UploadStatusView = ({
 
   if (fileInCache && [
     UploadStatus.UPLOAD_ERROR,
-    UploadStatus.UPLOAD_PAUSED,
+    UploadStatus.PAUSED,
   ].includes(status)) {
     return (
       <div style={uploadDivStyle}>

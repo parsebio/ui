@@ -25,7 +25,10 @@ const createSecondaryAnalysisFile = (
       type,
       createdAt: dayjs().toISOString(),
       upload: {
-        status: UploadStatus.QUEUED,
+        status: {
+          loading: false,
+          current: UploadStatus.QUEUED,
+        },
         progress: 0,
       },
     };
