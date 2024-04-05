@@ -26,7 +26,7 @@ const ProjectMenu = () => {
 
   const {
     secondaryAnalysisId: linkedSecondaryAnalysisId,
-    isLatestExecution: isLatestSecondaryExecution,
+    isLatestSecondaryExecution,
   } = activeExperiment;
 
   const { navigateTo } = useAppRouter();
