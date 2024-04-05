@@ -18,6 +18,14 @@ MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
 # base_url = "https://api-martinfosco-ui76-api51-db.scp-staging.biomage.net/v2"
 # base_url = "http://localhost:3000/v2"
 
+
+# To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
+# Possible values for <api-base-url> include:
+# -     Locally: "http://localhost:3000/v2"
+# -     current staging: "https://api-martinfosco-ui76-api51-db.scp-staging.biomage.net/v2"
+# -     staging secondary master: "https://api-secondary-analysis-master.scp-staging.biomage.net/v2"
+# -     staging default: "https://api-default.scp-staging.biomage.net/v2"
+
 default_prod_api_url = "https://api.scp.biomage.net/v2"
 
 base_url = os.environ.get('PARSE_API_URL') or default_prod_api_url
