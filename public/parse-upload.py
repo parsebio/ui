@@ -8,6 +8,9 @@ import math
 import json
 import glob
 
+from concurrent.futures import ThreadPoolExecutor
+from threading import Lock
+
 import typing
 from typing import List, Tuple
 
@@ -15,8 +18,8 @@ from typing import List, Tuple
 PART_SIZE: int = 64 * 1024 * 1024
 MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
 
-# base_url = "https://api-martinfosco-ui76-api51-db.scp-staging.biomage.net/v2"
-# base_url = "http://localhost:3000/v2"
+# To run locally, run the following environment command:
+# EXPORT PARSE_API_URL "http://localhost:3000/v2"
 
 default_prod_api_url = "https://api.scp.biomage.net/v2"
 
@@ -28,6 +31,8 @@ ETAGS_PATH = "part_etags.txt"
 CURSOR_UP_ONE = "\x1b[1A" 
 ERASE_CURRENT_LINE = "\x1b[2K"
 ERASE_UPPER_LINE = CURSOR_UP_ONE + ERASE_CURRENT_LINE
+
+THREADS_COUNT = 5
 
 def wipe_file(file_path):
     with open(file_path, "w"):
@@ -308,6 +313,25 @@ class FileUploader:
             raise Exception(f"Failed to upload part {part_number}: {response.text}")
 
         return response.headers["ETag"]
+    
+    def upload_file_section(self, from_offset, to_offset) -> None:
+        current_offset = from_offset
+
+        with open(self.file_path, 'rb') as file:
+            file.seek(self.parts_offset * PART_SIZE)
+            part = file.read(PART_SIZE)
+
+            # part_number is 1-indexed
+            part_number = self.parts_offset + 1
+                
+            while current_offset < to_offset:
+                etag = with_retry(lambda: self.upload_part(part, part_number))
+                
+                self.upload_tracker.part_uploaded(part_number, etag)
+                self.progress_displayer.increment()
+
+                part = file.read(PART_SIZE)
+                part_number += 1
             
     # Uploads a file in parts, beginning from the parts_offset
     def upload_file(self) -> None:
@@ -319,22 +343,30 @@ class FileUploader:
         self.key = upload_params["key"]
         self.file_id = upload_params["fileId"]
 
-        with open(self.file_path, 'rb') as file:
-            file.seek(self.parts_offset * PART_SIZE)
-            part = file.read(PART_SIZE)
+        with ThreadPoolExecutor(THREADS_COUNT) as executor:
+            # self.upload_file_section(0, os.path.getsize(self.file_path))
+            range(THREADS_COUNT)
+            futures = [executor.submit(download_and_save, url, path) for url in urls]
+            # _, _ = wait(futures)
 
-            # part_number is 1-indexed
-            part_number = self.parts_offset + 1
 
-            while part:
-                etag = with_retry(lambda: self.upload_part(part, part_number))
+        # Todo, begin using self.parts_offset again
+
+        # with open(self.file_path, 'rb') as file:
+        #     file.seek(self.parts_offset * PART_SIZE)
+        #     part = file.read(PART_SIZE)
+
+        #     # part_number is 1-indexed
+        #     part_number = self.parts_offset + 1
+            
+        #     while part:
+        #         etag = with_retry(lambda: self.upload_part(part, part_number))
                 
-                self.upload_tracker.part_uploaded(part_number, etag)
-                self.progress_displayer.increment()
+        #         self.upload_tracker.part_uploaded(part_number, etag)
+        #         self.progress_displayer.increment()
 
-                part = file.read(PART_SIZE)
-                part_number += 1
-
+        #         part = file.read(PART_SIZE)
+        #         part_number += 1
 
         etags = self.upload_tracker.get_parts_etags()
         with_retry(lambda: self.complete_multipart_upload(etags))
