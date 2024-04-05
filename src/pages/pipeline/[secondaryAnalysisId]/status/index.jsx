@@ -51,7 +51,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       switch (value) {
         case 'all': {
           const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadAll`);
-          downloadFromUrl(signedUrl, 'all_outputs.zip');
+          downloadFromUrl(signedUrl, 'all_outputs_${secondaryAnalysisId}.zip');
           break;
         }
         case 'combined': {
