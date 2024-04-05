@@ -206,10 +206,6 @@ const Pipeline = () => {
     return Object.values(files).every((file) => file?.upload?.status === 'uploaded');
   };
 
-  // const {
-  //   numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
-  // } = secondaryAnalysis || {};
-
   const secondaryAnalysisWizardSteps = [
     {
       title: 'Provide the details of the experimental setup:',
