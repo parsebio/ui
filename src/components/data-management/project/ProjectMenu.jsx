@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Space, Button,
+  Space, Button, Tooltip,
 } from 'antd';
+import { useAppRouter } from 'utils/AppRouteProvider';
+import { modules } from 'utils/constants';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import processSampleUpload from 'utils/upload/processSampleUpload';
@@ -22,6 +24,12 @@ const ProjectMenu = () => {
   const [shareExperimentModalVisible, setShareExperimentModalVisible] = useState(false);
   const selectedTech = samples[activeExperiment?.sampleIds[0]]?.type;
 
+  const {
+    secondaryAnalysisId: linkedSecondaryAnalysisId,
+    isLatestSecondaryExecution,
+  } = activeExperiment;
+
+  const { navigateTo } = useAppRouter();
   const uploadFiles = (filesList, sampleType) => {
     processSampleUpload(filesList, sampleType, samples, activeExperimentId, dispatch);
     setUploadModalVisible(false);
@@ -43,7 +51,25 @@ const ProjectMenu = () => {
         >
           Share
         </Button>
-
+        {linkedSecondaryAnalysisId && (
+          <div>
+            <Tooltip
+              title={!isLatestSecondaryExecution ? 'The pipeline run associated with this project is not available as the run has been overwritten by a more recent run with altered settings.' : `This Project was generated from a run in the Pipeline module of the platform.
+              Click to view the results and reports from the associated
+              pipeline run`}
+              placement='top'
+            >
+              <Button
+                disabled={!isLatestSecondaryExecution}
+                type='primary'
+                onClick={() => navigateTo(modules.SECONDARY_ANALYSIS_OUTPUT,
+                  { secondaryAnalysisId: linkedSecondaryAnalysisId })}
+              >
+                Go to Pipeline Outputs
+              </Button>
+            </Tooltip>
+          </div>
+        )}
         {shareExperimentModalVisible && (
           <ShareExperimentModal
             onCancel={() => setShareExperimentModalVisible(false)}
