@@ -56,12 +56,12 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         }
         case 'combined': {
           const combinedSignedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadCombined`);
-          downloadFromUrl(combinedSignedUrl, 'combined_output.zip');
+          downloadFromUrl(combinedSignedUrl, 'combined_output_${secondaryAnalysisId}.zip');
           break;
         }
         case 'reports': {
           const reportsSignedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/reports`);
-          downloadFromUrl(reportsSignedUrl, 'reports.zip');
+          downloadFromUrl(reportsSignedUrl, 'reports_${secondaryAnalysisId}.zip');
           break;
         }
         default: {
