@@ -13,13 +13,18 @@ from threading import Lock
 
 import typing
 from typing import List, Tuple
+from concurrent.futures import wait
 
-# 5 mb parts
-PART_SIZE: int = 64 * 1024 * 1024
-MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
+PART_SIZE: int = 5 * 1024 * 1024
+# MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
+MAX_RETRIES = 1 # Max number of retries to upload each PART_SIZE part
 
-# To run locally, run the following environment command:
-# EXPORT PARSE_API_URL "http://localhost:3000/v2"
+# To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
+# Possible values for <api-base-url> include:
+# -     Locally: "http://localhost:3000/v2"
+# -     current staging: "https://api-martinfosco-ui76-api51-db.scp-staging.biomage.net/v2"
+# -     staging secondary master: "https://api-secondary-analysis-master.scp-staging.biomage.net/v2"
+# -     staging default: "https://api-default.scp-staging.biomage.net/v2"
 
 default_prod_api_url = "https://api.scp.biomage.net/v2"
 
@@ -32,7 +37,7 @@ CURSOR_UP_ONE = "\x1b[1A"
 ERASE_CURRENT_LINE = "\x1b[2K"
 ERASE_UPPER_LINE = CURSOR_UP_ONE + ERASE_CURRENT_LINE
 
-THREADS_COUNT = 5
+THREADS_COUNT = 1
 
 def wipe_file(file_path):
     with open(file_path, "w"):
@@ -267,8 +272,9 @@ class FileUploader:
         self.parts_offset = parts_offset
 
         file_size = os.path.getsize(self.file_path)
-        number_of_parts = math.ceil(file_size/PART_SIZE)
-        self.progress_displayer = ProgressDisplayer(number_of_parts, parts_offset, current_file)
+        
+        self.number_of_parts = math.ceil(file_size/PART_SIZE)
+        self.progress_displayer = ProgressDisplayer(self.number_of_parts, parts_offset, current_file)
 
         # These will be obtained from begin_multipart_upload()
         self.upload_id = None
@@ -311,27 +317,29 @@ class FileUploader:
 
         if response.status_code != 200:
             raise Exception(f"Failed to upload part {part_number}: {response.text}")
-
-        return response.headers["ETag"]
     
-    def upload_file_section(self, from_offset, to_offset) -> None:
-        current_offset = from_offset
+        # With localstack the ETag is returned lowercase for some reason
+        return response.headers.get("ETag", response.headers["etag"])
+    
+    def upload_file_section(self, from_part_index, to_part_index) -> None:
+        part_index = from_part_index
 
         with open(self.file_path, 'rb') as file:
-            file.seek(self.parts_offset * PART_SIZE)
+            file.seek(part_index * PART_SIZE)
             part = file.read(PART_SIZE)
 
-            # part_number is 1-indexed
-            part_number = self.parts_offset + 1
-                
-            while current_offset < to_offset:
+            while part_index < to_part_index:
+                # part_number is 1-indexed
+                # part_index is same number but 0-indexed (calculate offset in file)
+                part_number = part_index + 1
+
                 etag = with_retry(lambda: self.upload_part(part, part_number))
-                
+
                 self.upload_tracker.part_uploaded(part_number, etag)
                 self.progress_displayer.increment()
 
                 part = file.read(PART_SIZE)
-                part_number += 1
+                part_index += 1
             
     # Uploads a file in parts, beginning from the parts_offset
     def upload_file(self) -> None:
@@ -343,12 +351,32 @@ class FileUploader:
         self.key = upload_params["key"]
         self.file_id = upload_params["fileId"]
 
-        with ThreadPoolExecutor(THREADS_COUNT) as executor:
-            # self.upload_file_section(0, os.path.getsize(self.file_path))
-            range(THREADS_COUNT)
-            futures = [executor.submit(download_and_save, url, path) for url in urls]
-            # _, _ = wait(futures)
+        parts_per_thread = math.ceil(self.number_of_parts / THREADS_COUNT)
 
+        with ThreadPoolExecutor(THREADS_COUNT) as executor:
+            futures = []
+
+            for thread_index in range(THREADS_COUNT):
+                from_part_index = thread_index * parts_per_thread
+                to_part_index = (thread_index + 1) * parts_per_thread
+
+                futures.append(executor.submit(self.upload_file_section, from_part_index, to_part_index))
+            
+            done, not_done = wait(futures)
+
+            for future in done:
+                try:
+                    result = future.result()
+                    print('ResultDONE:')
+                    print(result)
+                except Exception as e:
+                    print("SOMEERRROR")
+                    print(e)
+
+            print("not_doneDebug")
+            for future in not_done:
+                print("RESULTNOTDONE:")
+                print(future)
 
         # Todo, begin using self.parts_offset again
 

@@ -18,6 +18,8 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
+import { loadExperiments, switchExperiment } from 'redux/actions/experiments';
+import { loadBackendStatus } from 'redux/actions/backendStatus';
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
@@ -28,7 +30,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const [selectedReport, setSelectedReport] = useState(null);
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
-
+  const associatedExperimentId = secondaryAnalysis?.experimentId;
+  const associatedExperiment = useSelector((state) => state.experiments[associatedExperimentId]);
   const setupReports = useCallback(async () => {
     const htmlUrls = await getReports(secondaryAnalysisId);
 
@@ -57,7 +60,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
-
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
@@ -169,8 +171,18 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           style={{ width: '300px' }}
         />
         {renderDownloadOutputButton()}
+        {associatedExperimentId && (
+          <Button
+            onClick={async () => {
+              navigateTo(modules.DATA_EXPLORATION,
+                { experimentId: associatedExperimentId }, false, true);
+            }}
+            type='primary'
+          >
+            Go to Insights downstream analysis
+          </Button>
+        )}
       </Space>
-
       <iframe src={URL.createObjectURL(reports[selectedReport])} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
 
