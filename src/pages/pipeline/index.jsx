@@ -138,9 +138,6 @@ const Pipeline = () => {
   useEffect(() => {
     if (activeSecondaryAnalysisId) {
       dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
-    }
-
-    if (activeSecondaryAnalysisId) {
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
     }
   }, [activeSecondaryAnalysisId]);
