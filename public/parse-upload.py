@@ -37,7 +37,7 @@ CURSOR_UP_ONE = "\x1b[1A"
 ERASE_CURRENT_LINE = "\x1b[2K"
 ERASE_UPPER_LINE = CURSOR_UP_ONE + ERASE_CURRENT_LINE
 
-THREADS_COUNT = 1
+THREADS_COUNT = 2
 
 def wipe_file(file_path):
     with open(file_path, "w"):
@@ -296,13 +296,15 @@ class FileUploader:
     def complete_multipart_upload(self, parts) -> None:        
         self.progress_displayer.show_completing()
 
+        sorted_parts = sorted(parts, key=lambda part: part["PartNumber"])
+
         response = http_post(
             f"{base_url}/analysis/{self.analysis_id}/cliUpload/CompleteMultipartUpload",
             {"X-Api-Token": f"Bearer {self.api_token}"},
             json_data={
                 "key": self.key,
                 "uploadId": self.upload_id,
-                "parts": parts,
+                "parts": sorted_parts,
                 "fileId": self.file_id,
             },
         )
