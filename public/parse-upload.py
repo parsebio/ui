@@ -14,10 +14,12 @@ from threading import Lock
 import typing
 from typing import List, Tuple
 from concurrent.futures import wait
+import traceback
 
 PART_SIZE: int = 5 * 1024 * 1024
 # MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
 MAX_RETRIES = 1 # Max number of retries to upload each PART_SIZE part
+THREADS_COUNT = 50
 
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
 # Possible values for <api-base-url> include:
@@ -34,10 +36,10 @@ RESUME_PARAMS_PATH = "resume_params.txt"
 ETAGS_PATH = "part_etags.txt"
 
 CURSOR_UP_ONE = "\x1b[1A" 
+# ERASE_CURRENT_LINE = ""
+# ERASE_UPPER_LINE = ""
 ERASE_CURRENT_LINE = "\x1b[2K"
 ERASE_UPPER_LINE = CURSOR_UP_ONE + ERASE_CURRENT_LINE
-
-THREADS_COUNT = 2
 
 def wipe_file(file_path):
     with open(file_path, "w"):
@@ -247,6 +249,7 @@ class ProgressDisplayer:
     def finish(self):
         sys.stdout.write(ERASE_CURRENT_LINE)
         sys.stdout.write(ERASE_UPPER_LINE)
+        sys.stdout.write(ERASE_UPPER_LINE)
         sys.stdout.write(f"\rUploaded file {self.file_path}\n")
         print()  # Move to the next line
 
@@ -353,14 +356,26 @@ class FileUploader:
         self.key = upload_params["key"]
         self.file_id = upload_params["fileId"]
 
-        parts_per_thread = math.ceil(self.number_of_parts / THREADS_COUNT)
+        # Don't need more threads than parts
+        threads_count_safe = min(THREADS_COUNT, self.number_of_parts)
 
-        with ThreadPoolExecutor(THREADS_COUNT) as executor:
+        parts_per_thread = math.floor(self.number_of_parts / threads_count_safe)
+
+        # If not a perfect division, then some leftover parts will need to be distributed among the threads
+        leftover_parts = self.number_of_parts - parts_per_thread * threads_count_safe
+
+        with ThreadPoolExecutor(threads_count_safe) as executor:
             futures = []
 
-            for thread_index in range(THREADS_COUNT):
-                from_part_index = thread_index * parts_per_thread
-                to_part_index = (thread_index + 1) * parts_per_thread
+            to_part_index = 0
+            while to_part_index < self.number_of_parts:
+                from_part_index = to_part_index
+
+                # If still have leftovers, then add it to the current thread
+                extra_part = 1 if leftover_parts > 0 else 0
+                leftover_parts -= 1
+
+                to_part_index += parts_per_thread + extra_part
 
                 futures.append(executor.submit(self.upload_file_section, from_part_index, to_part_index))
             
@@ -369,8 +384,8 @@ class FileUploader:
             for future in done:
                 try:
                     result = future.result()
-                    print('ResultDONE:')
-                    print(result)
+                    # print('ResultDONE:')
+                    # print(result)
                 except Exception as e:
                     print("SOMEERRROR")
                     print(e)
