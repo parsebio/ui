@@ -30,6 +30,7 @@ const ProjectDetails = ({ width, height }) => {
 
   const { activeExperimentId } = useSelector((state) => state.experiments.meta);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
+
   const samplesTableRef = useRef();
 
   const clone = async () => {
@@ -51,9 +52,12 @@ const ProjectDetails = ({ width, height }) => {
         display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
       }}
       >
+        <Title level={3}>{activeExperiment.name}</Title>
+        <Text type='secondary'>
+          {`Project ID: ${activeExperimentId}`}
+        </Text>
         <div style={{ flex: 'none', paddingBottom: '1em' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Title level={3}>{activeExperiment.name}</Title>
+          <div style={{ display: 'flex', justifyContent: 'right' }}>
             <Space>
               <Button
                 onClick={clone}
@@ -64,9 +68,7 @@ const ProjectDetails = ({ width, height }) => {
               <ProjectMenu />
             </Space>
           </div>
-          <Text type='secondary'>
-            {`Project ID: ${activeExperimentId}`}
-          </Text>
+
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           <Text strong>
