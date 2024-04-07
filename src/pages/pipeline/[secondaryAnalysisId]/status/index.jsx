@@ -1,9 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useState, useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space, Switch, Popconfirm, Menu, Dropdown, Tooltip,
+  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip,
 } from 'antd';
 
 import fetchAPI from 'utils/http/fetchAPI';
@@ -46,34 +48,26 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     setupReports();
   }, [secondaryAnalysis?.status.current]);
 
-  const downloadOutput = useCallback(async (value) => {
-    if (secondaryAnalysis?.status?.current === 'finished') {
-      switch (value) {
-        case 'all': {
-          const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadAll`);
-          downloadFromUrl(signedUrl, 'all_outputs.zip');
-          break;
-        }
-        case 'combined': {
-          const combinedSignedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadCombined`);
-          downloadFromUrl(combinedSignedUrl, 'combined_output.zip');
-          break;
-        }
-        case 'reports': {
-          const reportsSignedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/reports`);
-          downloadFromUrl(reportsSignedUrl, 'reports.zip');
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-    } else if (value === 'logs') {
-      const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logFile`, {}, { parseJson: false });
-      const logsFile = await logsResponse.arrayBuffer();
-      downloadFromUrl(writeToFileURL(logsFile), `${secondaryAnalysisId}.log`);
-    }
-  }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
+  const secondaryAnalysisFinished = useMemo(() => (
+    secondaryAnalysis?.status?.current === 'finished'
+  ), [secondaryAnalysis?.status?.current]);
+
+  const outputDownloadParams = useMemo(() => ({
+    all: { uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/combinedOutput`, fileName: 'all_outputs.zip' },
+    combined: { uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/allOutputFiles`, fileName: 'combined_output.zip' },
+  }), [secondaryAnalysisId]);
+
+  const downloadOutput = useCallback(async (type) => {
+    const { uri, fileName } = outputDownloadParams[type];
+    const signedUrl = await fetchAPI(uri);
+    downloadFromUrl(signedUrl, fileName);
+  }, [outputDownloadParams]);
+
+  const downloadReports = useCallback(async () => {
+    const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logFile`, {}, { parseJson: false });
+    const logsFile = await logsResponse.arrayBuffer();
+    downloadFromUrl(writeToFileURL(logsFile), `${secondaryAnalysisId}.log`);
+  }, [secondaryAnalysisId]);
 
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
@@ -104,7 +98,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       key: 'reports',
       onClick: (e) => {
         e.domEvent.stopPropagation();
-        downloadOutput('reports');
+        downloadReports();
       },
       label: (
         <Tooltip
@@ -155,7 +149,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         items: menuItems,
       }}
     >
-      <Button type='primary'>
+      <Button type='primary' disabled={!secondaryAnalysisFinished}>
         Download Output
         <DownOutlined />
       </Button>
