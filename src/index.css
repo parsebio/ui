@@ -11,25 +11,6 @@ a {
 
 /* moving between modules resets ConfigProvider */ 
 
-/*
-.ant-btn-primary {
-  background-color: #9966b8 !important; 
-  border-color: #9966b8 !important; 
-  color: white !important;
-  text-shadow: none !important;
-}
-
-.ant-btn-primary:hover {
-  background-color: #B6007C !important;
-  color: white !important; 
-  border-color: #B6007C !important; 
-}
-
-.ant-btn-default:hover {
-  color: #B6007C !important;  
-  border-color: #B6007C !important; 
-}
-*/
 
 /* Radio buttons are not receiving the ConfigProvider change */ 
 
@@ -69,14 +50,12 @@ button {
 .gene-table .ant-table-header .ant-table-cell{
    background-color: #C4BCDC !important;
 }
-
-
 /* Highlight changes */
 .ant-tabs-tab-active .ant-tabs-tab-btn{
-    color: #9966b8 !important;
+    color: #4c067e !important;
 }
 .ant-tabs-ink-bar{
-    background: #9966b8 !important;
+    background: #4c067e !important;
 }
 
 
