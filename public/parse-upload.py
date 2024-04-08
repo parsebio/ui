@@ -144,7 +144,7 @@ class UploadTracker:
         self.upload_params = upload_params
         self.api_token = api_token
 
-        self.resume_file_lock = Lock()
+        self.files_lock = Lock()
 
     @classmethod
     def fromScratch(cls, analysis_id, file_paths, threads_count, api_token):
@@ -224,7 +224,7 @@ class UploadTracker:
             pass
 
     def part_uploaded(self, thread_index, part_number, etag):
-        with self.resume_file_lock:
+        with self.files_lock:
             with open(ETAGS_PATH, "a") as file:
                 # write etag without the double commas
                 file.write(f"{part_number},{etag}")
