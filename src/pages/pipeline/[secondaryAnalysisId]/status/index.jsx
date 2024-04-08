@@ -56,8 +56,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   ), [secondaryAnalysis?.status?.current]);
 
   const outputDownloadParams = useMemo(() => ({
-    all: { uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/combinedOutput`, fileName: 'all_files.zip' },
-    combined: { uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/allOutputFiles`, fileName: 'combined_output.zip' },
+    all: { uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/allOutputFiles`, fileName: 'all_files.zip' },
+    combined: { uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/combinedOutput`, fileName: 'combined_output.zip' },
   }), [secondaryAnalysisId]);
 
   const downloadOutput = useCallback(async (type) => {
