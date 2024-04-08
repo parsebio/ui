@@ -18,7 +18,8 @@ const createSecondaryAnalysisFile = (
       body: JSON.stringify({ name, size, type }),
     });
 
-    const fileRecordRedux = {
+    // Not exactly as with redux, the status has .current inside
+    const fileRecord = {
       id: uploadUrlParams.fileId,
       name: file.name,
       size: file.size,
@@ -34,7 +35,7 @@ const createSecondaryAnalysisFile = (
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {
         secondaryAnalysisId,
-        files: [fileRecordRedux],
+        files: [fileRecord],
       },
     });
 

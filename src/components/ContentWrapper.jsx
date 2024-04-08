@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {
@@ -110,6 +112,7 @@ const ContentWrapper = (props) => {
   const experimentName = experimentData?.experimentName || experiment?.name;
   const secondaryAnalysisName = useSelector(
     (state) => state?.secondaryAnalyses?.[currentAnalysisIdRef.current]?.name,
+    _.isEqual,
   );
 
   const {
@@ -358,10 +361,10 @@ const ContentWrapper = (props) => {
           get isDisabled() {
             return (
               !activeSecondaryAnalysisId
-                || (analysisStatus
-                  && analysisStatus === 'not_created'
-                  && currentModule === modules.SECONDARY_ANALYSIS
-                )
+              || (analysisStatus
+                && analysisStatus === 'not_created'
+                && currentModule === modules.SECONDARY_ANALYSIS
+              )
             );
           },
         },
@@ -457,12 +460,12 @@ const ContentWrapper = (props) => {
     }
     const needRerunPipeline = pipelinesRerunStatus === null || pipelinesRerunStatus.rerun;
     const notProcessedExperimentDisable = !routeExperimentId && disableIfNoExperiment
-    && needRerunPipeline;
+      && needRerunPipeline;
 
     const pipelineStatusDisable = disabledByPipelineStatus && (
       backendError || gem2sRunning || gem2sRunningError
-    || waitingForQcToLaunch || qcRunning || qcRunningError
-    || seuratRunning || seuratRunningError
+      || waitingForQcToLaunch || qcRunning || qcRunningError
+      || seuratRunning || seuratRunningError
     );
 
     const {
@@ -476,7 +479,7 @@ const ContentWrapper = (props) => {
     const seuratCompleteDisable = disabledIfSeuratComplete && seuratComplete;
 
     return notProcessedExperimentDisable || pipelineStatusDisable
-    || seuratCompleteDisable || nonExperimentModule;
+      || seuratCompleteDisable || nonExperimentModule;
   };
 
   const menuItemRender = ({
@@ -540,7 +543,7 @@ const ContentWrapper = (props) => {
     .map(menuItemRender);
 
   const isUserInModule = (module, items) => currentModule === module
-  || items.some((item) => item.module === currentModule);
+    || items.some((item) => item.module === currentModule);
 
   return (
     <>

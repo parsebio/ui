@@ -8,7 +8,7 @@ const secondaryAnalysisFileUpdated = produce((draft, action) => {
 
   const { upload: uploadDraft } = draft[secondaryAnalysisId].files.data[fileId];
 
-  uploadDraft.status = uploadStatus;
+  uploadDraft.status.current = uploadStatus;
   uploadDraft.percentProgress = percentProgress;
 
   if (abortController) {
