@@ -29,8 +29,8 @@ const getPlotConfigs = (...params) => (state) => (
 const getGeneList = (...params) => (state) => (
   genesSelectors.getGeneList(...params)(state.genes));
 
-const getFastQFiles = (...params) => (state) => (
-  secondaryAnalysesSelectors.getFastQFiles(...params)(state.secondaryAnalyses)
+const getFastqFiles = (...params) => (state) => (
+  secondaryAnalysesSelectors.getFastqFiles(...params)(state.secondaryAnalyses)
 );
 
 const getSampleLTFile = (...params) => (state) => (
@@ -50,6 +50,6 @@ export {
   getPlotConfigs,
   getGeneList,
   getSelectedMetadataTracks,
-  getFastQFiles,
+  getFastqFiles,
   getSampleLTFile,
 };

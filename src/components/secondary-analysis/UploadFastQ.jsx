@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import Expandable from 'components/Expandable';
 import endUserMessages from 'utils/endUserMessages';
 
-import { getFastQFiles } from 'redux/selectors';
+import { getFastqFiles } from 'redux/selectors';
 
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
@@ -37,7 +37,7 @@ const UploadFastQ = (props) => {
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
   };
 
-  const secondaryAnalysisFiles = useSelector(getFastQFiles(secondaryAnalysisId));
+  const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));

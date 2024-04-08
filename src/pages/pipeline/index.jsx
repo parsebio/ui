@@ -26,7 +26,7 @@ import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
-import { getSampleLTFile, getFastQFiles } from 'redux/selectors';
+import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -122,7 +122,7 @@ const Pipeline = () => {
   );
 
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
-  const fastqFiles = useSelector(getFastQFiles(activeSecondaryAnalysisId), _.isEqual);
+  const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
 
   const { loading: statusLoading, current: currentStatus } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
