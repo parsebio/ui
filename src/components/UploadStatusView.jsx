@@ -57,13 +57,14 @@ const UploadStatusView = ({
       </div>
     );
   }
-  if (status === UploadStatus.QUEUED) {
+  if ([UploadStatus.UPLOADING_FROM_CLI, UploadStatus.QUEUED].includes(status)) {
     return (
       <div style={uploadDivStyle}>
         <Text type='secondary'>{messageForStatus(status)}</Text>
       </div>
     );
   }
+
   if (status === UploadStatus.UPLOADED) {
     return (
       <div
