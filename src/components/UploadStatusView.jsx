@@ -59,9 +59,11 @@ const UploadStatusView = ({
   }
   if (status === UploadStatus.EXPIRED) {
     return (
-      <div style={uploadDivStyle}>
-        <Text type='danger'>{messageForStatus(status)}</Text>
-      </div>
+      <Tooltip title='Files expire after 30 days and this file has expired. Please delete all expired files to proceed with running the pipeline.'>
+        <div style={uploadDivStyle}>
+          <Text type='danger'>{messageForStatus(status)}</Text>
+        </div>
+      </Tooltip>
     );
   }
   if (status === UploadStatus.QUEUED) {

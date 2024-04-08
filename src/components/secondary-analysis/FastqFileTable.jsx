@@ -6,6 +6,7 @@ import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import bytesToSize from 'utils/styling/bytesToSize';
 import { DeleteOutlined } from '@ant-design/icons';
 import UploadStatusView from 'components/UploadStatusView';
+import UploadStatus from 'utils/upload/UploadStatus';
 
 const FastqFileTable = (props) => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const FastqFileTable = (props) => {
     status: file.upload.status,
     progress: file.upload.percentProgress,
   }));
-
+  console.log('FIELS ARE ', files);
   const columns = [
     {
       title: 'File Name',
@@ -29,14 +30,18 @@ const FastqFileTable = (props) => {
           {text}
           {' '}
           {canEditTable && (
-            <Popconfirm
-              title='Are you sure to delete this file?'
-              onConfirm={() => handleDelete(record.key)}
-              okText='Yes'
-              cancelText='No'
-            >
-              <DeleteOutlined style={{ color: 'red' }} />
-            </Popconfirm>
+            record.status !== UploadStatus.EXPIRED ? (
+              <Popconfirm
+                title='Are you sure to delete this file?'
+                onConfirm={() => handleDelete(record.key)}
+                okText='Yes'
+                cancelText='No'
+              >
+                <DeleteOutlined style={{ color: 'red' }} />
+              </Popconfirm>
+            ) : (
+              <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} onClick={() => handleDelete(record.key)} />
+            )
           )}
         </div>
       ),
