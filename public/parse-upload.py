@@ -279,7 +279,7 @@ class FileUploader:
         self.upload_tracker = upload_tracker
         
         self.file_path = current_file
-        self.threads_parts_offset = threads_parts_offset
+        self.completed_parts_number = threads_parts_offset
 
         file_size = os.path.getsize(self.file_path)
         
@@ -339,7 +339,8 @@ class FileUploader:
     
     def upload_file_section(self, thread_index, from_part_index, to_part_index, abort_event) -> None:
         try:
-            part_index = from_part_index
+            # Thread needs to upload from_part_index to to_part_index 
+            part_index = from_part_index + self.completed_parts_number[thread_index]
 
             with open(self.file_path, 'rb') as file:
                 file.seek(part_index * PART_SIZE)
