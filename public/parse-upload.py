@@ -73,19 +73,9 @@ def with_retry(func, try_number = 0):
         
         wait_seconds = 2**try_number
 
-        sys.stdout.flush()
-        sys.stdout.write(f"\r\033[KError uploading, retrying in {wait_seconds} seconds")
-        sys.stdout.flush()
-
         time.sleep(wait_seconds)
         
-        result = with_retry(func, try_number + 1)
-
-        # Clear the error message
-        sys.stdout.write("\r\033[K")
-        sys.stdout.flush()
-
-        return result
+        return with_retry(func, try_number + 1)
 
 class HTTPResponse:
     def __init__(self, response, response_data: bytes | None = None) -> None:
