@@ -1,6 +1,7 @@
 const UploadStatus = {
   UPLOADED: 'uploaded',
   UPLOADING: 'uploading',
+  UPLOADING_FROM_CLI: 'uploadingFromCli',
   COMPRESSING: 'compressing',
   UPLOAD_ERROR: 'uploadError',
   FILE_NOT_FOUND: 'fileNotFound',
@@ -14,6 +15,7 @@ const UploadStatus = {
 const message = {
   [UploadStatus.UPLOADED]: 'Uploaded',
   [UploadStatus.UPLOADING]: 'Uploading...',
+  [UploadStatus.UPLOADING_FROM_CLI]: 'Uploading from console...',
   [UploadStatus.COMPRESSING]: 'Compressing...',
   [UploadStatus.UPLOAD_ERROR]: 'Upload error',
   [UploadStatus.FILE_NOT_FOUND]: 'File not found',
