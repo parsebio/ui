@@ -11,15 +11,13 @@ import glob
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock, Event
 
-import typing
 from typing import List, Tuple
 from concurrent.futures import wait
-import traceback
 
 PART_SIZE: int = 5 * 1024 * 1024
 # MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
 MAX_RETRIES = 4 # Max number of retries to upload each PART_SIZE part
-THREADS_COUNT = 50
+THREADS_COUNT = 20
 
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
 # Possible values for <api-base-url> include:
