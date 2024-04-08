@@ -200,7 +200,7 @@ const Pipeline = () => {
 
   const allFilesUploaded = (files) => {
     if (!files || Object.keys(files).length === 0) return false;
-    return Object.values(files).every((file) => file?.upload?.status === 'uploaded');
+    return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
   };
 
   const secondaryAnalysisWizardSteps = [
