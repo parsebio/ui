@@ -59,7 +59,6 @@ def get_resume_params_from_file():
         file_paths = lines[3].split(',')
         current_file_index = int(lines[4])
         threads_parts_offset = [int(offset_str) for offset_str in lines[5].split(',')]
-        
 
         return (analysis_id, upload_params, file_paths, current_file_index, threads_parts_offset, current_file_created)
 
@@ -145,8 +144,7 @@ class UploadTracker:
         self.upload_params = upload_params
         self.api_token = api_token
 
-        # Temporary
-        self.parts_offset = 0
+        self.resume_file_lock = Lock()
 
     @classmethod
     def fromScratch(cls, analysis_id, file_paths, threads_count, api_token):
@@ -201,7 +199,7 @@ class UploadTracker:
         return self.upload_params
 
     def get_current_progress(self):
-        return (self.analysis_id, self.file_paths[self.current_file_index], self.parts_offset)
+        return (self.analysis_id, self.file_paths[self.current_file_index], self.threads_parts_offset)
     
     def get_parts_etags(self):
         if not os.path.exists(ETAGS_PATH):
@@ -216,7 +214,7 @@ class UploadTracker:
 
     def file_uploaded(self):
         self.current_file_index += 1
-        self.parts_offset = 0
+        self.threads_parts_offset = [0] * len(self.threads_parts_offset)
         self.current_file_created = False
 
         self.save_progress()
@@ -225,31 +223,31 @@ class UploadTracker:
         with open(ETAGS_PATH, 'w'):
             pass
 
-    def part_uploaded(self, part_number, etag):
-        with open(ETAGS_PATH, "a") as file:
-            # write etag without the double commas
-            file.write(f"{part_number},{etag}")
-            file.write('\n')
+    def part_uploaded(self, thread_index, part_number, etag):
+        with self.resume_file_lock:
+            with open(ETAGS_PATH, "a") as file:
+                # write etag without the double commas
+                file.write(f"{part_number},{etag}")
+                file.write('\n')
 
-        self.parts_offset = self.parts_offset + 1
+            self.threads_parts_offset[thread_index] += 1
 
-        self.save_progress()
+            self.save_progress()
 
 class ProgressDisplayer():
-    increase_lock = Lock()
-
     def __init__(self, total: int, progress: int, file_path: str):
         super().__init__()
 
         self.total = total
         self.progress = progress
         self.file_path = file_path
+        self.increase_lock = Lock()
 
     def begin(self):
         self._display_progress()
 
     def increment(self):
-        with ProgressDisplayer.increase_lock:
+        with self.increase_lock:
             self.progress += 1
             self._display_progress()
 
@@ -274,19 +272,19 @@ class ProgressDisplayer():
 # Manages the upload of a single file
 class FileUploader:
     def __init__(self, upload_tracker: UploadTracker) -> None:        
-        (analysis_id, current_file, parts_offset) = upload_tracker.get_current_progress()
+        (analysis_id, current_file, threads_parts_offset) = upload_tracker.get_current_progress()
 
         self.analysis_id = analysis_id
         self.api_token = upload_tracker.api_token
         self.upload_tracker = upload_tracker
         
         self.file_path = current_file
-        self.parts_offset = parts_offset
+        self.threads_parts_offset = threads_parts_offset
 
         file_size = os.path.getsize(self.file_path)
         
         self.number_of_parts = math.ceil(file_size/PART_SIZE)
-        self.progress_displayer = ProgressDisplayer(self.number_of_parts, parts_offset, current_file)
+        self.progress_displayer = ProgressDisplayer(self.number_of_parts, threads_parts_offset, current_file)
 
         # These will be obtained from begin_multipart_upload()
         self.upload_id = None
@@ -338,7 +336,7 @@ class FileUploader:
         # With localstack the ETag is returned lowercase for some reason
         return response.headers.get("ETag", response.headers["etag"])
     
-    def upload_file_section(self, from_part_index, to_part_index, abort_event) -> None:
+    def upload_file_section(self, thread_index, from_part_index, to_part_index, abort_event) -> None:
         try:
             part_index = from_part_index
 
@@ -356,7 +354,7 @@ class FileUploader:
 
                     etag = with_retry(lambda: self.upload_part(part, part_number))
 
-                    self.upload_tracker.part_uploaded(part_number, etag)
+                    self.upload_tracker.part_uploaded(thread_index, part_number, etag)
                     self.progress_displayer.increment()
 
                     part = file.read(PART_SIZE)
@@ -365,8 +363,7 @@ class FileUploader:
             # If an exception occurs, set the abort event to that the other threads stop too
             abort_event.set()
             raise e
-            
-    # Uploads a file in parts, beginning from the parts_offset
+
     def upload_file(self) -> None:
         self.progress_displayer.begin()
 
@@ -390,6 +387,7 @@ class FileUploader:
             futures = []
 
             to_part_index = 0
+            thread_index = 0
             while to_part_index < self.number_of_parts:
                 from_part_index = to_part_index
 
@@ -399,7 +397,9 @@ class FileUploader:
 
                 to_part_index += parts_per_thread + extra_part
 
-                futures.append(executor.submit(self.upload_file_section, from_part_index, to_part_index, abort_event))
+                futures.append(executor.submit(self.upload_file_section, thread_index, from_part_index, to_part_index, abort_event))
+                
+                thread_index += 1
             
             done, not_done = wait(futures)
 
@@ -409,24 +409,6 @@ class FileUploader:
             for future in not_done:
                 print("RESULTNOTDONE:")
                 print(future)
-
-        # Todo, begin using self.parts_offset again
-
-        # with open(self.file_path, 'rb') as file:
-        #     file.seek(self.parts_offset * PART_SIZE)
-        #     part = file.read(PART_SIZE)
-
-        #     # part_number is 1-indexed
-        #     part_number = self.parts_offset + 1
-            
-        #     while part:
-        #         etag = with_retry(lambda: self.upload_part(part, part_number))
-                
-        #         self.upload_tracker.part_uploaded(part_number, etag)
-        #         self.progress_displayer.increment()
-
-        #         part = file.read(PART_SIZE)
-        #         part_number += 1
 
         etags = self.upload_tracker.get_parts_etags()
         with_retry(lambda: self.complete_multipart_upload(etags))
@@ -471,7 +453,7 @@ def begin_multipart_upload(analysis_id, file_path, api_token) -> dict:
 # Show a warning if there is a previous upload that can be resumed
 def show_resume_option():
     if os.path.exists(RESUME_PARAMS_PATH):
-        (analysis_id, upload_params, file_paths, current_file_index, parts_offset) = None, None, None, None, None
+        (analysis_id, upload_params, file_paths, current_file_index, threads_parts_offset, current_file_created) = None, None, None, None, None, None
 
         try:
             (
@@ -487,7 +469,6 @@ def show_resume_option():
         except Exception as e:
            return False 
 
-        # analysis_id, upload_params, file_paths, current_file_index, parts_offset
         print(f"It seems an interrupted upload for analysis id: {analysis_id} can be resumed, or will be lost if a new upload is started")
         print()
         print(f"It included the following files:")
