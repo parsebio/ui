@@ -9,7 +9,7 @@ const UploadStatus = {
   FILE_READ_ABORTED: 'fileReadAborted',
   QUEUED: 'queued',
   DROP_AGAIN: 'dropAgain',
-  UPLOAD_PAUSED: 'resumeUpload',
+  PAUSED: 'paused',
 };
 
 const message = {
@@ -23,7 +23,7 @@ const message = {
   [UploadStatus.FILE_READ_ABORTED]: 'File read aborted',
   [UploadStatus.QUEUED]: 'Queued',
   [UploadStatus.DROP_AGAIN]: 'Drop file again',
-  [UploadStatus.UPLOAD_PAUSED]: 'Upload paused',
+  [UploadStatus.PAUSED]: 'Upload paused',
 };
 
 const messageForStatus = (uploadStatus) => message[uploadStatus];
