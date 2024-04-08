@@ -231,8 +231,12 @@ class UploadTracker:
 
         self.save_progress()
 
-class ProgressDisplayer:
+class ProgressDisplayer():
+    increase_lock = Lock()
+
     def __init__(self, total: int, progress: int, file_path: str):
+        super().__init__()
+
         self.total = total
         self.progress = progress
         self.file_path = file_path
@@ -241,8 +245,9 @@ class ProgressDisplayer:
         self._display_progress()
 
     def increment(self):
-        self.progress += 1
-        self._display_progress()
+        with ProgressDisplayer.increase_lock:
+            self.progress += 1
+            self._display_progress()
 
     def show_completing(self):
         sys.stdout.write(f"\r\033[KCompleting upload, this could take a few minutes with larger files")
@@ -293,7 +298,6 @@ class FileUploader:
             )
             
             if response.status_code != 200:
-                print("responseHAVINGTROUBLE")
                 raise Exception(f"Failed to get signed url for part {part_number}: {response.text}")
         except Exception as e:
             raise e
