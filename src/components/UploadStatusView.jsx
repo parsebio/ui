@@ -58,7 +58,7 @@ const UploadStatusView = ({
     );
   }
 
-  if ([UploadStatus.UPLOADING_FROM_CLI, UploadStatus.QUEUED].includes(status)) {
+  if ([UploadStatus.UPLOADING_FROM_CLI, UploadStatus.QUEUED].includes(status.current)) {
     return (
       <div style={uploadDivStyle}>
         <Text type='secondary'>{messageForStatus(status.current)}</Text>
