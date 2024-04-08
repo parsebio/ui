@@ -333,9 +333,13 @@ class FileUploader:
 
         if response.status_code != 200:
             raise Exception(f"Failed to upload part {part_number}: {response.text}")
-    
+        
         # With localstack the ETag is returned lowercase for some reason
-        return response.headers.get("ETag", response.headers["etag"])
+        etag = response.headers.get("ETag", response.headers.get("etag"))
+        if (etag == None):
+            raise Exception("ETag not found in response headers")
+        
+        return etag
     
     def upload_file_section(self, thread_index, from_part_index, to_part_index, abort_event) -> None:
         try:
@@ -361,6 +365,7 @@ class FileUploader:
 
                     part = file.read(PART_SIZE)
                     part_index += 1
+
         except Exception as e:
             # If an exception occurs, set the abort event to that the other threads stop too
             abort_event.set()
