@@ -457,6 +457,7 @@ const MarkerHeatmap = ({ experimentId }) => {
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.MARKER_HEATMAP}
         plotStylingConfig={plotStylingConfig}
         extraControlPanels={renderExtraPanels()}
         defaultActiveKey='gene-selection'

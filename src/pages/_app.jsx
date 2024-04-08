@@ -2,10 +2,12 @@ import '../../assets/self-styles.less';
 import '../../assets/nprogress.css';
 
 import _ from 'lodash';
+import '../index.css';
 
 import Amplify, { Credentials } from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
+import { ConfigProvider } from 'antd';
 import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
@@ -23,6 +25,15 @@ import UnauthorizedPage from 'pages/401';
 import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
+
+import 'antd/dist/antd.variable.min.css';
+
+ConfigProvider.config({
+  theme: {
+    primaryColor: '#9966b8',
+    infoColor: '#b6007c',
+  },
+});
 
 const mockCredentialsForInframock = () => {
   Credentials.get = async () => ({
@@ -146,7 +157,9 @@ const WrappedApp = ({ Component, pageProps }) => {
 
     // Otherwise, load the page inside the content wrapper.
     return (
+
       <AppRouteProvider>
+
         <ContentWrapper
           routeExperimentId={experimentId}
           routeAnalysisId={secondaryAnalysisId}
@@ -159,7 +172,9 @@ const WrappedApp = ({ Component, pageProps }) => {
             {...pageProps}
           />
         </ContentWrapper>
+
       </AppRouteProvider>
+
     );
   };
 
@@ -178,7 +193,9 @@ const WrappedApp = ({ Component, pageProps }) => {
       <TagManager
         environment={environment}
       />
-      {mainContent(Component, pageProps)}
+      <ConfigProvider>
+        {mainContent(Component, pageProps)}
+      </ConfigProvider>
     </>
   );
 };

@@ -211,6 +211,7 @@ const FrequencyPlotPage = ({ experimentId }) => {
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.FREQUENCY_PLOT}
         plotStylingConfig={plotStylingConfig}
         extraToolbarControls={<ExportAsCSV data={csvData} filename={csvFilename} />}
         extraControlPanels={renderExtraPanels()}

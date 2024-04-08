@@ -234,6 +234,7 @@ const VolcanoPlotPage = (props) => {
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.VOLCANO_PLOT}
         plotStylingConfig={plotStylingConfig}
         extraToolbarControls={generateExportDropdown()}
         extraControlPanels={renderExtraPanels()}

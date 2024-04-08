@@ -5,7 +5,7 @@ import {
   MinusOutlined,
   DownOutlined,
 } from '@ant-design/icons';
-import 'antd/dist/antd.css';
+
 import {
   Button, Space, Dropdown,
 } from 'antd';
@@ -80,36 +80,34 @@ const HeatmapGroupBySettings = (props) => {
 
   // This is so that a click on + or - buttons doesn't close the menu
   const stopPropagationEvent = (e) => e.stopPropagation();
-  const menuItems =
-    allCellSetsGroupBys
-      .map((cellSet, indx) => {
-        const positionInCellSetOrder = indexOfCellSet(cellSet);
+  const menuItems = allCellSetsGroupBys
+    .map((cellSet, indx) => {
+      const positionInCellSetOrder = indexOfCellSet(cellSet);
 
-        return {
-          label: (
-            <div onClick={stopPropagationEvent} onKeyDown={stopPropagationEvent}>
-              <Button
-                shape='square'
-                size='small'
-                style={{ marginRight: '5px' }}
-                icon={positionInCellSetOrder > -1 ? <MinusOutlined /> : <PlusOutlined />}
-                onClick={() => {
-                  const newCellSetsOrder = [...cellSetsOrder];
-                  if (positionInCellSetOrder > -1) {
-                    newCellSetsOrder.splice(positionInCellSetOrder, 1);
-                  } else {
-                    newCellSetsOrder.push(cellSet);
-                  }
-                  setCellSetsOrder(newCellSetsOrder);
-                }}
-              />
-              {cellSet.name}
-            </div>
-          ),
-          key: indx.toString(),
-        };
-      });
-
+      return {
+        label: (
+          <div onClick={stopPropagationEvent} onKeyDown={stopPropagationEvent}>
+            <Button
+              shape='square'
+              size='small'
+              style={{ marginRight: '5px' }}
+              icon={positionInCellSetOrder > -1 ? <MinusOutlined /> : <PlusOutlined />}
+              onClick={() => {
+                const newCellSetsOrder = [...cellSetsOrder];
+                if (positionInCellSetOrder > -1) {
+                  newCellSetsOrder.splice(positionInCellSetOrder, 1);
+                } else {
+                  newCellSetsOrder.push(cellSet);
+                }
+                setCellSetsOrder(newCellSetsOrder);
+              }}
+            />
+            {cellSet.name}
+          </div>
+        ),
+        key: indx.toString(),
+      };
+    });
 
   return (
     <div style={{ padding: '5px' }} key='dropdown'>

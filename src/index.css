@@ -1,0 +1,99 @@
+
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap');
+
+* {
+    font-family: 'M Plus 2' !important;
+}
+
+a {
+  color: #1677ff !important;
+}
+
+/* moving between modules resets ConfigProvider */ 
+
+
+/* Radio buttons are not receiving the ConfigProvider change */ 
+
+.ant-radio-checked .ant-radio-inner{
+    border-color: #9966b8 !important ;
+  }
+  
+  .ant-radio-checked .ant-radio-inner:after{
+    background-color: #9966b8  !important;
+  }
+  
+  .ant-radio:hover .ant-radio-inner {
+    border-color: #9966b8 !important;
+  }
+
+
+/* Need special color for menu selected and sider trigger */
+.ant-menu-item-selected {
+    background-color:#9966b8 !important;
+}
+
+.ant-layout-sider-trigger{
+    background-color: #11001b !important;
+}
+
+button {
+    border-radius: 0.25rem !important;
+}
+
+
+/* Table changes */ 
+.even-row .ant-table-cell {
+    background-color: #E5E5F1 !important;
+    
+}
+
+.gene-table .ant-table-header .ant-table-cell{
+   background-color: #C4BCDC !important;
+}
+/* Highlight changes */
+.ant-tabs-tab-active .ant-tabs-tab-btn{
+    color: #4c067e !important;
+}
+.ant-tabs-ink-bar{
+    background: #4c067e !important;
+}
+
+
+/* Antd slider 
+
+  
+  .slider-handle-color-focus-shadow {
+    border-color: brown !important;
+    background-color: chartreuse !important;
+    color: red !important;
+    --antd-wave-shadow-color: red !important;
+  }
+  
+  .ant-slider-handle {
+    border-color: brown !important;
+    background-color: rgb(15, 15, 15) !important;
+    box-shadow: 0 0 0 5px  fade(rgb(122, 122, 122),12%);
+    --antd-wave-shadow-color: red !important;
+  }
+  
+  .ant-slider-handle:focus {
+    border-color: brown !important;
+    background-color: rgb(15, 15, 15) !important;
+  
+    --antd-wave-shadow-color: red !important;
+  }
+  .ant-slider-handle-dragging {
+    border-color: brown !important;
+    background-color: chartreuse !important;
+    --antd-wave-shadow-color: red !important;
+    outline: none;
+  }
+  
+  .ant-slider-handle-click-focused:hover {
+    background-color: rgb(0, 0, 0) !important;
+    border: rgb(0, 0, 0) !important;
+    --antd-wave-shadow-color: red !important;
+  }
+  
+
+*/

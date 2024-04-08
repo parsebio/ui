@@ -10,6 +10,7 @@ import {
   Card,
   Form,
   Alert,
+  PageHeader,
 } from 'antd';
 import Header from 'components/Header';
 import { getCellSetsHierarchyByType, getCellSets, getCellSetsHierarchyByKeys } from 'redux/selectors';
@@ -285,7 +286,13 @@ const BatchDiffExpression = (props) => {
   }
   return (
     <div width='60%'>
-      <Header title={plotNames.BATCH_DIFFERENTIAL_EXPRESSION} />
+      <PageHeader
+        title='Batch Differential Expression'
+        style={{
+          width: '100%', paddingTop: '10px', paddingBottom: '10px',
+        }}
+      />
+      {/* <Header title={plotNames.BATCH_DIFFERENTIAL_EXPRESSION} /> */}
       <Card>
         <div> Select the batch differential expression calculation to perform:</div>
         {' '}
