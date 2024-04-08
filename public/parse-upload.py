@@ -9,7 +9,7 @@ import json
 import glob
 
 from concurrent.futures import ThreadPoolExecutor
-from threading import Lock
+from threading import Lock, Event
 
 import typing
 from typing import List, Tuple
@@ -18,7 +18,7 @@ import traceback
 
 PART_SIZE: int = 5 * 1024 * 1024
 # MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
-MAX_RETRIES = 1 # Max number of retries to upload each PART_SIZE part
+MAX_RETRIES = 4 # Max number of retries to upload each PART_SIZE part
 THREADS_COUNT = 50
 
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
@@ -91,7 +91,7 @@ class HTTPResponse:
     def __init__(self, response, response_data: bytes | None = None) -> None:
         self._response = response
         self._response_data = response_data
-        self._is_error = isinstance(self._response, urllib.error.HTTPError)
+        self._is_error = isinstance(self._response, Exception)
     
     def json(self):
         if (self._response_data == None):
@@ -110,7 +110,10 @@ class HTTPResponse:
     @property
     def status_code(self):
         if (self._is_error):
-            self._response.code
+            if (isinstance(self._response, urllib.error.HTTPError)):
+                return self._response.code
+            
+            return None
 
         return self._response.status
 
@@ -122,19 +125,21 @@ def http_put_part(signed_url, data):
         with urllib.request.urlopen(request) as response:
             return HTTPResponse(response)
 
-    except urllib.error.HTTPError as e:
+    except Exception as e:
         return HTTPResponse(e)
-
+    
 def http_post(url, headers, json_data = {}) -> HTTPResponse:
     headers["Content-Type"] = "application/json"
     data = json.dumps(json_data).encode("utf-8")
-    request = urllib.request.Request(url, data=data, headers=headers, method="POST")
-
+    
     try:
-        with urllib.request.urlopen(request) as response:
-            return HTTPResponse(response, response.read())
+        request = urllib.request.Request(url, data=data, headers=headers, method="POST")
+        response = urllib.request.urlopen(request)
 
-    except urllib.error.HTTPError as e:
+        # with urllib.request.urlopen(request) as response:
+        return HTTPResponse(response, response.read())
+
+    except Exception as e:
         return HTTPResponse(e)
 
 # Manages 
@@ -171,6 +176,12 @@ class UploadTracker:
 
         return cls(analysis_id, file_paths, current_file_index, parts_offset, upload_params, current_file_created, api_token)
 
+    @classmethod
+    def delete_temp_files(cls):
+        os.remove(ETAGS_PATH)
+        os.remove(RESUME_PARAMS_PATH)
+
+    # Keeps the files but leaves them empty
     @classmethod
     def wipe_current_upload(cls):
         wipe_file(ETAGS_PATH)
@@ -285,14 +296,18 @@ class FileUploader:
         self.file_id = None
 
     def get_signed_url_for_part(self, part_number) -> str:
-        response = http_post(
-            f"{base_url}/analysis/{self.analysis_id}/cliUpload/{self.upload_id}/part/{part_number}/signedUrl",
-            {"x-api-token": f"Bearer {self.api_token}"},
-            json_data={"key": self.key},
-        )
-        
-        if response.status_code != 200:
-            raise Exception(f"Failed to get signed url for part {part_number}: {response.text}")
+        try:
+            response = http_post(
+                f"{base_url}/analysis/{self.analysis_id}/cliUpload/{self.upload_id}/part/{part_number}/signedUrl",
+                {"x-api-token": f"Bearer {self.api_token}"},
+                json_data={"key": self.key},
+            )
+            
+            if response.status_code != 200:
+                print("responseHAVINGTROUBLE")
+                raise Exception(f"Failed to get signed url for part {part_number}: {response.text}")
+        except Exception as e:
+            raise e
 
         return response.json()
 
@@ -326,25 +341,33 @@ class FileUploader:
         # With localstack the ETag is returned lowercase for some reason
         return response.headers.get("ETag", response.headers["etag"])
     
-    def upload_file_section(self, from_part_index, to_part_index) -> None:
-        part_index = from_part_index
+    def upload_file_section(self, from_part_index, to_part_index, abort_event) -> None:
+        try:
+            part_index = from_part_index
 
-        with open(self.file_path, 'rb') as file:
-            file.seek(part_index * PART_SIZE)
-            part = file.read(PART_SIZE)
-
-            while part_index < to_part_index:
-                # part_number is 1-indexed
-                # part_index is same number but 0-indexed (calculate offset in file)
-                part_number = part_index + 1
-
-                etag = with_retry(lambda: self.upload_part(part, part_number))
-
-                self.upload_tracker.part_uploaded(part_number, etag)
-                self.progress_displayer.increment()
-
+            with open(self.file_path, 'rb') as file:
+                file.seek(part_index * PART_SIZE)
                 part = file.read(PART_SIZE)
-                part_index += 1
+
+                while part_index < to_part_index:
+                    if (abort_event.is_set()):
+                        return
+
+                    # part_number is 1-indexed
+                    # part_index is same number but 0-indexed (calculate offset in file)
+                    part_number = part_index + 1
+
+                    etag = with_retry(lambda: self.upload_part(part, part_number))
+
+                    self.upload_tracker.part_uploaded(part_number, etag)
+                    self.progress_displayer.increment()
+
+                    part = file.read(PART_SIZE)
+                    part_index += 1
+        except Exception as e:
+            # If an exception occurs, set the abort event to that the other threads stop too
+            abort_event.set()
+            raise e
             
     # Uploads a file in parts, beginning from the parts_offset
     def upload_file(self) -> None:
@@ -364,6 +387,8 @@ class FileUploader:
         # If not a perfect division, then some leftover parts will need to be distributed among the threads
         leftover_parts = self.number_of_parts - parts_per_thread * threads_count_safe
 
+        abort_event = Event()
+
         with ThreadPoolExecutor(threads_count_safe) as executor:
             futures = []
 
@@ -377,20 +402,13 @@ class FileUploader:
 
                 to_part_index += parts_per_thread + extra_part
 
-                futures.append(executor.submit(self.upload_file_section, from_part_index, to_part_index))
+                futures.append(executor.submit(self.upload_file_section, from_part_index, to_part_index, abort_event))
             
             done, not_done = wait(futures)
 
             for future in done:
-                try:
-                    result = future.result()
-                    # print('ResultDONE:')
-                    # print(result)
-                except Exception as e:
-                    print("SOMEERRROR")
-                    print(e)
+                future.result()
 
-            print("not_doneDebug")
             for future in not_done:
                 print("RESULTNOTDONE:")
                 print(future)
@@ -425,7 +443,7 @@ def upload_all_files(upload_tracker: UploadTracker) -> None:
         uploader.upload_file()
     
     # Finished upload, so wipe the resume files
-    UploadTracker.wipe_current_upload()
+    UploadTracker.delete_temp_files()
     print()
     print("Upload completed successfully!")
 
