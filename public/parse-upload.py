@@ -58,9 +58,9 @@ def get_resume_params_from_file():
         current_file_created = lines[2] == "True"
         file_paths = lines[3].split(',')
         current_file_index = int(lines[4])
-        threads_parts_offset = [int(offset_str) for offset_str in lines[5].split(',')]
+        completed_parts_by_thread = [int(offset_str) for offset_str in lines[5].split(',')]
 
-        return (analysis_id, upload_params, file_paths, current_file_index, threads_parts_offset, current_file_created)
+        return (analysis_id, upload_params, file_paths, current_file_index, completed_parts_by_thread, current_file_created)
 
 def with_retry(func, try_number = 0):
     try:
@@ -135,12 +135,12 @@ def http_post(url, headers, json_data = {}) -> HTTPResponse:
 # - the upload progress (both parts and files)
 # - persisting the current upload so that it is resumable
 class UploadTracker:
-    def __init__(self, analysis_id: str, file_paths: list[str], current_file_index: int, threads_parts_offset: list[int], upload_params, current_file_created, api_token) -> None:
+    def __init__(self, analysis_id: str, file_paths: list[str], current_file_index: int, completed_parts_by_thread: list[int], upload_params, current_file_created, api_token) -> None:
         self.analysis_id = analysis_id
         self.file_paths = file_paths
         self.current_file_index = current_file_index
         self.current_file_created = current_file_created
-        self.threads_parts_offset = threads_parts_offset
+        self.completed_parts_by_thread = completed_parts_by_thread
         self.upload_params = upload_params
         self.api_token = api_token
 
@@ -151,9 +151,9 @@ class UploadTracker:
         # Starting from scratch, so wipe files
         cls.wipe_current_upload()
 
-        threads_parts_offset = [0] * threads_count
+        completed_parts_by_thread = [0] * threads_count
 
-        return cls(analysis_id, file_paths, 0, threads_parts_offset, None, False, api_token)
+        return cls(analysis_id, file_paths, 0, completed_parts_by_thread, None, False, api_token)
 
     @classmethod
     def fromResumeFile(cls, api_token):
@@ -162,11 +162,11 @@ class UploadTracker:
             upload_params,
             file_paths,
             current_file_index,
-            threads_parts_offset,
+            completed_parts_by_thread,
             current_file_created,
         ) = get_resume_params_from_file()
 
-        return cls(analysis_id, file_paths, current_file_index, threads_parts_offset, upload_params, current_file_created, api_token)
+        return cls(analysis_id, file_paths, current_file_index, completed_parts_by_thread, upload_params, current_file_created, api_token)
 
     @classmethod
     def delete_temp_files(cls):
@@ -187,7 +187,7 @@ class UploadTracker:
                 str(self.current_file_created),
                 f"{','.join(self.file_paths)}",
                 f"{self.current_file_index}",
-                f"{','.join([str(offset) for offset in self.threads_parts_offset])}"
+                f"{','.join([str(offset) for offset in self.completed_parts_by_thread])}"
             ]))
 
     def get_upload_params(self) -> dict:
@@ -199,7 +199,7 @@ class UploadTracker:
         return self.upload_params
 
     def get_current_progress(self):
-        return (self.analysis_id, self.file_paths[self.current_file_index], self.threads_parts_offset)
+        return (self.analysis_id, self.file_paths[self.current_file_index], self.completed_parts_by_thread)
     
     def get_parts_etags(self):
         if not os.path.exists(ETAGS_PATH):
@@ -214,7 +214,7 @@ class UploadTracker:
 
     def file_uploaded(self):
         self.current_file_index += 1
-        self.threads_parts_offset = [0] * len(self.threads_parts_offset)
+        self.completed_parts_by_thread = [0] * len(self.completed_parts_by_thread)
         self.current_file_created = False
 
         self.save_progress()
@@ -230,7 +230,7 @@ class UploadTracker:
                 file.write(f"{part_number},{etag}")
                 file.write('\n')
 
-            self.threads_parts_offset[thread_index] += 1
+            self.completed_parts_by_thread[thread_index] += 1
 
             self.save_progress()
 
@@ -272,20 +272,20 @@ class ProgressDisplayer():
 # Manages the upload of a single file
 class FileUploader:
     def __init__(self, upload_tracker: UploadTracker) -> None:        
-        (analysis_id, current_file, threads_parts_offset) = upload_tracker.get_current_progress()
+        (analysis_id, current_file, completed_parts_by_thread) = upload_tracker.get_current_progress()
 
         self.analysis_id = analysis_id
         self.api_token = upload_tracker.api_token
         self.upload_tracker = upload_tracker
-        
+
         self.file_path = current_file
-        self.completed_parts_number = threads_parts_offset
+        self.completed_parts_by_thread = completed_parts_by_thread
 
         file_size = os.path.getsize(self.file_path)
         
         self.number_of_parts = math.ceil(file_size/PART_SIZE)
 
-        self.progress_displayer = ProgressDisplayer(self.number_of_parts, sum(threads_parts_offset), current_file)
+        self.progress_displayer = ProgressDisplayer(self.number_of_parts, sum(completed_parts_by_thread), current_file)
 
         # These will be obtained from begin_multipart_upload()
         self.upload_id = None
@@ -343,8 +343,9 @@ class FileUploader:
     
     def upload_file_section(self, thread_index, from_part_index, to_part_index, abort_event) -> None:
         try:
-            # Thread needs to upload from_part_index to to_part_index 
-            part_index = from_part_index + self.completed_parts_number[thread_index]
+            # Offset start point by the number of already completed parts
+            # (in case we are resuming and already completed is > 0)
+            part_index = from_part_index + self.completed_parts_by_thread[thread_index]
 
             with open(self.file_path, 'rb') as file:
                 file.seek(part_index * PART_SIZE)
@@ -380,22 +381,22 @@ class FileUploader:
         self.key = upload_params["key"]
         self.file_id = upload_params["fileId"]
 
-        # Don't need more threads than parts
-        threads_count_safe = min(THREADS_COUNT, self.number_of_parts)
+        threads_count = len(self.completed_parts_by_thread)
 
-        parts_per_thread = math.floor(self.number_of_parts / threads_count_safe)
+        parts_per_thread = math.floor(self.number_of_parts / threads_count)
 
         # If not a perfect division, then some leftover parts will need to be distributed among the threads
-        leftover_parts = self.number_of_parts - parts_per_thread * threads_count_safe
+        leftover_parts = self.number_of_parts - parts_per_thread * threads_count
 
         abort_event = Event()
 
-        with ThreadPoolExecutor(threads_count_safe) as executor:
+        with ThreadPoolExecutor(threads_count) as executor:
             futures = []
 
             to_part_index = 0
             thread_index = 0
             while to_part_index < self.number_of_parts:
+                # Start from previous thread's limit
                 from_part_index = to_part_index
 
                 # If still have leftovers, then add it to the current thread
@@ -413,9 +414,8 @@ class FileUploader:
             for future in done:
                 future.result()
 
-            for future in not_done:
-                print("RESULTNOTDONE:")
-                print(future)
+            if len(not_done) > 0:
+                print("Some upload errors:")
 
         etags = self.upload_tracker.get_parts_etags()
         with_retry(lambda: self.complete_multipart_upload(etags))
@@ -460,7 +460,7 @@ def begin_multipart_upload(analysis_id, file_path, api_token) -> dict:
 # Show a warning if there is a previous upload that can be resumed
 def show_resume_option():
     if os.path.exists(RESUME_PARAMS_PATH):
-        (analysis_id, upload_params, file_paths, current_file_index, threads_parts_offset, current_file_created) = None, None, None, None, None, None
+        (analysis_id, upload_params, file_paths, current_file_index, completed_parts_by_thread, current_file_created) = None, None, None, None, None, None
 
         try:
             (
@@ -468,7 +468,7 @@ def show_resume_option():
                 upload_params,
                 file_paths,
                 current_file_index,
-                threads_parts_offset,
+                completed_parts_by_thread,
                 current_file_created
             ) = get_resume_params_from_file()
 
