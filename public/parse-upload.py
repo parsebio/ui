@@ -11,10 +11,9 @@ import glob
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock, Event
 
-from typing import List, Tuple
 from concurrent.futures import wait
 
-PART_SIZE: int = 5 * 1024 * 1024
+PART_SIZE = 5 * 1024 * 1024
 # MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
 MAX_RETRIES = 4 # Max number of retries to upload each PART_SIZE part
 THREADS_COUNT = 20
@@ -76,7 +75,7 @@ def with_retry(func, try_number = 0):
         return with_retry(func, try_number + 1)
 
 class HTTPResponse:
-    def __init__(self, response, response_data = None) -> None:
+    def __init__(self, response, response_data = None):
         self._response = response
         self._response_data = response_data
         self._is_error = isinstance(self._response, Exception)
@@ -116,7 +115,7 @@ def http_put_part(signed_url, data):
     except Exception as e:
         return HTTPResponse(e)
     
-def http_post(url, headers, json_data = {}) -> HTTPResponse:
+def http_post(url, headers, json_data = {}):
     headers["Content-Type"] = "application/json"
     data = json.dumps(json_data).encode("utf-8")
 
@@ -135,7 +134,7 @@ def http_post(url, headers, json_data = {}) -> HTTPResponse:
 # - the upload progress (both parts and files)
 # - persisting the current upload so that it is resumable
 class UploadTracker:
-    def __init__(self, analysis_id: str, file_paths: list[str], current_file_index: int, completed_parts_by_thread: list[int], upload_params, current_file_created, api_token) -> None:
+    def __init__(self, analysis_id, file_paths, current_file_index, completed_parts_by_thread, upload_params, current_file_created, api_token):
         self.analysis_id = analysis_id
         self.file_paths = file_paths
         self.current_file_index = current_file_index
@@ -190,7 +189,7 @@ class UploadTracker:
                 f"{','.join([str(offset) for offset in self.completed_parts_by_thread])}"
             ]))
 
-    def get_upload_params(self) -> dict:
+    def get_upload_params(self):
         if (not self.current_file_created):
             self.upload_params = begin_multipart_upload(self.analysis_id, self.file_paths[self.current_file_index], self.api_token)
             self.current_file_created = True
@@ -235,7 +234,7 @@ class UploadTracker:
             self.save_progress()
 
 class ProgressDisplayer():
-    def __init__(self, total: int, progress: int, file_path: str):
+    def __init__(self, total, progress, file_path):
         super().__init__()
 
         self.total = total
@@ -271,7 +270,7 @@ class ProgressDisplayer():
 
 # Manages the upload of a single file
 class FileUploader:
-    def __init__(self, upload_tracker: UploadTracker) -> None:        
+    def __init__(self, upload_tracker):
         (analysis_id, current_file, completed_parts_by_thread) = upload_tracker.get_current_progress()
 
         self.analysis_id = analysis_id
@@ -292,7 +291,7 @@ class FileUploader:
         self.key = None
         self.file_id = None
 
-    def get_signed_url_for_part(self, part_number) -> str:
+    def get_signed_url_for_part(self, part_number):
         try:
             response = http_post(
                 f"{base_url}/analysis/{self.analysis_id}/cliUpload/{self.upload_id}/part/{part_number}/signedUrl",
@@ -307,7 +306,7 @@ class FileUploader:
 
         return response.json()
 
-    def complete_multipart_upload(self, parts) -> None:        
+    def complete_multipart_upload(self, parts):
         self.progress_displayer.show_completing()
 
         sorted_parts = sorted(parts, key=lambda part: part["PartNumber"])
@@ -326,7 +325,7 @@ class FileUploader:
         if response.status_code != 200:
             raise Exception(f"Failed to complete upload for file {self.file_path}: {response.text}")
 
-    def upload_part(self, part, part_number) -> str:
+    def upload_part(self, part, part_number):
         signed_url = self.get_signed_url_for_part(part_number)
 
         response = http_put_part(signed_url, part)
@@ -340,7 +339,7 @@ class FileUploader:
         
         return etag
     
-    def upload_file_section(self, thread_index, from_part_index, to_part_index, abort_event) -> None:
+    def upload_file_section(self, thread_index, from_part_index, to_part_index, abort_event):
         try:
             # Offset start point by the number of already completed parts
             # (in case we are resuming and already completed is > 0)
@@ -371,7 +370,7 @@ class FileUploader:
             abort_event.set()
             raise e
 
-    def upload_file(self) -> None:
+    def upload_file(self):
         self.progress_displayer.begin()
 
         upload_params = self.upload_tracker.get_upload_params()
@@ -420,7 +419,7 @@ class FileUploader:
         self.upload_tracker.file_uploaded()
         self.progress_displayer.finish()
 
-def upload_all_files(upload_tracker: UploadTracker) -> None:
+def upload_all_files(upload_tracker):
     while not upload_tracker.is_finished():
         uploader = FileUploader(upload_tracker)
         uploader.upload_file()
@@ -430,7 +429,7 @@ def upload_all_files(upload_tracker: UploadTracker) -> None:
     print()
     print("Upload completed successfully!")
 
-def begin_multipart_upload(analysis_id, file_path, api_token) -> dict:
+def begin_multipart_upload(analysis_id, file_path, api_token):
         file_name = os.path.basename(file_path)
         file_size = os.path.getsize(file_path)
 
@@ -500,7 +499,7 @@ def show_files_to_upload_warning(file_paths):
         raise Exception("Upload cancelled")
 
 # Performs all of the pre-upload validation and parameter checks
-def prepare_upload(args) -> UploadTracker:
+def prepare_upload(args):
     non_resumable_args = args.run_id or args.file
     
     if (non_resumable_args and args.resume):
