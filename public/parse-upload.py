@@ -324,7 +324,7 @@ class FileUploader:
         )
 
         if response.status_code != 200:
-            raise Exception(f"Failed to complete upload for file {self.file_id}: {response.text}")
+            raise Exception(f"Failed to complete upload for file {self.file_path}: {response.text}")
 
     def upload_part(self, part, part_number) -> str:
         signed_url = self.get_signed_url_for_part(part_number)
