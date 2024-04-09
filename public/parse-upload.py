@@ -119,7 +119,7 @@ def http_put_part(signed_url, data):
 def http_post(url, headers, json_data = {}) -> HTTPResponse:
     headers["Content-Type"] = "application/json"
     data = json.dumps(json_data).encode("utf-8")
-    
+
     try:
         request = urllib.request.Request(url, data=data, headers=headers, method="POST")
         response = urllib.request.urlopen(request)
@@ -252,7 +252,7 @@ class ProgressDisplayer():
             self._display_progress()
 
     def show_completing(self):
-        sys.stdout.write(f"\r\033[KCompleting upload, this could take a few minutes with larger files")
+        sys.stdout.write(f"\r\033[KCompleting upload, this could take a few minutes with large files")
 
     def finish(self):
         sys.stdout.write(ERASE_CURRENT_LINE)
@@ -330,7 +330,6 @@ class FileUploader:
         signed_url = self.get_signed_url_for_part(part_number)
 
         response = http_put_part(signed_url, part)
-
         if response.status_code != 200:
             raise Exception(f"Failed to upload part {part_number}: {response.text}")
         
@@ -554,6 +553,7 @@ def main():
         upload_all_files(upload_tracker)
     except Exception as e:
         print()
+        print("An error ocurred:")
         print(e)
         sys.exit(1)
 
