@@ -30,20 +30,20 @@ const UploadStatusView = ({
   useEffect(() => {
     if (fileId && secondaryAnalysisId && [
       UploadStatus.UPLOAD_ERROR,
-      UploadStatus.UPLOAD_PAUSED,
-    ].includes(status)) {
+      UploadStatus.PAUSED,
+    ].includes(status.current)) {
       const file = cache.get(fileId) ?? null;
       setFileInCache(file);
     }
-  }, [fileId, status]);
+  }, [fileId, status.current]);
 
   if (fileInCache && [
     UploadStatus.UPLOAD_ERROR,
-    UploadStatus.UPLOAD_PAUSED,
-  ].includes(status)) {
+    UploadStatus.PAUSED,
+  ].includes(status.current)) {
     return (
       <div style={uploadDivStyle}>
-        <Text type='warning'>{messageForStatus(status)}</Text>
+        <Text type='warning'>{messageForStatus(status.current)}</Text>
         <Tooltip
           title='Click to resume'
         >
@@ -66,14 +66,16 @@ const UploadStatusView = ({
       </Tooltip>
     );
   }
-  if (status === UploadStatus.QUEUED) {
+
+  if ([UploadStatus.UPLOADING_FROM_CLI, UploadStatus.QUEUED].includes(status.current)) {
     return (
       <div style={uploadDivStyle}>
-        <Text type='secondary'>{messageForStatus(status)}</Text>
+        <Text type='secondary'>{messageForStatus(status.current)}</Text>
       </div>
     );
   }
-  if (status === UploadStatus.UPLOADED) {
+
+  if (status.current === UploadStatus.UPLOADED) {
     return (
       <div
         className={styles.hoverSelectCursor}
@@ -81,7 +83,7 @@ const UploadStatusView = ({
         onKeyDown={showDetails}
         style={{ ...uploadDivStyle, flexDirection: 'column' }}
       >
-        <Text type='success'>{messageForStatus(status)}</Text>
+        <Text type='success'>{messageForStatus(status.current)}</Text>
       </div>
     );
   }
@@ -90,7 +92,7 @@ const UploadStatusView = ({
     [
       UploadStatus.UPLOADING,
       UploadStatus.COMPRESSING,
-    ].includes(status)
+    ].includes(status.current)
   ) {
     return (
       <div
@@ -99,7 +101,7 @@ const UploadStatusView = ({
           flexDirection: 'column',
         }}
       >
-        <Text type='warning'>{`${messageForStatus(status)}`}</Text>
+        <Text type='warning'>{`${messageForStatus(status.current)}`}</Text>
         {progress ? (<Progress style={{ marginLeft: '10%', width: '50%' }} percent={progress} size='small' />) : <div />}
       </div>
     );
@@ -108,7 +110,7 @@ const UploadStatusView = ({
     [
       UploadStatus.UPLOAD_ERROR,
       UploadStatus.DROP_AGAIN,
-    ].includes(status)
+    ].includes(status.current)
   ) {
     return (
       <div
@@ -117,7 +119,7 @@ const UploadStatusView = ({
         onClick={showDetails}
         onKeyDown={showDetails}
       >
-        <Text type='danger'>{messageForStatus(status)}</Text>
+        <Text type='danger'>{messageForStatus(status.current)}</Text>
       </div>
     );
   }
@@ -126,11 +128,11 @@ const UploadStatusView = ({
       UploadStatus.FILE_NOT_FOUND,
       UploadStatus.FILE_READ_ABORTED,
       UploadStatus.FILE_READ_ERROR,
-    ].includes(status)
+    ].includes(status.current)
   ) {
     return (
       <div style={uploadDivStyle}>
-        <Text type='danger'>{messageForStatus(status)}</Text>
+        <Text type='danger'>{messageForStatus(status.current)}</Text>
         {showDetails && (
           <Tooltip placement='bottom' title='Upload missing' mouseLeaveDelay={0}>
             <Button
@@ -154,7 +156,8 @@ UploadStatusView.defaultProps = {
 };
 
 UploadStatusView.propTypes = {
-  status: PropTypes.string.isRequired,
+  // Object with current status in .current
+  status: PropTypes.object.isRequired,
   progress: PropTypes.number,
   showDetails: PropTypes.func,
   fileId: PropTypes.string,

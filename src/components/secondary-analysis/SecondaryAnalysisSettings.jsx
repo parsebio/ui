@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Select, Form, Space,
@@ -5,6 +7,7 @@ import {
 import propTypes from 'prop-types';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 import SliderWithInput from 'components/SliderWithInput';
+import { useSelector } from 'react-redux';
 
 const kitToMaxSublibrariesMap = {
   wt_mini: 2,
@@ -12,10 +15,18 @@ const kitToMaxSublibrariesMap = {
   wt_mega: 16,
 };
 
+const detailsToShow = ['numOfSamples', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+
 const SecondaryAnalysisSettings = (props) => {
-  const { onDetailsChanged, secondaryAnalysisDetails } = props;
+  const { secondaryAnalysisId, onDetailsChanged } = props;
+
   const [maxSublibraries, setMaxSublibraries] = useState();
   const [formValues, setFormValues] = useState({});
+
+  const secondaryAnalysisDetails = useSelector(
+    (state) => _.pick(state.secondaryAnalyses[secondaryAnalysisId], detailsToShow),
+    _.isEqual,
+  );
 
   useEffect(() => {
     setFormValues(secondaryAnalysisDetails);
@@ -147,8 +158,8 @@ const SecondaryAnalysisSettings = (props) => {
 };
 
 SecondaryAnalysisSettings.propTypes = {
+  secondaryAnalysisId: propTypes.string.isRequired,
   onDetailsChanged: propTypes.func.isRequired,
-  secondaryAnalysisDetails: propTypes.object.isRequired,
 };
 
 export default SecondaryAnalysisSettings;
