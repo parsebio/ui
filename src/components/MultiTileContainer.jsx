@@ -5,6 +5,7 @@ import ReactResizeDetector from 'react-resize-detector';
 import 'react-mosaic-component/react-mosaic-component.css';
 import { layout } from 'utils/constants';
 import { useDragDropManager } from 'react-dnd';
+import { Radio } from 'antd';
 
 const renderWindow = (tile, width, height, style) => {
   if (!tile) return <></>;
@@ -26,6 +27,14 @@ const MultiTileContainer = ({ tileMap, initialArrangement }) => {
 
   return (
     <div style={{ height: '100%', width: '100%', margin: 0 }}>
+      <Radio.Group>
+        <Radio>
+          holahola
+        </Radio>
+        <Radio>
+          chauchau
+        </Radio>
+      </Radio.Group>
       <Mosaic
         dragAndDropManager={dragDropManager}
         renderTile={(id, path) => (

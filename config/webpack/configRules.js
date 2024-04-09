@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 const path = require('path');
 
+// const { brandColors } = require('utils/constants');
+
 const srcFolder = [
   path.resolve(__dirname, '../src/components'),
   path.resolve(__dirname, '../src/utils'),
@@ -36,6 +38,25 @@ const webpackConfigRules = (config, { dev }) => {
           mimetype: 'application/font-woff',
         },
       },
+    },
+    {
+      test: /\.less$/,
+      use: [{
+        loader: 'style-loader',
+      }, {
+        loader: 'css-loader', // translates CSS into CommonJS
+      }, {
+        loader: 'less-loader', // compiles Less to CSS
+        options: {
+          lessOptions: { // If you are using less-loader@5 please spread the lessOptions to options directly
+            modifyVars: {
+              'primary-color': '#9966b8',
+              'link-color': '#9966b8',
+            },
+            javascriptEnabled: true,
+          },
+        },
+      }],
     },
   ];
 

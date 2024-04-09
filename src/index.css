@@ -14,7 +14,7 @@ a {
 
 /* Radio buttons are not receiving the ConfigProvider change */ 
 
-.ant-radio-checked .ant-radio-inner{
+/* .ant-radio-checked .ant-radio-inner{
     border-color: #9966b8 !important ;
   }
   
@@ -24,7 +24,7 @@ a {
   
   .ant-radio:hover .ant-radio-inner {
     border-color: #9966b8 !important;
-  }
+  } */
 
 
 /* Need special color for menu selected and sider trigger */
