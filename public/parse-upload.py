@@ -530,7 +530,7 @@ def prepare_upload(args) -> UploadTracker:
             if (not file.endswith(".fastq.gz")):
                 raise Exception(f"File {file} does not end with .fastq.gz, only gzip compressed fastq files are supported")
 
-        upload_tracker = UploadTracker.fromScratch(args.run_id, files, THREADS_COUNT, args.token)
+        upload_tracker = UploadTracker.fromScratch(args.run_id, files, args.threads_count, args.token)
 
 
     if (not resume):
@@ -543,6 +543,7 @@ def main():
     parser.add_argument('-id', '--run_id', required=False, help='The run id')
     parser.add_argument('-t', '--token', required=False, default=os.environ.get('PARSE_CLOUD_TOKEN'), help='The upload token, can be obtained from the browser application')
     parser.add_argument('-f', '--file', nargs='*', required=False, help='A space-separated list of files, glob patterns are accepted')
+    parser.add_argument('-tc', '--threads_count', required=False, help='The amount of threads to use for the upload', type=int, default=THREADS_COUNT)
     parser.add_argument('-r', '--resume', action='store_true', help='Resume an interrupted upload')
     
     args = parser.parse_args()
