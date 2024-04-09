@@ -114,17 +114,17 @@ const Pipeline = () => {
           key={key}
           style={{
             display: 'flex',
-            marginBottom: '10px',
-            overflow: 'hidden',
+            marginBottom: window.innerHeight > 768 ? '0.6vh' : '0',
+            overflowY: 'auto',
           }}
         >
           {title && (
-            <span style={{ fontWeight: 'bold' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '1.4vh' }}>
               {`${title}:`}
             </span>
           )}
           &nbsp;
-          <span>
+          <span style={{ fontSize: '1.4vh' }}>
             {value || 'Not selected'}
           </span>
         </div>
@@ -165,11 +165,17 @@ const Pipeline = () => {
     return null;
   };
 
-  const renderMainScreenFileDetails = (renderFunc) => (renderFunc() || (
-    <Empty
-      description='Not uploaded'
-    />
-  ));
+  const renderMainScreenFileDetails = (renderFunc) => renderFunc() || (
+    window.innerHeight > 768 ? (
+      <Empty
+        style={{ fontSize: '1.4vh' }}
+        description='Not uploaded'
+        imageStyle={{ fontSize: window.innerWidth > 768 ? '24px' : '16px' }}
+      />
+    ) : (
+      <span style={{ display: 'flex', justifyContent: 'center', fontSize: '1.4vh' }}>Not uploaded</span>
+    )
+  );
 
   const areFilesUploaded = (type) => {
     const files = getFilesByType(type);

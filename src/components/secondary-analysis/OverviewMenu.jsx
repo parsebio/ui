@@ -13,7 +13,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => (
       {wizardSteps.map((step, index) => {
         const spanSize = index < 3 ? 8 : 24; // First three cards have span 8, fourth card has span 24
         const cardStyle = {
-          height: index === 3 ? '50vh' : '24vh',
+          height: index !== 3 && '24vh',
         };
 
         return (
@@ -28,7 +28,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => (
                   <Text
                     strong
                     style={{
-                      fontSize: '17px',
+                      fontSize: '1.62vh',
                       overflowX: 'auto',
                     }}
                   >
