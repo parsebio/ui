@@ -409,13 +409,11 @@ class FileUploader:
                 
                 thread_index += 1
             
+            # not_done will always be empty because wait doesn't have a timeout.
             done, not_done = wait(futures)
 
             for future in done:
                 future.result()
-
-            if len(not_done) > 0:
-                print("Some upload errors:")
 
         etags = self.upload_tracker.get_parts_etags()
         with_retry(lambda: self.complete_multipart_upload(etags))
