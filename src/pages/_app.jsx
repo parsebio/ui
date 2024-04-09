@@ -1,6 +1,8 @@
 import '../../assets/self-styles.less';
 import '../../assets/nprogress.css';
 
+import _ from 'lodash';
+
 import Amplify, { Credentials } from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
@@ -65,6 +67,7 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   const experimentData = useSelector(
     (state) => (experimentId ? state.experimentSettings.info : {}),
+    _.isEqual,
   );
 
   const [amplifyConfigured, setAmplifyConfigured] = useState(!amplifyConfig);

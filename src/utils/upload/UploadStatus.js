@@ -1,6 +1,7 @@
 const UploadStatus = {
   UPLOADED: 'uploaded',
   UPLOADING: 'uploading',
+  UPLOADING_FROM_CLI: 'uploadingFromCli',
   COMPRESSING: 'compressing',
   UPLOAD_ERROR: 'uploadError',
   FILE_NOT_FOUND: 'fileNotFound',
@@ -8,12 +9,13 @@ const UploadStatus = {
   FILE_READ_ABORTED: 'fileReadAborted',
   QUEUED: 'queued',
   DROP_AGAIN: 'dropAgain',
-  UPLOAD_PAUSED: 'resumeUpload',
+  PAUSED: 'paused',
 };
 
 const message = {
   [UploadStatus.UPLOADED]: 'Uploaded',
   [UploadStatus.UPLOADING]: 'Uploading...',
+  [UploadStatus.UPLOADING_FROM_CLI]: 'Uploading from console...',
   [UploadStatus.COMPRESSING]: 'Compressing...',
   [UploadStatus.UPLOAD_ERROR]: 'Upload error',
   [UploadStatus.FILE_NOT_FOUND]: 'File not found',
@@ -21,7 +23,7 @@ const message = {
   [UploadStatus.FILE_READ_ABORTED]: 'File read aborted',
   [UploadStatus.QUEUED]: 'Queued',
   [UploadStatus.DROP_AGAIN]: 'Drop file again',
-  [UploadStatus.UPLOAD_PAUSED]: 'Upload paused',
+  [UploadStatus.PAUSED]: 'Upload paused',
 };
 
 const messageForStatus = (uploadStatus) => message[uploadStatus];

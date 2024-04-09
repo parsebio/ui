@@ -1,6 +1,4 @@
-import React, {
-  useState, useEffect,
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm,
 } from 'antd';
@@ -28,6 +26,7 @@ import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
+import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -50,6 +49,8 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
+const analysisDetailsKeys = ['name', 'description', 'numOfSamples', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+
 const Pipeline = () => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
@@ -61,13 +62,39 @@ const Pipeline = () => {
 
   const user = useSelector((state) => state.user.current);
 
-  const secondaryAnalyses = useSelector((state) => state.secondaryAnalyses);
-  const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
-  const secondaryAnalysis = useSelector(
-    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId],
+  const secondaryAnalysisIds = useSelector((state) => state.secondaryAnalyses.ids, _.isEqual);
+  const activeSecondaryAnalysisId = useSelector(
+    (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
+    _.isEqual,
   );
-  const secondaryAnalysisFiles = secondaryAnalysis?.files.data ?? {};
-  const filesLoading = secondaryAnalysis?.files.loading;
+
+  const {
+    name: analysisName,
+    description: analysisDescription,
+    numOfSamples,
+    numOfSublibraries,
+    chemistryVersion,
+    kit,
+    refGenome,
+  } = useSelector(
+    (state) => _.pick(
+      state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {}, analysisDetailsKeys,
+    ),
+    _.isEqual,
+  );
+
+  const filesNotLoadedYet = useSelector(
+    (state) => _.isNil(state.secondaryAnalyses[activeSecondaryAnalysisId]?.files?.data),
+    _.isEqual,
+  );
+
+  const currentSecondaryAnalysisStatus = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status?.current,
+    _.isEqual,
+  );
+
+  const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
+  const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
 
   const { loading: statusLoading, current: currentStatus } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
@@ -77,26 +104,30 @@ const Pipeline = () => {
   const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useEffect(() => {
-    if (secondaryAnalyses.ids.length === 0) dispatch(loadSecondaryAnalyses());
+    if (secondaryAnalysisIds.length === 0) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
   useEffect(() => {
     if (activeSecondaryAnalysisId) {
       dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
-    }
-
-    if (activeSecondaryAnalysisId && _.isEmpty(secondaryAnalysisFiles)) {
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
     }
   }, [activeSecondaryAnalysisId]);
 
+  // Poll for status
   usePolling(async () => {
-    if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
+    if (!['running', 'created'].includes(currentSecondaryAnalysisStatus)) return;
 
     await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
-  }, [activeSecondaryAnalysisId, secondaryAnalysis?.status?.current]);
+  }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
 
-  const getFilesByType = (type) => _.pickBy(secondaryAnalysisFiles, (file) => file.type === type);
+  // Poll for files (in case the cli is uploading)
+  usePolling(async () => {
+    // If executing, no need to get files updates
+    if (['running', 'created'].includes(currentSecondaryAnalysisStatus)) return;
+
+    await dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
+  }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
@@ -115,7 +146,6 @@ const Pipeline = () => {
           style={{
             display: 'flex',
             marginBottom: window.innerHeight > 768 ? '0.6vh' : '0',
-            overflowY: 'auto',
           }}
         >
           {title && (
@@ -134,8 +164,6 @@ const Pipeline = () => {
   };
 
   const renderSampleLTFileDetails = () => {
-    const sampleLTFile = Object.values(getFilesByType('samplelt'))[0];
-
     if (!sampleLTFile) return null;
 
     const { name, upload, createdAt } = sampleLTFile;
@@ -151,13 +179,11 @@ const Pipeline = () => {
   };
 
   const renderFastqFileTable = (canEditTable) => {
-    const filesToDisplay = getFilesByType('fastq');
-
-    if (Object?.keys(filesToDisplay)?.length) {
+    if (Object?.keys(fastqFiles)?.length) {
       return (
         <FastqFileTable
           canEditTable={canEditTable}
-          files={filesToDisplay}
+          files={fastqFiles}
           secondaryAnalysisId={activeSecondaryAnalysisId}
         />
       );
@@ -177,25 +203,19 @@ const Pipeline = () => {
     )
   );
 
-  const areFilesUploaded = (type) => {
-    const files = getFilesByType(type);
-    if (!Object.keys(files).length) return false;
-    return Object.values(files).every((file) => file.upload.status === 'uploaded');
+  const allFilesUploaded = (files) => {
+    if (!files || Object.keys(files).length === 0) return false;
+    return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
   };
 
-  const {
-    numOfSamples, numOfSublibraries, chemistryVersion, kit, refGenome,
-  } = secondaryAnalysis || {};
   const secondaryAnalysisWizardSteps = [
     {
       title: 'Provide the details of the experimental setup:',
       key: 'Experimental setup',
       render: () => (
         <SecondaryAnalysisSettings
+          secondaryAnalysisId={activeSecondaryAnalysisId}
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          secondaryAnalysisDetails={{
-            numOfSamples, numOfSublibraries, chemistryVersion, kit,
-          }}
         />
       ),
       isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
@@ -213,12 +233,12 @@ const Pipeline = () => {
         <SampleLTUpload
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderUploadedFileDetails={renderSampleLTFileDetails}
-          uploadedFileId={Object.keys(getFilesByType('samplelt'))[0]}
+          uploadedFileId={sampleLTFile?.id}
           setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
-      isValid: areFilesUploaded('samplelt'),
-      isLoading: filesLoading,
+      isValid: allFilesUploaded([sampleLTFile]),
+      isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
     },
     {
@@ -241,11 +261,10 @@ const Pipeline = () => {
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderFastqFileTable={() => renderFastqFileTable(true)}
           setFilesNotUploaded={setFilesNotUploaded}
-          secondaryAnalysisFiles={secondaryAnalysisFiles}
         />
       ),
-      isValid: areFilesUploaded('fastq'),
-      isLoading: filesLoading,
+      isValid: allFilesUploaded(fastqFiles),
+      isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFileTable(false)),
     },
   ];
@@ -329,7 +348,7 @@ const Pipeline = () => {
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
                   <Space direction='vertical'>
-                    <Title level={4}>{secondaryAnalysis.name}</Title>
+                    <Title level={4}>{analysisName}</Title>
                     <Text type='secondary'>
                       {`Run ID: ${activeSecondaryAnalysisId}`}
                     </Text>
@@ -370,9 +389,9 @@ const Pipeline = () => {
                 <Text strong>Description:</Text>
                 <div style={{ flex: 1, overflowY: 'auto' }}>
                   <EditableParagraph
-                    value={secondaryAnalysis.description || ''}
+                    value={analysisDescription ?? ''}
                     onUpdate={(text) => {
-                      if (text !== secondaryAnalysis.description) {
+                      if (text !== analysisDescription) {
                         dispatch(
                           updateSecondaryAnalysis(
                             activeSecondaryAnalysisId,
