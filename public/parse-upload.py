@@ -85,7 +85,7 @@ def with_retry(func, try_number = 0):
         return result
 
 class HTTPResponse:
-    def __init__(self, response, response_data: bytes | None = None) -> None:
+    def __init__(self, response, response_data = None) -> None:
         self._response = response
         self._response_data = response_data
         self._is_error = isinstance(self._response, urllib.error.HTTPError)
