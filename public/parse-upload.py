@@ -26,7 +26,8 @@ MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
 # -     staging secondary master: "https://api-secondary-analysis-master.scp-staging.biomage.net/v2"
 # -     staging default: "https://api-default.scp-staging.biomage.net/v2"
 
-default_prod_api_url = "https://api.scp.biomage.net/v2"
+default_prod_api_url = "https://api-secondary-analysis-master.scp-staging.biomage.net/v2"
+# default_prod_api_url = "https://api.scp.biomage.net/v2"
 
 base_url = os.environ.get('PARSE_API_URL') or default_prod_api_url
 
