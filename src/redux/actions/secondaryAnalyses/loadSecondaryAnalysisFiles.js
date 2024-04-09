@@ -1,12 +1,15 @@
 /* eslint-disable no-param-reassign */
+import _ from 'lodash';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { SECONDARY_ANALYSIS_FILES_LOADED, SECONDARY_ANALYSIS_FILES_LOADING } from 'redux/actionTypes/secondaryAnalyses';
 import fetchAPI from 'utils/http/fetchAPI';
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
 
-const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => {
-  const { UPLOAD_PAUSED, DROP_AGAIN, UPLOADING } = UploadStatus;
+const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, getState) => {
+  const filesInRedux = getState().secondaryAnalyses[secondaryAnalysisId].files?.data ?? {};
+
+  const { PAUSED, DROP_AGAIN, UPLOADING } = UploadStatus;
   try {
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADING,
@@ -14,23 +17,28 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch) => 
         secondaryAnalysisId,
       },
     });
+
     const files = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
 
-    // If the file upload status is 'uploading' in sql, we need to change it
-    // since that status is not correct anymore after a page refresh
-    const filesForUI = await Promise.all(files.map(async (file) => {
-      if (file.upload.status === UPLOADING) {
-        const isFileInCache = await cache.get(file.id);
-        file.upload.status = isFileInCache ? UPLOAD_PAUSED : DROP_AGAIN;
-      }
-      return file;
-    }));
+    const filesForRedux = await Promise.all(files
+      // If the file upload status is 'uploading' in sql, we need to store something else in redux
+      // since that status is not correct if the upload is not performed in this case
+      .filter((file) => filesInRedux[file.id]?.upload?.status.current !== UPLOADING)
+      .map(async (file) => {
+        if (file.upload.status === UPLOADING) {
+          const isFileInCache = await cache.get(file.id);
+
+          file.upload.status = isFileInCache ? PAUSED : DROP_AGAIN;
+        }
+
+        return file;
+      }));
 
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {
         secondaryAnalysisId,
-        files: filesForUI,
+        files: filesForRedux,
       },
     });
   } catch (e) {

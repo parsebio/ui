@@ -2,27 +2,30 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button, Tabs, Alert,
 } from 'antd';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import {
   CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
 } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 
 import Expandable from 'components/Expandable';
 import endUserMessages from 'utils/endUserMessages';
+
+import { getFastqFiles } from 'redux/selectors';
+
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
-import Paragraph from 'antd/lib/typography/Paragraph';
+import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 
 const { Text } = Typography;
 
 const UploadFastQ = (props) => {
   const {
-    secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded, secondaryAnalysisFiles,
+    secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded,
   } = props;
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
@@ -34,12 +37,16 @@ const UploadFastQ = (props) => {
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
   };
 
+  const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
+
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));
   }, [fileHandles]);
 
-  const validateAndSetFiles = async (fileHandlesList) => {
-    const alreadyUploadedFiles = Object.values(secondaryAnalysisFiles).map((item) => item.name);
+  // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
+  // is not updated when used inside a event listener
+  const validateAndSetFiles = async (fileHandlesList, secondaryAnalysisFilesUpdated) => {
+    const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated).map((item) => item.name);
 
     const validators = [
       { validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'), rejectReason: endUserMessages.ERROR_HIDDEN_FILE },
@@ -67,7 +74,7 @@ const UploadFastQ = (props) => {
     try {
       const opts = { multiple: true };
       const handles = await window.showOpenFilePicker(opts);
-      return validateAndSetFiles(handles);
+      return validateAndSetFiles(handles, secondaryAnalysisFiles);
     } catch (err) {
       console.error('Error picking files:', err);
     }
@@ -96,14 +103,15 @@ const UploadFastQ = (props) => {
       const subFiles = await getAllFiles(entry);
       return subFiles;
     }));
-    return validateAndSetFiles(newFiles.flat());
+
+    return validateAndSetFiles(newFiles.flat(), secondaryAnalysisFiles);
   };
 
   useEffect(() => {
     const dropzone = document.getElementById('dropzone');
     dropzone.addEventListener('drop', onDrop);
     return () => dropzone.removeEventListener('drop', onDrop);
-  }, []);
+  }, [secondaryAnalysisFiles]);
 
   const removeFile = (fileName) => {
     setFileHandles((prevState) => {
@@ -363,7 +371,6 @@ UploadFastQ.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
   renderFastqFileTable: PropTypes.func.isRequired,
   setFilesNotUploaded: PropTypes.func.isRequired,
-  secondaryAnalysisFiles: PropTypes.object.isRequired,
 };
 
 export default UploadFastQ;

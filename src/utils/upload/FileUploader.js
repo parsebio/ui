@@ -251,9 +251,6 @@ class FileUploader {
     await navigator.locks.request(this.freeUploadSlotsLock, async () => {
       this.freeUploadSlots -= 1;
 
-      console.log('thisfreeUploadSlotsLOCKING');
-      console.log(this.freeUploadSlots);
-
       if (this.freeUploadSlots <= 0) {
         // We need to wait for some uploads to finish before we can continue
         this.readStream.pause();
@@ -263,8 +260,6 @@ class FileUploader {
 
   #releaseUploadSlot = async () => (
     await navigator.locks.request(this.freeUploadSlotsLock, async () => {
-      console.log('thisfreeUploadSlotsRELEASING');
-      console.log(this.freeUploadSlots);
       this.freeUploadSlots += 1;
 
       this.readStream.resume();
