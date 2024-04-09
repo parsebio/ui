@@ -6,6 +6,8 @@ import {
 import { blue } from '@ant-design/colors';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { brandColors } from 'utils/constants';
+
 import { updateExperiment, setActiveExperiment, deleteExperiment } from 'redux/actions/experiments';
 import validateInputs, { rules } from 'utils/validateInputs';
 import integrationTestConstants from 'utils/integrationTestConstants';
@@ -28,9 +30,9 @@ const inactiveExperimentStyle = {
 };
 
 const activeExperimentStyle = {
-  backgroundColor: '#F5F0F8',
+  backgroundColor: brandColors.LIGHT_LILAC,
   cursor: 'pointer',
-  border: '2px solid #9966b8',
+  border: `2px solid ${brandColors.DARK_LILAC}`,
 };
 
 const itemTextStyle = { fontWeight: 'bold' };

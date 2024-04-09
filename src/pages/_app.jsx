@@ -1,4 +1,3 @@
-import '../../assets/self-styles.less';
 import '../../assets/nprogress.css';
 
 import _ from 'lodash';
@@ -25,13 +24,14 @@ import UnauthorizedPage from 'pages/401';
 import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
+import { brandColors } from 'utils/constants';
 
 import 'antd/dist/antd.variable.min.css';
 
 ConfigProvider.config({
   theme: {
-    primaryColor: '#9966b8',
-    infoColor: '#b6007c',
+    primaryColor: brandColors.DARK_LILAC,
+    infoColor: brandColors.STEEL_PINK,
   },
 });
 

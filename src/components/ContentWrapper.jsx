@@ -37,7 +37,7 @@ import { loadUser } from 'redux/actions/user';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
 import { isBrowser, privacyPolicyIsNotAccepted } from 'utils/deploymentInfo';
-import { modules } from 'utils/constants';
+import { modules, brandColors } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import experimentUpdatesHandler from 'utils/experimentUpdatesHandler';
 import integrationTestConstants from 'utils/integrationTestConstants';
@@ -269,7 +269,7 @@ const ContentWrapper = (props) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(315deg, #9966b8 0%, #4c067e 30%, #25003b 100%)',
+        background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
         paddingTop: '10px',
         paddingBottom: '10px',
         pointerEvents: 'none',
@@ -315,7 +315,7 @@ const ContentWrapper = (props) => {
   const SmallLogo = () => (
     <div
       style={{
-        background: 'linear-gradient(315deg, #9966b8 0%, #4c067e 30%, #25003b 100%)',
+        background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
         paddingTop: '8px',
         paddingBottom: '8px',
         pointerEvents: 'none',
@@ -557,7 +557,7 @@ const ContentWrapper = (props) => {
         <Layout style={{ minHeight: '100vh' }}>
           <Sider
             style={{
-              background: '#11001b', overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
+              background: brandColors.BLACK_INDIGO, overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
             }}
             width={210}
             theme='dark'
@@ -571,7 +571,7 @@ const ContentWrapper = (props) => {
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               {collapsed ? <SmallLogo /> : <BigLogo />}
               <Menu
-                style={{ background: '#11001b' }}
+                style={{ background: brandColors.BLACK_INDIGO }}
                 data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
                 theme='dark'
                 selectedKeys={[currentModule]}
