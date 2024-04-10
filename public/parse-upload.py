@@ -14,8 +14,7 @@ from threading import Lock, Event
 from concurrent.futures import wait
 
 PART_SIZE = 5 * 1024 * 1024
-# MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
-MAX_RETRIES = 4 # Max number of retries to upload each PART_SIZE part
+MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
 THREADS_COUNT = 20
 
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
@@ -34,8 +33,6 @@ RESUME_PARAMS_PATH = "resume_params.txt"
 ETAGS_PATH = "part_etags.txt"
 
 CURSOR_UP_ONE = "\x1b[1A" 
-# ERASE_CURRENT_LINE = ""
-# ERASE_UPPER_LINE = ""
 ERASE_CURRENT_LINE = "\x1b[2K"
 ERASE_UPPER_LINE = CURSOR_UP_ONE + ERASE_CURRENT_LINE
 
@@ -122,10 +119,9 @@ def http_post(url, headers, json_data = {}):
 
     try:
         request = urllib.request.Request(url, data=data, headers=headers, method="POST")
-        response = urllib.request.urlopen(request)
 
-        # with urllib.request.urlopen(request) as response:
-        return HTTPResponse(response, response.read())
+        with urllib.request.urlopen(request) as response:
+            return HTTPResponse(response, response.read())
 
     except Exception as e:
         return HTTPResponse(e)
@@ -293,17 +289,14 @@ class FileUploader:
         self.file_id = None
 
     def get_signed_url_for_part(self, part_number):
-        try:
-            response = http_post(
-                f"{base_url}/analysis/{self.analysis_id}/cliUpload/{self.upload_id}/part/{part_number}/signedUrl",
-                {"x-api-token": f"Bearer {self.api_token}"},
-                json_data={"key": self.key},
-            )
-            
-            if response.status_code != 200:
-                raise Exception(f"Failed to get signed url for part {part_number}: {response.text}")
-        except Exception as e:
-            raise e
+        response = http_post(
+            f"{base_url}/analysis/{self.analysis_id}/cliUpload/{self.upload_id}/part/{part_number}/signedUrl",
+            {"x-api-token": f"Bearer {self.api_token}"},
+            json_data={"key": self.key},
+        )
+        
+        if response.status_code != 200:
+            raise Exception(f"Failed to get signed url for part {part_number}: {response.text}")
 
         return response.json()
 
