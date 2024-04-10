@@ -145,7 +145,7 @@ const Pipeline = () => {
           key={key}
           style={{
             display: 'flex',
-            marginBottom: window.innerHeight > 768 ? '0.6vh' : '0',
+            marginBottom: window.innerHeight > 850 ? '0.6vh' : '0',
           }}
         >
           {title && (
@@ -154,7 +154,10 @@ const Pipeline = () => {
             </span>
           )}
           &nbsp;
-          <span style={{ fontSize: '1.4vh' }}>
+          <span style={{
+            fontSize: '1.4vh', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          }}
+          >
             {value || 'Not selected'}
           </span>
         </div>
