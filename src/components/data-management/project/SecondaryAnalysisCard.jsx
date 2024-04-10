@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   Card, Descriptions,
 } from 'antd';
-import { blue } from '@ant-design/colors';
 import { useSelector, useDispatch } from 'react-redux';
 
 import validateInputs, { rules } from 'utils/validateInputs';
@@ -14,6 +13,7 @@ import { deleteSecondaryAnalysis, updateSecondaryAnalysis } from 'redux/actions/
 import ProjectDeleteModal from 'components/data-management/project/ProjectDeleteModal';
 import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
 import _ from 'lodash';
+import { brandColors } from 'utils/constants';
 
 const { Item } = Descriptions;
 
@@ -29,9 +29,9 @@ const inactiveExperimentStyle = {
 };
 
 const activeExperimentStyle = {
-  backgroundColor: blue[0],
+  backgroundColor: brandColors.LIGHT_LILAC,
   cursor: 'pointer',
-  border: `2px solid ${blue.primary}`,
+  border: `2px solid ${brandColors.DARK_LILAC}`,
 };
 
 const itemTextStyle = { fontWeight: 'bold' };

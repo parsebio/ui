@@ -1,33 +1,120 @@
 
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap');
 
+/* Color guide
+
+--ant-primary-color: rgb(153, 102, 184);
+    --ant-primary-color-disabled: #e7ddeb;
+    --ant-primary-color-hover: #b08bc4;
+    --ant-primary-color-active: #734991;
+    --ant-primary-color-outline: rgba(153, 102, 184, 0.2);
+    --ant-primary-color-deprecated-bg: #f4e9f7;
+    --ant-primary-color-deprecated-border: #dad1de;
+    --ant-primary-1: #f4e9f7;
+    --ant-primary-2: #e7ddeb;
+    --ant-primary-3: #dad1de;
+    --ant-primary-4: #c8b6d1;
+    --ant-primary-5: #b08bc4;
+    --ant-primary-6: #9966b8;
+    --ant-primary-7: #734991;
+    --ant-primary-8: #51306b;
+    --ant-primary-9: #311c45;
+    --ant-primary-10: #150c1f;
+    --ant-primary-color-deprecated-l-35: rgb(234, 224, 241);
+    --ant-primary-color-deprecated-l-20: rgb(199, 172, 216);
+    --ant-primary-color-deprecated-t-20: rgb(173, 133, 198);
+    --ant-primary-color-deprecated-t-50: rgb(204, 179, 220);
+    --ant-primary-color-deprecated-f-12: rgba(153, 102, 184, 0.12);
+    --ant-primary-color-active-deprecated-f-30: rgba(244, 233, 247, 0.3);
+    --ant-primary-color-active-deprecated-d-02: rgb(240, 225, 244);
+    --ant-info-color: rgb(182, 0, 124);
+    --ant-info-color-disabled: #e895c2;
+    --ant-info-color-hover: #c21f89;
+    --ant-info-color-active: #8f0066;
+    --ant-info-color-outline: rgba(182, 0, 124, 0.2);
+    --ant-info-color-deprecated-bg: #f5dce9;
+    --ant-info-color-deprecated-border: #db69ac;
+
+*/
+
 * {
     font-family: 'M Plus 2' !important;
 }
 
 a {
-  color: #1677ff !important;
+  color: #1890ff !important;
 }
 
-/* moving between modules resets ConfigProvider */ 
+a.ant-btn{
+  color: #fff !important;
+}
+
+/* Need to change Alert border to steel pink */
+.ant-alert-info {
+  border: 1px solid #b6007c !important;
+}
 
 
-/* Radio buttons are not receiving the ConfigProvider change */ 
+/* Selector on hover (e.g data upload modal) */
 
-/* .ant-radio-checked .ant-radio-inner{
-    border-color: #9966b8 !important ;
-  }
+
+.ant-select-focused:not( .ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector{
+ border-color: #b08bc4 !important; /* primary-hover */
+ box-shadow: 0 0 0 2px rgba(153, 102, 184, 0.2) !important; /* primary-outline */
+}
+
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #b08bc4 !important; /* primary-hover */
+}
+
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: #f4e9f7 !important; /* primary-1 */
+}
+
+/* Number input on hover and focus*/
+
+.ant-input-number:hover{
+ border-color: #b08bc4 !important;
+}
+
+.ant-input-number-focused {
+  border-color: #b08bc4 !important;
+  box-shadow: 0 0 0 2px rgba(153, 102, 184, 0.2) !important;
+}
   
-  .ant-radio-checked .ant-radio-inner:after{
-    background-color: #9966b8  !important;
-  }
-  
-  .ant-radio:hover .ant-radio-inner {
-    border-color: #9966b8 !important;
-  } */
+
+/* Radio buttons */
+ 
+.ant-radio-input:focus + .ant-radio-inner {
+  box-shadow: 0 0 0 3px rgba(153, 102, 184, 0.2) !important;
+}
+
+/* Default state */
+.ant-radio-inner {
+  border-color: rgb(153, 102, 184) !important; /* Using --ant-primary-color */
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important;
+}
+
+.ant-radio-checked .ant-radio-inner:after {
+  background-color: rgb(153, 102, 184) !important; /* Using --ant-primary-color */
+}
+
+/* Hover state */
+.ant-radio:hover .ant-radio-inner,
+.ant-radio-wrapper:hover .ant-radio-inner {
+  border-color: #b08bc4 !important; /* Using --ant-primary-color-hover */
+}
+
+/* Focus state */
+.ant-radio-focused .ant-radio-inner,
+.ant-radio-wrapper:focus .ant-radio-inner,
+.ant-radio-inner:focus {
+  box-shadow: 0 0 0 2px rgba(153, 102, 184, 0.2) !important; /* Using --ant-primary-color-outline */
+}
 
 
-/* Need special color for menu selected and sider trigger */
+/* Selected menu and sider */
+
 .ant-menu-item-selected {
     background-color:#9966b8 !important;
 }
@@ -36,21 +123,30 @@ a {
     background-color: #11001b !important;
 }
 
+
+/* Button changes */
+
 button {
     border-radius: 0.25rem !important;
 }
 
+button.ant-switch {
+  border-radius: 100px !important;
+}
 
-/* Table changes */ 
+/* Gene table  */ 
+
 .even-row .ant-table-cell {
     background-color: #E5E5F1 !important;
-    
 }
 
 .gene-table .ant-table-header .ant-table-cell{
    background-color: #C4BCDC !important;
 }
-/* Highlight changes */
+
+
+/* Highlights */
+
 .ant-tabs-tab-active .ant-tabs-tab-btn{
     color: #4c067e !important;
 }
@@ -59,41 +155,56 @@ button {
 }
 
 
-/* Antd slider 
+/* Slider input */
 
-  
-  .slider-handle-color-focus-shadow {
-    border-color: brown !important;
-    background-color: chartreuse !important;
-    color: red !important;
-    --antd-wave-shadow-color: red !important;
-  }
-  
-  .ant-slider-handle {
-    border-color: brown !important;
-    background-color: rgb(15, 15, 15) !important;
-    box-shadow: 0 0 0 5px  fade(rgb(122, 122, 122),12%);
-    --antd-wave-shadow-color: red !important;
-  }
-  
-  .ant-slider-handle:focus {
-    border-color: brown !important;
-    background-color: rgb(15, 15, 15) !important;
-  
-    --antd-wave-shadow-color: red !important;
-  }
-  .ant-slider-handle-dragging {
-    border-color: brown !important;
-    background-color: chartreuse !important;
-    --antd-wave-shadow-color: red !important;
-    outline: none;
-  }
-  
-  .ant-slider-handle-click-focused:hover {
-    background-color: rgb(0, 0, 0) !important;
-    border: rgb(0, 0, 0) !important;
-    --antd-wave-shadow-color: red !important;
-  }
-  
+/* Slider Handle Default State - The default look of the slider handle */
+.ant-slider-handle {
+  border-color: rgb(153, 102, 184) !important; /* Primary color for border */
+  background-color: #ffffff !important; /* White background for contrast */
 
-*/
+}
+
+/* Slider Handle Focus State - When the handle is focused, typically via keyboard navigation */
+.ant-slider-handle:focus {
+  border-color: rgb(153, 102, 184) !important; /* Primary color for border */
+  background-color: #ffffff !important; /* White background maintained */
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important; /* Keep wave effect color consistent */
+  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important; /* Subtle shadow with primary color */
+}
+
+/* Slider Handle Dragging State - While the handle is being dragged */
+.ant-slider-handle-dragging {
+  border-color: rgb(153, 102, 184) !important; /* Primary color for border */
+  background-color: #ffffff !important; /* White background for visibility */
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important; /* Wave effect color for consistency */
+  outline: none !important; /* Remove default outline to clean up appearance */
+  box-shadow: 0 0 0 5px rgb(153, 102, 184) !important; /* Subtle shadow with primary color */
+}
+
+/* Slider Handle Hover State - When the mouse hovers over the handle */
+.ant-slider-handle:hover {
+  border-color: #b08bc4 !important; /* Lighter primary color for border */
+  background-color: #ffffff !important; /* White background for contrast */
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important; /* Wave effect color for visual feedback */
+  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important; /* Subtle shadow with primary color */
+}
+
+/* Slider Handle Focus and Hover State - Specific for when the handle is focused and hovered over */
+.ant-slider-handle:focus:hover {
+  background-color: #ffffff !important; /* White background for contrast */
+  border-color: rgb(153, 102, 184) !important; /* Primary color for border */
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important; /* Ensuring wave effect color is consistent */
+  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important; /* Subtle shadow with primary color */
+}
+
+.ant-slider-track {
+  background-color: #dad1de !important;
+}
+
+.ant-slider:hover .ant-slider-track {
+  background-color: #b08bc4 !important;
+}
+
+.ant-slider-dot-active {
+  border-color: rgb(204, 179, 220) !important;
+}

@@ -27,14 +27,6 @@ const MultiTileContainer = ({ tileMap, initialArrangement }) => {
 
   return (
     <div style={{ height: '100%', width: '100%', margin: 0 }}>
-      <Radio.Group>
-        <Radio>
-          holahola
-        </Radio>
-        <Radio>
-          chauchau
-        </Radio>
-      </Radio.Group>
       <Mosaic
         dragAndDropManager={dragDropManager}
         renderTile={(id, path) => (
