@@ -173,7 +173,7 @@ const Pipeline = () => {
     return mainScreenDetails({
       name,
       status: <UploadStatusView
-        status={upload.status}
+        status={upload.status.current}
         fileId={sampleLTFile.id}
         secondaryAnalysisId={activeSecondaryAnalysisId}
       />,

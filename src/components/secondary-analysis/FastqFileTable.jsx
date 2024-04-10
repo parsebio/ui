@@ -51,7 +51,7 @@ const FastqFileTable = (props) => {
       width: '25%',
       render: (status, record) => (
         <UploadStatusView
-          status={status}
+          status={status.current}
           progress={record.progress}
           fileId={record.key}
           secondaryAnalysisId={secondaryAnalysisId}

@@ -26,7 +26,8 @@ MAX_RETRIES = 8 # Max number of retries to upload each PART_SIZE part
 # -     staging secondary master: "https://api-secondary-analysis-master.scp-staging.biomage.net/v2"
 # -     staging default: "https://api-default.scp-staging.biomage.net/v2"
 
-default_prod_api_url = "https://api.scp.biomage.net/v2"
+default_prod_api_url = "https://api-secondary-analysis-master.scp-staging.biomage.net/v2"
+# default_prod_api_url = "https://api.scp.biomage.net/v2"
 
 base_url = os.environ.get('PARSE_API_URL') or default_prod_api_url
 
@@ -84,7 +85,7 @@ def with_retry(func, try_number = 0):
         return result
 
 class HTTPResponse:
-    def __init__(self, response, response_data: bytes | None = None) -> None:
+    def __init__(self, response, response_data = None) -> None:
         self._response = response
         self._response_data = response_data
         self._is_error = isinstance(self._response, urllib.error.HTTPError)
