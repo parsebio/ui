@@ -56,7 +56,7 @@ const FastqFileTable = (props) => {
       width: '25%',
       render: (status, record) => (
         <UploadStatusView
-          status={status}
+          status={status.current}
           progress={record.progress}
           fileId={record.key}
           secondaryAnalysisId={secondaryAnalysisId}
@@ -75,7 +75,7 @@ const FastqFileTable = (props) => {
       columns={columns}
       dataSource={dataSource}
       pagination={false}
-      scroll={{ y: 320 }}
+      scroll={{ y: `calc(90vh - ${500}px)` }}
     />
   );
 };

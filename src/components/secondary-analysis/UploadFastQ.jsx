@@ -74,6 +74,7 @@ const UploadFastQ = (props) => {
     try {
       const opts = { multiple: true };
       const handles = await window.showOpenFilePicker(opts);
+      document.getElementById('uploadButton').scrollIntoView({ behavior: 'smooth', block: 'start' });
       return validateAndSetFiles(handles, secondaryAnalysisFiles);
     } catch (err) {
       console.error('Error picking files:', err);
@@ -104,6 +105,8 @@ const UploadFastQ = (props) => {
       return subFiles;
     }));
 
+    document.getElementById('uploadButton').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
     return validateAndSetFiles(newFiles.flat(), secondaryAnalysisFiles);
   };
 
@@ -133,9 +136,9 @@ const UploadFastQ = (props) => {
   }, []);
 
   const generateNewToken = useCallback(async () => {
-    const token = await generateApiToken(tokenExists);
+    const token = await generateApiToken();
     setNewToken(token);
-  }, [tokenExists]);
+  }, []);
 
   useEffect(() => {
     updateApiTokenStatus();
@@ -234,6 +237,7 @@ const UploadFastQ = (props) => {
             </div>
             <Button
               data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+              id='uploadButton'
               type='primary'
               key='create'
               block
