@@ -133,9 +133,9 @@ const UploadFastQ = (props) => {
   }, []);
 
   const generateNewToken = useCallback(async () => {
-    const token = await generateApiToken(tokenExists);
+    const token = await generateApiToken();
     setNewToken(token);
-  }, [tokenExists]);
+  }, []);
 
   useEffect(() => {
     updateApiTokenStatus();
