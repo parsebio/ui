@@ -457,42 +457,46 @@ const Pipeline = () => {
   return (
     <>
       <Header title='Pipeline' />
-      {NewProjectModalVisible && (
-        <NewProjectModal
-          projectType='secondaryAnalyses'
-          onCancel={() => { setNewProjectModalVisible(false); }}
-          onCreate={async (name, description) => {
-            await dispatch(createSecondaryAnalysis(name, description));
-            setCurrentStepIndex(0);
-            setNewProjectModalVisible(false);
-          }}
-        />
-      )}
-      {currentStep && (
-        <Modal
-          open
-          title={currentStep.title}
-          okButtonProps={{ htmlType: 'submit' }}
-          bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
-          style={{ minWidth: '70dvh' }}
-          onCancel={onCancel}
-          footer={[
-            <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
-              Back
-            </Button>,
-            <Button key='submit' type='primary' onClick={onNext}>
-              {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
-            </Button>,
-          ]}
-        >
-          {currentStep.render()}
-        </Modal>
-      )}
+      <div style={{ height: '100vh', overflowY: 'auto' }}>
+        {' '}
+        {/* Add this div with style */}
+        {NewProjectModalVisible && (
+          <NewProjectModal
+            projectType='secondaryAnalyses'
+            onCancel={() => { setNewProjectModalVisible(false); }}
+            onCreate={async (name, description) => {
+              await dispatch(createSecondaryAnalysis(name, description));
+              setCurrentStepIndex(0);
+              setNewProjectModalVisible(false);
+            }}
+          />
+        )}
+        {currentStep && (
+          <Modal
+            open
+            title={currentStep.title}
+            okButtonProps={{ htmlType: 'submit' }}
+            bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
+            style={{ minWidth: '70dvh' }}
+            onCancel={onCancel}
+            footer={[
+              <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
+                Back
+              </Button>,
+              <Button key='submit' type='primary' onClick={onNext}>
+                {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
+              </Button>,
+            ]}
+          >
+            {currentStep.render()}
+          </Modal>
+        )}
 
-      <MultiTileContainer
-        tileMap={TILE_MAP}
-        initialArrangement={windows}
-      />
+        <MultiTileContainer
+          tileMap={TILE_MAP}
+          initialArrangement={windows}
+        />
+      </div>
     </>
   );
 };

@@ -9,56 +9,93 @@ const { Text } = Typography;
 
 const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => (
   <Card style={{ maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }} size='small'>
-    <Row gutter={[16, 16]}>
-      {wizardSteps.map((step, index) => {
-        const spanSize = index < 3 ? 8 : 24; // First three cards have span 8, fourth card has span 24
-        const cardStyle = {
-          height: index !== 3 && '24vh',
-        };
-
-        return (
-          <Col key={step.key} span={spanSize}>
-            <Card
-              bordered
-              style={cardStyle}
-              loading={step.isLoading}
-              size='small'
-              title={(
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Text
-                    strong
-                    style={{
-                      fontSize: '1.62vh',
-                      overflowX: 'auto',
-                    }}
-                  >
-                    {step.key}
-                  </Text>
-                  <div>
-                    {step.isValid ? (
-                      <CheckCircleOutlined style={{ color: 'green', marginLeft: '10px', fontSize: '17px' }} />
-                    ) : (
-                      <CloseCircleOutlined style={{ color: 'red', marginLeft: '10px', fontSize: '17px' }} />
-                    )}
-                  </div>
-                </div>
-              )}
-              extra={editable && (
-                <Button
-                  icon={<EditOutlined />}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setCurrentStep(index);
+    {/* Wrap the first three cards in a div with display: flex */}
+    <div style={{ display: 'flex', marginBottom: '1vh' }}>
+      {wizardSteps.slice(0, 3).map((step, index) => (
+        <Col key={step.key} span={8} style={{ flex: 1, display: 'flex' }}>
+          <Card
+            bordered
+            style={{ width: '100%', marginRight: '1vh' }}
+            loading={step.isLoading}
+            size='small'
+            title={(
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Text
+                  strong
+                  style={{
+                    fontSize: '1.62vh',
+                    overflowX: 'auto',
                   }}
-                  type='link'
-                />
-              )}
-            >
-              {step.renderMainScreenDetails()}
-            </Card>
-          </Col>
-        );
-      })}
+                >
+                  {step.key}
+                </Text>
+                <div>
+                  {step.isValid ? (
+                    <CheckCircleOutlined style={{ color: 'green', marginLeft: '10px', fontSize: '17px' }} />
+                  ) : (
+                    <CloseCircleOutlined style={{ color: 'red', marginLeft: '10px', fontSize: '17px' }} />
+                  )}
+                </div>
+              </div>
+            )}
+            extra={editable && (
+              <Button
+                icon={<EditOutlined />}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setCurrentStep(index);
+                }}
+                type='link'
+              />
+            )}
+          >
+            {step.renderMainScreenDetails()}
+          </Card>
+        </Col>
+      ))}
+    </div>
+    <Row gutter={[16, 16]}>
+      {wizardSteps.slice(3).map((step, index) => (
+        <Col key={step.key} span={24}>
+          <Card
+            bordered
+            loading={step.isLoading}
+            size='small'
+            title={(
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Text
+                  strong
+                  style={{
+                    fontSize: '1.62vh',
+                    overflowX: 'auto',
+                  }}
+                >
+                  {step.key}
+                </Text>
+                <div>
+                  {step.isValid ? (
+                    <CheckCircleOutlined style={{ color: 'green', marginLeft: '10px', fontSize: '17px' }} />
+                  ) : (
+                    <CloseCircleOutlined style={{ color: 'red', marginLeft: '10px', fontSize: '17px' }} />
+                  )}
+                </div>
+              </div>
+            )}
+            extra={editable && (
+              <Button
+                icon={<EditOutlined />}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setCurrentStep(index + 3); // Adjust index for the rest of the cards
+                }}
+                type='link'
+              />
+            )}
+          >
+            {step.renderMainScreenDetails()}
+          </Card>
+        </Col>
+      ))}
     </Row>
   </Card>
 );
