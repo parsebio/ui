@@ -5,6 +5,11 @@ import {
 import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
 import fetchWork from 'utils/work/fetchWork';
 
+import pushNotificationMessage from 'utils/pushNotificationMessage';
+import endUserMessages from 'utils/endUserMessages';
+import handleError from 'utils/http/handleError';
+
+
 const runCellSetsAnnotation = (experimentId, species, tissue) => async (dispatch, getState) => {
   const { error, updatingClustering, loading } = getState().cellSets;
 
@@ -34,13 +39,16 @@ const runCellSetsAnnotation = (experimentId, species, tissue) => async (dispatch
       },
     );
   } catch (e) {
+    const errorMessage = handleError(e, endUserMessages.ERROR_CELL_SETS_ANNOTATION_FAILED);
+    console.log('DISPATCHING cell sets error');
     dispatch({
       type: CELL_SETS_ERROR,
       payload: {
         experimentId,
-        error: e,
+        error: errorMessage,
       },
     });
+    // pushNotificationMessage('error', endUserMessages.ERROR_CELL_SETS_ANNOTATION_FAILED);
   }
 };
 

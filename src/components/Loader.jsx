@@ -52,15 +52,24 @@ const fastLoad = (message) => (
 );
 
 const Loader = ({ experimentId }) => {
+  console.log('DEB Loader component rendered with experimentId:', experimentId);
+
   const backendStatus = useSelector((state) => state.backendStatus);
+  console.log('DEB backendStatus:', backendStatus);
+
   const workerInfo = backendStatus?.[experimentId]?.status?.worker;
+  console.log('DEB workerInfo:', workerInfo);
+
 
   const { data: workerStatus } = useSWR(
     () => (experimentId ? `/v2/experiments/${experimentId}/backendStatus` : null),
     fetchAPI,
   );
+  console.log('DEB workerStatus:', workerStatus);
+
 
   if (!workerStatus) {
+    console.log('DEB Displaying fastLoad: Assigning a worker to your analysis');
     return (
       <div>
         {fastLoad('Assigning a worker to your analysis')}
@@ -69,6 +78,8 @@ const Loader = ({ experimentId }) => {
   }
 
   if (workerInfo && workerInfo.userMessage) {
+    console.log('DEB Displaying fastLoad with userMessage:', workerInfo.userMessage);
+
     const { userMessage } = workerInfo;
     return (
       <div>
@@ -78,7 +89,10 @@ const Loader = ({ experimentId }) => {
   }
 
   const { worker: { started, ready } } = workerStatus;
+  console.log('DEB Worker status - started:', started, 'ready:', ready);
+
   if (started && ready) {
+    console.log('DEB Displaying fastLoad: Assigning a worker to your analysis (worker started and ready)');
     return (
       <div>
         {fastLoad('Assigning a worker to your analysis')}
@@ -86,6 +100,7 @@ const Loader = ({ experimentId }) => {
     );
   }
 
+  console.log('DEB Displaying slowLoad');
   return (
     <div>
       {slowLoad()}

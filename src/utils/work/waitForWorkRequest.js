@@ -70,6 +70,8 @@ const waitForWorkRequest = async (
     // related to the current experiment. We extend the timeout because we know
     // the worker is alive and was working on another request of our experiment
     io.on(`Heartbeat-${experimentId}`, (message) => {
+      console.log('DEB Received heartbeat message:', message);
+
       const newTimeoutDate = getTimeoutDate(timeout);
 
       if (newTimeoutDate < workerTimeoutDate) {

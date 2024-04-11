@@ -24,6 +24,7 @@ const experimentUpdatesHandler = (dispatch) => (experimentId, update) => {
 
   if (update.response?.error) {
     console.error('Experiment updates error:', update);
+    console.log('UPDATE TYPE:', update.type);
 
     // QC can handle updates even if there are errors
     if (update.type !== updateTypes.QC) return;
@@ -102,9 +103,22 @@ const onWorkResponseUpdate = (update, dispatch, experimentId) => {
   } = update;
 
   if (['ClusterCells', 'ScTypeAnnotate'].includes(workRequestName)) {
+    console.log('DEB ScTypeAnnotate is running or finished:', update);
     dispatch(updateCellSetsClustering(experimentId));
     pushNotificationMessage('success', cellSetsUpdatedMessages[workRequestName]);
   }
+
+  // else if (['ClusterCells', 'ScTypeAnnotate'].includes(workRequestName) && update.response?.error) {
+  //   console.log('DEB ScTypeAnnotate has failed:', update);
+  //   dispatch({
+  //     type: 'CELL_SETS_ERROR',
+  //     payload: {
+  //       error: true,
+  //       errorMessage: update.errorMessage || 'ScTypeAnnotate task failed.',
+  //     },
+  //   });
+  //   pushNotificationMessage('error', endUserMessages.ERROR_CELL_SETS_ANNOTATION_FAILED);
+  // }
 
   if (workRequestName === 'GetExpressionCellSets') {
     dispatch(loadCellSets(experimentId, true));

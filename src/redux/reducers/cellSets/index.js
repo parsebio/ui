@@ -66,6 +66,7 @@ const cellSetsReducer = (state = initialState, action) => {
       return cellSetsClusteringUpdated(state, action);
     }
     case CELL_SETS_ERROR: {
+      console.log('CELL_SETS_ERROR action received in cellSetsReducer', action);
       return cellSetsError(state, action);
     }
     case EXPERIMENT_SETTINGS_QC_START: {
