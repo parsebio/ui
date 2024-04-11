@@ -50,7 +50,7 @@ const UploadFastQ = (props) => {
 
     const validators = [
       { validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'), rejectReason: endUserMessages.ERROR_HIDDEN_FILE },
-      { validate: (file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'), rejectReason: endUserMessages.ERROR_NOT_FASTQ },
+      { validate: (file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz') || file.name.endsWith('.fq.gz'), rejectReason: endUserMessages.ERROR_NOT_FASTQ },
       { validate: (file) => !alreadyUploadedFiles.includes(file.name), rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED },
     ];
 

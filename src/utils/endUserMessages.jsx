@@ -46,7 +46,7 @@ export default {
   ERROR_MULTIPLE_SLT_FILES: 'More than one Sample Loading Table was selected, only one will be used.',
   ERROR_FAILED_SLT_FILE: 'Sample Loading Table must be a valid excel .xlsm file',
   ERROR_HIDDEN_FILE: 'Files starting with "." or "MACOSX" are hidden or system.',
-  ERROR_NOT_FASTQ: 'Not a .fastq or .fastq.gz file.',
+  ERROR_NOT_FASTQ: 'Not a ".fastq", ".fastq.gz" or ".fq.gz" file.',
   ERROR_ALREADY_UPLOADED: 'File already uploaded.',
   FEEDBACK_ERROR: 'We couldn\'t process your feedback. Please try submitting again.',
   FEEDBACK_SUCCESSFUL: 'Your feedback has been successfully sent. Thank you!',
