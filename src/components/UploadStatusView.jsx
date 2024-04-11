@@ -57,6 +57,15 @@ const UploadStatusView = ({
       </div>
     );
   }
+  if (status === UploadStatus.EXPIRED) {
+    return (
+      <Tooltip title='Fastq files expire after 30 days. Delete or re-upload expired files to run the pipeline.'>
+        <div style={uploadDivStyle}>
+          <Text type='danger'>{messageForStatus(status)}</Text>
+        </div>
+      </Tooltip>
+    );
+  }
 
   if ([UploadStatus.UPLOADING_FROM_CLI, UploadStatus.QUEUED].includes(status)) {
     return (
