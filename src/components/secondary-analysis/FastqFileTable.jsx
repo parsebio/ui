@@ -30,7 +30,7 @@ const FastqFileTable = (props) => {
           {text}
           {' '}
           {canEditTable && (
-            record.status !== UploadStatus.EXPIRED ? (
+            record.status.current !== UploadStatus.EXPIRED ? (
               <Popconfirm
                 title='Are you sure you want to delete this file?'
                 onConfirm={() => handleDelete(record.key)}
