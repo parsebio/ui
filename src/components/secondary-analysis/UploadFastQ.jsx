@@ -55,7 +55,7 @@ const UploadFastQ = (props) => {
         rejectReason: endUserMessages.ERROR_HIDDEN_FILE,
       },
       {
-        validate: (file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz') || file.name.endsWith('.fq') || file.name.endsWith('.fq.gz'),
+        validate: (file) => ['.fastq', '.fastq.gz', '.fq', '.fq.gz'].some((ext) => file.name.endsWith(ext)),
         rejectReason: endUserMessages.ERROR_NOT_FASTQ,
       },
       {
