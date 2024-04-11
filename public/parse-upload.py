@@ -459,7 +459,7 @@ def prepare_upload(args) -> UploadTracker:
 
         # Check that the files look like fastqs
         for file in files:
-            if (not file.endswith(".fastq.gz") or not file.endswith(".fq.gz")):
+            if (not file.endswith(".fastq.gz") and not file.endswith(".fq.gz")):
                 raise Exception(f"File {file} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported")
 
         upload_tracker = UploadTracker.fromScratch(args.run_id, files, args.token)
