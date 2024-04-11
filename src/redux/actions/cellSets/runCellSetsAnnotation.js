@@ -5,14 +5,11 @@ import {
 import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
 import fetchWork from 'utils/work/fetchWork';
 
-<<<<<<< Updated upstream
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
 import handleError from 'utils/http/handleError';
 
-=======
 import updateCellSetsClustering from 'redux/actions/cellSets/updateCellSetsClustering';
->>>>>>> Stashed changes
 
 const runCellSetsAnnotation = (experimentId, species, tissue) => async (dispatch, getState) => {
   const { error, updatingClustering, loading } = getState().cellSets;
@@ -52,13 +49,9 @@ const runCellSetsAnnotation = (experimentId, species, tissue) => async (dispatch
         error: errorMessage,
       },
     });
-<<<<<<< Updated upstream
-    // pushNotificationMessage('error', endUserMessages.ERROR_CELL_SETS_ANNOTATION_FAILED);
-=======
 
     // To set the clustering status back to false
     dispatch(updateCellSetsClustering(experimentId));
->>>>>>> Stashed changes
   }
 };
 
