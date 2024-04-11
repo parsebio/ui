@@ -57,11 +57,11 @@ const UploadStatusView = ({
       </div>
     );
   }
-  if (status.current === UploadStatus.EXPIRED) {
+  if (status === UploadStatus.EXPIRED) {
     return (
       <Tooltip title='Files expire after 30 days. Please delete all expired files to proceed with running the pipeline.'>
         <div style={uploadDivStyle}>
-          <Text type='danger'>{messageForStatus(status.current)}</Text>
+          <Text type='danger'>{messageForStatus(status)}</Text>
         </div>
       </Tooltip>
     );

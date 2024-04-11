@@ -19,7 +19,7 @@ const FastqFileTable = (props) => {
     status: file.upload.status,
     progress: file.upload.percentProgress,
   }));
-  console.log('FIELS ARE ', files);
+
   const columns = [
     {
       title: 'File Name',
@@ -32,7 +32,7 @@ const FastqFileTable = (props) => {
           {canEditTable && (
             record.status !== UploadStatus.EXPIRED ? (
               <Popconfirm
-                title='Are you sure to delete this file?'
+                title='Are you sure you want to delete this file?'
                 onConfirm={() => handleDelete(record.key)}
                 okText='Yes'
                 cancelText='No'
@@ -40,7 +40,7 @@ const FastqFileTable = (props) => {
                 <DeleteOutlined style={{ color: 'red' }} />
               </Popconfirm>
             ) : (
-              <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} onClick={() => handleDelete(record.key)} />
+              <DeleteOutlined style={{ color: 'red' }} onClick={() => handleDelete(record.key)} />
             )
           )}
         </div>
