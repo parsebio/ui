@@ -46,12 +46,22 @@ const UploadFastQ = (props) => {
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
   const validateAndSetFiles = async (fileHandlesList, secondaryAnalysisFilesUpdated) => {
-    const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated).map((item) => item.name);
+    const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated)
+      .map((item) => item.name);
 
     const validators = [
-      { validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'), rejectReason: endUserMessages.ERROR_HIDDEN_FILE },
-      { validate: (file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'), rejectReason: endUserMessages.ERROR_NOT_FASTQ },
-      { validate: (file) => !alreadyUploadedFiles.includes(file.name), rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED },
+      {
+        validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'),
+        rejectReason: endUserMessages.ERROR_HIDDEN_FILE,
+      },
+      {
+        validate: (file) => ['.fastq', '.fastq.gz', '.fq', '.fq.gz'].some((ext) => file.name.endsWith(ext)),
+        rejectReason: endUserMessages.ERROR_NOT_FASTQ,
+      },
+      {
+        validate: (file) => !alreadyUploadedFiles.includes(file.name),
+        rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
+      },
     ];
 
     const invalidFiles = [];
