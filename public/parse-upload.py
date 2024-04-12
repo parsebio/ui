@@ -50,7 +50,7 @@ def get_resume_params_from_file():
 
         if len(lines) != 6:
             raise Exception(
-                f"Resume files {RESUME_PARAMS_PATH} corrupted. You can delete the files that didn't finish and upload them without resume"
+                f"Resume files {RESUME_PARAMS_PATH} corrupted. You can delete the files that didn't finish through the browser and upload them again without resume"
             )
 
         analysis_id = lines[0]
@@ -531,12 +531,12 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
 
         if response.status_code == 409:
             raise Exception(
-                f"File {file_path} already exists in the run, please remove the existing one before uploading a new one"
+                f"File {file_path} already exists in the run. Please remove the existing one from the platform using the browser before uploading this file"
             )
         if response.status_code == 404:
             raise Exception(f"Error 404: Not found")
 
-        raise Exception(f"Failed to begin upload for file {file_path}, please check your files and internet connection and try again by resuming the upload\nIf the problem persists try restarting")
+        raise Exception(f"Failed to begin upload for file {file_path}, please check your files and internet connection and try again by resuming the upload\nIf the problem persists try starting the upload again from the beginning")
 
     upload_params = response.json()
 
