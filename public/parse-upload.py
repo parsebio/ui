@@ -367,7 +367,7 @@ class FileUploader:
 
         if response.status_code != 200:
             raise Exception(
-                f"Failed to upload a part of the file to our servers"
+                f"Failed to begin upload of part of the file to our servers, check your internet connection and try resuming the upload"
             )
 
         return response.json()
