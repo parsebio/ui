@@ -100,7 +100,9 @@ class HTTPResponse:
 
     @property
     def text(self):
-        return self._response.reason
+        if (hasattr(self._response, 'reason')):
+            return self._response.reason
+        return str(self._response)
 
     @property
     def headers(self):
@@ -522,6 +524,11 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
     )
 
     if response.status_code != 200:
+        if response.status_code == 401:
+            raise Exception(
+                f"Not authorized to upload files to this run, please verify your --run_id and --token"
+            )
+
         if response.status_code == 409:
             raise Exception(
                 f"File {file_path} already exists in the pipeline, please remove the existing one before uploading a new one"
