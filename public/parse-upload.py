@@ -534,7 +534,7 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
                 f"File {file_path} already exists in the run, please remove the existing one before uploading a new one"
             )
         if response.status_code == 404:
-            raise Exception(f"Analysis {analysis_id} not found")
+            raise Exception(f"Error 404: Not found")
 
         raise Exception(f"Failed to begin upload for file {file_path}, please check your files and internet connection and try again by resuming the upload\nIf the problem persists try restarting")
 
