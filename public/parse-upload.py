@@ -675,7 +675,7 @@ def main():
         "--file",
         nargs="*",
         required=False,
-        help="A space-separated list of files. You can also select many files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
+        help="A space-separated list of files. You can also select multiple files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
     )
     parser.add_argument(
         "-tc",
