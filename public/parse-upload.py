@@ -609,7 +609,7 @@ def show_files_to_upload_warning(file_paths):
 def prepare_upload(args):
     # Check minimum required python version is available
     #
-    if sys.version_info < (3, 6) or (sys.version_info.major < 3 or sys.version_info.minor < 6):
+    if sys.version_info < (3, 6):
         raise Exception(
             "This script requires Python 3.6 or later. You are using Python {}.{}.{}".format(
                 sys.version_info.major, sys.version_info.minor, sys.version_info.micro
