@@ -23,7 +23,7 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
     const files = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
 
     const filesForRedux = await Promise.all(files
-      // If the file upload status is 'uploading' in sql, we need to store something else in redux
+      // If the file upload status is 'uploading' or 'queued' in sql, we need to store something else in redux
       // since that status is not correct if the upload is not performed in this case
       .filter((file) => ![UPLOADING, QUEUED].includes(filesInRedux[file.id]?.upload?.status.current))
       .map(async (file) => {
