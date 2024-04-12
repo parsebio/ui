@@ -51,7 +51,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     setReports(sortedHtmlUrls);
 
     const defaultReport = 'all-sample_analysis_summary.html';
-    const defaultReportKey = defaultReport in htmlUrls ? defaultReport : Object.keys(htmlUrls)[0];
+    const defaultReportKey = defaultReport in sortedHtmlUrls ? defaultReport : Object.keys(sortedHtmlUrls)[0];
     setSelectedReport(defaultReportKey);
   }, [secondaryAnalysisId]);
 
