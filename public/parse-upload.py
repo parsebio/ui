@@ -367,7 +367,7 @@ class FileUploader:
 
         if response.status_code != 200:
             raise Exception(
-                f"Failed to get signed url for part {part_number}: {response.text}"
+                f"Failed to upload a part of the file to our servers"
             )
 
         return response.json()
