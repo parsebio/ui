@@ -9,7 +9,9 @@ import cache from 'utils/cache';
 const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, getState) => {
   const filesInRedux = getState().secondaryAnalyses[secondaryAnalysisId].files?.data ?? {};
 
-  const { PAUSED, DROP_AGAIN, UPLOADING } = UploadStatus;
+  const {
+    PAUSED, DROP_AGAIN, UPLOADING, QUEUED,
+  } = UploadStatus;
   try {
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADING,
@@ -25,7 +27,7 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
       // since that status is not correct if the upload is not performed in this case
       .filter((file) => filesInRedux[file.id]?.upload?.status.current !== UPLOADING)
       .map(async (file) => {
-        if (file.upload.status === UPLOADING) {
+        if ([UPLOADING, QUEUED].includes(file.upload.status)) {
           const isFileInCache = await cache.get(file.id);
 
           file.upload.status = isFileInCache ? PAUSED : DROP_AGAIN;
