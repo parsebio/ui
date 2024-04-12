@@ -340,6 +340,7 @@ const UploadFastQ = (props) => {
           <Divider />
           <Text>
             To perform a command-line upload, download this script:
+            <div>HOALHOLA</div>
             <br />
             <a href='/parse-upload.py' download>parse-upload.py</a>
             <br />
