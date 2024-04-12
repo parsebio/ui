@@ -531,7 +531,7 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
 
         if response.status_code == 409:
             raise Exception(
-                f"File {file_path} already exists in the pipeline, please remove the existing one before uploading a new one"
+                f"File {file_path} already exists in the run, please remove the existing one before uploading a new one"
             )
         if response.status_code == 404:
             raise Exception(f"Analysis {analysis_id} not found")
