@@ -43,14 +43,14 @@ def wipe_file(file_path):
 
 def get_resume_params_from_file():
     if not os.path.exists(RESUME_PARAMS_PATH):
-        raise Exception(f"No resume params file {RESUME_PARAMS_PATH} found")
+        raise Exception(f"No resume parameters file {RESUME_PARAMS_PATH} found, try beginning a new upload")
 
     with open(RESUME_PARAMS_PATH, "r") as file:
         lines = file.read().splitlines()
 
         if len(lines) != 6:
             raise Exception(
-                f"Resume params file {RESUME_PARAMS_PATH} corrupted. Delete the files that didn't finish and upload them without resume"
+                f"Resume files {RESUME_PARAMS_PATH} corrupted. You can delete the files that didn't finish and upload them without resume"
             )
 
         analysis_id = lines[0]
@@ -94,7 +94,7 @@ class HTTPResponse:
 
     def json(self):
         if self._response_data == None:
-            raise Exception("No data to parse into json")
+            raise Exception("Internal error, please try again.")
 
         return json.loads(self._response_data)
 
