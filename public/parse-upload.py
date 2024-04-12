@@ -607,6 +607,12 @@ def show_files_to_upload_warning(file_paths):
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
+    # Check minimum required python version is available
+    if sys.version_info.major < 3 or sys.version_info.minor < 6:
+        raise Exception(
+            f"This script requires Python 3.6 or later. You are using Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+        )
+
     non_resumable_args = args.run_id or args.file
 
     if non_resumable_args and args.resume:
