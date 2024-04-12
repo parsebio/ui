@@ -320,10 +320,6 @@ const UploadFastQ = (props) => {
                       </Text>
                     }
                   </Text>
-                  <br />
-                  <Text>
-                    {'Don\'t forget to save this token as it will not be displayed again.'}
-                  </Text>
                 </>
               )}
             />
