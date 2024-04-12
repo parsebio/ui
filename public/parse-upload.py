@@ -610,7 +610,7 @@ def prepare_upload(args):
     # Check minimum required python version is available
     if sys.version_info < (3, 6):
         raise Exception(
-            "This script requires Python 3.6 or later. You are using Python {}.{}.{}".format(
+            "This script requires Python 3.6 or later. You are using Python {}.{}.{}. Upgrade your python version to 3.6 or higher and try again.".format(
                 sys.version_info.major, sys.version_info.minor, sys.version_info.micro
             )
         )
