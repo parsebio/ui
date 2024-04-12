@@ -608,7 +608,6 @@ def show_files_to_upload_warning(file_paths):
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
     # Check minimum required python version is available
-    #
     if sys.version_info < (3, 6):
         raise Exception(
             "This script requires Python 3.6 or later. You are using Python {}.{}.{}".format(
