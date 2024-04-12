@@ -529,7 +529,7 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
         if response.status_code == 404:
             raise Exception(f"Analysis {analysis_id} not found")
 
-        raise Exception(f"Failed to begin upload for file {file_path}: {response.text}")
+        raise Exception(f"Failed to begin upload for file {file_path}, please check your files and internet connection and try again by resuming the upload\nIf the problem persists try restarting")
 
     upload_params = response.json()
 
