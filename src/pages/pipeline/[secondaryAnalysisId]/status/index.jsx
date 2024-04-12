@@ -22,6 +22,7 @@ import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
 import { loadExperiments, switchExperiment } from 'redux/actions/experiments';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
+import naturalSort from 'javascript-natural-sort';
 
 import { DownOutlined, WarningOutlined } from '@ant-design/icons';
 
@@ -39,7 +40,16 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const setupReports = useCallback(async () => {
     const htmlUrls = await getReports(secondaryAnalysisId);
 
-    setReports(htmlUrls);
+    // natural sort reports
+    const sortedKeys = Object.keys(htmlUrls).sort(naturalSort);
+
+    const sortedHtmlUrls = sortedKeys.reduce((obj, key) => {
+      obj[key] = htmlUrls[key];
+      return obj;
+    }, {});
+
+    setReports(sortedHtmlUrls);
+
     const defaultReport = 'all-sample_analysis_summary.html';
     const defaultReportKey = defaultReport in htmlUrls ? defaultReport : Object.keys(htmlUrls)[0];
     setSelectedReport(defaultReportKey);
@@ -58,11 +68,11 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const outputDownloadParams = useMemo(() => ({
     all: {
       uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/allOutputFiles`,
-      fileName: 'all_files.zip'
+      fileName: 'all_files.zip',
     },
     combined: {
       uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/combinedOutput`,
-      fileName: 'combined_output.zip'
+      fileName: 'combined_output.zip',
     },
   }), [secondaryAnalysisId]);
 
