@@ -17,7 +17,6 @@ import {
 
 import { loadCellSets } from 'redux/actions/cellSets';
 
-import Header from 'components/Header';
 import PlotContainer from 'components/plots/PlotContainer';
 import Loader from 'components/Loader';
 

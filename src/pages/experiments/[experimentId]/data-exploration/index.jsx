@@ -6,7 +6,6 @@ import {
 import { DownOutlined, PictureOutlined, ToolOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
-import Header from 'components/Header';
 
 import CellSetsTool from 'components/data-exploration/cell-sets-tool/CellSetsTool';
 import GeneListTool from 'components/data-exploration/gene-list-tool/GeneListTool';

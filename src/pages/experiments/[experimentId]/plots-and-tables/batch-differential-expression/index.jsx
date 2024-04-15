@@ -12,7 +12,7 @@ import {
   Alert,
   PageHeader,
 } from 'antd';
-import Header from 'components/Header';
+
 import { getCellSetsHierarchyByType, getCellSets, getCellSetsHierarchyByKeys } from 'redux/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadCellSets } from 'redux/actions/cellSets';

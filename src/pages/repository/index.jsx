@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadExampleExperiments } from 'redux/actions/experiments';
-import Header from 'components/Header';
+
 import RepositoryTable from 'components/repository/RepositoryTable';
 
 const RepositoryPage = () => {

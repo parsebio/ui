@@ -10,7 +10,7 @@ import {
 import MultiViewGrid from 'components/plots/MultiViewGrid';
 
 import SelectData from 'components/plots/styling/embedding-continuous/SelectData';
-import Header from 'components/Header';
+
 import PlotContainer from 'components/plots/PlotContainer';
 import { loadGeneExpression } from 'redux/actions/genes';
 

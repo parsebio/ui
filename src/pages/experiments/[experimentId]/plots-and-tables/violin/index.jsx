@@ -10,7 +10,7 @@ import {
   updatePlotConfig,
 } from 'redux/actions/componentConfig/index';
 import { loadCellSets } from 'redux/actions/cellSets';
-import Header from 'components/Header';
+
 import PlotContainer from 'components/plots/PlotContainer';
 import ViolinPlotMain from 'components/plots/ViolinPlotMain';
 import { getCellSets, getPlotConfigs } from 'redux/selectors';

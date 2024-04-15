@@ -4,18 +4,21 @@ import {
   Dropdown,
   Input,
   Space,
+  List,
 } from 'antd';
-import { CommentOutlined, DownOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, CaretRightOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import fetchAPI from 'utils/http/fetchAPI';
 import Auth from '@aws-amplify/auth';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
+import PropTypes from 'prop-types';
 
 const { TextArea } = Input;
 
-const FeedbackButton = () => {
+const FeedbackButton = (props) => {
+  const { collapsed } = props;
   const [visible, setVisible] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
 
@@ -104,10 +107,71 @@ const FeedbackButton = () => {
     }
   };
 
+  /*
+For help using the platform, check out:
+user guide
+tutorial videos
+free single cell RNA-seq data analysis course
+For 1-to-1 support from a member of our team, send a message using the box below:
+
+        <Card size='small' style={{ padding: '1em', width: '265px' }}>
+          Ask questions about how to use Cellenics and make feature requests on the
+          {' '}
+          <a href='https://community.biomage.net/' target='_blank' rel='noreferrer'>Cellenics community forum</a>
+          !
+          The Biomage team will reply to your message as soon as possible.
+          <br />
+          <br />
+          Check out the
+          {' '}
+          <a href='https://www.biomage.net/user-guide' target='_blank' rel='noreferrer'>
+            user guide
+            {' '}
+          </a>
+          and
+          {' '}
+          <a href='https://www.youtube.com/@biomageltd4616/featured' target='_blank' rel='noreferrer'> tutorial videos </a>
+          <br />
+        </Card>
+
+*/
+
+  const links = [
+    {
+      text: 'User guide',
+      url: 'https://www.biomage.net/user-guide',
+    },
+    {
+      text: 'Tutorial videos',
+      url: 'https://www.youtube.com/@biomageltd4616/featured',
+    },
+    {
+      text: 'Free single cell RNA-seq data analysis course',
+      url: 'https://courses.biomage.net',
+    },
+  ];
+
   const menuItems = [
     {
       label: (
-        <Card size='small'>
+        <Card size='small' style={{ padding: '0.5em', width: '300px' }}>
+          For help using the platform, check out:
+          <List
+            itemLayout='vertical'
+            dataSource={links}
+            style={{ marginLeft: '2em' }} // Adding padding without using px
+            split={false}
+            renderItem={(item) => (
+              <List.Item>
+                <CaretRightOutlined />
+                <a href={item.url} target='_blank' rel='noreferrer'>{item.text}</a>
+              </List.Item>
+            )}
+          />
+          <br />
+          For 1-to-1 support from a member of our team, send a message using the box below:
+          <br />
+          <br />
           <Space direction='vertical' style={{ width: '100%' }}>
             <TextArea
               value={feedbackText}
@@ -116,10 +180,10 @@ const FeedbackButton = () => {
               }}
               rows={4}
               placeholder='Please write your message here to provide feedback or report issues on Cellenics. A member of our team will get back to you as soon as possible.'
-              bordered={false}
+              bordered
               ref={(ref) => { if (ref) { ref.focus(); } }}
               style={{
-                resize: 'none', width: 300, border: 'none', outline: 'none',
+                resize: 'none', width: 300, outline: 'none',
               }}
             />
             <Space>
@@ -132,21 +196,22 @@ const FeedbackButton = () => {
       key: 'feedback-button-contents',
     },
   ];
-
   return (
     <Dropdown
       open={visible}
       onOpenChange={(v) => setVisible(v)}
       menu={{ items: menuItems }}
-      placement='bottomRight'
+      placement='topRight'
       trigger='click'
     >
-      <Button type='dashed' icon={<CommentOutlined />}>
-        Feedback or issues?
-        <DownOutlined />
+      <Button type='text' icon={<QuestionCircleOutlined />} style={{ color: 'hsla(0, 0%, 100%, .65)' }}>
+        {!collapsed && 'Support'}
       </Button>
     </Dropdown>
   );
+};
+FeedbackButton.propTypes = {
+  collapsed: PropTypes.bool.isRequired,
 };
 
 export default FeedbackButton;

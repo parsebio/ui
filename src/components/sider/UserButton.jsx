@@ -70,7 +70,7 @@ const UserButton = () => {
   ];
 
   return user ? (
-    <Dropdown menu={{ items: menuItems }} trigger={['click']}>
+    <Dropdown menu={{ items: menuItems }} trigger={['click']} placement='topRight'>
       <Button
         aria-label='User settings'
         type='text'

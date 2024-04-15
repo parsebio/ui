@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm,
 } from 'antd';
-import Header from 'components/Header';
+
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';

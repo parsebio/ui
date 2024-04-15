@@ -49,6 +49,10 @@ a.ant-btn{
   color: #fff !important;
 }
 
+.ant-btn-text:hover {
+  color: #fff !important;
+}
+
 /* Need to change Alert border to steel pink */
 .ant-alert-info {
   border: 1px solid #b6007c !important;
@@ -59,7 +63,7 @@ a.ant-btn{
   border: 1px solid #b6007c !important;
 }
 
-/* Plots and tables cards */ 
+/* Plots and tables cards */
 
 .ant-card-hoverable:hover {
   box-shadow: 0 1px 2px -2px rgba(153, 102, 184,.16), 0 3px 6px 0 rgba(153, 102, 184,.12), 0 5px 12px 4px rgba(153, 102, 184,.09) !important;
@@ -101,10 +105,10 @@ a.ant-btn{
   border-color: #b08bc4 !important;
   box-shadow: 0 0 0 2px rgba(153, 102, 184, 0.2) !important;
 }
-  
+
 
 /* Radio buttons */
- 
+
 .ant-radio-input:focus + .ant-radio-inner {
   box-shadow: 0 0 0 3px rgba(153, 102, 184, 0.2) !important;
 }
@@ -154,7 +158,7 @@ button.ant-switch {
   border-radius: 100px !important;
 }
 
-/* Gene table  */ 
+/* Gene table  */
 
 .even-row .ant-table-cell {
     background-color: #E5E5F1 !important;

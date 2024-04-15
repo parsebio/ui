@@ -10,7 +10,7 @@ import utc from 'dayjs/plugin/utc';
 import _ from 'lodash';
 import ExportAsCSV from 'components/plots/ExportAsCSV';
 import PropTypes from 'prop-types';
-import Header from 'components/Header';
+
 import PlotContainer from 'components/plots/PlotContainer';
 import { Vega } from 'react-vega';
 

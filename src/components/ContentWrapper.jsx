@@ -47,6 +47,10 @@ import { DndProvider } from 'react-dnd';
 import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
+import FeedbackButton from './sider/FeedbackButton';
+import ReferralButton from './sider/ReferralButton';
+import UserButton from './sider/UserButton';
+
 const { Sider } = Layout;
 const { Text } = Typography;
 const { Item, SubMenu, ItemGroup } = Menu;
@@ -581,6 +585,13 @@ const ContentWrapper = (props) => {
               >
                 {menuItems}
               </Menu>
+              <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: 'center' }}>
+                <FeedbackButton collapsed={collapsed} />
+                <ReferralButton collapsed={collapsed} />
+                <div style={{ margin: '0.5em 0' }}>
+                  <UserButton />
+                </div>
+              </div>
             </div>
 
           </Sider>

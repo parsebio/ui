@@ -7,7 +7,6 @@ import {
 } from 'antd';
 import { useRouter } from 'next/router';
 
-import Header from 'components/Header';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';

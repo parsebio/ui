@@ -18,7 +18,7 @@ import { loadPaginatedGeneProperties } from 'redux/actions/genes';
 import { loadCellSets } from 'redux/actions/cellSets';
 import SelectData from 'components/plots/styling/SelectData';
 import MarkerGeneSelection from 'components/plots/styling/MarkerGeneSelection';
-import Header from 'components/Header';
+
 import PlotContainer from 'components/plots/PlotContainer';
 import Loader from 'components/Loader';
 import ExportAsCSV from 'components/plots/ExportAsCSV';

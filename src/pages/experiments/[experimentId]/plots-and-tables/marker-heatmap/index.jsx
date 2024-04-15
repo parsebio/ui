@@ -20,7 +20,7 @@ import HeatmapMetadataTracksSettings from 'components/data-exploration/heatmap/H
 import MarkerGeneSelection from 'components/plots/styling/MarkerGeneSelection';
 import loadProcessingSettings from 'redux/actions/experimentSettings/processingConfig/loadProcessingSettings';
 import { updatePlotConfig, loadPlotConfig } from 'redux/actions/componentConfig';
-import Header from 'components/Header';
+
 import PlotContainer from 'components/plots/PlotContainer';
 import { generateSpec } from 'utils/plotSpecs/generateHeatmapSpec';
 import { loadDownsampledGeneExpression, loadMarkerGenes } from 'redux/actions/genes';

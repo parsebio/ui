@@ -13,7 +13,6 @@ import {
 } from 'antd';
 import Link from 'next/link';
 
-import Header from 'components/Header';
 import Loader from 'components/Loader';
 import PlatformError from 'components/PlatformError';
 import FrequencyPlot from 'components/plots/FrequencyPlot';
