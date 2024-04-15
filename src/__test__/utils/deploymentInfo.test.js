@@ -57,42 +57,7 @@ describe('deploymentInfo', () => {
 
       expect(ssrGetDeploymentInfo()).toEqual({
         environment: Environment.DEVELOPMENT,
-        domainName: DomainName.HMS,
-      });
-    });
-
-    it('Works with prod k8s env in hms domain', () => {
-      process.env = {
-        NODE_ENV: Environment.PRODUCTION,
-        K8S_ENV: Environment.PRODUCTION,
-        DOMAIN_NAME: DomainName.HMS,
-      };
-
-      expect(ssrGetDeploymentInfo()).toEqual({
-        environment: Environment.PRODUCTION,
-        domainName: DomainName.HMS,
-      });
-    });
-
-    it('Works with staging k8s env in hms staging domain', () => {
-      process.env = {
-        NODE_ENV: Environment.PRODUCTION,
-        K8S_ENV: Environment.STAGING,
-        DOMAIN_NAME: DomainName.HMS_STAGING,
-      };
-
-      expect(ssrGetDeploymentInfo()).toEqual({
-        environment: Environment.STAGING,
-        domainName: DomainName.HMS_STAGING,
-      });
-    });
-
-    it('Works in development for hms', () => {
-      process.env = { NODE_ENV: Environment.DEVELOPMENT, DEV_ACCOUNT: 'HMS' };
-
-      expect(ssrGetDeploymentInfo()).toEqual({
-        environment: Environment.DEVELOPMENT,
-        domainName: DomainName.HMS,
+        domainName: DomainName.BIOMAGE,
       });
     });
 

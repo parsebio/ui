@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  PageHeader, Space,
+  PageHeader, Space, Button,
 } from 'antd';
 import PropTypes from 'prop-types';
 import { NextSeo } from 'next-seo';
@@ -10,7 +10,6 @@ import UserButton from 'components/header/UserButton';
 import FeedbackButton from 'components/header/FeedbackButton';
 import ReferralButton from 'components/header/ReferralButton';
 import HelpButton from 'components/header/HelpButton';
-import getDomainSpecificContent from 'utils/getDomainSpecificContent';
 
 const Header = (props) => {
   const {
@@ -35,7 +34,11 @@ const Header = (props) => {
         extra={(
           <Space size='large'>
             <Space>
-              {getDomainSpecificContent('HeaderExtraButton')}
+              <Button>
+                <a href='https://courses.biomage.net' target='_blank' rel='noreferrer'>
+                  Courses
+                </a>
+              </Button>
               <HelpButton />
               <FeedbackButton />
               <ReferralButton />

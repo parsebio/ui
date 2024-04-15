@@ -21,7 +21,6 @@ import config from 'config';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 import readFileToString from 'utils/upload/readFileToString';
-import getDomainSpecificContent from 'utils/getDomainSpecificContent';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -161,9 +160,7 @@ const MetadataUploadModal = (props) => {
         <Col span={24}>
           <Paragraph type='secondary'>
             <i>
-              Don’t have the data in an accepted format?
-              {' '}
-              {getDomainSpecificContent('helpMessage')}
+              Don’t have the data in an accepted format? Reach out to us using the feedback button at the top of the page.
             </i>
           </Paragraph>
         </Col>

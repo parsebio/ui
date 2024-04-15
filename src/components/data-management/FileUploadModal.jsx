@@ -30,7 +30,6 @@ import handleError from 'utils/http/handleError';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import endUserMessages from 'utils/endUserMessages';
-import getDomainSpecificContent from 'utils/getDomainSpecificContent';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -221,9 +220,7 @@ const FileUploadModal = (props) => {
             </Space>
             <Text type='secondary'>
               <i>
-                Don't have data in an accepted format?
-                {' '}
-                {getDomainSpecificContent('helpMessage')}
+                Don't have data in an accepted format? Reach out to us using the feedback button at the top of the page.
               </i>
             </Text>
           </Space>
