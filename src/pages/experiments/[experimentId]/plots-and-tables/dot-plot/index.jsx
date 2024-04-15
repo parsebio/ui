@@ -493,7 +493,6 @@ const DotPlotPage = (props) => {
 
   return (
     <>
-      <Header title={plotNames.DOT_PLOT} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}

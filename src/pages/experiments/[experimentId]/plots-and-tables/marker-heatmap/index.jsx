@@ -452,7 +452,6 @@ const MarkerHeatmap = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.MARKER_HEATMAP} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}

@@ -138,7 +138,6 @@ const ContinuousEmbeddingPage = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.CONTINUOUS_EMBEDDING} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={selectedPlotUuid}

@@ -206,7 +206,6 @@ const FrequencyPlotPage = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.FREQUENCY_PLOT} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}

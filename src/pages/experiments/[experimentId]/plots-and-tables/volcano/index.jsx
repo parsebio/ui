@@ -229,7 +229,6 @@ const VolcanoPlotPage = (props) => {
 
   return (
     <>
-      <Header title={plotNames.VOLCANO_PLOT} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}

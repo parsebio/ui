@@ -106,7 +106,6 @@ const DataManagementPage = () => {
 
   return (
     <>
-      <Header title='Data Management' />
       {NewProjectModalVisible ? (
         <NewProjectModal
           projectType='experiments'

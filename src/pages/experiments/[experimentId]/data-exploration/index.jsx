@@ -175,26 +175,6 @@ const ExplorationViewPage = ({
 
   return (
     <>
-      <Header
-        experimentId={experimentId}
-        experimentData={experimentData}
-        title='Data Exploration'
-        extra={[(
-          <Dropdown
-            trigger={['click']}
-            key='search-menu-dropdown'
-            overlay={searchMenu}
-            open={addMenuVisible}
-            onOpenChange={(visible) => setAddMenuVisible(visible)}
-          >
-            <Button type='primary' onClick={() => setAddMenuVisible(!addMenuVisible)}>
-              Add
-              {' '}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
-        )]}
-      />
       <MultiTileContainer
         tileMap={TILE_MAP}
         initialArrangement={windows}

@@ -163,7 +163,6 @@ const EmbeddingCategoricalPage = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.CATEGORICAL_EMBEDDING} />
       <PlotContainer
         experimentId={experimentId}
         plotName={plotNames.CATEGORICAL_EMBEDDING}

@@ -144,7 +144,6 @@ const ViolinIndex = ({ experimentId }) => {
   );
   return (
     <>
-      <Header title={plotNames.VIOLIN_PLOT} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={selectedPlotUuid}

@@ -10,11 +10,6 @@ const PlotsTablesHome = (props) => {
 
   return (
     <>
-      <Header
-        experimentId={experimentId}
-        experimentData={experimentData}
-        title='Plots and Tables'
-      />
       <SingleTileContainer>
         <PlotsTablesContainer experimentId={experimentId} />
       </SingleTileContainer>

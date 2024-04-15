@@ -292,7 +292,6 @@ const BatchDiffExpression = (props) => {
           width: '100%', paddingTop: '10px', paddingBottom: '10px',
         }}
       />
-      {/* <Header title={plotNames.BATCH_DIFFERENTIAL_EXPRESSION} /> */}
       <Card>
         <div> Select the batch differential expression calculation to perform:</div>
         {' '}

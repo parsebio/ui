@@ -456,7 +456,6 @@ const Pipeline = () => {
 
   return (
     <>
-      <Header title='Pipeline' />
       <div style={{ height: '100vh', overflowY: 'auto' }}>
         {' '}
         {/* Add this div with style */}

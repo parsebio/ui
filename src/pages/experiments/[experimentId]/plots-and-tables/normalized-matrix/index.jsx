@@ -215,7 +215,6 @@ const NormalizedMatrixPage = (props) => {
           width: '100%', paddingTop: '10px', paddingBottom: '10px',
         }}
       />
-      {/* <Header title={plotNames.NORMALIZED_EXPRESSION_MATRIX} /> */}
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}

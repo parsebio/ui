@@ -16,7 +16,6 @@ const RepositoryPage = () => {
 
   return (
     <>
-      <Header title='Data Management' />
       <RepositoryTable
         data={exampleExperiments}
       />

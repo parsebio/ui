@@ -267,7 +267,6 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.TRAJECTORY_ANALYSIS} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}

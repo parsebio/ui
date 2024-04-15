@@ -664,11 +664,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
 
   return (
     <>
-      <Header
-        experimentId={experimentId}
-        experimentData={experimentData}
-        title='Data Processing'
-      />
       <Space direction='vertical' style={{ width: '100%', padding: '0 10px' }}>
         {runQCModalVisible && (
           runQCAuthorized === null ? <ClipLoader />
