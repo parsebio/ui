@@ -27,17 +27,9 @@ import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
+import secondarySettingDetails from 'utils/secondarySettingDetails';
 
 const { Text, Title } = Typography;
-const keyToTitle = {
-  numOfSamples: 'Number of samples',
-  numOfSublibraries: 'Number of sublibraries',
-  chemistryVersion: 'Chemistry version',
-  kit: 'Kit type',
-  name: 'File name',
-  status: 'Status',
-  createdAt: 'Uploaded at',
-};
 
 const pipelineStatusToDisplay = {
   not_created: 'Not started yet',
@@ -136,41 +128,11 @@ const Pipeline = () => {
     }
   };
 
-  const mainScreenDetails = (detailsObj) => {
-    const view = Object.keys(detailsObj).map((key) => {
-      const value = detailsObj[key];
-      const title = keyToTitle[key];
-      return (
-        <div
-          key={key}
-          style={{
-            display: 'flex',
-            marginBottom: window.innerHeight > 850 ? '0.6vh' : '0',
-          }}
-        >
-          {title && (
-            <span style={{ fontWeight: 'bold', fontSize: '1.4vh' }}>
-              {`${title}:`}
-            </span>
-          )}
-          &nbsp;
-          <span style={{
-            fontSize: '1.4vh', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          }}
-          >
-            {value || 'Not selected'}
-          </span>
-        </div>
-      );
-    });
-    return view;
-  };
-
   const renderSampleLTFileDetails = () => {
     if (!sampleLTFile) return null;
 
     const { name, upload, createdAt } = sampleLTFile;
-    return mainScreenDetails({
+    return secondarySettingDetails({
       name,
       status: <UploadStatusView
         status={upload.status.current}
@@ -224,7 +186,7 @@ const Pipeline = () => {
       isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
       renderMainScreenDetails: () => {
         const kitTitle = kitOptions.find((option) => option.value === kit)?.label;
-        return mainScreenDetails({
+        return secondarySettingDetails({
           kit: kitTitle, chemistryVersion, numOfSamples, numOfSublibraries,
         });
       },
@@ -254,7 +216,7 @@ const Pipeline = () => {
         />
       ),
       isValid: Boolean(refGenome),
-      renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
+      renderMainScreenDetails: () => secondarySettingDetails({ refGenome }),
     },
     {
       title: 'Upload your Fastq files:',

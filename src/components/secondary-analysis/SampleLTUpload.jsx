@@ -7,7 +7,7 @@ import {
   Divider,
   List,
 } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { CheckCircleTwoTone, DeleteOutlined, WarningOutlined } from '@ant-design/icons';
@@ -16,15 +16,37 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import endUserMessages from 'utils/endUserMessages';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
+import { getSampleLTFile } from 'redux/selectors';
+import secondarySettingDetails from 'utils/secondarySettingDetails';
+import UploadStatusView from 'components/UploadStatusView';
+import PrettyTime from 'components/PrettyTime';
 
 const { Text } = Typography;
 const SampleLTUpload = (props) => {
   const dispatch = useDispatch();
   const {
-    secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId, setFilesNotUploaded,
+    secondaryAnalysisId, uploadedFileId, setFilesNotUploaded,
   } = props;
+
+  const sampleLTFile = useSelector(getSampleLTFile(secondaryAnalysisId), _.isEqual);
+
   const [file, setFile] = useState(false);
   const [invalidInputWarnings, setInvalidInputWarnings] = useState([]);
+
+  const renderSampleLTFileDetails = () => {
+    if (!sampleLTFile) return null;
+
+    const { name, upload, createdAt } = sampleLTFile;
+    return secondarySettingDetails({
+      name,
+      status: <UploadStatusView
+        status={upload.status.current}
+        fileId={sampleLTFile.id}
+        secondaryAnalysisId={secondaryAnalysisId}
+      />,
+      createdAt: <PrettyTime isoTime={createdAt} />,
+    });
+  };
 
   const onDrop = async (droppedFiles) => {
     const warnings = [];
@@ -145,7 +167,7 @@ const SampleLTUpload = (props) => {
               </List>
             </>
           )}
-          {renderUploadedFileDetails()}
+          {renderSampleLTFileDetails()}
         </Form.Item>
       </Form>
     </>
