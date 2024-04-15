@@ -47,14 +47,6 @@ a {
   color: #1890ff !important;
 }
 
-a.ant-btn{
-  color: #fff !important;
-}
-
-.ant-btn-text:hover {
-  color: #fff !important;
-}
-
 /* Need to change Alert border to steel pink */
 .ant-alert-info {
   border: 1px solid #b6007c !important;
@@ -159,6 +151,15 @@ button {
 button.ant-switch {
   border-radius: 100px !important;
 }
+
+a.ant-btn{
+  color: #fff !important;
+}
+
+.ant-btn-text:hover {
+  color: #fff !important;
+}
+
 
 /* Gene table  */
 
