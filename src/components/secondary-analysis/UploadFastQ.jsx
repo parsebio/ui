@@ -320,10 +320,6 @@ const UploadFastQ = (props) => {
                       </Text>
                     }
                   </Text>
-                  <br />
-                  <Text>
-                    {'Don\'t forget to save this token as it will not be displayed again.'}
-                  </Text>
                 </>
               )}
             />
@@ -350,22 +346,22 @@ const UploadFastQ = (props) => {
 
             Run the script with the following command:
             <br />
-            <Paragraph copyable={{
-              text: `python parse-upload.py \\
+            <pre>
+              <Paragraph copyable={{
+                text: `python parse-upload.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
   --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
   `,
-            }}
-            >
-              <pre>
+              }}
+              >
                 {`python parse-upload.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
   --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
   `}
-              </pre>
-            </Paragraph>
+              </Paragraph>
+            </pre>
           </Text>
         </Space>
       ),
