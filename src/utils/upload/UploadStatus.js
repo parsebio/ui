@@ -10,6 +10,7 @@ const UploadStatus = {
   QUEUED: 'queued',
   DROP_AGAIN: 'dropAgain',
   PAUSED: 'paused',
+  EXPIRED: 'expired',
 };
 
 const message = {
@@ -24,6 +25,7 @@ const message = {
   [UploadStatus.QUEUED]: 'Queued',
   [UploadStatus.DROP_AGAIN]: 'Drop file again',
   [UploadStatus.PAUSED]: 'Upload paused',
+  [UploadStatus.EXPIRED]: 'File expired',
 };
 
 const messageForStatus = (uploadStatus) => message[uploadStatus];

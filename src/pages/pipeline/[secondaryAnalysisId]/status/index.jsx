@@ -1,9 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useState, useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space, Switch, Popconfirm,
+  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip,
 } from 'antd';
 
 import fetchAPI from 'utils/http/fetchAPI';
@@ -18,8 +20,8 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
-import { loadExperiments, switchExperiment } from 'redux/actions/experiments';
-import { loadBackendStatus } from 'redux/actions/backendStatus';
+
+import { DownOutlined, WarningOutlined } from '@ant-design/icons';
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
@@ -35,9 +37,21 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const setupReports = useCallback(async () => {
     const htmlUrls = await getReports(secondaryAnalysisId);
 
-    setReports(htmlUrls);
+    // natural sort reports
+    const sortedKeys = Object.keys(htmlUrls)
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    const sortedHtmlUrls = sortedKeys.reduce((obj, key) => {
+      obj[key] = htmlUrls[key];
+      return obj;
+    }, {});
+
+    setReports(sortedHtmlUrls);
+
     const defaultReport = 'all-sample_analysis_summary.html';
-    const defaultReportKey = defaultReport in htmlUrls ? defaultReport : Object.keys(htmlUrls)[0];
+    const defaultReportKey = defaultReport in sortedHtmlUrls
+      ? defaultReport
+      : Object.keys(sortedHtmlUrls)[0];
     setSelectedReport(defaultReportKey);
   }, [secondaryAnalysisId]);
 
@@ -47,25 +61,125 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     setupReports();
   }, [secondaryAnalysis?.status.current]);
 
-  const downloadOutput = useCallback(async () => {
-    if (secondaryAnalysis?.status?.current === 'finished') {
-      const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/output`);
-      downloadFromUrl(signedUrl, 'all_outputs.zip');
-    } else {
-      const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logFile`, {}, { parseJson: false });
-      const logsFile = await logsResponse.arrayBuffer();
-      downloadFromUrl(writeToFileURL(logsFile), `${secondaryAnalysisId}.log`);
-    }
-  }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
+  const secondaryAnalysisFinished = useMemo(() => (
+    secondaryAnalysis?.status?.current === 'finished'
+  ), [secondaryAnalysis?.status?.current]);
+
+  const outputDownloadParams = useMemo(() => ({
+    all: {
+      uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/allOutputFiles`,
+      fileName: 'all_files.zip',
+    },
+    combined: {
+      uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/combinedOutput`,
+      fileName: 'combined_output.zip',
+    },
+  }), [secondaryAnalysisId]);
+
+  const downloadOutput = useCallback(async (type) => {
+    const { uri, fileName } = outputDownloadParams[type];
+    const signedUrl = await fetchAPI(uri);
+    downloadFromUrl(signedUrl, fileName);
+  }, [outputDownloadParams]);
+
+  const downloadReports = useCallback(async () => {
+    const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logFile`, {}, { parseJson: false });
+    const logsFile = await logsResponse.arrayBuffer();
+    downloadFromUrl(writeToFileURL(logsFile), `${secondaryAnalysisId}.log`);
+  }, [secondaryAnalysisId]);
 
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
+  const menuItems = [
+    {
+      key: 'combined',
+      onClick: (e) => {
+        e.domEvent.stopPropagation();
+        downloadOutput('combined');
+      },
+      label: (
+        <Tooltip
+          title='Download combined output files'
+          placement='right'
+          mouseEnterDelay={0.05}
+        >
+          <Space>
+            Combined Output
+          </Space>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 'reports',
+      onClick: (e) => {
+        e.domEvent.stopPropagation();
+        downloadReports();
+      },
+      label: (
+        <Tooltip
+          title='Download report files'
+          placement='right'
+          mouseEnterDelay={0.05}
+        >
+          <Space>
+            Reports
+          </Space>
+        </Tooltip>
+      ),
+    },
+    {
+      key: 'all',
+      onClick: (e) => {
+        e.domEvent.stopPropagation();
+        downloadOutput('all');
+      },
+      label: (
+
+        <Tooltip
+          title={(
+            <>
+              <WarningOutlined />
+              {' '}
+              Warning: Downloading all output files might take a long time.
+            </>
+          )}
+          placement='right'
+          mouseEnterDelay={0.05}
+          overlayStyle={{
+            background: '#B6007C',
+          }}
+        >
+          <Space>
+            All files
+          </Space>
+        </Tooltip>
+      ),
+    },
+  ];
+
   const renderDownloadOutputButton = () => (
-    <Button type='primary' onClick={downloadOutput}>
-      Download output
+    <Dropdown
+      trigger={['click']}
+      menu={{
+        items: menuItems,
+      }}
+    >
+      <Button type='primary' disabled={!secondaryAnalysisFinished}>
+        Download Output
+        <DownOutlined />
+      </Button>
+    </Dropdown>
+  );
+
+  const renderDownloadLogsButton = () => (
+    <Button type='primary' onClick={() => downloadOutput('logs')}>
+      Download Logs
+      {' '}
+      <DownOutlined />
+      {' '}
     </Button>
   );
 
@@ -105,7 +219,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             The error logs can be accessed by downloading the pipeline output files.
 
           </Paragraph>
-          {renderDownloadOutputButton()}
+          {renderDownloadLogsButton()}
         </Space>
       ),
       running: (
