@@ -225,10 +225,10 @@ button.ant-switch {
 
 /* Slider Handle Focus and Hover State - Specific for when the handle is focused and hovered over */
 .ant-slider-handle:focus:hover {
-  background-color: #ffffff !important; /* White background for contrast */
-  border-color: rgb(153, 102, 184) !important; /* Primary color for border */
-  --antd-wave-shadow-color: rgb(153, 102, 184) !important; /* Ensuring wave effect color is consistent */
-  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important; /* Subtle shadow with primary color */
+  background-color: #ffffff !important; 
+  border-color: rgb(153, 102, 184) !important; 
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important; 
+  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important;
 }
 
 .ant-slider-track {
