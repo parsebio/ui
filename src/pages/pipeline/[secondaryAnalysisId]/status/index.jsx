@@ -20,9 +20,6 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
-import { loadExperiments, switchExperiment } from 'redux/actions/experiments';
-import { loadBackendStatus } from 'redux/actions/backendStatus';
-import naturalSort from 'javascript-natural-sort';
 
 import { DownOutlined, WarningOutlined } from '@ant-design/icons';
 
@@ -41,7 +38,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     const htmlUrls = await getReports(secondaryAnalysisId);
 
     // natural sort reports
-    const sortedKeys = Object.keys(htmlUrls).sort(naturalSort);
+    const sortedKeys = Object.keys(htmlUrls)
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
     const sortedHtmlUrls = sortedKeys.reduce((obj, key) => {
       obj[key] = htmlUrls[key];
@@ -51,7 +49,9 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     setReports(sortedHtmlUrls);
 
     const defaultReport = 'all-sample_analysis_summary.html';
-    const defaultReportKey = defaultReport in sortedHtmlUrls ? defaultReport : Object.keys(sortedHtmlUrls)[0];
+    const defaultReportKey = defaultReport in sortedHtmlUrls
+      ? defaultReport
+      : Object.keys(sortedHtmlUrls)[0];
     setSelectedReport(defaultReportKey);
   }, [secondaryAnalysisId]);
 
