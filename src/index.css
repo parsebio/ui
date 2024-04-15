@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap');
 
 /* COLOR GUIDE
-USE THIS TO CHOOSE COLORS FOR NEW COMPONENTS. 
+USE THIS TO CHOOSE COLORS FOR NEW COMPONENTS.
 
 
 --ant-primary-color: rgb(153, 102, 184);
@@ -117,25 +117,25 @@ a.ant-btn{
 
 /* Default state */
 .ant-radio-inner {
-  border-color: rgb(153, 102, 184) !important; /* Using --ant-primary-color */
+  border-color: rgb(153, 102, 184) !important;
   --antd-wave-shadow-color: rgb(153, 102, 184) !important;
 }
 
 .ant-radio-checked .ant-radio-inner:after {
-  background-color: rgb(153, 102, 184) !important; /* Using --ant-primary-color */
+  background-color: rgb(153, 102, 184) !important;
 }
 
 /* Hover state */
 .ant-radio:hover .ant-radio-inner,
 .ant-radio-wrapper:hover .ant-radio-inner {
-  border-color: #b08bc4 !important; /* Using --ant-primary-color-hover */
+  border-color: #b08bc4 !important;
 }
 
 /* Focus state */
 .ant-radio-focused .ant-radio-inner,
 .ant-radio-wrapper:focus .ant-radio-inner,
 .ant-radio-inner:focus {
-  box-shadow: 0 0 0 2px rgba(153, 102, 184, 0.2) !important; /* Using --ant-primary-color-outline */
+  box-shadow: 0 0 0 2px rgba(153, 102, 184, 0.2) !important;
 }
 
 
@@ -193,42 +193,42 @@ button.ant-switch {
 
 /* Slider Handle Default State - The default look of the slider handle */
 .ant-slider-handle {
-  border-color: rgb(153, 102, 184) !important; /* Primary color for border */
-  background-color: #ffffff !important; /* White background for contrast */
+  border-color: rgb(153, 102, 184) !important;
+  background-color: #ffffff !important;
 
 }
 
 /* Slider Handle Focus State - When the handle is focused, typically via keyboard navigation */
 .ant-slider-handle:focus {
-  border-color: rgb(153, 102, 184) !important; /* Primary color for border */
-  background-color: #ffffff !important; /* White background maintained */
-  --antd-wave-shadow-color: rgb(153, 102, 184) !important; /* Keep wave effect color consistent */
-  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important; /* Subtle shadow with primary color */
+  border-color: rgb(153, 102, 184) !important;
+  background-color: #ffffff !important;
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important;
+  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important;
 }
 
 /* Slider Handle Dragging State - While the handle is being dragged */
 .ant-slider-handle-dragging {
-  border-color: rgb(153, 102, 184) !important; /* Primary color for border */
-  background-color: #ffffff !important; /* White background for visibility */
-  --antd-wave-shadow-color: rgb(153, 102, 184) !important; /* Wave effect color for consistency */
-  outline: none !important; /* Remove default outline to clean up appearance */
-  box-shadow: 0 0 0 5px rgb(153, 102, 184) !important; /* Subtle shadow with primary color */
+  border-color: rgb(153, 102, 184) !important;
+  background-color: #ffffff !important;
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 5px rgb(153, 102, 184) !important;
 }
 
 /* Slider Handle Hover State - When the mouse hovers over the handle */
 .ant-slider-handle:hover {
-  border-color: #b08bc4 !important; /* Lighter primary color for border */
-  background-color: #ffffff !important; /* White background for contrast */
-  --antd-wave-shadow-color: rgb(153, 102, 184) !important; /* Wave effect color for visual feedback */
-  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important; /* Subtle shadow with primary color */
+  border-color: #b08bc4 !important;
+  background-color: #ffffff !important;
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important;
+  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important;
 }
 
 /* Slider Handle Focus and Hover State - Specific for when the handle is focused and hovered over */
 .ant-slider-handle:focus:hover {
-  background-color: #ffffff !important; /* White background for contrast */
-  border-color: rgb(153, 102, 184) !important; /* Primary color for border */
-  --antd-wave-shadow-color: rgb(153, 102, 184) !important; /* Ensuring wave effect color is consistent */
-  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important; /* Subtle shadow with primary color */
+  background-color: #ffffff !important;
+  border-color: rgb(153, 102, 184) !important;
+  --antd-wave-shadow-color: rgb(153, 102, 184) !important;
+  box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important;
 }
 
 .ant-slider-track {
