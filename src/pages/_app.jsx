@@ -32,6 +32,7 @@ ConfigProvider.config({
   theme: {
     primaryColor: brandColors.DARK_LILAC,
     infoColor: brandColors.STEEL_PINK,
+    warningColor: brandColors.STEEL_PINK,
   },
 });
 

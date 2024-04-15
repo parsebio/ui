@@ -291,7 +291,7 @@ const ContentWrapper = (props) => {
             textAnchor='start'
             dominantBaseline='middle'
           >
-            TrailMaker
+            Cellenics
           </text>
           {/* provided by? TBD */}
           <text
@@ -338,7 +338,7 @@ const ContentWrapper = (props) => {
             fontSize='25.00px'
             textAnchor='middle'
           >
-            TM
+            Cs
           </text>
         </g>
       </svg>
