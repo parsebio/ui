@@ -31,19 +31,19 @@ const UploadStatusView = ({
     if (fileId && secondaryAnalysisId && [
       UploadStatus.UPLOAD_ERROR,
       UploadStatus.PAUSED,
-    ].includes(status.current)) {
+    ].includes(status)) {
       const file = cache.get(fileId) ?? null;
       setFileInCache(file);
     }
-  }, [fileId, status.current]);
+  }, [fileId, status]);
 
   if (fileInCache && [
     UploadStatus.UPLOAD_ERROR,
     UploadStatus.PAUSED,
-  ].includes(status.current)) {
+  ].includes(status)) {
     return (
       <div style={uploadDivStyle}>
-        <Text type='warning'>{messageForStatus(status.current)}</Text>
+        <Text type='warning'>{messageForStatus(status)}</Text>
         <Tooltip
           title='Click to resume'
         >
@@ -57,16 +57,25 @@ const UploadStatusView = ({
       </div>
     );
   }
+  if (status === UploadStatus.EXPIRED) {
+    return (
+      <Tooltip title='Fastq files expire after 30 days. Delete or re-upload expired files to run the pipeline.'>
+        <div style={uploadDivStyle}>
+          <Text type='danger'>{messageForStatus(status)}</Text>
+        </div>
+      </Tooltip>
+    );
+  }
 
-  if ([UploadStatus.UPLOADING_FROM_CLI, UploadStatus.QUEUED].includes(status.current)) {
+  if ([UploadStatus.UPLOADING_FROM_CLI, UploadStatus.QUEUED].includes(status)) {
     return (
       <div style={uploadDivStyle}>
-        <Text type='secondary'>{messageForStatus(status.current)}</Text>
+        <Text type='secondary'>{messageForStatus(status)}</Text>
       </div>
     );
   }
 
-  if (status.current === UploadStatus.UPLOADED) {
+  if (status === UploadStatus.UPLOADED) {
     return (
       <div
         className={styles.hoverSelectCursor}
@@ -74,7 +83,7 @@ const UploadStatusView = ({
         onKeyDown={showDetails}
         style={{ ...uploadDivStyle, flexDirection: 'column' }}
       >
-        <Text type='success'>{messageForStatus(status.current)}</Text>
+        <Text type='success'>{messageForStatus(status)}</Text>
       </div>
     );
   }
@@ -83,7 +92,7 @@ const UploadStatusView = ({
     [
       UploadStatus.UPLOADING,
       UploadStatus.COMPRESSING,
-    ].includes(status.current)
+    ].includes(status)
   ) {
     return (
       <div
@@ -92,7 +101,7 @@ const UploadStatusView = ({
           flexDirection: 'column',
         }}
       >
-        <Text type='warning'>{`${messageForStatus(status.current)}`}</Text>
+        <Text type='warning'>{`${messageForStatus(status)}`}</Text>
         {progress ? (<Progress style={{ marginLeft: '10%', width: '50%' }} percent={progress} size='small' />) : <div />}
       </div>
     );
@@ -101,7 +110,7 @@ const UploadStatusView = ({
     [
       UploadStatus.UPLOAD_ERROR,
       UploadStatus.DROP_AGAIN,
-    ].includes(status.current)
+    ].includes(status)
   ) {
     return (
       <div
@@ -110,7 +119,7 @@ const UploadStatusView = ({
         onClick={showDetails}
         onKeyDown={showDetails}
       >
-        <Text type='danger'>{messageForStatus(status.current)}</Text>
+        <Text type='danger'>{messageForStatus(status)}</Text>
       </div>
     );
   }
@@ -119,11 +128,11 @@ const UploadStatusView = ({
       UploadStatus.FILE_NOT_FOUND,
       UploadStatus.FILE_READ_ABORTED,
       UploadStatus.FILE_READ_ERROR,
-    ].includes(status.current)
+    ].includes(status)
   ) {
     return (
       <div style={uploadDivStyle}>
-        <Text type='danger'>{messageForStatus(status.current)}</Text>
+        <Text type='danger'>{messageForStatus(status)}</Text>
         {showDetails && (
           <Tooltip placement='bottom' title='Upload missing' mouseLeaveDelay={0}>
             <Button
@@ -147,8 +156,7 @@ UploadStatusView.defaultProps = {
 };
 
 UploadStatusView.propTypes = {
-  // Object with current status in .current
-  status: PropTypes.object.isRequired,
+  status: PropTypes.string.isRequired,
   progress: PropTypes.number,
   showDetails: PropTypes.func,
   fileId: PropTypes.string,

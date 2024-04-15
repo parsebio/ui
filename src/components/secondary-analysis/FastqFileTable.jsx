@@ -6,6 +6,7 @@ import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import bytesToSize from 'utils/styling/bytesToSize';
 import { DeleteOutlined } from '@ant-design/icons';
 import UploadStatusView from 'components/UploadStatusView';
+import UploadStatus from 'utils/upload/UploadStatus';
 
 const FastqFileTable = (props) => {
   const dispatch = useDispatch();
@@ -29,14 +30,18 @@ const FastqFileTable = (props) => {
           {text}
           {' '}
           {canEditTable && (
-            <Popconfirm
-              title='Are you sure to delete this file?'
-              onConfirm={() => handleDelete(record.key)}
-              okText='Yes'
-              cancelText='No'
-            >
-              <DeleteOutlined style={{ color: 'red' }} />
-            </Popconfirm>
+            record.status.current !== UploadStatus.EXPIRED ? (
+              <Popconfirm
+                title='Are you sure you want to delete this file?'
+                onConfirm={() => handleDelete(record.key)}
+                okText='Yes'
+                cancelText='No'
+              >
+                <DeleteOutlined style={{ color: 'red' }} />
+              </Popconfirm>
+            ) : (
+              <DeleteOutlined style={{ color: 'red' }} onClick={() => handleDelete(record.key)} />
+            )
           )}
         </div>
       ),
@@ -51,7 +56,7 @@ const FastqFileTable = (props) => {
       width: '25%',
       render: (status, record) => (
         <UploadStatusView
-          status={status}
+          status={status.current}
           progress={record.progress}
           fileId={record.key}
           secondaryAnalysisId={secondaryAnalysisId}
@@ -70,7 +75,7 @@ const FastqFileTable = (props) => {
       columns={columns}
       dataSource={dataSource}
       pagination={false}
-      scroll={{ y: 320 }}
+      scroll={{ y: `calc(90vh - ${500}px)` }}
     />
   );
 };

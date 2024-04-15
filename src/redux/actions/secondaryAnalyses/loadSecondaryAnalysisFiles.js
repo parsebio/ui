@@ -9,7 +9,9 @@ import cache from 'utils/cache';
 const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, getState) => {
   const filesInRedux = getState().secondaryAnalyses[secondaryAnalysisId].files?.data ?? {};
 
-  const { PAUSED, DROP_AGAIN, UPLOADING } = UploadStatus;
+  const {
+    PAUSED, DROP_AGAIN, UPLOADING, QUEUED,
+  } = UploadStatus;
   try {
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADING,
@@ -21,9 +23,13 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
     const files = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
 
     const filesForRedux = await Promise.all(files
+      // If it is uploading or queued in redux, then this upload is managed by this client so
+      // don't overwrite it
+      .filter(
+        (file) => ![UPLOADING, QUEUED].includes(filesInRedux[file.id]?.upload?.status.current),
+      )
       // If the file upload status is 'uploading' in sql, we need to store something else in redux
       // since that status is not correct if the upload is not performed in this case
-      .filter((file) => filesInRedux[file.id]?.upload?.status.current !== UPLOADING)
       .map(async (file) => {
         if (file.upload.status === UPLOADING) {
           const isFileInCache = await cache.get(file.id);

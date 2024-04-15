@@ -1,4 +1,6 @@
 {
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
     },
@@ -17,9 +19,13 @@
         "editor.formatOnPaste": true,
         "editor.formatOnSave": true,
     },
-    "markdownlint.config": {
-        "default": true,
-        "MD003": { "style": "setext_with_atx" },
-        "MD034": false
-    }
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.fixAll": "explicit"
+        },
+      }
 }

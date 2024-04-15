@@ -46,12 +46,22 @@ const UploadFastQ = (props) => {
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
   const validateAndSetFiles = async (fileHandlesList, secondaryAnalysisFilesUpdated) => {
-    const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated).map((item) => item.name);
+    const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated)
+      .map((item) => item.name);
 
     const validators = [
-      { validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'), rejectReason: endUserMessages.ERROR_HIDDEN_FILE },
-      { validate: (file) => file.name.endsWith('.fastq') || file.name.endsWith('.fastq.gz'), rejectReason: endUserMessages.ERROR_NOT_FASTQ },
-      { validate: (file) => !alreadyUploadedFiles.includes(file.name), rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED },
+      {
+        validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'),
+        rejectReason: endUserMessages.ERROR_HIDDEN_FILE,
+      },
+      {
+        validate: (file) => ['.fastq', '.fastq.gz', '.fq', '.fq.gz'].some((ext) => file.name.endsWith(ext)),
+        rejectReason: endUserMessages.ERROR_NOT_FASTQ,
+      },
+      {
+        validate: (file) => !alreadyUploadedFiles.includes(file.name),
+        rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
+      },
     ];
 
     const invalidFiles = [];
@@ -74,6 +84,7 @@ const UploadFastQ = (props) => {
     try {
       const opts = { multiple: true };
       const handles = await window.showOpenFilePicker(opts);
+      document.getElementById('uploadButton').scrollIntoView({ behavior: 'smooth', block: 'start' });
       return validateAndSetFiles(handles, secondaryAnalysisFiles);
     } catch (err) {
       console.error('Error picking files:', err);
@@ -104,6 +115,8 @@ const UploadFastQ = (props) => {
       return subFiles;
     }));
 
+    document.getElementById('uploadButton').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
     return validateAndSetFiles(newFiles.flat(), secondaryAnalysisFiles);
   };
 
@@ -133,9 +146,9 @@ const UploadFastQ = (props) => {
   }, []);
 
   const generateNewToken = useCallback(async () => {
-    const token = await generateApiToken(tokenExists);
+    const token = await generateApiToken();
     setNewToken(token);
-  }, [tokenExists]);
+  }, []);
 
   useEffect(() => {
     updateApiTokenStatus();
@@ -234,6 +247,7 @@ const UploadFastQ = (props) => {
             </div>
             <Button
               data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+              id='uploadButton'
               type='primary'
               key='create'
               block
@@ -306,10 +320,6 @@ const UploadFastQ = (props) => {
                       </Text>
                     }
                   </Text>
-                  <br />
-                  <Text>
-                    {'Don\'t forget to save this token as it will not be displayed again.'}
-                  </Text>
                 </>
               )}
             />
@@ -336,22 +346,22 @@ const UploadFastQ = (props) => {
 
             Run the script with the following command:
             <br />
-            <Paragraph copyable={{
-              text: `python parse-upload.py \\
+            <pre>
+              <Paragraph copyable={{
+                text: `python parse-upload.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
   --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
   `,
-            }}
-            >
-              <pre>
+              }}
+              >
                 {`python parse-upload.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
   --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
   `}
-              </pre>
-            </Paragraph>
+              </Paragraph>
+            </pre>
           </Text>
         </Space>
       ),

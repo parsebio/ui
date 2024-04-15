@@ -49,34 +49,6 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
-const mainScreenDetails = (detailsObj) => {
-  const view = Object.keys(detailsObj).map((key) => {
-    const value = detailsObj[key];
-    const title = keyToTitle[key];
-    return (
-      <div
-        key={key}
-        style={{
-          display: 'flex',
-          marginBottom: '10px',
-          overflow: 'hidden',
-        }}
-      >
-        {title && (
-          <span style={{ fontWeight: 'bold' }}>
-            {`${title}:`}
-          </span>
-        )}
-        &nbsp;
-        <span>
-          {value || 'Not selected'}
-        </span>
-      </div>
-    );
-  });
-  return view;
-};
-
 const analysisDetailsKeys = ['name', 'description', 'numOfSamples', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
 
 const Pipeline = () => {
@@ -164,6 +136,36 @@ const Pipeline = () => {
     }
   };
 
+  const mainScreenDetails = (detailsObj) => {
+    const view = Object.keys(detailsObj).map((key) => {
+      const value = detailsObj[key];
+      const title = keyToTitle[key];
+      return (
+        <div
+          key={key}
+          style={{
+            display: 'flex',
+            marginBottom: window.innerHeight > 850 ? '0.6vh' : '0',
+          }}
+        >
+          {title && (
+            <span style={{ fontWeight: 'bold', fontSize: '1.4vh' }}>
+              {`${title}:`}
+            </span>
+          )}
+          &nbsp;
+          <span style={{
+            fontSize: '1.4vh', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          }}
+          >
+            {value || 'Not selected'}
+          </span>
+        </div>
+      );
+    });
+    return view;
+  };
+
   const renderSampleLTFileDetails = () => {
     if (!sampleLTFile) return null;
 
@@ -171,7 +173,7 @@ const Pipeline = () => {
     return mainScreenDetails({
       name,
       status: <UploadStatusView
-        status={upload.status}
+        status={upload.status.current}
         fileId={sampleLTFile.id}
         secondaryAnalysisId={activeSecondaryAnalysisId}
       />,
@@ -192,15 +194,21 @@ const Pipeline = () => {
     return null;
   };
 
-  const renderMainScreenFileDetails = (renderFunc) => (renderFunc() || (
-    <Empty
-      description='Not uploaded'
-    />
-  ));
+  const renderMainScreenFileDetails = (renderFunc) => renderFunc() || (
+    window.innerHeight > 768 ? (
+      <Empty
+        style={{ fontSize: '1.4vh' }}
+        description='Not uploaded'
+        imageStyle={{ fontSize: window.innerWidth > 768 ? '24px' : '16px' }}
+      />
+    ) : (
+      <span style={{ display: 'flex', justifyContent: 'center', fontSize: '1.4vh' }}>Not uploaded</span>
+    )
+  );
 
   const allFilesUploaded = (files) => {
     if (!files || Object.keys(files).length === 0) return false;
-    return Object.values(files).every((file) => file?.upload?.status === 'uploaded');
+    return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
   };
 
   const secondaryAnalysisWizardSteps = [
@@ -449,42 +457,46 @@ const Pipeline = () => {
   return (
     <>
       <Header title='Pipeline' />
-      {NewProjectModalVisible && (
-        <NewProjectModal
-          projectType='secondaryAnalyses'
-          onCancel={() => { setNewProjectModalVisible(false); }}
-          onCreate={async (name, description) => {
-            await dispatch(createSecondaryAnalysis(name, description));
-            setCurrentStepIndex(0);
-            setNewProjectModalVisible(false);
-          }}
-        />
-      )}
-      {currentStep && (
-        <Modal
-          open
-          title={currentStep.title}
-          okButtonProps={{ htmlType: 'submit' }}
-          bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
-          style={{ minWidth: '70dvh' }}
-          onCancel={onCancel}
-          footer={[
-            <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
-              Back
-            </Button>,
-            <Button key='submit' type='primary' onClick={onNext}>
-              {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
-            </Button>,
-          ]}
-        >
-          {currentStep.render()}
-        </Modal>
-      )}
+      <div style={{ height: '100vh', overflowY: 'auto' }}>
+        {' '}
+        {/* Add this div with style */}
+        {NewProjectModalVisible && (
+          <NewProjectModal
+            projectType='secondaryAnalyses'
+            onCancel={() => { setNewProjectModalVisible(false); }}
+            onCreate={async (name, description) => {
+              await dispatch(createSecondaryAnalysis(name, description));
+              setCurrentStepIndex(0);
+              setNewProjectModalVisible(false);
+            }}
+          />
+        )}
+        {currentStep && (
+          <Modal
+            open
+            title={currentStep.title}
+            okButtonProps={{ htmlType: 'submit' }}
+            bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
+            style={{ minWidth: '70dvh' }}
+            onCancel={onCancel}
+            footer={[
+              <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
+                Back
+              </Button>,
+              <Button key='submit' type='primary' onClick={onNext}>
+                {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
+              </Button>,
+            ]}
+          >
+            {currentStep.render()}
+          </Modal>
+        )}
 
-      <MultiTileContainer
-        tileMap={TILE_MAP}
-        initialArrangement={windows}
-      />
+        <MultiTileContainer
+          tileMap={TILE_MAP}
+          initialArrangement={windows}
+        />
+      </div>
     </>
   );
 };
