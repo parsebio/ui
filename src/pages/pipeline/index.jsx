@@ -197,7 +197,6 @@ const Pipeline = () => {
       render: () => (
         <SampleLTUpload
           secondaryAnalysisId={activeSecondaryAnalysisId}
-          renderUploadedFileDetails={renderSampleLTFileDetails}
           uploadedFileId={sampleLTFile?.id}
           setFilesNotUploaded={setFilesNotUploaded}
         />

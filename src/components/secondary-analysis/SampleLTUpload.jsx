@@ -178,7 +178,6 @@ SampleLTUpload.defaultProps = {
 };
 SampleLTUpload.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
-  renderUploadedFileDetails: PropTypes.func.isRequired,
   uploadedFileId: PropTypes.string,
   setFilesNotUploaded: PropTypes.func.isRequired,
 };
