@@ -47,14 +47,14 @@ def wipe_file(file_path):
 
 def get_resume_params_from_file():
     if not os.path.exists(RESUME_PARAMS_PATH):
-        raise Exception(f"No resume params file {RESUME_PARAMS_PATH} found")
+        raise Exception(f"No resume parameters file {RESUME_PARAMS_PATH} found, try beginning a new upload")
 
     with open(RESUME_PARAMS_PATH, "r") as file:
         lines = file.read().splitlines()
 
         if len(lines) != 6:
             raise Exception(
-                f"Resume params file {RESUME_PARAMS_PATH} corrupted. Delete the files that didn't finish and upload them without resume"
+                f"Resume files {RESUME_PARAMS_PATH} corrupted. You can delete the files that didn't finish through the browser and upload them again without resume"
             )
 
         analysis_id = lines[0]
@@ -98,13 +98,15 @@ class HTTPResponse:
 
     def json(self):
         if self._response_data == None:
-            raise Exception("No data to parse into json")
+            raise Exception("Internal error, please try again.")
 
         return json.loads(self._response_data)
 
     @property
     def text(self):
-        return self._response.reason
+        if (hasattr(self._response, 'reason')):
+            return self._response.reason
+        return str(self._response)
 
     @property
     def headers(self):
@@ -377,7 +379,7 @@ class FileUploader:
 
         if response.status_code != 200:
             raise Exception(
-                f"Failed to get signed url for part {part_number}: {response.text}"
+                f"Failed to begin upload of part of the file to our servers, check your internet connection and try resuming the upload"
             )
 
         return response.json()
@@ -400,7 +402,7 @@ class FileUploader:
 
         if response.status_code != 200:
             raise Exception(
-                f"Failed to complete upload for file {self.file_path}: {response.text}"
+                f"Failed to complete upload for file {self.file_path}, check your internet connection and try resuming the upload"
             )
 
     def upload_part(self, part, part_number):
@@ -408,12 +410,12 @@ class FileUploader:
 
         response = http_put_part(signed_url, part)
         if response.status_code != 200:
-            raise Exception(f"Failed to upload part {part_number}: {response.text}")
+            raise Exception(f"""Upload of part of the file failed, check your internet connection and try resuming the upload, \n\nError details: {response.text}""")
 
         # With localstack the ETag is returned lowercase for some reason
         etag = response.headers.get("ETag", response.headers.get("etag"))
         if etag == None:
-            raise Exception("ETag not found in response headers")
+            raise Exception("Unexpected response from the server")
 
         return etag
 
@@ -532,14 +534,19 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
     )
 
     if response.status_code != 200:
+        if response.status_code == 401:
+            raise Exception(
+                f"Not authorized to upload files to this run, please verify your --run_id and --token"
+            )
+
         if response.status_code == 409:
             raise Exception(
-                f"File {file_path} already exists in the pipeline, please remove the existing one before uploading a new one"
+                f"File {file_path} already exists in the run. Please remove the existing one from the platform using the browser before uploading this file"
             )
         if response.status_code == 404:
-            raise Exception(f"Analysis {analysis_id} not found")
+            raise Exception(f"Error 404: Not found")
 
-        raise Exception(f"Failed to begin upload for file {file_path}: {response.text}")
+        raise Exception(f"Failed to begin upload for file {file_path}, please check your files and internet connection and try again by resuming the upload\nIf the problem persists try starting the upload again from the beginning. \n\n {response.text}")
 
     upload_params = response.json()
 
@@ -610,6 +617,14 @@ def show_files_to_upload_warning(file_paths):
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
+    # Check minimum required python version is available
+    if sys.version_info < (3, 6):
+        raise Exception(
+            "This script requires Python 3.6 or later. You are using Python {}.{}.{}. Upgrade your python version to 3.6 or higher and try again.".format(
+                sys.version_info.major, sys.version_info.minor, sys.version_info.micro
+            )
+        )
+
     non_resumable_args = args.run_id or args.file
 
     if non_resumable_args and args.resume:
@@ -670,7 +685,7 @@ def main():
         "--file",
         nargs="*",
         required=False,
-        help="A space-separated list of files, glob patterns are accepted",
+        help="A space-separated list of files. You can also select multiple files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
     )
     parser.add_argument(
         "-tc",
