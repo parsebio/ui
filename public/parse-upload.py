@@ -10,9 +10,13 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor, wait
 from threading import Event, Lock
 
-PART_SIZE = 5 * 1024 * 1024
 MAX_RETRIES = 8  # Max number of retries to upload each PART_SIZE part
 THREADS_COUNT = 20
+
+# S3 multipart upload limits
+PART_SIZE_MIN = 5 * 1024 * 1024
+PART_COUNT_MAX = 10000
+
 
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
 # Possible values for <api-base-url> include:
@@ -349,7 +353,13 @@ class FileUploader:
 
         file_size = os.path.getsize(self.file_path)
 
-        self.number_of_parts = math.ceil(file_size / PART_SIZE)
+        # Can't have more than 10000 parts
+        minimum_part_size = math.ceil(file_size / PART_COUNT_MAX)
+
+        # Can't use part sizes smaller than 5mb
+        self.part_size = max(minimum_part_size, PART_SIZE_MIN)
+
+        self.number_of_parts = math.ceil(file_size / self.part_size)
 
         self.progress_displayer = ProgressDisplayer(
             self.number_of_parts, sum(completed_parts_by_thread), current_file
@@ -418,8 +428,8 @@ class FileUploader:
             part_index = from_part_index + self.completed_parts_by_thread[thread_index]
 
             with open(self.file_path, "rb") as file:
-                file.seek(part_index * PART_SIZE)
-                part = file.read(PART_SIZE)
+                file.seek(part_index * self.part_size)
+                part = file.read(self.part_size)
 
                 while part_index < to_part_index:
                     if abort_event.is_set():
@@ -434,7 +444,7 @@ class FileUploader:
                     self.upload_tracker.part_uploaded(thread_index, part_number, etag)
                     self.progress_displayer.increment()
 
-                    part = file.read(PART_SIZE)
+                    part = file.read(self.part_size)
                     part_index += 1
 
         except Exception as e:
