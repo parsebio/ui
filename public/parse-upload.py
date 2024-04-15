@@ -410,7 +410,7 @@ class FileUploader:
 
         response = http_put_part(signed_url, part)
         if response.status_code != 200:
-            raise Exception(f"""Failed during upload of part of the file to our servers, check your internet connection and try resuming the upload, \n\nError details: {response.text}""")
+            raise Exception(f"""Upload of part of the file failed, check your internet connection and try resuming the upload, \n\nError details: {response.text}""")
 
         # With localstack the ETag is returned lowercase for some reason
         etag = response.headers.get("ETag", response.headers.get("etag"))
