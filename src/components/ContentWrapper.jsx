@@ -568,8 +568,6 @@ const ContentWrapper = (props) => {
             mode='inline'
             collapsible
             collapsed={collapsed}
-            /* onMouseEnter={() => setCollapsed(false)}
-            onMouseLeave={() => setCollapsed(true)} */
             onCollapse={(collapse) => setCollapsed(collapse)}
           >
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>

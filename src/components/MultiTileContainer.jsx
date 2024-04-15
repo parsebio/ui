@@ -5,7 +5,6 @@ import ReactResizeDetector from 'react-resize-detector';
 import 'react-mosaic-component/react-mosaic-component.css';
 import { layout } from 'utils/constants';
 import { useDragDropManager } from 'react-dnd';
-import { Radio } from 'antd';
 
 const renderWindow = (tile, width, height, style) => {
   if (!tile) return <></>;
