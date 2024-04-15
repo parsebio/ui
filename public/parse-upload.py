@@ -410,12 +410,12 @@ class FileUploader:
 
         response = http_put_part(signed_url, part)
         if response.status_code != 200:
-            raise Exception(f"Failed during upload of part of the file to our servers, check your internet connection and try resuming the upload")
+            raise Exception(f"""Failed during upload of part of the file to our servers, check your internet connection and try resuming the upload, \n\nError details: {response.text}""")
 
         # With localstack the ETag is returned lowercase for some reason
         etag = response.headers.get("ETag", response.headers.get("etag"))
         if etag == None:
-            raise Exception("Error communicating with the server, please try again by resuming the upload")
+            raise Exception("Unexpected response from the server")
 
         return etag
 
@@ -546,7 +546,7 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
         if response.status_code == 404:
             raise Exception(f"Error 404: Not found")
 
-        raise Exception(f"Failed to begin upload for file {file_path}, please check your files and internet connection and try again by resuming the upload\nIf the problem persists try starting the upload again from the beginning")
+        raise Exception(f"Failed to begin upload for file {file_path}, please check your files and internet connection and try again by resuming the upload\nIf the problem persists try starting the upload again from the beginning. \n\n {response.text}")
 
     upload_params = response.json()
 
