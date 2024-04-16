@@ -4,8 +4,8 @@ import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
 
 const FASTQ = 'fastq';
 
-const getFastqFiles = (secondaryAnalysisId) => (state) => (
+const getFastQFiles = (secondaryAnalysisId) => (state) => (
   _.pickBy(state[secondaryAnalysisId]?.files.data, (file) => file.type === FASTQ)
 );
 
-export default createMemoizedSelector(getFastqFiles);
+export default createMemoizedSelector(getFastQFiles);
