@@ -8,7 +8,7 @@ import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAn
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
 import { useSelector, useDispatch } from 'react-redux';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
-import UploadFastQ from 'components/secondary-analysis/UploadFastQ';
+import UploadFastqFiles from 'components/secondary-analysis/UploadFastqFiles';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';

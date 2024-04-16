@@ -23,9 +23,9 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 
 const { Text } = Typography;
 
-const UploadFastQ = (props) => {
+const UploadFastqFiles = (props) => {
   const {
-    secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded,
+    secondaryAnalysisId, renderFastqFilesTable, setFilesNotUploaded,
   } = props;
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
@@ -297,7 +297,7 @@ const UploadFastQ = (props) => {
             )}
             <br />
             <br />
-            {renderFastqFileTable()}
+            {renderFastqFilesTable()}
           </Form.Item>
         </Form>
       ),
@@ -377,10 +377,10 @@ const UploadFastQ = (props) => {
     />
   );
 };
-UploadFastQ.propTypes = {
+UploadFastqFiles.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
-  renderFastqFileTable: PropTypes.func.isRequired,
+  renderFastqFilesTable: PropTypes.func.isRequired,
   setFilesNotUploaded: PropTypes.func.isRequired,
 };
 
-export default UploadFastQ;
+export default UploadFastqFiles;
