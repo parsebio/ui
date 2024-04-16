@@ -69,6 +69,11 @@ class FileUploader {
     let offset = 0;
     if (this.resumeUpload) {
       const uploadedParts = await this.#getUploadedParts();
+
+      if (uploadedParts.length === this.totalChunks) {
+        return uploadedParts;
+      }
+
       const nextPartNumber = uploadedParts.length + 1;
       // setting all previous parts as uploaded
       // this.uploadedPartPercentages.fill(1, 0, nextPartNumber - 1);
