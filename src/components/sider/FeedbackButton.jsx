@@ -107,35 +107,6 @@ const FeedbackButton = (props) => {
     }
   };
 
-  /*
-For help using the platform, check out:
-user guide
-tutorial videos
-free single cell RNA-seq data analysis course
-For 1-to-1 support from a member of our team, send a message using the box below:
-
-        <Card size='small' style={{ padding: '1em', width: '265px' }}>
-          Ask questions about how to use Cellenics and make feature requests on the
-          {' '}
-          <a href='https://community.biomage.net/' target='_blank' rel='noreferrer'>Cellenics community forum</a>
-          !
-          The Biomage team will reply to your message as soon as possible.
-          <br />
-          <br />
-          Check out the
-          {' '}
-          <a href='https://www.biomage.net/user-guide' target='_blank' rel='noreferrer'>
-            user guide
-            {' '}
-          </a>
-          and
-          {' '}
-          <a href='https://www.youtube.com/@biomageltd4616/featured' target='_blank' rel='noreferrer'> tutorial videos </a>
-          <br />
-        </Card>
-
-*/
-
   const links = [
     {
       text: 'User guide',
