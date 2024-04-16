@@ -18,7 +18,7 @@ import {
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
-import FastqFileTable from 'components/secondary-analysis/FastqFileTable';
+import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
@@ -181,10 +181,10 @@ const Pipeline = () => {
     });
   };
 
-  const renderFastqFileTable = (canEditTable) => {
+  const renderFastqFilesTable = (canEditTable) => {
     if (Object?.keys(fastqFiles)?.length) {
       return (
-        <FastqFileTable
+        <FastqFilesTable
           canEditTable={canEditTable}
           files={fastqFiles}
           secondaryAnalysisId={activeSecondaryAnalysisId}
@@ -260,15 +260,15 @@ const Pipeline = () => {
       title: 'Upload your Fastq files:',
       key: 'Fastq files',
       render: () => (
-        <UploadFastQ
+        <UploadFastqFiles
           secondaryAnalysisId={activeSecondaryAnalysisId}
-          renderFastqFileTable={() => renderFastqFileTable(true)}
+          renderFastqFilesTable={() => renderFastqFilesTable(true)}
           setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
       isValid: allFilesUploaded(fastqFiles),
       isLoading: filesNotLoadedYet,
-      renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFileTable(false)),
+      renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFilesTable(false)),
     },
   ];
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);

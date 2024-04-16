@@ -8,7 +8,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import UploadStatusView from 'components/UploadStatusView';
 import UploadStatus from 'utils/upload/UploadStatus';
 
-const FastqFileTable = (props) => {
+const FastqFilesTable = (props) => {
   const dispatch = useDispatch();
   const { files, canEditTable, secondaryAnalysisId } = props;
 
@@ -80,10 +80,10 @@ const FastqFileTable = (props) => {
   );
 };
 
-FastqFileTable.propTypes = {
+FastqFilesTable.propTypes = {
   files: PropTypes.object.isRequired,
   canEditTable: PropTypes.bool.isRequired,
   secondaryAnalysisId: PropTypes.string.isRequired,
 };
 
-export default FastqFileTable;
+export default FastqFilesTable;
