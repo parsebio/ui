@@ -145,7 +145,9 @@ const ReferralButton = (props) => {
             Note that Insights projects can be shared with collaborators
             to enable them to explore projects that you own.
             <br />
-            To do this, use the Share button in the Insights data management module.
+            To do this, use the Share button in
+            <a target='_blank' href='/data-management' rel='noreferrer'>Insights.</a>
+
           </Space>
         </Card>
       ),

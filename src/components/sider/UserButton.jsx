@@ -42,21 +42,26 @@ const UserButton = () => {
       type: 'group',
       label: `Signed in as ${user?.attributes.name}`,
       key: 'singed-in-username',
+      title: '',
     },
     {
       disabled: true,
       label: <div>Your profile</div>,
       key: 'user-profile',
+      title: '',
     },
     {
       label: <Link href='/settings/profile'>Settings</Link>,
       key: 'user-settings',
+      title: '',
     },
     {
       type: 'divider',
+      title: '',
     },
     {
       label: <div>Sign out</div>,
+      title: '',
       key: 'user-signout',
       onClick: async () => {
         Auth.signOut();
