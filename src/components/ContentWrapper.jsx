@@ -22,6 +22,7 @@ import {
   Layout,
   Menu,
   Typography,
+  Divider,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
@@ -583,10 +584,11 @@ const ContentWrapper = (props) => {
               >
                 {menuItems}
               </Menu>
-              <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: 'center' }}>
+              <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: collapsed ? 'center' : 'left' }}>
                 <FeedbackButton collapsed={collapsed} />
                 <ReferralButton collapsed={collapsed} />
-                <div style={{ margin: '0.5em 0' }}>
+                <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
+                <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
                   <UserButton />
                 </div>
               </div>
