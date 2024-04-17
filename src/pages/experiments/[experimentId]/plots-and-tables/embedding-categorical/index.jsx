@@ -14,7 +14,6 @@ import {
   updatePlotConfig,
   loadPlotConfig,
 } from 'redux/actions/componentConfig/index';
-
 import { loadCellSets } from 'redux/actions/cellSets';
 import Loader from 'components/Loader';
 import CategoricalEmbeddingPlot from 'components/plots/CategoricalEmbeddingPlot';
@@ -173,7 +172,7 @@ const EmbeddingCategoricalPage = ({ experimentId }) => {
         extraControlPanels={renderExtraPanels()}
         defaultActiveKey='group-by'
       >
-        { render() }
+        {render()}
       </PlotContainer>
     </>
   );
