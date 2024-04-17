@@ -296,7 +296,7 @@ const ContentWrapper = (props) => {
             textAnchor='start'
             dominantBaseline='middle'
           >
-            Cellenics
+            Parse Bio
           </text>
           {/* provided by? TBD */}
           <text
@@ -310,7 +310,7 @@ const ContentWrapper = (props) => {
             dominantBaseline='middle'
             y='20'
           >
-            provided by Parse Biosciences
+            Single Cell Platform
           </text>
         </g>
       </svg>
@@ -342,9 +342,7 @@ const ContentWrapper = (props) => {
             fill='#F0F2F5'
             fontSize='25.00px'
             textAnchor='middle'
-          >
-            Cs
-          </text>
+          />
         </g>
       </svg>
     </div>
