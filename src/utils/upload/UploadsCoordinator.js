@@ -17,7 +17,7 @@ class UploadsCoordinator {
 
   uploadFile = (params) => new Promise((resolve, reject) => {
     if (this.uploading) {
-      this.filesToUploadParams.push({ params, resolve, reject });
+      this.filesToUploadParams.push({ params, promise: { resolve, reject } });
       return;
     }
 
@@ -96,6 +96,7 @@ class UploadsCoordinator {
 
       promise.resolve();
     } catch (e) {
+      console.error(e);
       promise.reject(e);
     }
   }
