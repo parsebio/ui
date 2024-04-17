@@ -14,7 +14,6 @@ import { sampleTech } from 'utils/constants';
 import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import uploadFileToS3 from 'utils/upload/multipartUpload';
 import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
 
 const createAndUploadSampleFile = async (
