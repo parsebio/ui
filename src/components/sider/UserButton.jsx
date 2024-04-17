@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import {
-  Avatar,
-  Button,
-  Menu,
-  Dropdown,
+  Avatar, Button, Menu, Dropdown,
 } from 'antd';
 import Link from 'next/link';
 import { Hub } from '@aws-amplify/core';
@@ -48,29 +45,35 @@ const UserButton = () => {
     },
     {
       disabled: true,
-      label: 'Your profile',
+      label: <div>Your profile</div>,
       key: 'user-profile',
     },
     {
-      label: (
-        <Link href='/settings/profile'>
-          Settings
-        </Link>
-      ),
+      label: <Link href='/settings/profile'>Settings</Link>,
       key: 'user-settings',
     },
     {
       type: 'divider',
     },
     {
-      label: 'Sign out',
+      label: <div>Sign out</div>,
       key: 'user-signout',
-      onClick: async () => { Auth.signOut(); },
+      onClick: async () => {
+        Auth.signOut();
+      },
     },
   ];
 
   return user ? (
-    <Dropdown menu={{ items: menuItems }} trigger={['click']} placement='topRight'>
+    <Dropdown
+      menu={{ items: menuItems }}
+      inlineIndent='36'
+      trigger={['click']}
+      placement='topRight'
+      inlineCollapsed='false'
+      mode='vertical'
+      style={{ minWidth: '200px' }}
+    >
       <Button
         aria-label='User settings'
         type='text'
@@ -82,7 +85,8 @@ const UserButton = () => {
         icon={(
           <Avatar
             style={{
-              backgroundColor: '#f56a00', verticalAlign: 'middle',
+              backgroundColor: '#f56a00',
+              verticalAlign: 'middle',
             }}
             size='medium'
           >
@@ -92,19 +96,14 @@ const UserButton = () => {
       />
     </Dropdown>
   ) : (
-    <Button
-      type='dashed'
-      onClick={() => signIn()}
-    >
+    <Button type='dashed' onClick={() => signIn()}>
       Sign in
     </Button>
   );
 };
 
-UserButton.propTypes = {
-};
+UserButton.propTypes = {};
 
-UserButton.defaultProps = {
-};
+UserButton.defaultProps = {};
 
 export default UserButton;
