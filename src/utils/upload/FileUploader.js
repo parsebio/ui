@@ -226,7 +226,7 @@ class FileUploader {
   }
 
   #cleanupExecution = () => {
-    this.readStream.destroy();
+    this.readStream?.destroy();
     this.gzipStream?.terminate();
   }
 
