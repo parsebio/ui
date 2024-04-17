@@ -32,7 +32,7 @@ const uploadSecondaryAnalysisFile = async (
     compress: false,
   };
 
-  await UploadsCoordinator.get().uploadFile(
+  UploadsCoordinator.get().uploadFile(
     [
       secondaryAnalysisId,
       file,

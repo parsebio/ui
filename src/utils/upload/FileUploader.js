@@ -124,8 +124,8 @@ class FileUploader {
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
-    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
 
+    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
     return await fetchAPI(url, {
       method: 'POST',
       headers: {

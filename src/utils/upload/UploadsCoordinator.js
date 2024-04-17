@@ -52,52 +52,42 @@ class UploadsCoordinator {
         key,
       };
 
-      let parts;
+      const fileUploader = new FileUploader(
+        file,
+        fileUploadConfig.chunkSize,
+        uploadParams,
+        abortController,
+        onStatusUpdate,
+        options,
+      );
 
-      try {
-        const fileUploader = new FileUploader(
-          file,
-          fileUploadConfig.chunkSize,
-          uploadParams,
-          abortController,
-          onStatusUpdate,
-          options,
-        );
+      onStatusUpdate(UploadStatus.UPLOADING);
+      const parts = await fileUploader.upload();
 
-        parts = await fileUploader.upload();
+      // S3 expects parts to be sorted by number
+      parts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
+        if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
 
-        // S3 expects parts to be sorted by number
-        parts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
-          if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
+        return PartNumber1 > PartNumber2 ? 1 : -1;
+      });
 
-          return PartNumber1 > PartNumber2 ? 1 : -1;
-        });
-      } catch (e) {
-        // Return silently, the error is handled in the onStatusUpdate callback
-        return;
-      }
+      await this.#completeMultipartUpload(parts, uploadId, key, type);
 
-      try {
-        await this.#completeMultipartUpload(parts, uploadId, key, type);
-
-        onStatusUpdate(UploadStatus.UPLOADED);
-      } catch (e) {
-        onStatusUpdate(UploadStatus.UPLOAD_ERROR);
-      }
-
-      // Begin next upload
-      if (this.filesToUploadParams.length > 0) {
-        const { params: nextParams, promise: nextPromise } = this.filesToUploadParams.shift();
-
-        this.#beginUpload(nextParams, nextPromise);
-      } else {
-        this.uploading = false;
-      }
+      onStatusUpdate(UploadStatus.UPLOADED);
 
       promise.resolve();
     } catch (e) {
+      onStatusUpdate(UploadStatus.UPLOAD_ERROR);
       console.error(e);
-      promise.reject(e);
+    }
+
+    // Begin next upload
+    if (this.filesToUploadParams.length > 0) {
+      const { params: nextParams, promise: nextPromise } = this.filesToUploadParams.shift();
+
+      this.#beginUpload(nextParams, nextPromise);
+    } else {
+      this.uploading = false;
     }
   }
 
