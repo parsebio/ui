@@ -26,9 +26,6 @@ class UploadsCoordinator {
   })
 
   #beginUpload = async (params, promise) => {
-    console.log('paramsDebug');
-    console.log(params);
-
     const [
       projectId,
       file,
