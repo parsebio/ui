@@ -52,8 +52,9 @@ const AddMetadataButton = ({ samplesTableRef }) => {
     const options = {
       compress: !file.compressed,
     };
+
     try {
-      UploadsCoordinator.get().uploadFile(
+      await UploadsCoordinator.get().uploadFile(
         [
           activeExperimentId,
           file,
@@ -68,6 +69,7 @@ const AddMetadataButton = ({ samplesTableRef }) => {
       pushNotificationMessage('error', 'Something went wrong while uploading your metadata file.');
       console.log(e);
     }
+
     setCellLevelUploading(false);
     return file;
   };

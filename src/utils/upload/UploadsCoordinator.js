@@ -15,76 +15,91 @@ class UploadsCoordinator {
     this.uploading = false;
   }
 
-  uploadFile = (filesParams) => {
-    this.filesToUploadParams.push(filesParams);
-
-    // If no ongoing upload, begin
-    if (!this.uploading) {
-      this.uploading = true;
-      const params = this.filesToUploadParams.shift();
-
-      this.#beginUpload(...params);
-    }
-  }
-
-  #beginUpload = async (
-    projectId, file, uploadUrlParams, type, abortController, onStatusUpdate, options,
-  ) => {
-    const {
-      uploadId, bucket, key,
-    } = uploadUrlParams;
-
-    if (!uploadId || !bucket || !key) {
-      throw new Error('uploadUrlParams must contain uploadId, bucket, and key');
-    }
-
-    const uploadParams = {
-      projectId,
-      uploadId,
-      bucket,
-      key,
-    };
-
-    let parts;
-
-    try {
-      const fileUploader = new FileUploader(
-        file,
-        fileUploadConfig.chunkSize,
-        uploadParams,
-        abortController,
-        onStatusUpdate,
-        options,
-      );
-
-      parts = await fileUploader.upload();
-
-      // S3 expects parts to be sorted by number
-      parts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
-        if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
-
-        return PartNumber1 > PartNumber2 ? 1 : -1;
-      });
-    } catch (e) {
-      // Return silently, the error is handled in the onStatusUpdate callback
+  uploadFile = (params) => new Promise((resolve, reject) => {
+    if (this.uploading) {
+      this.filesToUploadParams.push({ params, resolve, reject });
       return;
     }
 
+    this.uploading = true;
+    this.#beginUpload(params, { resolve, reject });
+  })
+
+  #beginUpload = async (params, promise) => {
+    console.log('paramsDebug');
+    console.log(params);
+
+    const [
+      projectId,
+      file,
+      uploadUrlParams,
+      type,
+      abortController,
+      onStatusUpdate,
+      options,
+    ] = params;
+
     try {
-      await this.#completeMultipartUpload(parts, uploadId, key, type);
+      const {
+        uploadId, bucket, key,
+      } = uploadUrlParams;
 
-      onStatusUpdate(UploadStatus.UPLOADED);
+      if (!uploadId || !bucket || !key) {
+        throw new Error('uploadUrlParams must contain uploadId, bucket, and key');
+      }
+
+      const uploadParams = {
+        projectId,
+        uploadId,
+        bucket,
+        key,
+      };
+
+      let parts;
+
+      try {
+        const fileUploader = new FileUploader(
+          file,
+          fileUploadConfig.chunkSize,
+          uploadParams,
+          abortController,
+          onStatusUpdate,
+          options,
+        );
+
+        parts = await fileUploader.upload();
+
+        // S3 expects parts to be sorted by number
+        parts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
+          if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
+
+          return PartNumber1 > PartNumber2 ? 1 : -1;
+        });
+      } catch (e) {
+        // Return silently, the error is handled in the onStatusUpdate callback
+        return;
+      }
+
+      try {
+        await this.#completeMultipartUpload(parts, uploadId, key, type);
+
+        onStatusUpdate(UploadStatus.UPLOADED);
+      } catch (e) {
+        onStatusUpdate(UploadStatus.UPLOAD_ERROR);
+      }
+
+      // Begin next upload
+      if (this.filesToUploadParams.length > 0) {
+        const { params: nextParams, promise: nextPromise } = this.filesToUploadParams.shift();
+
+        this.#beginUpload(nextParams, nextPromise);
+      } else {
+        this.uploading = false;
+      }
+
+      promise.resolve();
     } catch (e) {
-      onStatusUpdate(UploadStatus.UPLOAD_ERROR);
-    }
-
-    // Begin next upload
-    if (this.filesToUploadParams.length > 0) {
-      const params = this.filesToUploadParams.shift();
-
-      this.#beginUpload(...params);
-    } else {
-      this.uploading = false;
+      promise.reject(e);
     }
   }
 
