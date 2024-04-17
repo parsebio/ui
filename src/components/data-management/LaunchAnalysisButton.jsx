@@ -145,7 +145,6 @@ const LaunchAnalysisButton = () => {
         onClick={onClick}
         loading={loading}
       >
-
         {
           getAnyFileUploadFailed() ? (
             <Space>
