@@ -150,6 +150,7 @@ const ReferralButton = (props) => {
         </Card>
       ),
       key: 'referral-button-contents',
+      title: '',
     },
   ];
 
