@@ -6,7 +6,7 @@ import {
   Space,
   List,
 } from 'antd';
-import { QuestionCircleOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, InfoCircleFilled } from '@ant-design/icons';
 import React, { useState } from 'react';
 import fetchAPI from 'utils/http/fetchAPI';
 import Auth from '@aws-amplify/auth';
@@ -107,40 +107,32 @@ const FeedbackButton = (props) => {
     }
   };
 
-  const links = [
-    {
-      text: 'User guide',
-      url: 'https://www.biomage.net/user-guide',
-    },
-    {
-      text: 'Tutorial videos',
-      url: 'https://www.youtube.com/@biomageltd4616/featured',
-    },
-    {
-      text: 'Free single cell RNA-seq data analysis course',
-      url: 'https://courses.biomage.net',
-    },
-  ];
-
   const menuItems = [
     {
       label: (
-        <Card size='small' style={{ padding: '0.5em', width: '300px' }}>
+        <Card size='small' style={{ padding: '0.5em', width: '400px' }}>
           For help using the platform, check out:
-          <List
-            itemLayout='vertical'
-            dataSource={links}
-            style={{ marginLeft: '2em' }} // Adding padding without using px
-            split={false}
-            renderItem={(item) => (
-              <List.Item>
-                <CaretRightOutlined />
-                <a href={item.url} target='_blank' rel='noreferrer'>{item.text}</a>
-              </List.Item>
-            )}
-          />
-          <br />
-          For 1-to-1 support from a member of our team, send a message using the box below:
+          <div style={{ margin: '1em' }}>
+            <a href='https://www.biomage.net/user-guide' target='_blank' rel='noreferrer'>
+              <InfoCircleFilled />
+              {' '}
+              User guide
+            </a>
+            {' '}
+            <br />
+            <a href='https://www.youtube.com/@biomageltd4616/featured' target='_blank' rel='noreferrer'>
+              <InfoCircleFilled />
+              {' '}
+              Tutorial videos
+            </a>
+            <br />
+            <a href='https://courses.biomage.net' target='_blank' rel='noreferrer'>
+              <InfoCircleFilled />
+              {' '}
+              Free single cell RNA-seq data analysis course
+            </a>
+          </div>
+          To report an issue or to receive 1-to-1 support from a member of our team:
           <br />
           <br />
           <Space direction='vertical' style={{ width: '100%' }}>
@@ -165,6 +157,7 @@ const FeedbackButton = (props) => {
         </Card>
       ),
       key: 'feedback-button-contents',
+      title: '',
     },
   ];
   return (
