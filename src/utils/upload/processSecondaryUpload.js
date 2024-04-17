@@ -1,9 +1,8 @@
-// import { getShouldCompress } from 'utils/upload/fileInspector';
-import uploadFileToS3 from 'utils/upload/multipartUpload';
 import { updateSecondaryAnalysisFile, createSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
+import UploadsCoordinator from './UploadsCoordinator';
 
 const uploadSecondaryAnalysisFile = async (
   file,
@@ -18,7 +17,7 @@ const uploadSecondaryAnalysisFile = async (
   // const shouldCompress = await getShouldCompress(file);
 
   dispatch(updateSecondaryAnalysisFile(
-    secondaryAnalysisId, uploadUrlParams.fileId, UploadStatus.UPLOADING, { abortController },
+    secondaryAnalysisId, uploadUrlParams.fileId, UploadStatus.QUEUED, { abortController },
   ));
 
   const onUpdateUploadStatus = (status, percentProgress) => {
@@ -33,15 +32,17 @@ const uploadSecondaryAnalysisFile = async (
     compress: false,
   };
 
-  return uploadFileToS3(
-    secondaryAnalysisId,
-    file,
-    uploadUrlParams,
-    'secondaryAnalysis',
-    abortController,
-    onUpdateUploadStatus,
-    options,
-  );
+  UploadsCoordinator.get().uploadFiles([
+    [
+      secondaryAnalysisId,
+      file,
+      uploadUrlParams,
+      'secondaryAnalysis',
+      abortController,
+      onUpdateUploadStatus,
+      options,
+    ],
+  ]);
 };
 
 const createAndUploadSecondaryAnalysisFiles = async (
@@ -62,6 +63,7 @@ const createAndUploadSecondaryAnalysisFiles = async (
     return uploadSecondaryAnalysisFile(file, secondaryAnalysisId, uploadUrlParams, dispatch);
   }, Promise.resolve()); // Start with an initially resolved promise
 };
+
 const resumeUpload = async (secondaryAnalysisId, fileId, dispatch) => {
   try {
     const { uploadUrlParams, fileHandle } = await cache.get(fileId);
