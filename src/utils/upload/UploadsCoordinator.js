@@ -12,13 +12,13 @@ class UploadsCoordinator {
 
   constructor() {
     this.filesToUploadParams = [];
-
     this.uploading = false;
-    this.uploadingFilesLock = 'uploadingFilesLock';
+
+    this.uploadTrackingLock = 'uploadTrackingLock';
   }
 
   uploadFile = (params) => new Promise((resolve, reject) => {
-    navigator.locks.request(this.uploadingFilesLock, async () => {
+    navigator.locks.request(this.uploadTrackingLock, async () => {
       if (this.uploading) {
         this.filesToUploadParams.push({ params, promise: { resolve, reject } });
         return;
@@ -86,7 +86,7 @@ class UploadsCoordinator {
     }
 
     // Begin next upload
-    navigator.locks.request(this.uploadingFilesLock, async () => {
+    navigator.locks.request(this.uploadTrackingLock, async () => {
       if (this.filesToUploadParams.length > 0) {
         const { params: nextParams, promise: nextPromise } = this.filesToUploadParams.shift();
 
