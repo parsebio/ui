@@ -12,17 +12,21 @@ class UploadsCoordinator {
 
   constructor() {
     this.filesToUploadParams = [];
+
     this.uploading = false;
+    this.uploadingFilesLock = 'uploadingFilesLock';
   }
 
   uploadFile = (params) => new Promise((resolve, reject) => {
-    if (this.uploading) {
-      this.filesToUploadParams.push({ params, promise: { resolve, reject } });
-      return;
-    }
+    navigator.locks.request(this.uploadingFilesLock, async () => {
+      if (this.uploading) {
+        this.filesToUploadParams.push({ params, promise: { resolve, reject } });
+        return;
+      }
 
-    this.uploading = true;
-    this.#beginUpload(params, { resolve, reject });
+      this.uploading = true;
+      this.#beginUpload(params, { resolve, reject });
+    });
   })
 
   #beginUpload = async (params, promise) => {
@@ -82,13 +86,15 @@ class UploadsCoordinator {
     }
 
     // Begin next upload
-    if (this.filesToUploadParams.length > 0) {
-      const { params: nextParams, promise: nextPromise } = this.filesToUploadParams.shift();
+    navigator.locks.request(this.uploadingFilesLock, async () => {
+      if (this.filesToUploadParams.length > 0) {
+        const { params: nextParams, promise: nextPromise } = this.filesToUploadParams.shift();
 
-      this.#beginUpload(nextParams, nextPromise);
-    } else {
-      this.uploading = false;
-    }
+        this.#beginUpload(nextParams, nextPromise);
+      } else {
+        this.uploading = false;
+      }
+    });
   }
 
   #completeMultipartUpload = async (parts, uploadId, s3Path, type) => {
