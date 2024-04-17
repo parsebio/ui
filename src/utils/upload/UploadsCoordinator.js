@@ -15,8 +15,8 @@ class UploadsCoordinator {
     this.uploading = false;
   }
 
-  uploadFiles = (filesParams) => {
-    this.filesToUploadParams.push(...filesParams);
+  uploadFile = (filesParams) => {
+    this.filesToUploadParams.push(filesParams);
 
     // If no ongoing upload, begin
     if (!this.uploading) {
