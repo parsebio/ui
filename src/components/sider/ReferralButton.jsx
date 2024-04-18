@@ -6,7 +6,7 @@ import {
   Space,
   Tooltip,
 } from 'antd';
-import { DownOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { TeamOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import Auth from '@aws-amplify/auth';
 import handleError from 'utils/http/handleError';
@@ -15,12 +15,12 @@ import validateInput, { rules } from 'utils/validateInputs';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import fetchAPI from 'utils/http/fetchAPI';
-
-const { TextArea } = Input;
+import PropTypes from 'prop-types';
 
 const initialMessage = 'Hi,\n\nCheck out Cellenics. It will make your single-cell analysis easier.';
 
-const ReferralButton = () => {
+const ReferralButton = (props) => {
+  const { collapsed } = props;
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(false);
@@ -121,10 +121,10 @@ const ReferralButton = () => {
   const menuItems = [
     {
       label: (
-        <Card size='small'>
+        <Card size='small' style={{ padding: '1em', width: '300px' }}>
           <Space direction='vertical' style={{ width: '100%' }}>
+            Provide your colleague&apos;s email address to recommend Cellenics.
             <Input
-              addonBefore='To: '
               label='Email'
               onChange={(e) => {
                 const { isValid } = validateInput(e.target.value, rules.VALID_EMAIL);
@@ -134,17 +134,6 @@ const ReferralButton = () => {
               }}
               placeholder={'Your friend\'s email address'}
             />
-            <TextArea
-              value={customMessage}
-              label='Custom message'
-              onChange={(e) => {
-                setCustomMessage(e.target.value);
-              }}
-              rows={4}
-              style={{
-                resize: 'none', width: 300, outline: 'none',
-              }}
-            />
             <Space>
               <Button size='small' onClick={() => setVisible(false)}>Cancel</Button>
               <Tooltip
@@ -153,10 +142,17 @@ const ReferralButton = () => {
                 <Button size='small' type='primary' disabled={!isEmailValid} onClick={submitReferral}>Send invite</Button>
               </Tooltip>
             </Space>
+            Note that Insights projects can be shared with collaborators
+            to enable them to explore projects that you own.
+            <br />
+            To do this, use the Share button in
+            <a target='_blank' href='/data-management' rel='noreferrer'>Insights.</a>
+
           </Space>
         </Card>
       ),
       key: 'referral-button-contents',
+      title: '',
     },
   ];
 
@@ -165,15 +161,17 @@ const ReferralButton = () => {
       open={visible}
       onOpenChange={(v) => setVisible(v)}
       menu={{ items: menuItems }}
-      placement='bottomRight'
+      placement='topRight'
       trigger='click'
     >
-      <Button type='dashed' icon={<ShareAltOutlined />}>
-        Invite a friend
-        <DownOutlined />
+      <Button type='text' icon={<TeamOutlined />} style={{ color: 'hsla(0, 0%, 100%, .65)' }}>
+        {!collapsed && 'Recommend'}
       </Button>
     </Dropdown>
   );
+};
+ReferralButton.propTypes = {
+  collapsed: PropTypes.bool.isRequired,
 };
 
 export default ReferralButton;

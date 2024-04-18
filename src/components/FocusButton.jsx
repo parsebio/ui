@@ -8,6 +8,7 @@ import {
 } from 'react-redux';
 
 import { setCellInfoFocus } from 'redux/actions/cellInfo';
+import { brandColors } from 'utils/constants';
 
 const FocusButton = (props) => {
   const { store, lookupKey, experimentId } = props;
@@ -40,7 +41,7 @@ const FocusButton = (props) => {
         ref={buttonRef}
       >
         {focused
-          ? (<EyeTwoTone style={{ cursor: 'pointer' }} />)
+          ? (<EyeTwoTone twoToneColor={brandColors.STEEL_PINK} style={{ cursor: 'pointer' }} />)
           : (<EyeOutlined style={{ cursor: 'pointer' }} />)}
       </Button>
     </Tooltip>

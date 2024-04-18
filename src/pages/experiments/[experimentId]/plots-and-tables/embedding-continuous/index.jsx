@@ -10,7 +10,6 @@ import {
 import MultiViewGrid from 'components/plots/MultiViewGrid';
 
 import SelectData from 'components/plots/styling/embedding-continuous/SelectData';
-import Header from 'components/Header';
 import PlotContainer from 'components/plots/PlotContainer';
 import { loadGeneExpression } from 'redux/actions/genes';
 
@@ -138,11 +137,11 @@ const ContinuousEmbeddingPage = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.CONTINUOUS_EMBEDDING} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={selectedPlotUuid}
         plotType={plotType}
+        plotName={plotNames.CONTINUOUS_EMBEDDING}
         plotStylingConfig={plotStylingConfig}
         extraControlPanels={renderExtraPanels()}
         defaultActiveKey='view-multiple-plots'
