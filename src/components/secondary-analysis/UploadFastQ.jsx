@@ -29,6 +29,7 @@ const UploadFastQ = (props) => {
   } = props;
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
+  const [missingFastqPairs, setMissingFastqPairs] = useState();
 
   const dispatch = useDispatch();
 
@@ -61,6 +62,14 @@ const UploadFastQ = (props) => {
       {
         validate: (file) => !alreadyUploadedFiles.includes(file.name),
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
+      },
+      {
+        validate: (file) => (!['_R1', '_R2'].some((readNumber) => file.name.includes(readNumber))),
+        rejectReason: endUserMessages.ERROR_READ_NUMBER_NOT_IN_NAME,
+      },
+      {
+        validate: (file) => (['_R1', '_R2'].every((readNumber) => file.name.includes(readNumber))),
+        rejectReason: endUserMessages.ERROR_TOO_MANY_READS_IN_NAME,
       },
     ];
 
