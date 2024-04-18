@@ -65,7 +65,7 @@ const UploadFastQ = (props) => {
       },
       {
         validate: (file) => (!['_R1', '_R2'].some((readNumber) => file.name.includes(readNumber))),
-        rejectReason: endUserMessages.ERROR_READ_NUMBER_NOT_IN_NAME,
+        rejectReason: endUserMessages.ERROR_READ_PAIR_NOT_IN_NAME,
       },
       {
         validate: (file) => (['_R1', '_R2'].every((readNumber) => file.name.includes(readNumber))),
