@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm,
+  Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
 import Header from 'components/Header';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
@@ -30,7 +30,6 @@ import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
-  numOfSamples: 'Number of samples',
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
   kit: 'Kit type',
@@ -49,7 +48,7 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
-const analysisDetailsKeys = ['name', 'description', 'numOfSamples', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+const analysisDetailsKeys = ['name', 'description', 'sampleNames', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
 
 const Pipeline = () => {
   const dispatch = useDispatch();
@@ -71,7 +70,7 @@ const Pipeline = () => {
   const {
     name: analysisName,
     description: analysisDescription,
-    numOfSamples,
+    sampleNames,
     numOfSublibraries,
     chemistryVersion,
     kit,
@@ -170,6 +169,9 @@ const Pipeline = () => {
     if (!sampleLTFile) return null;
 
     const { name, upload, createdAt } = sampleLTFile;
+    const sampleCount = sampleNames.length;
+    const sampleNamesString = sampleNames.join(', ');
+
     return mainScreenDetails({
       name,
       status: <UploadStatusView
@@ -178,6 +180,14 @@ const Pipeline = () => {
         secondaryAnalysisId={activeSecondaryAnalysisId}
       />,
       createdAt: <PrettyTime isoTime={createdAt} />,
+      samples:
+
+  <div style={{ display: 'flex', alignItems: 'center' }}>
+    <b>{`${sampleCount} samples`}</b>
+    <Popover content={<div style={{ maxWidth: '300px', wordWrap: 'break-word' }}>{sampleNamesString}</div>} title='Sample Names' trigger='click'>
+      <Button style={{ fontSize: '1.4vh' }} type='link'>View Names</Button>
+    </Popover>
+  </div>,
     });
   };
 
@@ -221,11 +231,11 @@ const Pipeline = () => {
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />
       ),
-      isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
+      isValid: (numOfSublibraries && chemistryVersion && kit),
       renderMainScreenDetails: () => {
         const kitTitle = kitOptions.find((option) => option.value === kit)?.label;
         return mainScreenDetails({
-          kit: kitTitle, chemistryVersion, numOfSamples, numOfSublibraries,
+          kit: kitTitle, chemistryVersion, numOfSublibraries,
         });
       },
     },
@@ -238,6 +248,7 @@ const Pipeline = () => {
           renderUploadedFileDetails={renderSampleLTFileDetails}
           uploadedFileId={sampleLTFile?.id}
           setFilesNotUploaded={setFilesNotUploaded}
+          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />
       ),
       isValid: allFilesUploaded([sampleLTFile]),

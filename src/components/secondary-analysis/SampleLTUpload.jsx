@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
+import readExcelFile from 'read-excel-file';
 import {
   Form, Empty, Button,
   Typography,
@@ -11,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { CheckCircleTwoTone, DeleteOutlined, WarningOutlined } from '@ant-design/icons';
-import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import { deleteSecondaryAnalysisFile, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import endUserMessages from 'utils/endUserMessages';
@@ -21,10 +22,25 @@ const { Text } = Typography;
 const SampleLTUpload = (props) => {
   const dispatch = useDispatch();
   const {
-    secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId, setFilesNotUploaded,
+    secondaryAnalysisId, renderUploadedFileDetails,
+    uploadedFileId, setFilesNotUploaded,
   } = props;
   const [file, setFile] = useState(false);
   const [invalidInputWarnings, setInvalidInputWarnings] = useState([]);
+  const [sampleNames, setSampleNames] = useState([]);
+
+  const getSampleNamesFromExcel = async (excelFile) => {
+    const rows = await readExcelFile(excelFile);
+    // Find the row and column index where 'Sample Name' is mentioned
+    const sampleNameRowIndex = rows.findIndex((row) => row.includes('Sample Name'));
+    const sampleNameColumnIndex = rows[sampleNameRowIndex].findIndex((cell) => cell === 'Sample Name');
+
+    // Extract sample names from the rows following the 'Sample Name' row
+    const extractedSampleNames = rows.slice(sampleNameRowIndex + 1)
+      .map((row) => row[sampleNameColumnIndex]).filter((name) => name !== null);
+    console.log('EXTRACTED SAMPLES ', extractedSampleNames, secondaryAnalysisId);
+    return extractedSampleNames;
+  };
 
   const onDrop = async (droppedFiles) => {
     const warnings = [];
@@ -40,7 +56,13 @@ const SampleLTUpload = (props) => {
     }
 
     setInvalidInputWarnings(warnings);
-    setFile(validFiles.length > 0 ? validFiles[0] : false);
+    const selectedFile = validFiles.length > 0 ? validFiles[0] : false;
+    setFile(selectedFile);
+
+    if (selectedFile) {
+      const names = await getSampleNamesFromExcel(selectedFile);
+      setSampleNames(names);
+    }
   };
 
   useEffect(() => {
@@ -52,6 +74,7 @@ const SampleLTUpload = (props) => {
       dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
     }
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], [], 'samplelt', dispatch);
+    dispatch(updateSecondaryAnalysis(secondaryAnalysisId, { sampleNames }));
   };
 
   const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';
@@ -159,5 +182,6 @@ SampleLTUpload.propTypes = {
   renderUploadedFileDetails: PropTypes.func.isRequired,
   uploadedFileId: PropTypes.string,
   setFilesNotUploaded: PropTypes.func.isRequired,
+  onDetailsChanged: PropTypes.func.isRequired,
 };
 export default SampleLTUpload;
