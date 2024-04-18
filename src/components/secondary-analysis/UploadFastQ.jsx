@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState, useEffect, useCallback, useMemo,
+} from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button, Tabs, Alert,
 } from 'antd';
@@ -29,7 +31,6 @@ const UploadFastQ = (props) => {
   } = props;
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
-  const [missingFastqPairs, setMissingFastqPairs] = useState();
 
   const dispatch = useDispatch();
 
@@ -44,11 +45,25 @@ const UploadFastQ = (props) => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));
   }, [fileHandles]);
 
+  const matchingFastqPairs = useMemo(() => {
+    const fileNames = fileHandles.valid.map((file) => file.name);
+
+    const [r1s, r2s] = _.partition(fileNames, (fileName) => fileName.includes('_R1'));
+    const intersection = _.intersectionBy(r1s, r2s, (fileName) => fileName.replace('_R1', '_R2'));
+
+    return intersection.length === r1s.length && intersection.length === r2s.length;
+  }, [fileHandles]);
+
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
   const validateAndSetFiles = async (fileHandlesList, secondaryAnalysisFilesUpdated) => {
     const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated)
       .map((item) => item.name);
+
+    const countOccurrences = (subStr, str) => {
+      const matches = str.match(new RegExp(subStr, 'g'));
+      return matches ? matches.length : 0;
+    };
 
     const validators = [
       {
@@ -64,11 +79,11 @@ const UploadFastQ = (props) => {
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
       },
       {
-        validate: (file) => (['_R1', '_R2'].some((readNumber) => file.name.includes(readNumber))),
+        validate: (file) => ['_R1', '_R2'].some((readNumber) => file.name.includes(readNumber)),
         rejectReason: endUserMessages.ERROR_READ_PAIR_NOT_IN_NAME,
       },
       {
-        validate: (file) => (!['_R1', '_R2'].every((readNumber) => file.name.includes(readNumber))),
+        validate: (file) => countOccurrences('_R1', file.name) + countOccurrences('_R2', file.name) <= 1,
         rejectReason: endUserMessages.ERROR_TOO_MANY_READS_IN_NAME,
       },
     ];
