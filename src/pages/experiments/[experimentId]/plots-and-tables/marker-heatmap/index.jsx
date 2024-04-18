@@ -98,10 +98,12 @@ const MarkerHeatmap = ({ experimentId }) => {
       // grouping and metadata tracks should change when selectedCellSet is changed
       updatesToDispatch = {
         ...updatesToDispatch,
-        selectedTracks: [config.selectedCellSet],
-        groupedTracks: [config.selectedCellSet],
+        selectedTracks: [updatesToDispatch.selectedCellSet],
+        groupedTracks: [updatesToDispatch.selectedCellSet],
       };
     }
+
+    dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
 
     if (updatesToDispatch.nMarkerGenes) {
       dispatch(loadMarkerGenes(
@@ -119,8 +121,6 @@ const MarkerHeatmap = ({ experimentId }) => {
         loadDownsampledGeneExpression(experimentId, updatesToDispatch.selectedGenes, plotUuid),
       );
     }
-
-    dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
   };
 
   useEffect(() => {
