@@ -20,7 +20,6 @@ import { getCellSets, getCellSetsHierarchy, getCellSetsHierarchyByKeys } from 'r
 
 import getTrajectoryPlotStartingNodes from 'redux/actions/componentConfig/getTrajectoryPlotStartingNodes';
 
-import Header from 'components/Header';
 import PlotContainer from 'components/plots/PlotContainer';
 import TrajectoryAnalysisPlot from 'components/plots/TrajectoryAnalysisPlot';
 import PlatformError from 'components/PlatformError';
@@ -267,11 +266,11 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.TRAJECTORY_ANALYSIS} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.TRAJECTORY_ANALYSIS}
         plotStylingConfig={plotStylingConfig}
         extraToolbarControls={renderExtraToolbarControls()}
         defaultActiveKey='trajectory-analysis'

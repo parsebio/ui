@@ -10,7 +10,6 @@ import utc from 'dayjs/plugin/utc';
 import _ from 'lodash';
 import ExportAsCSV from 'components/plots/ExportAsCSV';
 import PropTypes from 'prop-types';
-import Header from 'components/Header';
 import PlotContainer from 'components/plots/PlotContainer';
 import { Vega } from 'react-vega';
 
@@ -229,11 +228,11 @@ const VolcanoPlotPage = (props) => {
 
   return (
     <>
-      <Header title={plotNames.VOLCANO_PLOT} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.VOLCANO_PLOT}
         plotStylingConfig={plotStylingConfig}
         extraToolbarControls={generateExportDropdown()}
         extraControlPanels={renderExtraPanels()}

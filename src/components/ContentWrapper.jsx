@@ -22,6 +22,7 @@ import {
   Layout,
   Menu,
   Typography,
+  Divider,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
@@ -37,7 +38,7 @@ import { loadUser } from 'redux/actions/user';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
 import { isBrowser, privacyPolicyIsNotAccepted } from 'utils/deploymentInfo';
-import { modules } from 'utils/constants';
+import { modules, brandColors } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import experimentUpdatesHandler from 'utils/experimentUpdatesHandler';
 import integrationTestConstants from 'utils/integrationTestConstants';
@@ -46,6 +47,10 @@ import pipelineStatusValues from 'utils/pipelineStatusValues';
 import { DndProvider } from 'react-dnd';
 import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
+
+import FeedbackButton from './sider/FeedbackButton';
+import ReferralButton from './sider/ReferralButton';
+import UserButton from './sider/UserButton';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -269,7 +274,7 @@ const ContentWrapper = (props) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(315deg, #5B070A 0%, #8f0b10 30%, #A80D12 100%)',
+        background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
         paddingTop: '10px',
         paddingBottom: '10px',
         pointerEvents: 'none',
@@ -278,34 +283,34 @@ const ContentWrapper = (props) => {
     >
       <svg xmlns='http://www.w3.org/2000/svg' width={200} height={50}>
         <defs id='svg_document_defs'>
-          <style id='IBM Plex Sans_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css?family=IBM+Plex+Sans);</style>
+          <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g transform='translate(20, 25)'>
           <text
             style={{ outlineStyle: 'none' }}
             fontWeight='500'
             textRendering='geometricPrecision'
-            fontFamily='IBM Plex Sans'
+            fontFamily='M Plus 2'
             fill='#F0F2F5'
             fontSize='25.00px'
             textAnchor='start'
             dominantBaseline='middle'
           >
-            Cellenics®
+            Parse Bio
           </text>
           {/* provided by? TBD */}
           <text
             style={{ outlineStyle: 'none' }}
             fontWeight='400'
             textRendering='geometricPrecision'
-            fontFamily='IBM Plex Sans'
+            fontFamily='M Plus 2'
             fill='#F0F2F5'
             fontSize='9.00px'
             textAnchor='start'
             dominantBaseline='middle'
             y='20'
           >
-            provided by Biomage
+            Single Cell Platform
           </text>
         </g>
       </svg>
@@ -315,7 +320,7 @@ const ContentWrapper = (props) => {
   const SmallLogo = () => (
     <div
       style={{
-        background: 'linear-gradient(315deg, #5B070A 0%, #8f0b10 30%, #A80D12 100%)',
+        background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
         paddingTop: '8px',
         paddingBottom: '8px',
         pointerEvents: 'none',
@@ -324,7 +329,7 @@ const ContentWrapper = (props) => {
     >
       <svg xmlns='http://www.w3.org/2000/svg' width={100} height={30}>
         <defs id='svg_document_defs'>
-          <style id='IBM Plex Sans_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css?family=IBM+Plex+Sans);</style>
+          <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g>
           <text
@@ -332,14 +337,12 @@ const ContentWrapper = (props) => {
             x='40px'
             fontWeight='500'
             textRendering='geometricPrecision'
-            fontFamily='IBM Plex Sans'
+            fontFamily='M Plus 2'
             y='24px'
             fill='#F0F2F5'
             fontSize='25.00px'
             textAnchor='middle'
-          >
-            Cs
-          </text>
+          />
         </g>
       </svg>
     </div>
@@ -553,10 +556,11 @@ const ContentWrapper = (props) => {
           <PrivacyPolicyIntercept user={user} onOk={() => dispatch(loadUser())} />
         )}
         <BrowserAlert />
+
         <Layout style={{ minHeight: '100vh' }}>
           <Sider
             style={{
-              overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
+              background: brandColors.BLACK_INDIGO, overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
             }}
             width={210}
             theme='dark'
@@ -568,6 +572,7 @@ const ContentWrapper = (props) => {
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               {collapsed ? <SmallLogo /> : <BigLogo />}
               <Menu
+                style={{ background: brandColors.BLACK_INDIGO }}
                 data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
                 theme='dark'
                 selectedKeys={[currentModule]}
@@ -577,15 +582,27 @@ const ContentWrapper = (props) => {
               >
                 {menuItems}
               </Menu>
+              <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: collapsed ? 'center' : 'left' }}>
+                <FeedbackButton collapsed={collapsed} />
+                <ReferralButton collapsed={collapsed} />
+                <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
+                <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
+                  <UserButton />
+                </div>
+              </div>
             </div>
+
           </Sider>
+
           <Layout
             style={!collapsed ? { marginLeft: '210px' } : { marginLeft: '80px' }} // this is the collapsed width for our sider
           >
             {renderContent()}
           </Layout>
         </Layout>
+
       </DndProvider>
+
     </>
   );
 };

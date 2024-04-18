@@ -14,7 +14,6 @@ import {
   updatePlotConfig,
   loadPlotConfig,
 } from 'redux/actions/componentConfig/index';
-import Header from 'components/Header';
 import { loadCellSets } from 'redux/actions/cellSets';
 import Loader from 'components/Loader';
 import CategoricalEmbeddingPlot from 'components/plots/CategoricalEmbeddingPlot';
@@ -163,9 +162,9 @@ const EmbeddingCategoricalPage = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.CATEGORICAL_EMBEDDING} />
       <PlotContainer
         experimentId={experimentId}
+        plotName={plotNames.CATEGORICAL_EMBEDDING}
         plotUuid={plotUuid}
         plotType={plotType}
         plotStylingConfig={plotStylingConfig}
@@ -173,7 +172,7 @@ const EmbeddingCategoricalPage = ({ experimentId }) => {
         extraControlPanels={renderExtraPanels()}
         defaultActiveKey='group-by'
       >
-        { render() }
+        {render()}
       </PlotContainer>
     </>
   );

@@ -4,18 +4,21 @@ import {
   Dropdown,
   Input,
   Space,
+  List,
 } from 'antd';
-import { CommentOutlined, DownOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, InfoCircleFilled } from '@ant-design/icons';
 import React, { useState } from 'react';
 import fetchAPI from 'utils/http/fetchAPI';
 import Auth from '@aws-amplify/auth';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
+import PropTypes from 'prop-types';
 
 const { TextArea } = Input;
 
-const FeedbackButton = () => {
+const FeedbackButton = (props) => {
+  const { collapsed } = props;
   const [visible, setVisible] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
 
@@ -107,7 +110,31 @@ const FeedbackButton = () => {
   const menuItems = [
     {
       label: (
-        <Card size='small'>
+        <Card size='small' style={{ padding: '0.5em', width: '400px' }}>
+          For help using the platform, check out:
+          <div style={{ margin: '1em' }}>
+            <a href='https://www.biomage.net/user-guide' target='_blank' rel='noreferrer'>
+              <InfoCircleFilled />
+              {' '}
+              User guide
+            </a>
+            {' '}
+            <br />
+            <a href='https://www.youtube.com/@biomageltd4616/featured' target='_blank' rel='noreferrer'>
+              <InfoCircleFilled />
+              {' '}
+              Tutorial videos
+            </a>
+            <br />
+            <a href='https://courses.biomage.net' target='_blank' rel='noreferrer'>
+              <InfoCircleFilled />
+              {' '}
+              Free single cell RNA-seq data analysis course
+            </a>
+          </div>
+          To report an issue or to receive 1-to-1 support from a member of our team:
+          <br />
+          <br />
           <Space direction='vertical' style={{ width: '100%' }}>
             <TextArea
               value={feedbackText}
@@ -116,10 +143,10 @@ const FeedbackButton = () => {
               }}
               rows={4}
               placeholder='Please write your message here to provide feedback or report issues on Cellenics. A member of our team will get back to you as soon as possible.'
-              bordered={false}
+              bordered
               ref={(ref) => { if (ref) { ref.focus(); } }}
               style={{
-                resize: 'none', width: 300, border: 'none', outline: 'none',
+                resize: 'none', width: 300, outline: 'none',
               }}
             />
             <Space>
@@ -130,23 +157,25 @@ const FeedbackButton = () => {
         </Card>
       ),
       key: 'feedback-button-contents',
+      title: '',
     },
   ];
-
   return (
     <Dropdown
       open={visible}
       onOpenChange={(v) => setVisible(v)}
       menu={{ items: menuItems }}
-      placement='bottomRight'
+      placement='topRight'
       trigger='click'
     >
-      <Button type='dashed' icon={<CommentOutlined />}>
-        Feedback or issues?
-        <DownOutlined />
+      <Button type='text' icon={<QuestionCircleOutlined />} style={{ color: 'hsla(0, 0%, 100%, .65)' }}>
+        {!collapsed && 'Support'}
       </Button>
     </Dropdown>
   );
+};
+FeedbackButton.propTypes = {
+  collapsed: PropTypes.bool.isRequired,
 };
 
 export default FeedbackButton;
