@@ -13,7 +13,6 @@ import {
 } from 'antd';
 import Link from 'next/link';
 
-import Header from 'components/Header';
 import Loader from 'components/Loader';
 import PlatformError from 'components/PlatformError';
 import FrequencyPlot from 'components/plots/FrequencyPlot';
@@ -206,11 +205,11 @@ const FrequencyPlotPage = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.FREQUENCY_PLOT} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.FREQUENCY_PLOT}
         plotStylingConfig={plotStylingConfig}
         extraToolbarControls={<ExportAsCSV data={csvData} filename={csvFilename} />}
         extraControlPanels={renderExtraPanels()}
