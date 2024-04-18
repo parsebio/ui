@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button, Tabs, Alert,
+  Tooltip,
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
@@ -285,7 +286,7 @@ const UploadFastQ = (props) => {
                   style={{ width: '100%' }}
                   expandedContent={(
                     <>
-                      <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Files without pair</Divider>
+                      <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Files without read pair</Divider>
                       <List
                         dataSource={nonMatchingFastqPairs}
                         size='small'
@@ -320,9 +321,7 @@ const UploadFastQ = (props) => {
                         {' '}
                       </Text>
                       <Text>
-                        Some of your files do not have a matching read pair.
-                        Please ensure that for each sublibrary,
-                        you have a pair of Fastq files, R1 and R2.
+                        Files without read pair, click to display
                       </Text>
                     </center>
                   )}
@@ -341,20 +340,22 @@ const UploadFastQ = (props) => {
             >
               <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
             </div>
-            <Button
-              data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
-              id='uploadButton'
-              type='primary'
-              key='create'
-              block
-              disabled={!fileHandles.valid.length}
-              onClick={() => {
-                beginUpload(fileHandles.valid);
-                setFileHandles(emptyFiles);
-              }}
-            >
-              Upload
-            </Button>
+            <Tooltip title={nonMatchingFastqPairs.length > 0 ? 'Please fix the files without read pair' : null}>
+              <Button
+                data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+                id='uploadButton'
+                type='primary'
+                key='create'
+                block
+                disabled={!fileHandles.valid.length || nonMatchingFastqPairs.length > 0}
+                onClick={() => {
+                  beginUpload(fileHandles.valid);
+                  setFileHandles(emptyFiles);
+                }}
+              >
+                Upload
+              </Button>
+            </Tooltip>
             {fileHandles.valid.length > 0 && (
               <>
                 <Divider orientation='center'>To upload</Divider>
