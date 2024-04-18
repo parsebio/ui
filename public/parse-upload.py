@@ -614,6 +614,23 @@ def show_files_to_upload_warning(file_paths):
     if the_input == "no":
         raise Exception("Upload cancelled")
 
+def check_names_are_valid(files):
+    for file in files:
+        if not (file.endswith(".fastq.gz") or file.endswith(".fq.gz")):
+            raise Exception(
+                f"File {file} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported"
+            )
+        if not "_R1" in file or "_R2" in file:
+            raise Exception(
+                f"File {file} does not contain _R1 or _R2 in its name, please check the file name to ensure it is a valid fastq pair"
+            )
+        if file.count("_R1") + file.count("_R2") > 1:
+            raise Exception(
+                f"File {file} can't contain \"_R1\" or \"_R2\" (its read pair) more than once. Valid example: \"S1_R1.fast.gz\""
+            )
+
+def check_fastq_pairs_complete(file_paths):
+    pass
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
@@ -653,12 +670,8 @@ def prepare_upload(args):
         # Take list of glob patterns and expand and flatten them into a list of files
         files = [file for glob_pattern in args.file for file in glob.glob(glob_pattern)]
 
-        # Check that the files look like fastqs
-        for file in files:
-            if not (file.endswith(".fastq.gz") or file.endswith(".fq.gz")):
-                raise Exception(
-                    f"File {file} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported"
-                )
+        check_names_are_valid(files)
+        check_fastq_pairs_complete(files)
 
         upload_tracker = UploadTracker.fromScratch(
             args.run_id, files, args.max_threads_count, args.token
