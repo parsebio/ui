@@ -64,11 +64,11 @@ const UploadFastQ = (props) => {
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
       },
       {
-        validate: (file) => (!['_R1', '_R2'].some((readNumber) => file.name.includes(readNumber))),
+        validate: (file) => (['_R1', '_R2'].some((readNumber) => file.name.includes(readNumber))),
         rejectReason: endUserMessages.ERROR_READ_PAIR_NOT_IN_NAME,
       },
       {
-        validate: (file) => (['_R1', '_R2'].every((readNumber) => file.name.includes(readNumber))),
+        validate: (file) => (!['_R1', '_R2'].every((readNumber) => file.name.includes(readNumber))),
         rejectReason: endUserMessages.ERROR_TOO_MANY_READS_IN_NAME,
       },
     ];
