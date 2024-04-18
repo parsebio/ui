@@ -25,6 +25,11 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 
 const { Text } = Typography;
 
+const getMissingPairName = (fileName) => {
+  if (fileName.includes('_R1')) return fileName.replace('_R1', '_R2');
+  if (fileName.includes('_R2')) return fileName.replace('_R2', '_R1');
+};
+
 const UploadFastQ = (props) => {
   const {
     secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded,
@@ -45,13 +50,18 @@ const UploadFastQ = (props) => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));
   }, [fileHandles]);
 
-  const matchingFastqPairs = useMemo(() => {
+  const nonMatchingFastqPairs = useMemo(() => {
     const fileNames = fileHandles.valid.map((file) => file.name);
 
     const [r1s, r2s] = _.partition(fileNames, (fileName) => fileName.includes('_R1'));
-    const intersection = _.intersectionBy(r1s, r2s, (fileName) => fileName.replace('_R1', '_R2'));
 
-    return intersection.length === r1s.length && intersection.length === r2s.length;
+    const r1sSet = new Set(r1s);
+    const r2sWithoutMatch = r2s.filter((fileName) => !r1sSet.has(fileName.replace('_R2', '_R1')));
+
+    const r2sSet = new Set(r2s);
+    const r1sWithoutMatch = r1s.filter((fileName) => !r2sSet.has(fileName.replace('_R1', '_R2')));
+
+    return [...r1sWithoutMatch, ...r2sWithoutMatch];
   }, [fileHandles]);
 
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
@@ -192,14 +202,24 @@ const UploadFastQ = (props) => {
             name='projectName'
           >
             <div>
-              Upload your Fastq files that are output from bcl2fastq. For each sublibrary, you must have a pair of Fastq files, R1 and R2.
+              Upload your Fastq files that are output from bcl2fastq.
+              For each sublibrary, you must have a pair of Fastq files, R1 and R2.
+              <br />
               <br />
               Note that:
               {' '}
               <br />
               <ul>
-                <li>FASTQ files from the same Parse experiment that have different Illumina indexes should not be concatenated. These files are separate sublibraries.</li>
-                <li>FASTQ files from the same Parse experiment that share identical Illumina indexes must be concatenated. These files belong to the same sublibrary.</li>
+                <li>
+                  FASTQ files from the same Parse experiment that have different
+                  Illumina indexes should not be concatenated.
+                  These files are separate sublibraries.
+                </li>
+                <li>
+                  FASTQ files from the same Parse experiment
+                  that share identical Illumina indexes must be concatenated.
+                  These files belong to the same sublibrary.
+                </li>
               </ul>
               Further details on Fastq file format can be found
               {' '}
@@ -257,6 +277,58 @@ const UploadFastQ = (props) => {
                 />
                 <br />
               </div>
+            )}
+
+            {nonMatchingFastqPairs.length > 0 && (
+              <>
+                <Expandable
+                  style={{ width: '100%' }}
+                  expandedContent={(
+                    <>
+                      <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Files without pair</Divider>
+                      <List
+                        dataSource={nonMatchingFastqPairs}
+                        size='small'
+                        itemLayout='horizontal'
+                        pagination
+                        renderItem={(fileName) => (
+                          <List.Item key={fileName} style={{ height: '100%', width: '100%' }}>
+                            <Space style={{ width: 200, justifyContent: 'center' }}>
+                              <CloseCircleTwoTone twoToneColor='#f5222d' />
+                              <div style={{ width: 200 }}>
+                                <Text
+                                  ellipsis={{ tooltip: fileName }}
+                                >
+                                  {fileName}
+                                </Text>
+                              </div>
+                            </Space>
+                            <Text style={{ width: '100%', marginLeft: '50px' }}>
+                              {`Either remove this file or add ${getMissingPairName(fileName)}.`}
+                            </Text>
+                          </List.Item>
+                        )}
+                      />
+                    </>
+                  )}
+                  collapsedContent={(
+                    <center style={{ cursor: 'pointer' }}>
+                      <Divider orientation='center' style={{ color: 'red' }} />
+                      <Text type='danger'>
+                        {' '}
+                        <WarningOutlined />
+                        {' '}
+                      </Text>
+                      <Text>
+                        Some of your files do not have a matching read pair.
+                        Please ensure that for each sublibrary,
+                        you have a pair of Fastq files, R1 and R2.
+                      </Text>
+                    </center>
+                  )}
+                />
+                <br />
+              </>
             )}
 
             <div
