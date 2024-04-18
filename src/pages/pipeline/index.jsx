@@ -168,7 +168,7 @@ const Pipeline = () => {
     if (!sampleLTFile) return null;
 
     const { name, upload, createdAt } = sampleLTFile;
-    const sampleCount = sampleNames.length;
+    const sampleCount = sampleNames?.length || 0;
 
     return mainScreenDetails({
       name,
@@ -178,25 +178,25 @@ const Pipeline = () => {
         secondaryAnalysisId={activeSecondaryAnalysisId}
       />,
       createdAt: <PrettyTime isoTime={createdAt} />,
-      samples:
-
-  <div style={{ display: 'flex', alignItems: 'center' }}>
-    <b>{`${sampleCount} samples`}</b>
-    <Popover
-      content={(
-        <div style={{
-          maxWidth: '300px', maxHeight: '30vh', overflowY: 'auto', wordWrap: 'break-word',
-        }}
-        >
-          {sampleNames.map((sampleName) => <div key={sampleName}>{sampleName}</div>)}
+      samples: sampleCount && (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <b>{`${sampleCount} samples`}</b>
+          <Popover
+            content={(
+              <div style={{
+                maxWidth: '300px', maxHeight: '30vh', overflowY: 'auto', wordWrap: 'break-word',
+              }}
+              >
+                {sampleNames.map((sampleName) => <div key={sampleName}>{sampleName}</div>)}
+              </div>
+            )}
+            title='Sample Names'
+            trigger='click'
+          >
+            <Button style={{ fontSize: '1.4vh' }} type='link'>View Sample Names</Button>
+          </Popover>
         </div>
-      )}
-      title='Sample Names'
-      trigger='click'
-    >
-      <Button style={{ fontSize: '1.4vh' }} type='link'>View Sample Names</Button>
-    </Popover>
-  </div>,
+      ),
     });
   };
 
