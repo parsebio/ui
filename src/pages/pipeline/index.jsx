@@ -170,7 +170,6 @@ const Pipeline = () => {
 
     const { name, upload, createdAt } = sampleLTFile;
     const sampleCount = sampleNames.length;
-    const sampleNamesString = sampleNames.join(', ');
 
     return mainScreenDetails({
       name,
@@ -184,8 +183,19 @@ const Pipeline = () => {
 
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <b>{`${sampleCount} samples`}</b>
-    <Popover content={<div style={{ maxWidth: '300px', wordWrap: 'break-word' }}>{sampleNamesString}</div>} title='Sample Names' trigger='click'>
-      <Button style={{ fontSize: '1.4vh' }} type='link'>View Names</Button>
+    <Popover
+      content={(
+        <div style={{
+          maxWidth: '300px', maxHeight: '30vh', overflowY: 'auto', wordWrap: 'break-word',
+        }}
+        >
+          {sampleNames.map((sampleName) => <div key={sampleName}>{sampleName}</div>)}
+        </div>
+      )}
+      title='Sample Names'
+      trigger='click'
+    >
+      <Button style={{ fontSize: '1.4vh' }} type='link'>View Sample Names</Button>
     </Popover>
   </div>,
     });
