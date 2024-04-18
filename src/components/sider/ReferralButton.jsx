@@ -165,7 +165,7 @@ const ReferralButton = (props) => {
       trigger='click'
     >
       <Button type='text' icon={<TeamOutlined />} style={{ color: 'hsla(0, 0%, 100%, .65)' }}>
-        {!collapsed && 'Recommend Cellenics'}
+        {!collapsed && 'Recommend'}
       </Button>
     </Dropdown>
   );
