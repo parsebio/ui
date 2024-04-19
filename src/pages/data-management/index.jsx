@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadExperiments, createExperiment } from 'redux/actions/experiments';
 
-import Header from 'components/Header';
 import MultiTileContainer from 'components/MultiTileContainer';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import ProjectDetails from 'components/data-management/project/ProjectDetails';
@@ -106,7 +105,6 @@ const DataManagementPage = () => {
 
   return (
     <>
-      <Header title='Data Management' />
       {NewProjectModalVisible ? (
         <NewProjectModal
           projectType='experiments'

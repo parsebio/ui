@@ -14,7 +14,7 @@ import { sampleTech } from 'utils/constants';
 import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import uploadFileToS3 from 'utils/upload/multipartUpload';
+import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
 
 const createAndUploadSampleFile = async (
   file, fileType, experimentId, sampleId, dispatch, selectedTech,
@@ -57,10 +57,12 @@ const createAndUploadSampleFile = async (
         ),
       );
     };
+
     const options = {
       compress: !file.compressed,
     };
-    await uploadFileToS3(
+
+    await UploadsCoordinator.get().uploadFile([
       experimentId,
       file,
       uploadUrlParams,
@@ -68,7 +70,7 @@ const createAndUploadSampleFile = async (
       abortController,
       updateSampleFileUploadProgress,
       options,
-    );
+    ]);
   } catch (e) {
     dispatch(updateSampleFileUpload(
       experimentId, sampleId, sampleFileId, fileType, UploadStatus.UPLOAD_ERROR,

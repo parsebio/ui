@@ -72,4 +72,5 @@ export default {
   ERROR_CLONING_PIPELINE_LOCKED: 'We couldn\'t clone the project because data processing is currently running, wait until it finishes and try again',
   ERROR_LAUNCHING_SECONDARY_ANALYSIS: 'There was a problem launching the pipeline.',
   ERROR_CANCELLING_SECONDARY_ANALYSIS: 'There was a problem cancelling your analysis.',
+  ERROR_CELL_SETS_ANNOTATION_FAILED: 'ScType annotation unsuccessful. Please ensure dataset contains gene symbols.',
 };

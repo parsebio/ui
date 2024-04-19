@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState, useEffect, useCallback,
+} from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button, Tabs, Alert,
 } from 'antd';
@@ -27,6 +29,7 @@ const UploadFastqForm = (props) => {
   const {
     secondaryAnalysisId, renderFastqFilesTable, setFilesNotUploaded,
   } = props;
+
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
 
@@ -168,14 +171,23 @@ const UploadFastqForm = (props) => {
             name='projectName'
           >
             <div>
-              Upload your Fastq files that are output from bcl2fastq. For each sublibrary, you must have a pair of Fastq files, R1 and R2.
+              Upload your Fastq files that are output from bcl2fastq.
+              For each sublibrary, you must have a pair of Fastq files, R1 and R2.
               <br />
               Note that:
               {' '}
               <br />
               <ul>
-                <li>FASTQ files from the same Parse experiment that have different Illumina indexes should not be concatenated. These files are separate sublibraries.</li>
-                <li>FASTQ files from the same Parse experiment that share identical Illumina indexes must be concatenated. These files belong to the same sublibrary.</li>
+                <li>
+                  FASTQ files from the same Parse experiment that have
+                  different Illumina indexes should not be concatenated.
+                  These files are separate sublibraries.
+                </li>
+                <li>
+                  FASTQ files from the same Parse experiment that
+                  share identical Illumina indexes must be concatenated.
+                  These files belong to the same sublibrary.
+                </li>
               </ul>
               Further details on Fastq file format can be found
               {' '}

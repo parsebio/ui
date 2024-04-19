@@ -7,7 +7,6 @@ import {
 } from 'antd';
 import { useRouter } from 'next/router';
 
-import Header from 'components/Header';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
@@ -90,9 +89,6 @@ const ProfileSettings = () => {
   if (user) {
     return (
       <>
-        <Header
-          title='Profile'
-        />
         <Space direction='vertical' style={{ width: '100%', padding: '20px', background: ' white' }}>
           <Row type='flex'>
             <Col xl={{ span: 12, offset: 6 }} span={24}>

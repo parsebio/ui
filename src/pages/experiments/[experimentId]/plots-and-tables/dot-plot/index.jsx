@@ -18,7 +18,6 @@ import { loadPaginatedGeneProperties } from 'redux/actions/genes';
 import { loadCellSets } from 'redux/actions/cellSets';
 import SelectData from 'components/plots/styling/SelectData';
 import MarkerGeneSelection from 'components/plots/styling/MarkerGeneSelection';
-import Header from 'components/Header';
 import PlotContainer from 'components/plots/PlotContainer';
 import Loader from 'components/Loader';
 import ExportAsCSV from 'components/plots/ExportAsCSV';
@@ -493,11 +492,11 @@ const DotPlotPage = (props) => {
 
   return (
     <>
-      <Header title={plotNames.DOT_PLOT} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.DOT_PLOT}
         plotStylingConfig={plotStylingConfig}
         extraToolbarControls={<ExportAsCSV data={getCSVData()} filename={csvFileName} />}
         extraControlPanels={renderExtraPanels()}

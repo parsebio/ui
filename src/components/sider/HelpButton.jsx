@@ -36,7 +36,7 @@ const HelpButton = () => {
       open={visible}
       onOpenChange={(v) => setVisible(v)}
       menu={{ items: menuItems }}
-      placement='bottomRight'
+      placement='topRight'
       trigger='click'
     >
       <Button
