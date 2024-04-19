@@ -19,6 +19,7 @@ const uploadDivStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   verticalAlign: 'middle',
+  height: '1vh',
 };
 
 const UploadStatusView = ({

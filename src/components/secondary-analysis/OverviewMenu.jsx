@@ -40,7 +40,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
             icon={<EditOutlined />}
             onClick={(event) => {
               event.stopPropagation();
-              setCurrentStep(index); // Adjust index for the rest of the cards if not flex
+              setCurrentStep(index);
             }}
             type='link'
           />
