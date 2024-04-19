@@ -625,7 +625,7 @@ def check_names_are_valid(files):
 
         if not ("_R1" in file_name or "_R2" in file_name):
             raise Exception(
-                f"File {file_name} does not contain _R1 or _R2 in its name, please check the file name to ensure it is a valid fastq pair"
+                f"File {file_name} does not contain _R1 or _R2 in its name, please check the file name to ensure it is a valid fastq pair and rename it accordingly"
             )
         if file_name.count("_R1") + file_name.count("_R2") > 1:
             raise Exception(
