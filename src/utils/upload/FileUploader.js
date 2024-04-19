@@ -245,6 +245,13 @@ class FileUploader {
       }
 
       if (this.pendingChunks === 0) {
+        // S3 expects parts to be sorted by number
+        this.uploadedParts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
+          if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
+
+          return PartNumber1 > PartNumber2 ? 1 : -1;
+        });
+
         this.resolve(this.uploadedParts);
       }
     } catch (e) {

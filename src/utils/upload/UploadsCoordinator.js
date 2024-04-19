@@ -68,13 +68,6 @@ class UploadsCoordinator {
       onStatusUpdate(UploadStatus.UPLOADING);
       const parts = await fileUploader.upload();
 
-      // S3 expects parts to be sorted by number
-      parts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
-        if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
-
-        return PartNumber1 > PartNumber2 ? 1 : -1;
-      });
-
       await this.#completeMultipartUpload(parts, uploadId, key, type);
 
       onStatusUpdate(UploadStatus.UPLOADED);
