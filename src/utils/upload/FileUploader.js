@@ -69,6 +69,11 @@ class FileUploader {
     let offset = 0;
     if (this.resumeUpload) {
       const uploadedParts = await this.#getUploadedParts();
+
+      if (uploadedParts.length === this.totalChunks) {
+        return uploadedParts;
+      }
+
       const nextPartNumber = uploadedParts.length + 1;
       // setting all previous parts as uploaded
       // this.uploadedPartPercentages.fill(1, 0, nextPartNumber - 1);
@@ -119,8 +124,8 @@ class FileUploader {
     const {
       projectId, uploadId, bucket, key,
     } = this.uploadParams;
-    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
 
+    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
     return await fetchAPI(url, {
       method: 'POST',
       headers: {
@@ -221,7 +226,7 @@ class FileUploader {
   }
 
   #cleanupExecution = () => {
-    this.readStream.destroy();
+    this.readStream?.destroy();
     this.gzipStream?.terminate();
   }
 
@@ -240,6 +245,13 @@ class FileUploader {
       }
 
       if (this.pendingChunks === 0) {
+        // S3 expects parts to be sorted by number
+        this.uploadedParts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
+          if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
+
+          return PartNumber1 > PartNumber2 ? 1 : -1;
+        });
+
         this.resolve(this.uploadedParts);
       }
     } catch (e) {
