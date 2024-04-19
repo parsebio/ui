@@ -1,8 +1,10 @@
-import { updateSecondaryAnalysisFile, createSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import updateSecondaryAnalysisFile from 'redux/actions/secondaryAnalyses/updateSecondaryAnalysisFile';
+import createSecondaryAnalysisFile from 'redux/actions/secondaryAnalyses/createSecondaryAnalysisFile';
+
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import UploadsCoordinator from './UploadsCoordinator';
+import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
 
 const uploadSecondaryAnalysisFile = async (
   file,

@@ -11,7 +11,8 @@ import {
 } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import cache from 'utils/cache';
-import { resumeUpload } from 'utils/upload/processSecondaryUpload';
+
+import { resumeUploads } from 'redux/actions/secondaryAnalyses';
 
 const { Text } = Typography;
 const uploadDivStyle = {
@@ -25,6 +26,7 @@ const UploadStatusView = ({
   status, progress, showDetails, fileId, secondaryAnalysisId,
 }) => {
   const dispatch = useDispatch();
+
   const [fileInCache, setFileInCache] = useState(null);
 
   useEffect(() => {
@@ -51,7 +53,7 @@ const UploadStatusView = ({
             size='large'
             shape='link'
             icon={<CaretRightFilled />}
-            onClick={async () => await resumeUpload(secondaryAnalysisId, fileId, dispatch)}
+            onClick={() => dispatch(resumeUploads(secondaryAnalysisId))}
           />
         </Tooltip>
       </div>
