@@ -8,7 +8,7 @@ import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAn
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
 import { useSelector, useDispatch } from 'react-redux';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
-import UploadFastqFiles from 'components/secondary-analysis/UploadFastqFiles';
+import UploadFastqForm from 'components/secondary-analysis/UploadFastqForm';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
@@ -260,7 +260,7 @@ const Pipeline = () => {
       title: 'Upload your Fastq files:',
       key: 'Fastq files',
       render: () => (
-        <UploadFastqFiles
+        <UploadFastqForm
           secondaryAnalysisId={activeSecondaryAnalysisId}
           renderFastqFilesTable={() => renderFastqFilesTable(true)}
           setFilesNotUploaded={setFilesNotUploaded}
