@@ -144,17 +144,19 @@ const Pipeline = () => {
           style={{
             display: 'flex',
             marginBottom: window.innerHeight > 850 ? '0.6vh' : '0',
+            alignItems: 'center', // Ensure items are aligned in the center vertically
           }}
         >
           {title && (
-            <span style={{ fontWeight: 'bold', fontSize: '1.4vh' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '1.4vh', marginRight: '0.5vh' }}>
               {`${title}:`}
             </span>
           )}
-          &nbsp;
-          <span style={{
-            fontSize: '1.4vh', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          }}
+          <span
+            style={{
+              fontSize: '1.4vh', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            }}
+            title={value?.length > 20 ? value : ''}
           >
             {value || 'Not selected'}
           </span>
@@ -184,10 +186,25 @@ const Pipeline = () => {
           <Popover
             content={(
               <div style={{
-                maxWidth: '300px', maxHeight: '30vh', overflowY: 'auto', wordWrap: 'break-word',
+                display: 'inline-block',
+                width: '100%',
+                maxWidth: '200px',
+                maxHeight: '30vh',
+                overflowY: 'auto',
               }}
               >
-                {sampleNames.map((sampleName) => <div key={sampleName}>{sampleName}</div>)}
+                {sampleNames.map((sampleName) => (
+                  <div
+                    key={sampleName}
+                    style={{
+                      textAlign: 'center',
+                      wordWrap: 'break-word',
+                      padding: '3px',
+                    }}
+                  >
+                    {sampleName}
+                  </div>
+                ))}
               </div>
             )}
             title='Sample Names'
