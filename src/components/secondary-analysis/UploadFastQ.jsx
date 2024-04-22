@@ -228,45 +228,6 @@ const UploadFastQ = (props) => {
               <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
             </div>
-            {
-              fileHandles.invalid.length > 0 && (
-                <div>
-                  <ExpandableList
-                    expandedTitle='Ignored files'
-                    dataSource={fileHandles.invalid}
-                    getItemText={(file) => file.name}
-                    getItemExplanation={(file) => file.rejectReason}
-                    collapsedExplanation={(
-                      <>
-                        {fileHandles.invalid.length}
-                        {' '}
-                        file
-                        {fileHandles.invalid.length > 1 ? 's were' : ' was'}
-                        {' '}
-                        ignored, click to display
-                      </>
-                    )}
-                  />
-                  <br />
-                </div>
-              )
-            }
-
-            {
-              nonMatchingFastqPairs.length > 0 && (
-                <>
-                  <ExpandableList
-                    expandedTitle='Files without read pair'
-                    dataSource={nonMatchingFastqPairs}
-                    getItemText={(fileName) => fileName}
-                    getItemExplanation={(fileName) => `Either remove this file or add ${getMissingPairName(fileName)}.`}
-                    collapsedExplanation='Files without read pair, click to display'
-                  />
-                  <br />
-                </>
-              )
-            }
-
             <div
               onClick={handleFileSelection}
               onKeyDown={handleFileSelection}
@@ -293,6 +254,41 @@ const UploadFastQ = (props) => {
                 Upload
               </Button>
             </Tooltip>
+            {
+              fileHandles.invalid.length > 0 && (
+                <div>
+                  <ExpandableList
+                    expandedTitle='Ignored files'
+                    dataSource={fileHandles.invalid}
+                    getItemText={(file) => file.name}
+                    getItemExplanation={(file) => file.rejectReason}
+                    collapsedExplanation={(
+                      <>
+                        {fileHandles.invalid.length}
+                        {' '}
+                        file
+                        {fileHandles.invalid.length > 1 ? 's were' : ' was'}
+                        {' '}
+                        ignored, click to display
+                      </>
+                    )}
+                  />
+                </div>
+              )
+            }
+            {
+              nonMatchingFastqPairs.length > 0 && (
+                <>
+                  <ExpandableList
+                    expandedTitle='Files without read pair'
+                    dataSource={nonMatchingFastqPairs}
+                    getItemText={(fileName) => fileName}
+                    getItemExplanation={(fileName) => `Either remove this file or add ${getMissingPairName(fileName)}.`}
+                    collapsedExplanation='Files without read pair, click to display'
+                  />
+                </>
+              )
+            }
             {
               fileHandles.valid.length > 0 && (
                 <>
