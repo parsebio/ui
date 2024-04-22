@@ -64,7 +64,8 @@ describe('EdtableParagraph', () => {
     const descriptionInput = container.querySelector('p[contenteditable="true"]');
 
     act(() => {
-      userEvent.type(descriptionInput, `${mockContent}`);
+      userEvent.type(descriptionInput);
+      userEvent.keyboard(`${mockContent}{enter}`);
     });
 
     userEvent.click(document.body);
