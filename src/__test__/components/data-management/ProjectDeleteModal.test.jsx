@@ -28,6 +28,11 @@ const state = {
 const deleteProjectSpy = jest.fn();
 const cancelProjectSpy = jest.fn();
 
+const typeToDisplay = {
+  experiments: 'project',
+  secondaryAnalyses: 'run',
+};
+
 describe.each([
   { projectName: 'someExperiment', projectType: 'experiments' },
   { projectName: 'someAnalysis', projectType: 'secondaryAnalyses' },
@@ -52,10 +57,8 @@ describe.each([
   it('has cancel and ok button', async () => {
     renderProjectDeleteModal();
 
-    const typeToDisplay = projectType === 'experiments' ? 'project' : 'run';
-
-    expect(screen.getByText(`Keep ${typeToDisplay}`)).toBeInTheDocument();
-    expect(screen.getByText(`Permanently delete ${typeToDisplay}`)).toBeInTheDocument();
+    expect(screen.getByText(`Keep ${typeToDisplay[projectType]}`)).toBeInTheDocument();
+    expect(screen.getByText(`Permanently delete ${typeToDisplay[projectType]}`)).toBeInTheDocument();
   });
 
   it('ok button is disabled by default', () => {
@@ -67,7 +70,7 @@ describe.each([
     renderProjectDeleteModal();
     const nameField = screen.getByRole('textbox');
     fireEvent.change(nameField, { target: { value: experimentName } });
-    expect(screen.getByText('Permanently delete project').parentElement).not.toBeDisabled();
+    expect(screen.getByText(`Permanently delete ${typeToDisplay[projectType]}`).parentElement).not.toBeDisabled();
   });
 
   it('Calls delete on deletion', async () => {
