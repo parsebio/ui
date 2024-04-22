@@ -18,17 +18,25 @@ jest.mock('utils/AppRouteProvider', () => ({
   })),
 }));
 
-describe('ProjectsList', () => {
+describe.each([
+  { projectType: 'experiments' },
+  { projectType: 'secondaryAnalyses' },
+])('ProjectsList $projectType', ({ projectType }) => {
   let storeState;
 
   beforeEach(() => {
     storeState = makeStore();
   });
 
-  it('Contains the input box and create project button', async () => {
+  it.only('Contains the input box and create project button', async () => {
+    const onCreateNewProjectMock = jest.fn();
+
     render(
       <Provider store={storeState}>
-        <ProjectsListContainer />
+        <ProjectsListContainer
+          projectType={projectType}
+          onCreateNewProject={onCreateNewProjectMock}
+        />
       </Provider>,
     );
 
@@ -37,11 +45,14 @@ describe('ProjectsList', () => {
   });
 
   it('triggers onCreateNewProject on clicking create new project button', async () => {
-    const onCreateNewProjectMock = jest.fn(() => { });
+    const onCreateNewProjectMock = jest.fn();
 
     render(
       <Provider store={storeState}>
-        <ProjectsListContainer onCreateNewProject={onCreateNewProjectMock} />
+        <ProjectsListContainer
+          projectType={projectType}
+          onCreateNewProject={onCreateNewProjectMock}
+        />
       </Provider>,
     );
 
@@ -58,9 +69,14 @@ describe('ProjectsList', () => {
   });
 
   it('navigates to repository page when selecting the option in the create project dropdown', async () => {
+    const onCreateNewProjectMock = jest.fn();
+
     render(
       <Provider store={storeState}>
-        <ProjectsListContainer />
+        <ProjectsListContainer
+          projectType={projectType}
+          onCreateNewProject={onCreateNewProjectMock}
+        />
       </Provider>,
     );
 
