@@ -28,7 +28,7 @@ const state = {
 const deleteProjectSpy = jest.fn();
 const cancelProjectSpy = jest.fn();
 
-const typeToDisplay = {
+const typesToDisplay = {
   experiments: 'project',
   secondaryAnalyses: 'run',
 };
@@ -40,6 +40,7 @@ describe.each([
   beforeEach(() => {
     jest.clearAllMocks();
   });
+
   const renderProjectDeleteModal = () => {
     const store = mockStore(state);
     render(
@@ -54,36 +55,38 @@ describe.each([
     );
   };
 
+  const typeToDisplay = typesToDisplay[projectType];
+
   it('has cancel and ok button', async () => {
     renderProjectDeleteModal();
 
-    expect(screen.getByText(`Keep ${typeToDisplay[projectType]}`)).toBeInTheDocument();
-    expect(screen.getByText(`Permanently delete ${typeToDisplay[projectType]}`)).toBeInTheDocument();
+    expect(screen.getByText(`Keep ${typeToDisplay}`)).toBeInTheDocument();
+    expect(screen.getByText(`Permanently delete ${typeToDisplay}`)).toBeInTheDocument();
   });
 
   it('ok button is disabled by default', () => {
     renderProjectDeleteModal();
-    expect(screen.getByText('Permanently delete project').parentElement).toBeDisabled();
+    expect(screen.getByText(`Permanently delete ${typeToDisplay}`).parentElement).toBeDisabled();
   });
 
   it('ok button is not disabled if project name is typed in', () => {
     renderProjectDeleteModal();
     const nameField = screen.getByRole('textbox');
     fireEvent.change(nameField, { target: { value: experimentName } });
-    expect(screen.getByText(`Permanently delete ${typeToDisplay[projectType]}`).parentElement).not.toBeDisabled();
+    expect(screen.getByText(`Permanently delete ${typeToDisplay}`).parentElement).not.toBeDisabled();
   });
 
   it('Calls delete on deletion', async () => {
     renderProjectDeleteModal();
     const nameField = screen.getByRole('textbox');
     fireEvent.change(nameField, { target: { value: experimentName } });
-    fireEvent.click(screen.getByText('Permanently delete project').parentElement);
+    fireEvent.click(screen.getByText(`Permanently delete ${typeToDisplay}`).parentElement);
     await waitFor(() => expect(deleteProjectSpy).toHaveBeenCalled());
   });
 
   it('Calls cancel when delete is cancelled', async () => {
     renderProjectDeleteModal();
-    fireEvent.click(screen.getByText('Keep project'));
+    fireEvent.click(screen.getByText(`Keep ${typeToDisplay}`));
     await waitFor(() => expect(cancelProjectSpy).toHaveBeenCalled());
   });
 
