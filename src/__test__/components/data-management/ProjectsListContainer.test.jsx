@@ -28,7 +28,7 @@ describe.each([
     storeState = makeStore();
   });
 
-  it.only('Contains the input box and create project button', async () => {
+  it('Contains the input box and create project button', async () => {
     const onCreateNewProjectMock = jest.fn();
 
     render(
@@ -40,8 +40,11 @@ describe.each([
       </Provider>,
     );
 
-    expect(screen.getByPlaceholderText(/Filter by project name/i)).toBeDefined();
-    expect(screen.getByText(/Create New Project/)).toBeDefined();
+    const filterByTextRegex = projectType === 'experiments' ? /Filter by project name/i : /Filter by run name or run ID/i;
+    const createNewRegex = projectType === 'experiments' ? /Create New Project/i : /Create New Run/i;
+
+    expect(screen.getByPlaceholderText(filterByTextRegex)).toBeDefined();
+    expect(screen.getByText(createNewRegex)).toBeDefined();
   });
 
   it('triggers onCreateNewProject on clicking create new project button', async () => {
