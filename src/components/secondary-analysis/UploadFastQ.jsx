@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
-  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
+  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,7 +15,6 @@ import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
-import Expandable from 'components/Expandable';
 import ExpandableList from 'components/ExpandableList';
 import endUserMessages from 'utils/endUserMessages';
 
@@ -256,49 +255,12 @@ const UploadFastQ = (props) => {
             {
               nonMatchingFastqPairs.length > 0 && (
                 <>
-                  <Expandable
-                    style={{ width: '100%' }}
-                    expandedContent={(
-                      <>
-                        <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Files without read pair</Divider>
-                        <List
-                          dataSource={nonMatchingFastqPairs}
-                          size='small'
-                          itemLayout='horizontal'
-                          pagination
-                          renderItem={(fileName) => (
-                            <List.Item key={fileName} style={{ height: '100%', width: '100%' }}>
-                              <Space style={{ width: 200, justifyContent: 'center' }}>
-                                <CloseCircleTwoTone twoToneColor='#f5222d' />
-                                <div style={{ width: 200 }}>
-                                  <Text
-                                    ellipsis={{ tooltip: fileName }}
-                                  >
-                                    {fileName}
-                                  </Text>
-                                </div>
-                              </Space>
-                              <Text style={{ width: '100%', marginLeft: '50px' }}>
-                                {`Either remove this file or add ${getMissingPairName(fileName)}.`}
-                              </Text>
-                            </List.Item>
-                          )}
-                        />
-                      </>
-                    )}
-                    collapsedContent={(
-                      <center style={{ cursor: 'pointer' }}>
-                        <Divider orientation='center' style={{ color: 'red' }} />
-                        <Text type='danger'>
-                          {' '}
-                          <WarningOutlined />
-                          {' '}
-                        </Text>
-                        <Text>
-                          Files without read pair, click to display
-                        </Text>
-                      </center>
-                    )}
+                  <ExpandableList
+                    expandedTitle='Files without read pair'
+                    dataSource={nonMatchingFastqPairs}
+                    getItemText={(fileName) => fileName}
+                    getItemExplanation={(fileName) => `Either remove this file or add ${getMissingPairName(fileName)}.`}
+                    collapsedExplanation='Files without read pair, click to display'
                   />
                   <br />
                 </>
