@@ -13,11 +13,19 @@ const defaultProps = {
   onUpdate: jest.fn(),
 };
 
+const originalScrollWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollWidth');
+const originalClientWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth');
+
 const editableParagraphFactory = createTestComponentFactory(EditableParagraph, defaultProps);
 
 const renderEditableParagraph = (props = {}) => render(editableParagraphFactory(props));
 
 describe('EdtableParagraph', () => {
+  afterEach(() => {
+    Object.defineProperty(HTMLElement.prototype, 'scrollWidth', { configurable: true, value: originalScrollWidth });
+    Object.defineProperty(HTMLElement.prototype, 'clientWidth', { configurable: true, value: originalClientWidth });
+  });
+
   it('Should render an editable paragraph without extend/collapse', () => {
     renderEditableParagraph();
 
@@ -80,6 +88,10 @@ describe('EdtableParagraph', () => {
   // We can not test if the content will be ellipsized properly because
   // we are useing CSS to create the ellipsis effect
   it('More and less toggles correctly', () => {
+    // More scrollWidth than clientWidth means it's overflowing
+    Object.defineProperty(HTMLElement.prototype, 'scrollWidth', { configurable: true, value: 100 });
+    Object.defineProperty(HTMLElement.prototype, 'clientWidth', { configurable: true, value: 50 });
+
     const moreText = 'more';
     const lessText = 'less';
 
