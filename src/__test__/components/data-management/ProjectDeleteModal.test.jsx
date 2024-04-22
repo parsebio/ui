@@ -28,7 +28,10 @@ const state = {
 const deleteProjectSpy = jest.fn();
 const cancelProjectSpy = jest.fn();
 
-describe('Delete Project Modal tests', () => {
+describe.each([
+  { projectName: 'someExperiment', projectType: 'experiments' },
+  { projectName: 'someAnalysis', projectType: 'secondaryAnalyses' },
+])('ProjectDeleteModal $projectName, $projectType', ({ projectName, projectType }) => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -37,7 +40,8 @@ describe('Delete Project Modal tests', () => {
     render(
       <Provider store={store}>
         <ProjectDeleteModal
-          experimentId={experimentId}
+          projectName={projectName}
+          projectType={projectType}
           onDelete={deleteProjectSpy}
           onCancel={cancelProjectSpy}
         />
@@ -47,8 +51,11 @@ describe('Delete Project Modal tests', () => {
 
   it('has cancel and ok button', async () => {
     renderProjectDeleteModal();
-    expect(screen.getByText('Keep project')).toBeInTheDocument();
-    expect(screen.getByText('Permanently delete project')).toBeInTheDocument();
+
+    const typeToDisplay = projectType === 'experiments' ? 'project' : 'run';
+
+    expect(screen.getByText(`Keep ${typeToDisplay}`)).toBeInTheDocument();
+    expect(screen.getByText(`Permanently delete ${typeToDisplay}`)).toBeInTheDocument();
   });
 
   it('ok button is disabled by default', () => {
