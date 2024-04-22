@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useRef, useCallback,
+  useState, useEffect, useRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
@@ -28,8 +28,9 @@ const EditableParagraph = (props) => {
   // used for tracking, whether we should render the 'more' button
   // happens when the text is overflowing (doesnt fit in the container)
   useEffect(() => {
-    if (textContainerRef.current) {
-      const isOverflow = textContainerRef.current.scrollWidth > textContainerRef.current.clientWidth;
+    const textContainer = textContainerRef.current;
+    if (textContainer) {
+      const isOverflow = textContainer.scrollWidth > textContainer.clientWidth;
       setIsOverflowing(isOverflow);
     }
   }, [text, isExpanded]);
