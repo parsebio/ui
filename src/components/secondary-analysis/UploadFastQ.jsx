@@ -16,6 +16,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import Expandable from 'components/Expandable';
+import ExpandableList from 'components/ExpandableList';
 import endUserMessages from 'utils/endUserMessages';
 
 import { getFastqFiles } from 'redux/selectors';
@@ -231,51 +232,20 @@ const UploadFastQ = (props) => {
             {
               fileHandles.invalid.length > 0 && (
                 <div>
-                  <Expandable
-                    style={{ width: '100%' }}
-                    expandedContent={(
+                  <ExpandableList
+                    expandedTitle='Ignored files'
+                    dataSource={fileHandles.invalid}
+                    getItemText={(file) => file.name}
+                    getItemExplanation={(file) => file.rejectReason}
+                    collapsedExplanation={(
                       <>
-                        <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Ignored files</Divider>
-                        <List
-                          dataSource={fileHandles.invalid}
-                          size='small'
-                          itemLayout='horizontal'
-                          pagination
-                          renderItem={(file) => (
-                            <List.Item key={file.name} style={{ height: '100%', width: '100%' }}>
-                              <Space style={{ width: 200, justifyContent: 'center' }}>
-                                <CloseCircleTwoTone twoToneColor='#f5222d' />
-                                <div style={{ width: 200 }}>
-                                  <Text
-                                    ellipsis={{ tooltip: file.name }}
-                                  >
-                                    {file.name}
-                                  </Text>
-                                </div>
-                              </Space>
-                              <Text style={{ width: '100%', marginLeft: '50px' }}>{file.rejectReason}</Text>
-                            </List.Item>
-                          )}
-                        />
+                        {fileHandles.invalid.length}
+                        {' '}
+                        file
+                        {fileHandles.invalid.length > 1 ? 's were' : ' was'}
+                        {' '}
+                        ignored, click to display
                       </>
-                    )}
-                    collapsedContent={(
-                      <center style={{ cursor: 'pointer' }}>
-                        <Divider orientation='center' style={{ color: 'red' }} />
-                        <Text type='danger'>
-                          {' '}
-                          <WarningOutlined />
-                          {' '}
-                        </Text>
-                        <Text>
-                          {fileHandles.invalid.length}
-                          {' '}
-                          file
-                          {fileHandles.invalid.length > 1 ? 's were' : ' was'}
-                          {' '}
-                          ignored, click to display
-                        </Text>
-                      </center>
                     )}
                   />
                   <br />
