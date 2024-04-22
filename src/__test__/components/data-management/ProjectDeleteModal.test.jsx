@@ -10,21 +10,8 @@ import initialExperimentState from 'redux/reducers/experiments/initialState';
 import ProjectDeleteModal from 'components/data-management/project/ProjectDeleteModal';
 
 const mockStore = configureMockStore([thunk]);
-const experimentName = 'super cool experiment';
 const experimentId = 'iamid';
-const state = {
-  experiments: {
-    ...initialExperimentState,
-    ids: [experimentId],
-    [experimentId]: {
-      name: experimentName,
-    },
-    meta: {
-      ...initialExperimentState.meta,
-      loading: false,
-    },
-  },
-};
+
 const deleteProjectSpy = jest.fn();
 const cancelProjectSpy = jest.fn();
 
@@ -37,6 +24,20 @@ describe.each([
   { projectName: 'someExperiment', projectType: 'experiments' },
   { projectName: 'someAnalysis', projectType: 'secondaryAnalyses' },
 ])('ProjectDeleteModal $projectName, $projectType', ({ projectName, projectType }) => {
+  const state = {
+    experiments: {
+      ...initialExperimentState,
+      ids: [experimentId],
+      [experimentId]: {
+        name: projectName,
+      },
+      meta: {
+        ...initialExperimentState.meta,
+        loading: false,
+      },
+    },
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -71,15 +72,17 @@ describe.each([
 
   it('ok button is not disabled if project name is typed in', () => {
     renderProjectDeleteModal();
+
     const nameField = screen.getByRole('textbox');
-    fireEvent.change(nameField, { target: { value: experimentName } });
-    expect(screen.getByText(`Permanently delete ${typeToDisplay}`).parentElement).not.toBeDisabled();
+    fireEvent.change(nameField, { target: { value: projectName } });
+
+    expect(screen.getByText(`Permanently delete ${typeToDisplay}`).parentElement).toBeEnabled();
   });
 
   it('Calls delete on deletion', async () => {
     renderProjectDeleteModal();
     const nameField = screen.getByRole('textbox');
-    fireEvent.change(nameField, { target: { value: experimentName } });
+    fireEvent.change(nameField, { target: { value: projectName } });
     fireEvent.click(screen.getByText(`Permanently delete ${typeToDisplay}`).parentElement);
     await waitFor(() => expect(deleteProjectSpy).toHaveBeenCalled());
   });
