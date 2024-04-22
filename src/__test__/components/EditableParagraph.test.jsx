@@ -41,14 +41,15 @@ describe('EdtableParagraph', () => {
     const descriptionInput = container.querySelector('p[contenteditable="true"]');
 
     act(() => {
-      userEvent.type(descriptionInput, `${mockContent}{enter}`);
+      userEvent.type(descriptionInput);
+      userEvent.keyboard(`${mockContent}{enter}`);
     });
 
     expect(defaultProps.onUpdate).toHaveBeenCalledWith(mockContent);
     expect(screen.getByText(mockContent)).toBeInTheDocument();
 
-    // Description is shortened by default
-    expect(screen.queryByText(/more/i)).toBeInTheDocument();
+    // Description is not shortened because it isn't overflowing
+    expect(screen.queryByText(/more/i)).not.toBeInTheDocument();
   });
 
   it('Clicking outside the paragraph should cause the paragraph to update', () => {
@@ -71,8 +72,8 @@ describe('EdtableParagraph', () => {
     expect(defaultProps.onUpdate).toHaveBeenCalledWith(mockContent);
     expect(screen.getByText(mockContent)).toBeInTheDocument();
 
-    // Description is shortened by default
-    expect(screen.queryByText(/more/i)).toBeInTheDocument();
+    // Description is not shortened because it isn't overflowing
+    expect(screen.queryByText(/more/i)).not.toBeInTheDocument();
   });
 
   // We can not test if the content will be ellipsized properly because
