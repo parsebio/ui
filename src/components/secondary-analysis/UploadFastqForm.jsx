@@ -31,9 +31,9 @@ const getMissingPairName = (fileName) => {
   if (fileName.includes('_R2')) return fileName.replace('_R2', '_R1');
 };
 
-const UploadFastQ = (props) => {
+const UploadFastqForm = (props) => {
   const {
-    secondaryAnalysisId, renderFastqFileTable, setFilesNotUploaded,
+    secondaryAnalysisId, renderFastqFilesTable, setFilesNotUploaded,
   } = props;
 
   const emptyFiles = { valid: [], invalid: [] };
@@ -329,7 +329,7 @@ const UploadFastQ = (props) => {
             }
             <br />
             <br />
-            {renderFastqFileTable()}
+            {renderFastqFilesTable()}
           </Form.Item>
         </Form>
       ),
@@ -409,10 +409,10 @@ const UploadFastQ = (props) => {
     />
   );
 };
-UploadFastQ.propTypes = {
+UploadFastqForm.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
-  renderFastqFileTable: PropTypes.func.isRequired,
+  renderFastqFilesTable: PropTypes.func.isRequired,
   setFilesNotUploaded: PropTypes.func.isRequired,
 };
 
-export default UploadFastQ;
+export default UploadFastqForm;
