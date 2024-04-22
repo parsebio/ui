@@ -18,6 +18,17 @@ jest.mock('utils/AppRouteProvider', () => ({
   })),
 }));
 
+const regexes = {
+  filterBy: {
+    experiments: /Filter by project name/i,
+    secondaryAnalyses: /Filter by run name or run ID/i,
+  },
+  createNew: {
+    experiments: /Create New Project/i,
+    secondaryAnalyses: /Create New Run/i,
+  },
+};
+
 describe.each([
   { projectType: 'experiments' },
   { projectType: 'secondaryAnalyses' },
@@ -40,11 +51,8 @@ describe.each([
       </Provider>,
     );
 
-    const filterByTextRegex = projectType === 'experiments' ? /Filter by project name/i : /Filter by run name or run ID/i;
-    const createNewRegex = projectType === 'experiments' ? /Create New Project/i : /Create New Run/i;
-
-    expect(screen.getByPlaceholderText(filterByTextRegex)).toBeDefined();
-    expect(screen.getByText(createNewRegex)).toBeDefined();
+    expect(screen.getByPlaceholderText(regexes.filterBy[projectType])).toBeDefined();
+    expect(screen.getByText(regexes.createNew[projectType])).toBeDefined();
   });
 
   it('triggers onCreateNewProject on clicking create new project button', async () => {
@@ -59,37 +67,41 @@ describe.each([
       </Provider>,
     );
 
-    const createNewProjectButton = screen.getByText(/Create New Project/);
+    const createNewProjectButton = screen.getByText(regexes.createNew[projectType]);
 
     expect(onCreateNewProjectMock).toHaveBeenCalledTimes(0);
 
     await act(async () => {
       userEvent.click(createNewProjectButton);
     });
-    userEvent.click(screen.getByText('Upload Project'));
 
-    expect(onCreateNewProjectMock).toHaveBeenCalledTimes(1);
+    if (projectType === 'experiments') {
+      userEvent.click(screen.getByText('Upload Project'));
+      expect(onCreateNewProjectMock).toHaveBeenCalledTimes(1);
+    }
   });
 
-  it('navigates to repository page when selecting the option in the create project dropdown', async () => {
-    const onCreateNewProjectMock = jest.fn();
+  if (projectType === 'experiments') {
+    it('navigates to repository page when selecting the option in the create project dropdown', async () => {
+      const onCreateNewProjectMock = jest.fn();
 
-    render(
-      <Provider store={storeState}>
-        <ProjectsListContainer
-          projectType={projectType}
-          onCreateNewProject={onCreateNewProjectMock}
-        />
-      </Provider>,
-    );
+      render(
+        <Provider store={storeState}>
+          <ProjectsListContainer
+            projectType={projectType}
+            onCreateNewProject={onCreateNewProjectMock}
+          />
+        </Provider>,
+      );
 
-    const createNewProjectButton = screen.getByText(/Create New Project/);
+      const createNewProjectButton = screen.getByText(regexes.createNew[projectType]);
 
-    await act(async () => {
-      userEvent.click(createNewProjectButton);
+      await act(async () => {
+        userEvent.click(createNewProjectButton);
+      });
+      userEvent.click(screen.getByText('Select from Dataset Repository'));
+
+      expect(mockNavigateTo.mock.calls).toMatchSnapshot();
     });
-    userEvent.click(screen.getByText('Select from Dataset Repository'));
-
-    expect(mockNavigateTo.mock.calls).toMatchSnapshot();
-  });
+  }
 });
