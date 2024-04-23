@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default {
   ACCOUNT_DETAILS_UPDATED: 'Account details updated successfully.',
   CONNECTION_ERROR: 'Could not connect to the server. Check your internet connection and refresh the page.',
@@ -43,11 +45,13 @@ export default {
   ERROR_STARTING_PIPLELINE: 'We couldn\'t start working on your data.',
   ERROR_SIGN_IN: 'We couldn\'t sign you in. Please try again.',
   ERROR_DOWNLOADING_SEURAT_OBJECT: 'We couldn\'t get the processed Seurat object.',
-  ERROR_MULTIPLE_SLT_FILES: 'More than one Sample Loading Table was selected, only one will be used.',
-  ERROR_FAILED_SLT_FILE: 'Sample Loading Table must be a valid excel .xlsm file',
+  ERROR_MULTIPLE_SAMPLELT_FILES: 'More than one Sample Loading Table was selected, only one will be used.',
+  ERROR_FAILED_SAMPLELT_FILE: 'Sample Loading Table must be a valid excel .xlsm file',
   ERROR_HIDDEN_FILE: 'Files starting with "." or "MACOSX" are hidden or system.',
-  ERROR_NOT_FASTQ: 'Not a ".fastq", ".fastq.gz", "fq" or ".fq.gz" file.',
+  ERROR_NOT_FASTQ: 'File name does not end with ".fastq.gz" or ".fq.gz".',
   ERROR_ALREADY_UPLOADED: 'File already uploaded.',
+  ERROR_READ_PAIR_NOT_IN_NAME: 'File name must include "_R1" or "_R2" (its read pair). Valid example: "S1_R1.fast.gz"',
+  ERROR_TOO_MANY_READS_IN_NAME: 'File name can\'t contain "_R1" or "_R2" (its read pair) more than once. Valid example: "S1_R1.fast.gz"',
   FEEDBACK_ERROR: 'We couldn\'t process your feedback. Please try submitting again.',
   FEEDBACK_SUCCESSFUL: 'Your feedback has been successfully sent. Thank you!',
   REFERRAL_ERROR: 'We couldn\'t process your referral. Please try submitting again.',
