@@ -154,7 +154,10 @@ const Pipeline = () => {
           )}
           <span
             style={{
-              fontSize: '1.4vh', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              fontSize: '1.4vh',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }}
             title={value?.length > 20 ? value : ''}
           >
