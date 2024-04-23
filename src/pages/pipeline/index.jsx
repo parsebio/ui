@@ -205,6 +205,11 @@ const Pipeline = () => {
     )
   );
 
+  const fileNumberIsCorrect = (files, expectedNumber) => {
+    if (!files || Object.keys(files).length === 0) return false;
+    return Object.keys(files).length === 2 * expectedNumber;
+  };
+
   const allFilesUploaded = (files) => {
     if (!files || Object.keys(files).length === 0) return false;
     return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
@@ -266,11 +271,13 @@ const Pipeline = () => {
         />
       ),
       isValid: allFilesUploaded(fastqFiles),
+      fileNumberIsCorrect: fileNumberIsCorrect(fastqFiles, numOfSublibraries),
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFilesTable(false)),
     },
   ];
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
+  const validUploadedFiles = secondaryAnalysisWizardSteps.find((step) => step.key === 'Fastq files').fileNumberIsCorrect === true;
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
   const ANALYSIS_LIST = 'Runs';
@@ -296,13 +303,14 @@ const Pipeline = () => {
       return (
         <Button
           type='primary'
-          disabled={!isAllValid}
+          disabled={!(isAllValid && validUploadedFiles)}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
           onClick={() => launchAnalysis()}
         >
           Run the pipeline
         </Button>
+
       );
     }
 
@@ -317,7 +325,7 @@ const Pipeline = () => {
         overlayStyle={{ maxWidth: '250px' }}
       >
         <Button
-          disabled={!isAllValid}
+          disabled={!(isAllValid && validUploadedFiles)}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
         >
@@ -326,7 +334,8 @@ const Pipeline = () => {
       </Popconfirm>
     );
   };
-
+  console.log('VALIDUPLOADEDFILES');
+  console.log(validUploadedFiles);
   const TILE_MAP = {
     [ANALYSIS_LIST]: {
       toolbarControls: [],
@@ -358,7 +367,9 @@ const Pipeline = () => {
                   <Tooltip
                     title={!isAllValid
                       ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                      : undefined}
+                      : !validUploadedFiles
+                        ? 'You should upload two FASTQ files per sublibrary. Incorrect number of FASTQ files.'
+                        : ''}
                     placement='left'
                   >
                     <Space align='baseline'>
