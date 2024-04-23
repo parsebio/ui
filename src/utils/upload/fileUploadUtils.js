@@ -7,11 +7,11 @@ import sampleFileType from 'utils/sampleFileType';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 
 const techNamesToDisplay = {
+  [sampleTech.PARSE]: 'Parse Evercode WT',
   [sampleTech['10X']]: '10X Chromium',
   [sampleTech.RHAPSODY]: 'BD Rhapsody',
   [sampleTech.SEURAT]: 'Seurat',
   [sampleTech.H5]: '10X Chromium - H5',
-  [sampleTech.PARSE]: 'Parse Evercode WT',
 };
 
 const matchFileName = (fileName, fileNames) => {

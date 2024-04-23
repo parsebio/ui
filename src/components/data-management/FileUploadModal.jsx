@@ -33,6 +33,7 @@ const { Option } = Select;
 const SEURAT_MAX_FILE_SIZE = 15 * 1024 * 1024 * 1024;
 
 const extraHelpText = {
+  [sampleTech.PARSE]: () => <></>,
   [sampleTech['10X']]: () => <></>,
   [sampleTech.SEURAT]: () => <></>,
   [sampleTech.H5]: () => <></>,
@@ -50,7 +51,7 @@ const extraHelpText = {
       </ul>
     </Paragraph>
   ),
-  [sampleTech.PARSE]: () => <></>,
+
 };
 
 const emptyFiles = { valid: [], invalid: [] };
@@ -63,7 +64,7 @@ const FileUploadModal = (props) => {
   const previouslyUploadedSamples = Object.keys(samples)
     .filter((key) => samples[key].experimentId === activeExperimentId);
 
-  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech['10X']);
+  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech.PARSE);
   const [canUpload, setCanUpload] = useState(false);
   const [files, setFiles] = useState(emptyFiles);
 
