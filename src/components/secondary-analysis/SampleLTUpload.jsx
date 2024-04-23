@@ -14,7 +14,6 @@ import integrationTestConstants from 'utils/integrationTestConstants';
 import { CheckCircleTwoTone, DeleteOutlined, WarningOutlined } from '@ant-design/icons';
 import { deleteSecondaryAnalysisFile, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 import endUserMessages from 'utils/endUserMessages';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 
@@ -48,10 +47,10 @@ const SampleLTUpload = (props) => {
     const validFiles = droppedFiles.filter((f) => f.name.endsWith('.xlsm'));
 
     if (validFiles.length === 0) {
-      warnings.push(endUserMessages.ERROR_FAILED_SLT_FILE);
+      warnings.push(endUserMessages.ERROR_FAILED_SAMPLELT_FILE);
     }
     if (validFiles.length > 1) {
-      warnings.push(endUserMessages.ERROR_MULTIPLE_SLT_FILES);
+      warnings.push(endUserMessages.ERROR_MULTIPLE_SAMPLELT_FILES);
       validFiles.splice(1); // Keep only the first valid file
     }
 
@@ -121,7 +120,10 @@ const SampleLTUpload = (props) => {
                 {...getRootProps({ className: 'dropzone' })}
                 id='dropzone'
               >
-                <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} />
+                <input
+                  data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT}
+                  {...getInputProps()}
+                />
                 <Empty
                   description='Drag and drop xlsm file here or click to browse'
                   image={Empty.PRESENTED_IMAGE_SIMPLE}

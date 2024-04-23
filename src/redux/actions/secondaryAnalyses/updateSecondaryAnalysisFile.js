@@ -7,7 +7,7 @@ const updateSecondaryAnalysisFile = (
 ) => async (dispatch) => {
   const { percentProgress = 0, abortController = null } = extras;
 
-  if (uploadStatus !== UploadStatus.UPLOADING) {
+  if (![UploadStatus.UPLOADING, UploadStatus.QUEUED].includes(uploadStatus)) {
     const url = `/v2/secondaryAnalysis/${secondaryAnalysisId}/files`;
     const body = { uploadStatus, id: fileId };
     try {

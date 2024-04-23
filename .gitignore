@@ -37,3 +37,4 @@ __MACOSX
 # custom
 .next
 out/
+.python-version
