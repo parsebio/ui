@@ -270,14 +270,12 @@ const Pipeline = () => {
           setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
-      isValid: allFilesUploaded(fastqFiles),
-      fileNumberIsCorrect: fileNumberIsCorrect(fastqFiles, numOfSublibraries),
+      isValid: allFilesUploaded(fastqFiles && fileNumberIsCorrect(fastqFiles, numOfSublibraries)),
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFilesTable(false)),
     },
   ];
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
-  const validUploadedFiles = secondaryAnalysisWizardSteps.find((step) => step.key === 'Fastq files').fileNumberIsCorrect === true;
 
   const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
   const ANALYSIS_LIST = 'Runs';
@@ -303,7 +301,7 @@ const Pipeline = () => {
       return (
         <Button
           type='primary'
-          disabled={!(isAllValid && validUploadedFiles)}
+          disabled={!(isAllValid)}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
           onClick={() => launchAnalysis()}
@@ -325,7 +323,7 @@ const Pipeline = () => {
         overlayStyle={{ maxWidth: '250px' }}
       >
         <Button
-          disabled={!(isAllValid && validUploadedFiles)}
+          disabled={!(isAllValid)}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
         >
@@ -334,8 +332,7 @@ const Pipeline = () => {
       </Popconfirm>
     );
   };
-  console.log('VALIDUPLOADEDFILES');
-  console.log(validUploadedFiles);
+
   const TILE_MAP = {
     [ANALYSIS_LIST]: {
       toolbarControls: [],
@@ -367,9 +364,7 @@ const Pipeline = () => {
                   <Tooltip
                     title={!isAllValid
                       ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                      : !validUploadedFiles
-                        ? 'You should upload two FASTQ files per sublibrary. Incorrect number of FASTQ files.'
-                        : ''}
+                      : ''}
                     placement='left'
                   >
                     <Space align='baseline'>
