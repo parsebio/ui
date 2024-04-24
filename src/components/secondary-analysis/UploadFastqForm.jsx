@@ -71,7 +71,7 @@ const UploadFastqForm = (props) => {
 
     const fileNamesSet = new Set(fileNames);
 
-    // Files already in process of being uploaded
+    // Files already in process of being uploaded (or already uploaded)
     const alreadyAddedFileNames = new Set(
       Object.values(secondaryAnalysisFiles).map((file) => file.name),
     );
