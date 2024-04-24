@@ -26,9 +26,28 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 
 const { Text } = Typography;
 
-const getMissingPairName = (fileName) => {
-  if (fileName.includes('_R1')) return fileName.replace('_R1', '_R2');
-  if (fileName.includes('_R2')) return fileName.replace('_R2', '_R1');
+const getIsWithR = (fileName, number) => fileName.includes(`_R${number}`);
+const getIsWithUnderscore = (fileName, number) => (
+  fileName.endsWith(`_${number}.fastq.gz`) || fileName.endsWith(`_${number}.fq.gz`)
+);
+
+const hasReadPair = (fileName, number) => (
+  getIsWithR(fileName, number) || getIsWithUnderscore(fileName, number)
+);
+
+const getMatchingPairFor = (fileName) => {
+  if (getIsWithR(fileName, 1)) return fileName.replace('_R1', '_R2');
+  if (getIsWithR(fileName, 2)) return fileName.replace('_R2', '_R1');
+
+  // regex to replace the 1 in _1.fast.gz or _1.fq.gz
+  if (getIsWithUnderscore(fileName, 1)) {
+    fileName.replace(/(_1\.(fast|fq)\.gz)$/, '_2.$1.gz');
+  }
+
+  // regex to replace the 1 in _1.fast.gz or _1.fq.gz
+  if (getIsWithUnderscore(fileName, 2)) {
+    fileName.replace(/(_2\.(fast|fq)\.gz)$/, '_1.$1.gz');
+  }
 };
 
 const UploadFastqForm = (props) => {
@@ -55,15 +74,9 @@ const UploadFastqForm = (props) => {
   const nonMatchingFastqPairs = useMemo(() => {
     const fileNames = fileHandles.valid.map((file) => file.name);
 
-    const [r1s, r2s] = _.partition(fileNames, (fileName) => fileName.includes('_R1'));
+    const fileNamesSet = new Set(fileNames);
 
-    const r1sSet = new Set(r1s);
-    const r2sWithoutMatch = r2s.filter((fileName) => !r1sSet.has(fileName.replace('_R2', '_R1')));
-
-    const r2sSet = new Set(r2s);
-    const r1sWithoutMatch = r1s.filter((fileName) => !r2sSet.has(fileName.replace('_R1', '_R2')));
-
-    return [...r1sWithoutMatch, ...r2sWithoutMatch];
+    return fileNames.filter((fileName) => !fileNamesSet.has(getMatchingPairFor(fileName)));
   }, [fileHandles]);
 
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
@@ -75,14 +88,6 @@ const UploadFastqForm = (props) => {
     const countOccurrences = (subStr, str) => {
       const matches = str.match(new RegExp(subStr, 'g'));
       return matches ? matches.length : 0;
-    };
-
-    const hasReadPair = (fileName, number) => {
-      const withR = fileName.includes(`_R${number}`);
-
-      const withUnderscore = fileName.endsWith(`_${number}.fastq.gz`) || fileName.endsWith(`_${number}.fq.gz`);
-
-      return withR || withUnderscore;
     };
 
     const validators = [
@@ -291,7 +296,7 @@ const UploadFastqForm = (props) => {
                     expandedTitle='Files without read pair'
                     dataSource={nonMatchingFastqPairs}
                     getItemText={(fileName) => fileName}
-                    getItemExplanation={(fileName) => `Either remove this file or add ${getMissingPairName(fileName)}.`}
+                    getItemExplanation={(fileName) => `Either remove this file or add ${getMatchingPairFor(fileName)}.`}
                     collapsedExplanation='Files without read pair, click to display'
                   />
                 </>
