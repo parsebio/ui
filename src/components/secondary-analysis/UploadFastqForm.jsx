@@ -41,12 +41,12 @@ const getMatchingPairFor = (fileName) => {
 
   // regex to replace the 1 in _1.fast.gz or _1.fq.gz
   if (getIsWithUnderscore(fileName, 1)) {
-    fileName.replace(/(_1\.(fast|fq)\.gz)$/, '_2.$1.gz');
+    return fileName.replace(/(_1)\.(fastq|fq)\.gz$/, '_2.$2.gz');
   }
 
   // regex to replace the 1 in _1.fast.gz or _1.fq.gz
   if (getIsWithUnderscore(fileName, 2)) {
-    fileName.replace(/(_2\.(fast|fq)\.gz)$/, '_1.$1.gz');
+    return fileName.replace(/(_2)\.(fastq|fq)\.gz$/, '_1.$2.gz');
   }
 };
 
