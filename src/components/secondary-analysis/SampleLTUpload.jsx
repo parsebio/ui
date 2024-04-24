@@ -58,7 +58,7 @@ const SampleLTUpload = (props) => {
     if (selectedFile) {
       const names = await getSampleNamesFromExcel(selectedFile);
       if (names.length === 0) {
-        warnings.push('No sample names extracted from the file. Please ensure the file is correctly formatted.');
+        warnings.push(`${selectedFile.name}: No sample names extracted from the file. Ensure the file is correctly formatted.`);
         setFile(false);
       } else {
         setSampleNames(names);
