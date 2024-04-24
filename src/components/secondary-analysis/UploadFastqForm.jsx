@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
-  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined,
+  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -47,6 +47,11 @@ const UploadFastqForm = (props) => {
   };
 
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
+
+  const numOfSublibraries = useSelector(
+    (state) => state.secondaryAnalyses[secondaryAnalysisId].numOfSublibraries,
+    _.isEqual,
+  );
 
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));
@@ -190,6 +195,16 @@ const UploadFastqForm = (props) => {
     updateApiTokenStatus();
   }, []);
 
+  const warnings = [];
+
+  if (Object.keys(secondaryAnalysisFiles).length > 0 && Object.keys(secondaryAnalysisFiles).length < numOfSublibraries * 2) {
+    warnings.push(endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES);
+  }
+
+  if (Object.keys(secondaryAnalysisFiles).length > numOfSublibraries * 2) {
+    warnings.push(endUserMessages.ERROR_MORE_FILES_THAN_SUBLIBRARIES);
+  }
+
   const uploadTabItems = [
     {
       key: 'ui',
@@ -228,6 +243,26 @@ const UploadFastqForm = (props) => {
               <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
             </div>
+            {(warnings.length > 0) && (
+              <div>
+                <br />
+                <center style={{ cursor: 'pointer' }}>
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
+                  <Text>
+                    {' '}
+                    {warnings[0]}
+                    <br />
+                  </Text>
+                </center>
+
+                <br />
+                <br />
+              </div>
+            )}
             <div
               onClick={handleFileSelection}
               onKeyDown={handleFileSelection}

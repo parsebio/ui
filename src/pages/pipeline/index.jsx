@@ -95,6 +95,8 @@ const Pipeline = () => {
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
   const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
 
+  const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
+
   const { loading: statusLoading, current: currentStatus } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
   );
@@ -270,7 +272,8 @@ const Pipeline = () => {
           setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
-      isValid: allFilesUploaded(fastqFiles && fileNumberIsCorrect(fastqFiles, numOfSublibraries)),
+      isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
+
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFilesTable(false)),
     },
@@ -301,7 +304,7 @@ const Pipeline = () => {
       return (
         <Button
           type='primary'
-          disabled={!(isAllValid)}
+          disabled={!(isAllValid && fastqsMatch)}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
           onClick={() => launchAnalysis()}
@@ -315,7 +318,7 @@ const Pipeline = () => {
     return (
       <Popconfirm
         title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
-        disabled={!isAllValid}
+        disabled={!(isAllValid && fastqsMatch)}
         onConfirm={() => launchAnalysis()}
         okText='Yes'
         cancelText='No'
@@ -323,7 +326,7 @@ const Pipeline = () => {
         overlayStyle={{ maxWidth: '250px' }}
       >
         <Button
-          disabled={!(isAllValid)}
+          disabled={!(isAllValid && fastqsMatch)}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
         >
@@ -362,9 +365,11 @@ const Pipeline = () => {
                     </Text>
                   </Space>
                   <Tooltip
-                    title={!isAllValid
+                    title={!isAllValid && fastqsMatch
                       ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                      : ''}
+                      : !fastqsMatch
+                        ? 'You should upload exactly one pair of FASTQ files per sublibrary. Please check the FASTQs section.'
+                        : ''}
                     placement='left'
                   >
                     <Space align='baseline'>
