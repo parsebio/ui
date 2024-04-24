@@ -71,8 +71,20 @@ const UploadFastqForm = (props) => {
 
     const fileNamesSet = new Set(fileNames);
 
-    return fileNames.filter((fileName) => !fileNamesSet.has(getMatchingPairFor(fileName)));
-  }, [fileHandles]);
+    // Files already in process of being uploaded
+    const alreadyAddedFileNames = new Set(
+      Object.values(secondaryAnalysisFiles).map((file) => file.name),
+    );
+
+    return fileNames.filter((fileName) => {
+      const matchingPair = getMatchingPairFor(fileName);
+
+      // Matching pair needs to be ready to be added too
+      return !fileNamesSet.has(matchingPair)
+        // Or be already added
+        && !alreadyAddedFileNames.has(matchingPair);
+    });
+  }, [fileHandles, secondaryAnalysisFiles]);
 
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
