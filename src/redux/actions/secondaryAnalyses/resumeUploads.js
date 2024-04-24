@@ -15,13 +15,17 @@ const resumeUploads = (secondaryAnalysisId) => async (dispatch, getState) => {
     async (fastq) => {
       const { uploadUrlParams, fileHandle } = await cache.get(fastq.id);
 
-      const permissionStatus = await fileHandle.requestPermission({ mode: 'read' });
-      if (permissionStatus !== 'granted') {
-        // If permission is not granted, throw a specific error for permission.
-        throw new Error('PermissionError: Permission to access the file was not granted');
+      const options = { mode: 'read' };
+
+      if (await fileHandle.queryPermission(options) === 'granted') {
+        return { uploadUrlParams, fileHandle };
       }
 
-      return { uploadUrlParams, fileHandle };
+      if (await fileHandle.requestPermission(options) === 'granted') {
+        return { uploadUrlParams, fileHandle };
+      }
+
+      throw new Error('PermissionError: Permission to access the file was not granted');
     },
   ));
 
