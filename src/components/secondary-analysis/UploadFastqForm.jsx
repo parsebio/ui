@@ -77,6 +77,14 @@ const UploadFastqForm = (props) => {
       return matches ? matches.length : 0;
     };
 
+    const hasReadPair = (fileName, number) => {
+      const withR = fileName.includes(`_R${number}`);
+
+      const withUnderscore = fileName.endsWith(`_${number}.fastq.gz`) || fileName.endsWith(`_${number}.fq.gz`);
+
+      return withR || withUnderscore;
+    };
+
     const validators = [
       {
         validate: (file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'),
@@ -91,7 +99,7 @@ const UploadFastqForm = (props) => {
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
       },
       {
-        validate: (file) => ['_R1', '_R2'].some((readNumber) => file.name.includes(readNumber)),
+        validate: (file) => hasReadPair(file.name, 1) || hasReadPair(file.name, 2),
         rejectReason: endUserMessages.ERROR_READ_PAIR_NOT_IN_NAME,
       },
       {
