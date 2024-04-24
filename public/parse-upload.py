@@ -614,6 +614,29 @@ def show_files_to_upload_warning(file_paths):
     if the_input == "no":
         raise Exception("Upload cancelled")
 
+def is_read_pair(file_name, number):
+    if (number != 1 and number != 2):
+        raise Exception("Read pair number must be 1 or 2")
+
+    with_r = f"_R{number}" in file_name
+    with_underscore = file_name.endswith(f"_{number}.fastq.gz") or file_name.endswith(f"_{number}.fq.gz")
+
+    return with_r or with_underscore
+
+def change_pair_number(file_name, from_number, to_number):
+    with_r = f"_R{from_number}" in file_name
+    with_underscore = file_name.endswith(f"_{from_number}.fastq.gz") or file_name.endswith(f"_{from_number}.fq.gz")
+
+    if with_r:
+        return file_name.replace(f"_R{from_number}", f"_R{to_number}")
+    if with_underscore:
+        file_end = file_name.rsplit('_', 1)[-1]
+        new_file_end = file_end.replace(f"{from_number}", f"{to_number}")
+
+        changed_file_name = file_name.replace(file_end, new_file_end)
+
+        return changed_file_name
+
 def check_names_are_valid(files):
     for file in files:
         file_name = file.split("/")[-1]
@@ -623,10 +646,11 @@ def check_names_are_valid(files):
                 f"File {file_name} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported"
             )
 
-        if not ("_R1" in file_name or "_R2" in file_name):
+        if (not (is_read_pair(file_name, 1) or is_read_pair(file_name, 2))):
             raise Exception(
-                f"File {file_name} does not contain _R1 or _R2 in its name, please check the file name to ensure it is a valid fastq pair and rename it accordingly"
+                f"File {file_name} must either: contain _R1 or _R2 in its name, or end with _1 or _2, please check the file name to ensure it is a valid fastq pair"
             )
+
         if file_name.count("_R1") + file_name.count("_R2") > 1:
             raise Exception(
                 f"File {file_name} can't contain \"_R1\" or \"_R2\" (its read pair) more than once. Valid example: \"S1_R1.fast.gz\""
@@ -638,13 +662,13 @@ def check_fastq_pairs_complete(files):
     r1s, r2s = [], []
 
     for file_name in file_names:
-        if "_R1" in file_name: r1s.append(file_name)
-        if "_R2" in file_name: r2s.append(file_name)
+        if is_read_pair(file_name, 1): r1s.append(file_name)
+        if is_read_pair(file_name, 2): r2s.append(file_name)
 
-    r2s_as_r1s = [file_name.replace("_R2", "_R1") for file_name in r2s]
+    r2s_as_r1s = [change_pair_number(file_name, 2, 1) for file_name in r2s]
     single_r1s = set(r1s) - set(r2s_as_r1s)
 
-    r1s_as_r2s = [file_name.replace("_R1", "_R2") for file_name in r1s]
+    r1s_as_r2s = [change_pair_number(file_name, 1, 2) for file_name in r1s]
     single_r2s = set(r2s) - set(r1s_as_r2s)
 
     single_files = list(single_r1s) + list(single_r2s)
