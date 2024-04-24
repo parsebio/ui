@@ -9,7 +9,11 @@ const resumeUploads = (secondaryAnalysisId) => async (dispatch, getState) => {
 
   const fastqsData = await Promise.all(Object.values(fastqs).map(
     async (fastq) => {
-      const { uploadUrlParams, fileHandle } = await cache.get(fastq.id);
+      const cachedData = await cache.get(fastq.id);
+
+      if (cachedData === null) return;
+
+      const { uploadUrlParams, fileHandle } = cachedData;
 
       const options = { mode: 'read' };
 
@@ -26,7 +30,7 @@ const resumeUploads = (secondaryAnalysisId) => async (dispatch, getState) => {
   ));
 
   const pausedFastqsData = fastqsData.filter(
-    (fastqData) => [UploadStatus.ERROR, UploadStatus.PAUSED].includes(fastqData.uploadStatus),
+    (fastqData) => [UploadStatus.ERROR, UploadStatus.PAUSED].includes(fastqData?.uploadStatus),
   );
 
   pausedFastqsData.forEach(({ fileHandle, uploadUrlParams }) => {
