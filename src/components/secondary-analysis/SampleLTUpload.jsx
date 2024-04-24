@@ -93,32 +93,8 @@ const SampleLTUpload = (props) => {
         style={{ width: '100%', margin: '0 auto' }}
       >
         <Form.Item
-          label={(
-            <div>
-              Upload your sample loading table Excel file:
-            </div>
-          )}
           name='projectName'
         >
-          {(invalidInputWarnings.length > 0) && (
-            <div>
-              {invalidInputWarnings.map((warning) => (
-                <center style={{ cursor: 'pointer' }}>
-                  <Text type='danger'>
-                    {' '}
-                    <WarningOutlined />
-                    {' '}
-                  </Text>
-                  <Text>
-                    {' '}
-                    {warning}
-                    <br />
-                  </Text>
-                </center>
-              ))}
-              <br />
-            </div>
-          )}
           <Dropzone onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
               <div
@@ -138,22 +114,30 @@ const SampleLTUpload = (props) => {
               </div>
             )}
           </Dropzone>
-          <Button
-            data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
-            type='primary'
-            key='create'
-            block
-            disabled={!file}
-            onClick={() => {
-              beginUpload();
-              setFile(null);
-            }}
-          >
-            {uploadButtonText}
-          </Button>
+
+          {(file || invalidInputWarnings.length > 0) && (<><Divider orientation='center'>To upload</Divider></>)}
+
+          {(invalidInputWarnings.length > 0) && (
+            <div>
+              {invalidInputWarnings.map((warning) => (
+                <center style={{ cursor: 'pointer' }}>
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
+                  <Text>
+                    {' '}
+                    {warning}
+                    <br />
+                  </Text>
+                </center>
+              ))}
+              <br />
+            </div>
+          )}
           {file && (
-            <>
-              <Divider orientation='center'>To upload</Divider>
+            <center>
               <List
                 size='small'
                 itemLayout='horizontal'
@@ -175,8 +159,25 @@ const SampleLTUpload = (props) => {
                   </Space>
                 </List.Item>
               </List>
-            </>
+            </center>
           )}
+          <br />
+          <center>
+            <Button
+              data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+              type='primary'
+              key='create'
+              style={{ width: '30%' }}
+              disabled={!file}
+              onClick={() => {
+                beginUpload();
+                setFile(null);
+              }}
+            >
+              {uploadButtonText}
+            </Button>
+          </center>
+          <Divider orientation='center'>Previously uploaded file</Divider>
           {renderUploadedFileDetails()}
         </Form.Item>
       </Form>
