@@ -37,7 +37,7 @@ const SampleLTUpload = (props) => {
     // Extract sample names from the rows following the 'Sample Name' row
     const extractedSampleNames = rows.slice(sampleNameRowIndex + 1)
       .map((row) => row[sampleNameColumnIndex]).filter((name) => name !== null);
-    console.log('EXTRACTED SAMPLES ', extractedSampleNames, secondaryAnalysisId);
+
     return extractedSampleNames;
   };
 
@@ -54,14 +54,21 @@ const SampleLTUpload = (props) => {
       validFiles.splice(1); // Keep only the first valid file
     }
 
-    setInvalidInputWarnings(warnings);
     const selectedFile = validFiles.length > 0 ? validFiles[0] : false;
-    setFile(selectedFile);
-
     if (selectedFile) {
       const names = await getSampleNamesFromExcel(selectedFile);
-      setSampleNames(names);
+      if (names.length === 0) {
+        warnings.push('No sample names extracted from the file. Please ensure the file is correctly formatted.');
+        setFile(false);
+      } else {
+        setSampleNames(names);
+        setFile(selectedFile);
+      }
+    } else {
+      setFile(false);
     }
+
+    setInvalidInputWarnings(warnings);
   };
 
   useEffect(() => {
