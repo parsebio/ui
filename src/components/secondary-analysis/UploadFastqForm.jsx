@@ -26,28 +26,23 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 
 const { Text } = Typography;
 
-const getIsWithR = (fileName, number) => fileName.includes(`_R${number}`);
-const getIsWithUnderscore = (fileName, number) => (
-  fileName.endsWith(`_${number}.fastq.gz`) || fileName.endsWith(`_${number}.fq.gz`)
-);
+const rReadRegex = /_R([12])/;
+const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
 
-const hasReadPair = (fileName, number) => (
-  getIsWithR(fileName, number) || getIsWithUnderscore(fileName, number)
+const hasReadPair = (fileName) => (
+  rReadRegex.test(fileName) || underscoreReadRegex.test(fileName)
 );
 
 const getMatchingPairFor = (fileName) => {
-  if (getIsWithR(fileName, 1)) return fileName.replace('_R1', '_R2');
-  if (getIsWithR(fileName, 2)) return fileName.replace('_R2', '_R1');
+  const matcher = fileName.match(rReadRegex) ? rReadRegex : underscoreReadRegex;
 
-  // regex to replace the 1 in _1.fast.gz or _1.fq.gz
-  if (getIsWithUnderscore(fileName, 1)) {
-    return fileName.replace(/(_1)\.(fastq|fq)\.gz$/, '_2.$2.gz');
-  }
+  const matchingPair = fileName.replace(matcher, (match, group1) => {
+    const otherNumber = group1 === '1' ? '2' : '1';
 
-  // regex to replace the 1 in _1.fast.gz or _1.fq.gz
-  if (getIsWithUnderscore(fileName, 2)) {
-    return fileName.replace(/(_2)\.(fastq|fq)\.gz$/, '_1.$2.gz');
-  }
+    return match.replace(group1, otherNumber);
+  });
+
+  return matchingPair;
 };
 
 const UploadFastqForm = (props) => {
@@ -104,7 +99,7 @@ const UploadFastqForm = (props) => {
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
       },
       {
-        validate: (file) => hasReadPair(file.name, 1) || hasReadPair(file.name, 2),
+        validate: (file) => hasReadPair(file.name),
         rejectReason: endUserMessages.ERROR_READ_PAIR_NOT_IN_NAME,
       },
       {
