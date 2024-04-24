@@ -7,11 +7,7 @@ import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 const resumeUploads = (secondaryAnalysisId) => async (dispatch, getState) => {
   const fastqs = await getFastqFiles(secondaryAnalysisId)(getState());
 
-  const pausedFastqs = Object.values(fastqs).filter(
-    (fastq) => [UploadStatus.ERROR, UploadStatus.PAUSED].includes(fastq.upload.status.current),
-  );
-
-  const fastqsData = await Promise.all(pausedFastqs.map(
+  const fastqsData = await Promise.all(Object.values(fastqs).map(
     async (fastq) => {
       const { uploadUrlParams, fileHandle } = await cache.get(fastq.id);
 
@@ -22,14 +18,18 @@ const resumeUploads = (secondaryAnalysisId) => async (dispatch, getState) => {
       }
 
       if (await fileHandle.requestPermission(options) === 'granted') {
-        return { uploadUrlParams, fileHandle };
+        return { uploadUrlParams, fileHandle, uploadStatus: fastq.upload.status.current };
       }
 
       throw new Error('PermissionError: Permission to access the file was not granted');
     },
   ));
 
-  fastqsData.forEach(({ fileHandle, uploadUrlParams }) => {
+  const pausedFastqsData = fastqsData.filter(
+    (fastqData) => [UploadStatus.ERROR, UploadStatus.PAUSED].includes(fastqData.uploadStatus),
+  );
+
+  pausedFastqsData.forEach(({ fileHandle, uploadUrlParams }) => {
     resumeUpload(secondaryAnalysisId, fileHandle, uploadUrlParams, dispatch);
   });
 };
