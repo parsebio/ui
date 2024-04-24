@@ -207,11 +207,6 @@ const Pipeline = () => {
     )
   );
 
-  const fileNumberIsCorrect = (files, expectedNumber) => {
-    if (!files || Object.keys(files).length === 0) return false;
-    return Object.keys(files).length === 2 * expectedNumber;
-  };
-
   const allFilesUploaded = (files) => {
     if (!files || Object.keys(files).length === 0) return false;
     return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');

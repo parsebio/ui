@@ -195,15 +195,19 @@ const UploadFastqForm = (props) => {
     updateApiTokenStatus();
   }, []);
 
-  const warnings = [];
+  const fastqsCount = Object.keys(secondaryAnalysisFiles).length;
 
-  if (Object.keys(secondaryAnalysisFiles).length > 0 && Object.keys(secondaryAnalysisFiles).length < numOfSublibraries * 2) {
-    warnings.push(endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES);
-  }
+  const warning = useMemo(() => {
+    if (fastqsCount > 0 && fastqCount < numOfSublibraries * 2) {
+      return endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES;
+    }
 
-  if (Object.keys(secondaryAnalysisFiles).length > numOfSublibraries * 2) {
-    warnings.push(endUserMessages.ERROR_MORE_FILES_THAN_SUBLIBRARIES);
-  }
+    if (fastqsCount > numOfSublibraries * 2) {
+      return endUserMessages.ERROR_MORE_FILES_THAN_SUBLIBRARIES;
+    }
+
+    return null;
+  }, [fastqsCount]);
 
   const uploadTabItems = [
     {
@@ -243,7 +247,7 @@ const UploadFastqForm = (props) => {
               <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
             </div>
-            {(warnings.length > 0) && (
+            {warning && (
               <div>
                 <br />
                 <center style={{ cursor: 'pointer' }}>
@@ -254,7 +258,7 @@ const UploadFastqForm = (props) => {
                   </Text>
                   <Text>
                     {' '}
-                    {warnings[0]}
+                    {warning}
                     <br />
                   </Text>
                 </center>
