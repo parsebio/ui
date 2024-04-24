@@ -1,5 +1,6 @@
 import { getFastqFiles } from 'redux/selectors';
 
+import cache from 'utils/cache';
 import UploadStatus from 'utils/upload/UploadStatus';
 import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
@@ -7,14 +8,25 @@ const resumeUploads = (secondaryAnalysisId) => async (dispatch, getState) => {
   const fastqs = await getFastqFiles(secondaryAnalysisId)(getState());
 
   const pausedFastqs = Object.values(fastqs).filter(
-    (fastq) => fastq.upload.status.current === UploadStatus.PAUSED,
+    (fastq) => [UploadStatus.ERROR, UploadStatus.PAUSED].includes(fastq.upload.status.current),
   );
 
-  console.log('pausedFastqsDebug');
-  console.log(pausedFastqs);
+  const fastqsData = await Promise.all(pausedFastqs.map(
+    async (fastq) => {
+      const { uploadUrlParams, fileHandle } = await cache.get(fastq.id);
 
-  pausedFastqs.forEach((fastq) => {
-    resumeUpload(secondaryAnalysisId, fastq.id, dispatch);
+      const permissionStatus = await fileHandle.requestPermission({ mode: 'read' });
+      if (permissionStatus !== 'granted') {
+        // If permission is not granted, throw a specific error for permission.
+        throw new Error('PermissionError: Permission to access the file was not granted');
+      }
+
+      return { uploadUrlParams, fileHandle };
+    },
+  ));
+
+  fastqsData.forEach(({ fileHandle, uploadUrlParams }) => {
+    resumeUpload(secondaryAnalysisId, fileHandle, uploadUrlParams, dispatch);
   });
 };
 
