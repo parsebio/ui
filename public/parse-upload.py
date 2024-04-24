@@ -614,7 +614,7 @@ def show_files_to_upload_warning(file_paths):
     if the_input == "no":
         raise Exception("Upload cancelled")
 
-def is_read_pair(file_name, number):
+def has_read_pair(file_name, number):
     if (number != 1 and number != 2):
         raise Exception("Read pair number must be 1 or 2")
 
@@ -646,7 +646,7 @@ def check_names_are_valid(files):
                 f"File {file_name} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported"
             )
 
-        if (not (is_read_pair(file_name, 1) or is_read_pair(file_name, 2))):
+        if (not (has_read_pair(file_name, 1) or has_read_pair(file_name, 2))):
             raise Exception(
                 f"File {file_name} must either: contain _R1 or _R2 in its name, or end with _1 or _2, please check the file name to ensure it is a valid fastq pair"
             )
@@ -662,8 +662,8 @@ def check_fastq_pairs_complete(files):
     r1s, r2s = [], []
 
     for file_name in file_names:
-        if is_read_pair(file_name, 1): r1s.append(file_name)
-        if is_read_pair(file_name, 2): r2s.append(file_name)
+        if has_read_pair(file_name, 1): r1s.append(file_name)
+        if has_read_pair(file_name, 2): r2s.append(file_name)
 
     r2s_as_r1s = [change_pair_number(file_name, 2, 1) for file_name in r2s]
     single_r1s = set(r1s) - set(r2s_as_r1s)
