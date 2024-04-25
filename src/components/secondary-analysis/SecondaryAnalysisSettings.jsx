@@ -15,7 +15,7 @@ const kitToMaxSublibrariesMap = {
   wt_mega: 16,
 };
 
-const detailsToShow = ['numOfSamples', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+const detailsToShow = ['numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
 
 const SecondaryAnalysisSettings = (props) => {
   const { secondaryAnalysisId, onDetailsChanged } = props;
@@ -57,7 +57,6 @@ const SecondaryAnalysisSettings = (props) => {
     // changing the kit, changes the default selected number of sublibraries and samples
     setFormValues((prevFormValues) => ({
       ...prevFormValues,
-      numOfSamples: newMaxSublibraries * 6,
       numOfSublibraries: newMaxSublibraries,
       kit,
     }));
@@ -81,7 +80,7 @@ const SecondaryAnalysisSettings = (props) => {
           label='Parse Biosciences technology details:'
           name='technologyDetails'
         >
-          <Space direction='vertical' style={{ width: '70%' }}>
+          <Space direction='vertical' style={{ width: '92%' }}>
             <Select
               placeholder='Select the kit you used in your experiment'
               value={formValues.kit}
@@ -104,24 +103,6 @@ const SecondaryAnalysisSettings = (props) => {
 
         {formValues.kit && (
           <>
-            <Form.Item
-              label='Provide details of your experimental design:'
-              name='numOfSamples'
-            >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ marginRight: '5px' }}>Select the number of samples:</div>
-                <SliderWithInput
-                  style={{ marginLeft: '20px', width: '20%' }}
-                  min={1}
-                  max={maxSublibraries * 6}
-                  value={formValues.numOfSamples}
-                  onUpdate={(value) => handleValueChange('numOfSamples', parseInt(value, 10))}
-                  disabled={!formValues.kit}
-                  step={1}
-                  debounceTime={0}
-                />
-              </div>
-            </Form.Item>
             <Form.Item
               name='numOfSublibraries'
             >

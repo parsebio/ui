@@ -252,22 +252,6 @@ const UploadFastqForm = (props) => {
             >
               <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
             </div>
-            <Tooltip title={nonMatchingFastqPairs.length > 0 ? 'Please fix the files without read pair' : null}>
-              <Button
-                data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
-                id='uploadButton'
-                type='primary'
-                key='create'
-                block
-                disabled={!fileHandles.valid.length || nonMatchingFastqPairs.length > 0}
-                onClick={() => {
-                  beginUpload(fileHandles.valid);
-                  setFileHandles(emptyFiles);
-                }}
-              >
-                Upload
-              </Button>
-            </Tooltip>
             {
               fileHandles.invalid.length > 0 && (
                 <div>
@@ -342,6 +326,25 @@ const UploadFastqForm = (props) => {
               )
             }
             <br />
+            <center>
+              <Tooltip title={nonMatchingFastqPairs.length > 0 ? 'Please fix the files without read pair' : null}>
+                <Button
+                  data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+                  id='uploadButton'
+                  type='primary'
+                  key='create'
+                  block
+                  style={{ width: '30%' }}
+                  disabled={!fileHandles.valid.length || nonMatchingFastqPairs.length > 0}
+                  onClick={() => {
+                    beginUpload(fileHandles.valid);
+                    setFileHandles(emptyFiles);
+                  }}
+                >
+                  Upload
+                </Button>
+              </Tooltip>
+            </center>
             <br />
             {Object.keys(secondaryAnalysisFiles).length > 0 && (
               <>
