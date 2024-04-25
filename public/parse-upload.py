@@ -659,11 +659,12 @@ def check_names_are_valid(files):
             )
 
 def get_common_name(file_name):
-    common_name = file_name.replace('_R[12]', '_R#')
+    common_name = re.sub('_R[12]', '_R#', file_name)
 
-    if (common_name != file_name): return common_name
+    if (common_name != file_name):
+        return common_name
 
-    return file_name.replace('(_[12])\.(fastq|fq)\.gz$', '_$.$2.gz')
+    return re.sub('(_[12])\.(fastq|fq)\.gz$', '_#.\g<2>.gz', file_name)
 
 def check_fastq_pairs_complete(files):
     file_names = [file.split("/")[-1] for file in files]
@@ -672,6 +673,7 @@ def check_fastq_pairs_complete(files):
 
     for file_name in file_names:
         common_name = get_common_name(file_name)
+
         file_map[common_name].append(file_name)
 
     single_files = []
