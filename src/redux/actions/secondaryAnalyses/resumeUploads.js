@@ -30,7 +30,7 @@ const resumeUploads = (secondaryAnalysisId) => async (dispatch, getState) => {
   ));
 
   const pausedFastqsData = fastqsData.filter(
-    (fastqData) => [UploadStatus.ERROR, UploadStatus.PAUSED].includes(fastqData?.uploadStatus),
+    (fastqData) => [UploadStatus.ERROR, UploadStatus.PAUSED].includes(fastqData.uploadStatus),
   );
 
   console.log('pausedFastqsDataDebug');
