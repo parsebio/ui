@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
-  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined,
+  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import UploadStatus from 'utils/upload/UploadStatus';
@@ -33,15 +33,60 @@ const getMissingPairName = (fileName) => {
 };
 
 const UploadFastqForm = (props) => {
+  const dispatch = useDispatch();
   const {
     secondaryAnalysisId, renderFastqFilesTable, setFilesNotUploaded,
   } = props;
 
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
+  const [tokenExists, setTokenExists] = useState(null);
+  const [newToken, setNewToken] = useState(null);
+
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
-  const dispatch = useDispatch();
+  const numOfSublibraries = useSelector(
+    (state) => state.secondaryAnalyses[secondaryAnalysisId].numOfSublibraries,
+    _.isEqual,
+  );
+
+  const updateApiTokenStatus = useCallback(async () => {
+    const exists = await getApiTokenExists();
+    setTokenExists(exists);
+  }, []);
+
+  const generateNewToken = useCallback(async () => {
+    const token = await generateApiToken();
+    setNewToken(token);
+  }, []);
+
+  const fastqsCount = Object.keys(secondaryAnalysisFiles).length;
+
+  const warning = useMemo(() => {
+    if (fastqsCount > 0 && fastqsCount < numOfSublibraries * 2) {
+      return endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES;
+    }
+
+    if (fastqsCount > numOfSublibraries * 2) {
+      return endUserMessages.ERROR_MORE_FILES_THAN_SUBLIBRARIES;
+    }
+
+    return null;
+  }, [fastqsCount]);
+
+  useEffect(() => {
+    setFilesNotUploaded(Boolean(fileHandles.valid.length));
+  }, [fileHandles]);
+
+  useEffect(() => {
+    const dropzone = document.getElementById('dropzone');
+    dropzone.addEventListener('drop', onDrop);
+    return () => dropzone.removeEventListener('drop', onDrop);
+  }, [secondaryAnalysisFiles]);
+
+  useEffect(() => {
+    updateApiTokenStatus();
+  }, []);
 
   const beginUpload = async () => {
     const filesList = await Promise.all(fileHandles.valid.map(async (handle) => handle.getFile()));
@@ -57,10 +102,6 @@ const UploadFastqForm = (props) => {
 
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
   };
-
-  useEffect(() => {
-    setFilesNotUploaded(Boolean(fileHandles.valid.length));
-  }, [fileHandles]);
 
   const nonMatchingFastqPairs = useMemo(() => {
     const fileNames = fileHandles.valid.map((file) => file.name);
@@ -170,12 +211,6 @@ const UploadFastqForm = (props) => {
     return validateAndSetFiles(newFiles.flat(), secondaryAnalysisFiles);
   };
 
-  useEffect(() => {
-    const dropzone = document.getElementById('dropzone');
-    dropzone.addEventListener('drop', onDrop);
-    return () => dropzone.removeEventListener('drop', onDrop);
-  }, [secondaryAnalysisFiles]);
-
   const removeFile = (fileName) => {
     setFileHandles((prevState) => {
       const newValid = _.filter(prevState.valid, (file) => file.name !== fileName);
@@ -186,23 +221,6 @@ const UploadFastqForm = (props) => {
       };
     });
   };
-
-  const [tokenExists, setTokenExists] = useState(null);
-  const [newToken, setNewToken] = useState(null);
-
-  const updateApiTokenStatus = useCallback(async () => {
-    const exists = await getApiTokenExists();
-    setTokenExists(exists);
-  }, []);
-
-  const generateNewToken = useCallback(async () => {
-    const token = await generateApiToken();
-    setNewToken(token);
-  }, []);
-
-  useEffect(() => {
-    updateApiTokenStatus();
-  }, []);
 
   const uploadTabItems = [
     {
@@ -242,6 +260,26 @@ const UploadFastqForm = (props) => {
               <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
             </div>
+            {warning && (
+              <div>
+                <br />
+                <center style={{ cursor: 'pointer' }}>
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
+                  <Text>
+                    {' '}
+                    {warning}
+                    <br />
+                  </Text>
+                </center>
+
+                <br />
+                <br />
+              </div>
+            )}
             <div
               onClick={handleFileSelection}
               onKeyDown={handleFileSelection}
