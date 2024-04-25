@@ -505,7 +505,7 @@ const Pipeline = () => {
       {currentStep && (
         <Modal
           open
-          width='50%'
+          width={currentStep.key === 'Fastq files' ? '50%' : '30%'}
           height='90%'
           title={currentStep.title}
           okButtonProps={{ htmlType: 'submit' }}
