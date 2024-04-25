@@ -616,28 +616,8 @@ def show_files_to_upload_warning(file_paths):
     if the_input == "no":
         raise Exception("Upload cancelled")
 
-def has_read_pair(file_name, number):
-    if (number != 1 and number != 2):
-        raise Exception("Read pair number must be 1 or 2")
-
-    with_r = f"_R{number}" in file_name
-    with_underscore = file_name.endswith(f"_{number}.fastq.gz") or file_name.endswith(f"_{number}.fq.gz")
-
-    return with_r or with_underscore
-
-def change_pair_number(file_name, from_number, to_number):
-    with_r = f"_R{from_number}" in file_name
-    with_underscore = file_name.endswith(f"_{from_number}.fastq.gz") or file_name.endswith(f"_{from_number}.fq.gz")
-
-    if with_r:
-        return file_name.replace(f"_R{from_number}", f"_R{to_number}")
-    if with_underscore:
-        file_end = file_name.rsplit('_', 1)[-1]
-        new_file_end = file_end.replace(f"{from_number}", f"{to_number}")
-
-        changed_file_name = file_name.replace(file_end, new_file_end)
-
-        return changed_file_name
+with_r_regex = r'_R([12])'
+with_underscore_regex = r'_([12])\.(fastq|fq)\.gz$'
 
 def check_names_are_valid(files):
     for file in files:
@@ -648,7 +628,7 @@ def check_names_are_valid(files):
                 f"File {file_name} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported"
             )
 
-        if (not (has_read_pair(file_name, 1) or has_read_pair(file_name, 2))):
+        if not (re.search(with_r_regex, file_name) or re.search(with_underscore_regex, file_name)):
             raise Exception(
                 f"File {file_name} must either: contain _R1 or _R2 in its name, or end with _1 or _2, please check the file name to ensure it is a valid fastq pair"
             )
@@ -658,29 +638,42 @@ def check_names_are_valid(files):
                 f"File {file_name} can't contain \"_R1\" or \"_R2\" (its read pair) more than once. Valid example: \"S1_R1.fast.gz\""
             )
 
-def get_common_name(file_name):
-    common_name = re.sub('_R[12]', '_R#', file_name)
+def get_common_name(match):
+    start = match.start(1)
+    end = match.end(1)
 
-    if (common_name != file_name):
-        return common_name
+    original_string = match.string
+    return f"{original_string[:start]}#{original_string[end:]}"
 
-    return re.sub('(_[12])\.(fastq|fq)\.gz$', '_#.\g<2>.gz', file_name)
+def get_match(file_name):
+    match = re.search(with_r_regex, file_name)
+
+    if (match == None):
+        match = re.search(with_underscore_regex, file_name)
+
+    return match
 
 def check_fastq_pairs_complete(files):
     file_names = [file.split("/")[-1] for file in files]
 
-    file_map = defaultdict(list)
+    file_map = defaultdict(lambda: {"reads": [], "file_names": []})
 
     for file_name in file_names:
-        common_name = get_common_name(file_name)
+        match = get_match(file_name)
 
-        file_map[common_name].append(file_name)
+        common_name = get_common_name(match)
+
+        file_map[common_name]["reads"].append(int(match.group(1)))
+        file_map[common_name]["file_names"].append(file_name)
 
     single_files = []
 
-    for files in file_map.values():
-        if len(files) != 2:
-            single_files += files
+    for value in file_map.values():
+        reads = value["reads"]
+        file_names = value["file_names"]
+
+        if sorted(reads) != [1, 2]:
+            single_files += file_names
 
     if len(single_files) > 0:
         single_files_str =  "\n".join(single_files)
