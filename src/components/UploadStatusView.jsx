@@ -20,6 +20,7 @@ const uploadDivStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   verticalAlign: 'middle',
+  height: '2vh',
 };
 
 const UploadStatusView = ({
