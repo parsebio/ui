@@ -616,8 +616,7 @@ def show_files_to_upload_warning(file_paths):
     if the_input == "no":
         raise Exception("Upload cancelled")
 
-with_r_regex = r'_R([12])'
-with_underscore_regex = r'_([12])\.(fastq|fq)\.gz$'
+regex = r'_R([12])|_([12])\.(fastq|fq)\.gz$'
 
 def check_names_are_valid(files):
     for file in files:
@@ -628,7 +627,7 @@ def check_names_are_valid(files):
                 f"File {file_name} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported"
             )
 
-        if not (re.search(with_r_regex, file_name) or re.search(with_underscore_regex, file_name)):
+        if not re.search(regex, file_name):
             raise Exception(
                 f"File {file_name} must either: contain _R1 or _R2 in its name, or end with _1 or _2, please check the file name to ensure it is a valid fastq pair"
             )
@@ -638,20 +637,12 @@ def check_names_are_valid(files):
                 f"File {file_name} can't contain \"_R1\" or \"_R2\" (its read pair) more than once. Valid example: \"S1_R1.fast.gz\""
             )
 
-def get_common_name(match):
-    start = match.start(1)
-    end = match.end(1)
+def get_common_name(match, match_index):
+    start = match.start(match_index)
+    end = match.end(match_index)
 
     original_string = match.string
     return f"{original_string[:start]}#{original_string[end:]}"
-
-def get_match(file_name):
-    match = re.search(with_r_regex, file_name)
-
-    if (match == None):
-        match = re.search(with_underscore_regex, file_name)
-
-    return match
 
 def check_fastq_pairs_complete(files):
     file_names = [file.split("/")[-1] for file in files]
@@ -659,11 +650,13 @@ def check_fastq_pairs_complete(files):
     file_map = defaultdict(lambda: {"reads": [], "file_names": []})
 
     for file_name in file_names:
-        match = get_match(file_name)
+        match = re.search(regex, file_name)
 
-        common_name = get_common_name(match)
+        match_index = 1 if match.group(1) else 2
 
-        file_map[common_name]["reads"].append(int(match.group(1)))
+        common_name = get_common_name(match, match_index)
+
+        file_map[common_name]["reads"].append(int(match.group(match_index)))
         file_map[common_name]["file_names"].append(file_name)
 
     single_files = []
