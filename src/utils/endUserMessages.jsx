@@ -49,7 +49,7 @@ export default {
   ERROR_FAILED_SAMPLELT_FILE: 'Sample Loading Table must be a valid excel .xlsm file',
   ERROR_HIDDEN_FILE: 'Files starting with "." or "MACOSX" are hidden or system.',
   ERROR_NOT_FASTQ: 'File name does not end with ".fastq.gz" or ".fq.gz".',
-  ERROR_ALREADY_UPLOADED: 'File already uploaded.',
+  ERROR_ALREADY_UPLOADED: 'File already uploaded or is being uploaded.',
   ERROR_READ_PAIR_NOT_IN_NAME: 'File name must include "_R1" or "_R2" (its read pair). Valid example: "S1_R1.fast.gz"',
   ERROR_TOO_MANY_READS_IN_NAME: 'File name can\'t contain "_R1" or "_R2" (its read pair) more than once. Valid example: "S1_R1.fast.gz"',
   FEEDBACK_ERROR: 'We couldn\'t process your feedback. Please try submitting again.',

@@ -20,7 +20,7 @@ import ExpandableList from 'components/ExpandableList';
 import endUserMessages from 'utils/endUserMessages';
 
 import { getFastqFiles } from 'redux/selectors';
-
+import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
@@ -39,15 +39,25 @@ const UploadFastqForm = (props) => {
 
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
+  const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
   const dispatch = useDispatch();
 
   const beginUpload = async () => {
     const filesList = await Promise.all(fileHandles.valid.map(async (handle) => handle.getFile()));
+
+    // Delete already uploaded files before uploading new ones
+    await Promise.all(filesList.map(async (file) => {
+      const uploadedFileId = Object.keys(secondaryAnalysisFiles)
+        .find((key) => secondaryAnalysisFiles[key].name === file.name);
+      if (uploadedFileId) {
+        console.log('DELETING FILE ', uploadedFileId);
+        await dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
+      }
+    }));
+
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
   };
-
-  const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));
@@ -69,10 +79,7 @@ const UploadFastqForm = (props) => {
 
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
-  const validateAndSetFiles = async (fileHandlesList, secondaryAnalysisFilesUpdated) => {
-    const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated)
-      .map((item) => item.name);
-
+  const validateAndSetFiles = async (fileHandlesList) => {
     const countOccurrences = (subStr, str) => {
       const matches = str.match(new RegExp(subStr, 'g'));
       return matches ? matches.length : 0;
@@ -88,9 +95,14 @@ const UploadFastqForm = (props) => {
         rejectReason: endUserMessages.ERROR_NOT_FASTQ,
       },
       {
-        validate: (file) => !alreadyUploadedFiles.includes(file.name)
-        && ![UploadStatus.UPLOADING, UploadStatus.UPLOADED]
-          .includes(secondaryAnalysisFiles[file?.id]?.upload?.status),
+        validate: (file) => {
+          // file is invalid if its already uploaded or uploading
+          const uploadedFileId = Object.keys(secondaryAnalysisFiles)
+            .find((key) => secondaryAnalysisFiles[key].name === file.name);
+          return !uploadedFileId
+            || ![UploadStatus.UPLOADING, UploadStatus.UPLOADED]
+              .includes(secondaryAnalysisFiles[uploadedFileId]?.upload?.status.current);
+        },
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
       },
       {
