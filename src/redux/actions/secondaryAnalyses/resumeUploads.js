@@ -33,6 +33,9 @@ const resumeUploads = (secondaryAnalysisId) => async (dispatch, getState) => {
     (fastqData) => [UploadStatus.ERROR, UploadStatus.PAUSED].includes(fastqData?.uploadStatus),
   );
 
+  console.log('pausedFastqsDataDebug');
+  console.log(pausedFastqsData);
+
   pausedFastqsData.forEach(({ fileHandle, uploadUrlParams }) => {
     resumeUpload(secondaryAnalysisId, fileHandle, uploadUrlParams, dispatch);
   });
