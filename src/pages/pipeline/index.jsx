@@ -499,7 +499,7 @@ const Pipeline = () => {
       {currentStep && (
         <Modal
           open
-          width='60%'
+          width='50%'
           height='90%'
           title={currentStep.title}
           okButtonProps={{ htmlType: 'submit' }}
