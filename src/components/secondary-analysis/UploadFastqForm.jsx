@@ -51,7 +51,6 @@ const UploadFastqForm = (props) => {
       const uploadedFileId = Object.keys(secondaryAnalysisFiles)
         .find((key) => secondaryAnalysisFiles[key].name === file.name);
       if (uploadedFileId) {
-        console.log('DELETING FILE ', uploadedFileId);
         await dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
       }
     }));
