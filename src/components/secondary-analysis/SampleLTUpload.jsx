@@ -56,13 +56,18 @@ const SampleLTUpload = (props) => {
 
     const selectedFile = validFiles.length > 0 ? validFiles[0] : false;
     if (selectedFile) {
-      const names = await getSampleNamesFromExcel(selectedFile);
-      if (names.length === 0) {
-        warnings.push(`${selectedFile.name}: No sample names extracted from the file. Ensure the file is correctly formatted.`);
+      try {
+        const names = await getSampleNamesFromExcel(selectedFile);
+        if (names.length === 0) {
+          warnings.push(`${selectedFile.name}: No sample names extracted from the file. Ensure the file is correctly formatted.`);
+          setFile(false);
+        } else {
+          setSampleNames(names);
+          setFile(selectedFile);
+        }
+      } catch (error) {
+        warnings.push(`Failed to read ${selectedFile.name}: ${error.message}`);
         setFile(false);
-      } else {
-        setSampleNames(names);
-        setFile(selectedFile);
       }
     } else {
       setFile(false);
