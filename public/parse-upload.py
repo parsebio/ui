@@ -3,10 +3,12 @@ import glob
 import json
 import math
 import os
+import re
 import sys
 import time
 import urllib.error
 import urllib.request
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, wait
 from threading import Event, Lock
 
@@ -656,22 +658,27 @@ def check_names_are_valid(files):
                 f"File {file_name} can't contain \"_R1\" or \"_R2\" (its read pair) more than once. Valid example: \"S1_R1.fast.gz\""
             )
 
+def get_common_name(file_name):
+    common_name = file_name.replace('_R[12]', '_R#')
+
+    if (common_name != file_name): return common_name
+
+    return file_name.replace('(_[12])\.(fastq|fq)\.gz$', '_$.$2.gz')
+
 def check_fastq_pairs_complete(files):
     file_names = [file.split("/")[-1] for file in files]
 
-    r1s, r2s = [], []
+    file_map = defaultdict(list)
 
     for file_name in file_names:
-        if has_read_pair(file_name, 1): r1s.append(file_name)
-        if has_read_pair(file_name, 2): r2s.append(file_name)
+        common_name = get_common_name(file_name)
+        file_map[common_name].append(file_name)
 
-    r2s_as_r1s = [change_pair_number(file_name, 2, 1) for file_name in r2s]
-    single_r1s = set(r1s) - set(r2s_as_r1s)
+    single_files = []
 
-    r1s_as_r2s = [change_pair_number(file_name, 1, 2) for file_name in r1s]
-    single_r2s = set(r2s) - set(r1s_as_r2s)
-
-    single_files = list(single_r1s) + list(single_r2s)
+    for files in file_map.values():
+        if len(files) != 2:
+            single_files += files
 
     if len(single_files) > 0:
         single_files_str =  "\n".join(single_files)
@@ -679,8 +686,7 @@ def check_fastq_pairs_complete(files):
             f"""Some of your files do not have a matching read pair. Please ensure that for each sublibrary, you have a pair of Fastq files, with the same name except for _R1 or _R2\n
 The following files are missing their read pair:\n
 {single_files_str}
-"""
-        )
+""")
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
