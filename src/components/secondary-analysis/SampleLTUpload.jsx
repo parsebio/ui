@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
+import readExcelFile from 'read-excel-file';
 import {
   Form, Empty, Button,
   Typography,
@@ -11,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { CheckCircleTwoTone, DeleteOutlined, WarningOutlined } from '@ant-design/icons';
-import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import { deleteSecondaryAnalysisFile, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import PropTypes from 'prop-types';
 import endUserMessages from 'utils/endUserMessages';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
@@ -20,10 +21,29 @@ const { Text } = Typography;
 const SampleLTUpload = (props) => {
   const dispatch = useDispatch();
   const {
-    secondaryAnalysisId, renderUploadedFileDetails, uploadedFileId, setFilesNotUploaded,
+    secondaryAnalysisId, renderUploadedFileDetails,
+    uploadedFileId, setFilesNotUploaded,
   } = props;
   const [file, setFile] = useState(false);
   const [invalidInputWarnings, setInvalidInputWarnings] = useState([]);
+  const [sampleNames, setSampleNames] = useState([]);
+
+  const getSampleNamesFromExcel = async (excelFile) => {
+    const rows = await readExcelFile(excelFile);
+    const isSampleNameCell = (cell) => typeof cell === 'string' && cell.includes('Sample Name');
+
+    // Find the row and column index where 'Sample Name' is mentioned
+    // 'sample name' lowercase is located elsewhere and should not be found
+    const sampleNameRowIndex = rows.findIndex((row) => row.some(isSampleNameCell));
+
+    // Extract sample names from the rows following the 'Sample Name' row
+    const sampleNameColumnIndex = rows[sampleNameRowIndex].findIndex(isSampleNameCell);
+
+    const extractedSampleNames = rows.slice(sampleNameRowIndex + 1)
+      .map((row) => row[sampleNameColumnIndex]).filter((name) => name !== null);
+
+    return extractedSampleNames;
+  };
 
   const onDrop = async (droppedFiles) => {
     const warnings = [];
@@ -38,8 +58,26 @@ const SampleLTUpload = (props) => {
       validFiles.splice(1); // Keep only the first valid file
     }
 
+    const selectedFile = validFiles.length > 0 ? validFiles[0] : false;
+    if (selectedFile) {
+      try {
+        const names = await getSampleNamesFromExcel(selectedFile);
+        if (names.length === 0) {
+          warnings.push(`${selectedFile.name}: No sample names extracted from the file. Ensure the file is correctly formatted.`);
+          setFile(false);
+        } else {
+          setSampleNames(names);
+          setFile(selectedFile);
+        }
+      } catch (error) {
+        warnings.push(`Failed to read ${selectedFile.name}: ${error.message}`);
+        setFile(false);
+      }
+    } else {
+      setFile(false);
+    }
+
     setInvalidInputWarnings(warnings);
-    setFile(validFiles.length > 0 ? validFiles[0] : false);
   };
 
   useEffect(() => {
@@ -51,6 +89,7 @@ const SampleLTUpload = (props) => {
       dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
     }
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], [], 'samplelt', dispatch);
+    dispatch(updateSecondaryAnalysis(secondaryAnalysisId, { sampleNames }));
   };
 
   const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';
@@ -63,32 +102,8 @@ const SampleLTUpload = (props) => {
         style={{ width: '100%', margin: '0 auto' }}
       >
         <Form.Item
-          label={(
-            <div>
-              Upload your sample loading table Excel file:
-            </div>
-          )}
           name='projectName'
         >
-          {(invalidInputWarnings.length > 0) && (
-            <div>
-              {invalidInputWarnings.map((warning) => (
-                <center style={{ cursor: 'pointer' }}>
-                  <Text type='danger'>
-                    {' '}
-                    <WarningOutlined />
-                    {' '}
-                  </Text>
-                  <Text>
-                    {' '}
-                    {warning}
-                    <br />
-                  </Text>
-                </center>
-              ))}
-              <br />
-            </div>
-          )}
           <Dropzone onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
               <div
@@ -108,22 +123,30 @@ const SampleLTUpload = (props) => {
               </div>
             )}
           </Dropzone>
-          <Button
-            data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
-            type='primary'
-            key='create'
-            block
-            disabled={!file}
-            onClick={() => {
-              beginUpload();
-              setFile(null);
-            }}
-          >
-            {uploadButtonText}
-          </Button>
+
+          {(file || invalidInputWarnings.length > 0) && (<><Divider orientation='center'>To upload</Divider></>)}
+
+          {(invalidInputWarnings.length > 0) && (
+            <div>
+              {invalidInputWarnings.map((warning) => (
+                <center style={{ cursor: 'pointer' }}>
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
+                  <Text>
+                    {' '}
+                    {warning}
+                    <br />
+                  </Text>
+                </center>
+              ))}
+              <br />
+            </div>
+          )}
           {file && (
-            <>
-              <Divider orientation='center'>To upload</Divider>
+            <center>
               <List
                 size='small'
                 itemLayout='horizontal'
@@ -145,8 +168,25 @@ const SampleLTUpload = (props) => {
                   </Space>
                 </List.Item>
               </List>
-            </>
+            </center>
           )}
+          <br />
+          <center>
+            <Button
+              data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+              type='primary'
+              key='create'
+              style={{ width: '30%' }}
+              disabled={!file}
+              onClick={() => {
+                beginUpload();
+                setFile(null);
+              }}
+            >
+              {uploadButtonText}
+            </Button>
+          </center>
+          {uploadedFileId && (<Divider orientation='center'>Previously uploaded file</Divider>)}
           {renderUploadedFileDetails()}
         </Form.Item>
       </Form>
@@ -161,5 +201,6 @@ SampleLTUpload.propTypes = {
   renderUploadedFileDetails: PropTypes.func.isRequired,
   uploadedFileId: PropTypes.string,
   setFilesNotUploaded: PropTypes.func.isRequired,
+  onDetailsChanged: PropTypes.func.isRequired,
 };
 export default SampleLTUpload;

@@ -1,8 +1,9 @@
 import React, {
-  useState, useEffect, useCallback,
+  useState, useEffect, useCallback, useMemo,
 } from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button, Tabs, Alert,
+  Tooltip,
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
@@ -14,7 +15,7 @@ import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 
-import Expandable from 'components/Expandable';
+import ExpandableList from 'components/ExpandableList';
 import endUserMessages from 'utils/endUserMessages';
 
 import { getFastqFiles } from 'redux/selectors';
@@ -24,6 +25,11 @@ import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 
 const { Text } = Typography;
+
+const getMissingPairName = (fileName) => {
+  if (fileName.includes('_R1')) return fileName.replace('_R1', '_R2');
+  if (fileName.includes('_R2')) return fileName.replace('_R2', '_R1');
+};
 
 const UploadFastqForm = (props) => {
   const {
@@ -42,8 +48,27 @@ const UploadFastqForm = (props) => {
 
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
+  const numOfSublibraries = useSelector(
+    (state) => state.secondaryAnalyses[secondaryAnalysisId].numOfSublibraries,
+    _.isEqual,
+  );
+
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));
+  }, [fileHandles]);
+
+  const nonMatchingFastqPairs = useMemo(() => {
+    const fileNames = fileHandles.valid.map((file) => file.name);
+
+    const [r1s, r2s] = _.partition(fileNames, (fileName) => fileName.includes('_R1'));
+
+    const r1sSet = new Set(r1s);
+    const r2sWithoutMatch = r2s.filter((fileName) => !r1sSet.has(fileName.replace('_R2', '_R1')));
+
+    const r2sSet = new Set(r2s);
+    const r1sWithoutMatch = r1s.filter((fileName) => !r2sSet.has(fileName.replace('_R1', '_R2')));
+
+    return [...r1sWithoutMatch, ...r2sWithoutMatch];
   }, [fileHandles]);
 
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
@@ -51,6 +76,11 @@ const UploadFastqForm = (props) => {
   const validateAndSetFiles = async (fileHandlesList, secondaryAnalysisFilesUpdated) => {
     const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated)
       .map((item) => item.name);
+
+    const countOccurrences = (subStr, str) => {
+      const matches = str.match(new RegExp(subStr, 'g'));
+      return matches ? matches.length : 0;
+    };
 
     const validators = [
       {
@@ -64,6 +94,14 @@ const UploadFastqForm = (props) => {
       {
         validate: (file) => !alreadyUploadedFiles.includes(file.name),
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
+      },
+      {
+        validate: (file) => ['_R1', '_R2'].some((readNumber) => file.name.includes(readNumber)),
+        rejectReason: endUserMessages.ERROR_READ_PAIR_NOT_IN_NAME,
+      },
+      {
+        validate: (file) => countOccurrences('_R1', file.name) + countOccurrences('_R2', file.name) <= 1,
+        rejectReason: endUserMessages.ERROR_TOO_MANY_READS_IN_NAME,
       },
     ];
 
@@ -157,6 +195,20 @@ const UploadFastqForm = (props) => {
     updateApiTokenStatus();
   }, []);
 
+  const fastqsCount = Object.keys(secondaryAnalysisFiles).length;
+
+  const warning = useMemo(() => {
+    if (fastqsCount > 0 && fastqsCount < numOfSublibraries * 2) {
+      return endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES;
+    }
+
+    if (fastqsCount > numOfSublibraries * 2) {
+      return endUserMessages.ERROR_MORE_FILES_THAN_SUBLIBRARIES;
+    }
+
+    return null;
+  }, [fastqsCount]);
+
   const uploadTabItems = [
     {
       key: 'ui',
@@ -173,6 +225,7 @@ const UploadFastqForm = (props) => {
             <div>
               Upload your Fastq files that are output from bcl2fastq.
               For each sublibrary, you must have a pair of Fastq files, R1 and R2.
+              <br />
               <br />
               Note that:
               {' '}
@@ -194,59 +247,26 @@ const UploadFastqForm = (props) => {
               <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
             </div>
-            {fileHandles.invalid.length > 0 && (
+            {warning && (
               <div>
-                <Expandable
-                  style={{ width: '100%' }}
-                  expandedContent={(
-                    <>
-                      <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Ignored files</Divider>
-                      <List
-                        dataSource={fileHandles.invalid}
-                        size='small'
-                        itemLayout='horizontal'
-                        pagination
-                        renderItem={(file) => (
-                          <List.Item key={file.name} style={{ height: '100%', width: '100%' }}>
-                            <Space style={{ width: 200, justifyContent: 'center' }}>
-                              <CloseCircleTwoTone twoToneColor='#f5222d' />
-                              <div style={{ width: 200 }}>
-                                <Text
-                                  ellipsis={{ tooltip: file.name }}
-                                >
-                                  {file.name}
-                                </Text>
-                              </div>
-                            </Space>
-                            <Text style={{ width: '100%', marginLeft: '50px' }}>{file.rejectReason}</Text>
-                          </List.Item>
-                        )}
-                      />
-                    </>
-                  )}
-                  collapsedContent={(
-                    <center style={{ cursor: 'pointer' }}>
-                      <Divider orientation='center' style={{ color: 'red' }} />
-                      <Text type='danger'>
-                        {' '}
-                        <WarningOutlined />
-                        {' '}
-                      </Text>
-                      <Text>
-                        {fileHandles.invalid.length}
-                        {' '}
-                        file
-                        {fileHandles.invalid.length > 1 ? 's were' : ' was'}
-                        {' '}
-                        ignored, click to display
-                      </Text>
-                    </center>
-                  )}
-                />
+                <br />
+                <center style={{ cursor: 'pointer' }}>
+                  <Text type='danger'>
+                    {' '}
+                    <WarningOutlined />
+                    {' '}
+                  </Text>
+                  <Text>
+                    {' '}
+                    {warning}
+                    <br />
+                  </Text>
+                </center>
+
+                <br />
                 <br />
               </div>
             )}
-
             <div
               onClick={handleFileSelection}
               onKeyDown={handleFileSelection}
@@ -257,57 +277,99 @@ const UploadFastqForm = (props) => {
             >
               <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
             </div>
-            <Button
-              data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
-              id='uploadButton'
-              type='primary'
-              key='create'
-              block
-              disabled={!fileHandles.valid.length}
-              onClick={() => {
-                beginUpload(fileHandles.valid);
-                setFileHandles(emptyFiles);
-              }}
-            >
-              Upload
-            </Button>
-            {fileHandles.valid.length > 0 && (
-              <>
-                <Divider orientation='center'>To upload</Divider>
-                <List
-                  dataSource={fileHandles.valid}
-                  size='small'
-                  itemLayout='horizontal'
-                  grid='{column: 4}'
-                  renderItem={(file) => (
-                    <List.Item
-                      key={file.name}
-                      style={{ width: '100%' }}
-                    >
-                      <Space>
-                        {!file.errors
-                          ? (
-                            <>
-                              <CheckCircleTwoTone twoToneColor='#52c41a' />
-                            </>
-                          ) : (
-                            <>
-                              <CloseCircleTwoTone twoToneColor='#f5222d' />
-                            </>
-                          )}
-                        <Text
-                          style={{ width: '200px' }}
-                        >
-                          {file.name}
-                        </Text>
-                        <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.name); }} />
-                      </Space>
-                    </List.Item>
-                  )}
-                />
-              </>
-            )}
+            {
+              fileHandles.invalid.length > 0 && (
+                <div>
+                  <ExpandableList
+                    expandedTitle='Ignored files'
+                    dataSource={fileHandles.invalid}
+                    getItemText={(file) => file.name}
+                    getItemExplanation={(file) => file.rejectReason}
+                    collapsedExplanation={(
+                      <>
+                        {fileHandles.invalid.length}
+                        {' '}
+                        file
+                        {fileHandles.invalid.length > 1 ? 's were' : ' was'}
+                        {' '}
+                        ignored, click to display
+                      </>
+                    )}
+                  />
+                </div>
+              )
+            }
+            {
+              nonMatchingFastqPairs.length > 0 && (
+                <>
+                  <ExpandableList
+                    expandedTitle='Files without read pair'
+                    dataSource={nonMatchingFastqPairs}
+                    getItemText={(fileName) => fileName}
+                    getItemExplanation={(fileName) => `Either remove this file or add ${getMissingPairName(fileName)}.`}
+                    collapsedExplanation='Files without read pair, click to display'
+                  />
+                </>
+              )
+            }
+            {
+              fileHandles.valid.length > 0 && (
+                <>
+                  <Divider orientation='center'>To upload</Divider>
+                  <List
+                    dataSource={fileHandles.valid}
+                    size='small'
+                    itemLayout='horizontal'
+                    grid='{column: 4}'
+                    renderItem={(file) => (
+                      <List.Item
+                        key={file.name}
+                        style={{ width: '100%' }}
+                      >
+                        <Space>
+                          {!file.errors
+                            ? (
+                              <>
+                                <CheckCircleTwoTone twoToneColor='#52c41a' />
+                              </>
+                            ) : (
+                              <>
+                                <CloseCircleTwoTone twoToneColor='#f5222d' />
+                              </>
+                            )}
+                          <Text
+                            style={{ width: '200px' }}
+                          >
+                            {file.name}
+                          </Text>
+                          <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.name); }} />
+                        </Space>
+                      </List.Item>
+                    )}
+                  />
+                </>
+              )
+            }
             <br />
+            <center>
+              <Tooltip title={nonMatchingFastqPairs.length > 0 ? 'Please fix the files without read pair' : null}>
+                <Button
+                  data-test-id={integrationTestConstants.ids.FILE_UPLOAD_BUTTON}
+                  id='uploadButton'
+                  type='primary'
+                  key='create'
+                  block
+                  style={{ width: '30%' }}
+                  disabled={!fileHandles.valid.length || nonMatchingFastqPairs.length > 0}
+                  onClick={() => {
+                    beginUpload(fileHandles.valid);
+                    setFileHandles(emptyFiles);
+                  }}
+                >
+                  Upload
+                </Button>
+              </Tooltip>
+            </center>
             <br />
             {renderFastqFilesTable()}
           </Form.Item>
@@ -318,7 +380,7 @@ const UploadFastqForm = (props) => {
       key: 'cli',
       label: 'Console upload',
       children: (
-        <Space direction='vertical'>
+        <Space direction='vertical' style={{ width: '80%' }}>
           {newToken && (
             <Alert
               message={(
@@ -349,14 +411,15 @@ const UploadFastqForm = (props) => {
             )
             : 'To upload files via the command line, you need to generate a token.'}
           <Button loading={_.isNil(tokenExists)} onClick={generateNewToken}>{(tokenExists || newToken) ? 'Refresh token' : 'Generate token'}</Button>
-          <Divider />
           <Text>
             To perform a command-line upload, download this script:
-            <br />
+            {' '}
             <a href='/parse-upload.py' download>parse-upload.py</a>
+
+            <br />
             <br />
 
-            Run the script with the following command:
+            And run the script with the following command:
             <br />
             <pre>
               <Paragraph copyable={{

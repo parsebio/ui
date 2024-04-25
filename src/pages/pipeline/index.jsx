@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm,
+  Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
@@ -29,7 +29,6 @@ import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
-  numOfSamples: 'Number of samples',
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
   kit: 'Kit type',
@@ -48,7 +47,7 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
-const analysisDetailsKeys = ['name', 'description', 'numOfSamples', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+const analysisDetailsKeys = ['name', 'description', 'sampleNames', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
 
 const Pipeline = () => {
   const dispatch = useDispatch();
@@ -70,7 +69,7 @@ const Pipeline = () => {
   const {
     name: analysisName,
     description: analysisDescription,
-    numOfSamples,
+    sampleNames,
     numOfSublibraries,
     chemistryVersion,
     kit,
@@ -94,6 +93,8 @@ const Pipeline = () => {
 
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
   const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
+
+  const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
 
   const { loading: statusLoading, current: currentStatus } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
@@ -145,17 +146,22 @@ const Pipeline = () => {
           style={{
             display: 'flex',
             marginBottom: window.innerHeight > 850 ? '0.6vh' : '0',
+            alignItems: 'center', // Ensure items are aligned in the center vertically
           }}
         >
           {title && (
-            <span style={{ fontWeight: 'bold', fontSize: '1.4vh' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '1.4vh', marginRight: '0.5vh' }}>
               {`${title}:`}
             </span>
           )}
-          &nbsp;
-          <span style={{
-            fontSize: '1.4vh', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          }}
+          <span
+            style={{
+              fontSize: '1.4vh',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+            title={value?.length > 20 ? value : ''}
           >
             {value || 'Not selected'}
           </span>
@@ -169,6 +175,8 @@ const Pipeline = () => {
     if (!sampleLTFile) return null;
 
     const { name, upload, createdAt } = sampleLTFile;
+    const sampleCount = sampleNames?.length || 0;
+
     return mainScreenDetails({
       name,
       status: <UploadStatusView
@@ -177,6 +185,40 @@ const Pipeline = () => {
         secondaryAnalysisId={activeSecondaryAnalysisId}
       />,
       createdAt: <PrettyTime isoTime={createdAt} />,
+      samples: sampleCount && (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <b>{`${sampleCount} samples`}</b>
+          <Popover
+            content={(
+              <div style={{
+                display: 'inline-block',
+                width: '100%',
+                maxWidth: '200px',
+                maxHeight: '30vh',
+                overflowY: 'auto',
+              }}
+              >
+                {sampleNames.map((sampleName) => (
+                  <div
+                    key={sampleName}
+                    style={{
+                      textAlign: 'center',
+                      wordWrap: 'break-word',
+                      padding: '3px',
+                    }}
+                  >
+                    {sampleName}
+                  </div>
+                ))}
+              </div>
+            )}
+            title='Sample Names'
+            trigger='click'
+          >
+            <Button style={{ fontSize: '1.4vh' }} type='link'>View Sample Names</Button>
+          </Popover>
+        </div>
+      ),
     });
   };
 
@@ -220,11 +262,11 @@ const Pipeline = () => {
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />
       ),
-      isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
+      isValid: (numOfSublibraries && chemistryVersion && kit),
       renderMainScreenDetails: () => {
         const kitTitle = kitOptions.find((option) => option.value === kit)?.label;
         return mainScreenDetails({
-          kit: kitTitle, chemistryVersion, numOfSamples, numOfSublibraries,
+          kit: kitTitle, chemistryVersion, numOfSublibraries,
         });
       },
     },
@@ -237,6 +279,7 @@ const Pipeline = () => {
           renderUploadedFileDetails={renderSampleLTFileDetails}
           uploadedFileId={sampleLTFile?.id}
           setFilesNotUploaded={setFilesNotUploaded}
+          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />
       ),
       isValid: allFilesUploaded([sampleLTFile]),
@@ -265,7 +308,8 @@ const Pipeline = () => {
           setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
-      isValid: allFilesUploaded(fastqFiles),
+      isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
+
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFilesTable(false)),
     },
@@ -296,20 +340,21 @@ const Pipeline = () => {
       return (
         <Button
           type='primary'
-          disabled={!isAllValid}
+          disabled={!(isAllValid && fastqsMatch)}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
           onClick={() => launchAnalysis()}
         >
           Run the pipeline
         </Button>
+
       );
     }
 
     return (
       <Popconfirm
         title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
-        disabled={!isAllValid}
+        disabled={!(isAllValid && fastqsMatch)}
         onConfirm={() => launchAnalysis()}
         okText='Yes'
         cancelText='No'
@@ -317,7 +362,7 @@ const Pipeline = () => {
         overlayStyle={{ maxWidth: '250px' }}
       >
         <Button
-          disabled={!isAllValid}
+          disabled={!(isAllValid && fastqsMatch)}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
         >
@@ -356,9 +401,11 @@ const Pipeline = () => {
                     </Text>
                   </Space>
                   <Tooltip
-                    title={!isAllValid
+                    title={!isAllValid && fastqsMatch
                       ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                      : undefined}
+                      : !fastqsMatch
+                        ? 'You should upload exactly one pair of FASTQ files per sublibrary. Please check the FASTQs section.'
+                        : ''}
                     placement='left'
                   >
                     <Space align='baseline'>
@@ -455,9 +502,28 @@ const Pipeline = () => {
 
   return (
     <>
+      {currentStep && (
+        <Modal
+          open
+          width={currentStep.key === 'Fastq files' ? '50%' : '30%'}
+          height='90%'
+          title={currentStep.title}
+          okButtonProps={{ htmlType: 'submit' }}
+          bodyStyle={{ minHeight: '20dvh', maxHeight: '75dvh', overflowY: 'auto' }}
+          onCancel={onCancel}
+          footer={[
+            <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
+              Back
+            </Button>,
+            <Button key='submit' type='primary' onClick={onNext}>
+              {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
+            </Button>,
+          ]}
+        >
+          {currentStep.render()}
+        </Modal>
+      )}
       <div style={{ height: '100vh', overflowY: 'auto' }}>
-        {' '}
-        {/* Add this div with style */}
         {NewProjectModalVisible && (
           <NewProjectModal
             projectType='secondaryAnalyses'
@@ -468,26 +534,6 @@ const Pipeline = () => {
               setNewProjectModalVisible(false);
             }}
           />
-        )}
-        {currentStep && (
-          <Modal
-            open
-            title={currentStep.title}
-            okButtonProps={{ htmlType: 'submit' }}
-            bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
-            style={{ minWidth: '70dvh' }}
-            onCancel={onCancel}
-            footer={[
-              <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
-                Back
-              </Button>,
-              <Button key='submit' type='primary' onClick={onNext}>
-                {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
-              </Button>,
-            ]}
-          >
-            {currentStep.render()}
-          </Modal>
         )}
 
         <MultiTileContainer

@@ -614,6 +614,49 @@ def show_files_to_upload_warning(file_paths):
     if the_input == "no":
         raise Exception("Upload cancelled")
 
+def check_names_are_valid(files):
+    for file in files:
+        file_name = file.split("/")[-1]
+
+        if not (file_name.endswith(".fastq.gz") or file_name.endswith(".fq.gz")):
+            raise Exception(
+                f"File {file_name} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported"
+            )
+
+        if not ("_R1" in file_name or "_R2" in file_name):
+            raise Exception(
+                f"File {file_name} does not contain _R1 or _R2 in its name, please check the file name to ensure it is a valid fastq pair and rename it accordingly"
+            )
+        if file_name.count("_R1") + file_name.count("_R2") > 1:
+            raise Exception(
+                f"File {file_name} can't contain \"_R1\" or \"_R2\" (its read pair) more than once. Valid example: \"S1_R1.fast.gz\""
+            )
+
+def check_fastq_pairs_complete(files):
+    file_names = [file.split("/")[-1] for file in files]
+
+    r1s, r2s = [], []
+
+    for file_name in file_names:
+        if "_R1" in file_name: r1s.append(file_name)
+        if "_R2" in file_name: r2s.append(file_name)
+
+    r2s_as_r1s = [file_name.replace("_R2", "_R1") for file_name in r2s]
+    single_r1s = set(r1s) - set(r2s_as_r1s)
+
+    r1s_as_r2s = [file_name.replace("_R1", "_R2") for file_name in r1s]
+    single_r2s = set(r2s) - set(r1s_as_r2s)
+
+    single_files = list(single_r1s) + list(single_r2s)
+
+    if len(single_files) > 0:
+        single_files_str =  "\n".join(single_files)
+        raise Exception(
+            f"""Some of your files do not have a matching read pair. Please ensure that for each sublibrary, you have a pair of Fastq files, with the same name except for _R1 or _R2\n
+The following files are missing their read pair:\n
+{single_files_str}
+"""
+        )
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
@@ -641,7 +684,7 @@ def prepare_upload(args):
 
     if not resume:
         if not args.run_id:
-            raise Exception("Analysis ID is required")
+            raise Exception("run_id is required")
 
         if not args.file:
             raise Exception("At least one file is required")
@@ -653,12 +696,8 @@ def prepare_upload(args):
         # Take list of glob patterns and expand and flatten them into a list of files
         files = [file for glob_pattern in args.file for file in glob.glob(glob_pattern)]
 
-        # Check that the files look like fastqs
-        for file in files:
-            if not (file.endswith(".fastq.gz") or file.endswith(".fq.gz")):
-                raise Exception(
-                    f"File {file} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported"
-                )
+        check_names_are_valid(files)
+        check_fastq_pairs_complete(files)
 
         upload_tracker = UploadTracker.fromScratch(
             args.run_id, files, args.max_threads_count, args.token
