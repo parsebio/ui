@@ -2,8 +2,6 @@ import { updateSecondaryAnalysisFile, createSecondaryAnalysisFile } from 'redux/
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import { useSelector } from 'react-redux';
-import { getFastqFiles } from 'redux/selectors';
 import UploadsCoordinator from './UploadsCoordinator';
 
 const uploadSecondaryAnalysisFile = async (
@@ -50,17 +48,10 @@ const uploadSecondaryAnalysisFile = async (
 const createAndUploadSecondaryAnalysisFiles = async (
   secondaryAnalysisId, filesList, handlesList = [], type, dispatch,
 ) => {
-  const existingFiles = useSelector(getFastqFiles(secondaryAnalysisId));
-  const existingFileNames = existingFiles.map((file) => file.name);
-
   const uploadUrlParamsList = await Promise.all(
     filesList.map(async (file, index) => {
       const handle = handlesList[index] ?? null;
-      if (!existingFileNames.includes(file.name)) {
-        return dispatch(createSecondaryAnalysisFile(secondaryAnalysisId, file, type, handle));
-      }
-      const existingFile = existingFiles.find((f) => f.name === file.name);
-      return { fileId: existingFile.id, ...existingFile.uploadUrlParams };
+      return dispatch(createSecondaryAnalysisFile(secondaryAnalysisId, file, type, handle));
     }),
   );
 
