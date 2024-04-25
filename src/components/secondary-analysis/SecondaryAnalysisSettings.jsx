@@ -74,7 +74,7 @@ const SecondaryAnalysisSettings = (props) => {
       <Form
         layout='vertical'
         size='middle'
-        style={{ width: '100%', margin: '0 auto', height: '50%' }}
+        style={{ width: '90%', height: '50%' }}
       >
         <Form.Item
           label='Parse Biosciences technology details:'
