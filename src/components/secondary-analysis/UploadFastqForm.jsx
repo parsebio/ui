@@ -343,7 +343,12 @@ const UploadFastqForm = (props) => {
             }
             <br />
             <br />
-            {renderFastqFilesTable()}
+            {Object.keys(secondaryAnalysisFiles).length > 0 && (
+              <>
+                <Divider orientation='center'>Previously uploaded files</Divider>
+                {renderFastqFilesTable()}
+              </>
+            )}
           </Form.Item>
         </Form>
       ),
