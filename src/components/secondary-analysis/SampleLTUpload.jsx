@@ -31,9 +31,9 @@ const SampleLTUpload = (props) => {
   const getSampleNamesFromExcel = async (excelFile) => {
     const rows = await readExcelFile(excelFile);
     // Find the row and column index where 'Sample Name' is mentioned
-    const sampleNameRowIndex = rows.findIndex((row) => row.includes('Sample Name'));
-    const sampleNameColumnIndex = rows[sampleNameRowIndex].findIndex((cell) => cell === 'Sample Name');
+    const sampleNameRowIndex = rows.findIndex((row) => row.some((cell) => typeof cell === 'string' && cell.includes('Sample Name')));
 
+    const sampleNameColumnIndex = rows[sampleNameRowIndex].findIndex((cell) => cell.includes('Sample Name'));
     // Extract sample names from the rows following the 'Sample Name' row
     const extractedSampleNames = rows.slice(sampleNameRowIndex + 1)
       .map((row) => row[sampleNameColumnIndex]).filter((name) => name !== null);
