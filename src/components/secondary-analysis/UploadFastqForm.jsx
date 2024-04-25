@@ -400,7 +400,7 @@ const UploadFastqForm = (props) => {
       key: 'cli',
       label: 'Console upload',
       children: (
-        <Space direction='vertical'>
+        <Space direction='vertical' style={{ width: '80%' }}>
           {newToken && (
             <Alert
               message={(
@@ -431,14 +431,15 @@ const UploadFastqForm = (props) => {
             )
             : 'To upload files via the command line, you need to generate a token.'}
           <Button loading={_.isNil(tokenExists)} onClick={generateNewToken}>{(tokenExists || newToken) ? 'Refresh token' : 'Generate token'}</Button>
-          <Divider />
           <Text>
             To perform a command-line upload, download this script:
-            <br />
+            {' '}
             <a href='/parse-upload.py' download>parse-upload.py</a>
+
+            <br />
             <br />
 
-            Run the script with the following command:
+            And run the script with the following command:
             <br />
             <pre>
               <Paragraph copyable={{
