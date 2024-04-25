@@ -503,7 +503,7 @@ const Pipeline = () => {
           height='90%'
           title={currentStep.title}
           okButtonProps={{ htmlType: 'submit' }}
-          bodyStyle={{ minHeight: '20dvh', maxHeight: '70dvh', overflowY: 'auto' }}
+          bodyStyle={{ minHeight: '20dvh', maxHeight: '75dvh', overflowY: 'auto' }}
           onCancel={onCancel}
           footer={[
             <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
