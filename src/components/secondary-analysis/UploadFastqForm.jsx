@@ -10,6 +10,7 @@ import {
   CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
+import UploadStatus from 'utils/upload/UploadStatus';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';
@@ -87,7 +88,9 @@ const UploadFastqForm = (props) => {
         rejectReason: endUserMessages.ERROR_NOT_FASTQ,
       },
       {
-        validate: (file) => !alreadyUploadedFiles.includes(file.name),
+        validate: (file) => !alreadyUploadedFiles.includes(file.name)
+        && ![UploadStatus.UPLOADING, UploadStatus.UPLOADED]
+          .includes(secondaryAnalysisFiles[file?.id]?.upload?.status),
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
       },
       {
