@@ -80,7 +80,7 @@ const SecondaryAnalysisSettings = (props) => {
           label='Parse Biosciences technology details:'
           name='technologyDetails'
         >
-          <Space direction='vertical' style={{ width: '70%' }}>
+          <Space direction='vertical' style={{ width: '92%' }}>
             <Select
               placeholder='Select the kit you used in your experiment'
               value={formValues.kit}
