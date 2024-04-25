@@ -42,6 +42,7 @@ jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
     attributes: {
       'custom:agreed_terms': 'true',
+      name: 'Tester Testson',
     },
   })),
   federatedSignIn: jest.fn(),
