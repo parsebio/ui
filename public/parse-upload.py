@@ -683,7 +683,7 @@ def check_fastq_pairs_complete(files):
     if len(single_files) > 0:
         single_files_str =  "\n".join(single_files)
         raise Exception(
-            f"""Some of your files do not have a matching read pair. Please ensure that for each sublibrary, you have a pair of Fastq files, with the same name except for _R1 or _R2\n
+            f"""Some of your files do not have a matching read pair. Please ensure that for each sublibrary you have a pair of Fastq files, with the same name except for _R1 or _R2\n
 The following files are missing their read pair:\n
 {single_files_str}
 """)
