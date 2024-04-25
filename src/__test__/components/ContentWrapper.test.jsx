@@ -239,9 +239,9 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
-    expect(screen.getByText('Data Exploration').closest('li')).toHaveAttribute('aria-disabled', 'true');
-    expect(screen.getByText('Plots and Tables').closest('li')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByText('Data Processing')).not.toBeInTheDocument();
+    expect(screen.queryByText('Data Exploration')).not.toBeInTheDocument();
+    expect(screen.queryByText('Plots and Tables')).not.toBeInTheDocument();
   });
 
   it('has the correct sider and layout style when opened / closed', async () => {
