@@ -198,7 +198,7 @@ const UploadFastqForm = (props) => {
   const fastqsCount = Object.keys(secondaryAnalysisFiles).length;
 
   const warning = useMemo(() => {
-    if (fastqsCount > 0 && fastqCount < numOfSublibraries * 2) {
+    if (fastqsCount > 0 && fastqsCount < numOfSublibraries * 2) {
       return endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES;
     }
 
