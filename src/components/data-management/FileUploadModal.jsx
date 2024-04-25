@@ -63,7 +63,7 @@ const FileUploadModal = (props) => {
   const previouslyUploadedSamples = Object.keys(samples)
     .filter((key) => samples[key].experimentId === activeExperimentId);
 
-  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech['10X']);
+  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech.PARSE);
   const [canUpload, setCanUpload] = useState(false);
   const [files, setFiles] = useState(emptyFiles);
 
