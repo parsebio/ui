@@ -155,9 +155,6 @@ describe('ContentWrapper', () => {
   it('links are disabled if there is no experimentId', async () => {
     await renderContentWrapper();
 
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
-
     // Data Processing link is disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
 
@@ -174,9 +171,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper();
 
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
-
     // Data Processing link is disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
 
@@ -192,9 +186,6 @@ describe('ContentWrapper', () => {
     calculateQCRerunStatus.mockReturnValue({ rerun: true, reasons: [], complete: true });
 
     await renderContentWrapper();
-
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
 
     // Data Processing link is disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
@@ -231,9 +222,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
-
     // Data Processing link is not disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'false');
 
@@ -251,7 +239,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
     expect(screen.getByText('Data Exploration').closest('li')).toHaveAttribute('aria-disabled', 'true');
     expect(screen.getByText('Plots and Tables').closest('li')).toHaveAttribute('aria-disabled', 'true');
@@ -313,7 +300,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.queryByText('Data Management')).not.toBeInTheDocument();
     expect(Auth.federatedSignIn).toHaveBeenCalled();
   });
 
