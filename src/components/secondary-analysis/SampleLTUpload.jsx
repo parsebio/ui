@@ -177,7 +177,7 @@ const SampleLTUpload = (props) => {
               {uploadButtonText}
             </Button>
           </center>
-          <Divider orientation='center'>Previously uploaded file</Divider>
+          {uploadedFileId && (<Divider orientation='center'>Previously uploaded file</Divider>)}
           {renderUploadedFileDetails()}
         </Form.Item>
       </Form>

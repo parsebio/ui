@@ -497,8 +497,6 @@ const Pipeline = () => {
   return (
     <>
       <div style={{ height: '100vh', overflowY: 'auto' }}>
-        {' '}
-        {/* Add this div with style */}
         {NewProjectModalVisible && (
           <NewProjectModal
             projectType='secondaryAnalyses'
@@ -515,8 +513,7 @@ const Pipeline = () => {
             open
             title={currentStep.title}
             okButtonProps={{ htmlType: 'submit' }}
-            bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
-            style={{ minWidth: '70dvh' }}
+            bodyStyle={{ minHeight: '20dvh', maxHeight: '60dvh', overflowY: 'auto' }}
             onCancel={onCancel}
             footer={[
               <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>

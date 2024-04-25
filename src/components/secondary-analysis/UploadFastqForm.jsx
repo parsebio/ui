@@ -331,7 +331,6 @@ const UploadFastqForm = (props) => {
                 </Button>
               </Tooltip>
             </center>
-            <Divider orientation='center'>Previously uploaded file</Divider>
             <br />
             {renderFastqFilesTable()}
           </Form.Item>
