@@ -18,7 +18,7 @@ const resumeUploads = (secondaryAnalysisId) => async (dispatch, getState) => {
       const options = { mode: 'read' };
 
       if (await fileHandle.queryPermission(options) === 'granted') {
-        return { uploadUrlParams, fileHandle };
+        return { uploadUrlParams, fileHandle, uploadStatus: fastq.upload.status.current };
       }
 
       if (await fileHandle.requestPermission(options) === 'granted') {
