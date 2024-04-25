@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {
-  Avatar, Button, Menu, Dropdown,
+  Avatar, Button, Dropdown,
 } from 'antd';
 import Link from 'next/link';
 import { Hub } from '@aws-amplify/core';

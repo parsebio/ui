@@ -145,7 +145,7 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.getByText('Data Management')).toBeInTheDocument();
+    expect(screen.getByText('Pipeline')).toBeInTheDocument();
     expect(screen.getByText(experimentName)).toBeInTheDocument();
     expect(screen.getByText('Data Processing')).toBeInTheDocument();
     expect(screen.getByText('Data Exploration')).toBeInTheDocument();
