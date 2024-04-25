@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm,
+  Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
@@ -29,7 +29,6 @@ import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
-  numOfSamples: 'Number of samples',
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
   kit: 'Kit type',
@@ -48,7 +47,7 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
-const analysisDetailsKeys = ['name', 'description', 'numOfSamples', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+const analysisDetailsKeys = ['name', 'description', 'sampleNames', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
 
 const Pipeline = () => {
   const dispatch = useDispatch();
@@ -70,7 +69,7 @@ const Pipeline = () => {
   const {
     name: analysisName,
     description: analysisDescription,
-    numOfSamples,
+    sampleNames,
     numOfSublibraries,
     chemistryVersion,
     kit,
@@ -147,17 +146,22 @@ const Pipeline = () => {
           style={{
             display: 'flex',
             marginBottom: window.innerHeight > 850 ? '0.6vh' : '0',
+            alignItems: 'center', // Ensure items are aligned in the center vertically
           }}
         >
           {title && (
-            <span style={{ fontWeight: 'bold', fontSize: '1.4vh' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '1.4vh', marginRight: '0.5vh' }}>
               {`${title}:`}
             </span>
           )}
-          &nbsp;
-          <span style={{
-            fontSize: '1.4vh', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          }}
+          <span
+            style={{
+              fontSize: '1.4vh',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+            title={value?.length > 20 ? value : ''}
           >
             {value || 'Not selected'}
           </span>
@@ -171,6 +175,8 @@ const Pipeline = () => {
     if (!sampleLTFile) return null;
 
     const { name, upload, createdAt } = sampleLTFile;
+    const sampleCount = sampleNames?.length || 0;
+
     return mainScreenDetails({
       name,
       status: <UploadStatusView
@@ -179,6 +185,40 @@ const Pipeline = () => {
         secondaryAnalysisId={activeSecondaryAnalysisId}
       />,
       createdAt: <PrettyTime isoTime={createdAt} />,
+      samples: sampleCount && (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <b>{`${sampleCount} samples`}</b>
+          <Popover
+            content={(
+              <div style={{
+                display: 'inline-block',
+                width: '100%',
+                maxWidth: '200px',
+                maxHeight: '30vh',
+                overflowY: 'auto',
+              }}
+              >
+                {sampleNames.map((sampleName) => (
+                  <div
+                    key={sampleName}
+                    style={{
+                      textAlign: 'center',
+                      wordWrap: 'break-word',
+                      padding: '3px',
+                    }}
+                  >
+                    {sampleName}
+                  </div>
+                ))}
+              </div>
+            )}
+            title='Sample Names'
+            trigger='click'
+          >
+            <Button style={{ fontSize: '1.4vh' }} type='link'>View Sample Names</Button>
+          </Popover>
+        </div>
+      ),
     });
   };
 
@@ -222,11 +262,11 @@ const Pipeline = () => {
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />
       ),
-      isValid: (numOfSamples && numOfSublibraries && chemistryVersion && kit),
+      isValid: (numOfSublibraries && chemistryVersion && kit),
       renderMainScreenDetails: () => {
         const kitTitle = kitOptions.find((option) => option.value === kit)?.label;
         return mainScreenDetails({
-          kit: kitTitle, chemistryVersion, numOfSamples, numOfSublibraries,
+          kit: kitTitle, chemistryVersion, numOfSublibraries,
         });
       },
     },
@@ -239,6 +279,7 @@ const Pipeline = () => {
           renderUploadedFileDetails={renderSampleLTFileDetails}
           uploadedFileId={sampleLTFile?.id}
           setFilesNotUploaded={setFilesNotUploaded}
+          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />
       ),
       isValid: allFilesUploaded([sampleLTFile]),
@@ -462,8 +503,6 @@ const Pipeline = () => {
   return (
     <>
       <div style={{ height: '100vh', overflowY: 'auto' }}>
-        {' '}
-        {/* Add this div with style */}
         {NewProjectModalVisible && (
           <NewProjectModal
             projectType='secondaryAnalyses'
@@ -480,8 +519,7 @@ const Pipeline = () => {
             open
             title={currentStep.title}
             okButtonProps={{ htmlType: 'submit' }}
-            bodyStyle={{ minHeight: '41dvh', maxHeight: '60dvh', overflowY: 'auto' }}
-            style={{ minWidth: '70dvh' }}
+            bodyStyle={{ minHeight: '20dvh', maxHeight: '60dvh', overflowY: 'auto' }}
             onCancel={onCancel}
             footer={[
               <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
