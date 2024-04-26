@@ -31,7 +31,7 @@ import createTestComponentFactory from '__test__/test-utils/testComponentFactory
 import userEvent from '@testing-library/user-event';
 import { updatePlotConfig } from 'redux/actions/componentConfig';
 
-jest.mock('components/header/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;

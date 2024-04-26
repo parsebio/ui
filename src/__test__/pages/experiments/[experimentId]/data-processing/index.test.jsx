@@ -28,7 +28,7 @@ import config from 'config';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-jest.mock('components/header/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('redux/actions/experimentSettings/processingConfig/saveProcessingSettings');
 jest.mock('redux/actions/experiments', () => ({
   cloneExperiment: jest.fn(() => () => { }),
