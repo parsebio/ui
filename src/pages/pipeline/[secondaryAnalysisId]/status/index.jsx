@@ -74,9 +74,9 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   useEffect(() => {
     if (secondaryAnalysis?.status.current !== 'finished') return;
-    if (!associatedExperimentId) {
-      loadAssociatedExperiment();
-    }
+    // if (!associatedExperimentId) {
+    loadAssociatedExperiment();
+    // }
     setupReports();
   }, [secondaryAnalysis?.status.current]);
 
