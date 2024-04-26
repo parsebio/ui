@@ -74,7 +74,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   useEffect(() => {
     if (secondaryAnalysis?.status.current !== 'finished') return;
-
+    console.log('try again ');
     const fetchData = async () => {
       await loadAssociatedExperiment();
       setupReports();
