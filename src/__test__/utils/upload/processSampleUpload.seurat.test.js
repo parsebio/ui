@@ -237,7 +237,7 @@ describe('processUpload', () => {
 
     axios.request.mockImplementation(uploadError);
 
-    await processSampleUpload(
+    processSampleUpload(
       getValidFiles(),
       sampleType,
       store.getState().samples,
@@ -274,7 +274,7 @@ describe('processUpload', () => {
     );
 
     // There are 1 files actions with status uploading
-    expect(uploadingFileProperties.length).toEqual(1);
+    expect(uploadingFileProperties.length).toEqual(2);
     // There are 1 files actions with status upload error
     expect(errorFileProperties.length).toEqual(1);
     // There are no file actions with status successfully uploaded

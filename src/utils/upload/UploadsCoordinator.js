@@ -2,6 +2,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import fileUploadConfig from 'utils/upload/fileUploadConfig';
 import UploadStatus from 'utils/upload/UploadStatus';
 import FileUploader from 'utils/upload/FileUploader';
+import FileUploaderError from 'utils/errors/upload/FileUploaderError';
 
 class UploadsCoordinator {
   static get() {
@@ -74,7 +75,12 @@ class UploadsCoordinator {
 
       promise.resolve();
     } catch (e) {
-      onStatusUpdate(UploadStatus.UPLOAD_ERROR);
+      // File uploader handles errors internally already
+      if (!(e instanceof FileUploaderError)) {
+        onStatusUpdate(UploadStatus.UPLOAD_ERROR);
+      }
+
+      promise.reject(new UploadsCoordinator(e.message));
       console.error(e);
     }
 

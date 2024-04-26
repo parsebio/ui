@@ -15,6 +15,7 @@ import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
+import UploadsCoordinatorError from 'utils/errors/upload/UploadsCoordinatorError';
 
 const createAndUploadSampleFile = async (
   file, fileType, experimentId, sampleId, dispatch, selectedTech,
@@ -72,6 +73,9 @@ const createAndUploadSampleFile = async (
       options,
     ]);
   } catch (e) {
+    // Error is already handled by the UploadsCoordinator
+    if (e instanceof UploadsCoordinatorError) return;
+
     dispatch(updateSampleFileUpload(
       experimentId, sampleId, sampleFileId, fileType, UploadStatus.UPLOAD_ERROR,
     ));

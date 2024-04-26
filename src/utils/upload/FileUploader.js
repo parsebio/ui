@@ -7,6 +7,7 @@ import filereaderStream from 'filereader-stream';
 import fetchAPI from 'utils/http/fetchAPI';
 import putInS3 from 'utils/upload/putInS3';
 import UploadStatus from 'utils/upload/UploadStatus';
+import FileUploaderError from 'utils/errors/upload/FileUploaderError';
 
 class FileUploader {
   constructor(
@@ -221,7 +222,7 @@ class FileUploader {
 
     this.onStatusUpdate(status);
 
-    this.reject(e);
+    this.reject(new FileUploaderError(e.message));
     console.error(e);
   }
 
