@@ -18,7 +18,21 @@ jest.mock('utils/AppRouteProvider', () => ({
   })),
 }));
 
-describe('ProjectsList', () => {
+const regexes = {
+  filterBy: {
+    experiments: /Filter by project name/i,
+    secondaryAnalyses: /Filter by run name or run ID/i,
+  },
+  createNew: {
+    experiments: /Create New Project/i,
+    secondaryAnalyses: /Create New Run/i,
+  },
+};
+
+describe.each([
+  { projectType: 'experiments' },
+  { projectType: 'secondaryAnalyses' },
+])('ProjectsList $projectType', ({ projectType }) => {
   let storeState;
 
   beforeEach(() => {
@@ -26,51 +40,68 @@ describe('ProjectsList', () => {
   });
 
   it('Contains the input box and create project button', async () => {
+    const onCreateNewProjectMock = jest.fn();
+
     render(
       <Provider store={storeState}>
-        <ProjectsListContainer />
+        <ProjectsListContainer
+          projectType={projectType}
+          onCreateNewProject={onCreateNewProjectMock}
+        />
       </Provider>,
     );
 
-    expect(screen.getByPlaceholderText(/Filter by project name/i)).toBeDefined();
-    expect(screen.getByText(/Create New Project/)).toBeDefined();
+    expect(screen.getByPlaceholderText(regexes.filterBy[projectType])).toBeDefined();
+    expect(screen.getByText(regexes.createNew[projectType])).toBeDefined();
   });
 
   it('triggers onCreateNewProject on clicking create new project button', async () => {
-    const onCreateNewProjectMock = jest.fn(() => { });
+    const onCreateNewProjectMock = jest.fn();
 
     render(
       <Provider store={storeState}>
-        <ProjectsListContainer onCreateNewProject={onCreateNewProjectMock} />
+        <ProjectsListContainer
+          projectType={projectType}
+          onCreateNewProject={onCreateNewProjectMock}
+        />
       </Provider>,
     );
 
-    const createNewProjectButton = screen.getByText(/Create New Project/);
+    const createNewProjectButton = screen.getByText(regexes.createNew[projectType]);
 
     expect(onCreateNewProjectMock).toHaveBeenCalledTimes(0);
 
     await act(async () => {
       userEvent.click(createNewProjectButton);
     });
-    userEvent.click(screen.getByText('Upload Project'));
 
-    expect(onCreateNewProjectMock).toHaveBeenCalledTimes(1);
+    if (projectType === 'experiments') {
+      userEvent.click(screen.getByText('Upload Project'));
+      expect(onCreateNewProjectMock).toHaveBeenCalledTimes(1);
+    }
   });
 
-  it('navigates to repository page when selecting the option in the create project dropdown', async () => {
-    render(
-      <Provider store={storeState}>
-        <ProjectsListContainer />
-      </Provider>,
-    );
+  if (projectType === 'experiments') {
+    it('navigates to repository page when selecting the option in the create project dropdown', async () => {
+      const onCreateNewProjectMock = jest.fn();
 
-    const createNewProjectButton = screen.getByText(/Create New Project/);
+      render(
+        <Provider store={storeState}>
+          <ProjectsListContainer
+            projectType={projectType}
+            onCreateNewProject={onCreateNewProjectMock}
+          />
+        </Provider>,
+      );
 
-    await act(async () => {
-      userEvent.click(createNewProjectButton);
+      const createNewProjectButton = screen.getByText(regexes.createNew[projectType]);
+
+      await act(async () => {
+        userEvent.click(createNewProjectButton);
+      });
+      userEvent.click(screen.getByText('Select from Dataset Repository'));
+
+      expect(mockNavigateTo.mock.calls).toMatchSnapshot();
     });
-    userEvent.click(screen.getByText('Select from Dataset Repository'));
-
-    expect(mockNavigateTo.mock.calls).toMatchSnapshot();
-  });
+  }
 });

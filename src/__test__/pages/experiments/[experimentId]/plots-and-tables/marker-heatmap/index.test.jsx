@@ -31,7 +31,7 @@ import createTestComponentFactory from '__test__/test-utils/testComponentFactory
 import cellSetsData from '__test__/data/cell_sets.json';
 import { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
 
-jest.mock('components/header/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
