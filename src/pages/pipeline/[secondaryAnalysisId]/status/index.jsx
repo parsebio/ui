@@ -36,7 +36,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
   const associatedExperimentId = secondaryAnalysis?.experimentId;
-  const associatedExperiment = useSelector((state) => state.experiments[associatedExperimentId]);
+  // const associatedExperiment = useSelector((state) => state.experiments[associatedExperimentId]);
   const loadAssociatedExperiment = async () => {
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
     console.log('LOADED EXPERIMENT', response);
@@ -62,7 +62,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       obj[key] = htmlUrls[key];
       return obj;
     }, {});
-    // await loadAssociatedExperiment();
+    await loadAssociatedExperiment();
 
     setReports(sortedHtmlUrls);
 
@@ -303,13 +303,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           style={{ width: '300px' }}
         />
         {renderDownloadOutputButton()}
-        <Tooltip
-          title={!associatedExperiment ? 'We are creating your downstream analysis, try refreshing the page.' : ''}
-          placement='top'
-          mouseEnterDelay={0.05}
-        >
+        {associatedExperimentId && (
           <Button
-            disabled={!associatedExperimentId}
             onClick={async () => {
               navigateTo(modules.DATA_EXPLORATION,
                 { experimentId: associatedExperimentId }, false, true);
@@ -318,7 +313,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           >
             Go to Insights downstream analysis
           </Button>
-        </Tooltip>
+        )}
       </Space>
       <iframe src={URL.createObjectURL(reports[selectedReport])} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
