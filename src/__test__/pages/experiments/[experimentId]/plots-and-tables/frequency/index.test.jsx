@@ -70,7 +70,8 @@ describe('Frequency plots and tables index page', () => {
 
   it('Renders all control panels', async () => {
     await renderFrequencyIndex();
-    expect(screen.getByText(new RegExp(plotNames.FREQUENCY_PLOT, 'i'))).toBeInTheDocument();
+
+    expect(screen.getAllByText(new RegExp(plotNames.FREQUENCY_PLOT, 'i'))).toHaveLength(3);
 
     expect(screen.getByText(/Select data/i)).toBeInTheDocument();
     expect(screen.getByText(/Plot type/i)).toBeInTheDocument();
