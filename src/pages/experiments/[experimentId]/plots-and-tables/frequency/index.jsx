@@ -1,6 +1,4 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-param-reassign */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
