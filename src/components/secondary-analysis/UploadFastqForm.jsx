@@ -33,10 +33,10 @@ const getMissingPairName = (fileName) => {
 };
 
 const UploadFastqForm = (props) => {
-  const dispatch = useDispatch();
   const {
     secondaryAnalysisId, renderFastqFilesTable, setFilesNotUploaded,
   } = props;
+  const dispatch = useDispatch();
 
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
@@ -139,9 +139,10 @@ const UploadFastqForm = (props) => {
           // file is invalid if its already uploaded or uploading
           const uploadedFileId = Object.keys(secondaryAnalysisFiles)
             .find((key) => secondaryAnalysisFiles[key].name === file.name);
-          return !uploadedFileId
-            || ![UploadStatus.UPLOADING, UploadStatus.UPLOADED]
-              .includes(secondaryAnalysisFiles[uploadedFileId]?.upload?.status.current);
+          const uploadedFileStatus = secondaryAnalysisFiles[uploadedFileId]?.upload?.status.current;
+          return !(uploadedFileId
+            && [UploadStatus.UPLOADING, UploadStatus.UPLOADED, UploadStatus.QUEUED]
+              .includes(uploadedFileStatus));
         },
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
       },
@@ -386,7 +387,6 @@ const UploadFastqForm = (props) => {
             <br />
             {Object.keys(secondaryAnalysisFiles).length > 0 && (
               <>
-                <Divider orientation='center'>Previously uploaded files</Divider>
                 {renderFastqFilesTable()}
               </>
             )}
