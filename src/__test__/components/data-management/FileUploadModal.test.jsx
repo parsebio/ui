@@ -471,7 +471,7 @@ describe('FileUploadModal', () => {
     expect(screen.queryByText('WT13/DGE_filtered/all_genes.csv.gz')).not.toBeInTheDocument();
 
     // Warning shows up with offer to expand
-    expect(screen.getByText(/1 file was ignored, click to display/i)).toBeInTheDocument();
+    expect(screen.getByText(/1 file was ignored. Click to display/i)).toBeInTheDocument();
 
     // Add a new invalid file
     await act(async () => {
@@ -484,14 +484,14 @@ describe('FileUploadModal', () => {
     });
 
     // Now warning shows plural version
-    expect(screen.getByText(/2 files were ignored, click to display/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 files were ignored. Click to display/i)).toBeInTheDocument();
 
     // But invalid files don't show up yet
     expect(screen.queryByText('all-sample/all_genes.csv.gz')).not.toBeInTheDocument();
     expect(screen.queryByText('KO/DGE_unfiltered/invalidName.csv.gz')).not.toBeInTheDocument();
 
     await act(() => {
-      fireEvent.click(screen.getByText(/2 files were ignored, click to display/i));
+      fireEvent.click(screen.getByText(/2 files were ignored. Click to display/i));
     });
 
     // All invalid files are shown here
