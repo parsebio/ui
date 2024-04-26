@@ -12,7 +12,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import React from 'react';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import FeedbackButton from 'components/header/FeedbackButton';
+import FeedbackButton from 'components/sider/FeedbackButton';
 
 jest.mock('utils/http/fetchAPI');
 
