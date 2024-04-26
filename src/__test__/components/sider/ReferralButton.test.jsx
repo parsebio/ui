@@ -30,13 +30,13 @@ describe('ReferralButton', () => {
 
   it('renders a button correctly without any props', () => {
     render(<ReferralButton />);
-    expect(screen.getByText(/Invite a friend/i)).toBeDefined();
+    expect(screen.getByText(/Recommend/i)).toBeDefined();
   });
 
   it('Shows an input, a text area input and 2 buttons when opened', () => {
     render(<ReferralButton />);
 
-    const referralButton = screen.getByText(/Invite a friend/i);
+    const referralButton = screen.getByText(/Recommend/i);
     userEvent.click(referralButton);
 
     // There is an email input
@@ -55,7 +55,7 @@ describe('ReferralButton', () => {
 
     const invalidEmail = 'invalidEmail';
 
-    const referralButton = screen.getByText(/Invite a friend/i);
+    const referralButton = screen.getByText(/Recommend/i);
     userEvent.click(referralButton);
 
     const emailInput = screen.getByPlaceholderText(/Your friend's email address/i);
@@ -76,7 +76,7 @@ describe('ReferralButton', () => {
     const emailText = 'friend@email.com';
     const messageText = 'Some message text';
 
-    const referralButton = screen.getByText(/Invite a friend/i);
+    const referralButton = screen.getByText(/Recommend/i);
     userEvent.click(referralButton);
 
     const emailInput = screen.getByPlaceholderText(/Your friend's email address/i);
@@ -115,7 +115,7 @@ describe('ReferralButton', () => {
     const emailText = 'friend@email.com';
     const messageText = 'Some message text';
 
-    const referralButton = screen.getByText(/Invite a friend/i);
+    const referralButton = screen.getByText(/Recommend/i);
     userEvent.click(referralButton);
 
     const emailInput = screen.getByPlaceholderText(/Your friend's email address/i);
