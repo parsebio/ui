@@ -62,7 +62,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       obj[key] = htmlUrls[key];
       return obj;
     }, {});
-    await loadAssociatedExperiment();
+    // await loadAssociatedExperiment();
 
     setReports(sortedHtmlUrls);
 
