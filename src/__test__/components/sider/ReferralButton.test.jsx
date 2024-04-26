@@ -8,7 +8,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
-import ReferralButton from 'components/header/ReferralButton';
+import ReferralButton from 'components/sider/ReferralButton';
 import '__test__/test-utils/setupTests';
 
 jest.mock('utils/http/fetchAPI');
