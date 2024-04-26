@@ -2,7 +2,6 @@ import updateSecondaryAnalysisFile from 'redux/actions/secondaryAnalyses/updateS
 import createSecondaryAnalysisFile from 'redux/actions/secondaryAnalyses/createSecondaryAnalysisFile';
 
 import UploadStatus from 'utils/upload/UploadStatus';
-import cache from 'utils/cache';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
 
