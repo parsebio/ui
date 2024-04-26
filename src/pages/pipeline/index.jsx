@@ -502,6 +502,27 @@ const Pipeline = () => {
 
   return (
     <>
+      {currentStep && (
+        <Modal
+          open
+          width='50%'
+          height='90%'
+          title={currentStep.title}
+          okButtonProps={{ htmlType: 'submit' }}
+          bodyStyle={{ minHeight: '20dvh', maxHeight: '75dvh', overflowY: 'auto' }}
+          onCancel={onCancel}
+          footer={[
+            <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
+              Back
+            </Button>,
+            <Button key='submit' type='primary' onClick={onNext}>
+              {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
+            </Button>,
+          ]}
+        >
+          {currentStep.render()}
+        </Modal>
+      )}
       <div style={{ height: '100vh', overflowY: 'auto' }}>
         {NewProjectModalVisible && (
           <NewProjectModal
@@ -513,25 +534,6 @@ const Pipeline = () => {
               setNewProjectModalVisible(false);
             }}
           />
-        )}
-        {currentStep && (
-          <Modal
-            open
-            title={currentStep.title}
-            okButtonProps={{ htmlType: 'submit' }}
-            bodyStyle={{ minHeight: '20dvh', maxHeight: '60dvh', overflowY: 'auto' }}
-            onCancel={onCancel}
-            footer={[
-              <Button key='back' onClick={onBack} style={{ display: currentStepIndex > 0 ? 'inline' : 'none' }}>
-                Back
-              </Button>,
-              <Button key='submit' type='primary' onClick={onNext}>
-                {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
-              </Button>,
-            ]}
-          >
-            {currentStep.render()}
-          </Modal>
         )}
 
         <MultiTileContainer
