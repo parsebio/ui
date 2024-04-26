@@ -74,10 +74,13 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   useEffect(() => {
     if (secondaryAnalysis?.status.current !== 'finished') return;
-    // if (!associatedExperimentId) {
-    loadAssociatedExperiment();
-    // }
-    setupReports();
+
+    const fetchData = async () => {
+      await loadAssociatedExperiment();
+      setupReports();
+    };
+
+    fetchData();
   }, [secondaryAnalysis?.status.current]);
 
   const secondaryAnalysisFinished = useMemo(() => (
