@@ -3,6 +3,7 @@ import fileUploadConfig from 'utils/upload/fileUploadConfig';
 import UploadStatus from 'utils/upload/UploadStatus';
 import FileUploader from 'utils/upload/FileUploader';
 import FileUploaderError from 'utils/errors/upload/FileUploaderError';
+import UploadsCoordinatorError from 'utils/errors/upload/UploadsCoordinatorError';
 
 class UploadsCoordinator {
   static get() {
@@ -80,7 +81,7 @@ class UploadsCoordinator {
         onStatusUpdate(UploadStatus.UPLOAD_ERROR);
       }
 
-      promise.reject(new UploadsCoordinator(e.message));
+      promise.reject(new UploadsCoordinatorError(e.message));
       console.error(e);
     }
 

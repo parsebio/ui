@@ -19,6 +19,7 @@ import processSampleUpload from 'utils/upload/processSampleUpload';
 import validate from 'utils/upload/validateSeurat';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import mockFile from '__test__/test-utils/mockFile';
+import { setupNavigatorLocks, teardownNavigatorLocks } from '__test__/test-utils/mockLocks';
 
 const MB = 1024 * 1024;
 jest.mock('../../../utils/upload/fileUploadConfig', () => ({
@@ -84,19 +85,6 @@ jest.mock('utils/pushNotificationMessage');
 jest.mock('utils/upload/validateSeurat');
 
 let store = null;
-
-const setupNavigatorLocks = () => {
-  const mockLockRequest = jest.fn((lock, func) => func());
-  global.navigator.locks = {
-    request: mockLockRequest,
-  };
-
-  return mockLockRequest;
-};
-
-const teardownNavigatorLocks = () => {
-  delete global.navigator.locks;
-};
 
 describe('processUpload', () => {
   beforeEach(() => {
