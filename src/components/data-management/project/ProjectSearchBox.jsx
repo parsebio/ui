@@ -14,7 +14,9 @@ const ProjectSearchBox = (props) => {
         const uuid = value.slice(userPrefix.length).trim();
 
         if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(uuid)) {
-          const projectIds = await fetchProjectsByUser(uuid, projectType);
+          // mismatch between UI and db conventions.
+          const projectTypeDb = projectType === 'secondaryAnalyses' ? 'secondary' : 'tertiary';
+          const projectIds = await fetchProjectsByUser(uuid, projectTypeDb);
           console.log(projectIds);
           return;
         }
