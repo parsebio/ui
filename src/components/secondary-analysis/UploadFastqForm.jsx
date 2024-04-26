@@ -385,11 +385,7 @@ const UploadFastqForm = (props) => {
               </Tooltip>
             </center>
             <br />
-            {Object.keys(secondaryAnalysisFiles).length > 0 && (
-              <>
-                {renderFastqFilesTable()}
-              </>
-            )}
+            {renderFastqFilesTable()}
           </Form.Item>
         </Form>
       ),
