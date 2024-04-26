@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-import _ from 'lodash';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { SECONDARY_ANALYSIS_FILES_LOADED, SECONDARY_ANALYSIS_FILES_LOADING } from 'redux/actionTypes/secondaryAnalyses';
 import fetchAPI from 'utils/http/fetchAPI';
