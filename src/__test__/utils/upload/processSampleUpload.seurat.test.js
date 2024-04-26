@@ -85,6 +85,19 @@ jest.mock('utils/upload/validateSeurat');
 
 let store = null;
 
+const setupNavigatorLocks = () => {
+  const mockLockRequest = jest.fn((lock, func) => func());
+  global.navigator.locks = {
+    request: mockLockRequest,
+  };
+
+  return mockLockRequest;
+};
+
+const teardownNavigatorLocks = () => {
+  delete global.navigator.locks;
+};
+
 describe('processUpload', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -142,6 +155,12 @@ describe('processUpload', () => {
     });
 
     store = mockStore(initialState);
+
+    setupNavigatorLocks();
+  });
+
+  afterEach(() => {
+    teardownNavigatorLocks();
   });
 
   it('Uploads and updates redux correctly when there are no errors', async () => {
