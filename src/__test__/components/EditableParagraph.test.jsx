@@ -13,11 +13,19 @@ const defaultProps = {
   onUpdate: jest.fn(),
 };
 
+const originalScrollWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollWidth');
+const originalClientWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth');
+
 const editableParagraphFactory = createTestComponentFactory(EditableParagraph, defaultProps);
 
 const renderEditableParagraph = (props = {}) => render(editableParagraphFactory(props));
 
 describe('EdtableParagraph', () => {
+  afterEach(() => {
+    Object.defineProperty(HTMLElement.prototype, 'scrollWidth', { configurable: true, value: originalScrollWidth });
+    Object.defineProperty(HTMLElement.prototype, 'clientWidth', { configurable: true, value: originalClientWidth });
+  });
+
   it('Should render an editable paragraph without extend/collapse', () => {
     renderEditableParagraph();
 
@@ -41,14 +49,15 @@ describe('EdtableParagraph', () => {
     const descriptionInput = container.querySelector('p[contenteditable="true"]');
 
     act(() => {
-      userEvent.type(descriptionInput, `${mockContent}{enter}`);
+      userEvent.type(descriptionInput);
+      userEvent.keyboard(`${mockContent}{enter}`);
     });
 
     expect(defaultProps.onUpdate).toHaveBeenCalledWith(mockContent);
     expect(screen.getByText(mockContent)).toBeInTheDocument();
 
-    // Description is shortened by default
-    expect(screen.queryByText(/more/i)).toBeInTheDocument();
+    // Description is not shortened because it isn't overflowing
+    expect(screen.queryByText(/more/i)).not.toBeInTheDocument();
   });
 
   it('Clicking outside the paragraph should cause the paragraph to update', () => {
@@ -63,7 +72,8 @@ describe('EdtableParagraph', () => {
     const descriptionInput = container.querySelector('p[contenteditable="true"]');
 
     act(() => {
-      userEvent.type(descriptionInput, `${mockContent}`);
+      userEvent.type(descriptionInput);
+      userEvent.keyboard(`${mockContent}{enter}`);
     });
 
     userEvent.click(document.body);
@@ -71,13 +81,17 @@ describe('EdtableParagraph', () => {
     expect(defaultProps.onUpdate).toHaveBeenCalledWith(mockContent);
     expect(screen.getByText(mockContent)).toBeInTheDocument();
 
-    // Description is shortened by default
-    expect(screen.queryByText(/more/i)).toBeInTheDocument();
+    // Description is not shortened because it isn't overflowing
+    expect(screen.queryByText(/more/i)).not.toBeInTheDocument();
   });
 
   // We can not test if the content will be ellipsized properly because
   // we are useing CSS to create the ellipsis effect
   it('More and less toggles correctly', () => {
+    // More scrollWidth than clientWidth means it's overflowing
+    Object.defineProperty(HTMLElement.prototype, 'scrollWidth', { configurable: true, value: 100 });
+    Object.defineProperty(HTMLElement.prototype, 'clientWidth', { configurable: true, value: 50 });
+
     const moreText = 'more';
     const lessText = 'less';
 

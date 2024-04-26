@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { modules } from 'utils/constants';
-import { useSelector } from 'react-redux';
 import ProjectsList from './ProjectsList';
 import ProjectSearchBox from './ProjectSearchBox';
 
@@ -61,7 +60,10 @@ const ProjectsListContainer = (props) => {
   return (
     <Space direction='vertical' style={{ width: '100%' }}>
       {createButton}
-      <ProjectSearchBox projectType={projectType} onChange={(searchRegex) => setFilterParam(searchRegex)} />
+      <ProjectSearchBox
+        projectType={projectType}
+        onChange={(searchRegex) => setFilterParam(searchRegex)}
+      />
       <ProjectsList height={height} filter={filterParam} projectType={projectType} />
     </Space>
   );
