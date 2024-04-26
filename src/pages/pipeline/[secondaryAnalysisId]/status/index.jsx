@@ -37,27 +37,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
   const associatedExperimentId = secondaryAnalysis?.experimentId;
   const associatedExperiment = useSelector((state) => state.experiments[associatedExperimentId]);
-  const setupReports = useCallback(async () => {
-    const htmlUrls = await getReports(secondaryAnalysisId);
-
-    // natural sort reports
-    const sortedKeys = Object.keys(htmlUrls)
-      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-
-    const sortedHtmlUrls = sortedKeys.reduce((obj, key) => {
-      obj[key] = htmlUrls[key];
-      return obj;
-    }, {});
-
-    setReports(sortedHtmlUrls);
-
-    const defaultReport = 'all-sample_analysis_summary.html';
-    const defaultReportKey = defaultReport in sortedHtmlUrls
-      ? defaultReport
-      : Object.keys(sortedHtmlUrls)[0];
-    setSelectedReport(defaultReportKey);
-  }, [secondaryAnalysisId]);
-
   const loadAssociatedExperiment = async () => {
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
     console.log('LOADED EXPERIMENT', response);
@@ -69,18 +48,35 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       error: false,
     };
 
-    dispatch(storeLoadedAnalysis(secondaryAnalysisForRedux));
+    await dispatch(storeLoadedAnalysis(secondaryAnalysisForRedux));
   };
+
+  const setupReports = useCallback(async () => {
+    const htmlUrls = await getReports(secondaryAnalysisId);
+
+    // natural sort reports
+    const sortedKeys = Object.keys(htmlUrls)
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
+    const sortedHtmlUrls = sortedKeys.reduce((obj, key) => {
+      obj[key] = htmlUrls[key];
+      return obj;
+    }, {});
+    await loadAssociatedExperiment();
+
+    setReports(sortedHtmlUrls);
+
+    const defaultReport = 'all-sample_analysis_summary.html';
+    const defaultReportKey = defaultReport in sortedHtmlUrls
+      ? defaultReport
+      : Object.keys(sortedHtmlUrls)[0];
+    setSelectedReport(defaultReportKey);
+  }, [secondaryAnalysisId]);
 
   useEffect(() => {
     if (secondaryAnalysis?.status.current !== 'finished') return;
-    console.log('try again ');
-    const fetchData = async () => {
-      await loadAssociatedExperiment();
-      setupReports();
-    };
 
-    fetchData();
+    setupReports();
   }, [secondaryAnalysis?.status.current]);
 
   const secondaryAnalysisFinished = useMemo(() => (
