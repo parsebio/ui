@@ -1,8 +1,10 @@
-import { updateSecondaryAnalysisFile, createSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+import updateSecondaryAnalysisFile from 'redux/actions/secondaryAnalyses/updateSecondaryAnalysisFile';
+import createSecondaryAnalysisFile from 'redux/actions/secondaryAnalyses/createSecondaryAnalysisFile';
+
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import UploadsCoordinator from './UploadsCoordinator';
+import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
 
 const uploadSecondaryAnalysisFile = async (
   file,
@@ -64,17 +66,8 @@ const createAndUploadSecondaryAnalysisFiles = async (
   }, Promise.resolve()); // Start with an initially resolved promise
 };
 
-const resumeUpload = async (secondaryAnalysisId, fileId, dispatch) => {
+const resumeUpload = async (secondaryAnalysisId, fileHandle, uploadUrlParams, dispatch) => {
   try {
-    const { uploadUrlParams, fileHandle } = await cache.get(fileId);
-
-    // Request permission to access the file
-    const permissionStatus = await fileHandle.requestPermission({ mode: 'read' });
-    if (permissionStatus !== 'granted') {
-      // If permission is not granted, throw a specific error for permission.
-      throw new Error('PermissionError: Permission to access the file was not granted');
-    }
-
     const file = await fileHandle.getFile();
 
     await uploadSecondaryAnalysisFile(
