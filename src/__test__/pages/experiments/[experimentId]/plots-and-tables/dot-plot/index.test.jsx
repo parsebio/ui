@@ -143,7 +143,7 @@ describe('Dot plot page', () => {
     await renderDotPlot(storeState);
 
     // screen.debug(null, Infinity); // There is the text Dot plot show in the breadcrumbs
-    expect(screen.getByText(new RegExp(plotNames.DOT_PLOT, 'i'))).toBeInTheDocument();
+    expect(screen.getAllByText(new RegExp(plotNames.DOT_PLOT, 'i'))).toHaveLength(3);
 
     // It has the required dropdown options
     expect(screen.getByText(/Gene selection/i)).toBeInTheDocument();
