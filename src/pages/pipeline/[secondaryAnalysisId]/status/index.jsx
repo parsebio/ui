@@ -7,12 +7,15 @@ import PropTypes from 'prop-types';
 import {
   Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip,
 } from 'antd';
-
+import _ from 'lodash';
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadSecondaryAnalysisStatus, updateSecondaryAnalysis, cancelSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import {
+  loadSecondaryAnalysisStatus, updateSecondaryAnalysis,
+  cancelSecondaryAnalysis, storeLoadedAnalysis,
+} from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/pipeline/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
@@ -55,9 +58,25 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     setSelectedReport(defaultReportKey);
   }, [secondaryAnalysisId]);
 
+  const loadAssociatedExperiment = async () => {
+    const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
+    console.log('LOADED EXPERIMENT', response);
+    const secondaryAnalysisForRedux = _.cloneDeep(response);
+
+    secondaryAnalysisForRedux.status = {
+      current: secondaryAnalysis.status,
+      loading: false,
+      error: false,
+    };
+
+    dispatch(storeLoadedAnalysis(secondaryAnalysisForRedux));
+  };
+
   useEffect(() => {
     if (secondaryAnalysis?.status.current !== 'finished') return;
-
+    if (!associatedExperimentId) {
+      loadAssociatedExperiment();
+    }
     setupReports();
   }, [secondaryAnalysis?.status.current]);
 
@@ -285,8 +304,13 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           style={{ width: '300px' }}
         />
         {renderDownloadOutputButton()}
-        {associatedExperimentId && (
+        <Tooltip
+          title={!associatedExperiment ? 'We are creating your downstream analysis, try refreshing the page.' : ''}
+          placement='top'
+          mouseEnterDelay={0.05}
+        >
           <Button
+            disabled={!associatedExperimentId}
             onClick={async () => {
               navigateTo(modules.DATA_EXPLORATION,
                 { experimentId: associatedExperimentId }, false, true);
@@ -295,7 +319,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           >
             Go to Insights downstream analysis
           </Button>
-        )}
+        </Tooltip>
       </Space>
       <iframe src={URL.createObjectURL(reports[selectedReport])} title='My Document' style={{ height: '100%', width: '100%' }} />
     </>
