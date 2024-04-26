@@ -122,8 +122,8 @@ describe('FileUploadModal', () => {
   it('contains required components for Seurat', async () => {
     await renderFileUploadModal(initialStore);
 
-    // It has default 10x selected
-    expect(screen.queryAllByText(techNamesToDisplay[sampleTech['10X']]).length).toBe(1);
+    // It has default parse selected
+    expect(screen.queryAllByText(techNamesToDisplay[sampleTech.PARSE]).length).toBe(1);
     expect(screen.queryAllByText(seuratTech).length).toBe(0);
 
     selectTech(sampleTech.SEURAT);
