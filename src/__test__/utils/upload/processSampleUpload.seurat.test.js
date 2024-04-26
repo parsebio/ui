@@ -138,12 +138,11 @@ describe('processUpload', () => {
         result = { status: 200, body: JSON.stringify(mockUploadUrlParams) };
       }
 
-      const queryParams = new URLSearchParams({ bucket, key: mockSampleFileId });
-      if (url.endsWith(`/v2/projects/${mockExperimentId}/upload/${uploadId}/part/1/signedUrl?${queryParams}`)) {
+      if (url.endsWith(`/v2/projects/${mockExperimentId}/upload/${uploadId}/part/1/signedUrl`)) {
         result = { status: 200, body: JSON.stringify('theSignedUrl') };
       }
 
-      if (url.endsWith(`/v2/projects/${mockExperimentId}/upload/${uploadId}/part/2/signedUrl?${queryParams}`)) {
+      if (url.endsWith(`/v2/projects/${mockExperimentId}/upload/${uploadId}/part/2/signedUrl`)) {
         result = { status: 200, body: JSON.stringify('theSignedUrl2') };
       }
 
