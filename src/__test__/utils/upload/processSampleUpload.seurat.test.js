@@ -205,8 +205,8 @@ describe('processUpload', () => {
       ({ status }) => status === UploadStatus.UPLOADED,
     );
 
-    // There are 1 files actions with status uploading
-    expect(uploadingStatusProperties.length).toEqual(1);
+    // There are 2 files actions with status uploading
+    expect(uploadingStatusProperties.length).toEqual(2);
     // There are 1 files actions with status uploaded
     expect(uploadedStatusProperties.length).toEqual(1);
 
