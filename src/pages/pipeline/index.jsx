@@ -326,7 +326,7 @@ const Pipeline = () => {
 
   const LaunchAnalysisButton = () => {
     const firstTimeLaunch = currentStatus === 'not_created';
-    const disableFinishedIfProduction = currentStatus === 'finished' && environment === Environment.STAGING;
+    const disableFinishedIfProduction = currentStatus === 'finished' && environment === Environment.PRODUCTION;
     const shouldDisableLaunchButton = !(isAllValid && fastqsMatch) || disableFinishedIfProduction;
 
     const launchAnalysis = () => {
@@ -354,28 +354,32 @@ const Pipeline = () => {
         >
           Run the pipeline
         </Button>
-
       );
     }
 
     return (
-      <Popconfirm
-        title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
-        disabled={shouldDisableLaunchButton}
-        onConfirm={() => launchAnalysis()}
-        okText='Yes'
-        cancelText='No'
-        placement='bottom'
-        overlayStyle={{ maxWidth: '250px' }}
+      <Tooltip
+        title={disableFinishedIfProduction ? 'The pipeline has finished successfully.' : ''}
+        placement='top'
       >
-        <Button
-          disabled={!(isAllValid && fastqsMatch)}
-          style={{ marginBottom: '10px' }}
-          loading={statusLoading || buttonClicked}
+        <Popconfirm
+          title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
+          disabled={shouldDisableLaunchButton}
+          onConfirm={() => launchAnalysis()}
+          okText='Yes'
+          cancelText='No'
+          placement='bottom'
+          overlayStyle={{ maxWidth: '250px' }}
         >
-          Rerun the pipeline
-        </Button>
-      </Popconfirm>
+          <Button
+            disabled={shouldDisableLaunchButton}
+            style={{ marginBottom: '10px' }}
+            loading={statusLoading || buttonClicked}
+          >
+            Rerun the pipeline
+          </Button>
+        </Popconfirm>
+      </Tooltip>
     );
   };
 
