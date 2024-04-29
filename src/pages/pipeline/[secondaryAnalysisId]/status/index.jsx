@@ -41,7 +41,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   // const associatedExperiment = useSelector((state) => state.experiments[associatedExperimentId]);
   const loadAssociatedExperiment = async () => {
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
-
+    console.log('RESPONSE ANALYSIS INFO', response);
     dispatch({
       type: SECONDARY_ANALYSES_UPDATED,
       payload: {
