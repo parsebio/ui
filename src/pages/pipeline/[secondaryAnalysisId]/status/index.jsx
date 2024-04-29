@@ -14,7 +14,7 @@ import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loadSecondaryAnalysisStatus, updateSecondaryAnalysis,
-  cancelSecondaryAnalysis, storeLoadedAnalysis,
+  cancelSecondaryAnalysis,
 } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/pipeline/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
@@ -23,7 +23,9 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
-
+import {
+  SECONDARY_ANALYSES_UPDATED,
+} from 'redux/actionTypes/secondaryAnalyses';
 import { DownOutlined, WarningOutlined } from '@ant-design/icons';
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
@@ -39,19 +41,19 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   // const associatedExperiment = useSelector((state) => state.experiments[associatedExperimentId]);
   const loadAssociatedExperiment = async () => {
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
-    console.log('LOADED EXPERIMENT', response);
-    const secondaryAnalysisForRedux = _.cloneDeep(response);
 
-    secondaryAnalysisForRedux.status = {
-      current: secondaryAnalysis.status,
-      loading: false,
-      error: false,
-    };
-
-    await dispatch(storeLoadedAnalysis(secondaryAnalysisForRedux));
+    dispatch({
+      type: SECONDARY_ANALYSES_UPDATED,
+      payload: {
+        secondaryAnalysisId,
+        secondaryAnalysis: { experimentId: response.experimentId },
+      },
+    });
   };
 
   const setupReports = useCallback(async () => {
+    await loadAssociatedExperiment();
+
     const htmlUrls = await getReports(secondaryAnalysisId);
 
     // natural sort reports
@@ -62,7 +64,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       obj[key] = htmlUrls[key];
       return obj;
     }, {});
-    await loadAssociatedExperiment();
 
     setReports(sortedHtmlUrls);
 
