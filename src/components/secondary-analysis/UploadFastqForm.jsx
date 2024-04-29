@@ -10,6 +10,7 @@ import {
   CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
+import UploadStatus from 'utils/upload/UploadStatus';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';
@@ -19,7 +20,7 @@ import ExpandableList from 'components/ExpandableList';
 import endUserMessages from 'utils/endUserMessages';
 
 import { getFastqFiles } from 'redux/selectors';
-
+import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
@@ -49,16 +50,12 @@ const UploadFastqForm = (props) => {
   const {
     secondaryAnalysisId, renderFastqFilesTable, setFilesNotUploaded,
   } = props;
+  const dispatch = useDispatch();
 
   const emptyFiles = { valid: [], invalid: [] };
   const [fileHandles, setFileHandles] = useState(emptyFiles);
-
-  const dispatch = useDispatch();
-
-  const beginUpload = async () => {
-    const filesList = await Promise.all(fileHandles.valid.map(async (handle) => handle.getFile()));
-    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
-  };
+  const [tokenExists, setTokenExists] = useState(null);
+  const [newToken, setNewToken] = useState(null);
 
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
@@ -67,9 +64,58 @@ const UploadFastqForm = (props) => {
     _.isEqual,
   );
 
+  const updateApiTokenStatus = useCallback(async () => {
+    const exists = await getApiTokenExists();
+    setTokenExists(exists);
+  }, []);
+
+  const generateNewToken = useCallback(async () => {
+    const token = await generateApiToken();
+    setNewToken(token);
+  }, []);
+
+  const fastqsCount = Object.keys(secondaryAnalysisFiles).length;
+
+  const warning = useMemo(() => {
+    if (fastqsCount > 0 && fastqsCount < numOfSublibraries * 2) {
+      return endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES;
+    }
+
+    if (fastqsCount > numOfSublibraries * 2) {
+      return endUserMessages.ERROR_MORE_FILES_THAN_SUBLIBRARIES;
+    }
+
+    return null;
+  }, [fastqsCount]);
+
   useEffect(() => {
     setFilesNotUploaded(Boolean(fileHandles.valid.length));
   }, [fileHandles]);
+
+  useEffect(() => {
+    const dropzone = document.getElementById('dropzone');
+    dropzone.addEventListener('drop', onDrop);
+    return () => dropzone.removeEventListener('drop', onDrop);
+  }, [secondaryAnalysisFiles]);
+
+  useEffect(() => {
+    updateApiTokenStatus();
+  }, []);
+
+  const beginUpload = async () => {
+    const filesList = await Promise.all(fileHandles.valid.map(async (handle) => handle.getFile()));
+
+    // Delete already uploaded files before uploading new ones
+    await Promise.all(filesList.map(async (file) => {
+      const uploadedFileId = Object.keys(secondaryAnalysisFiles)
+        .find((key) => secondaryAnalysisFiles[key].name === file.name);
+      if (uploadedFileId) {
+        await dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
+      }
+    }));
+
+    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
+  };
 
   const nonMatchingFastqPairs = useMemo(() => {
     const fileNames = fileHandles.valid.map((file) => file.name);
@@ -93,10 +139,7 @@ const UploadFastqForm = (props) => {
 
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
-  const validateAndSetFiles = async (fileHandlesList, secondaryAnalysisFilesUpdated) => {
-    const alreadyUploadedFiles = Object.values(secondaryAnalysisFilesUpdated)
-      .map((item) => item.name);
-
+  const validateAndSetFiles = async (fileHandlesList) => {
     const countOccurrences = (subStr, str) => {
       const matches = str.match(new RegExp(subStr, 'g'));
       return matches ? matches.length : 0;
@@ -112,7 +155,15 @@ const UploadFastqForm = (props) => {
         rejectReason: endUserMessages.ERROR_NOT_FASTQ,
       },
       {
-        validate: (file) => !alreadyUploadedFiles.includes(file.name),
+        validate: (file) => {
+          // file is invalid if its already uploaded or uploading
+          const uploadedFileId = Object.keys(secondaryAnalysisFiles)
+            .find((key) => secondaryAnalysisFiles[key].name === file.name);
+          const uploadedFileStatus = secondaryAnalysisFiles[uploadedFileId]?.upload?.status.current;
+          return !(uploadedFileId
+            && [UploadStatus.UPLOADING, UploadStatus.UPLOADED, UploadStatus.QUEUED]
+              .includes(uploadedFileStatus));
+        },
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
       },
       {
@@ -181,12 +232,6 @@ const UploadFastqForm = (props) => {
     return validateAndSetFiles(newFiles.flat(), secondaryAnalysisFiles);
   };
 
-  useEffect(() => {
-    const dropzone = document.getElementById('dropzone');
-    dropzone.addEventListener('drop', onDrop);
-    return () => dropzone.removeEventListener('drop', onDrop);
-  }, [secondaryAnalysisFiles]);
-
   const removeFile = (fileName) => {
     setFileHandles((prevState) => {
       const newValid = _.filter(prevState.valid, (file) => file.name !== fileName);
@@ -197,37 +242,6 @@ const UploadFastqForm = (props) => {
       };
     });
   };
-
-  const [tokenExists, setTokenExists] = useState(null);
-  const [newToken, setNewToken] = useState(null);
-
-  const updateApiTokenStatus = useCallback(async () => {
-    const exists = await getApiTokenExists();
-    setTokenExists(exists);
-  }, []);
-
-  const generateNewToken = useCallback(async () => {
-    const token = await generateApiToken();
-    setNewToken(token);
-  }, []);
-
-  useEffect(() => {
-    updateApiTokenStatus();
-  }, []);
-
-  const fastqsCount = Object.keys(secondaryAnalysisFiles).length;
-
-  const warning = useMemo(() => {
-    if (fastqsCount > 0 && fastqsCount < numOfSublibraries * 2) {
-      return endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES;
-    }
-
-    if (fastqsCount > numOfSublibraries * 2) {
-      return endUserMessages.ERROR_MORE_FILES_THAN_SUBLIBRARIES;
-    }
-
-    return null;
-  }, [fastqsCount]);
 
   const uploadTabItems = [
     {
