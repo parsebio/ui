@@ -17,7 +17,12 @@ const launchSecondaryAnalysis = (secondaryAnalysisId) => async (dispatch) => {
       method: 'POST',
     });
   } catch (error) {
-    handleError(error, endUserMessages.ERROR_LAUNCHING_SECONDARY_ANALYSIS);
+    if (error.statusCode === 422) {
+      handleError(error, endUserMessages.ERROR_FASTQS_INCORRECTLY_PAIRED);
+    } else {
+      handleError(error, endUserMessages.ERROR_LAUNCHING_SECONDARY_ANALYSIS);
+    }
+
     dispatch({
       type: SECONDARY_ANALYSIS_STATUS_LOADED,
       payload: {

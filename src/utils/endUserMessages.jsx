@@ -49,7 +49,7 @@ export default {
   ERROR_FAILED_SAMPLELT_FILE: 'Sample Loading Table must be a valid excel .xlsm file',
   ERROR_HIDDEN_FILE: 'Files starting with "." or "MACOSX" are hidden or system.',
   ERROR_NOT_FASTQ: 'File name does not end with ".fastq.gz" or ".fq.gz".',
-  ERROR_ALREADY_UPLOADED: 'File already uploaded.',
+  ERROR_ALREADY_UPLOADED: 'File already uploaded or is being uploaded.',
   ERROR_READ_PAIR_NOT_IN_NAME: 'File name must include "_R1" or "_R2" (its read pair). Valid example: "S1_R1.fast.gz"',
   ERROR_TOO_MANY_READS_IN_NAME: 'File name can\'t contain "_R1" or "_R2" (its read pair) more than once. Valid example: "S1_R1.fast.gz"',
   ERROR_MORE_FILES_THAN_SUBLIBRARIES: 'You have uploaded more pairs of FASTQ files than the specified number of sublibraries. Please check the input number of sublibraries or contact support about concatenating your FASTQ files.',
@@ -77,6 +77,7 @@ export default {
   ERROR_CLONING_DEFAULT: 'We couldn\'t clone the project.',
   ERROR_CLONING_PIPELINE_LOCKED: 'We couldn\'t clone the project because data processing is currently running, wait until it finishes and try again',
   ERROR_LAUNCHING_SECONDARY_ANALYSIS: 'There was a problem launching the pipeline.',
+  ERROR_FASTQS_INCORRECTLY_PAIRED: 'Some fastqs are missing their corresponding read pairs.',
   ERROR_CANCELLING_SECONDARY_ANALYSIS: 'There was a problem cancelling your analysis.',
   ERROR_CELL_SETS_ANNOTATION_FAILED: 'ScType annotation unsuccessful. Please ensure dataset contains gene symbols.',
 };
