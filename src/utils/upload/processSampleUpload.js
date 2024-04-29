@@ -74,9 +74,6 @@ const createAndUploadSampleFile = async (
       options,
     ]);
   } catch (e) {
-    // Error is already handled by the UploadsCoordinator or FileUploaderError
-    if (e instanceof UploadsCoordinatorError || e instanceof FileUploaderError) return;
-
     dispatch(updateSampleFileUpload(
       experimentId, sampleId, sampleFileId, fileType, UploadStatus.UPLOAD_ERROR,
     ));

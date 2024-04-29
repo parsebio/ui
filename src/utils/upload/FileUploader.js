@@ -172,7 +172,7 @@ class FileUploader {
 
         await this.#handleChunkLoadFinished(chunk);
       } catch (e) {
-        this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+        this.#abortUpload(e);
       }
     };
   }
@@ -196,12 +196,12 @@ class FileUploader {
 
         this.currentChunk = chunk;
       } catch (e) {
-        this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+        this.#abortUpload(e);
       }
     });
 
     this.readStream.on('error', (e) => {
-      this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+      this.#abortUpload(e);
     });
 
     this.readStream.on('end', async () => {
@@ -212,15 +212,13 @@ class FileUploader {
 
         this.gzipStream.push(this.currentChunk, true);
       } catch (e) {
-        this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+        this.#abortUpload(e);
       }
     });
   }
 
-  #abortUpload = (status, e) => {
+  #abortUpload = (e) => {
     this.abortController?.abort();
-
-    this.onStatusUpdate(status);
 
     this.reject(new FileUploaderError(e.message));
     console.error(e);
@@ -256,7 +254,7 @@ class FileUploader {
         this.resolve(this.uploadedParts);
       }
     } catch (e) {
-      this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+      this.#abortUpload(e);
     }
   }
 
