@@ -27,9 +27,23 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 
 const { Text } = Typography;
 
-const getMissingPairName = (fileName) => {
-  if (fileName.includes('_R1')) return fileName.replace('_R1', '_R2');
-  if (fileName.includes('_R2')) return fileName.replace('_R2', '_R1');
+const rReadRegex = /_R([12])/;
+const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
+
+const hasReadPair = (fileName) => (
+  rReadRegex.test(fileName) || underscoreReadRegex.test(fileName)
+);
+
+const getMatchingPairFor = (fileName) => {
+  const matcher = fileName.match(rReadRegex) ? rReadRegex : underscoreReadRegex;
+
+  const matchingPair = fileName.replace(matcher, (match, group1) => {
+    const otherNumber = group1 === '1' ? '2' : '1';
+
+    return match.replace(group1, otherNumber);
+  });
+
+  return matchingPair;
 };
 
 const UploadFastqForm = (props) => {
@@ -106,16 +120,22 @@ const UploadFastqForm = (props) => {
   const nonMatchingFastqPairs = useMemo(() => {
     const fileNames = fileHandles.valid.map((file) => file.name);
 
-    const [r1s, r2s] = _.partition(fileNames, (fileName) => fileName.includes('_R1'));
+    const fileNamesSet = new Set(fileNames);
 
-    const r1sSet = new Set(r1s);
-    const r2sWithoutMatch = r2s.filter((fileName) => !r1sSet.has(fileName.replace('_R2', '_R1')));
+    // Files already in process of being uploaded (or already uploaded)
+    const alreadyAddedFileNames = new Set(
+      Object.values(secondaryAnalysisFiles).map((file) => file.name),
+    );
 
-    const r2sSet = new Set(r2s);
-    const r1sWithoutMatch = r1s.filter((fileName) => !r2sSet.has(fileName.replace('_R1', '_R2')));
+    return fileNames.filter((fileName) => {
+      const matchingPair = getMatchingPairFor(fileName);
 
-    return [...r1sWithoutMatch, ...r2sWithoutMatch];
-  }, [fileHandles]);
+      // Matching pair needs to be ready to be added too
+      return !fileNamesSet.has(matchingPair)
+        // Or be already added
+        && !alreadyAddedFileNames.has(matchingPair);
+    });
+  }, [fileHandles, secondaryAnalysisFiles]);
 
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
@@ -147,7 +167,7 @@ const UploadFastqForm = (props) => {
         rejectReason: endUserMessages.ERROR_ALREADY_UPLOADED,
       },
       {
-        validate: (file) => ['_R1', '_R2'].some((readNumber) => file.name.includes(readNumber)),
+        validate: (file) => hasReadPair(file.name),
         rejectReason: endUserMessages.ERROR_READ_PAIR_NOT_IN_NAME,
       },
       {
@@ -320,7 +340,7 @@ const UploadFastqForm = (props) => {
                     expandedTitle='Files without read pair'
                     dataSource={nonMatchingFastqPairs}
                     getItemText={(fileName) => fileName}
-                    getItemExplanation={(fileName) => `Either remove this file or add ${getMissingPairName(fileName)}.`}
+                    getItemExplanation={(fileName) => `Either remove this file or add ${getMatchingPairFor(fileName)}.`}
                     collapsedExplanation='Files without read pair, click to display'
                   />
                 </>
