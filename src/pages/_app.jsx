@@ -236,10 +236,10 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
       await getExperimentInfo(ctx, store, Auth);
     }
 
-    // if (query?.secondaryAnalysisId) {
-    //   const { default: getAnalysisInfo } = (await import('utils/ssr/getAnalysisInfo'));
-    //   await getAnalysisInfo(ctx, store, Auth);
-    // }
+    if (query?.secondaryAnalysisId) {
+      const { default: getAnalysisInfo } = (await import('utils/ssr/getAnalysisInfo'));
+      await getAnalysisInfo(ctx, store, Auth);
+    }
 
     return { pageProps: { ...pageProps, amplifyConfig } };
   } catch (e) {
