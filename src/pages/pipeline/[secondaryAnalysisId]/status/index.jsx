@@ -41,7 +41,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const loadAssociatedExperiment = async () => {
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
-    console.log('response   from get analysis info', response);
     dispatch({
       type: SECONDARY_ANALYSES_UPDATED,
       payload: {
@@ -53,6 +52,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const setupReports = useCallback(async () => {
     if (!associatedExperimentId) {
+      // if you stay in the loading screen when the pipeline finishes
+      // the associated experimentId doesnt get loaded
+      // because that happens onNavigate and in that case the user is in the same page
+      // so we need to load it manually
       await loadAssociatedExperiment();
     }
 
