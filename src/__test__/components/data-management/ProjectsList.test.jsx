@@ -5,7 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import '@testing-library/jest-dom';
 import initialState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
-import ProjectsList projectType='experiments' from 'components/data-management/project/ProjectsList projectType='experiments'';
+import ProjectsList from 'components/data-management/project/ProjectsList';
 import ExperimentCard from 'components/data-management/project/ExperimentCard';
 import '__test__/test-utils/setupTests';
 
@@ -82,7 +82,7 @@ const filledStore = mockStore({
   },
 });
 
-describe('ProjectsList projectType='experiments'', () => {
+describe('ProjectsList', () => {
   it('renders without options', () => {
     const component = mount(
       <Provider store={initialStore}>

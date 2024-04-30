@@ -2,7 +2,6 @@ import updateSecondaryAnalysisFile from 'redux/actions/secondaryAnalyses/updateS
 import createSecondaryAnalysisFile from 'redux/actions/secondaryAnalyses/createSecondaryAnalysisFile';
 
 import UploadStatus from 'utils/upload/UploadStatus';
-import cache from 'utils/cache';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
 
@@ -34,17 +33,21 @@ const uploadSecondaryAnalysisFile = async (
     compress: false,
   };
 
-  UploadsCoordinator.get().uploadFile(
-    [
-      secondaryAnalysisId,
-      file,
-      uploadUrlParams,
-      'secondaryAnalysis',
-      abortController,
-      onUpdateUploadStatus,
-      options,
-    ],
-  );
+  try {
+    await UploadsCoordinator.get().uploadFile(
+      [
+        secondaryAnalysisId,
+        file,
+        uploadUrlParams,
+        'secondaryAnalysis',
+        abortController,
+        onUpdateUploadStatus,
+        options,
+      ],
+    );
+  } catch (e) {
+    onUpdateUploadStatus(UploadStatus.UPLOAD_ERROR);
+  }
 };
 
 const createAndUploadSecondaryAnalysisFiles = async (

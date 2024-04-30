@@ -12,7 +12,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import React from 'react';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import FeedbackButton from 'components/header/FeedbackButton';
+import FeedbackButton from 'components/sider/FeedbackButton';
 
 jest.mock('utils/http/fetchAPI');
 
@@ -31,6 +31,8 @@ jest.mock('@aws-amplify/auth', () => ({
   })),
 }));
 
+const placeHolderTextRegex = /Please write your message here to provide feedback or report issues on Cellenics. A member of our team will get back to you as soon as possible./i;
+
 describe('FeedbackButton', () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -38,17 +40,17 @@ describe('FeedbackButton', () => {
 
   it('renders a button correctly without any props', () => {
     render(<FeedbackButton />);
-    expect(screen.getByText(/Feedback/i)).toBeDefined();
+    expect(screen.getByText(/Support/i)).toBeDefined();
   });
 
   it('Shows a text area input with 2 buttons when opened', () => {
     render(<FeedbackButton />);
 
-    const feedbackButton = screen.getByText(/Feedback/i);
+    const feedbackButton = screen.getByText(/Support/i);
     fireEvent.click(feedbackButton);
 
     // There is a textarea
-    expect(screen.getByPlaceholderText(/Feedback/i)).toBeDefined();
+    expect(screen.getByPlaceholderText(placeHolderTextRegex)).toBeDefined();
 
     // With 2 buttons
     expect(screen.getByText(/cancel/i)).toBeDefined();
@@ -62,10 +64,10 @@ describe('FeedbackButton', () => {
 
     const feedbackText = 'Some feedback';
 
-    const feedbackButton = screen.getByText(/Feedback/i);
+    const feedbackButton = screen.getByText(/Support/i);
     fireEvent.click(feedbackButton);
 
-    const feedbackInput = screen.getByPlaceholderText(/Feedback/i);
+    const feedbackInput = screen.getByPlaceholderText(placeHolderTextRegex);
 
     fireEvent.change(feedbackInput, { target: { value: feedbackText } });
     expect(feedbackInput).toHaveValue(feedbackText);
@@ -102,10 +104,10 @@ describe('FeedbackButton', () => {
 
     const feedbackText = 'Some feedback';
 
-    const feedbackButton = screen.getByText(/Feedback/i);
+    const feedbackButton = screen.getByText(/Support/i);
     fireEvent.click(feedbackButton);
 
-    const feedbackInput = screen.getByPlaceholderText(/Feedback/i);
+    const feedbackInput = screen.getByPlaceholderText(placeHolderTextRegex);
 
     fireEvent.change(feedbackInput, { target: { value: feedbackText } });
     expect(feedbackInput).toHaveValue(feedbackText);
