@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
+  Environment,
+} from 'utils/deploymentInfo';
+import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
@@ -65,6 +68,7 @@ const Pipeline = () => {
     (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
     _.isEqual,
   );
+  const environment = useSelector((state) => state.networkResources.environment);
 
   const {
     name: analysisName,
@@ -322,6 +326,9 @@ const Pipeline = () => {
 
   const LaunchAnalysisButton = () => {
     const firstTimeLaunch = currentStatus === 'not_created';
+    const disableFinishedIfProduction = currentStatus === 'finished' && environment === Environment.PRODUCTION;
+    const disableLaunchButton = !isAllValid || disableFinishedIfProduction;
+
     const launchAnalysis = () => {
       setButtonClicked(true);
       dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
@@ -340,35 +347,39 @@ const Pipeline = () => {
       return (
         <Button
           type='primary'
-          disabled={!(isAllValid && fastqsMatch)}
+          disabled={disableLaunchButton}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
           onClick={() => launchAnalysis()}
         >
           Run the pipeline
         </Button>
-
       );
     }
 
     return (
-      <Popconfirm
-        title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
-        disabled={!(isAllValid && fastqsMatch)}
-        onConfirm={() => launchAnalysis()}
-        okText='Yes'
-        cancelText='No'
-        placement='bottom'
-        overlayStyle={{ maxWidth: '250px' }}
+      <Tooltip
+        title={disableFinishedIfProduction ? 'The pipeline has finished successfully.' : ''}
+        placement='top'
       >
-        <Button
-          disabled={!(isAllValid && fastqsMatch)}
-          style={{ marginBottom: '10px' }}
-          loading={statusLoading || buttonClicked}
+        <Popconfirm
+          title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
+          disabled={disableLaunchButton}
+          onConfirm={() => launchAnalysis()}
+          okText='Yes'
+          cancelText='No'
+          placement='bottom'
+          overlayStyle={{ maxWidth: '250px' }}
         >
-          Rerun the pipeline
-        </Button>
-      </Popconfirm>
+          <Button
+            disabled={disableLaunchButton}
+            style={{ marginBottom: '10px' }}
+            loading={statusLoading || buttonClicked}
+          >
+            Rerun the pipeline
+          </Button>
+        </Popconfirm>
+      </Tooltip>
     );
   };
 
