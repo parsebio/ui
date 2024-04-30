@@ -7,12 +7,15 @@ import PropTypes from 'prop-types';
 import {
   Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip,
 } from 'antd';
-
+import _ from 'lodash';
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadSecondaryAnalysisStatus, updateSecondaryAnalysis, cancelSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import {
+  loadSecondaryAnalysisStatus, updateSecondaryAnalysis,
+  cancelSecondaryAnalysis,
+} from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/pipeline/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
@@ -20,7 +23,9 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
-
+import {
+  SECONDARY_ANALYSES_UPDATED,
+} from 'redux/actionTypes/secondaryAnalyses';
 import { DownOutlined, WarningOutlined } from '@ant-design/icons';
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
@@ -33,8 +38,27 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
   const associatedExperimentId = secondaryAnalysis?.experimentId;
-  const associatedExperiment = useSelector((state) => state.experiments[associatedExperimentId]);
+
+  const loadAssociatedExperiment = async () => {
+    const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
+    dispatch({
+      type: SECONDARY_ANALYSES_UPDATED,
+      payload: {
+        secondaryAnalysisId,
+        secondaryAnalysis: { experimentId: response.experimentId },
+      },
+    });
+  };
+
   const setupReports = useCallback(async () => {
+    if (!associatedExperimentId) {
+      // if you stay in the loading screen when the pipeline finishes
+      // the associated experimentId doesnt get loaded unless you refresh the page
+      // because that happens onNavigate and in that case the user is in the same page
+      // so we need to load it manually
+      await loadAssociatedExperiment();
+    }
+
     const htmlUrls = await getReports(secondaryAnalysisId);
 
     // natural sort reports
