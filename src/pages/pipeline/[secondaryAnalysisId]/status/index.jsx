@@ -112,8 +112,14 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     downloadFromUrl(writeToFileURL(logsFile), `${secondaryAnalysisId}.log`);
   }, [secondaryAnalysisId]);
 
+  const getLatestLogs = async () => {
+    const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logs`);
+    console.log('LOGS ARE ', logsResponse);
+  };
+
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
+    await getLatestLogs();
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
