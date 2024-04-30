@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip,
+  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip, Typography, Card, List,
 } from 'antd';
 import _ from 'lodash';
 import fetchAPI from 'utils/http/fetchAPI';
@@ -19,7 +19,6 @@ import {
 import getReports from 'pages/pipeline/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
@@ -28,6 +27,8 @@ import {
 } from 'redux/actionTypes/secondaryAnalyses';
 import { DownOutlined, WarningOutlined } from '@ant-design/icons';
 
+const { Text, Paragraph, Title } = Typography;
+
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
 
@@ -35,6 +36,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const [reports, setReports] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
+  const [logData, setLogData] = useState(null);
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
   const associatedExperimentId = secondaryAnalysis?.experimentId;
@@ -114,6 +116,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const getLatestLogs = async () => {
     const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logs`);
+    setLogData(logsResponse);
     console.log('LOGS ARE ', logsResponse);
   };
 
@@ -122,6 +125,32 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     await getLatestLogs();
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
+  const LogViewer = () => {
+    const { logs } = logData;
+
+    return (
+      <div
+        style={{ overflowY: 'auto', maxHeight: '50vh' }}
+        ref={(el) => {
+          if (el) {
+            el.scrollTop = el.scrollHeight;
+          }
+        }}
+      >
+        <Card title='Log Entries' style={{ backgroundColor: '#000', color: '#fff' }}>
+          <pre style={{ wordBreak: 'break-word' }}>
+            {logs.log.entries.map((entry, index) => (
+              <Tooltip key={index} title={entry} placement='topLeft' mouseEnterDelay={0.1}>
+                <div style={{ marginBottom: '0.5vh' }}>
+                  {entry.length > 80 ? `${entry.substring(0, 47)}...` : entry}
+                </div>
+              </Tooltip>
+            ))}
+          </pre>
+        </Card>
+      </div>
+    );
+  };
 
   const menuItems = [
     {
@@ -213,7 +242,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     </Button>
   );
 
-  if (!secondaryAnalysis || secondaryAnalysis?.status.loading) {
+  if (!secondaryAnalysis?.status.current && secondaryAnalysis?.status.loading) {
     return <PreloadContent />;
   }
 
@@ -253,37 +282,48 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         </Space>
       ),
       running: (
-        <>
-          <div>
-            {fastLoad('')}
-            <Paragraph style={{ fontSize: '20px', width: '50%' }}>
-              The pipeline is running. You cannot change any settings until the run completes
+
+        <Card>
+          <Space direction='horizontal'>
+            <div>
+              {fastLoad('')}
+              <Title level={3}>The pipeline is running... </Title>
+              <Text type='secondary'>You can wait or leave this screen and check again later.</Text>
+              <br />
+              <Text type='secondary'>You cannot change any settings until the run completes.</Text>
+              <br />
+              <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                <Popconfirm
+                  title='Are you sure you want to cancel this pipeline run?'
+                  onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
+                  okText='Yes'
+                  cancelText='No'
+                >
+                  <Button type='danger'>Cancel Run</Button>
+                </Popconfirm>
+              </div>
               <br />
               <br />
-              <br />
-              To elect to receive an email notification when your
-              pipeline run is complete, ensure the toggle below is enabled.
-              <br />
-            </Paragraph>
-            <Switch
-              checked={secondaryAnalysis.notifyByEmail}
-              onChange={(value) => dispatch(
-                updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail: value }),
-              )}
-            />
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <Popconfirm
-                title='Are you sure you want to cancel this pipeline run?'
-                onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
-                okText='Yes'
-                cancelText='No'
-              >
-                <Button type='danger'>Cancel Run</Button>
-              </Popconfirm>
+              <Space direction='horizontal'>
+                <Text>Get notified about your pipeline status via email  </Text>
+                <Switch
+                  checked={secondaryAnalysis.notifyByEmail}
+                  onChange={(value) => dispatch(
+                    updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail: value }),
+                  )}
+                />
+              </Space>
             </div>
-          </div>
-          <></>
-        </>),
+            {logData && (
+              <div>
+                <Title level={4}>Logs</Title>
+                <LogViewer logData={logData} />
+              </div>
+            )}
+          </Space>
+
+        </Card>
+      ),
     };
 
     return (
