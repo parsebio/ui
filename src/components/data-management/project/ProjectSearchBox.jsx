@@ -15,11 +15,20 @@ const ProjectSearchBox = (props) => {
         const userId = value.slice(userPrefix.length).trim();
 
         // filter by user id or email
-        if (validateInput(userId, rules.VALID_UUID).isValid || validateInput(userId, rules.VALID_EMAIL).isValid) {
+        if (
+          validateInput(userId, rules.VALID_UUID).isValid
+          || validateInput(userId, rules.VALID_EMAIL).isValid
+        ) {
           // mismatch between UI and db conventions.
           const projectTypeDb = projectType === 'secondaryAnalyses' ? 'secondary' : 'tertiary';
           const projectIds = await fetchProjectsByUser(userId, projectTypeDb);
-          onChange(new RegExp(projectIds.join('|'), 'i'));
+          if (projectIds) {
+            onChange(new RegExp(projectIds.join('|'), 'i'));
+          } else {
+            // match nothing
+            onChange(new RegExp('^(?!x)x'));
+            console.log('No projects found for the specified user and project type.');
+          }
           return;
         }
       }
