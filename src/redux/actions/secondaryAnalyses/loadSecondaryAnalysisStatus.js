@@ -15,12 +15,17 @@ const loadSecondaryAnalysisStatus = (secondaryAnalysisId) => async (dispatch) =>
 
   try {
     const status = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/executionStatus`);
+    let logData = {};
+    if (status === 'running' || status === 'failed') {
+      logData = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logs`);
+    }
 
     dispatch({
       type: SECONDARY_ANALYSIS_STATUS_LOADED,
       payload: {
         secondaryAnalysisId,
         status,
+        logData,
       },
     });
   } catch (e) {

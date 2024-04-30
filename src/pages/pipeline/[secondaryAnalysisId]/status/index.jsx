@@ -36,9 +36,9 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const [reports, setReports] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
-  const [logData, setLogData] = useState(null);
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
+  const logData = secondaryAnalysis?.status.logData;
   const associatedExperimentId = secondaryAnalysis?.experimentId;
 
   const loadAssociatedExperiment = async () => {
@@ -114,17 +114,11 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     downloadFromUrl(writeToFileURL(logsFile), `${secondaryAnalysisId}.log`);
   }, [secondaryAnalysisId]);
 
-  const getLatestLogs = async () => {
-    const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logs`);
-    setLogData(logsResponse);
-    console.log('LOGS ARE ', logsResponse);
-  };
-
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
-    await getLatestLogs();
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
+
   const LogViewer = () => {
     const { logs } = logData;
 
@@ -261,28 +255,56 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         </Space>
       ),
       created: (
-        <Space direction='vertical'>
+        <div>
           {fastLoad('')}
-          <Paragraph style={{ fontSize: '20px', width: '100%' }}>
-            The pipeline is launching
-            .
-            <br />
-            You cannot change any settings until the run completes
-          </Paragraph>
-        </Space>
+          <Title level={3}>The pipeline is launching... </Title>
+          <Text type='secondary'>You can wait or leave this screen and check again later.</Text>
+          <br />
+          <Text type='secondary'>You cannot change any settings until the run completes.</Text>
+          <br />
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <Popconfirm
+              title='Are you sure you want to cancel this pipeline run?'
+              onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
+              okText='Yes'
+              cancelText='No'
+            >
+              <Button type='danger'>Cancel Run</Button>
+            </Popconfirm>
+          </div>
+          <br />
+          <br />
+          <Space direction='horizontal'>
+            <Text>Get notified about your pipeline status via email  </Text>
+            <Switch
+              checked={secondaryAnalysis.notifyByEmail}
+              onChange={(value) => dispatch(
+                updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail: value }),
+              )}
+            />
+          </Space>
+        </div>
       ),
       failed: (
-        <Space direction='vertical'>
-          <Paragraph style={{ fontSize: '20px', width: '100%' }}>
-            Your pipeline run failed.
-            The error logs can be accessed by downloading the pipeline output files.
+        <Space direction='horizontal'>
 
-          </Paragraph>
-          {renderDownloadLogsButton()}
+          <Space direction='vertical'>
+            <Paragraph style={{ fontSize: '20px', width: '100%' }}>
+              Your pipeline run failed.
+              The error logs can be accessed by downloading the pipeline output files.
+
+            </Paragraph>
+            {renderDownloadLogsButton()}
+          </Space>
+          {secondaryAnalysis?.logData && (
+            <div>
+              <Title level={4}>Logs</Title>
+              <LogViewer logData={secondaryAnalysis.logData} />
+            </div>
+          )}
         </Space>
       ),
       running: (
-
         <Card>
           <Space direction='horizontal'>
             <div>
@@ -321,7 +343,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               </div>
             )}
           </Space>
-
         </Card>
       ),
     };

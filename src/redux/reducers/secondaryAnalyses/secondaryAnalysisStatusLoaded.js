@@ -2,8 +2,9 @@
 import produce from 'immer';
 
 const secondaryAnalysisStatusLoaded = produce((draft, action) => {
-  const { secondaryAnalysisId, status } = action.payload;
+  const { secondaryAnalysisId, status, logData } = action.payload;
   draft[secondaryAnalysisId].status.current = status;
+  draft[secondaryAnalysisId].status.logData = logData;
   draft[secondaryAnalysisId].status.loading = false;
 });
 
