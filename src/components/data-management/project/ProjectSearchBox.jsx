@@ -17,7 +17,7 @@ const ProjectSearchBox = (props) => {
           // mismatch between UI and db conventions.
           const projectTypeDb = projectType === 'secondaryAnalyses' ? 'secondary' : 'tertiary';
           const projectIds = await fetchProjectsByUser(uuid, projectTypeDb);
-          console.log(projectIds);
+          onChange(new RegExp(projectIds.join('|'), 'i'));
           return;
         }
       }
