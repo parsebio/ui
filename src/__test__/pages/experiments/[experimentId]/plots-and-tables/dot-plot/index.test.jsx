@@ -41,7 +41,7 @@ import waitForComponentToPaint from '__test__/test-utils/waitForComponentToPaint
 import { arrayMoveImmutable } from 'utils/arrayUtils';
 
 jest.mock('components/plots/ExportAsCSV', () => jest.fn(() => (<></>)));
-jest.mock('components/header/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
@@ -143,7 +143,7 @@ describe('Dot plot page', () => {
     await renderDotPlot(storeState);
 
     // screen.debug(null, Infinity); // There is the text Dot plot show in the breadcrumbs
-    expect(screen.getByText(new RegExp(plotNames.DOT_PLOT, 'i'))).toBeInTheDocument();
+    expect(screen.getAllByText(new RegExp(plotNames.DOT_PLOT, 'i'))).toHaveLength(3);
 
     // It has the required dropdown options
     expect(screen.getByText(/Gene selection/i)).toBeInTheDocument();

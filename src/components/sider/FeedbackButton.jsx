@@ -4,7 +4,6 @@ import {
   Dropdown,
   Input,
   Space,
-  List,
 } from 'antd';
 import { QuestionCircleOutlined, InfoCircleFilled } from '@ant-design/icons';
 import React, { useState } from 'react';

@@ -46,7 +46,6 @@ const setUpAuthMocks = () => {
 };
 
 const userName = 'Arthur Dent';
-jest.mock('components/Header', () => () => <></>);
 
 describe('Profile page', () => {
   const store = makeStore();
