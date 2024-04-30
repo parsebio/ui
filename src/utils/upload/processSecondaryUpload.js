@@ -33,17 +33,21 @@ const uploadSecondaryAnalysisFile = async (
     compress: false,
   };
 
-  UploadsCoordinator.get().uploadFile(
-    [
-      secondaryAnalysisId,
-      file,
-      uploadUrlParams,
-      'secondaryAnalysis',
-      abortController,
-      onUpdateUploadStatus,
-      options,
-    ],
-  );
+  try {
+    await UploadsCoordinator.get().uploadFile(
+      [
+        secondaryAnalysisId,
+        file,
+        uploadUrlParams,
+        'secondaryAnalysis',
+        abortController,
+        onUpdateUploadStatus,
+        options,
+      ],
+    );
+  } catch (e) {
+    onUpdateUploadStatus(UploadStatus.UPLOAD_ERROR);
+  }
 };
 
 const createAndUploadSecondaryAnalysisFiles = async (
