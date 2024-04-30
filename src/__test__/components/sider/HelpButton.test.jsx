@@ -1,13 +1,12 @@
 import React from 'react';
 import { screen, render } from '@testing-library/react';
 
-import HelpButton from 'components/header/HelpButton';
+import HelpButton from 'components/sider/HelpButton';
 import userEvent from '@testing-library/user-event';
 
 import { AccountId } from 'utils/deploymentInfo';
 
 import nextConfig from 'next/config';
-import config from 'config';
 
 const renderHelpButton = () => render(<HelpButton />);
 

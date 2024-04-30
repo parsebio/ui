@@ -7,6 +7,7 @@ import filereaderStream from 'filereader-stream';
 import fetchAPI from 'utils/http/fetchAPI';
 import putInS3 from 'utils/upload/putInS3';
 import UploadStatus from 'utils/upload/UploadStatus';
+import FileUploaderError from 'utils/errors/upload/FileUploaderError';
 
 class FileUploader {
   constructor(
@@ -171,7 +172,7 @@ class FileUploader {
 
         await this.#handleChunkLoadFinished(chunk);
       } catch (e) {
-        this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+        this.#abortUpload(e);
       }
     };
   }
@@ -195,12 +196,12 @@ class FileUploader {
 
         this.currentChunk = chunk;
       } catch (e) {
-        this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+        this.#abortUpload(e);
       }
     });
 
     this.readStream.on('error', (e) => {
-      this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+      this.#abortUpload(e);
     });
 
     this.readStream.on('end', async () => {
@@ -211,17 +212,15 @@ class FileUploader {
 
         this.gzipStream.push(this.currentChunk, true);
       } catch (e) {
-        this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+        this.#abortUpload(e);
       }
     });
   }
 
-  #abortUpload = (status, e) => {
+  #abortUpload = (e) => {
     this.abortController?.abort();
 
-    this.onStatusUpdate(status);
-
-    this.reject(e);
+    this.reject(new FileUploaderError(e.message));
     console.error(e);
   }
 
@@ -255,7 +254,7 @@ class FileUploader {
         this.resolve(this.uploadedParts);
       }
     } catch (e) {
-      this.#abortUpload(UploadStatus.UPLOAD_ERROR, e);
+      this.#abortUpload(e);
     }
   }
 

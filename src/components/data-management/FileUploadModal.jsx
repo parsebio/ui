@@ -307,9 +307,9 @@ const FileUploadModal = (props) => {
               getItemExplanation={(file) => file.rejectReason}
               collapsedExplanation={(
                 <>
-                  {files.invalid.length}
-                  {files.invalid.length > 1 ? 'files were ' : ' file was '}
-                  ignored. Click to display
+                  {
+                    `${files.invalid.length}${files.invalid.length > 1 ? ' files were' : ' file was'} ignored. Click to display`
+                  }
                 </>
               )}
             />

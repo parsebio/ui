@@ -8,7 +8,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
-import ReferralButton from 'components/header/ReferralButton';
+import ReferralButton from 'components/sider/ReferralButton';
 import '__test__/test-utils/setupTests';
 
 jest.mock('utils/http/fetchAPI');
@@ -30,22 +30,16 @@ describe('ReferralButton', () => {
 
   it('renders a button correctly without any props', () => {
     render(<ReferralButton />);
-    expect(screen.getByText(/Invite a friend/i)).toBeDefined();
+    expect(screen.getByText(/Recommend/i)).toBeDefined();
   });
 
   it('Shows an input, a text area input and 2 buttons when opened', () => {
     render(<ReferralButton />);
 
-    const referralButton = screen.getByText(/Invite a friend/i);
+    const referralButton = screen.getByText(/Recommend/i);
     userEvent.click(referralButton);
 
-    // There is an email input
-    expect(screen.getByPlaceholderText(/Your friend's email address/i)).toBeDefined();
-
-    // There is a textarea to input the value
-    expect(screen.getByText(/Hi,/i)).toBeDefined();
-
-    // With 2 buttons
+    // There's 2 buttons
     expect(screen.getByText(/cancel/i)).toBeDefined();
     expect(screen.getByText(/Send invite/i)).toBeDefined();
   });
@@ -55,7 +49,7 @@ describe('ReferralButton', () => {
 
     const invalidEmail = 'invalidEmail';
 
-    const referralButton = screen.getByText(/Invite a friend/i);
+    const referralButton = screen.getByText(/Recommend/i);
     userEvent.click(referralButton);
 
     const emailInput = screen.getByPlaceholderText(/Your friend's email address/i);
@@ -74,21 +68,42 @@ describe('ReferralButton', () => {
     render(<ReferralButton />);
 
     const emailText = 'friend@email.com';
-    const messageText = 'Some message text';
+    const expectedFeedbackBody = {
+      data: {
+        channel: 'referrals',
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'plain_text',
+              text: `To: ${emailText}`,
+            },
+          },
+          {
+            type: 'section',
+            text: {
+              type: 'plain_text',
+              text: 'Message:\n Hi,\n\nCheck out Cellenics. It will make your single-cell analysis easier.',
+            },
+          },
+          {
+            type: 'divider',
+          },
+          {
+            type: 'context',
+            elements: [],
+          },
+        ],
+      },
+    };
 
-    const referralButton = screen.getByText(/Invite a friend/i);
+    const referralButton = screen.getByText(/Recommend/i);
     userEvent.click(referralButton);
 
     const emailInput = screen.getByPlaceholderText(/Your friend's email address/i);
     fireEvent.change(emailInput, { target: { value: emailText } });
 
     await waitFor(() => expect(emailInput).toHaveValue(emailText));
-
-    const customMessageInput = screen.getByText(/Hi,/i);
-
-    fireEvent.change(customMessageInput, { target: { value: messageText } });
-
-    await waitFor(() => expect(customMessageInput).toHaveValue(messageText));
 
     const submitButton = screen.getByText(/Send invite/i).closest('button');
 
@@ -97,8 +112,7 @@ describe('ReferralButton', () => {
     await waitFor(() => expect(fetchAPI).toHaveBeenCalledTimes(1));
 
     const feedbackBody = fetchAPI.mock.calls[0][1].body;
-    expect(feedbackBody).toMatch(emailText);
-    expect(feedbackBody).toMatch(messageText);
+    expect(feedbackBody).toEqual(JSON.stringify(expectedFeedbackBody));
 
     await waitFor(() => expect(pushNotificationMessage).toHaveBeenCalledTimes(1));
     const pushNotificationMessageParams = pushNotificationMessage.mock.calls[0];
@@ -113,21 +127,14 @@ describe('ReferralButton', () => {
     render(<ReferralButton />);
 
     const emailText = 'friend@email.com';
-    const messageText = 'Some message text';
 
-    const referralButton = screen.getByText(/Invite a friend/i);
+    const referralButton = screen.getByText(/Recommend/i);
     userEvent.click(referralButton);
 
     const emailInput = screen.getByPlaceholderText(/Your friend's email address/i);
     fireEvent.change(emailInput, { target: { value: emailText } });
 
     await waitFor(() => expect(emailInput).toHaveValue(emailText));
-
-    const customMessageInput = screen.getByText(/Hi,/i);
-
-    fireEvent.change(customMessageInput, { target: { value: messageText } });
-
-    await waitFor(() => expect(customMessageInput).toHaveValue(messageText));
 
     const submitButton = screen.getByText(/Send invite/i).closest('button');
 

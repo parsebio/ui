@@ -60,7 +60,10 @@ const ProjectsListContainer = (props) => {
   return (
     <Space direction='vertical' style={{ width: '100%' }}>
       {createButton}
-      <ProjectSearchBox projectType={projectType} onChange={(searchRegex) => setFilterParam(searchRegex)} />
+      <ProjectSearchBox
+        projectType={projectType}
+        onChange={(searchRegex) => setFilterParam(searchRegex)}
+      />
       <ProjectsList height={height} filter={filterParam} projectType={projectType} />
     </Space>
   );
