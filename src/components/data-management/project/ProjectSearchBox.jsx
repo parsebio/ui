@@ -3,6 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Tooltip, Input } from 'antd';
 import fetchAPI from '../../../utils/http/fetchAPI';
+import validateInput, { rules } from '../../../utils/validateInputs';
 
 const ProjectSearchBox = (props) => {
   const { onChange, projectType } = props;
@@ -11,12 +12,13 @@ const ProjectSearchBox = (props) => {
     _.debounce(async (value) => {
       const userPrefix = 'user:';
       if (value.startsWith(userPrefix)) {
-        const uuid = value.slice(userPrefix.length).trim();
+        const userId = value.slice(userPrefix.length).trim();
 
-        if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(uuid)) {
+        // filter by user id or email
+        if (validateInput(userId, rules.VALID_UUID).isValid || validateInput(userId, rules.VALID_EMAIL).isValid) {
           // mismatch between UI and db conventions.
           const projectTypeDb = projectType === 'secondaryAnalyses' ? 'secondary' : 'tertiary';
-          const projectIds = await fetchProjectsByUser(uuid, projectTypeDb);
+          const projectIds = await fetchProjectsByUser(userId, projectTypeDb);
           onChange(new RegExp(projectIds.join('|'), 'i'));
           return;
         }
@@ -38,11 +40,9 @@ const ProjectSearchBox = (props) => {
   );
 };
 
-async function fetchProjectsByUser(uuid, projectType) {
+async function fetchProjectsByUser(userId, projectType) {
   try {
-    const response = await fetchAPI(`/v2/user/${uuid}/projects/${projectType}`, { method: 'GET' });
-    console.log('RESPONSE');
-    console.log(response);
+    const response = await fetchAPI(`/v2/user/${userId}/projects/${projectType}`, { method: 'GET' });
     return response;
   } catch (e) {
     console.error(e);
