@@ -327,7 +327,7 @@ const Pipeline = () => {
   const LaunchAnalysisButton = () => {
     const firstTimeLaunch = currentStatus === 'not_created';
     const disableFinishedIfProduction = currentStatus === 'finished' && environment === Environment.PRODUCTION;
-    const shouldDisableLaunchButton = !(isAllValid && fastqsMatch) || disableFinishedIfProduction;
+    const disableLaunchButton = !isAllValid || disableFinishedIfProduction;
 
     const launchAnalysis = () => {
       setButtonClicked(true);
@@ -347,7 +347,7 @@ const Pipeline = () => {
       return (
         <Button
           type='primary'
-          disabled={shouldDisableLaunchButton}
+          disabled={disableLaunchButton}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
           onClick={() => launchAnalysis()}
@@ -364,7 +364,7 @@ const Pipeline = () => {
       >
         <Popconfirm
           title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
-          disabled={shouldDisableLaunchButton}
+          disabled={disableLaunchButton}
           onConfirm={() => launchAnalysis()}
           okText='Yes'
           cancelText='No'
@@ -372,7 +372,7 @@ const Pipeline = () => {
           overlayStyle={{ maxWidth: '250px' }}
         >
           <Button
-            disabled={shouldDisableLaunchButton}
+            disabled={disableLaunchButton}
             style={{ marginBottom: '10px' }}
             loading={statusLoading || buttonClicked}
           >
