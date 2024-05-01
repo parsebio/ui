@@ -54,6 +54,7 @@ export default {
   ERROR_TOO_MANY_READS_IN_NAME: 'File name can\'t contain "_R1" or "_R2" (its read pair) more than once. Valid example: "S1_R1.fast.gz"',
   ERROR_MORE_FILES_THAN_SUBLIBRARIES: 'You have uploaded more pairs of FASTQ files than the specified number of sublibraries. Please check the input number of sublibraries or contact support about concatenating your FASTQ files.',
   ERROR_LESS_FILES_THAN_SUBLIBRARIES: "You have uploaded less pairs of FASTQ files than the specified number of sublibraries. Please check the input number of sublibraries or make sure your FASTQ files haven't been concatenated.",
+  ERROR_NON_UNIQUE_SAMPLE_NAMES: 'Some sample names in the provided table are duplicated. Please make sure all sample names are unique and reupload your file.',
   FEEDBACK_ERROR: 'We couldn\'t process your feedback. Please try submitting again.',
   FEEDBACK_SUCCESSFUL: 'Your feedback has been successfully sent. Thank you!',
   REFERRAL_ERROR: 'We couldn\'t process your referral. Please try submitting again.',

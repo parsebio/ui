@@ -28,7 +28,7 @@ import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
-import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
+import { getSampleLTFile, getFastqFiles, getSampleNames } from 'redux/selectors';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -99,6 +99,7 @@ const Pipeline = () => {
   const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
 
   const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
+  const uniqueSampleNames = new Set(sampleNames).size === sampleNames?.length;
 
   const { loading: statusLoading, current: currentStatus } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
@@ -286,7 +287,7 @@ const Pipeline = () => {
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />
       ),
-      isValid: allFilesUploaded([sampleLTFile]),
+      isValid: allFilesUploaded([sampleLTFile]) && uniqueSampleNames,
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
     },
@@ -412,11 +413,13 @@ const Pipeline = () => {
                     </Text>
                   </Space>
                   <Tooltip
-                    title={!isAllValid && fastqsMatch
+                    title={!isAllValid && fastqsMatch && uniqueSampleNames
                       ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
                       : !fastqsMatch
                         ? 'You should upload exactly one pair of FASTQ files per sublibrary. Please check the FASTQs section.'
-                        : ''}
+                        : !uniqueSampleNames
+                          ? 'Some sample names are duplicated. Please check the sample loading table.'
+                          : ''}
                     placement='left'
                   >
                     <Space align='baseline'>

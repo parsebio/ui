@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect, useMemo,
+} from 'react';
 import readExcelFile from 'read-excel-file';
 import {
   Form, Empty, Button,
@@ -8,7 +10,7 @@ import {
   Divider,
   List,
 } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { CheckCircleTwoTone, DeleteOutlined, WarningOutlined } from '@ant-design/icons';
@@ -44,6 +46,9 @@ const SampleLTUpload = (props) => {
 
     return extractedSampleNames;
   };
+
+  const activeSampleNames = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]?.sampleNames, _.isEqual);
+  const uniqueSampleNames = useMemo(() => new Set(activeSampleNames).size === activeSampleNames?.length, [activeSampleNames]);
 
   const onDrop = async (droppedFiles) => {
     const warnings = [];
@@ -90,6 +95,7 @@ const SampleLTUpload = (props) => {
     }
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], [], 'samplelt', dispatch);
     dispatch(updateSecondaryAnalysis(secondaryAnalysisId, { sampleNames }));
+    console.log();
   };
 
   const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';
@@ -101,6 +107,23 @@ const SampleLTUpload = (props) => {
         size='middle'
         style={{ width: '100%', margin: '0 auto' }}
       >
+        {!uniqueSampleNames && (
+          <div>
+            <center style={{ cursor: 'pointer' }}>
+              <Text type='danger'>
+                {' '}
+                <WarningOutlined />
+                {' '}
+              </Text>
+              <Text>
+                {' '}
+                {endUserMessages.ERROR_NON_UNIQUE_SAMPLE_NAMES}
+                <br />
+              </Text>
+            </center>
+            <br />
+          </div>
+        )}
         <Form.Item
           name='projectName'
         >
