@@ -95,7 +95,6 @@ const SampleLTUpload = (props) => {
     }
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], [], 'samplelt', dispatch);
     dispatch(updateSecondaryAnalysis(secondaryAnalysisId, { sampleNames }));
-    console.log();
   };
 
   const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';
