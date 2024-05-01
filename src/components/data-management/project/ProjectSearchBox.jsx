@@ -22,7 +22,7 @@ const ProjectSearchBox = (props) => {
           // mismatch between UI and db conventions.
           const projectTypeDb = projectType === 'secondaryAnalyses' ? 'secondary' : 'tertiary';
           const projectIds = await fetchProjectsByUser(userId, projectTypeDb);
-          if (projectIds) {
+          if (projectIds && projectIds.length > 0) {
             onChange(new RegExp(projectIds.join('|'), 'i'));
           } else {
             // match nothing
