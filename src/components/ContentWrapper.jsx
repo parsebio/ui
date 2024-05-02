@@ -286,18 +286,7 @@ const ContentWrapper = (props) => {
           <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g transform='translate(20, 25)'>
-          <text
-            style={{ outlineStyle: 'none' }}
-            fontWeight='500'
-            textRendering='geometricPrecision'
-            fontFamily='M Plus 2'
-            fill='#F0F2F5'
-            fontSize='25.00px'
-            textAnchor='start'
-            dominantBaseline='middle'
-          >
-            Parse Bio
-          </text>
+          <image href='/Parse_Logo_white.png' x='-10' y='-30' width='100' height='30' />
           {/* provided by? TBD */}
           <text
             style={{ outlineStyle: 'none' }}
@@ -305,12 +294,13 @@ const ContentWrapper = (props) => {
             textRendering='geometricPrecision'
             fontFamily='M Plus 2'
             fill='#F0F2F5'
-            fontSize='9.00px'
+            fontSize='25.00px'
             textAnchor='start'
             dominantBaseline='middle'
-            y='20'
+            y='15'
+            x='10'
           >
-            Single Cell Platform
+            Trailmaker
           </text>
         </g>
       </svg>
@@ -332,17 +322,7 @@ const ContentWrapper = (props) => {
           <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g>
-          <text
-            style={{ outlineStyle: 'none' }}
-            x='40px'
-            fontWeight='500'
-            textRendering='geometricPrecision'
-            fontFamily='M Plus 2'
-            y='24px'
-            fill='#F0F2F5'
-            fontSize='25.00px'
-            textAnchor='middle'
-          />
+          <image href='/Parse_Logo_white.png' x='5' y='5' width='70' height='20' />
         </g>
       </svg>
     </div>

@@ -102,7 +102,7 @@ const QCRerunDisabledModal = (props) => {
         runQCAuthorized && (
           <p>
             This might take several minutes.
-            Your navigation within Cellenics will be restricted during this time.
+            Your navigation within Trailmaker will be restricted during this time.
             Do you want to start?
           </p>
         )

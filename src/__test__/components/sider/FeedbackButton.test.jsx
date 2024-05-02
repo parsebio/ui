@@ -31,7 +31,7 @@ jest.mock('@aws-amplify/auth', () => ({
   })),
 }));
 
-const placeHolderTextRegex = /Please write your message here to provide feedback or report issues on Cellenics. A member of our team will get back to you as soon as possible./i;
+const placeHolderTextRegex = /Please write your message here to provide feedback or report issues on Trailmaker. A member of our team will get back to you as soon as possible./i;
 
 describe('FeedbackButton', () => {
   beforeEach(() => {

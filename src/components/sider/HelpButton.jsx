@@ -8,11 +8,11 @@ const HelpButton = () => {
     {
       label: (
         <Card size='small' style={{ padding: '1em', width: '265px' }}>
-          Ask questions about how to use Cellenics and make feature requests on the
+          Ask questions about how to use Trailmaker and make feature requests on the
           {' '}
-          <a href='https://community.biomage.net/' target='_blank' rel='noreferrer'>Cellenics community forum</a>
+          <a href='https://community.biomage.net/' target='_blank' rel='noreferrer'>Trailmaker community forum</a>
           !
-          The Biomage team will reply to your message as soon as possible.
+          The team will reply to your message as soon as possible.
           <br />
           <br />
           Check out the
