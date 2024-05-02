@@ -102,6 +102,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/combinedOutput`,
       fileName: 'combined_output.zip',
     },
+    summaries: {
+      uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/reports`,
+      fileName: 'all_summaries.zip',
+    },
   }), [secondaryAnalysisId]);
 
   const downloadOutput = useCallback(async (type) => {
@@ -144,7 +148,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       key: 'reports',
       onClick: (e) => {
         e.domEvent.stopPropagation();
-        downloadReports();
+        downloadOutput('summaries');
       },
       label: (
         <Tooltip
@@ -203,7 +207,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   );
 
   const renderDownloadLogsButton = () => (
-    <Button type='primary' onClick={() => downloadOutput('logs')}>
+    <Button type='primary' onClick={() => downloadReports()}>
       Download Logs
       {' '}
       <DownOutlined />
