@@ -80,6 +80,9 @@ const PipelineLogsViewer = (props) => {
               case 'RUNNING':
                 icon = <LoadingOutlined spin style={{ color: 'blue' }} />;
                 break;
+              case 'SUBMITTED':
+                icon = <LoadingOutlined style={{ color: 'yellow' }} />;
+                break;
               default:
                 icon = <PauseCircleOutlined style={{ color: 'grey' }} />;
             }
