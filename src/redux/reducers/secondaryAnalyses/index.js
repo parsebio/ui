@@ -18,6 +18,8 @@ import {
   SECONDARY_ANALYSIS_FILES_DELETE,
   SECONDARY_ANALYSIS_STATUS_LOADING,
   SECONDARY_ANALYSIS_STATUS_LOADED,
+  SECONDARY_ANALYSIS_LOGS_LOADING,
+  SECONDARY_ANALYSIS_LOGS_LOADED,
 } from '../../actionTypes/secondaryAnalyses';
 
 import secondaryAnalysesLoading from './secondaryAnalysesLoading';
@@ -37,6 +39,9 @@ import secondaryAnalysisFileError from './secondaryAnalysisFileError';
 
 import secondaryAnalysisStatusLoading from './secondaryAnalysisStatusLoading';
 import secondaryAnalysisStatusLoaded from './secondaryAnalysisStatusLoaded';
+
+import secondaryAnalysisLogsLoaded from './secondaryAnalysisLogsLoaded';
+import secondaryAnalysisLogsLoading from './secondaryAnalysisLogsLoading';
 
 const notificationsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -96,6 +101,14 @@ const notificationsReducer = (state = initialState, action) => {
 
     case SECONDARY_ANALYSIS_STATUS_LOADED: {
       return secondaryAnalysisStatusLoaded(state, action);
+    }
+
+    case SECONDARY_ANALYSIS_LOGS_LOADING: {
+      return secondaryAnalysisLogsLoading(state, action);
+    }
+
+    case SECONDARY_ANALYSIS_LOGS_LOADED: {
+      return secondaryAnalysisLogsLoaded(state, action);
     }
 
     case HYDRATE: {

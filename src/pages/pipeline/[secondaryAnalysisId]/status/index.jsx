@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip, Typography, Card, List,
+  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip, Typography, Card, Progress,
 } from 'antd';
 import _ from 'lodash';
 import fetchAPI from 'utils/http/fetchAPI';
@@ -25,7 +25,9 @@ import writeToFileURL from 'utils/upload/writeToFileURL';
 import {
   SECONDARY_ANALYSES_UPDATED,
 } from 'redux/actionTypes/secondaryAnalyses';
+import pipelineTasks from 'utils/secondary-analysis/pipelineTasks';
 import { DownOutlined, WarningOutlined } from '@ant-design/icons';
+import PipelineLogsViewer from 'components/secondary-analysis/PipelineLogsViewer';
 
 const { Text, Paragraph, Title } = Typography;
 
@@ -38,8 +40,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const [selectedReport, setSelectedReport] = useState(null);
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
-  const logData = secondaryAnalysis?.status.logData;
   const associatedExperimentId = secondaryAnalysis?.experimentId;
+  const progress = secondaryAnalysis?.status?.progress;
 
   const loadAssociatedExperiment = async () => {
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
@@ -118,33 +120,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
-
-  const LogViewer = () => {
-    const { logs } = logData;
-
-    return (
-      <div
-        style={{ overflowY: 'auto', maxHeight: '50vh' }}
-        ref={(el) => {
-          if (el) {
-            el.scrollTop = el.scrollHeight;
-          }
-        }}
-      >
-        <Card title='Log Entries' style={{ backgroundColor: '#000', color: '#fff' }}>
-          <pre style={{ wordBreak: 'break-word' }}>
-            {logs.log.entries.map((entry, index) => (
-              <Tooltip key={index} title={entry} placement='topLeft' mouseEnterDelay={0.1}>
-                <div style={{ marginBottom: '0.5vh' }}>
-                  {entry.length > 80 ? `${entry.substring(0, 47)}...` : entry}
-                </div>
-              </Tooltip>
-            ))}
-          </pre>
-        </Card>
-      </div>
-    );
-  };
 
   const menuItems = [
     {
@@ -239,6 +214,27 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   if (!secondaryAnalysis?.status.current && secondaryAnalysis?.status.loading) {
     return <PreloadContent />;
   }
+  const ProgressBar = () => {
+    const totalTasks = (pipelineTasks.length * secondaryAnalysis.numOfSublibraries) + 1;
+    const { running, succeeded } = progress;
+
+    const succeededPercentage = _.round((succeeded / totalTasks) * 100);
+    const runningPercentage = _.round((running / totalTasks) * 100);
+
+    return (
+      <div>
+        <Tooltip title={`Tasks : ${succeeded} done / ${running} in progress / ${totalTasks - succeeded - running} not started`}>
+          <Progress
+            percent={succeededPercentage + runningPercentage}
+            success={{ percent: succeededPercentage }}
+            type='dashboard'
+            showInfo={false}
+          />
+
+        </Tooltip>
+      </div>
+    );
+  };
 
   if (secondaryAnalysis?.status.current !== 'finished') {
     const messages = {
@@ -296,24 +292,23 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             </Paragraph>
             {renderDownloadLogsButton()}
           </Space>
-          {secondaryAnalysis?.logData && (
-            <div>
-              <Title level={4}>Logs</Title>
-              <LogViewer logData={secondaryAnalysis.logData} />
-            </div>
-          )}
+          <div>
+            <PipelineLogsViewer secondaryAnalysisId={secondaryAnalysisId} />
+          </div>
         </Space>
       ),
       running: (
         <Card>
-          <Space direction='horizontal'>
+          <div style={{ display: 'block', justifyContent: 'center' }}>
             <div>
-              {fastLoad('')}
+              <ProgressBar />
               <Title level={3}>The pipeline is running... </Title>
+
               <Text type='secondary'>You can wait or leave this screen and check again later.</Text>
               <br />
               <Text type='secondary'>You cannot change any settings until the run completes.</Text>
               <br />
+
               <div style={{ textAlign: 'center', marginTop: '20px' }}>
                 <Popconfirm
                   title='Are you sure you want to cancel this pipeline run?'
@@ -336,13 +331,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
                 />
               </Space>
             </div>
-            {logData && (
-              <div>
-                <Title level={4}>Logs</Title>
-                <LogViewer logData={logData} />
-              </div>
-            )}
-          </Space>
+            <div>
+              <PipelineLogsViewer secondaryAnalysisId={secondaryAnalysisId} />
+            </div>
+          </div>
         </Card>
       ),
     };
