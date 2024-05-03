@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect,
+} from 'react';
 import readExcelFile from 'read-excel-file';
 import {
   Form, Empty, Button,
@@ -44,7 +46,6 @@ const SampleLTUpload = (props) => {
 
     return extractedSampleNames;
   };
-
   const onDrop = async (droppedFiles) => {
     const warnings = [];
 
@@ -67,7 +68,13 @@ const SampleLTUpload = (props) => {
           setFile(false);
         } else {
           setSampleNames(names);
-          setFile(selectedFile);
+          const sampleNamesAreUnique = new Set(names).size === names.length;
+          if (sampleNamesAreUnique) {
+            setFile(selectedFile);
+          } else {
+            warnings.push(`${selectedFile.name}: Sample names are not unique. Make sure all samples have unique names and reupload.`);
+            setFile(false);
+          }
         }
       } catch (error) {
         warnings.push(`Failed to read ${selectedFile.name}: ${error.message}`);
