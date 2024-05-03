@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip, Typography, Card, Progress,
+  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip, Typography, Card, Progress, Spin,
 } from 'antd';
 import _ from 'lodash';
 import fetchAPI from 'utils/http/fetchAPI';
@@ -42,24 +42,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
   const associatedExperimentId = secondaryAnalysis?.experimentId;
   const progress = secondaryAnalysis?.status?.progress;
-  const [runningText, setRunningText] = useState('');
-
-  // Handle running text animation
-  useEffect(() => {
-    if (secondaryAnalysis?.status?.current !== 'running') {
-      return;
-    }
-
-    const runningStates = ['', '.', '..', '...'];
-    let index = 0;
-
-    const interval = setInterval(() => {
-      setRunningText(runningStates[index]);
-      index = (index + 1) % runningStates.length;
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, [secondaryAnalysis?.status?.current]);
 
   const loadAssociatedExperiment = async () => {
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
@@ -240,7 +222,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     const totalTasks = (pipelineTasks.length * secondaryAnalysis.numOfSublibraries) + 1;
     const { running, succeeded } = progress;
     const succeededPercentage = _.round((succeeded / totalTasks) * 100);
-    const runningPercentage = _.round((running / totalTasks) * 1000);
+    const runningPercentage = _.round((running / totalTasks) * 100);
     return (
       <div>
         <Tooltip title={`Tasks : ${succeeded} done / ${running} in progress / ${totalTasks - succeeded - running} not started`}>
@@ -250,7 +232,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             type='dashboard'
             showInfo={false}
           />
-
         </Tooltip>
       </div>
     );
@@ -324,7 +305,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               <ProgressBar />
               <Title level={3}>
                 The pipeline is running
-                {runningText}
+                {' '}
+                <Spin />
               </Title>
               <Text type='secondary'>You can wait or leave this screen and check again later.</Text>
               <br />

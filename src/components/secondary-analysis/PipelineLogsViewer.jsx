@@ -129,27 +129,25 @@ const PipelineLogsViewer = (props) => {
               >
                 {logs.loading && fastLoad('Loading logs...')}
                 {logs.data && (
-                  <Card
-                    title='Log Entries'
-                    style={{
-                      backgroundColor: '#11001b',
-                      color: '#fff',
-                      overflow: 'auto',
-                      flexDirection: 'column-reverse',
-                      textAlign: 'left',
-                    }}
-                  >
-                    <div style={{
-                      wordBreak: 'break-word',
-                      maxHeight: '30vh',
 
-                    }}
-                    >
-                      {logs.data.map((entry, index) => (
-                        <div key={index} style={{ marginBottom: '0.5vh' }}>{entry}</div>
-                      ))}
-                    </div>
-                  </Card>
+                  <div style={{
+                    backgroundColor: '#11001b',
+                    color: '#fff',
+                    padding: 10,
+                    width: '100%',
+                    textAlign: 'left',
+
+                    wordBreak: 'break-word',
+                    maxHeight: '30vh',
+                    overflow: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column-reverse', // This will start the scroll from the bottom
+                  }}
+                  >
+                    {logs.data.map((entry) => (
+                      <div key={entry} style={{ marginBottom: '0.5vh' }}>{entry}</div>
+                    ))}
+                  </div>
                 )}
               </TabPane>
             );
