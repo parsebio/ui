@@ -1,10 +1,10 @@
 import React, {
-  useState, useMemo, useEffect,
+  useState, useEffect,
 } from 'react';
 import {
   CloseCircleOutlined, SyncOutlined, CheckCircleOutlined, LoadingOutlined, PauseCircleOutlined,
 } from '@ant-design/icons';
-
+import PropTypes from 'prop-types';
 import {
   Select, Tabs, Typography, Space, Button, Divider, Row, Col,
 } from 'antd';
@@ -21,25 +21,15 @@ const PipelineLogsViewer = (props) => {
   const dispatch = useDispatch();
   const [selectedSublibrary, setSelectedSublibrary] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
+  const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
+  const { tasksData, pipelineTasks, sublibraries } = secondaryAnalysis.status;
+  const logs = secondaryAnalysis.status?.logs?.[selectedSublibrary]?.[selectedTask?.process] || {};
 
-  const logs = useSelector((state) => (
-    state.secondaryAnalyses[secondaryAnalysisId].status?.logs?.[selectedSublibrary]?.[selectedTask?.process])) || {};
-  const { tasksData, pipelineTasks } = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId].status);
   useEffect(() => {
     if (selectedSublibrary && selectedTask) {
       dispatch(loadSecondaryAnalysisLogs(secondaryAnalysisId, selectedTask));
     }
   }, [selectedSublibrary, selectedTask]);
-
-  const sublibraries = useMemo(() => {
-    const uniqueSublibraries = new Set(tasksData.map((task) => task.sublibrary));
-    return Array.from(uniqueSublibraries);
-  }, [tasksData]);
-
-  const filteredTasks = useMemo(() => tasksData.filter(
-    (task) => task.sublibrary === selectedSublibrary,
-  ),
-  [tasksData, selectedSublibrary]);
 
   const handleClose = () => {
     setSelectedSublibrary(null);
@@ -95,7 +85,9 @@ const PipelineLogsViewer = (props) => {
           style={{ width: '70vh', margin: '0 auto', maxHeight: '30%' }}
         >
           {pipelineTasks.map((taskName) => {
-            const task = filteredTasks.find((t) => t.process === taskName);
+            const task = tasksData.find((t) => (
+              t.process === taskName && t.sublibrary === selectedSublibrary
+            ));
             let icon;
             switch (task?.status) {
               case 'COMPLETED':
@@ -120,7 +112,7 @@ const PipelineLogsViewer = (props) => {
                 )}
                 disabled={!task?.taskId}
                 key={task?.taskId || taskName}
-                onChange={(key) => {
+                onChange={() => {
                   setSelectedTask(task);
                 }}
               >
@@ -151,6 +143,10 @@ const PipelineLogsViewer = (props) => {
       )}
     </div>
   );
+};
+
+PipelineLogsViewer.propTypes = {
+  secondaryAnalysisId: PropTypes.string.isRequired,
 };
 
 export default PipelineLogsViewer;
