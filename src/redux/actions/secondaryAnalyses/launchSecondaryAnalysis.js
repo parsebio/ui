@@ -27,7 +27,7 @@ const launchSecondaryAnalysis = (secondaryAnalysisId) => async (dispatch) => {
       type: SECONDARY_ANALYSIS_STATUS_LOADED,
       payload: {
         secondaryAnalysisId,
-        status: 'failed',
+        status: { current: 'failed' },
       },
     });
 
