@@ -1,10 +1,13 @@
 import React, {
-  useState, useMemo, useEffect, useRef,
+  useState, useMemo, useEffect,
 } from 'react';
 import {
-  Select, Tabs, Typography, Space, Card,
+  CloseCircleOutlined, SyncOutlined, CheckCircleOutlined, LoadingOutlined, PauseCircleOutlined,
+} from '@ant-design/icons';
+
+import {
+  Select, Tabs, Typography, Space, Card, Button, Divider, Row, Col,
 } from 'antd';
-import { CheckCircleOutlined, LoadingOutlined, PauseCircleOutlined } from '@ant-design/icons';
 import { loadSecondaryAnalysisLogs } from 'redux/actions/secondaryAnalyses';
 import { useSelector, useDispatch } from 'react-redux';
 import { fastLoad } from 'components/Loader';
@@ -40,27 +43,50 @@ const PipelineLogsViewer = (props) => {
   ),
   [tasksData, selectedSublibrary]);
 
+  const handleClose = () => {
+    setSelectedSublibrary(null);
+    setSelectedTask(null);
+  };
+
+  const handleRefresh = () => {
+    if (selectedSublibrary && selectedTask) {
+      dispatch(loadSecondaryAnalysisLogs(secondaryAnalysisId, selectedTask));
+    }
+  };
+
   return (
     <div>
-      <br />
-      <Space direction='horizontal'>
-        <Title level={5}>Pipeline Logs:</Title>
-        <Select
-          placeholder='Select a sublibrary'
-          onChange={(value) => {
-            setSelectedSublibrary(value);
-            const task = tasksData.find(
-              (t) => t.process.toString() === pipelineTasks[0] && t.sublibrary === value,
-            );
-            console.log('SETTING TO TASK', task);
-            setSelectedTask(task);
-          }}
-          style={{ width: 200, marginBottom: 20 }}
-        >
-          {sublibraries.map((sublibrary) => (
-            <Option key={sublibrary} value={sublibrary}>{sublibrary}</Option>
-          ))}
-        </Select>
+      <Divider />
+      <Space direction='vertical' size='large' style={{ width: '100%' }}>
+        <Row gutter={16} align='middle'>
+          <Title level={5}>Pipeline Logs:</Title>
+
+          <Col>
+            <Select
+              placeholder='Select a sublibrary'
+              value={selectedSublibrary}
+              onChange={(value) => {
+                setSelectedSublibrary(value);
+                const task = tasksData.find(
+                  (t) => t.process.toString() === pipelineTasks[0] && t.sublibrary === value,
+                );
+                console.log('SETTING TO TASK', task);
+                setSelectedTask(task);
+              }}
+              style={{ width: 200 }}
+            >
+              {sublibraries.map((sublibrary) => (
+                <Option key={sublibrary} value={sublibrary}>{sublibrary}</Option>
+              ))}
+            </Select>
+          </Col>
+          {selectedSublibrary && (
+            <Col>
+              <Button icon={<CloseCircleOutlined />} onClick={handleClose} style={{ fontSize: '2vh', marginRight: 8 }} />
+              <Button icon={<SyncOutlined />} onClick={handleRefresh} style={{ fontSize: '2vh' }} />
+            </Col>
+          )}
+        </Row>
       </Space>
       {selectedSublibrary && (
         <Tabs
@@ -109,13 +135,14 @@ const PipelineLogsViewer = (props) => {
                       backgroundColor: '#11001b',
                       color: '#fff',
                       overflow: 'auto',
-
+                      flexDirection: 'column-reverse',
                       textAlign: 'left',
                     }}
                   >
                     <div style={{
                       wordBreak: 'break-word',
                       maxHeight: '30vh',
+
                     }}
                     >
                       {logs.data.map((entry, index) => (

@@ -42,6 +42,24 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
   const associatedExperimentId = secondaryAnalysis?.experimentId;
   const progress = secondaryAnalysis?.status?.progress;
+  const [runningText, setRunningText] = useState('');
+
+  // Handle running text animation
+  useEffect(() => {
+    if (secondaryAnalysis?.status?.current !== 'running') {
+      return;
+    }
+
+    const runningStates = ['', '.', '..', '...'];
+    let index = 0;
+
+    const interval = setInterval(() => {
+      setRunningText(runningStates[index]);
+      index = (index + 1) % runningStates.length;
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [secondaryAnalysis?.status?.current]);
 
   const loadAssociatedExperiment = async () => {
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
@@ -221,10 +239,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const ProgressBar = () => {
     const totalTasks = (pipelineTasks.length * secondaryAnalysis.numOfSublibraries) + 1;
     const { running, succeeded } = progress;
-
     const succeededPercentage = _.round((succeeded / totalTasks) * 100);
-    const runningPercentage = _.round((running / totalTasks) * 100);
-
+    const runningPercentage = _.round((running / totalTasks) * 1000);
     return (
       <div>
         <Tooltip title={`Tasks : ${succeeded} done / ${running} in progress / ${totalTasks - succeeded - running} not started`}>
@@ -306,13 +322,14 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           <div style={{ display: 'block', justifyContent: 'center' }}>
             <div>
               <ProgressBar />
-              <Title level={3}>The pipeline is running... </Title>
-
+              <Title level={3}>
+                The pipeline is running
+                {runningText}
+              </Title>
               <Text type='secondary'>You can wait or leave this screen and check again later.</Text>
               <br />
               <Text type='secondary'>You cannot change any settings until the run completes.</Text>
               <br />
-
               <div style={{ textAlign: 'center', marginTop: '20px' }}>
                 <Popconfirm
                   title='Are you sure you want to cancel this pipeline run?'
