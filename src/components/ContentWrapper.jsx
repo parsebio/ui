@@ -288,7 +288,7 @@ const ContentWrapper = (props) => {
         <g transform='translate(20, 25)'>
 
           {/* provided by? TBD */}
-          <image href='/Parse_icon_white.png' x='-5' y='-20' width='15%' />
+          <image href='/Parse_icon_white.png' x='-5' y='-20' width='18%' />
           <text
             style={{ outlineStyle: 'none' }}
             fontWeight='900'
@@ -298,7 +298,7 @@ const ContentWrapper = (props) => {
             fontSize='22.00px'
             textAnchor='start'
             dominantBaseline='middle'
-            x='30'
+            x='35'
           >
             Trailmaker
           </text>
