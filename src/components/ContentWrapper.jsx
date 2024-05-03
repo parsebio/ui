@@ -286,8 +286,9 @@ const ContentWrapper = (props) => {
           <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g transform='translate(20, 25)'>
-          <image href='/Parse_Logo_white.png' x='-10' y='-25' width='60%' />
+
           {/* provided by? TBD */}
+          <image href='/Parse_icon_white.png' x='-5' y='-20' width='15%' />
           <text
             style={{ outlineStyle: 'none' }}
             fontWeight='900'
@@ -297,8 +298,7 @@ const ContentWrapper = (props) => {
             fontSize='22.00px'
             textAnchor='start'
             dominantBaseline='middle'
-            y='15'
-            x='13'
+            x='30'
           >
             Trailmaker
           </text>
@@ -322,7 +322,7 @@ const ContentWrapper = (props) => {
           <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g>
-          <image href='/parse-favicon.png' x='20' y='0' width='35%' />
+          <image href='/Parse_icon_white.png' x='20' y='0' width='35%' />
         </g>
       </svg>
     </div>
