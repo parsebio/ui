@@ -25,7 +25,6 @@ import writeToFileURL from 'utils/upload/writeToFileURL';
 import {
   SECONDARY_ANALYSES_UPDATED,
 } from 'redux/actionTypes/secondaryAnalyses';
-import pipelineTasks from 'utils/secondary-analysis/pipelineTasks';
 import { DownOutlined, WarningOutlined } from '@ant-design/icons';
 import PipelineLogsViewer from 'components/secondary-analysis/PipelineLogsViewer';
 
@@ -219,7 +218,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     return <PreloadContent />;
   }
   const ProgressBar = () => {
-    const totalTasks = (pipelineTasks.length * secondaryAnalysis.numOfSublibraries) + 1;
+    const { totalTasks } = secondaryAnalysis.status;
     const { running, succeeded } = progress;
     const succeededPercentage = _.round((succeeded / totalTasks) * 100);
     const runningPercentage = _.round((running / totalTasks) * 100);

@@ -6,12 +6,11 @@ import {
 } from '@ant-design/icons';
 
 import {
-  Select, Tabs, Typography, Space, Card, Button, Divider, Row, Col,
+  Select, Tabs, Typography, Space, Button, Divider, Row, Col,
 } from 'antd';
 import { loadSecondaryAnalysisLogs } from 'redux/actions/secondaryAnalyses';
 import { useSelector, useDispatch } from 'react-redux';
 import { fastLoad } from 'components/Loader';
-import pipelineTasks from 'utils/secondary-analysis/pipelineTasks';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -25,8 +24,7 @@ const PipelineLogsViewer = (props) => {
 
   const logs = useSelector((state) => (
     state.secondaryAnalyses[secondaryAnalysisId].status?.logs?.[selectedSublibrary]?.[selectedTask?.process])) || {};
-  const tasksData = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId].status?.tasksData);
-
+  const { tasksData, pipelineTasks } = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId].status);
   useEffect(() => {
     if (selectedSublibrary && selectedTask) {
       dispatch(loadSecondaryAnalysisLogs(secondaryAnalysisId, selectedTask));
@@ -103,12 +101,11 @@ const PipelineLogsViewer = (props) => {
               case 'COMPLETED':
                 icon = <CheckCircleOutlined style={{ color: 'green' }} />;
                 break;
+              case 'SUBMITTED':
               case 'RUNNING':
                 icon = <LoadingOutlined spin style={{ color: 'blue' }} />;
                 break;
-              case 'SUBMITTED':
-                icon = <LoadingOutlined style={{ color: 'yellow' }} />;
-                break;
+
               default:
                 icon = <PauseCircleOutlined style={{ color: 'grey' }} />;
             }
@@ -134,9 +131,7 @@ const PipelineLogsViewer = (props) => {
                     backgroundColor: '#11001b',
                     color: '#fff',
                     padding: 10,
-                    width: '100%',
                     textAlign: 'left',
-
                     wordBreak: 'break-word',
                     maxHeight: '30vh',
                     overflow: 'auto',
@@ -144,8 +139,8 @@ const PipelineLogsViewer = (props) => {
                     flexDirection: 'column-reverse', // This will start the scroll from the bottom
                   }}
                   >
-                    {logs.data.map((entry) => (
-                      <div key={entry} style={{ marginBottom: '0.5vh' }}>{entry}</div>
+                    {logs.data.map((entry, index) => (
+                      <div key={`${entry}-${index}`} style={{ marginBottom: '0.5vh' }}>{entry}</div>
                     ))}
                   </div>
                 )}
