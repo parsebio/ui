@@ -282,7 +282,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         </div>
       ),
       failed: (
-        <Space direction='horizontal'>
+        <Space direction='vertical'>
 
           <Space direction='vertical'>
             <Paragraph style={{ fontSize: '20px', width: '100%' }}>
