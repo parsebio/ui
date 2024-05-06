@@ -11,24 +11,27 @@ import styles from 'components/data-management/TermsOfUseIntercept.module.css';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
-import _ from 'lodash';
+import { termsOfUseKeys } from 'utils/constants';
 
 const { Text } = Typography;
 
+const {
+  privacyPolicy,
+  cookies,
+  dataUse,
+} = termsOfUseKeys;
+
 // const agreedPrivacyPolicyKey = 'custom:agreed_terms';
 // const agreedEmailsKey = 'custom:agreed_emails';
-const agreedPrivacyPolicyKey = 'custom:agreed_terms_v2';
-const agreedCookiesKey = 'custom:agreed_cookies_v1';
-const agreedDataUseKey = 'custom:agreed_data_use_v1';
 
 const TermsOfUseIntercept = (props) => {
   const { user, onOk } = props;
 
   const {
     attributes: {
-      [agreedPrivacyPolicyKey]: originalAgreedPrivacyPolicy,
-      [agreedCookiesKey]: originalAgreedCookies,
-      [agreedDataUseKey]: originalAgreedDataUse,
+      [privacyPolicy]: originalAgreedPrivacyPolicy,
+      [cookies]: originalAgreedCookies,
+      [dataUse]: originalAgreedDataUse,
     },
   } = user;
 
@@ -56,9 +59,9 @@ const TermsOfUseIntercept = (props) => {
         await Auth.updateUserAttributes(
           user,
           {
-            [agreedPrivacyPolicyKey]: agreedPrivacyPolicy,
-            [agreedCookiesKey]: agreedCookies,
-            [agreedDataUseKey]: agreedDataUse,
+            [privacyPolicy]: agreedPrivacyPolicy,
+            [cookies]: agreedCookies,
+            [dataUse]: agreedDataUse,
           },
         )
           .then(() => {

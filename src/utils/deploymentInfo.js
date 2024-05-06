@@ -1,9 +1,13 @@
+import { termsOfUseKeys } from 'utils/constants';
+
 const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 
-const privacyPolicyIsNotAccepted = (user, domainName) => (
-  user?.attributes['custom:agreed_terms'] !== 'true'
-  && (domainName === DomainName.BIOMAGE || domainName === DomainName.BIOMAGE_STAGING)
-);
+const privacyPolicyIsNotAccepted = (user, domainName) => {
+  const notAccepted = Object.values(termsOfUseKeys).some((key) => user?.attributes[key] !== 'true');
+
+  return notAccepted
+    && (domainName === DomainName.BIOMAGE || domainName === DomainName.BIOMAGE_STAGING);
+};
 
 const Environment = {
   DEVELOPMENT: 'development',

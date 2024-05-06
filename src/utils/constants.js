@@ -90,6 +90,12 @@ const cellSetsUpdatedMessages = {
   ScTypeAnnotate: endUserMessages.SUCCESS_CELL_SETS_ANNOTATED,
 };
 
+const termsOfUseKeys = {
+  privacyPolicy: 'custom:agreed_terms_v2',
+  cookies: 'custom:agreed_cookies_v1',
+  dataUse: 'custom:agreed_data_use_v1',
+};
+
 export {
   api,
   modules,
@@ -101,4 +107,5 @@ export {
   layout,
   downsamplingMethods,
   cellSetsUpdatedMessages,
+  termsOfUseKeys,
 };
