@@ -10,7 +10,7 @@ import loadBackendStatus from 'redux/actions/backendStatus/loadBackendStatus';
 import { loadSamples } from 'redux/actions/samples';
 import ExampleExperimentsSpace from 'components/data-management/ExampleExperimentsSpace';
 import Loader from 'components/Loader';
-import { termsOfUseNotAccepted } from 'utils/deploymentInfo';
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
 
 const DataManagementPage = () => {

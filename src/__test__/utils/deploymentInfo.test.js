@@ -1,37 +1,8 @@
 import {
-  ssrGetDeploymentInfo, DomainName, Environment, termsOfUseNotAccepted,
+  ssrGetDeploymentInfo, DomainName, Environment,
 } from 'utils/deploymentInfo';
 
 describe('deploymentInfo', () => {
-  describe('termsOfUseNotAccepted', () => {
-    it('Returns false for users that accepted privacy policy', () => {
-      const user = { attributes: { 'custom:agreed_terms': 'true' } };
-      const domainName = DomainName.BIOMAGE;
-
-      expect(termsOfUseNotAccepted(user, domainName)).toEqual(false);
-    });
-
-    it('Returns false for users that arent in Biomage deployment', () => {
-      const user = { attributes: {} };
-      const domainName = 'Someotherdomain.com';
-
-      expect(termsOfUseNotAccepted(user, domainName)).toEqual(false);
-    });
-
-    it('Returns true for users that still need to accept terms in Biomage', () => {
-      const user = { attributes: {} };
-      const domainName = DomainName.BIOMAGE;
-
-      expect(termsOfUseNotAccepted(user, domainName)).toEqual(true);
-    });
-
-    it('Returns true for users that still need to accept terms in Biomage staging', () => {
-      const user = { attributes: {} };
-      const domainName = DomainName.BIOMAGE_STAGING;
-
-      expect(termsOfUseNotAccepted(user, domainName)).toEqual(true);
-    });
-  });
   describe('ssrGetDeploymentInfo', () => {
     let originalEnv;
 

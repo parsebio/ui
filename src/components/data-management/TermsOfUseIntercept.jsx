@@ -21,9 +21,6 @@ const {
   dataUse,
 } = termsOfUseKeys;
 
-// const agreedPrivacyPolicyKey = 'custom:agreed_terms';
-// const agreedEmailsKey = 'custom:agreed_emails';
-
 const TermsOfUseIntercept = (props) => {
   const { user, onOk } = props;
 

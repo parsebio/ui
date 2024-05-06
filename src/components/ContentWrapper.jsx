@@ -37,7 +37,7 @@ import { getBackendStatus } from 'redux/selectors';
 import { loadUser } from 'redux/actions/user';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
-import { isBrowser, termsOfUseNotAccepted } from 'utils/deploymentInfo';
+import { isBrowser } from 'utils/deploymentInfo';
 import { modules, brandColors } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import experimentUpdatesHandler from 'utils/experimentUpdatesHandler';
@@ -48,6 +48,7 @@ import { DndProvider } from 'react-dnd';
 import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import FeedbackButton from './sider/FeedbackButton';
 import ReferralButton from './sider/ReferralButton';
 import UserButton from './sider/UserButton';
