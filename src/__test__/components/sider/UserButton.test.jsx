@@ -42,7 +42,14 @@ describe('UserButton', () => {
 
     store = makeStore();
 
-    Auth.currentAuthenticatedUser = jest.fn(() => Promise.resolve({ attributes: { name: userName, 'custom:agreed_terms': 'true' } }));
+    Auth.currentAuthenticatedUser = jest.fn(() => Promise.resolve({
+      attributes: {
+        name: userName,
+        'custom:agreed_terms_v2': 'true',
+        'custom:agreed_cookies_v1': 'true',
+        'custom:agreed_data_use_v1': 'true',
+      },
+    }));
     Auth.signOut = jest.fn(() => { });
     Auth.federatedSignIn = jest.fn(() => { });
 

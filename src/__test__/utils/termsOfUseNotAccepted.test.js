@@ -3,7 +3,13 @@ import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 
 describe('termsOfUseNotAccepted', () => {
   it('Returns false for users that accepted privacy policy', () => {
-    const user = { attributes: { 'custom:agreed_terms': 'true' } };
+    const user = {
+      attributes: {
+        'custom:agreed_terms_v2': 'true',
+        'custom:agreed_cookies_v1': 'true',
+        'custom:agreed_data_use_v1': 'true',
+      },
+    };
     const domainName = DomainName.BIOMAGE;
 
     expect(termsOfUseNotAccepted(user, domainName)).toEqual(false);

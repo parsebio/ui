@@ -41,7 +41,9 @@ jest.mock('next/router', () => ({
 jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
     attributes: {
-      'custom:agreed_terms': 'true',
+      'custom:agreed_terms_v2': 'true',
+      'custom:agreed_cookies_v1': 'true',
+      'custom:agreed_data_use_v1': 'true',
       name: 'Tester Testson',
     },
   })),
