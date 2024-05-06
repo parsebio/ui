@@ -14,8 +14,11 @@ import endUserMessages from 'utils/endUserMessages';
 
 const { Text } = Typography;
 
-const agreedPrivacyPolicyKey = 'custom:agreed_terms';
-const agreedEmailsKey = 'custom:agreed_emails';
+// const agreedPrivacyPolicyKey = 'custom:agreed_terms';
+// const agreedEmailsKey = 'custom:agreed_emails';
+const agreedPrivacyPolicyKey = 'custom:agreed_terms_v2';
+const agreedCookiesKey = 'custom:agreed_cookies_v1';
+const agreedDataUseKey = 'custom:agreed_data_use_v1';
 
 const PrivacyPolicyIntercept = (props) => {
   const { user, onOk } = props;
@@ -23,12 +26,14 @@ const PrivacyPolicyIntercept = (props) => {
   const {
     attributes: {
       [agreedPrivacyPolicyKey]: originalAgreedPrivacyPolicy,
-      [agreedEmailsKey]: originalAgreedEmails,
+      [agreedCookiesKey]: originalAgreedCookies,
+      [agreedDataUseKey]: originalAgreedDataUse,
     },
   } = user;
 
   const [agreedPrivacyPolicy, setAgreedPrivacyPolicy] = useState(originalAgreedPrivacyPolicy);
-  const [agreedEmails, setAgreedEmails] = useState(originalAgreedEmails ?? 'false');
+  const [agreedCookies, setAgreedCookies] = useState(originalAgreedCookies);
+  const [agreedDataUse, setAgreedDataUse] = useState(originalAgreedDataUse);
 
   const privacyPolicyUrl = 'https://static1.squarespace.com/static/5f355513fc75aa471d47455c/t/64e74c9b4fc1e66b2434b9fb/1692880027872/Biomage_PrivacyPolicy_Aug2023.pdf';
 
@@ -48,7 +53,7 @@ const PrivacyPolicyIntercept = (props) => {
           user,
           {
             [agreedPrivacyPolicyKey]: agreedPrivacyPolicy,
-            [agreedEmailsKey]: agreedEmails,
+            [agreedCookiesKey]: agreedCookies,
           },
         )
           .then(() => {
@@ -69,19 +74,34 @@ const PrivacyPolicyIntercept = (props) => {
             <span style={{ color: '#ff0000' }}>* </span>
             I accept the terms of the
             {' '}
-            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Biomage privacy policy</a>
+            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Parse Biosciences Privacy Policy</a>
             .
           </Text>
         </Space>
         <Space align='start'>
           <Checkbox
-            defaultChecked={agreedEmails === 'true'}
-            onChange={(e) => setAgreedEmails(e.target.checked.toString())}
-            style={{ marginRight: 10 }}
+            defaultChecked={agreedCookies === 'true'}
+            onChange={(e) => setAgreedCookies(e.target.checked.toString())}
           />
           <Text>
-            I agree to receive updates about new features in Cellenics,
-            research done with Cellenics, and Cellenics community events. (No external marketing.)
+            <span style={{ color: '#ff0000' }}>* </span>
+            I agree to the
+            {' '}
+            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Parse Biosciences Cookie Policy</a>
+            .
+          </Text>
+        </Space>
+        <Space align='start'>
+          <Checkbox
+            defaultChecked={agreedDataUse === 'true'}
+            onChange={(e) => setAgreedDataUse(e.target.checked.toString())}
+          />
+          <Text>
+            <span style={{ color: '#ff0000' }}>* </span>
+            I agree to the
+            {' '}
+            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Trailmaker Data Use Agreement</a>
+            .
           </Text>
         </Space>
       </Space>
