@@ -2,7 +2,7 @@ import { termsOfUseKeys } from 'utils/constants';
 
 const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 
-const privacyPolicyIsNotAccepted = (user, domainName) => {
+const termsOfUseNotAccepted = (user, domainName) => {
   const notAccepted = Object.values(termsOfUseKeys).some((key) => user?.attributes[key] !== 'true');
 
   return notAccepted
@@ -56,5 +56,5 @@ const ssrGetDeploymentInfo = () => {
 
 // Using module.exports instead of export allows next.config.js to use it
 module.exports = {
-  isBrowser, ssrGetDeploymentInfo, DomainName, AccountId, Environment, privacyPolicyIsNotAccepted,
+  isBrowser, ssrGetDeploymentInfo, DomainName, AccountId, Environment, termsOfUseNotAccepted,
 };

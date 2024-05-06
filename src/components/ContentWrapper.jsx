@@ -37,7 +37,7 @@ import { getBackendStatus } from 'redux/selectors';
 import { loadUser } from 'redux/actions/user';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
-import { isBrowser, privacyPolicyIsNotAccepted } from 'utils/deploymentInfo';
+import { isBrowser, termsOfUseNotAccepted } from 'utils/deploymentInfo';
 import { modules, brandColors } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import experimentUpdatesHandler from 'utils/experimentUpdatesHandler';
@@ -552,7 +552,7 @@ const ContentWrapper = (props) => {
     <>
       <DndProvider backend={MultiBackend} options={HTML5ToTouch}>
         {/* Privacy policy only for biomage deployment */}
-        {privacyPolicyIsNotAccepted(user, domainName) && (
+        {termsOfUseNotAccepted(user, domainName) && (
           <TermsOfUseIntercept user={user} onOk={() => dispatch(loadUser())} />
         )}
         <BrowserAlert />
