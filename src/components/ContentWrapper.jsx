@@ -26,7 +26,7 @@ import {
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
-import PrivacyPolicyIntercept from 'components/data-management/PrivacyPolicyIntercept';
+import TermsOfUseIntercept from 'components/data-management/TermsOfUseIntercept';
 
 import BrowserAlert from 'components/BrowserAlert';
 import PreloadContent from 'components/PreloadContent';
@@ -553,7 +553,7 @@ const ContentWrapper = (props) => {
       <DndProvider backend={MultiBackend} options={HTML5ToTouch}>
         {/* Privacy policy only for biomage deployment */}
         {privacyPolicyIsNotAccepted(user, domainName) && (
-          <PrivacyPolicyIntercept user={user} onOk={() => dispatch(loadUser())} />
+          <TermsOfUseIntercept user={user} onOk={() => dispatch(loadUser())} />
         )}
         <BrowserAlert />
 

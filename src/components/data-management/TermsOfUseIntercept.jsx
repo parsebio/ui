@@ -7,7 +7,7 @@ import {
   Modal, Space, Checkbox, Typography,
 } from 'antd';
 
-import styles from 'components/data-management/PrivacyPolicyIntercept.module.css';
+import styles from 'components/data-management/TermsOfUseIntercept.module.css';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
@@ -20,7 +20,7 @@ const agreedPrivacyPolicyKey = 'custom:agreed_terms_v2';
 const agreedCookiesKey = 'custom:agreed_cookies_v1';
 const agreedDataUseKey = 'custom:agreed_data_use_v1';
 
-const PrivacyPolicyIntercept = (props) => {
+const TermsOfUseIntercept = (props) => {
   const { user, onOk } = props;
 
   const {
@@ -109,11 +109,11 @@ const PrivacyPolicyIntercept = (props) => {
   );
 };
 
-PrivacyPolicyIntercept.propTypes = {
+TermsOfUseIntercept.propTypes = {
   user: PropTypes.object.isRequired,
   onOk: PropTypes.func.isRequired,
 };
 
-PrivacyPolicyIntercept.defaultProps = {};
+TermsOfUseIntercept.defaultProps = {};
 
-export default PrivacyPolicyIntercept;
+export default TermsOfUseIntercept;
