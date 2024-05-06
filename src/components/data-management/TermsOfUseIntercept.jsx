@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Auth from '@aws-amplify/auth';
@@ -11,6 +11,7 @@ import styles from 'components/data-management/TermsOfUseIntercept.module.css';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
+import _ from 'lodash';
 
 const { Text } = Typography;
 
@@ -35,6 +36,9 @@ const TermsOfUseIntercept = (props) => {
   const [agreedCookies, setAgreedCookies] = useState(originalAgreedCookies);
   const [agreedDataUse, setAgreedDataUse] = useState(originalAgreedDataUse);
 
+  const agreedToAllTerms = useMemo(() => [agreedPrivacyPolicy, agreedCookies, agreedDataUse].every((value) => value === 'true'),
+    [agreedPrivacyPolicy, agreedCookies, agreedDataUse]);
+
   const privacyPolicyUrl = 'https://static1.squarespace.com/static/5f355513fc75aa471d47455c/t/64e74c9b4fc1e66b2434b9fb/1692880027872/Biomage_PrivacyPolicy_Aug2023.pdf';
 
   return (
@@ -45,7 +49,7 @@ const TermsOfUseIntercept = (props) => {
       className={styles['ok-to-the-right-modal']}
       cancelText='Sign out'
       cancelButtonProps={{ danger: true }}
-      okButtonProps={{ disabled: agreedPrivacyPolicy !== 'true' }}
+      okButtonProps={{ disabled: !agreedToAllTerms }}
       closable={false}
       maskClosable={false}
       onOk={async () => {
@@ -54,6 +58,7 @@ const TermsOfUseIntercept = (props) => {
           {
             [agreedPrivacyPolicyKey]: agreedPrivacyPolicy,
             [agreedCookiesKey]: agreedCookies,
+            [agreedDataUseKey]: agreedDataUse,
           },
         )
           .then(() => {
