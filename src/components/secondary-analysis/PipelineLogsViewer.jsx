@@ -26,7 +26,9 @@ const PipelineLogsViewer = (props) => {
 
   const {
     tasksData, pipelineTasks, sublibraries, logs,
-  } = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId].status, _.isEqual);
+  } = useSelector((state) => _.pick(state.secondaryAnalyses[secondaryAnalysisId]
+    .status, ['tasksData', 'pipelineTasks', 'sublibraries', 'logs']), _.isEqual);
+
   const selectedLogs = logs?.[selectedSublibrary]?.[selectedTask?.process] || {};
 
   useEffect(() => {
@@ -90,6 +92,7 @@ const PipelineLogsViewer = (props) => {
             const task = tasksData.find(({ process, sublibrary }) => (
               process === taskName && sublibrary === selectedSublibrary
             ));
+            const taskId = task?.taskId;
             let icon;
             switch (task?.status) {
               case 'COMPLETED':
@@ -112,8 +115,8 @@ const PipelineLogsViewer = (props) => {
                     {taskName}
                   </span>
                 )}
-                disabled={!task?.taskId}
-                key={task?.taskId ?? taskName}
+                disabled={!taskId}
+                key={taskId ?? taskName}
                 onChange={() => {
                   setSelectedTask(task);
                 }}
