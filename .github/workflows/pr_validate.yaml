@@ -169,7 +169,7 @@ jobs:
       - id: get-pr-body
         if: failure()
         name: Get the current PR body
-        uses: jwalton/gh-find-current-pr@v1
+        uses: jwalton/gh-find-current-pr@master
         with:
           state: open
 
