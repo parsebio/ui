@@ -1,7 +1,7 @@
 {
   "name": "ui",
   "version": "0.0.0",
-  "description": "Cellenics App UI",
+  "description": "Trailmaker App UI",
   "main": "server.js",
   "lint-staged": {
     "*.{js,jsx}": [

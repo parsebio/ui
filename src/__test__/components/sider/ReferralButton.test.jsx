@@ -83,7 +83,7 @@ describe('ReferralButton', () => {
             type: 'section',
             text: {
               type: 'plain_text',
-              text: 'Message:\n Hi,\n\nCheck out Cellenics. It will make your single-cell analysis easier.',
+              text: 'Message:\n Hi,\n\nCheck out Trailmaker. It will make your single-cell analysis easier.',
             },
           },
           {

@@ -133,7 +133,7 @@ const ProfileSettings = () => {
                       })}
                     />
                     <Text>
-                      I agree to receive updates about new features in Cellenics, research done with Cellenics, and Cellenics community events. (No external marketing.)
+                      I agree to receive updates about new features in Trailmaker, research done with Trailmaker, and Trailmaker community events. (No external marketing.)
                     </Text>
                   </Space>
                 </Form.Item>

@@ -33,8 +33,8 @@ describe('HelpButton', () => {
     expect(screen.getByRole('img', { name: 'down' })).toBeDefined();
 
     expect(screen.getByText(/user guide/i)).toBeDefined();
-    expect(screen.getByText(/Ask questions about how to use Cellenics and make feature requests/i)).toBeDefined();
-    expect(screen.getByText(/Cellenics community forum/i)).toBeDefined();
+    expect(screen.getByText(/Ask questions about how to use Trailmaker and make feature requests/i)).toBeDefined();
+    expect(screen.getByText(/Trailmaker community forum/i)).toBeDefined();
 
     // Links contain the desired targets
     const guideLink = screen.getByText(/user guide/i).closest('a');
@@ -45,7 +45,7 @@ describe('HelpButton', () => {
     expect(websiteLink).toHaveAttribute('href', 'https://www.youtube.com/@biomageltd4616/featured');
     expect(websiteLink).toHaveAttribute('target', '_blank');
 
-    const forumLink = screen.getByText(/Cellenics community forum/i).closest('a');
+    const forumLink = screen.getByText(/Trailmaker community forum/i).closest('a');
     expect(forumLink).toHaveAttribute('href', 'https://community.biomage.net/');
     expect(forumLink).toHaveAttribute('target', '_blank');
   });
