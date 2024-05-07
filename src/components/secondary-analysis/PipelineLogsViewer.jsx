@@ -125,36 +125,39 @@ const PipelineLogsViewer = (props) => {
                   position: 'relative',
                 }}
                 >
-                  <Tooltip title='Click to refresh logs'>
-                    <Button
-                      icon={<SyncOutlined />}
-                      onClick={handleRefresh}
-                      style={{
-                        position: 'absolute',
-                        top: '1vh',
-                        right: '2.5vh',
-                      }}
-                    />
-                  </Tooltip>
+
                   {selectedLogs.loading && fastLoad('Loading logs...')}
                   {selectedLogs.data && (
-                    <div style={{
-                      backgroundColor: '#11001b',
-                      color: '#fff',
-                      padding: 10,
-                      textAlign: 'left',
-                      minHeight: '5vh',
-                      wordBreak: 'break-word',
-                      maxHeight: '30vh',
-                      overflow: 'auto',
-                      display: 'flex',
-                      flexDirection: 'column-reverse', // This will start the scroll from the bottom
-                    }}
-                    >
-                      {selectedLogs.data.map((entry, index) => (
-                        <div key={`${entry}-${index}`} style={{ marginBottom: '0.5vh' }}>{entry}</div>
-                      ))}
-                    </div>
+                    <>
+                      <Tooltip title='Click to refresh logs'>
+                        <Button
+                          icon={<SyncOutlined />}
+                          onClick={handleRefresh}
+                          style={{
+                            position: 'absolute',
+                            top: '1vh',
+                            right: '2.5vh',
+                          }}
+                        />
+                      </Tooltip>
+                      <div style={{
+                        backgroundColor: '#11001b',
+                        color: '#fff',
+                        padding: 10,
+                        textAlign: 'left',
+                        minHeight: '5vh',
+                        wordBreak: 'break-word',
+                        maxHeight: '30vh',
+                        overflow: 'auto',
+                        display: 'flex',
+                        flexDirection: 'column-reverse', // This will start the scroll from the bottom
+                      }}
+                      >
+                        {selectedLogs.data.map((entry, index) => (
+                          <div key={`${entry}-${index}`} style={{ marginBottom: '0.5vh' }}>{entry || 'No logs yet'}</div>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
               </TabPane>

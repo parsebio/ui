@@ -241,13 +241,13 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       not_created: (
         <Space direction='vertical'>
           <Paragraph style={{ fontSize: '20px', width: '100%' }}>{'Analysis hasn\'t been executed yet'}</Paragraph>
-          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipelines</Button>
+          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipeline</Button>
         </Space>
       ),
       cancelled: (
         <Space direction='vertical'>
-          <Paragraph style={{ fontSize: '20px', width: '100%' }}>Your pipeline run has been cancelled.</Paragraph>
-          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipelines</Button>
+          <Title level={3}>Your pipeline run has been cancelled.</Title>
+          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipeline</Button>
         </Space>
       ),
       created: (
@@ -282,20 +282,23 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         </div>
       ),
       failed: (
-        <Space direction='vertical'>
+        <Card>
+          <div style={{ display: 'block', justifyContent: 'center' }}>
 
-          <Space direction='vertical'>
-            <Paragraph style={{ fontSize: '20px', width: '100%' }}>
-              Your pipeline run failed.
-              The error logs can be accessed by downloading the pipeline output files.
-
-            </Paragraph>
-            {renderDownloadLogsButton()}
-          </Space>
-          <div>
-            <PipelineLogsViewer secondaryAnalysisId={secondaryAnalysisId} />
+            <Space direction='vertical'>
+              <Title level={3}>
+                Your pipeline run failed.
+              </Title>
+              <Text type='secondary'>
+                The error logs can be accessed by downloading the pipeline output files.
+              </Text>
+              {renderDownloadLogsButton()}
+            </Space>
+            <div>
+              <PipelineLogsViewer secondaryAnalysisId={secondaryAnalysisId} />
+            </div>
           </div>
-        </Space>
+        </Card>
       ),
       running: (
         <Card>
