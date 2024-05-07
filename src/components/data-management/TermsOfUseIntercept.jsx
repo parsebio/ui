@@ -5,6 +5,7 @@ import Auth from '@aws-amplify/auth';
 
 import {
   Modal, Space, Checkbox, Typography,
+  Button,
 } from 'antd';
 
 import styles from 'components/data-management/TermsOfUseIntercept.module.css';
@@ -12,6 +13,8 @@ import styles from 'components/data-management/TermsOfUseIntercept.module.css';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
 import { termsOfUseKeys } from 'utils/constants';
+import fetchAPI from 'utils/http/fetchAPI';
+import downloadFromUrl from 'utils/downloadFromUrl';
 
 const { Text } = Typography;
 
@@ -40,6 +43,11 @@ const TermsOfUseIntercept = (props) => {
     [agreedPrivacyPolicy, agreedCookies, agreedDataUse]);
 
   const privacyPolicyUrl = 'https://static1.squarespace.com/static/5f355513fc75aa471d47455c/t/64e74c9b4fc1e66b2434b9fb/1692880027872/Biomage_PrivacyPolicy_Aug2023.pdf';
+
+  const getDownloadTermsOfUseFunc = (file) => async () => {
+    const signedUrl = await fetchAPI(`/v2/termsOfUse/${file}/download`);
+    downloadFromUrl(signedUrl);
+  };
 
   return (
     <Modal
@@ -79,8 +87,9 @@ const TermsOfUseIntercept = (props) => {
             <span style={{ color: '#ff0000' }}>* </span>
             I accept the terms of the
             {' '}
-            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Privacy policy</a>
-            .
+            <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('privacyPolicy')}>
+              Privacy policy.
+            </Button>
           </Text>
         </Space>
         <Space align='start'>
@@ -92,8 +101,9 @@ const TermsOfUseIntercept = (props) => {
             <span style={{ color: '#ff0000' }}>* </span>
             I agree to the
             {' '}
-            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Parse Biosciences Cookie Policy</a>
-            .
+            <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('cookies')}>
+              Parse Biosciences Cookie Policy.
+            </Button>
           </Text>
         </Space>
         <Space align='start'>
@@ -105,8 +115,9 @@ const TermsOfUseIntercept = (props) => {
             <span style={{ color: '#ff0000' }}>* </span>
             I agree to the
             {' '}
-            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Trailmaker Data Use Agreement</a>
-            .
+            <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('dataUse')}>
+              Trailmaker Data Use Agreement.
+            </Button>
           </Text>
         </Space>
       </Space>
