@@ -64,6 +64,7 @@ import QCRerunDisabledModal from 'components/modals/QCRerunDisabledModal';
 import isUserAuthorized from 'utils/isUserAuthorized';
 import { getURL } from 'redux/actions/pipeline/runQC';
 import { ClipLoader } from 'react-spinners';
+import { sampleTech } from 'utils/constants';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -105,6 +106,8 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
   const [stepIdx, setStepIdx] = useState(0);
   const [runQCModalVisible, setRunQCModalVisible] = useState(false);
   const [inputsList, setInputsList] = useState([]);
+
+  const sampleTechnology = samples[sampleKeys[0]]?.type;
 
   useEffect(() => {
     // If processingConfig is not loaded then reload
@@ -497,16 +500,16 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
                               ) : pipelineNotFinished
                                 && !pipelineRunning
                                 && !isStepComplete(key) ? (
-                                  <>
-                                    <Text
-                                      type='danger'
-                                      strong
-                                    >
-                                      <WarningOutlined />
-                                    </Text>
-                                    <span style={{ marginLeft: '0.25rem' }}>{text}</span>
-                                  </>
-                                )
+                                <>
+                                  <Text
+                                    type='danger'
+                                    strong
+                                  >
+                                    <WarningOutlined />
+                                  </Text>
+                                  <span style={{ marginLeft: '0.25rem' }}>{text}</span>
+                                </>
+                              )
                                 : <></>}
                             </Option>
                           );
@@ -649,8 +652,11 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
           !checkIfSampleIsEnabled(key) ? (
             <Alert
               message={checkIfSampleIsPrefiltered(key)
-                ? 'This filter is disabled because the one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.'
-                : 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.'}
+                ? 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.'
+                : sampleTechnology === sampleTech.PARSE
+                  ? 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.'
+                  : 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.'
+              }
               type='info'
               showIcon
             />
@@ -697,12 +703,12 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
                 </p>
                 {
                   !(changedQCFilters.size === 1 && changedQCFilters.has('embeddingSettings'))
-                && (
-                  <Alert
-                    message='Note that you will lose your previous Louvain or Leiden clusters.'
-                    type='warning'
-                  />
-                )
+                  && (
+                    <Alert
+                      message='Note that you will lose your previous Louvain or Leiden clusters.'
+                      type='warning'
+                    />
+                  )
                 }
               </Modal>
             )
