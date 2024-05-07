@@ -2,7 +2,7 @@
 ui
 ==
 
-The user interface of Cellenics - cloud based Single Cell RNA seq Analysis web platform.
+The user interface of Trailmaker - cloud based Single Cell RNA seq Analysis web platform.
 
 ## Development
 
@@ -110,7 +110,7 @@ The script will produce HTML artifacts that will open in your default browser as
 
 ### Browser cache
 
-Browser cache enabled by default in production environment. This can be disabled by adding the entry 
+Browser cache enabled by default in production environment. This can be disabled by adding the entry
 "disableCache" to "true" via the console using the command:
 
     localStorage.setItem("disableCache", "true")

@@ -43,7 +43,7 @@ const TermsOfUseIntercept = (props) => {
 
   return (
     <Modal
-      title='Agree to the Biomage privacy policy to continue using Cellenics'
+      title='Agree to the privacy policy to continue using Trailmaker'
       open
       centered
       className={styles['ok-to-the-right-modal']}
@@ -79,7 +79,7 @@ const TermsOfUseIntercept = (props) => {
             <span style={{ color: '#ff0000' }}>* </span>
             I accept the terms of the
             {' '}
-            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Parse Biosciences Privacy Policy</a>
+            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Privacy policy</a>
             .
           </Text>
         </Space>

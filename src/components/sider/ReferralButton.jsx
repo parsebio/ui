@@ -17,7 +17,7 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import fetchAPI from 'utils/http/fetchAPI';
 import PropTypes from 'prop-types';
 
-const initialMessage = 'Hi,\n\nCheck out Cellenics. It will make your single-cell analysis easier.';
+const initialMessage = 'Hi,\n\nCheck out Trailmaker. It will make your single-cell analysis easier.';
 
 const ReferralButton = (props) => {
   const { collapsed } = props;
@@ -123,7 +123,7 @@ const ReferralButton = (props) => {
       label: (
         <Card size='small' style={{ padding: '1em', width: '300px' }}>
           <Space direction='vertical' style={{ width: '100%' }}>
-            Provide your colleague&apos;s email address to recommend Cellenics.
+            Provide your colleague&apos;s email address to recommend Trailmaker.
             <Input
               label='Email'
               onChange={(e) => {

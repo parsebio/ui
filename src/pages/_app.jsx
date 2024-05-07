@@ -136,7 +136,7 @@ const WrappedApp = ({ Component, pageProps }) => {
         return (
           <NotFoundPage
             title='Terms agreement required'
-            subTitle='You cannot access your analysis in Cellenics until you have agreed to our updated privacy policy.'
+            subTitle='You cannot access your analysis in Trailmaker until you have agreed to our updated privacy policy.'
             hint='Go to Data Management to accept the terms.'
             primaryActionText='Go to Data Management'
           />
@@ -178,13 +178,13 @@ const WrappedApp = ({ Component, pageProps }) => {
   return (
     <>
       <DefaultSeo
-        titleTemplate='%s &middot; Cellenics'
-        defaultTitle='Cellenics'
-        description='Cellenics turns your single cell datasets into meaningful biology. It’s free for academic researchers, and you get world-class quality analytical insight: simple data upload, data integration for batch effect correction, beautiful publication-quality figures, and much more.'
+        titleTemplate='%s &middot; Trailmaker'
+        defaultTitle='Trailmaker'
+        description='Trailmaker turns your single cell datasets into meaningful biology. It’s free for academic researchers, and you get world-class quality analytical insight: simple data upload, data integration for batch effect correction, beautiful publication-quality figures, and much more.'
         openGraph={{
           type: 'website',
           locale: 'en_US',
-          site_name: 'Cellenics',
+          site_name: 'Trailmaker',
         }}
       />
       <TagManager
