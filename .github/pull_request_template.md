@@ -14,7 +14,7 @@
 <!---
   Delete this comment and include the URL of the staging environment for this pull request.
   Refer to https://github.com/parsebio/biomage-utils#stage on how to stage a staging environment.
-  If a staging environment for testing is not necessary for this PR, replace this comment with N/A 
+  If a staging environment for testing is not necessary for this PR, replace this comment with N/A
   and explain why a staging environment is not required for this PR.
 
   Your pull request will not pass the required checks if this is not followed.
@@ -54,9 +54,9 @@ Have best practices and ongoing refactors being observed in this PR
 - [ ] Unit tests written **or** no unit tests required for change, e.g. documentation update.
 
 <!---
-  Download the latest production data using `cellenics experiment pull`.
+  Download the latest production data using `biomage experiment pull`.
   To set up easy local testing with inframock, follow the instructions here: https://github.com/parsebio/inframock
-  To deploy to the staging environment, follow the instructions here: https://github.com/parsebio/cellenics-utils
+  To deploy to the staging environment, follow the instructions here: https://github.com/parsebio/biomage-utils
 -->
 
 ### Integration testing

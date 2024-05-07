@@ -141,7 +141,7 @@ const FeedbackButton = (props) => {
                 setFeedbackText(e.target.value);
               }}
               rows={4}
-              placeholder='Please write your message here to provide feedback or report issues on Cellenics. A member of our team will get back to you as soon as possible.'
+              placeholder='Please write your message here to provide feedback or report issues on Trailmaker. A member of our team will get back to you as soon as possible.'
               bordered
               ref={(ref) => { if (ref) { ref.focus(); } }}
               style={{
