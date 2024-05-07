@@ -7,12 +7,14 @@ const secondaryAnalysisLogsLoading = produce((draft, action) => {
   if (!draft[secondaryAnalysisId].status.logs) {
     draft[secondaryAnalysisId].status.logs = {};
   }
-  if (!draft[secondaryAnalysisId].status.logs[sublibrary]) {
-    draft[secondaryAnalysisId].status.logs[sublibrary] = {};
+
+  const logsDraft = draft[secondaryAnalysisId].status.logs;
+
+  if (!logsDraft[sublibrary]) {
+    logsDraft[sublibrary] = {};
   }
-  draft[secondaryAnalysisId].status.logs[sublibrary][process] = {};
-  draft[secondaryAnalysisId].status.logs[sublibrary][process] = {};
-  draft[secondaryAnalysisId].status.logs[sublibrary][process].loading = true;
+  logsDraft[sublibrary][process] = {};
+  logsDraft[sublibrary][process].loading = true;
 });
 
 export default secondaryAnalysisLogsLoading;

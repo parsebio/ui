@@ -6,11 +6,12 @@ import {
 } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import {
-  Select, Tabs, Typography, Space, Button, Divider, Row, Col,
+  Select, Tabs, Typography, Space, Button, Divider, Row, Col, Tooltip,
 } from 'antd';
 import { loadSecondaryAnalysisLogs } from 'redux/actions/secondaryAnalyses';
 import { useSelector, useDispatch } from 'react-redux';
 import { fastLoad } from 'components/Loader';
+import _ from 'lodash';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -19,11 +20,14 @@ const { TabPane } = Tabs;
 const PipelineLogsViewer = (props) => {
   const { secondaryAnalysisId } = props;
   const dispatch = useDispatch();
+
   const [selectedSublibrary, setSelectedSublibrary] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
-  const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
-  const { tasksData, pipelineTasks, sublibraries } = secondaryAnalysis.status;
-  const logs = secondaryAnalysis.status?.logs?.[selectedSublibrary]?.[selectedTask?.process] || {};
+
+  const {
+    tasksData, pipelineTasks, sublibraries, logs,
+  } = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId].status, _.isEqual);
+  const selectedLogs = logs?.[selectedSublibrary]?.[selectedTask?.process] || {};
 
   useEffect(() => {
     if (selectedSublibrary && selectedTask) {
@@ -56,9 +60,8 @@ const PipelineLogsViewer = (props) => {
               onChange={(value) => {
                 setSelectedSublibrary(value);
                 const task = tasksData.find(
-                  (t) => t.process.toString() === pipelineTasks[0] && t.sublibrary === value,
+                  ({ process, sublibrary }) => process === pipelineTasks[0] && sublibrary === value,
                 );
-                console.log('SETTING TO TASK', task);
                 setSelectedTask(task);
               }}
               style={{ width: 200 }}
@@ -71,7 +74,6 @@ const PipelineLogsViewer = (props) => {
           {selectedSublibrary && (
             <Col>
               <Button icon={<CloseCircleOutlined />} onClick={handleClose} style={{ fontSize: '2vh', marginRight: 8 }} />
-              <Button icon={<SyncOutlined />} onClick={handleRefresh} style={{ fontSize: '2vh' }} />
             </Col>
           )}
         </Row>
@@ -79,14 +81,14 @@ const PipelineLogsViewer = (props) => {
       {selectedSublibrary && (
         <Tabs
           onChange={(key) => {
-            const task = tasksData.find((t) => t.taskId.toString() === key);
+            const task = tasksData.find(({ taskId }) => taskId.toString() === key);
             setSelectedTask(task);
           }}
           style={{ width: '70vh', margin: '0 auto', maxHeight: '30%' }}
         >
           {pipelineTasks.map((taskName) => {
-            const task = tasksData.find((t) => (
-              t.process === taskName && t.sublibrary === selectedSublibrary
+            const task = tasksData.find(({ process, sublibrary }) => (
+              process === taskName && sublibrary === selectedSublibrary
             ));
             let icon;
             switch (task?.status) {
@@ -111,31 +113,47 @@ const PipelineLogsViewer = (props) => {
                   </span>
                 )}
                 disabled={!task?.taskId}
-                key={task?.taskId || taskName}
+                key={task?.taskId ?? taskName}
                 onChange={() => {
                   setSelectedTask(task);
                 }}
               >
-                {logs.loading && fastLoad('Loading logs...')}
-                {logs.data && (
-
-                  <div style={{
-                    backgroundColor: '#11001b',
-                    color: '#fff',
-                    padding: 10,
-                    textAlign: 'left',
-                    wordBreak: 'break-word',
-                    maxHeight: '30vh',
-                    overflow: 'auto',
-                    display: 'flex',
-                    flexDirection: 'column-reverse', // This will start the scroll from the bottom
-                  }}
-                  >
-                    {logs.data.map((entry, index) => (
-                      <div key={`${entry}-${index}`} style={{ marginBottom: '0.5vh' }}>{entry}</div>
-                    ))}
-                  </div>
-                )}
+                <div style={{
+                  position: 'relative',
+                }}
+                >
+                  <Tooltip title='Click to refresh logs'>
+                    <Button
+                      icon={<SyncOutlined />}
+                      onClick={handleRefresh}
+                      style={{
+                        position: 'absolute',
+                        top: '1vh',
+                        right: '2.5vh',
+                      }}
+                    />
+                  </Tooltip>
+                  {selectedLogs.loading && fastLoad('Loading logs...')}
+                  {selectedLogs.data && (
+                    <div style={{
+                      backgroundColor: '#11001b',
+                      color: '#fff',
+                      padding: 10,
+                      textAlign: 'left',
+                      minHeight: '5vh',
+                      wordBreak: 'break-word',
+                      maxHeight: '30vh',
+                      overflow: 'auto',
+                      display: 'flex',
+                      flexDirection: 'column-reverse', // This will start the scroll from the bottom
+                    }}
+                    >
+                      {selectedLogs.data.map((entry, index) => (
+                        <div key={`${entry}-${index}`} style={{ marginBottom: '0.5vh' }}>{entry}</div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </TabPane>
             );
           })}

@@ -274,8 +274,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
             <Text>Get notified about your pipeline status via email  </Text>
             <Switch
               checked={secondaryAnalysis.notifyByEmail}
-              onChange={(value) => dispatch(
-                updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail: value }),
+              onChange={(notifyByEmail) => dispatch(
+                updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail }),
               )}
             />
           </Space>
