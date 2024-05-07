@@ -42,8 +42,6 @@ const TermsOfUseIntercept = (props) => {
   const agreedToAllTerms = useMemo(() => [agreedPrivacyPolicy, agreedCookies, agreedDataUse].every((value) => value === 'true'),
     [agreedPrivacyPolicy, agreedCookies, agreedDataUse]);
 
-  const privacyPolicyUrl = 'https://static1.squarespace.com/static/5f355513fc75aa471d47455c/t/64e74c9b4fc1e66b2434b9fb/1692880027872/Biomage_PrivacyPolicy_Aug2023.pdf';
-
   const getDownloadTermsOfUseFunc = (file) => async () => {
     const signedUrl = await fetchAPI(`/v2/termsOfUse/${file}/download`);
     downloadFromUrl(signedUrl);
