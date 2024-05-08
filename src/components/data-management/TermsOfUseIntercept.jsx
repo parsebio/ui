@@ -12,7 +12,7 @@ import styles from 'components/data-management/TermsOfUseIntercept.module.css';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
-import termsOfUseCognitoKey from 'utils/constants';
+import { termsOfUseCognitoKey } from 'utils/constants';
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 
