@@ -31,7 +31,7 @@ const TermsOfUseIntercept = (props) => {
 
   const getDownloadTermsOfUseFunc = (file) => async () => {
     const signedUrl = await fetchAPI(`/v2/termsOfUse/${file}/download`);
-    downloadFromUrl(signedUrl);
+    downloadFromUrl(signedUrl, { newTab: true });
   };
 
   return (
