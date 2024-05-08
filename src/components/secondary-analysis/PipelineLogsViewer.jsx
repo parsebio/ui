@@ -92,6 +92,8 @@ const PipelineLogsViewer = (props) => {
             const tasks = tasksData.filter(({ process, sublibrary }) => (
               process === taskName && sublibrary === selectedSublibrary
             ));
+            // if the task failed, there might be multiple past attempts of it
+            // so we are getting the latest one
             const task = tasks[tasks.length - 1];
 
             const taskId = task?.taskId;
@@ -104,6 +106,7 @@ const PipelineLogsViewer = (props) => {
               case 'RUNNING':
                 icon = <LoadingOutlined spin style={{ color: 'blue' }} />;
                 break;
+              case 'ABORTED':
               case 'FAILED':
                 icon = <CloseCircleOutlined style={{ color: 'red' }} />;
                 break;
