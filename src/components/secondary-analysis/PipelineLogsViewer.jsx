@@ -89,9 +89,11 @@ const PipelineLogsViewer = (props) => {
           style={{ width: '70vh', margin: '0 auto', maxHeight: '30%' }}
         >
           {pipelineTasks.map((taskName) => {
-            const task = tasksData.find(({ process, sublibrary }) => (
+            const tasks = tasksData.filter(({ process, sublibrary }) => (
               process === taskName && sublibrary === selectedSublibrary
             ));
+            const task = tasks[tasks.length - 1];
+
             const taskId = task?.taskId;
             let icon;
             switch (task?.status) {
@@ -102,7 +104,9 @@ const PipelineLogsViewer = (props) => {
               case 'RUNNING':
                 icon = <LoadingOutlined spin style={{ color: 'blue' }} />;
                 break;
-
+              case 'FAILED':
+                icon = <CloseCircleOutlined style={{ color: 'red' }} />;
+                break;
               default:
                 icon = <PauseCircleOutlined style={{ color: 'grey' }} />;
             }
