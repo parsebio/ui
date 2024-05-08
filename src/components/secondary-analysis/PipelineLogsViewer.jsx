@@ -37,11 +37,6 @@ const PipelineLogsViewer = (props) => {
     }
   }, [selectedSublibrary, selectedTask]);
 
-  const handleClose = () => {
-    setSelectedSublibrary(null);
-    setSelectedTask(null);
-  };
-
   const handleRefresh = () => {
     if (selectedSublibrary && selectedTask) {
       dispatch(loadSecondaryAnalysisLogs(secondaryAnalysisId, selectedTask));
@@ -60,11 +55,12 @@ const PipelineLogsViewer = (props) => {
               placeholder='Select a sublibrary'
               value={selectedSublibrary}
               onChange={(value) => {
-                setSelectedSublibrary(value);
-                const task = tasksData.find(
-                  ({ process, sublibrary }) => process === pipelineTasks[0] && sublibrary === value,
-                );
+                const sublibraryTasks = tasksData.filter(({ sublibrary }) => (
+                  sublibrary === value
+                ));
+                const task = sublibraryTasks[sublibraryTasks.length - 1];
                 setSelectedTask(task);
+                setSelectedSublibrary(value);
               }}
               style={{ width: 200 }}
             >
@@ -81,6 +77,7 @@ const PipelineLogsViewer = (props) => {
             const task = tasksData.find(({ taskId }) => taskId.toString() === key);
             setSelectedTask(task);
           }}
+          activeKey={`${selectedTask?.taskId}`}
           style={{ width: '70vh', margin: '0 auto', maxHeight: '30%' }}
         >
           {pipelineTasks.map((taskName) => {
