@@ -100,7 +100,7 @@ const Pipeline = () => {
 
   const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
 
-  const { loading: statusLoading, current: currentStatus } = useSelector(
+  const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
   );
 
@@ -327,7 +327,7 @@ const Pipeline = () => {
   const LaunchAnalysisButton = () => {
     const firstTimeLaunch = currentStatus === 'not_created';
     const disableFinishedIfProduction = currentStatus === 'finished' && environment === Environment.PRODUCTION;
-    const disableLaunchButton = !isAllValid || disableFinishedIfProduction;
+    const cantRunAnalysis = !isAllValid || disableFinishedIfProduction;
 
     const launchAnalysis = () => {
       setButtonClicked(true);
@@ -343,11 +343,14 @@ const Pipeline = () => {
         });
     };
 
+    console.log('shouldRerunDebug');
+    console.log(shouldRerun);
+
     if (firstTimeLaunch) {
       return (
         <Button
           type='primary'
-          disabled={disableLaunchButton}
+          disabled={cantRunAnalysis}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
           onClick={() => launchAnalysis()}
@@ -364,7 +367,7 @@ const Pipeline = () => {
       >
         <Popconfirm
           title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
-          disabled={disableLaunchButton}
+          disabled={cantRunAnalysis || !shouldRerun}
           onConfirm={() => launchAnalysis()}
           okText='Yes'
           cancelText='No'
@@ -372,7 +375,7 @@ const Pipeline = () => {
           overlayStyle={{ maxWidth: '250px' }}
         >
           <Button
-            disabled={disableLaunchButton}
+            disabled={cantRunAnalysis || !shouldRerun}
             style={{ marginBottom: '10px' }}
             loading={statusLoading || buttonClicked}
           >
