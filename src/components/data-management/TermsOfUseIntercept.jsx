@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Auth from '@aws-amplify/auth';
@@ -12,35 +12,22 @@ import styles from 'components/data-management/TermsOfUseIntercept.module.css';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
-import { termsOfUseKeys } from 'utils/constants';
+import termsOfUseCognitoKey from 'utils/constants';
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 
 const { Text } = Typography;
-
-const {
-  privacyPolicy,
-  cookies,
-  dataUse,
-} = termsOfUseKeys;
 
 const TermsOfUseIntercept = (props) => {
   const { user, onOk } = props;
 
   const {
     attributes: {
-      [privacyPolicy]: originalAgreedPrivacyPolicy,
-      [cookies]: originalAgreedCookies,
-      [dataUse]: originalAgreedDataUse,
+      [termsOfUseCognitoKey]: originalAgreedPrivacyPolicy,
     },
   } = user;
 
-  const [agreedPrivacyPolicy, setAgreedPrivacyPolicy] = useState(originalAgreedPrivacyPolicy);
-  const [agreedCookies, setAgreedCookies] = useState(originalAgreedCookies);
-  const [agreedDataUse, setAgreedDataUse] = useState(originalAgreedDataUse);
-
-  const agreedToAllTerms = useMemo(() => [agreedPrivacyPolicy, agreedCookies, agreedDataUse].every((value) => value === 'true'),
-    [agreedPrivacyPolicy, agreedCookies, agreedDataUse]);
+  const [agreedTerms, setAgreedTerms] = useState(originalAgreedPrivacyPolicy);
 
   const getDownloadTermsOfUseFunc = (file) => async () => {
     const signedUrl = await fetchAPI(`/v2/termsOfUse/${file}/download`);
@@ -55,16 +42,15 @@ const TermsOfUseIntercept = (props) => {
       className={styles['ok-to-the-right-modal']}
       cancelText='Sign out'
       cancelButtonProps={{ danger: true }}
-      okButtonProps={{ disabled: !agreedToAllTerms }}
+      okButtonProps={{ disabled: agreedTerms !== 'true' }}
       closable={false}
       maskClosable={false}
+      width={600}
       onOk={async () => {
         await Auth.updateUserAttributes(
           user,
           {
-            [privacyPolicy]: agreedPrivacyPolicy,
-            [cookies]: agreedCookies,
-            [dataUse]: agreedDataUse,
+            [termsOfUseCognitoKey]: agreedTerms,
           },
         )
           .then(() => {
@@ -76,46 +62,27 @@ const TermsOfUseIntercept = (props) => {
       onCancel={async () => Auth.signOut()}
     >
       <Space direction='vertical'>
-        <Space align='start'>
+        <Space align='baseline'>
           <Checkbox
-            defaultChecked={agreedPrivacyPolicy === 'true'}
-            onChange={(e) => setAgreedPrivacyPolicy(e.target.checked.toString())}
+            defaultChecked={agreedTerms === 'true'}
+            onChange={(e) => setAgreedTerms(e.target.checked.toString())}
           />
           <Text>
             <span style={{ color: '#ff0000' }}>* </span>
             I accept the terms of the
             {' '}
             <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('privacyPolicy')}>
-              Privacy policy.
+              Privacy policy
             </Button>
-          </Text>
-        </Space>
-        <Space align='start'>
-          <Checkbox
-            defaultChecked={agreedCookies === 'true'}
-            onChange={(e) => setAgreedCookies(e.target.checked.toString())}
-          />
-          <Text>
-            <span style={{ color: '#ff0000' }}>* </span>
-            I agree to the
-            {' '}
+            ,
             <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('cookies')}>
-              Parse Biosciences Cookie Policy.
+              Parse Biosciences Cookie Policy
             </Button>
-          </Text>
-        </Space>
-        <Space align='start'>
-          <Checkbox
-            defaultChecked={agreedDataUse === 'true'}
-            onChange={(e) => setAgreedDataUse(e.target.checked.toString())}
-          />
-          <Text>
-            <span style={{ color: '#ff0000' }}>* </span>
-            I agree to the
-            {' '}
+            {' and '}
             <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('dataUse')}>
-              Trailmaker Data Use Agreement.
+              Trailmaker Data Use Agreement
             </Button>
+            .
           </Text>
         </Space>
       </Space>
