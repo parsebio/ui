@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Environment,
 } from 'utils/deploymentInfo';
@@ -29,6 +29,7 @@ import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
+import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -113,10 +114,29 @@ const Pipeline = () => {
 
   useEffect(() => {
     if (activeSecondaryAnalysisId) {
-      dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
+      dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
     }
   }, [activeSecondaryAnalysisId]);
+
+  useConditionalEffect(() => {
+    if (
+      activeSecondaryAnalysisId
+      && sampleLTFile
+      && _.size(fastqFiles) > 0
+      && allFilesUploaded({ ...fastqFiles, [sampleLTFile.id]: sampleLTFile })
+    ) {
+      dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
+    }
+  }, [
+    activeSecondaryAnalysisId,
+    fastqFiles,
+    sampleLTFile,
+    kit,
+    chemistryVersion,
+    numOfSublibraries,
+    refGenome,
+  ]);
 
   // Poll for status
   usePolling(async () => {
@@ -252,7 +272,7 @@ const Pipeline = () => {
   );
 
   const allFilesUploaded = (files) => {
-    if (!files || Object.keys(files).length === 0) return false;
+    if (!files || _.size(files) === 0) return false;
     return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
   };
 
@@ -342,9 +362,6 @@ const Pipeline = () => {
           setButtonClicked(false);
         });
     };
-
-    console.log('shouldRerunDebug');
-    console.log(shouldRerun);
 
     if (firstTimeLaunch) {
       return (
