@@ -73,11 +73,6 @@ const PipelineLogsViewer = (props) => {
               ))}
             </Select>
           </Col>
-          {selectedSublibrary && (
-            <Col>
-              <Button icon={<CloseCircleOutlined />} onClick={handleClose} style={{ fontSize: '2vh', marginRight: 8 }} />
-            </Col>
-          )}
         </Row>
       </Space>
       {selectedSublibrary && (
