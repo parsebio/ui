@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip,
+  Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip, Typography, Card, Progress, Spin,
 } from 'antd';
 import _ from 'lodash';
 import fetchAPI from 'utils/http/fetchAPI';
@@ -19,7 +19,6 @@ import {
 import getReports from 'pages/pipeline/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import writeToFileURL from 'utils/upload/writeToFileURL';
@@ -27,6 +26,9 @@ import {
   SECONDARY_ANALYSES_UPDATED,
 } from 'redux/actionTypes/secondaryAnalyses';
 import { DownOutlined, WarningOutlined } from '@ant-design/icons';
+import PipelineLogsViewer from 'components/secondary-analysis/PipelineLogsViewer';
+
+const { Text, Paragraph, Title } = Typography;
 
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
@@ -38,6 +40,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
   const associatedExperimentId = secondaryAnalysis?.experimentId;
+  const progress = secondaryAnalysis?.status?.progress;
 
   const loadAssociatedExperiment = async () => {
     const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`);
@@ -211,77 +214,134 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     </Button>
   );
 
-  if (!secondaryAnalysis || secondaryAnalysis?.status.loading) {
+  if (!secondaryAnalysis?.status.current && secondaryAnalysis?.status.loading) {
     return <PreloadContent />;
   }
+  const ProgressBar = () => {
+    const { totalTasks } = secondaryAnalysis.status;
+    const { running, succeeded } = progress;
+    const succeededPercentage = _.round((succeeded / totalTasks) * 100);
+    const runningPercentage = _.round((running / totalTasks) * 100);
+    return (
+      <div>
+        <Tooltip title={`Tasks : ${succeeded} done / ${running} in progress / ${totalTasks - succeeded - running} not started`}>
+          <Progress
+            percent={succeededPercentage + runningPercentage}
+            success={{ percent: succeededPercentage }}
+            type='dashboard'
+            showInfo={false}
+          />
+        </Tooltip>
+      </div>
+    );
+  };
 
   if (secondaryAnalysis?.status.current !== 'finished') {
     const messages = {
       not_created: (
         <Space direction='vertical'>
           <Paragraph style={{ fontSize: '20px', width: '100%' }}>{'Analysis hasn\'t been executed yet'}</Paragraph>
-          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipelines</Button>
+          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipeline</Button>
         </Space>
       ),
       cancelled: (
         <Space direction='vertical'>
-          <Paragraph style={{ fontSize: '20px', width: '100%' }}>Your pipeline run has been cancelled.</Paragraph>
-          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipelines</Button>
+          <Title level={3}>Your pipeline run has been cancelled.</Title>
+          <Button size='large' type='primary' onClick={() => navigateTo(modules.SECONDARY_ANALYSIS)}>Take me to Pipeline</Button>
         </Space>
       ),
       created: (
-        <Space direction='vertical'>
+        <div>
           {fastLoad('')}
-          <Paragraph style={{ fontSize: '20px', width: '100%' }}>
-            The pipeline is launching
-            .
-            <br />
-            You cannot change any settings until the run completes
-          </Paragraph>
-        </Space>
-      ),
-      failed: (
-        <Space direction='vertical'>
-          <Paragraph style={{ fontSize: '20px', width: '100%' }}>
-            Your pipeline run failed.
-            The error logs can be accessed by downloading the pipeline output files.
-
-          </Paragraph>
-          {renderDownloadLogsButton()}
-        </Space>
-      ),
-      running: (
-        <>
-          <div>
-            {fastLoad('')}
-            <Paragraph style={{ fontSize: '20px', width: '50%' }}>
-              The pipeline is running. You cannot change any settings until the run completes
-              <br />
-              <br />
-              <br />
-              To elect to receive an email notification when your
-              pipeline run is complete, ensure the toggle below is enabled.
-              <br />
-            </Paragraph>
+          <Title level={3}>The pipeline is launching... </Title>
+          <Text type='secondary'>You can wait or leave this screen and check again later.</Text>
+          <br />
+          <Text type='secondary'>You cannot change any settings until the run completes.</Text>
+          <br />
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <Popconfirm
+              title='Are you sure you want to cancel this pipeline run?'
+              onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
+              okText='Yes'
+              cancelText='No'
+            >
+              <Button type='danger'>Cancel Run</Button>
+            </Popconfirm>
+          </div>
+          <br />
+          <br />
+          <Space direction='horizontal'>
+            <Text>Get notified about your pipeline status via email  </Text>
             <Switch
               checked={secondaryAnalysis.notifyByEmail}
-              onChange={(value) => dispatch(
-                updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail: value }),
+              onChange={(notifyByEmail) => dispatch(
+                updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail }),
               )}
             />
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <Popconfirm
-                title='Are you sure you want to cancel this pipeline run?'
-                onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
-                okText='Yes'
-                cancelText='No'
-              >
-                <Button type='danger'>Cancel Run</Button>
-              </Popconfirm>
+          </Space>
+        </div>
+      ),
+      failed: (
+        <Card>
+          <div style={{ display: 'block', justifyContent: 'center' }}>
+
+            <Space direction='vertical'>
+              <Title level={3}>
+                Your pipeline run failed.
+              </Title>
+              <Text type='secondary'>
+                The error logs can be accessed by downloading the pipeline output files.
+              </Text>
+              {renderDownloadLogsButton()}
+            </Space>
+            <div>
+              <PipelineLogsViewer secondaryAnalysisId={secondaryAnalysisId} />
             </div>
           </div>
-          <></>
-        </>),
+        </Card>
+      ),
+      running: (
+        <Card>
+          <div style={{ display: 'block', justifyContent: 'center' }}>
+            <div>
+              <ProgressBar />
+              <Title level={3}>
+                The pipeline is running
+                {' '}
+                <Spin />
+              </Title>
+              <Text type='secondary'>You can wait or leave this screen and check again later.</Text>
+              <br />
+              <Text type='secondary'>You cannot change any settings until the run completes.</Text>
+              <br />
+              <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                <Popconfirm
+                  title='Are you sure you want to cancel this pipeline run?'
+                  onConfirm={() => dispatch(cancelSecondaryAnalysis(secondaryAnalysisId))}
+                  okText='Yes'
+                  cancelText='No'
+                >
+                  <Button type='danger'>Cancel Run</Button>
+                </Popconfirm>
+              </div>
+              <br />
+              <br />
+              <Space direction='horizontal'>
+                <Text>Get notified about your pipeline status via email  </Text>
+                <Switch
+                  checked={secondaryAnalysis.notifyByEmail}
+                  onChange={(value) => dispatch(
+                    updateSecondaryAnalysis(secondaryAnalysisId, { notifyByEmail: value }),
+                  )}
+                />
+              </Space>
+            </div>
+            <div>
+              <PipelineLogsViewer secondaryAnalysisId={secondaryAnalysisId} />
+            </div>
+          </div>
+        </Card>
+      ),
     };
 
     return (
