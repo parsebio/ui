@@ -33,9 +33,10 @@ const getAnalysisInfo = async (context, store, Auth) => {
   const secondaryAnalysisForRedux = _.cloneDeep(secondaryAnalysis);
 
   secondaryAnalysisForRedux.status = {
-    current: secondaryAnalysis.status,
+    logs: {},
     loading: false,
     error: false,
+    ...secondaryAnalysis.status,
   };
 
   store.dispatch(storeLoadedAnalysis(secondaryAnalysisForRedux));

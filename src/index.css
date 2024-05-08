@@ -3,7 +3,7 @@
 
 /* COLOR GUIDE
 USE THIS TO CHOOSE COLORS FOR NEW COMPONENTS.
-In order to migrate from this document to pure react we need to update the antd version and use the configProvider. 
+In order to migrate from this document to pure react we need to update the antd version and use the configProvider.
 
 --ant-primary-color: rgb(153, 102, 184);
     --ant-primary-color-disabled: #e7ddeb;
@@ -160,7 +160,9 @@ a.ant-btn{
   color: #fff !important;
 }
 
-
+.ant-spin-dot-item {
+  background-color: #4c067e !important;
+}
 /* Gene table  */
 
 .even-row .ant-table-cell {

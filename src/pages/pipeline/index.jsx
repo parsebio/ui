@@ -421,7 +421,7 @@ const Pipeline = () => {
                   >
                     <Space align='baseline'>
                       <Text strong style={{ marginRight: '10px' }}>
-                        {`Current status: ${pipelineStatusToDisplay[currentStatus]}`}
+                        {`Current status: ${pipelineStatusToDisplay[currentStatus] || ''}`}
                       </Text>
                       {pipelineCanBeRun && (
                         <LaunchAnalysisButton />
