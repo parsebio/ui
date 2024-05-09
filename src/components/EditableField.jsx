@@ -28,7 +28,6 @@ const EditableField = (props) => {
     disabled,
     message,
     onDelete,
-
   } = props;
 
   const [editing, setEditing] = useState(defaultEditing);
@@ -174,6 +173,8 @@ const EditableField = (props) => {
                       title={confirmDelete}
                       onConfirm={deleteEditableField}
                       okText='Yes'
+                      disabled={disabled}
+
                       cancelText='No'
                     >
                       <Button
