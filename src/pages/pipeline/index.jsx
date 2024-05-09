@@ -272,7 +272,7 @@ const Pipeline = () => {
   );
 
   const allFilesUploaded = (files) => {
-    if (!files || _.size(files) === 0) return false;
+    if (_.size(files) === 0) return false;
     return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
   };
 
