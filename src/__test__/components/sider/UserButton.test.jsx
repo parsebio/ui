@@ -46,8 +46,6 @@ describe('UserButton', () => {
       attributes: {
         name: userName,
         'custom:agreed_terms_v2': 'true',
-        'custom:agreed_cookies_v1': 'true',
-        'custom:agreed_data_use_v1': 'true',
       },
     }));
     Auth.signOut = jest.fn(() => { });

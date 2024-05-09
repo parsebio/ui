@@ -55,8 +55,6 @@ describe('Repository page', () => {
         attributes: {
           name: 'Mocked User',
           'custom:agreed_terms_v2': 'true',
-          'custom:agreed_cookies_v1': 'true',
-          'custom:agreed_data_use_v1': 'true',
           email: 'mock@user.name',
         },
       },
@@ -77,8 +75,6 @@ describe('Repository page', () => {
         attributes: {
           name: 'Mocked User',
           'custom:agreed_terms_v2': 'true',
-          'custom:agreed_cookies_v1': 'true',
-          'custom:agreed_data_use_v1': 'true',
           email: 'mock@user.name',
         },
       },
