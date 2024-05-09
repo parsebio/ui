@@ -85,6 +85,11 @@ const TermsOfUseIntercept = (props) => {
             .
           </Text>
         </Space>
+        <Text>
+          If you want to discuss any of the policies, reach out to
+          {' '}
+          support@parsebiosciences.com
+        </Text>
       </Space>
     </Modal>
   );
