@@ -174,7 +174,6 @@ const EditableField = (props) => {
                       onConfirm={deleteEditableField}
                       okText='Yes'
                       disabled={disabled}
-
                       cancelText='No'
                     >
                       <Button
