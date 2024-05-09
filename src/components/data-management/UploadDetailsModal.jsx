@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import {
-  Modal, Button, Col, Row, Progress,
+  Modal, Button, Col, Row, Progress, Popconfirm,
 } from 'antd';
 import UploadStatus, { messageForStatus } from 'utils/upload/UploadStatus';
 import bytesToSize from 'utils/styling/bytesToSize';
@@ -89,13 +89,19 @@ const UploadDetailsModal = (props) => {
             {!isNotUploadedModal && (isSuccessModal ? downloadButton() : retryButton())}
           </Col>
           <Col span='2' />
-          <Button
-            danger
-            onClick={() => { onDelete(); onCancel(); }}
-            style={{ width: '140px', marginBottom: '10px' }}
+          <Popconfirm
+            title='Are you sure to delete this sample?'
+            onConfirm={() => { onDelete(); onCancel(); }}
+            okText='Yes'
+            cancelText='No'
           >
-            Delete
-          </Button>
+            <Button
+              danger
+              style={{ width: '140px', marginBottom: '10px' }}
+            >
+              Delete
+            </Button>
+          </Popconfirm>
           <Col />
         </Row>
       )}
