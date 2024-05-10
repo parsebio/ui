@@ -76,7 +76,7 @@ const TermsOfUseIntercept = (props) => {
             </Button>
             {', '}
             <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('cookies')}>
-              Parse Biosciences Cookie Policy
+              Cookie Policy
             </Button>
             {' and '}
             <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('dataUse')}>
