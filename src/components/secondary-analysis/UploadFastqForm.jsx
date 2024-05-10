@@ -266,14 +266,24 @@ const UploadFastqForm = (props) => {
               <br />
               <ul>
                 <li>
-                  FASTQ files from the same Parse experiment that have
-                  different Illumina indexes should not be concatenated.
-                  These files are separate sublibraries.
+                  FASTQ files from the same Parse experiment that have different Illumina indexes
+                  should not be concatenated. These files are separate sublibraries.
                 </li>
                 <li>
-                  FASTQ files from the same Parse experiment that
-                  share identical Illumina indexes must be concatenated.
-                  These files belong to the same sublibrary.
+                  FASTQ files from the same Parse experiment that share identical
+                  Illumina indexes must be concatenated. These files belong to the same sublibrary.
+                </li>
+                <li>
+                  Uploading large FASTQ files can take multiple hours or even days.
+                  You must keep your computer running and your browser tab open for the duration of the upload.
+                </li>
+                <li>
+                  If your internet connection fails, file upload will resume from the last checkpoint.
+                  Checkpoints are created every 128 MB.
+                </li>
+                <li>
+                  FASTQ files are deleted from Trailmaker 30 days after upload. After this time,
+                  your Pipeline Run Details and any Outputs will continue to be available but the FASTQ files will be marked as 'Expired'.
                 </li>
               </ul>
               Further details on Fastq file format can be found

@@ -133,7 +133,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       },
       label: (
         <Tooltip
-          title='Download combined output files'
+          title='Download count matrices and intermediate files for the combined sublibraries.'
           placement='right'
           mouseEnterDelay={0.05}
         >
@@ -151,7 +151,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       },
       label: (
         <Tooltip
-          title='Download report files'
+          title='Download all_summaries.zip file with html reports, QC metrics and log files.'
           placement='right'
           mouseEnterDelay={0.05}
         >

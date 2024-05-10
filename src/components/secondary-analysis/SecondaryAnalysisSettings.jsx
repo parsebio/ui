@@ -117,7 +117,7 @@ const SecondaryAnalysisSettings = (props) => {
                   >
                     sublibraries
                   </a>
-                  :
+                  to be processed in this pipeline run:
                 </div>
                 <SliderWithInput
                   style={{ marginLeft: '20px', width: '20%' }}

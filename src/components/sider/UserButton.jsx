@@ -11,6 +11,7 @@ import handleError from 'utils/http/handleError';
 import { loadUser } from 'redux/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 import signIn from 'utils/signIn';
+import { brandColors } from 'utils/constants';
 
 const UserButton = () => {
   const dispatch = useDispatch();
@@ -90,7 +91,7 @@ const UserButton = () => {
         icon={(
           <Avatar
             style={{
-              backgroundColor: '#f56a00',
+              backgroundColor: brandColors.DARK_LILAC,
               verticalAlign: 'middle',
             }}
             size='medium'
