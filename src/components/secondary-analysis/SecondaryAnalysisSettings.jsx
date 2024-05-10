@@ -108,7 +108,7 @@ const SecondaryAnalysisSettings = (props) => {
             >
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ marginRight: '5px' }}>
-                  Select the number of
+                  Number of
                   {' '}
                   <a
                     href='https://support.parsebiosciences.com/hc/en-us/articles/360052394312-What-is-a-sublibrary-'
@@ -117,7 +117,8 @@ const SecondaryAnalysisSettings = (props) => {
                   >
                     sublibraries
                   </a>
-                  :
+                  {' '}
+                  to be processed in this pipeline run:
                 </div>
                 <SliderWithInput
                   style={{ marginLeft: '20px', width: '20%' }}
