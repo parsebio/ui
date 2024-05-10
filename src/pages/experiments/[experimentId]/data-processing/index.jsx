@@ -174,6 +174,18 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         processingConfig[step][key]?.prefiltered)));
   };
 
+  const sampleDisabledMessage = (step, sampleTechnology) => {
+    if (checkIfSampleIsPrefiltered(step)) {
+      return 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.'
+    }
+
+    if (sampleTechnology === sampleTech.PARSE && step === 'classifier') {
+      return 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.'
+    }
+
+    return 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.'
+  }
+
   const steps = [
     {
       key: 'classifier',
@@ -651,12 +663,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         {
           !checkIfSampleIsEnabled(key) ? (
             <Alert
-              message={checkIfSampleIsPrefiltered(key)
-                ? 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.'
-                : sampleTechnology === sampleTech.PARSE
-                  ? 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.'
-                  : 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.'
-              }
+              message={sampleDisabledMessage(key, sampleTechnology)}
               type='info'
               showIcon
             />
