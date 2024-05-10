@@ -214,7 +214,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     </Button>
   );
 
-  if (!secondaryAnalysis?.status.current && secondaryAnalysis?.status.loading) {
+  if ((!secondaryAnalysis?.status.current && secondaryAnalysis?.status.loading)
+    || !secondaryAnalysis) {
     return <PreloadContent />;
   }
   const ProgressBar = () => {
