@@ -146,6 +146,7 @@ const SampleNameCell = (props) => {
     <Text className={integrationTestConstants.classes.SAMPLES_TABLE_NAME_CELL} strong key={`sample-cell-${idx}`}>
       <EditableField
         deleteEnabled
+        confirmDelete='Are you sure you want to delete this sample'
         value={name}
         onAfterSubmit={(newName) => dispatch(updateSample(sampleId, { name: newName }))}
         onDelete={() => dispatch(deleteSamples([sampleId]))}

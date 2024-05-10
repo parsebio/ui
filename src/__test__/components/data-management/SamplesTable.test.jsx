@@ -252,6 +252,10 @@ describe('Samples table', () => {
     await act(async () => {
       userEvent.click(firstSampleDeleteButton);
     });
+    await waitFor(() => {
+      expect(screen.queryByText('Yes')).toBeInTheDocument();
+    });
+    userEvent.click(screen.getByText('Yes'));
 
     // The first sample should be deleted
     const sampleNames = Object.values(samples).map((sample) => sample.name);
