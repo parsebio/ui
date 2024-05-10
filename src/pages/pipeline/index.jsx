@@ -346,8 +346,6 @@ const Pipeline = () => {
   const LaunchAnalysisButton = () => {
     const firstTimeLaunch = currentStatus === 'not_created';
 
-    const cantRunAnalysis = !isAllValid;
-
     const launchAnalysis = () => {
       setButtonClicked(true);
       dispatch(launchSecondaryAnalysis(activeSecondaryAnalysisId))
@@ -391,7 +389,7 @@ const Pipeline = () => {
           overlayStyle={{ maxWidth: '250px' }}
         >
           <Button
-            disabled={!(cantRunAnalysis && shouldRerun)}
+            disabled={!(isAllValid && shouldRerun)}
             style={{ marginBottom: '10px' }}
             loading={statusLoading || buttonClicked}
           >
