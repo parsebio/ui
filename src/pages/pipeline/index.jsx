@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {
-  Environment,
-} from 'utils/deploymentInfo';
+import React, { useState, useEffect } from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
+
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
@@ -69,7 +67,6 @@ const Pipeline = () => {
     (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
     _.isEqual,
   );
-  const environment = useSelector((state) => state.networkResources.environment);
 
   const {
     name: analysisName,
@@ -335,7 +332,9 @@ const Pipeline = () => {
       isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
 
       isLoading: filesNotLoadedYet,
-      renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFilesTable(false)),
+      renderMainScreenDetails: () => renderMainScreenFileDetails(
+        () => renderFastqFilesTable(false),
+      ),
     },
   ];
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
@@ -346,8 +345,8 @@ const Pipeline = () => {
 
   const LaunchAnalysisButton = () => {
     const firstTimeLaunch = currentStatus === 'not_created';
-    const disableFinishedIfProduction = currentStatus === 'finished' && environment === Environment.PRODUCTION;
-    const cantRunAnalysis = !isAllValid || disableFinishedIfProduction;
+
+    const cantRunAnalysis = !isAllValid;
 
     const launchAnalysis = () => {
       setButtonClicked(true);
@@ -367,7 +366,7 @@ const Pipeline = () => {
       return (
         <Button
           type='primary'
-          disabled={cantRunAnalysis}
+          disabled={!isAllValid}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
           onClick={() => launchAnalysis()}
@@ -379,12 +378,12 @@ const Pipeline = () => {
 
     return (
       <Tooltip
-        title={disableFinishedIfProduction ? 'The pipeline has finished successfully.' : ''}
+        title={(currentStatus === 'finished' && shouldRerun === false) ? 'The pipeline has finished successfully.' : ''}
         placement='top'
       >
         <Popconfirm
           title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
-          disabled={cantRunAnalysis || !shouldRerun}
+          disabled={!(isAllValid && shouldRerun)}
           onConfirm={() => launchAnalysis()}
           okText='Yes'
           cancelText='No'
@@ -392,7 +391,7 @@ const Pipeline = () => {
           overlayStyle={{ maxWidth: '250px' }}
         >
           <Button
-            disabled={cantRunAnalysis || !shouldRerun}
+            disabled={!(cantRunAnalysis && shouldRerun)}
             style={{ marginBottom: '10px' }}
             loading={statusLoading || buttonClicked}
           >
