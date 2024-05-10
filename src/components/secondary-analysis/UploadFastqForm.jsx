@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
-  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
+  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined, InfoCircleOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import UploadStatus from 'utils/upload/UploadStatus';
@@ -281,11 +281,14 @@ const UploadFastqForm = (props) => {
                   If your internet connection fails, file upload will resume from the last checkpoint.
                   Checkpoints are created every 128 MB.
                 </li>
-                <li>
-                  FASTQ files are deleted from Trailmaker 30 days after upload. After this time,
-                  your Pipeline Run Details and any Outputs will continue to be available but the FASTQ files will be marked as 'Expired'.
-                </li>
               </ul>
+              <InfoCircleOutlined />
+              {' '}
+              FASTQ files are deleted from Trailmaker 30 days after upload. After this time,
+              your Pipeline Run Details and any Outputs will continue to be available but the FASTQ files will be marked as 'Expired'.
+              {' '}
+              <br />
+              <br />
               Further details on Fastq file format can be found
               {' '}
               <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
