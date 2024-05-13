@@ -556,8 +556,10 @@ const ContentWrapper = (props) => {
                 theme='dark'
                 selectedKeys={[currentModule]}
                 mode='inline'
-                openKeys={collapsed ? undefined : menuLinks.filter((item) => isUserInModule(item.module,
-                  item.items || [])).map((item) => item.module)}
+                openKeys={collapsed ? undefined
+                  : menuLinks
+                    .filter((item) => isUserInModule(item.module, item.items))
+                    .map((item) => item.module)}
               >
                 {menuItems}
               </Menu>
