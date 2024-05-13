@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Environment,
-} from 'utils/deploymentInfo';
-import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
+
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
@@ -29,6 +27,7 @@ import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
+import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -68,7 +67,6 @@ const Pipeline = () => {
     (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
     _.isEqual,
   );
-  const environment = useSelector((state) => state.networkResources.environment);
 
   const {
     name: analysisName,
@@ -100,7 +98,7 @@ const Pipeline = () => {
 
   const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
 
-  const { loading: statusLoading, current: currentStatus } = useSelector(
+  const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
   );
 
@@ -113,10 +111,29 @@ const Pipeline = () => {
 
   useEffect(() => {
     if (activeSecondaryAnalysisId) {
-      dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
       dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
+      dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
     }
   }, [activeSecondaryAnalysisId]);
+
+  useConditionalEffect(() => {
+    if (
+      activeSecondaryAnalysisId
+      && sampleLTFile
+      && _.size(fastqFiles) > 0
+      && allFilesUploaded({ ...fastqFiles, [sampleLTFile.id]: sampleLTFile })
+    ) {
+      dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
+    }
+  }, [
+    activeSecondaryAnalysisId,
+    fastqFiles,
+    sampleLTFile,
+    kit,
+    chemistryVersion,
+    numOfSublibraries,
+    refGenome,
+  ]);
 
   // Poll for status
   usePolling(async () => {
@@ -252,7 +269,7 @@ const Pipeline = () => {
   );
 
   const allFilesUploaded = (files) => {
-    if (!files || Object.keys(files).length === 0) return false;
+    if (_.size(files) === 0) return false;
     return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
   };
 
@@ -315,7 +332,9 @@ const Pipeline = () => {
       isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
 
       isLoading: filesNotLoadedYet,
-      renderMainScreenDetails: () => renderMainScreenFileDetails(() => renderFastqFilesTable(false)),
+      renderMainScreenDetails: () => renderMainScreenFileDetails(
+        () => renderFastqFilesTable(false),
+      ),
     },
   ];
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
@@ -326,8 +345,6 @@ const Pipeline = () => {
 
   const LaunchAnalysisButton = () => {
     const firstTimeLaunch = currentStatus === 'not_created';
-    const disableFinishedIfProduction = currentStatus === 'finished' && environment === Environment.PRODUCTION;
-    const disableLaunchButton = !isAllValid || disableFinishedIfProduction;
 
     const launchAnalysis = () => {
       setButtonClicked(true);
@@ -347,7 +364,7 @@ const Pipeline = () => {
       return (
         <Button
           type='primary'
-          disabled={disableLaunchButton}
+          disabled={!isAllValid}
           style={{ marginBottom: '10px' }}
           loading={statusLoading || buttonClicked}
           onClick={() => launchAnalysis()}
@@ -359,12 +376,12 @@ const Pipeline = () => {
 
     return (
       <Tooltip
-        title={disableFinishedIfProduction ? 'The pipeline has finished successfully.' : ''}
+        title={(currentStatus === 'finished' && shouldRerun === false) ? 'The pipeline has finished successfully.' : ''}
         placement='top'
       >
         <Popconfirm
           title='This action will cause any outputs of previous pipeline runs to be lost. Are you sure you want to rerun the pipeline?'
-          disabled={disableLaunchButton}
+          disabled={!(isAllValid && shouldRerun)}
           onConfirm={() => launchAnalysis()}
           okText='Yes'
           cancelText='No'
@@ -372,7 +389,7 @@ const Pipeline = () => {
           overlayStyle={{ maxWidth: '250px' }}
         >
           <Button
-            disabled={disableLaunchButton}
+            disabled={!(isAllValid && shouldRerun)}
             style={{ marginBottom: '10px' }}
             loading={statusLoading || buttonClicked}
           >
