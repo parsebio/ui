@@ -75,8 +75,6 @@ class UploadsCoordinator {
 
       promise.resolve();
     } catch (e) {
-      // File uploader handles errors internally already
-
       promise.reject(new UploadsCoordinatorError(e.message));
       console.error(e);
     }
