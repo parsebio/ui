@@ -68,7 +68,7 @@ Amplify.configure({
 const addDashesToExperimentId = (experimentId) => experimentId.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
 
 const WrappedApp = ({ Component, pageProps }) => {
-  const { httpError, amplifyConfig } = pageProps;
+  const { httpError, amplifyConfig, errorOrigin } = pageProps;
 
   const router = useRouter();
   const { experimentId: urlExperimentId, secondaryAnalysisId } = router.query;
@@ -114,23 +114,34 @@ const WrappedApp = ({ Component, pageProps }) => {
     // If there was an error querying the API, display an error state.
     if (httpError) {
       if (httpError === 404) {
+        const projectType = errorOrigin === 'experiment' ? 'analysis' : 'pipeline run';
         return (
           <NotFoundPage
-            title={'Analysis doesn\'t exist'}
-            subTitle={'We searched, but we couldn\'t find the analysis you\'re looking for.'}
-            hint='It may have been deleted by the project owner. Go home to see your own projects and analyses.'
+            title={`${projectType} doesn't exist`}
+            subTitle={`We searched, but we couldn't find the ${projectType} you're looking for.`}
+            hint='It may have been deleted by the project owner.'
           />
         );
       }
 
       if (httpError === 403) {
-        return (
-          <NotFoundPage
-            title='Analysis not found'
-            subTitle={'You don\'t have access to this analysis. The owner may have made it private.'}
-            hint='If somebody gave you this link, they may need to invite you to their project.'
-          />
-        );
+        if (errorOrigin === 'experiment') {
+          return (
+            <NotFoundPage
+              title='Analysis not found'
+              subTitle={'You don\'t have access to this analysis. The owner may have made it private.'}
+              hint='If somebody gave you this link, they may need to invite you to their project.'
+            />
+          );
+        }
+        if (errorOrigin === 'secondaryAnalysis') {
+          return (
+            <NotFoundPage
+              title='Pipeline run not found'
+              subTitle={'Or you don\'t have access to it.'}
+            />
+          );
+        }
       }
       if (httpError === 424) {
         return (
@@ -250,8 +261,12 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
       e = new APIError(500);
     }
     res.statusCode = e.statusCode;
-
-    return { pageProps: { ...pageProps, amplifyConfig, httpError: e.statusCode || true } };
+    const errorOrigin = query?.experimentId ? 'experiment' : query?.secondaryAnalysisId ? 'secondaryAnalysis' : '';
+    return {
+      pageProps: {
+        ...pageProps, amplifyConfig, httpError: e.statusCode || true, errorOrigin,
+      },
+    };
   }
 };
 /* eslint-enable global-require */
