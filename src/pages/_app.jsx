@@ -138,7 +138,7 @@ const WrappedApp = ({ Component, pageProps }) => {
           return (
             <NotFoundPage
               title='Pipeline run not found'
-              subTitle={'Or don\'t have access to it.'}
+              subTitle={'Or you don\'t have access to it.'}
             />
           );
         }
