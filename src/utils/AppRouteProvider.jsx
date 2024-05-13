@@ -135,7 +135,7 @@ const AppRouteProvider = (props) => {
     }
     // using hard load for the secondary analysi outputs page because we need to load the analysis info
     // without hardLoad, the secondaryAnalysisId is not present in the query (see _app.jsx file - loadAnalysisInfo)
-    if (hardLoad) {
+    if (hardLoad || nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS_OUTPUT)) {
       window.location = nextRoute;
     } else {
       router.push(nextRoute);
