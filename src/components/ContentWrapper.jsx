@@ -552,7 +552,6 @@ const ContentWrapper = (props) => {
               <Menu
                 style={{ background: brandColors.BLACK_INDIGO }}
                 data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
-                inlineCollapsed={collapsed}
                 theme='dark'
                 selectedKeys={[currentModule]}
                 mode='inline'
