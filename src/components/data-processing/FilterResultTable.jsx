@@ -21,7 +21,7 @@ const FilterResultTable = (props) => {
 
     // Rearrange data to fit table
     const titles = {
-      num_cells: 'Estimated number of cells',
+      num_cells: 'Number of barcodes',
       total_genes: 'Total number of genes',
       median_genes: 'Median number of genes per cell',
       median_umis: 'Median UMI counts per cell',
