@@ -6,8 +6,6 @@ import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
 
 const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, getState) => {
-  if (!secondaryAnalysisId) return;
-
   const filesInRedux = getState().secondaryAnalyses[secondaryAnalysisId].files?.data ?? {};
 
   const {
