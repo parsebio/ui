@@ -145,7 +145,10 @@ const Pipeline = () => {
   // Poll for files (in case the cli is uploading)
   usePolling(async () => {
     // If executing, no need to get files updates
-    if (['running', 'created'].includes(currentSecondaryAnalysisStatus)) return;
+    if (
+      !activeSecondaryAnalysisId
+      || ['running', 'created'].includes(currentSecondaryAnalysisStatus)
+    ) return;
 
     await dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
   }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
