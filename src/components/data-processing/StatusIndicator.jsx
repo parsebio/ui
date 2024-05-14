@@ -20,6 +20,7 @@ import StepsIndicator from 'components/data-processing/StepsIndicator';
 import pipelineStatus from 'utils/pipelineStatusValues';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { getBackendStatus } from 'redux/selectors';
+import colors from 'utils/styling/colors';
 
 const { Text, Paragraph } = Typography;
 
@@ -49,8 +50,16 @@ const StatusIndicator = (props) => {
       ),
     },
     [pipelineStatus.RUNNING]: {
-      icon: <Text strong type='warning' data-test-id={integrationTestConstants.ids.QC_STATUS_TEXT}>running</Text>,
-      title: <Text strong type='warning'>running</Text>,
+      icon: (
+        <Text
+          strong
+          style={{ color: colors.warningYellow }}
+          data-test-id={integrationTestConstants.ids.QC_STATUS_TEXT}
+        >
+          running
+        </Text>
+      ),
+      title: <Text strong style={{ color: colors.warningYellow }}>running</Text>,
       description: (
         <Text>
           The analysis launched
