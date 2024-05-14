@@ -106,7 +106,7 @@ class FileUploader {
   }
 
   #subscribeToAbortSignal = () => {
-    this.abortController.signal.addEventListener('abort', () => this.#cleanupExecution());
+    this.abortController.signal.addEventListener('abort', (reason) => this.#cleanupExecution(reason));
   }
 
   #uploadChunk = async (compressedPart, partNumber) => {
@@ -218,15 +218,16 @@ class FileUploader {
   }
 
   #abortUpload = (e) => {
-    this.abortController?.abort();
-
-    this.reject(new FileUploaderError(e.message));
+    this.abortController?.abort(e.message);
     console.error(e);
   }
 
-  #cleanupExecution = () => {
+  #cleanupExecution = (reason) => {
     this.readStream?.destroy();
     this.gzipStream?.terminate();
+
+    const reasonMessage = reason?.target.reason;
+    this.reject(new FileUploaderError(reasonMessage));
   }
 
   #handleChunkLoadFinished = async (chunk) => {
