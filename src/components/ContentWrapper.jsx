@@ -487,35 +487,33 @@ const ContentWrapper = (props) => {
         disabled={isDisabled}
         onTitleClick={() => onClick(module)}
       >
-        {!collapsed && (
-          <ItemGroup
-            key='active project'
-            title={(
-              <Text
-                style={{
-                  width: '100%',
-                  color: 'grey',
-                }}
-                ellipsis
-              >
-                {selectedProjectText}
-              </Text>
-            )}
-          >
-            {items.map((item) => (
-              <Item
-                key={item.module}
-                disabled={item.isDisabled}
-                icon={item.icon}
-                onClick={() => {
-                  onClick(item.module);
-                }}
-              >
-                {item.name}
-              </Item>
-            ))}
-          </ItemGroup>
-        )}
+        <ItemGroup
+          key='active project'
+          title={(
+            <Text
+              style={{
+                width: '100%',
+                color: 'grey',
+              }}
+              ellipsis
+            >
+              {selectedProjectText}
+            </Text>
+          )}
+        >
+          {items.map((item) => (
+            <Item
+              key={item.module}
+              disabled={item.isDisabled}
+              icon={item.icon}
+              onClick={() => {
+                onClick(item.module);
+              }}
+            >
+              {item.name}
+            </Item>
+          ))}
+        </ItemGroup>
       </SubMenu>
     );
   };
@@ -557,8 +555,10 @@ const ContentWrapper = (props) => {
                 theme='dark'
                 selectedKeys={[currentModule]}
                 mode='inline'
-                openKeys={menuLinks.filter((item) => isUserInModule(item.module,
-                  item.items || [])).map((item) => item.module)}
+                openKeys={collapsed ? undefined
+                  : menuLinks
+                    .filter((item) => isUserInModule(item.module, item.items))
+                    .map((item) => item.module)}
               >
                 {menuItems}
               </Menu>
