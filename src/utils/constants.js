@@ -91,6 +91,7 @@ const cellSetsUpdatedMessages = {
 };
 
 const termsOfUseCognitoKey = 'custom:agreed_terms_v2';
+const institutionCognitoKey = 'custom:institution';
 
 export {
   api,
@@ -104,4 +105,5 @@ export {
   downsamplingMethods,
   cellSetsUpdatedMessages,
   termsOfUseCognitoKey,
+  institutionCognitoKey,
 };

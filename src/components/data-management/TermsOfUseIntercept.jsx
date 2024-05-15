@@ -14,7 +14,7 @@ import styles from 'components/data-management/TermsOfUseIntercept.module.css';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
-import { termsOfUseCognitoKey } from 'utils/constants';
+import { termsOfUseCognitoKey, institutionCognitoKey } from 'utils/constants';
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 
@@ -26,10 +26,12 @@ const TermsOfUseIntercept = (props) => {
   const {
     attributes: {
       [termsOfUseCognitoKey]: originalAgreedPrivacyPolicy,
+      [institutionCognitoKey]: originalInstitution,
     },
   } = user;
 
   const [agreedTerms, setAgreedTerms] = useState(originalAgreedPrivacyPolicy);
+  const [institution, setInstitution] = useState(originalInstitution);
 
   const getDownloadTermsOfUseFunc = (file) => async () => {
     const signedUrl = await fetchAPI(`/v2/termsOfUse/${file}/download`);
@@ -53,6 +55,7 @@ const TermsOfUseIntercept = (props) => {
           user,
           {
             [termsOfUseCognitoKey]: agreedTerms,
+            [institutionCognitoKey]: institution,
           },
         )
           .then(() => {
@@ -83,7 +86,7 @@ const TermsOfUseIntercept = (props) => {
             <span style={{ color: '#ff0000', marginRight: 0 }}>*</span>
             Institution/Company:
           </Text>
-          <Input style={{ minWidth: 300 }} />
+          <Input style={{ minWidth: 300 }} value={institution} onChange={setInstitution} />
         </Space>
         <Divider style={{
           marginLeft: 0, paddingLeft: 0, marginTop: 15, marginBottom: 10,
