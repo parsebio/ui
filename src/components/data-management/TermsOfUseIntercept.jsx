@@ -6,6 +6,8 @@ import Auth from '@aws-amplify/auth';
 import {
   Modal, Space, Checkbox, Typography,
   Button,
+  Input,
+  Divider,
 } from 'antd';
 
 import styles from 'components/data-management/TermsOfUseIntercept.module.css';
@@ -36,7 +38,7 @@ const TermsOfUseIntercept = (props) => {
 
   return (
     <Modal
-      title='Agree to the privacy policy to continue using Trailmaker'
+      title='Consent to the Trailmaker terms of use:'
       open
       centered
       className={styles['ok-to-the-right-modal']}
@@ -45,7 +47,7 @@ const TermsOfUseIntercept = (props) => {
       okButtonProps={{ disabled: agreedTerms !== 'true' }}
       closable={false}
       maskClosable={false}
-      width={600}
+      width={700}
       onOk={async () => {
         await Auth.updateUserAttributes(
           user,
@@ -62,14 +64,39 @@ const TermsOfUseIntercept = (props) => {
       onCancel={async () => Auth.signOut()}
     >
       <Space direction='vertical'>
+        <Text strong>Welcome to Trailmaker!</Text>
+        <Text>
+          Trailmaker is available for free to all academic researchers.
+          <br />
+          <br />
+          If you are an industry researcher who is currently a Parse customer,
+          Trailmaker is also available for free.
+          If you are an industry researcher who is not currently a Parse customer,
+          a free 4-month trial of Trailmaker is available.
+          {' '}
+          <a href='mailto:support@parsebiosciences.com'>Contact us</a>
+          {' '}
+          to discuss pricing.
+        </Text>
+        <Space align='baseline' style={{ marginTop: 10 }}>
+          <Text>
+            <span style={{ color: '#ff0000', marginRight: 0 }}>*</span>
+            Institution/Company:
+          </Text>
+          <Input style={{ minWidth: 300 }} />
+        </Space>
+        <Divider style={{
+          marginLeft: 0, paddingLeft: 0, marginTop: 15, marginBottom: 10,
+        }}
+        />
         <Space align='baseline'>
           <Checkbox
             defaultChecked={agreedTerms === 'true'}
             onChange={(e) => setAgreedTerms(e.target.checked.toString())}
           />
           <Text>
-            <span style={{ color: '#ff0000' }}>* </span>
-            I accept the terms of the
+            <span style={{ color: '#ff0000' }}>*</span>
+            I agree to the
             {' '}
             <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('privacyPolicy')}>
               Privacy policy
@@ -85,11 +112,6 @@ const TermsOfUseIntercept = (props) => {
             .
           </Text>
         </Space>
-        <Text>
-          If you want to discuss any of the policies, reach out to
-          {' '}
-          support@parsebiosciences.com
-        </Text>
       </Space>
     </Modal>
   );
