@@ -93,7 +93,8 @@ const SampleLTUpload = (props) => {
 
   const beginUpload = async () => {
     if (uploadedFileId) {
-      dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
+      // Important to wait before creating the new file, otherwise we break a unique constraint
+      await dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
     }
     await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], [], 'samplelt', dispatch);
     dispatch(updateSecondaryAnalysis(secondaryAnalysisId, { sampleNames }));

@@ -57,11 +57,9 @@ const ProjectDetails = ({ width, height }) => {
           {`Project ID: ${activeExperimentId}`}
         </Text>
         <div style={{ flex: 'none', paddingBottom: '1em' }}>
-          <div style={{ display: 'flex', justifyContent: 'right' }}>
-            <Space>
-              <Button
-                onClick={clone}
-              >
+          <div style={{ display: 'flex', justifyContent: 'right', flexWrap: 'wrap' }}>
+            <Space style={{ flexWrap: 'wrap' }}>
+              <Button onClick={clone}>
                 Copy
               </Button>
               <AddMetadataButton samplesTableRef={samplesTableRef} />

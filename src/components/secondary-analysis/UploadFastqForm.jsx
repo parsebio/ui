@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
-  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
+  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined, InfoCircleOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import UploadStatus from 'utils/upload/UploadStatus';
@@ -266,16 +266,29 @@ const UploadFastqForm = (props) => {
               <br />
               <ul>
                 <li>
-                  FASTQ files from the same Parse experiment that have
-                  different Illumina indexes should not be concatenated.
-                  These files are separate sublibraries.
+                  FASTQ files from the same Parse experiment that have different Illumina indexes
+                  should not be concatenated. These files are separate sublibraries.
                 </li>
                 <li>
-                  FASTQ files from the same Parse experiment that
-                  share identical Illumina indexes must be concatenated.
-                  These files belong to the same sublibrary.
+                  FASTQ files from the same Parse experiment that share identical
+                  Illumina indexes must be concatenated. These files belong to the same sublibrary.
+                </li>
+                <li>
+                  Uploading large FASTQ files can take multiple hours or even days.
+                  You must keep your computer running and your browser tab open for the duration of the upload.
+                </li>
+                <li>
+                  If your internet connection fails, file upload will resume from the last checkpoint.
+                  Checkpoints are created every 128 MB.
                 </li>
               </ul>
+              <InfoCircleOutlined />
+              {' '}
+              FASTQ files are deleted from Trailmaker 30 days after upload. After this time,
+              your Pipeline Run Details and any Outputs will continue to be available but the FASTQ files will be marked as 'Expired'.
+              {' '}
+              <br />
+              <br />
               Further details on Fastq file format can be found
               {' '}
               <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>

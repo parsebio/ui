@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const { Option } = Select;
 
@@ -22,7 +22,7 @@ const GenesVsUMIsConfig = (props) => {
     config, updateSettings, disabled, rerunRequired, onQCRunClick,
   } = props;
 
-  const [newConfig, handleChange] = useUpdateThrottled(updateSettings, config);
+  const [newConfig, handleChange] = useUpdateDebounced(updateSettings, config);
 
   const defaultPredictionInterval = 1 - config.regressionTypeSettings[config.regressionType]['p.level'];
 

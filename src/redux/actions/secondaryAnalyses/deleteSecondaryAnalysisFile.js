@@ -5,7 +5,7 @@ const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (disp
   // Abort upload if it is ongoing
   // eslint-disable-next-line no-unused-expressions
   getState().secondaryAnalyses[secondaryAnalysisId].files.data[fileId].upload
-    .abortController?.abort();
+    .abortController?.abort('File deleted');
 
   try {
     await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`, {

@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 const { TextArea } = Input;
 
 const FeedbackButton = (props) => {
-  const { collapsed } = props;
+  const { collapsed, buttonType } = props;
   const [visible, setVisible] = useState(false);
   const [feedbackText, setFeedbackText] = useState('');
 
@@ -159,6 +159,14 @@ const FeedbackButton = (props) => {
       title: '',
     },
   ];
+
+  let buttonStyle = {};
+  if (buttonType === 'text') {
+    buttonStyle = {
+      color: 'hsla(0, 0%, 100%, .65)',
+    };
+  }
+
   return (
     <Dropdown
       open={visible}
@@ -167,14 +175,20 @@ const FeedbackButton = (props) => {
       placement='topRight'
       trigger='click'
     >
-      <Button type='text' icon={<QuestionCircleOutlined />} style={{ color: 'hsla(0, 0%, 100%, .65)' }}>
+      <Button type={buttonType} icon={<QuestionCircleOutlined />} style={buttonStyle}>
         {!collapsed && 'Support'}
       </Button>
     </Dropdown>
   );
 };
+
+FeedbackButton.defaultProps = {
+  buttonType: 'default',
+};
+
 FeedbackButton.propTypes = {
   collapsed: PropTypes.bool.isRequired,
+  buttonType: PropTypes.string,
 };
 
 export default FeedbackButton;

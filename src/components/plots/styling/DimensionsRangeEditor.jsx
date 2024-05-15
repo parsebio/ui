@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Slider, Form, Space,
 } from 'antd';
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const DimensionsRangeEditor = (props) => {
   const {
@@ -19,7 +19,7 @@ const DimensionsRangeEditor = (props) => {
   const heighthMarks = {};
   heighthMarks[minHeight] = minHeight;
   heighthMarks[maxHeight] = maxHeight;
-  const [newConfig, handleChange] = useUpdateThrottled(onUpdate, config);
+  const [newConfig, handleChange] = useUpdateDebounced(onUpdate, config);
 
   return (
     <Space direction='vertical' style={{ width: '80%' }}>
