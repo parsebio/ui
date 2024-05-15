@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import {
   Slider, Form, Input, Switch,
 } from 'antd';
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const AxesDesign = (props) => {
   const { onUpdate, config } = props;
-  const [newConfig, handleChange] = useUpdateThrottled(onUpdate, config, 200);
+  const [newConfig, handleChange] = useUpdateDebounced(onUpdate, config, 200);
 
   return (
     <Form
