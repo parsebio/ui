@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Auth from '@aws-amplify/auth';
@@ -38,6 +38,8 @@ const TermsOfUseIntercept = (props) => {
     downloadFromUrl(signedUrl, { newTab: true });
   };
 
+  const institutionFilledIn = useMemo(() => institution && institution.length > 0, [institution]);
+
   return (
     <Modal
       title='Consent to the Trailmaker terms of use:'
@@ -46,7 +48,7 @@ const TermsOfUseIntercept = (props) => {
       className={styles['ok-to-the-right-modal']}
       cancelText='Sign out'
       cancelButtonProps={{ danger: true }}
-      okButtonProps={{ disabled: agreedTerms !== 'true' }}
+      okButtonProps={{ disabled: agreedTerms !== 'true' || !institutionFilledIn }}
       closable={false}
       maskClosable={false}
       width={700}
@@ -86,7 +88,13 @@ const TermsOfUseIntercept = (props) => {
             <span style={{ color: '#ff0000', marginRight: 0 }}>*</span>
             Institution/Company:
           </Text>
-          <Input style={{ minWidth: 300 }} value={institution} onChange={setInstitution} />
+          <Input
+            style={{ minWidth: 300 }}
+            value={institution}
+            onChange={(e) => {
+              setInstitution(e.target.value);
+            }}
+          />
         </Space>
         <Divider style={{
           marginLeft: 0, paddingLeft: 0, marginTop: 15, marginBottom: 10,
