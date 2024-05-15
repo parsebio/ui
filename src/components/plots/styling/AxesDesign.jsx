@@ -19,7 +19,7 @@ const AxesDesign = (props) => {
       <p><strong>Axes Settings</strong></p>
       <Form.Item label='X-Axis Title'>
         <Input
-          value={config.axes.xAxisText}
+          value={newConfig.axes.xAxisText}
           onChange={(e) => {
             handleChange({
               axes: {
@@ -33,7 +33,7 @@ const AxesDesign = (props) => {
 
       <Form.Item label='Y-Axis Title'>
         <Input
-          value={config.axes.yAxisText}
+          value={newConfig.axes.yAxisText}
           onChange={(e) => {
             handleChange({
               axes: {
