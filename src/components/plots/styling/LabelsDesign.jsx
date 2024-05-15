@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {
   Radio, Form, Slider,
 } from 'antd';
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const LabelsDesign = (props) => {
   const { config, onUpdate } = props;
-  const [newConfig, handleChange] = useUpdateThrottled(onUpdate, config);
+  const [newConfig, handleChange] = useUpdateDebounced(onUpdate, config);
   const minLabelSize = 0;
   const maxLabelSize = 50;
 

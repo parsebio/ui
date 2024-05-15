@@ -4,14 +4,14 @@ import { Slider, InputNumber, Space } from 'antd';
 
 import _ from 'lodash';
 
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const SliderWithInput = (props) => {
   const {
     min, max, value, onUpdate, disabled, step, debounceTime, sliderMaxWidth,
   } = props;
 
-  const [, handleChange] = useUpdateThrottled(onUpdate, value);
+  const [, handleChange] = useUpdateDebounced(onUpdate, value);
 
   const [localValue, setLocalValue] = useState(value);
 
