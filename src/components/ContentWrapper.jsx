@@ -569,6 +569,17 @@ const ContentWrapper = (props) => {
                 <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
                 <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
                   <UserButton />
+                  <br />
+                  <br />
+                  <span style={{ fontSize: '0.75em', color: 'hsla(0, 0%, 100%, 0.65)' }}>
+                    &copy;
+                    {' '}
+                    <a href='https://parsebiosciences.com/' style={{ color: 'inherit', textDecoration: 'none' }}>Parse Biosciences</a>
+                    {' '}
+                    2024.
+                    <br />
+                    All rights reserved.
+                  </span>
                 </div>
               </div>
             </div>
