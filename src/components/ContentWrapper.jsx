@@ -286,31 +286,21 @@ const ContentWrapper = (props) => {
           <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g transform='translate(20, 25)'>
-          <text
-            style={{ outlineStyle: 'none' }}
-            fontWeight='500'
-            textRendering='geometricPrecision'
-            fontFamily='M Plus 2'
-            fill='#F0F2F5'
-            fontSize='25.00px'
-            textAnchor='start'
-            dominantBaseline='middle'
-          >
-            Parse Bio
-          </text>
+
           {/* provided by? TBD */}
+          <image href='/Parse_icon_white.png' x='-5' y='-20' width='18%' />
           <text
             style={{ outlineStyle: 'none' }}
-            fontWeight='400'
+            fontWeight='900'
             textRendering='geometricPrecision'
             fontFamily='M Plus 2'
             fill='#F0F2F5'
-            fontSize='9.00px'
+            fontSize='22.00px'
             textAnchor='start'
             dominantBaseline='middle'
-            y='20'
+            x='35'
           >
-            Single Cell Platform
+            Trailmaker
           </text>
         </g>
       </svg>
@@ -332,17 +322,7 @@ const ContentWrapper = (props) => {
           <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
         </defs>
         <g>
-          <text
-            style={{ outlineStyle: 'none' }}
-            x='40px'
-            fontWeight='500'
-            textRendering='geometricPrecision'
-            fontFamily='M Plus 2'
-            y='24px'
-            fill='#F0F2F5'
-            fontSize='25.00px'
-            textAnchor='middle'
-          />
+          <image href='/Parse_icon_white.png' x='20' y='0' width='35%' />
         </g>
       </svg>
     </div>
@@ -507,35 +487,33 @@ const ContentWrapper = (props) => {
         disabled={isDisabled}
         onTitleClick={() => onClick(module)}
       >
-        {!collapsed && (
-          <ItemGroup
-            key='active project'
-            title={(
-              <Text
-                style={{
-                  width: '100%',
-                  color: 'grey',
-                }}
-                ellipsis
-              >
-                {selectedProjectText}
-              </Text>
-            )}
-          >
-            {items.map((item) => (
-              <Item
-                key={item.module}
-                disabled={item.isDisabled}
-                icon={item.icon}
-                onClick={() => {
-                  onClick(item.module);
-                }}
-              >
-                {item.name}
-              </Item>
-            ))}
-          </ItemGroup>
-        )}
+        <ItemGroup
+          key='active project'
+          title={(
+            <Text
+              style={{
+                width: '100%',
+                color: 'grey',
+              }}
+              ellipsis
+            >
+              {selectedProjectText}
+            </Text>
+          )}
+        >
+          {items.map((item) => (
+            <Item
+              key={item.module}
+              disabled={item.isDisabled}
+              icon={item.icon}
+              onClick={() => {
+                onClick(item.module);
+              }}
+            >
+              {item.name}
+            </Item>
+          ))}
+        </ItemGroup>
       </SubMenu>
     );
   };
@@ -577,13 +555,15 @@ const ContentWrapper = (props) => {
                 theme='dark'
                 selectedKeys={[currentModule]}
                 mode='inline'
-                openKeys={menuLinks.filter((item) => isUserInModule(item.module,
-                  item.items || [])).map((item) => item.module)}
+                openKeys={collapsed ? undefined
+                  : menuLinks
+                    .filter((item) => isUserInModule(item.module, item.items))
+                    .map((item) => item.module)}
               >
                 {menuItems}
               </Menu>
               <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: collapsed ? 'center' : 'left' }}>
-                <FeedbackButton collapsed={collapsed} />
+                <FeedbackButton buttonType='text' collapsed={collapsed} />
                 <ReferralButton collapsed={collapsed} />
                 <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
                 <div style={{ margin: '0.5em 0', textAlign: 'center' }}>

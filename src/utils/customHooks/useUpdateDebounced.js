@@ -4,12 +4,10 @@ import {
 } from 'react';
 
 // A custom hook for the sliders in plot styling for throttling the dispatching of updates to redux
-
-const useUpdateThrottled = (onUpdate, value, throttleTime = 1000) => {
-  const updateThrottled = useCallback(_.throttle((obj) => onUpdate(obj), throttleTime), [onUpdate]);
+const useUpdateDebounced = (onUpdate, value, throttleTime = 1000) => {
+  const updateThrottled = useCallback(_.debounce((obj) => onUpdate(obj), throttleTime), [onUpdate]);
   const [newValue, setNewValue] = useState(value);
-
-  // if the plot is reset - update the newConfig too
+  // if the config is changed - update the newConfig too
   useEffect(() => {
     if (!_.isEqual(newValue, value)) {
       setNewValue(value);
@@ -24,5 +22,4 @@ const useUpdateThrottled = (onUpdate, value, throttleTime = 1000) => {
   };
   return [newValue, update];
 };
-
-export default useUpdateThrottled;
+export default useUpdateDebounced;

@@ -433,7 +433,7 @@ const ConfigureEmbedding = (props) => {
         style={{ width: '100%', paddingRight: '0px' }}
       />
       <Row gutter={16}>
-        <Col flex='auto'>
+        <Col span={18}>
           <center>
             {renderPlot()}
           </center>
@@ -460,7 +460,10 @@ const ConfigureEmbedding = (props) => {
                   ))}
                 </Radio.Group>
                 Colour plot by:
-                <Radio.Group onChange={(e) => setPlotColouring(e.target.value)} value={plotColouring}>
+                <Radio.Group
+                  onChange={(e) => setPlotColouring(e.target.value)}
+                  value={plotColouring}
+                >
                   {Object.entries(plots).map(([key, plotObj]) => {
                     if (plots[key].subPlots[plotType]) {
                       return (
@@ -476,7 +479,11 @@ const ConfigureEmbedding = (props) => {
             </Panel>
           </Collapse>
 
-          <CalculationConfig experimentId={experimentId} onConfigChange={onConfigChange} disabled={controlsDisabledForViolin} />
+          <CalculationConfig
+            experimentId={experimentId}
+            onConfigChange={onConfigChange}
+            disabled={controlsDisabledForViolin}
+          />
           <Collapse>
             <Panel header='Plot options' key='styling'>
               <div style={{ height: 8 }} />

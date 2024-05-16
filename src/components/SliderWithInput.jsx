@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Slider, InputNumber, Space,
-} from 'antd';
+import { Slider, InputNumber, Space } from 'antd';
 
 import _ from 'lodash';
 
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const SliderWithInput = (props) => {
   const {
-    min, max, value, onUpdate, disabled, step, debounceTime,
+    min, max, value, onUpdate, disabled, step, debounceTime, sliderMaxWidth,
   } = props;
 
-  const [, handleChange] = useUpdateThrottled(onUpdate, value);
+  const [, handleChange] = useUpdateDebounced(onUpdate, value);
 
   const [localValue, setLocalValue] = useState(value);
 
@@ -37,7 +35,7 @@ const SliderWithInput = (props) => {
       step={stepToSet}
       disabled={disabled}
       style={{
-        minWidth: 100, display: 'inline-block', flexGrow: 100, margin: '0.5em',
+        minWidth: 100, display: 'inline-block', flexGrow: 100, margin: '0.5em', maxWidth: sliderMaxWidth,
       }}
     />
   );
@@ -67,7 +65,7 @@ const SliderWithInput = (props) => {
   );
 
   return (
-    <Space align='start'>
+    <Space align='start' wrap>
       {slider}
       {input}
     </Space>
@@ -82,12 +80,14 @@ SliderWithInput.propTypes = {
   disabled: PropTypes.bool,
   step: PropTypes.number,
   debounceTime: PropTypes.number,
+  sliderMaxWidth: PropTypes.number,
 };
 
 SliderWithInput.defaultProps = {
   disabled: false,
   step: null,
   debounceTime: 1000,
+  sliderMaxWidth: 200,
 };
 
 export default SliderWithInput;

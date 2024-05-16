@@ -308,7 +308,7 @@ const DataIntegration = (props) => {
         style={{ width: '100%', paddingRight: '0px' }}
       />
       <Row gutter={16}>
-        <Col flex='auto'>
+        <Col span={18}>
           <center>
             {renderPlot()}
           </center>

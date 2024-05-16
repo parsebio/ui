@@ -102,7 +102,7 @@ describe('UploadDetailsModal', () => {
     const errorMessages = screen.getAllByText('Error');
     expect(errorMessages.length).toBeGreaterThan(0);
   });
-  it('Deleting the file calls onDelete', () => {
+  it('Deleting the file calls onDelete', async () => {
     const status = UploadStatus.UPLOADED;
     renderUploadDetailsModal({
       data: {
@@ -113,6 +113,10 @@ describe('UploadDetailsModal', () => {
 
     const deleteButton = screen.getByText('Delete');
     userEvent.click(deleteButton);
+    await waitFor(() => {
+      expect(screen.queryByText('Yes')).toBeInTheDocument();
+    });
+    userEvent.click(screen.getByText('Yes'));
     expect(mockOnDelete).toHaveBeenCalled();
   });
 });
