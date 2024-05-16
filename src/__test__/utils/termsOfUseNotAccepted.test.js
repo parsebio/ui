@@ -6,6 +6,7 @@ describe('termsOfUseNotAccepted', () => {
     const user = {
       attributes: {
         'custom:agreed_terms_v2': 'true',
+        'custom:institution': 'mockInstitution',
       },
     };
     const domainName = DomainName.BIOMAGE;
