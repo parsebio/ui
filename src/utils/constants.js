@@ -91,7 +91,7 @@ const cellSetsUpdatedMessages = {
 };
 
 const termsOfUseCognitoKey = 'custom:agreed_terms_v2';
-const institutionCognitoKey = 'custom:institution';
+const institutionCognitoKey = 'custom:agreed_cookies_v1';
 
 export {
   api,
