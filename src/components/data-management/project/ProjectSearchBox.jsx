@@ -16,20 +16,19 @@ const ProjectSearchBox = (props) => {
 
         // filter by user id or email
         if (
-          validateInput(userId, rules.VALID_UUID).isValid
-          || validateInput(userId, rules.VALID_EMAIL).isValid
+          !(validateInput(userId, rules.VALID_UUID).isValid
+            || validateInput(userId, rules.VALID_EMAIL).isValid)
         ) {
-          // mismatch between UI and db conventions.
-          const projectTypeDb = projectType === 'secondaryAnalyses' ? 'secondary' : 'tertiary';
-          const projectIds = await fetchProjectsByUser(userId, projectTypeDb);
-          if (projectIds && projectIds.length > 0) {
-            onChange(new RegExp(projectIds.join('|'), 'i'));
-          } else {
-            // match nothing
-            onChange(new RegExp('^(?!x)x'));
-            console.log('No projects found for the specified user and project type.');
-          }
           return;
+        }
+
+        const projectIds = await fetchProjectsByUser(userId, projectType);
+        if (projectIds && projectIds.length > 0) {
+          onChange(new RegExp(projectIds.join('|'), 'i'));
+        } else {
+          // match nothing
+          onChange(new RegExp('^(?!x)x'));
+          console.log('No projects found for the specified user and project type.');
         }
       }
       onChange(new RegExp(value, 'i'));
@@ -50,8 +49,11 @@ const ProjectSearchBox = (props) => {
 };
 
 async function fetchProjectsByUser(userId, projectType) {
+  // mismatch between UI and db conventions.
+  const projectTypeDb = projectType === 'secondaryAnalyses' ? 'secondary' : 'tertiary';
+
   try {
-    const response = await fetchAPI(`/v2/user/${userId}/projects/${projectType}`, { method: 'GET' });
+    const response = await fetchAPI(`/v2/user/${userId}/projects/${projectTypeDb}`, { method: 'GET' });
     return response;
   } catch (e) {
     console.error(e);
