@@ -28,7 +28,6 @@ const ProjectSearchBox = (props) => {
         } else {
           // match nothing
           onChange(new RegExp('^(?!x)x'));
-          console.log('No projects found for the specified user and project type.');
         }
       }
       onChange(new RegExp(value, 'i'));
