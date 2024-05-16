@@ -4,11 +4,11 @@ import {
   Slider, Form,
   Radio, Space,
 } from 'antd';
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const PointDesign = (props) => {
   const { onUpdate, config, showShapeType } = props;
-  const [newConfig, handleChange] = useUpdateThrottled(onUpdate, config);
+  const [newConfig, handleChange] = useUpdateDebounced(onUpdate, config);
 
   return (
     <Space direction='vertical' style={{ width: '80%' }}>
