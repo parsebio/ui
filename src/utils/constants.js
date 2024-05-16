@@ -91,7 +91,9 @@ const cellSetsUpdatedMessages = {
 };
 
 const termsOfUseCognitoKey = 'custom:agreed_terms_v2';
-const institutionCognitoKey = 'custom:agreed_cookies_v1';
+const institutionCognitoKey = 'custom:institution';
+
+const notAgreedToTermsStatus = 424;
 
 export {
   api,
@@ -106,4 +108,5 @@ export {
   cellSetsUpdatedMessages,
   termsOfUseCognitoKey,
   institutionCognitoKey,
+  notAgreedToTermsStatus,
 };
