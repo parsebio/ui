@@ -16,7 +16,7 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
 import { termsOfUseCognitoKey, institutionCognitoKey } from 'utils/constants';
 import fetchAPI from 'utils/http/fetchAPI';
-import downloadFromUrl from 'utils/downloadFromUrl';
+import IframeModal from 'utils/IframeModal';
 
 const { Text } = Typography;
 
@@ -33,9 +33,16 @@ const TermsOfUseIntercept = (props) => {
   const [agreedTerms, setAgreedTerms] = useState(originalAgreedPrivacyPolicy);
   const [institution, setInstitution] = useState(originalInstitution);
 
+  const [dataUseVisible, setDataUseVisible] = useState(false);
+  const [dataUseBlob, setDataUseBlob] = useState(null);
+
   const getDownloadTermsOfUseFunc = (file) => async () => {
     const signedUrl = await fetchAPI(`/v2/termsOfUse/${file}/download`);
-    downloadFromUrl(signedUrl, { newTab: true });
+    const response = await fetch(signedUrl);
+    let blob = await response.blob();
+    blob = blob.slice(0, blob.size, 'text/html');
+
+    setDataUseBlob(blob);
   };
 
   const institutionFilledIn = useMemo(() => institution && institution.length > 0, [institution]);
@@ -117,13 +124,24 @@ const TermsOfUseIntercept = (props) => {
               Cookie Policy
             </Button>
             {' and '}
-            <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('dataUse')}>
+            <Button
+              type='link'
+              style={{ padding: '0px' }}
+              onClick={() => {
+                setDataUseVisible(true);
+                getDownloadTermsOfUseFunc('dataUse');
+              }}
+            >
               Trailmaker Data Use Agreement
             </Button>
             .
           </Text>
         </Space>
       </Space>
+
+      {dataUseVisible && (
+        <IframeModal onClose={() => setDataUseVisible(false)} dataUseBlob={dataUseBlob} />
+      )}
     </Modal>
   );
 };
