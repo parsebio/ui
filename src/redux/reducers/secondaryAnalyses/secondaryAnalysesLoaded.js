@@ -17,6 +17,7 @@ const secondaryAnalysesLoaded = produce((draft, action) => {
 
   draft.meta.activeSecondaryAnalysisId = newActiveSecondaryAnalysisId;
   draft.meta.loading = false;
+  draft.meta.initialLoadPending = false;
   draft.ids = ids;
 
   secondaryAnalyses.forEach((analysis) => {
