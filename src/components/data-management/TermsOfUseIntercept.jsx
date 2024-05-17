@@ -36,9 +36,14 @@ const TermsOfUseIntercept = (props) => {
   const [dataUseVisible, setDataUseVisible] = useState(false);
   const [dataUseBlob, setDataUseBlob] = useState(null);
 
-  const getDownloadTermsOfUseFunc = (file) => async () => {
-    const signedUrl = await fetchAPI(`/v2/termsOfUse/${file}/download`);
+  const downloadTermsOfUse = async () => {
+    console.log('eoifjeroi11');
+    const signedUrl = await fetchAPI('/v2/termsOfUse/dataUse/download');
+    console.log('eoifjeroi22');
     const response = await fetch(signedUrl);
+
+    console.log('responseDebug');
+    console.log(response);
     let blob = await response.blob();
     blob = blob.slice(0, blob.size, 'text/html');
 
@@ -46,6 +51,10 @@ const TermsOfUseIntercept = (props) => {
   };
 
   const institutionFilledIn = useMemo(() => institution && institution.length > 0, [institution]);
+
+  // if (dataUseVisible) {
+  //   return <IframeModal style={{ width: '100%', height: '100%' }} onClose={() => setDataUseVisible(false)} blobToDisplay={dataUseBlob} />;
+  // }
 
   return (
     <Modal
@@ -116,11 +125,11 @@ const TermsOfUseIntercept = (props) => {
             <span style={{ color: '#ff0000' }}>*</span>
             I agree to the
             {' '}
-            <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('privacyPolicy')}>
+            <Button type='link' style={{ padding: '0px' }}>
               Privacy policy
             </Button>
             {', '}
-            <Button type='link' style={{ padding: '0px' }} onClick={getDownloadTermsOfUseFunc('cookies')}>
+            <Button type='link' style={{ padding: '0px' }}>
               Cookie Policy
             </Button>
             {' and '}
@@ -129,7 +138,14 @@ const TermsOfUseIntercept = (props) => {
               style={{ padding: '0px' }}
               onClick={() => {
                 setDataUseVisible(true);
-                getDownloadTermsOfUseFunc('dataUse');
+
+                console.log('eoifjeroi111232');
+                console.log('dataUseBlobDebug');
+                console.log(dataUseBlob);
+                if (!dataUseBlob) {
+                  console.log('gotHERE');
+                  downloadTermsOfUse();
+                }
               }}
             >
               Trailmaker Data Use Agreement
@@ -140,7 +156,7 @@ const TermsOfUseIntercept = (props) => {
       </Space>
 
       {dataUseVisible && (
-        <IframeModal onClose={() => setDataUseVisible(false)} dataUseBlob={dataUseBlob} />
+        <IframeModal onClose={() => setDataUseVisible(false)} blobToDisplay={dataUseBlob} />
       )}
     </Modal>
   );

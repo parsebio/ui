@@ -1,23 +1,28 @@
 import React from 'react';
 import { Modal } from 'antd';
 import PropTypes from 'prop-types';
+
 import { fastLoad } from 'components/Loader';
 
 const IframeModal = (props) => {
   const { onClose, blobToDisplay } = props;
 
+  console.log('blobToDisplayDebug');
+  console.log(blobToDisplay);
+
   return (
     <Modal
-      title=':'
+      title={<></>}
       open
-      centered
-      width={700}
+      width={1200}
       footer={null}
       onOk={onClose}
       onCancel={onClose}
+      bodyStyle={{ height: '90vh' }}
+      style={{ top: '2vh' }}
     >
       {blobToDisplay
-        ? <iframe src={URL.createObjectURL(blobToDisplay)} title='My Document' style={{ height: '100%', width: '100%' }} />
+        ? <iframe src={URL.createObjectURL(blobToDisplay)} title='My Document' style={{ width: '100%', height: '100%' }} />
         : fastLoad()}
     </Modal>
   );
