@@ -1,10 +1,10 @@
 [
-  { "name": "GRCh38", "species": "Human" },
-  { "name": "GRCm39", "species": "Mouse" },
-  { "name": "GRCh38_GRCm39", "species": "Mixed human mouse"},
-  { "name": "BDGP6.46", "species": "Drosophila melanogaster"},
-  { "name": "bos_ovis", "species": "Mixed cow and sheep"},
-  { "name": "ovis_aries", "species": "Sheep"},
-  { "name": "sus_ovis", "species": "Mixed pig and sheep"},
-  { "name": "Mmul10", "species": "Macaca mulatta (Rhesus monkey)"}
+  { "name": "GRCh38", "species": "Homo sapiens (Human)" },
+  { "name": "GRCm39", "species": "Mus musculus (Mouse)" },
+  { "name": "BDGP6.46", "species": "Drosophila melanogaster (Fruit fly)"},
+  { "name": "Oar_v3.1", "species": "Ovis aries (sheep)"},
+  { "name": "Mmul10", "species": "Macaca mulatta (Rhesus monkey)"},
+  { "name": "GRCh38_GRCm39", "species": "Mixed human and mouse"},
+  { "name": "ARS-UCD1.2_Oar_v3.1", "species": "Mixed cow and sheep"},
+  { "name": "Sscrofa11.1_Oar_v3.1", "species": "Mixed pig and sheep"}
 ]
