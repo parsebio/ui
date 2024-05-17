@@ -52,10 +52,6 @@ const TermsOfUseIntercept = (props) => {
 
   const institutionFilledIn = useMemo(() => institution && institution.length > 0, [institution]);
 
-  // if (dataUseVisible) {
-  //   return <IframeModal style={{ width: '100%', height: '100%' }} onClose={() => setDataUseVisible(false)} blobToDisplay={dataUseBlob} />;
-  // }
-
   return (
     <Modal
       title='Consent to the Trailmaker terms of use:'
@@ -125,7 +121,11 @@ const TermsOfUseIntercept = (props) => {
             <span style={{ color: '#ff0000' }}>*</span>
             I agree to the
             {' '}
-            <Button type='link' style={{ padding: '0px' }}>
+            <Button
+              type='link'
+              style={{ padding: '0px' }}
+              onClick={() => window.open('https://www.parsebiosciences.com/privacy-policy/', '_blank').focus()}
+            >
               Privacy policy
             </Button>
             {', '}
