@@ -119,7 +119,7 @@ const TermsOfUseIntercept = (props) => {
           />
           <Text>
             <span style={{ color: '#ff0000' }}>*</span>
-            I agree to the
+            I confirm I have read the
             {' '}
             <Button
               type='link'
