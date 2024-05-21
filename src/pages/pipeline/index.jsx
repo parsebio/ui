@@ -62,7 +62,10 @@ const Pipeline = () => {
 
   const user = useSelector((state) => state.user.current);
 
-  const initialLoadPending = useSelector((state) => state.secondaryAnalyses.initialLoadPending, _.isEqual);
+  const initialLoadPending = useSelector(
+    (state) => state.secondaryAnalyses.meta.initialLoadPending, _.isEqual,
+  );
+
   const activeSecondaryAnalysisId = useSelector(
     (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
     _.isEqual,
