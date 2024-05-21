@@ -15,7 +15,8 @@ const ProjectSearchBox = (props) => {
       let searchRegex = new RegExp(value, 'i');
 
       if (value.startsWith(userPrefix)) {
-        searchRegex = getUserSearchRegex(value, userPrefix, projectType);
+        const searchBy = value.slice(userPrefix.length).trim();
+        searchRegex = await getUserSearchRegex(searchBy, projectType);
       }
       onChange(searchRegex);
     }, 400),
@@ -46,28 +47,26 @@ const fetchProjectsByUser = async (userId, projectType) => {
   }
 };
 
-const getUserSearchRegex = async (value, userPrefix, projectType) => {
-  const userId = value.slice(userPrefix.length).trim();
-
+const getUserSearchRegex = async (searchBy, projectType) => {
   // filter by user id or email
   if (
-    !(validateInput(userId, rules.VALID_UUID).isValid
-      || validateInput(userId, rules.VALID_EMAIL).isValid)
+    !(validateInput(searchBy, rules.VALID_UUID).isValid
+      || validateInput(searchBy, rules.VALID_EMAIL).isValid)
   ) {
     return;
   }
 
   try {
-    const projectIds = await fetchProjectsByUser(userId, projectType);
+    const projectIds = await fetchProjectsByUser(searchBy, projectType);
     if (projectIds.length > 0) {
       return new RegExp(projectIds.join('|'), 'i');
     }
     // if empty list, match nothing (instead of matching everything)
     return new RegExp('^(?!x)x');
   } catch (e) {
-    if (e.response && e.response.status === 401) {
+    if (e.response && e.response.status === 403) {
       // if unauthorized revert to default behaviour
-      return new RegExp(value, 'i');
+      return new RegExp(searchBy, 'i');
     }
     console.error(e);
   }
