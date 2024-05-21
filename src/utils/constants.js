@@ -90,6 +90,11 @@ const cellSetsUpdatedMessages = {
   ScTypeAnnotate: endUserMessages.SUCCESS_CELL_SETS_ANNOTATED,
 };
 
+const termsOfUseCognitoKey = 'custom:agreed_terms_v2';
+const institutionCognitoKey = 'custom:institution';
+
+const notAgreedToTermsStatus = 424;
+
 export {
   api,
   modules,
@@ -101,4 +106,7 @@ export {
   layout,
   downsamplingMethods,
   cellSetsUpdatedMessages,
+  termsOfUseCognitoKey,
+  institutionCognitoKey,
+  notAgreedToTermsStatus,
 };

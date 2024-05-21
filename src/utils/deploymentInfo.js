@@ -1,10 +1,5 @@
 const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 
-const privacyPolicyIsNotAccepted = (user, domainName) => (
-  user?.attributes['custom:agreed_terms'] !== 'true'
-  && (domainName === DomainName.BIOMAGE || domainName === DomainName.BIOMAGE_STAGING)
-);
-
 const Environment = {
   DEVELOPMENT: 'development',
   STAGING: 'staging',
@@ -12,8 +7,8 @@ const Environment = {
 };
 
 const DomainName = {
-  BIOMAGE: 'scp.biomage.net',
-  BIOMAGE_STAGING: 'scp-staging.biomage.net',
+  BIOMAGE: 'app.trailmaker.parsebiosciences.com',
+  BIOMAGE_STAGING: 'staging.trailmaker.parsebiosciences.com',
 };
 
 const AccountId = {
@@ -52,5 +47,5 @@ const ssrGetDeploymentInfo = () => {
 
 // Using module.exports instead of export allows next.config.js to use it
 module.exports = {
-  isBrowser, ssrGetDeploymentInfo, DomainName, AccountId, Environment, privacyPolicyIsNotAccepted,
+  isBrowser, ssrGetDeploymentInfo, DomainName, AccountId, Environment,
 };

@@ -195,7 +195,7 @@ const LaunchPathwayAnalysisModal = (props) => {
               onClick={async () => {
                 const genesList = await getBackgroundGenesList();
                 const fileUrl = writeToFileURL(genesList);
-                downloadFromUrl(fileUrl, 'reference_genes_list.txt');
+                downloadFromUrl(fileUrl, { fileName: 'reference_genes_list.txt' });
               }}
             >
               Click here to download the reference genes list

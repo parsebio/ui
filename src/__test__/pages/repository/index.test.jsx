@@ -52,7 +52,11 @@ describe('Repository page', () => {
     Auth.currentAuthenticatedUser = jest.fn(() => Promise.resolve(
       {
         username: 'mockuser',
-        attributes: { name: 'Mocked User', 'custom:agreed_terms': 'false', email: 'mock@user.name' },
+        attributes: {
+          name: 'Mocked User',
+          'custom:agreed_terms_v2': 'true',
+          email: 'mock@user.name',
+        },
       },
     ));
     await store.dispatch(loadUser());
@@ -68,7 +72,11 @@ describe('Repository page', () => {
     Auth.currentAuthenticatedUser = jest.fn(() => Promise.resolve(
       {
         username: 'mockuser',
-        attributes: { name: 'Mocked User', 'custom:agreed_terms': 'true', email: 'mock@user.name' },
+        attributes: {
+          name: 'Mocked User',
+          'custom:agreed_terms_v2': 'true',
+          email: 'mock@user.name',
+        },
       },
     ));
     await store.dispatch(loadUser());

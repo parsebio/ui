@@ -4,7 +4,7 @@ import signIn from 'utils/signIn';
 
 const loadUser = () => async (dispatch) => {
   try {
-    const user = await Auth.currentAuthenticatedUser();
+    const user = await Auth.currentAuthenticatedUser({ bypassCache: true });
 
     dispatch({
       type: USER_LOADED,
