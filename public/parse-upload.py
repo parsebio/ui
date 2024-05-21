@@ -27,10 +27,10 @@ PART_COUNT_MAX = 10000
 # -     staging secondary master: "https://api-secondary-analysis-master.scp-staging.biomage.net/v2"
 # -     staging default: "https://api-default.scp-staging.biomage.net/v2"
 
-default_prod_api_url = (
-    "https://api-secondary-analysis-master.scp-staging.biomage.net/v2"
-)
-# default_prod_api_url = "https://api.scp.biomage.net/v2"
+# default_prod_api_url = (
+#     "https://api-default.scp-staging.biomage.net/v2"
+# )
+default_prod_api_url = "https://api.app.trailmaker.parsebiosciences.com/v2"
 
 base_url = os.environ.get("PARSE_API_URL") or default_prod_api_url
 
