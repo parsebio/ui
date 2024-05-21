@@ -37,13 +37,9 @@ const TermsOfUseIntercept = (props) => {
   const [dataUseBlob, setDataUseBlob] = useState(null);
 
   const downloadTermsOfUse = async () => {
-    console.log('eoifjeroi11');
     const signedUrl = await fetchAPI('/v2/termsOfUse/dataUse/download');
-    console.log('eoifjeroi22');
     const response = await fetch(signedUrl);
 
-    console.log('responseDebug');
-    console.log(response);
     let blob = await response.blob();
     blob = blob.slice(0, blob.size, 'text/html');
 
@@ -139,11 +135,7 @@ const TermsOfUseIntercept = (props) => {
               onClick={() => {
                 setDataUseVisible(true);
 
-                console.log('eoifjeroi111232');
-                console.log('dataUseBlobDebug');
-                console.log(dataUseBlob);
                 if (!dataUseBlob) {
-                  console.log('gotHERE');
                   downloadTermsOfUse();
                 }
               }}

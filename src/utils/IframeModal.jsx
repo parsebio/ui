@@ -7,9 +7,6 @@ import { fastLoad } from 'components/Loader';
 const IframeModal = (props) => {
   const { onClose, blobToDisplay } = props;
 
-  console.log('blobToDisplayDebug');
-  console.log(blobToDisplay);
-
   return (
     <Modal
       title={<></>}
