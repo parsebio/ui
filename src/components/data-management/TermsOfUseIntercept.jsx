@@ -125,7 +125,11 @@ const TermsOfUseIntercept = (props) => {
               Privacy policy
             </Button>
             {', '}
-            <Button type='link' style={{ padding: '0px' }}>
+            <Button
+              type='link'
+              style={{ padding: '0px' }}
+              onClick={() => window.open('https://www.parsebiosciences.com/trailmaker-cookie-policy/', '_blank').focus()}
+            >
               Cookie Policy
             </Button>
             {' and '}
