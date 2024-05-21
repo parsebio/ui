@@ -7,8 +7,8 @@ const Environment = {
 };
 
 const DomainName = {
-  BIOMAGE: 'scp.biomage.net',
-  BIOMAGE_STAGING: 'scp-staging.biomage.net',
+  BIOMAGE: 'app.trailmaker.parsebiosciences.com',
+  BIOMAGE_STAGING: 'staging.trailmaker.parsebiosciences.com',
 };
 
 const AccountId = {
