@@ -430,6 +430,7 @@ exports[`switch experiment  Then updates the experiment info 1`] = `
     "meta": {
       "activeSecondaryAnalysisId": null,
       "error": false,
+      "initialLoadPending": true,
       "loading": false,
       "saving": false,
     },
@@ -870,6 +871,7 @@ exports[`switch experiment  switches the experiment to its initial values 1`] = 
     "meta": {
       "activeSecondaryAnalysisId": null,
       "error": false,
+      "initialLoadPending": true,
       "loading": false,
       "saving": false,
     },
