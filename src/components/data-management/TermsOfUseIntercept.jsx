@@ -30,6 +30,7 @@ const TermsOfUseIntercept = (props) => {
     },
   } = user;
 
+  const [readPrivacyAndCookie, setReadPrivacyAndCookie] = useState(originalAgreedPrivacyPolicy);
   const [agreedTerms, setAgreedTerms] = useState(originalAgreedPrivacyPolicy);
   const [institution, setInstitution] = useState(originalInstitution);
 
@@ -56,7 +57,7 @@ const TermsOfUseIntercept = (props) => {
       className={styles['ok-to-the-right-modal']}
       cancelText='Sign out'
       cancelButtonProps={{ danger: true }}
-      okButtonProps={{ disabled: agreedTerms !== 'true' || !institutionFilledIn }}
+      okButtonProps={{ disabled: agreedTerms !== 'true' || readPrivacyAndCookie !== 'true' || !institutionFilledIn }}
       closable={false}
       maskClosable={false}
       width={700}
@@ -110,8 +111,8 @@ const TermsOfUseIntercept = (props) => {
         />
         <Space align='baseline'>
           <Checkbox
-            defaultChecked={agreedTerms === 'true'}
-            onChange={(e) => setAgreedTerms(e.target.checked.toString())}
+            defaultChecked={readPrivacyAndCookie === 'true'}
+            onChange={(e) => setReadPrivacyAndCookie(e.target.checked.toString())}
           />
           <Text>
             <span style={{ color: '#ff0000' }}>*</span>
@@ -124,15 +125,26 @@ const TermsOfUseIntercept = (props) => {
             >
               Privacy policy
             </Button>
-            {', '}
+            {' and '}
             <Button
               type='link'
               style={{ padding: '0px' }}
               onClick={() => window.open('https://www.parsebiosciences.com/trailmaker-cookie-policy/', '_blank').focus()}
             >
-              Cookie Policy
+              Trailmaker Cookie Policy
             </Button>
-            {' and '}
+            .
+          </Text>
+        </Space>
+        <Space align='baseline'>
+          <Checkbox
+            defaultChecked={agreedTerms === 'true'}
+            onChange={(e) => setAgreedTerms(e.target.checked.toString())}
+          />
+          <Text>
+            <span style={{ color: '#ff0000' }}>*</span>
+            I accept the
+            {' '}
             <Button
               type='link'
               style={{ padding: '0px' }}
@@ -144,9 +156,8 @@ const TermsOfUseIntercept = (props) => {
                 }
               }}
             >
-              Trailmaker Data Use Agreement
+              Terms of Use Agreement
             </Button>
-            .
           </Text>
         </Space>
       </Space>
