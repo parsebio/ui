@@ -49,7 +49,12 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/data-management',
+        destination: '/landing',
+        permanent: false,
+      },
+      {
+        source: '/pipeline/:secondaryAnalysisId',
+        destination: '/pipeline/:secondaryAnalysisId/status',
         permanent: false,
       },
       {

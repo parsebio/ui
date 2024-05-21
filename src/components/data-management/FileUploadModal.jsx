@@ -14,15 +14,9 @@ import {
   List,
   Tooltip,
 } from 'antd';
-import {
-  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
-} from '@ant-design/icons';
+import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
-
-import config from 'config';
-
-import Expandable from 'components/Expandable';
 
 import { sampleTech } from 'utils/constants';
 import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
@@ -30,6 +24,7 @@ import handleError from 'utils/http/handleError';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import endUserMessages from 'utils/endUserMessages';
+import ExpandableList from 'components/ExpandableList';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -68,7 +63,7 @@ const FileUploadModal = (props) => {
   const previouslyUploadedSamples = Object.keys(samples)
     .filter((key) => samples[key].experimentId === activeExperimentId);
 
-  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech['10X']);
+  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech.PARSE);
   const [canUpload, setCanUpload] = useState(false);
   const [files, setFiles] = useState(emptyFiles);
 
@@ -248,7 +243,11 @@ const FileUploadModal = (props) => {
                 {...getRootProps({ className: 'dropzone' })}
                 id='dropzone'
               >
-                <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} webkitdirectory={webkitdirectory} />
+                <input
+                  data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT}
+                  {...getInputProps()}
+                  webkitdirectory={webkitdirectory}
+                />
                 <Empty description={dropzoneText} image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </div>
             )}
@@ -283,7 +282,12 @@ const FileUploadModal = (props) => {
                           </>
                         )}
                       <Text
-                        ellipsis={{ tooltip: fileUploadUtils[selectedTech].getFilePathToDisplay(file.fileObject.path) }}
+                        ellipsis={{
+                          tooltip:
+                            fileUploadUtils[selectedTech].getFilePathToDisplay(
+                              file.fileObject.path,
+                            ),
+                        }}
                         style={{ width: '200px' }}
                       >
                         {fileUploadUtils[selectedTech].getFilePathToDisplay(file.fileObject.path)}
@@ -296,51 +300,17 @@ const FileUploadModal = (props) => {
             </>
           ) : ''}
           {files.invalid.length > 0 && (
-            <Expandable
-              style={{ width: '100%' }}
-              expandedContent={(
+            <ExpandableList
+              expandedTitle='Ignored files'
+              dataSource={files.invalid}
+              getItemText={(file) => _.trim(file.path, '/')}
+              getItemExplanation={(file) => file.rejectReason}
+              collapsedExplanation={(
                 <>
-                  <Divider orientation='center' style={{ color: 'red', marginBottom: '0' }}>Ignored files</Divider>
-                  <List
-                    dataSource={files.invalid}
-                    size='small'
-                    itemLayout='horizontal'
-                    pagination
-                    renderItem={(file) => (
-                      <List.Item key={file.path} style={{ height: '100%', width: '100%' }}>
-                        <Space style={{ width: 200, justifyContent: 'center' }}>
-                          <CloseCircleTwoTone twoToneColor='#f5222d' />
-                          <div style={{ width: 200 }}>
-                            <Text
-                              ellipsis={{ tooltip: _.trim(file.path, '/') }}
-                            >
-                              {_.trim(file.path, '/')}
-                            </Text>
-                          </div>
-                        </Space>
-                        <Text style={{ width: '100%', marginLeft: '50px' }}>{file.rejectReason}</Text>
-                      </List.Item>
-                    )}
-                  />
+                  {
+                    `${files.invalid.length}${files.invalid.length > 1 ? ' files were' : ' file was'} ignored. Click to display`
+                  }
                 </>
-              )}
-              collapsedContent={(
-                <center style={{ cursor: 'pointer' }}>
-                  <Divider orientation='center' style={{ color: 'red' }} />
-                  <Text type='danger'>
-                    {' '}
-                    <WarningOutlined />
-                    {' '}
-                  </Text>
-                  <Text>
-                    {files.invalid.length}
-                    {' '}
-                    file
-                    {files.invalid.length > 1 ? 's were' : ' was'}
-                    {' '}
-                    ignored, click to display
-                  </Text>
-                </center>
               )}
             />
           )}

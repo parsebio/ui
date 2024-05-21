@@ -28,7 +28,7 @@ import config from 'config';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-jest.mock('components/header/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('redux/actions/experimentSettings/processingConfig/saveProcessingSettings');
 jest.mock('redux/actions/experiments', () => ({
   cloneExperiment: jest.fn(() => () => { }),
@@ -154,12 +154,6 @@ describe('DataProcessingPage', () => {
         {dataProcessingPageFactory()}
       </Provider>,
     );
-
-    // It contains the title Data Processing
-    const titles = screen.getAllByText('Data Processing');
-
-    // One for breadcrumb, one for title
-    expect(titles).toHaveLength(1);
 
     // It shows the first filter step - Classifier filter
     expect(screen.getByText(/Classifier/i)).toBeInTheDocument();

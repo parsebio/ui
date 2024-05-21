@@ -6,7 +6,6 @@ import {
 import { DownOutlined, PictureOutlined, ToolOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
-import Header from 'components/Header';
 
 import CellSetsTool from 'components/data-exploration/cell-sets-tool/CellSetsTool';
 import GeneListTool from 'components/data-exploration/gene-list-tool/GeneListTool';
@@ -175,26 +174,6 @@ const ExplorationViewPage = ({
 
   return (
     <>
-      <Header
-        experimentId={experimentId}
-        experimentData={experimentData}
-        title='Data Exploration'
-        extra={[(
-          <Dropdown
-            trigger={['click']}
-            key='search-menu-dropdown'
-            overlay={searchMenu}
-            open={addMenuVisible}
-            onOpenChange={(visible) => setAddMenuVisible(visible)}
-          >
-            <Button type='primary' onClick={() => setAddMenuVisible(!addMenuVisible)}>
-              Add
-              {' '}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
-        )]}
-      />
       <MultiTileContainer
         tileMap={TILE_MAP}
         initialArrangement={windows}

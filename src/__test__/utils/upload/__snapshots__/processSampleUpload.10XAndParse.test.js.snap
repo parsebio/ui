@@ -193,10 +193,73 @@ exports[`processUpload 10x, v2 Updates redux correctly when there are file uploa
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
@@ -210,10 +273,73 @@ exports[`processUpload 10x, v2 Updates redux correctly when there are file uploa
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
@@ -227,10 +353,73 @@ exports[`processUpload 10x, v2 Updates redux correctly when there are file uploa
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
@@ -351,16 +540,19 @@ exports[`processUpload 10x, v2 Uploads and updates redux correctly when there ar
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
     "http://localhost:3000/v2/completeMultipartUpload",
     {
-      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","fileId":"mockSampleFileId","type":"sample"}",
+      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","s3Path":"mockSampleFileId","type":"sample"}",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -378,16 +570,19 @@ exports[`processUpload 10x, v2 Uploads and updates redux correctly when there ar
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
     "http://localhost:3000/v2/completeMultipartUpload",
     {
-      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","fileId":"mockSampleFileId","type":"sample"}",
+      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","s3Path":"mockSampleFileId","type":"sample"}",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -405,16 +600,19 @@ exports[`processUpload 10x, v2 Uploads and updates redux correctly when there ar
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
     "http://localhost:3000/v2/completeMultipartUpload",
     {
-      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","fileId":"mockSampleFileId","type":"sample"}",
+      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","s3Path":"mockSampleFileId","type":"sample"}",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -627,10 +825,73 @@ exports[`processUpload 10x, v3 Updates redux correctly when there are file uploa
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
@@ -644,10 +905,73 @@ exports[`processUpload 10x, v3 Updates redux correctly when there are file uploa
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
@@ -661,10 +985,73 @@ exports[`processUpload 10x, v3 Updates redux correctly when there are file uploa
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
@@ -785,16 +1172,19 @@ exports[`processUpload 10x, v3 Uploads and updates redux correctly when there ar
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
     "http://localhost:3000/v2/completeMultipartUpload",
     {
-      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","fileId":"mockSampleFileId","type":"sample"}",
+      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","s3Path":"mockSampleFileId","type":"sample"}",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -812,16 +1202,19 @@ exports[`processUpload 10x, v3 Uploads and updates redux correctly when there ar
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
     "http://localhost:3000/v2/completeMultipartUpload",
     {
-      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","fileId":"mockSampleFileId","type":"sample"}",
+      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","s3Path":"mockSampleFileId","type":"sample"}",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -839,16 +1232,19 @@ exports[`processUpload 10x, v3 Uploads and updates redux correctly when there ar
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
     "http://localhost:3000/v2/completeMultipartUpload",
     {
-      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","fileId":"mockSampleFileId","type":"sample"}",
+      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","s3Path":"mockSampleFileId","type":"sample"}",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1061,10 +1457,73 @@ exports[`processUpload parse, null Updates redux correctly when there are file u
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
@@ -1078,10 +1537,73 @@ exports[`processUpload parse, null Updates redux correctly when there are file u
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
@@ -1095,10 +1617,73 @@ exports[`processUpload parse, null Updates redux correctly when there are file u
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
+    {
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
@@ -1219,16 +1804,19 @@ exports[`processUpload parse, null Uploads and updates redux correctly when ther
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
     "http://localhost:3000/v2/completeMultipartUpload",
     {
-      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","fileId":"mockSampleFileId","type":"sample"}",
+      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","s3Path":"mockSampleFileId","type":"sample"}",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1246,16 +1834,19 @@ exports[`processUpload parse, null Uploads and updates redux correctly when ther
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
     "http://localhost:3000/v2/completeMultipartUpload",
     {
-      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","fileId":"mockSampleFileId","type":"sample"}",
+      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","s3Path":"mockSampleFileId","type":"sample"}",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1273,16 +1864,19 @@ exports[`processUpload parse, null Uploads and updates redux correctly when ther
     },
   ],
   [
-    "http://localhost:3000/v2/experiments/project-uuid/upload/some_id/part/1/signedUrl?bucket=biomage-originals-test-accountId&key=mockSampleFileId",
+    "http://localhost:3000/v2/projects/project-uuid/upload/some_id/part/1/signedUrl",
     {
-      "headers": {},
-      "method": "GET",
+      "body": "{"bucket":"biomage-originals-test-accountId","key":"mockSampleFileId"}",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
     },
   ],
   [
     "http://localhost:3000/v2/completeMultipartUpload",
     {
-      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","fileId":"mockSampleFileId","type":"sample"}",
+      "body": "{"parts":[{"ETag":"etag-blah","PartNumber":1}],"uploadId":"some_id","s3Path":"mockSampleFileId","type":"sample"}",
       "headers": {
         "Content-Type": "application/json",
       },

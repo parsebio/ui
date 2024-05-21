@@ -14,6 +14,7 @@ import sampleReducer from './samples';
 import backendStatusReducer from './backendStatus';
 import networkResourcesReducer from './networkResources';
 import userReducer from './user';
+import secondaryAnalysesReducer from './secondaryAnalyses';
 import { EXPERIMENTS_SWITCH } from '../actionTypes/experiments';
 
 const appReducers = combineReducers({
@@ -25,6 +26,7 @@ const appReducers = combineReducers({
   embeddings: embeddingsReducer,
   experiments: experimentsReducer,
   experimentSettings: experimentSettingsReducer,
+  secondaryAnalyses: secondaryAnalysesReducer,
   backendStatus: backendStatusReducer,
   genes: genesReducer,
   layout: layoutReducer,

@@ -42,6 +42,7 @@ jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
     attributes: {
       'custom:agreed_terms': 'true',
+      name: 'Tester Testson',
     },
   })),
   federatedSignIn: jest.fn(),
@@ -144,7 +145,7 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.getByText('Data Management')).toBeInTheDocument();
+    expect(screen.getByText('Pipeline')).toBeInTheDocument();
     expect(screen.getByText(experimentName)).toBeInTheDocument();
     expect(screen.getByText('Data Processing')).toBeInTheDocument();
     expect(screen.getByText('Data Exploration')).toBeInTheDocument();
@@ -153,9 +154,6 @@ describe('ContentWrapper', () => {
 
   it('links are disabled if there is no experimentId', async () => {
     await renderContentWrapper();
-
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
 
     // Data Processing link is disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
@@ -173,9 +171,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper();
 
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
-
     // Data Processing link is disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
 
@@ -191,9 +186,6 @@ describe('ContentWrapper', () => {
     calculateQCRerunStatus.mockReturnValue({ rerun: true, reasons: [], complete: true });
 
     await renderContentWrapper();
-
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
 
     // Data Processing link is disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
@@ -230,9 +222,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
-
     // Data Processing link is not disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'false');
 
@@ -250,10 +239,9 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
-    expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
-    expect(screen.getByText('Data Exploration').closest('li')).toHaveAttribute('aria-disabled', 'true');
-    expect(screen.getByText('Plots and Tables').closest('li')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByText('Data Processing')).not.toBeInTheDocument();
+    expect(screen.queryByText('Data Exploration')).not.toBeInTheDocument();
+    expect(screen.queryByText('Plots and Tables')).not.toBeInTheDocument();
   });
 
   it('has the correct sider and layout style when opened / closed', async () => {
@@ -312,7 +300,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.queryByText('Data Management')).not.toBeInTheDocument();
     expect(Auth.federatedSignIn).toHaveBeenCalled();
   });
 

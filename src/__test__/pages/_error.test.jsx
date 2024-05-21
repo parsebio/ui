@@ -45,8 +45,7 @@ describe('ErrorPage', () => {
 
     expect(screen.getByText(/Sorry, something went wrong on our end./i)).toBeInTheDocument();
 
-    // There should be a feedback button and a reload button
-    expect(screen.getByText(/Feedback or issues?/i).closest('button')).toBeInTheDocument();
+    // There should be a reload button
     expect(screen.getByText(/Reload page/i)).toBeInTheDocument();
   });
 

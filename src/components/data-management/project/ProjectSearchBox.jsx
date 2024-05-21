@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Tooltip, Input } from 'antd';
 
 const ProjectSearchBox = (props) => {
-  const { onChange } = props;
+  const { onChange, projectType } = props;
 
   const debouncedSetFilterParam = useCallback(
     _.debounce((value) => {
@@ -12,20 +12,26 @@ const ProjectSearchBox = (props) => {
     }, 400),
     [],
   );
+  const tooltipText = projectType === 'secondaryAnalyses' ? 'run' : 'project';
 
   return (
 
-    <Tooltip title='To search, insert project name, project ID or analysis ID here' placement='right'>
+    <Tooltip title={`To search, insert ${tooltipText} name or ${tooltipText} ID here`} placement='right'>
       <Input
-        placeholder='Filter by project name, project ID or analysis ID'
+        placeholder={`Filter by ${tooltipText} name or ${tooltipText} ID`}
         onChange={(e) => debouncedSetFilterParam(e.target.value)}
       />
     </Tooltip>
   );
 };
 
+ProjectSearchBox.defaultProps = {
+  projectType: null,
+};
+
 ProjectSearchBox.propTypes = {
   onChange: PropTypes.func.isRequired,
+  projectType: PropTypes.string,
 };
 
 export default ProjectSearchBox;

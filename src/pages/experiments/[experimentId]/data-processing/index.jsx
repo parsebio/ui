@@ -44,7 +44,6 @@ import ConfigureEmbedding from 'components/data-processing/ConfigureEmbedding/Co
 import DataIntegration from 'components/data-processing/DataIntegration/DataIntegration';
 import DoubletScores from 'components/data-processing/DoubletScores/DoubletScores';
 import GenesVsUMIs from 'components/data-processing/GenesVsUMIs/GenesVsUMIs';
-import Header from 'components/Header';
 import MitochondrialContent from 'components/data-processing/MitochondrialContent/MitochondrialContent';
 import PipelineRedirectToDataProcessing from 'components/PipelineRedirectToDataProcessing';
 import PlatformError from 'components/PlatformError';
@@ -677,11 +676,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
 
   return (
     <>
-      <Header
-        experimentId={experimentId}
-        experimentData={experimentData}
-        title='Data Processing'
-      />
       <Space direction='vertical' style={{ width: '100%', padding: '0 10px' }}>
         {runQCModalVisible && (
           runQCAuthorized === null ? <ClipLoader />
@@ -705,7 +699,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
               >
                 <p>
                   This might take several minutes.
-                  Your navigation within Cellenics will be restricted during this time.
+                  Your navigation within Trailmaker will be restricted during this time.
                   Do you want to start?
                 </p>
                 {

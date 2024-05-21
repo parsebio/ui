@@ -34,7 +34,7 @@ const PrivacyPolicyIntercept = (props) => {
 
   return (
     <Modal
-      title='Agree to the Biomage privacy policy to continue using Cellenics'
+      title='Agree to the privacy policy to continue using Trailmaker'
       open
       centered
       className={styles['ok-to-the-right-modal']}
@@ -69,7 +69,7 @@ const PrivacyPolicyIntercept = (props) => {
             <span style={{ color: '#ff0000' }}>* </span>
             I accept the terms of the
             {' '}
-            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Biomage privacy policy</a>
+            <a href={privacyPolicyUrl} target='_blank' rel='noreferrer'> Privacy policy</a>
             .
           </Text>
         </Space>
@@ -80,8 +80,8 @@ const PrivacyPolicyIntercept = (props) => {
             style={{ marginRight: 10 }}
           />
           <Text>
-            I agree to receive updates about new features in Cellenics,
-            research done with Cellenics, and Cellenics community events. (No external marketing.)
+            I agree to receive updates about new features in Trailmaker,
+            research done with Trailmaker, and Trailmaker community events. (No external marketing.)
           </Text>
         </Space>
       </Space>

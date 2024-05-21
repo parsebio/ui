@@ -6,6 +6,7 @@ import getAuthJWT from 'utils/getAuthJWT';
 const fetchAPI = async (path, params = {}, extras = {}) => {
   const headers = params.headers ? params.headers : {};
   const authJWT = extras.jwt || await getAuthJWT();
+  const parseJson = extras.parseJson ?? true;
 
   const parameters = {
     ...params,
@@ -37,6 +38,8 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
     // HTTPError.v1.yaml
     throw new APIError(response.status, data?.message, data?.errors);
   }
+
+  if (!parseJson) return response;
 
   return await response.json();
 };

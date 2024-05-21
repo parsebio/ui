@@ -1,6 +1,4 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-param-reassign */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,7 +11,6 @@ import {
 } from 'antd';
 import Link from 'next/link';
 
-import Header from 'components/Header';
 import Loader from 'components/Loader';
 import PlatformError from 'components/PlatformError';
 import FrequencyPlot from 'components/plots/FrequencyPlot';
@@ -206,11 +203,11 @@ const FrequencyPlotPage = ({ experimentId }) => {
 
   return (
     <>
-      <Header title={plotNames.FREQUENCY_PLOT} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.FREQUENCY_PLOT}
         plotStylingConfig={plotStylingConfig}
         extraToolbarControls={<ExportAsCSV data={csvData} filename={csvFilename} />}
         extraControlPanels={renderExtraPanels()}

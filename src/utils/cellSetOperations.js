@@ -23,7 +23,7 @@ const union = (listOfSets, properties) => {
   const sets = listOfSets.map((key) => properties[key]?.cellIds || []);
   // flatten and transform list of Sets to list of lists
   const unionSet = new Set(
-    sets.flatMap(set => [...set]),
+    sets.flatMap((set) => [...set]),
   );
 
   return unionSet;

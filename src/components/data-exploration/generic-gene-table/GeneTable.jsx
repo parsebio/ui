@@ -68,6 +68,8 @@ const GeneTable = (props) => {
     );
   }, []);
 
+  const getRowClassName = (record, index) => (index % 2 === 1 ? 'even-row' : '');
+
   const getSortOrder = (key) => {
     if (key === tableState.sorter.columnKey) {
       return tableState.sorter.order;
@@ -181,6 +183,7 @@ const GeneTable = (props) => {
           >
             {geneName}
           </a>
+
         ),
         sortOrder: getSortOrder('gene_names'),
       },
@@ -233,6 +236,8 @@ const GeneTable = (props) => {
         pagination={{ ...tableState?.pagination }}
         scroll={{ x: width, y: height - 294 }}
         onChange={handleTableChange}
+        className='gene-table'
+        rowClassName={getRowClassName}
         rowSelection={{
           type: 'checkbox',
           selectedRowKeys: selectedGenes,

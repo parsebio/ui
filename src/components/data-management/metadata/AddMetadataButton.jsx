@@ -14,7 +14,7 @@ import {
   updateCellLevelMetadataFileUpload,
 } from 'redux/actions/experiments';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import uploadFileToS3 from 'utils/upload/multipartUpload';
+import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
 import MetadataUploadModal from './MetadataUploadModal';
 import CellLevelUploadModal from './CellLevelUploadModal';
 
@@ -49,21 +49,27 @@ const AddMetadataButton = ({ samplesTableRef }) => {
     const uploadUrlParams = await dispatch(
       createCellLevelMetadata(activeExperimentId, getSignedURLsParams),
     );
+    const options = {
+      compress: !file.compressed,
+    };
 
     try {
-      await uploadFileToS3(
-        activeExperimentId,
-        file,
-        !file.compressed,
-        uploadUrlParams,
-        'cellLevelMeta',
-        new AbortController(),
-        onUpdateUploadStatus,
+      await UploadsCoordinator.get().uploadFile(
+        [
+          activeExperimentId,
+          file,
+          uploadUrlParams,
+          'cellLevelMeta',
+          new AbortController(),
+          onUpdateUploadStatus,
+          options,
+        ],
       );
     } catch (e) {
       pushNotificationMessage('error', 'Something went wrong while uploading your metadata file.');
       console.log(e);
     }
+
     setCellLevelUploading(false);
     return file;
   };

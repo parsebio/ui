@@ -11,6 +11,7 @@ import {
   Checkbox,
   Tooltip,
   Alert,
+  Row,
 } from 'antd';
 
 import {
@@ -228,33 +229,39 @@ const CalculationConfig = (props) => {
             </p>
           </Form.Item>
           <div style={{ paddingLeft: '1rem' }}>
-            <Form.Item label='Number of Principal Components'>
-              <InputNumber
-                value={numPCs}
-                aria-label='Number of Principal Components'
-                max={data?.length || 100}
-                min={0}
-                onChange={(value) => {
-                  onConfigChange();
-                  setNumPCs(value);
-                }}
-                onPressEnter={(e) => e.preventDefault()}
-                onStep={(value) => updateSettings({ dimensionalityReduction: { numPCs: value } })}
-                onBlur={(e) => updateSettings(
-                  { dimensionalityReduction: { numPCs: parseInt(e.target.value, 0) } },
-                )}
-                disabled={disabled}
-              />
+            <Form.Item>
+              <Space wrap>
+                Number of Principal Components:
+                <InputNumber
+                  value={numPCs}
+                  aria-label='Number of Principal Components'
+                  max={data?.length || 100}
+                  min={0}
+                  onChange={(value) => {
+                    onConfigChange();
+                    setNumPCs(value);
+                  }}
+                  onPressEnter={(e) => e.preventDefault()}
+                  onStep={(value) => updateSettings({ dimensionalityReduction: { numPCs: value } })}
+                  onBlur={(e) => updateSettings(
+                    { dimensionalityReduction: { numPCs: parseInt(e.target.value, 0) } },
+                  )}
+                  disabled={disabled}
+                />
+              </Space>
             </Form.Item>
-            <Form.Item label='% variation explained'>
-              <InputNumber
-                value={roundedVariationExplained()}
-                disabled={disabled}
-                readOnly
-              />
+            <Form.Item>
+              <Space wrap>
+                % variation explained:
+                <InputNumber
+                  value={roundedVariationExplained()}
+                  disabled={disabled}
+                  readOnly
+                />
+              </Space>
             </Form.Item>
-            <Form.Item
-              label={(
+            <Form.Item>
+              <Space wrap>
                 <span>
                   Exclude genes categories
                   {' '}
@@ -267,32 +274,32 @@ const CalculationConfig = (props) => {
                   >
                     <QuestionCircleOutlined />
                   </Tooltip>
+                  :
                 </span>
-              )}
-            >
 
-              <Checkbox.Group
-                onChange={(val) => updateSettings(
-                  { dimensionalityReduction: { excludeGeneCategories: val } },
-                )}
-                value={dimensionalityReduction.excludeGeneCategories}
-              >
-                <Space direction='vertical'>
-                  <Checkbox value='ribosomal'>Ribosomal</Checkbox>
-                  <Checkbox value='mitochondrial'>Mitochondrial</Checkbox>
-                  <Checkbox value='cellCycle'>
-                    <span>
-                      Cell cycle genes
-                      {' '}
-                      <Tooltip
-                        title='Currently only available for human and mice species. Do not check this box if your cells are from a different species.'
-                      >
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  </Checkbox>
-                </Space>
-              </Checkbox.Group>
+                <Checkbox.Group
+                  onChange={(val) => updateSettings(
+                    { dimensionalityReduction: { excludeGeneCategories: val } },
+                  )}
+                  value={dimensionalityReduction.excludeGeneCategories}
+                >
+                  <Space direction='vertical'>
+                    <Checkbox value='ribosomal'>Ribosomal</Checkbox>
+                    <Checkbox value='mitochondrial'>Mitochondrial</Checkbox>
+                    <Checkbox value='cellCycle'>
+                      <span>
+                        Cell cycle genes
+                        {' '}
+                        <Tooltip
+                          title='Currently only available for human and mice species. Do not check this box if your cells are from a different species.'
+                        >
+                          <QuestionCircleOutlined />
+                        </Tooltip>
+                      </span>
+                    </Checkbox>
+                  </Space>
+                </Checkbox.Group>
+              </Space>
             </Form.Item>
 
             {dataIntegration.method === 'seuratv4' ? renderDimReductionMethod() : <></>}
@@ -374,25 +381,28 @@ const CalculationConfig = (props) => {
 
               </Select>
             </Form.Item>
-            <Form.Item label='% of cells to keep'>
-              <InputNumber
-                aria-label='% of cells to keep'
-                disabled={downsampling.method !== downsamplingMethods.GEOSKETCH}
-                value={downsampling.percentageToKeep}
-                max={100}
-                min={0}
-                onChange={(value) => {
-                  updateSettings({
-                    downsampling: {
-                      methodSettings:
-                      {
-                        [downsampling.method]: { percentageToKeep: parseInt(value, 0) },
-                      },
+            <Form.Item>
+              <Space wrap>
+                % of cells to keep:
+                <InputNumber
+                  aria-label='% of cells to keep'
+                  disabled={downsampling.method !== downsamplingMethods.GEOSKETCH}
+                  value={downsampling.percentageToKeep}
+                  max={100}
+                  min={0}
+                  onChange={(value) => {
+                    updateSettings({
+                      downsampling: {
+                        methodSettings:
+                        {
+                          [downsampling.method]: { percentageToKeep: parseInt(value, 0) },
+                        },
 
-                    },
-                  });
-                }}
-              />
+                      },
+                    });
+                  }}
+                />
+              </Space>
             </Form.Item>
           </div>
         </Panel>

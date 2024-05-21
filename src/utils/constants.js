@@ -5,7 +5,19 @@ const api = {
   V2: 'v2',
 };
 
+const brandColors = {
+  INDIGO: '#4c067e',
+  DARK_LILAC: '#9966b8',
+  LILAC: '#DFCEE8',
+  LIGHT_LILAC: '#F5F0F8',
+  DARK_INDIGO: '#25003B',
+  BLACK_INDIGO: '#11001B',
+  STEEL_PINK: '#b6007c',
+};
+
 const modules = {
+  SECONDARY_ANALYSIS: 'SECONDARY_ANALYSIS',
+  SECONDARY_ANALYSIS_OUTPUT: 'SECONDARY_ANALYSIS_OUTPUT',
   DATA_MANAGEMENT: 'DATA_MANAGEMENT',
   REPOSITORY: 'REPOSITORY',
   DATA_PROCESSING: 'DATA_PROCESSING',
@@ -16,11 +28,11 @@ const modules = {
 };
 
 const sampleTech = {
+  PARSE: 'parse',
   '10X': '10x',
   RHAPSODY: 'rhapsody',
   SEURAT: 'seurat',
   H5: '10x_h5',
-  PARSE: 'parse',
 };
 
 const plotTypes = {
@@ -82,6 +94,7 @@ export {
   api,
   modules,
   sampleTech,
+  brandColors,
   plotTypes,
   plotUuids,
   plotNames,

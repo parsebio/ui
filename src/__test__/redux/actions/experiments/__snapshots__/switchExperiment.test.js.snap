@@ -425,6 +425,15 @@ exports[`switch experiment  Then updates the experiment info 1`] = `
       "uuid": "test9188-d682-test-mock-cb6d644cmock-2",
     },
   },
+  "secondaryAnalyses": {
+    "ids": [],
+    "meta": {
+      "activeSecondaryAnalysisId": null,
+      "error": false,
+      "loading": false,
+      "saving": false,
+    },
+  },
   "user": {
     "current": null,
   },
@@ -854,6 +863,15 @@ exports[`switch experiment  switches the experiment to its initial values 1`] = 
       "options": {},
       "type": "10x",
       "uuid": "test9188-d682-test-mock-cb6d644cmock-2",
+    },
+  },
+  "secondaryAnalyses": {
+    "ids": [],
+    "meta": {
+      "activeSecondaryAnalysisId": null,
+      "error": false,
+      "loading": false,
+      "saving": false,
     },
   },
   "user": {

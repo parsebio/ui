@@ -10,7 +10,6 @@ const useLazyEffect = (callback, dependencies) => {
     } else {
       initializeRef.current = true;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 };
 
