@@ -11,26 +11,13 @@ const ProjectSearchBox = (props) => {
   const debouncedSetFilterParam = useCallback(
     _.debounce(async (value) => {
       const userPrefix = 'user:';
+
+      let searchRegex = new RegExp(value, 'i');
+
       if (value.startsWith(userPrefix)) {
-        const userId = value.slice(userPrefix.length).trim();
-
-        // filter by user id or email
-        if (
-          !(validateInput(userId, rules.VALID_UUID).isValid
-            || validateInput(userId, rules.VALID_EMAIL).isValid)
-        ) {
-          return;
-        }
-
-        const projectIds = await fetchProjectsByUser(userId, projectType);
-        if (projectIds && projectIds.length > 0) {
-          onChange(new RegExp(projectIds.join('|'), 'i'));
-        } else {
-          // match nothing
-          onChange(new RegExp('^(?!x)x'));
-        }
+        searchRegex = getUserSearchRegex(value, userPrefix, projectType);
       }
-      onChange(new RegExp(value, 'i'));
+      onChange(searchRegex);
     }, 400),
     [],
   );
@@ -47,7 +34,7 @@ const ProjectSearchBox = (props) => {
   );
 };
 
-async function fetchProjectsByUser(userId, projectType) {
+const fetchProjectsByUser = async (userId, projectType) => {
   // mismatch between UI and db conventions.
   const projectTypeDb = projectType === 'secondaryAnalyses' ? 'secondary' : 'tertiary';
 
@@ -57,7 +44,34 @@ async function fetchProjectsByUser(userId, projectType) {
   } catch (e) {
     console.error(e);
   }
-}
+};
+
+const getUserSearchRegex = async (value, userPrefix, projectType) => {
+  const userId = value.slice(userPrefix.length).trim();
+
+  // filter by user id or email
+  if (
+    !(validateInput(userId, rules.VALID_UUID).isValid
+      || validateInput(userId, rules.VALID_EMAIL).isValid)
+  ) {
+    return;
+  }
+
+  try {
+    const projectIds = await fetchProjectsByUser(userId, projectType);
+    if (projectIds.length > 0) {
+      return new RegExp(projectIds.join('|'), 'i');
+    }
+    // if empty list, match nothing (instead of matching everything)
+    return new RegExp('^(?!x)x');
+  } catch (e) {
+    if (e.response && e.response.status === 401) {
+      // if unauthorized revert to default behaviour
+      return new RegExp(value, 'i');
+    }
+    console.error(e);
+  }
+};
 
 ProjectSearchBox.defaultProps = {
   projectType: null,
