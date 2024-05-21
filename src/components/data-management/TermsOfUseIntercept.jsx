@@ -50,7 +50,7 @@ const TermsOfUseIntercept = (props) => {
       if (retries > 0) {
         console.error(`Retrying downloadTermsOfUse, attempts remaining: ${retries - 1}`);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        downloadTermsOfUse(retries - 1);
+        return downloadTermsOfUse(retries - 1);
       }
     }
   };
