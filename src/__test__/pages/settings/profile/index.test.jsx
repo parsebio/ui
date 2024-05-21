@@ -37,7 +37,7 @@ const setUpAuthMocks = () => {
   Auth.currentAuthenticatedUser = jest.fn(() => Promise.resolve({
     attributes: {
       name: userName,
-      'custom:agreed_terms': 'true',
+      'custom:agreed_terms_v2': 'true',
     },
   }));
   Auth.signOut = jest.fn(() => { });

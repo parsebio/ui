@@ -62,7 +62,7 @@ const Pipeline = () => {
 
   const user = useSelector((state) => state.user.current);
 
-  const secondaryAnalysisIds = useSelector((state) => state.secondaryAnalyses.ids, _.isEqual);
+  const initialLoadPending = useSelector((state) => state.secondaryAnalyses.initialLoadPending, _.isEqual);
   const activeSecondaryAnalysisId = useSelector(
     (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
     _.isEqual,
@@ -105,8 +105,8 @@ const Pipeline = () => {
   const pipelineCanBeRun = !['created', 'running'].includes(currentStatus);
   const pipelineRunAccessible = currentStatus !== 'not_created';
 
-  useEffect(() => {
-    if (secondaryAnalysisIds.length === 0) dispatch(loadSecondaryAnalyses());
+  useConditionalEffect(() => {
+    if (initialLoadPending) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
   useEffect(() => {

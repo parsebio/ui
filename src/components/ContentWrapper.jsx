@@ -26,7 +26,7 @@ import {
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
-import PrivacyPolicyIntercept from 'components/data-management/PrivacyPolicyIntercept';
+import TermsOfUseIntercept from 'components/data-management/TermsOfUseIntercept';
 
 import BrowserAlert from 'components/BrowserAlert';
 import PreloadContent from 'components/PreloadContent';
@@ -37,7 +37,7 @@ import { getBackendStatus } from 'redux/selectors';
 import { loadUser } from 'redux/actions/user';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
-import { isBrowser, privacyPolicyIsNotAccepted } from 'utils/deploymentInfo';
+import { isBrowser } from 'utils/deploymentInfo';
 import { modules, brandColors } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import experimentUpdatesHandler from 'utils/experimentUpdatesHandler';
@@ -48,6 +48,7 @@ import { DndProvider } from 'react-dnd';
 import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import FeedbackButton from './sider/FeedbackButton';
 import ReferralButton from './sider/ReferralButton';
 import UserButton from './sider/UserButton';
@@ -530,8 +531,8 @@ const ContentWrapper = (props) => {
     <>
       <DndProvider backend={MultiBackend} options={HTML5ToTouch}>
         {/* Privacy policy only for biomage deployment */}
-        {privacyPolicyIsNotAccepted(user, domainName) && (
-          <PrivacyPolicyIntercept user={user} onOk={() => dispatch(loadUser())} />
+        {termsOfUseNotAccepted(user, domainName) && (
+          <TermsOfUseIntercept user={user} onOk={() => dispatch(loadUser())} />
         )}
         <BrowserAlert />
 

@@ -110,13 +110,13 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const downloadOutput = useCallback(async (type) => {
     const { uri, fileName } = outputDownloadParams[type];
     const signedUrl = await fetchAPI(uri);
-    downloadFromUrl(signedUrl, fileName);
+    downloadFromUrl(signedUrl, { fileName });
   }, [outputDownloadParams]);
 
   const downloadReports = useCallback(async () => {
     const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logFile`, {}, { parseJson: false });
     const logsFile = await logsResponse.arrayBuffer();
-    downloadFromUrl(writeToFileURL(logsFile), `${secondaryAnalysisId}.log`);
+    downloadFromUrl(writeToFileURL(logsFile), { fileName: `${secondaryAnalysisId}.log` });
   }, [secondaryAnalysisId]);
 
   usePolling(async () => {
