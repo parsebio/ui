@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { DefaultSeo } from 'next-seo';
 
 import { wrapper } from 'redux/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import AppRouteProvider from 'utils/AppRouteProvider';
 import ContentWrapper from 'components/ContentWrapper';
@@ -24,9 +24,11 @@ import UnauthorizedPage from 'pages/401';
 import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
-import { brandColors } from 'utils/constants';
+import { brandColors, notAgreedToTermsStatus } from 'utils/constants';
 
 import 'antd/dist/antd.variable.min.css';
+import { loadUser } from 'redux/actions/user';
+import { setUpDispatch } from 'utils/http/fetchAPI';
 
 ConfigProvider.config({
   theme: {
@@ -69,6 +71,10 @@ const addDashesToExperimentId = (experimentId) => experimentId.replace(/(.{8})(.
 
 const WrappedApp = ({ Component, pageProps }) => {
   const { httpError, amplifyConfig, errorOrigin } = pageProps;
+
+  const dispatch = useDispatch();
+
+  setUpDispatch(dispatch);
 
   const router = useRouter();
   const { experimentId: urlExperimentId, secondaryAnalysisId } = router.query;
@@ -143,7 +149,8 @@ const WrappedApp = ({ Component, pageProps }) => {
           );
         }
       }
-      if (httpError === 424) {
+      if (httpError === notAgreedToTermsStatus) {
+        dispatch(loadUser());
         return (
           <NotFoundPage
             title='Terms agreement required'

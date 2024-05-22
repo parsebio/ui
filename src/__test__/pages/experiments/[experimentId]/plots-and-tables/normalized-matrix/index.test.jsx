@@ -116,7 +116,7 @@ describe('Normalized matrix index page', () => {
 
     await waitFor(() => {
       expect(writeToFileURL).toHaveBeenCalledWith(result);
-      expect(downloadFromUrl).toHaveBeenCalledWith(writeToFileURLResult, 'NormalizedExpression.csv.gz');
+      expect(downloadFromUrl).toHaveBeenCalledWith(writeToFileURLResult, { fileName: 'NormalizedExpression.csv.gz' });
     });
   });
 
@@ -167,7 +167,7 @@ describe('Normalized matrix index page', () => {
 
     await waitFor(() => {
       expect(writeToFileURL).toHaveBeenCalledWith(result);
-      expect(downloadFromUrl).toHaveBeenCalledWith(writeToFileURLResult, 'NormalizedExpression.csv.gz');
+      expect(downloadFromUrl).toHaveBeenCalledWith(writeToFileURLResult, { fileName: 'NormalizedExpression.csv.gz' });
     });
   });
 

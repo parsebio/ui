@@ -10,7 +10,7 @@ import loadBackendStatus from 'redux/actions/backendStatus/loadBackendStatus';
 import { loadSamples } from 'redux/actions/samples';
 import ExampleExperimentsSpace from 'components/data-management/ExampleExperimentsSpace';
 import Loader from 'components/Loader';
-import { privacyPolicyIsNotAccepted } from 'utils/deploymentInfo';
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
 
 const DataManagementPage = () => {
@@ -28,7 +28,7 @@ const DataManagementPage = () => {
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
 
   useEffect(() => {
-    if (privacyPolicyIsNotAccepted(user, domainName)) return;
+    if (termsOfUseNotAccepted(user, domainName)) return;
     if (experiments.ids.length === 0) dispatch(loadExperiments());
   }, [user]);
 
@@ -47,7 +47,7 @@ const DataManagementPage = () => {
   useEffect(() => {
     if (!activeExperimentId
       || !activeExperiment
-      || privacyPolicyIsNotAccepted(user, domainName)
+      || termsOfUseNotAccepted(user, domainName)
     ) return;
 
     dispatch(loadProcessingSettings(activeExperimentId));
