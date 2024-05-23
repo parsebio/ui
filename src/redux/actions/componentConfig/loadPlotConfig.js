@@ -22,6 +22,7 @@ const loadPlotConfig = (experimentId, plotUuid, plotType) => async (dispatch) =>
       },
     });
   } catch (e) {
+    console.log('GOT THE ERROR ', e);
     // load default plot config if it not found
     if (e.statusCode === httpStatusCodes.NOT_FOUND) {
       dispatch({
