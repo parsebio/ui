@@ -12,6 +12,7 @@ import ExampleExperimentsSpace from 'components/data-management/ExampleExperimen
 import Loader from 'components/Loader';
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
+import usePolling from 'utils/customHooks/usePolling';
 
 const DataManagementPage = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,13 @@ const DataManagementPage = () => {
     const loadedSampleIds = Object.keys(samples);
     return activeExperiment.sampleIds.every((sampleId) => loadedSampleIds.includes(sampleId));
   };
+
+  // TMP to debug
+  usePolling(() => {
+    if (activeExperimentId) {
+      dispatch(loadExperiments());
+    }
+  }, [activeExperiment], 5000);
 
   useEffect(() => {
     // If the active experiment isnt loaded, reload
