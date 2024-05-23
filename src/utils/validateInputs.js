@@ -8,6 +8,7 @@ const rules = {
   UNIQUE_NAME_CASE_INSENSITIVE: 'UNIQUE_NAME_CASE_INSENSITIVE',
   START_WITH_ALPHABET: 'START_WITH_ALPHABET',
   VALID_EMAIL: 'VALID_EMAIL',
+  VALID_UUID: 'VALID_UUID',
 };
 
 const errorMessages = {
@@ -20,6 +21,7 @@ const errorMessages = {
   [rules.UNIQUE_NAME_CASE_INSENSITIVE]: 'Name is already used',
   [rules.START_WITH_ALPHABET]: 'Name can only start with letter',
   [rules.VALID_EMAIL]: 'Invalid email',
+  [rules.VALID_UUID]: 'Invalid UUID',
 };
 
 const validationFns = {
@@ -94,6 +96,13 @@ const validationFns = {
     // Valid email regex based on RC 5322 - https://emailregex.com/
     const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!input.match(emailRegex)) return errorMessages[checkName];
+    return true;
+  },
+
+  // Valid UUID - Fail if input is not a valid UUID
+  [rules.VALID_UUID](checkName, input) {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    if (!input.match(uuidRegex)) return errorMessages[checkName];
     return true;
   },
 

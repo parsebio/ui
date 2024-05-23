@@ -31,7 +31,15 @@ const SampleLTUpload = (props) => {
   const [sampleNames, setSampleNames] = useState([]);
 
   const getSampleNamesFromExcel = async (excelFile) => {
-    const rows = await readExcelFile(excelFile);
+    const sheets = await readExcelFile(excelFile, { getSheets: true });
+
+    const rows = await readExcelFile(excelFile, { sheet: sheets[0].name });
+
+    if (sheets.length !== 3
+      || !rows.some((row) => row.some((cell) => typeof cell === 'string' && cell.includes('Parse Biosciences')))) {
+      throw new Error('Not a valid Parse Biosciences sample loading table.');
+    }
+
     const isSampleNameCell = (cell) => typeof cell === 'string' && cell.includes('Sample Name');
 
     // Find the row and column index where 'Sample Name' is mentioned
@@ -46,6 +54,7 @@ const SampleLTUpload = (props) => {
 
     return extractedSampleNames;
   };
+
   const onDrop = async (droppedFiles) => {
     const warnings = [];
 
