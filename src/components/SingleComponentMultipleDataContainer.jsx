@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import { Collapse } from 'antd';
 
 const { Panel } = Collapse;
@@ -9,7 +10,8 @@ const SingleComponentMultipleDataContainer = (props) => {
     inputsList, baseComponentRenderer,
   } = props;
 
-  const defaultActiveKey = inputsList.length > 0 ? [inputsList[0].key] : [];
+  // First 50 dropdowns are open by default
+  const defaultActiveKey = inputsList.slice(0, 50).map(({ key }) => key);
 
   return (
     <Collapse defaultActiveKey={defaultActiveKey}>
