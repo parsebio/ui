@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import Auth from '@aws-amplify/auth';
-import nextConfig from 'next/config';
 import _ from 'lodash';
 import {
-  Form, Input, Empty, Row, Col, Button, Space, Checkbox, Typography,
+  Form, Input, Empty, Row, Col, Button, Space,
 } from 'antd';
 import { useRouter } from 'next/router';
 
@@ -12,8 +11,6 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadUser } from 'redux/actions/user';
-
-const { Text } = Typography;
 
 const ProfileSettings = () => {
   const router = useRouter();
@@ -47,7 +44,7 @@ const ProfileSettings = () => {
     if (name || email) {
       setEmailError(false);
       await Auth.updateUserAttributes(user, changedUserAttributes)
-        .then((a) => pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3))
+        .then(() => pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3))
         .catch(() => {
           setEmailError(true);
         });
@@ -99,7 +96,9 @@ const ProfileSettings = () => {
                 <h2 style={{ marginTop: '16px' }}>Profile settings:</h2>
                 <Form.Item label='Full name'>
                   <Input
-                    onChange={(e) => setChanges({ changedUserAttributes: { name: e.target.value } })}
+                    onChange={
+                      (e) => setChanges({ changedUserAttributes: { name: e.target.value } })
+                    }
                     placeholder={user.attributes.name}
                   />
                 </Form.Item>
@@ -112,7 +111,9 @@ const ProfileSettings = () => {
                     type='email'
                     // disabled until we can validate the changing of email
                     disabled
-                    onChange={(e) => setChanges({ changedUserAttributes: { email: e.target.value } })}
+                    onChange={(e) => (
+                      setChanges({ changedUserAttributes: { email: e.target.value } })
+                    )}
                     placeholder={user.attributes.email}
                   />
                 </Form.Item>
@@ -127,7 +128,9 @@ const ProfileSettings = () => {
                   help={oldPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { oldPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => (
+                      setChanges({ changedPasswordAttributes: { oldPassword: e.target.value } })
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
@@ -137,7 +140,9 @@ const ProfileSettings = () => {
                   help={newPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { newPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => (
+                      setChanges({ changedPasswordAttributes: { newPassword: e.target.value } })
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
@@ -147,7 +152,11 @@ const ProfileSettings = () => {
                   help={newPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { confirmNewPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => (
+                      setChanges({
+                        changedPasswordAttributes: { confirmNewPassword: e.target.value },
+                      })
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
