@@ -7,8 +7,11 @@ const { Panel } = Collapse;
 
 const SingleComponentMultipleDataContainer = (props) => {
   const {
-    defaultActiveKey, inputsList, baseComponentRenderer,
+    inputsList, baseComponentRenderer,
   } = props;
+
+  // First 50 dropdowns are open by default
+  const defaultActiveKey = inputsList.slice(0, 50).map(({ key }) => key);
 
   return (
     <Collapse defaultActiveKey={defaultActiveKey}>
@@ -24,13 +27,11 @@ const SingleComponentMultipleDataContainer = (props) => {
 };
 
 SingleComponentMultipleDataContainer.propTypes = {
-  defaultActiveKey: PropTypes.array,
   inputsList: PropTypes.array,
   baseComponentRenderer: PropTypes.func.isRequired,
 };
 
 SingleComponentMultipleDataContainer.defaultProps = {
-  defaultActiveKey: '',
   inputsList: [],
 };
 
