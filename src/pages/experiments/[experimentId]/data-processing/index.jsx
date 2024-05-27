@@ -58,12 +58,11 @@ import { loadSamples } from 'redux/actions/samples';
 import { runQC } from 'redux/actions/pipeline';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { modules, sampleTech } from 'utils/constants';
 import QCRerunDisabledModal from 'components/modals/QCRerunDisabledModal';
 import isUserAuthorized from 'utils/isUserAuthorized';
 import { getURL } from 'redux/actions/pipeline/runQC';
 import { ClipLoader } from 'react-spinners';
-import { sampleTech } from 'utils/constants';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -175,15 +174,15 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
 
   const sampleDisabledMessage = (step, sampleTechnology) => {
     if (checkIfSampleIsPrefiltered(step)) {
-      return 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.'
+      return 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.';
     }
 
     if (sampleTechnology === sampleTech.PARSE && step === 'classifier') {
-      return 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.'
+      return 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.';
     }
 
-    return 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.'
-  }
+    return 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.';
+  };
 
   const steps = [
     {
@@ -193,7 +192,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <Classifier
@@ -218,7 +216,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <CellSizeDistribution
@@ -242,7 +239,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <MitochondrialContent
@@ -266,7 +262,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <GenesVsUMIs
@@ -303,7 +298,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <DoubletScores
@@ -511,16 +505,16 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
                               ) : pipelineNotFinished
                                 && !pipelineRunning
                                 && !isStepComplete(key) ? (
-                                <>
-                                  <Text
-                                    type='danger'
-                                    strong
-                                  >
-                                    <WarningOutlined />
-                                  </Text>
-                                  <span style={{ marginLeft: '0.25rem' }}>{text}</span>
-                                </>
-                              )
+                                  <>
+                                    <Text
+                                      type='danger'
+                                      strong
+                                    >
+                                      <WarningOutlined />
+                                    </Text>
+                                    <span style={{ marginLeft: '0.25rem' }}>{text}</span>
+                                  </>
+                                )
                                 : <></>}
                             </Option>
                           );
