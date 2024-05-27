@@ -186,13 +186,15 @@ const ContentWrapper = (props) => {
   }, [backendLoading]);
 
   useEffect(() => {
-    if (!experiment || !backendStatus) return;
-
-    // The value of backend status is null for new experiments that have never run
     const setupPipeline = isSeurat ? 'seurat' : 'gem2s';
+
     const {
       pipeline: qcBackendStatus, [setupPipeline]: setupBackendStatus,
     } = backendStatus ?? {};
+
+    if (!experiment || !setupBackendStatus) return;
+
+    // The value of backend status is null for new experiments that have never run
 
     setPipelinesRerunStatus(
       calculatePipelinesRerunStatus(
