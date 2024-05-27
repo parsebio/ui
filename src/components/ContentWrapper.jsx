@@ -457,7 +457,7 @@ const ContentWrapper = (props) => {
       DATA_MANAGEMENT, DATA_PROCESSING, PLOTS_AND_TABLES]
       .includes(currentModule) && disableIfNoExperiment;
 
-    const seuratCompleteDisable = disabledIfSeuratComplete && seuratComplete;
+    const seuratCompleteDisable = disabledIfSeuratComplete && isSeurat;
 
     return notProcessedExperimentDisable || pipelineStatusDisable
       || seuratCompleteDisable || nonExperimentModule;
