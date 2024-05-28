@@ -87,8 +87,6 @@ const ContentWrapper = (props) => {
   const user = useSelector((state) => state.user.current);
 
   const samples = useSelector((state) => state.samples);
-  const selectedTechnology = (samples[experimentData?.sampleIds?.[0]]?.type || false);
-
   useEffect(() => {
     // selectedExperimentID holds the value in redux of the selected experiment
     // after loading a page it is determined whether to use that ID or the ID in the route URL
@@ -115,6 +113,8 @@ const ContentWrapper = (props) => {
 
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
+  const selectedTechnology = (samples[experiment?.sampleIds?.[0]]?.type || false);
+
   const experimentName = experimentData?.experimentName || experiment?.name;
   const secondaryAnalysisName = useSelector(
     (state) => state?.secondaryAnalyses?.[currentAnalysisIdRef.current]?.name,
@@ -186,18 +186,15 @@ const ContentWrapper = (props) => {
   }, [backendLoading]);
 
   useEffect(() => {
-    if (!experiment || !backendStatus) return;
-
-    // The value of backend status is null for new experiments that have never run
     const setupPipeline = isSeurat ? 'seurat' : 'gem2s';
+
     const {
       pipeline: qcBackendStatus, [setupPipeline]: setupBackendStatus,
     } = backendStatus ?? {};
 
-    if (
-      !setupBackendStatus
-      || !experiment?.sampleIds?.length > 0
-    ) return;
+    if (!experiment || !setupBackendStatus) return;
+
+    // The value of backend status is null for new experiments that have never run
 
     setPipelinesRerunStatus(
       calculatePipelinesRerunStatus(
@@ -460,7 +457,7 @@ const ContentWrapper = (props) => {
       DATA_MANAGEMENT, DATA_PROCESSING, PLOTS_AND_TABLES]
       .includes(currentModule) && disableIfNoExperiment;
 
-    const seuratCompleteDisable = disabledIfSeuratComplete && seuratComplete;
+    const seuratCompleteDisable = disabledIfSeuratComplete && isSeurat;
 
     return notProcessedExperimentDisable || pipelineStatusDisable
       || seuratCompleteDisable || nonExperimentModule;
