@@ -49,6 +49,7 @@ import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
+import CookieBanner from './CookieBanner';
 import FeedbackButton from './sider/FeedbackButton';
 import ReferralButton from './sider/ReferralButton';
 import UserButton from './sider/UserButton';
@@ -585,6 +586,7 @@ const ContentWrapper = (props) => {
             </div>
 
           </Sider>
+          <CookieBanner />
 
           <Layout
             style={!collapsed ? { marginLeft: '210px' } : { marginLeft: '80px' }} // this is the collapsed width for our sider

@@ -5,7 +5,7 @@ import { getTrackingDetails } from 'utils/tracking';
 
 const TagManager = ({ environment }) => {
   const { enabled, containerId } = getTrackingDetails(environment);
-
+  console.log('TRACKING IS ', enabled);
   // if tracking is not enabled don't add tag manager to the head
   if (!enabled) return (null);
 
