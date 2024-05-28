@@ -91,7 +91,9 @@ const WrappedApp = ({ Component, pageProps }) => {
   const [amplifyConfigured, setAmplifyConfigured] = useState(!amplifyConfig);
 
   const environment = useSelector((state) => state.networkResources.environment);
-  const cookiesAgreed = useSelector((state) => state?.user?.current?.attributes[cookiesAgreedCognitoKey]);
+  const cookiesAgreed = useSelector((state) => (
+    state?.user?.current?.attributes[cookiesAgreedCognitoKey] || false
+  ));
 
   useEffect(() => {
     if (cookiesAgreed) {
@@ -209,6 +211,7 @@ const WrappedApp = ({ Component, pageProps }) => {
         }}
       />
       <TagManager
+        cookiesAgreed={cookiesAgreed}
         environment={environment}
       />
       <ConfigProvider>

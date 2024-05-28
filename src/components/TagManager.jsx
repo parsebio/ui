@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { getTrackingDetails } from 'utils/tracking';
 
-const TagManager = ({ environment }) => {
+const TagManager = ({ environment, cookiesAgreed }) => {
   const { enabled, containerId } = getTrackingDetails(environment);
-  console.log('TRACKING IS ', enabled);
   // if tracking is not enabled don't add tag manager to the head
-  if (!enabled) return (null);
+  if (!enabled || !cookiesAgreed) return (null);
 
   const matomoName = 'biomage';
 
@@ -25,6 +24,7 @@ const TagManager = ({ environment }) => {
 
 TagManager.propTypes = {
   environment: PropTypes.oneOf(['development', 'staging', 'production']).isRequired,
+  cookiesAgreed: PropTypes.bool.isRequired,
 };
 
 export default TagManager;
