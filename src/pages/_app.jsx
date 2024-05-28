@@ -93,7 +93,7 @@ const WrappedApp = ({ Component, pageProps }) => {
   const environment = useSelector((state) => state.networkResources.environment);
   const cookiesAgreed = useSelector((state) => (
     state?.user?.current?.attributes[cookiesAgreedCognitoKey] || false
-  ));
+  )) === 'true';
 
   useEffect(() => {
     if (cookiesAgreed) {
