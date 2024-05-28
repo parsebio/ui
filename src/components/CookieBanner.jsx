@@ -10,7 +10,7 @@ const CookieBanner = () => {
   const user = useSelector((state) => state.user.current);
   const cookiesAgreed = user.attributes[cookiesAgreedCognitoKey];
 
-  const [visible, setVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [bannerVisible, setBannerVisible] = useState(cookiesAgreed === undefined);
   const [consent, setConsent] = useState({ performance: false });
 
@@ -38,17 +38,17 @@ const CookieBanner = () => {
   };
 
   const handleSavePreferences = async () => {
-    setVisible(false);
+    setModalVisible(false);
     setBannerVisible(false);
     await updateUserChoice(consent.performance);
   };
 
   const handleCustomize = () => {
-    setVisible(true);
+    setModalVisible(true);
   };
   return (
     <div>
-      {!bannerVisible && (
+      {bannerVisible && (
         <div style={{
           position: 'absolute', bottom: 0, width: '100%', background: '#b08bc4', zIndex: 1000, height: '10%',
         }}
@@ -77,8 +77,8 @@ const CookieBanner = () => {
 
       <Modal
         title='Cookie Settings'
-        open={visible}
-        onCancel={() => setVisible(false)}
+        open={modalVisible}
+        onCancel={() => setModalVisible(false)}
         footer={[
           <Button key='reject' onClick={handleRejectAll}>
             Reject All
