@@ -55,6 +55,7 @@ const CookieBanner = () => {
         >
           <Alert
             message='We use cookies to improve your experience on our site. You can customize your preferences.'
+            description={<a href='https://www.parsebiosciences.com/trailmaker-cookie-policy/' target='_blank' rel='noopener noreferrer'>Read our full cookie policy</a>}
             type='info'
             showIcon
             style={{ height: '100%', fontSize: '16px' }} // Increased font size for the alert text
@@ -80,14 +81,11 @@ const CookieBanner = () => {
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={[
-          <Button key='reject' onClick={handleRejectAll}>
-            Reject All
+          <Button key='save' onClick={handleSavePreferences}>
+            Save Preferences
           </Button>,
           <Button key='accept' type='primary' onClick={handleAcceptAll}>
             Accept All
-          </Button>,
-          <Button key='save' type='primary' onClick={handleSavePreferences}>
-            Save Preferences
           </Button>,
         ]}
       >

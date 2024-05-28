@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import Auth from '@aws-amplify/auth';
-import nextConfig from 'next/config';
 import _ from 'lodash';
 import {
-  Form, Input, Empty, Row, Col, Button, Space, Checkbox, Typography,
+  Form, Input, Empty, Row, Col, Button, Space, Checkbox, Typography, Divider,
 } from 'antd';
 import { useRouter } from 'next/router';
 
@@ -190,6 +189,25 @@ const ProfileSettings = () => {
               </Row>
             </Col>
           </Row>
+          <center>
+            <Divider style={{ marginTop: '40px' }} />
+            <h2>Policy Documents:</h2>
+            <Space>
+              <Button
+                type='link'
+                onClick={() => window.open('https://www.parsebiosciences.com/privacy-policy/', '_blank').focus()}
+              >
+                Privacy Policy
+              </Button>
+              <Button
+                type='link'
+                onClick={() => window.open('https://www.parsebiosciences.com/trailmaker-cookie-policy/', '_blank').focus()}
+              >
+                Cookie Policy
+              </Button>
+            </Space>
+            <Divider style={{ marginTop: '20px' }} />
+          </center>
         </Space>
 
       </>
