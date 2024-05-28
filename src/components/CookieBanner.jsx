@@ -103,7 +103,7 @@ const CookieBanner = () => {
           onChange={(e) => setConsent({ ...consent, performance: e.target.checked })}
         >
           We track how you use the website during your visit. This includes taking a recording of your actions on the website
-          (“Session Replay Technology”). You can ask us not to do it by unchecking this checkbox or clicking “reject all”.
+          (“Session Replay Technology”). You can ask us not to do it by unchecking this checkbox or clicking “reject other cookies”.
         </Checkbox>
       </Modal>
     </div>
