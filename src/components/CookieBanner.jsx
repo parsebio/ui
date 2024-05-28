@@ -84,6 +84,9 @@ const CookieBanner = () => {
           <Button key='save' onClick={handleSavePreferences}>
             Save Preferences
           </Button>,
+          <Button key='reject' onClick={handleRejectAll}>
+            Reject Other Cookies
+          </Button>,
           <Button key='accept' type='primary' onClick={handleAcceptAll}>
             Accept All
           </Button>,
@@ -99,8 +102,8 @@ const CookieBanner = () => {
           checked={consent.performance}
           onChange={(e) => setConsent({ ...consent, performance: e.target.checked })}
         >
-          Performance cookies track how you use a website during your visit. Typically, this information is anonymous and aggregated.
-          They help us understand visitor usage patterns, identify and diagnose problems or errors you may encounter, and make better decisions in improving the overall website experience.
+          We track how you use the website during your visit. This includes taking a recording of your actions on the website
+          (“Session Replay Technology”). You can ask us not to do it by unchecking this checkbox or clicking “reject all”.
         </Checkbox>
       </Modal>
     </div>
