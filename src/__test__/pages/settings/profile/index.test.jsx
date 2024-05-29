@@ -77,7 +77,9 @@ describe('Profile page', () => {
       expect.anything(),
       { [cookiesAgreedCognitoKey]: '' },
     );
+
     expect(cookiesSpy).toHaveBeenCalledWith('username=;expires=Thu, 01 Jan 1970 00:00:00 GMT');
+    expect(document.cookie).toEqual('');
   });
 
   it('check that the back button is called on cancel', async () => {
