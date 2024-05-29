@@ -10,7 +10,7 @@ import Auth from '@aws-amplify/auth';
 import ProfileSettings from 'pages/settings/profile';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { Provider } from 'react-redux';
-
+import { cookiesAgreedCognitoKey } from 'utils/constants';
 import { loadUser } from 'redux/actions/user';
 import loadDeploymentInfo from 'redux/actions/networkResources/loadDeploymentInfo';
 
@@ -38,6 +38,8 @@ const setUpAuthMocks = () => {
     attributes: {
       name: userName,
       'custom:agreed_terms_v2': 'true',
+      'custom:agreed_cookies_v1': 'true',
+
     },
   }));
   Auth.signOut = jest.fn(() => { });
@@ -57,6 +59,27 @@ describe('Profile page', () => {
 
     store.dispatch(loadDeploymentInfo({ environment: 'test' }));
     store.dispatch(loadUser());
+  });
+
+  it('resetCookiesPreferences calls updateUserAttributes and deletes cookies', async () => {
+    document.cookie = 'username=John Doe';
+    const cookiesSpy = jest.spyOn(document, 'cookie', 'set');
+
+    await act(async () => {
+      renderProfileSettingsPage(store);
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText('Reset Cookies Preferences'));
+    });
+
+    expect(Auth.updateUserAttributes).toHaveBeenCalledWith(
+      expect.anything(),
+      { [cookiesAgreedCognitoKey]: '' },
+    );
+
+    expect(cookiesSpy).toHaveBeenCalledWith('username=;expires=Thu, 01 Jan 1970 00:00:00 GMT');
+    expect(document.cookie).toEqual('');
   });
 
   it('check that the back button is called on cancel', async () => {
