@@ -22,7 +22,6 @@ const CookieBanner = () => {
 
   const updateUserChoice = async (consentChoice) => {
     await Auth.updateUserAttributes(user, {
-
       [cookiesAgreedCognitoKey]: consentChoice.toString(),
     });
   };
@@ -46,16 +45,15 @@ const CookieBanner = () => {
   const handleCustomize = () => {
     setModalVisible(true);
   };
+
   return (
     <div>
       {bannerVisible && (
         <div style={{
           position: 'fixed',
-          bottom: '0%',
+          bottom: 0,
           width: '100%',
           zIndex: 1000,
-          minHeight: '10%',
-          overflow: 'auto',
         }}
         >
           <Alert
@@ -63,7 +61,7 @@ const CookieBanner = () => {
             description={<a href='https://www.parsebiosciences.com/trailmaker-cookie-policy/' target='_blank' rel='noopener noreferrer'>Read our full cookie policy</a>}
             type='info'
             showIcon
-            style={{ height: '100%', fontSize: '16px' }} // Increased font size for the alert text
+            style={{ fontSize: '16px', padding: '16px 24px' }} // Adjusted padding for better spacing
             action={(
               <Space>
                 <Button size='large' type='primary' onClick={handleRejectAll}>
