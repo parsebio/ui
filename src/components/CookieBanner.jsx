@@ -50,7 +50,12 @@ const CookieBanner = () => {
     <div>
       {bannerVisible && (
         <div style={{
-          position: 'absolute', bottom: 0, width: '100%', background: '#b08bc4', zIndex: 1000, height: '10%',
+          position: 'fixed',
+          bottom: '0%',
+          width: '100%',
+          zIndex: 1000,
+          minHeight: '10%',
+          overflow: 'auto',
         }}
         >
           <Alert
