@@ -94,7 +94,7 @@ const CookieBanner = () => {
       >
         <Divider style={{ marginTop: 0 }}>Essential Cookies</Divider>
         <Checkbox checked disabled>
-          Essential cookies are crucial to your experience of a website, enabling core features like user logins, account management, shopping carts, and payment processing.
+          Essential cookies are crucial to your experience of a website, enabling core features like user logins and account management.
         </Checkbox>
 
         <Divider>Other cookies and Session Replay Technology</Divider>
