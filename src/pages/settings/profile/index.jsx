@@ -5,7 +5,7 @@ import {
   Form, Input, Empty, Row, Col, Button, Space,
 } from 'antd';
 import { useRouter } from 'next/router';
-
+import { institutionCognitoKey } from 'utils/constants';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
@@ -119,7 +119,7 @@ const ProfileSettings = () => {
                 </Form.Item>
                 {/* no information for the institution currently */}
                 <Form.Item label='Institution:'>
-                  <Input disabled placeholder={user.attributes.institution} />
+                  <Input disabled placeholder={user.attributes[institutionCognitoKey]} />
                 </Form.Item>
                 <h2 style={{ marginTop: '40px' }}>Password settings:</h2>
                 <Form.Item
