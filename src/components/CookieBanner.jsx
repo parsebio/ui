@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { cookiesAgreedCognitoKey } from 'utils/constants';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   Modal, Button, Checkbox, Divider, Alert, Space,
 } from 'antd';
-import { updateUserAttributes } from 'redux/actions/user';
 import Auth from '@aws-amplify/auth';
 
 const CookieBanner = () => {
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.current);
   const cookiesAgreed = user.attributes[cookiesAgreedCognitoKey];
 
@@ -23,9 +21,9 @@ const CookieBanner = () => {
   }, [cookiesAgreed]);
 
   const updateUserChoice = async (consentChoice) => {
-    dispatch(updateUserAttributes(user, {
+    await Auth.updateUserAttributes(user, {
       [cookiesAgreedCognitoKey]: consentChoice.toString(),
-    }));
+    });
   };
 
   const handleAcceptAll = async () => {
