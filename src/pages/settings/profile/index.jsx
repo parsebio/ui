@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { loadUser } from 'redux/actions/user';
 import downloadTermsOfUse from 'utils/downloadTermsOfUse';
 import IframeModal from 'utils/IframeModal';
+import { cookiesAgreedCognitoKey } from 'utils/constants';
 
 const { Text } = Typography;
 
@@ -87,7 +88,16 @@ const ProfileSettings = () => {
 
     setNewAttributes(initialState);
   };
-
+  const resetCookiesPreferences = async () => {
+    try {
+      await Auth.updateUserAttributes(user, {
+        [cookiesAgreedCognitoKey]: '',
+      });
+      pushNotificationMessage('success', 'Cookies preferences reset', 3);
+    } catch (e) {
+      handleError(e, e.message);
+    }
+  };
   // the user might not be loaded already - then return <Empty/>
   if (user) {
     return (
@@ -140,6 +150,13 @@ const ProfileSettings = () => {
                     </Text>
                   </Space>
                 </Form.Item>
+                <center>
+                  <Button
+                    onClick={resetCookiesPreferences}
+                  >
+                    Reset Cookies Preferences
+                  </Button>
+                </center>
                 <h2 style={{ marginTop: '40px' }}>Password settings:</h2>
                 <Form.Item
                   label='Current password:' // pragma: allowlist secret
