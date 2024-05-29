@@ -18,7 +18,7 @@ import {
   termsOfUseCognitoKey,
   institutionCognitoKey,
 } from 'utils/constants';
-import fetchAPI from 'utils/http/fetchAPI';
+import downloadTermsOfUse from 'utils/downloadTermsOfUse';
 import IframeModal from 'utils/IframeModal';
 
 const { Text } = Typography;
@@ -39,24 +39,6 @@ const TermsOfUseIntercept = (props) => {
 
   const [dataUseVisible, setDataUseVisible] = useState(false);
   const [dataUseBlob, setDataUseBlob] = useState(null);
-
-  const downloadTermsOfUse = async (retries = 3) => {
-    try {
-      const signedUrl = await fetchAPI('/v2/termsOfUse/dataUse/download');
-      const response = await fetch(signedUrl);
-
-      let blob = await response.blob();
-      blob = blob.slice(0, blob.size, 'text/html');
-
-      setDataUseBlob(blob);
-    } catch (e) {
-      if (retries > 0) {
-        console.error(`Retrying downloadTermsOfUse, attempts remaining: ${retries - 1}`);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        return downloadTermsOfUse(retries - 1);
-      }
-    }
-  };
 
   const institutionFilledIn = useMemo(() => institution && institution.length > 0, [institution]);
 
@@ -163,7 +145,7 @@ const TermsOfUseIntercept = (props) => {
                 setDataUseVisible(true);
 
                 if (!dataUseBlob) {
-                  downloadTermsOfUse();
+                  downloadTermsOfUse(setDataUseBlob);
                 }
               }}
             >

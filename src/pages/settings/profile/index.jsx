@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import Auth from '@aws-amplify/auth';
 import _ from 'lodash';
 import {
-  Form, Input, Empty, Row, Col, Button, Space,
+  Form, Input, Empty, Row, Col, Button, Space, Divider,
 } from 'antd';
 import { useRouter } from 'next/router';
-import { institutionCognitoKey } from 'utils/constants';
+import { institutionCognitoKey, cookiesAgreedCognitoKey } from 'utils/constants';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadUser } from 'redux/actions/user';
+import downloadTermsOfUse from 'utils/downloadTermsOfUse';
+import IframeModal from 'utils/IframeModal';
 
 const ProfileSettings = () => {
   const router = useRouter();
@@ -29,6 +31,8 @@ const ProfileSettings = () => {
   };
   const [newAttributes, setNewAttributes] = useState(initialState);
   const { changedPasswordAttributes, changedUserAttributes } = newAttributes;
+  const [dataUseVisible, setDataUseVisible] = useState(false);
+  const [dataUseBlob, setDataUseBlob] = useState(null);
 
   const setChanges = (object) => {
     const newChanges = _.cloneDeep(newAttributes);
@@ -79,7 +83,16 @@ const ProfileSettings = () => {
 
     setNewAttributes(initialState);
   };
-
+  const resetCookiesPreferences = async () => {
+    try {
+      await Auth.updateUserAttributes(user, {
+        [cookiesAgreedCognitoKey]: '',
+      });
+      pushNotificationMessage('success', 'Cookies preferences reset', 3);
+    } catch (e) {
+      handleError(e, e.message);
+    }
+  };
   // the user might not be loaded already - then return <Empty/>
   if (user) {
     return (
@@ -121,6 +134,13 @@ const ProfileSettings = () => {
                 <Form.Item label='Institution:'>
                   <Input disabled placeholder={user.attributes[institutionCognitoKey]} />
                 </Form.Item>
+                <center>
+                  <Button
+                    onClick={resetCookiesPreferences}
+                  >
+                    Reset Cookies Preferences
+                  </Button>
+                </center>
                 <h2 style={{ marginTop: '40px' }}>Password settings:</h2>
                 <Form.Item
                   label='Current password:' // pragma: allowlist secret
@@ -182,6 +202,40 @@ const ProfileSettings = () => {
               </Row>
             </Col>
           </Row>
+          <center>
+            <Divider style={{ marginTop: '40px' }} />
+            <h2>Policy Documents:</h2>
+            <Space>
+              <Button
+                type='link'
+                onClick={() => window.open('https://www.parsebiosciences.com/privacy-policy/', '_blank').focus()}
+              >
+                Privacy Policy
+              </Button>
+              <Button
+                type='link'
+                onClick={() => window.open('https://www.parsebiosciences.com/trailmaker-cookie-policy/', '_blank').focus()}
+              >
+                Cookie Policy
+              </Button>
+              <Button
+                type='link'
+                onClick={() => {
+                  setDataUseVisible(true);
+
+                  if (!dataUseBlob) {
+                    downloadTermsOfUse(setDataUseBlob);
+                  }
+                }}
+              >
+                Terms of Use
+              </Button>
+            </Space>
+            <Divider style={{ marginTop: '20px' }} />
+            {dataUseVisible && (
+              <IframeModal onClose={() => setDataUseVisible(false)} blobToDisplay={dataUseBlob} />
+            )}
+          </center>
         </Space>
 
       </>
