@@ -84,15 +84,13 @@ const ProfileSettings = () => {
     setNewAttributes(initialState);
   };
   const resetCookiesPreferences = async () => {
-    function deleteMatomoCookies() {
-      const matomoCookies = [
-        '_pk_ref', '_pk_cvar', '_pk_id', '_pk_ses',
-        'mtm_consent', 'mtm_consent_removed', 'mtm_cookie_consent',
-        'matomo_ignore', 'matomo_sessid', '_pk_hsr',
-      ];
+    function deleteAllCookies() {
+      const cookies = document.cookie.split(';');
 
-      matomoCookies.forEach((cookie) => {
-        document.cookie = `${cookie}=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/`;
+      cookies.forEach((cookie) => {
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
       });
     }
     try {
@@ -100,7 +98,7 @@ const ProfileSettings = () => {
         [cookiesAgreedCognitoKey]: '',
       });
 
-      deleteMatomoCookies();
+      deleteAllCookies();
 
       pushNotificationMessage('success', 'Cookies preferences reset', 3);
     } catch (e) {
