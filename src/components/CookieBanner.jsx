@@ -61,7 +61,7 @@ const CookieBanner = () => {
             style={{ height: '100%', fontSize: '16px' }} // Increased font size for the alert text
             action={(
               <Space>
-                <Button size='large' type='default' onClick={handleRejectAll}>
+                <Button size='large' type='primary' onClick={handleRejectAll}>
                   Reject
                 </Button>
                 <Button size='large' type='primary' onClick={handleCustomize}>
@@ -81,10 +81,10 @@ const CookieBanner = () => {
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={[
-          <Button key='save' onClick={handleSavePreferences}>
+          <Button key='save' type='primary' onClick={handleSavePreferences}>
             Save Preferences
           </Button>,
-          <Button key='reject' onClick={handleRejectAll}>
+          <Button key='reject' type='primary' onClick={handleRejectAll}>
             Reject Other Cookies
           </Button>,
           <Button key='accept' type='primary' onClick={handleAcceptAll}>

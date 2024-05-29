@@ -61,6 +61,7 @@ describe('CookieBanner', () => {
       [cookiesAgreedCognitoKey]: 'false',
     });
   });
+
   it('Opens customize modal and interacts with cookie settings', () => {
     render(
       <Provider store={store}>

@@ -11,6 +11,8 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadUser } from 'redux/actions/user';
+import downloadTermsOfUse from 'utils/downloadTermsOfUse';
+import IframeModal from 'utils/IframeModal';
 
 const { Text } = Typography;
 
@@ -31,6 +33,8 @@ const ProfileSettings = () => {
   };
   const [newAttributes, setNewAttributes] = useState(initialState);
   const { changedPasswordAttributes, changedUserAttributes } = newAttributes;
+  const [dataUseVisible, setDataUseVisible] = useState(false);
+  const [dataUseBlob, setDataUseBlob] = useState(null);
 
   const setChanges = (object) => {
     const newChanges = _.cloneDeep(newAttributes);
@@ -205,8 +209,23 @@ const ProfileSettings = () => {
               >
                 Cookie Policy
               </Button>
+              <Button
+                type='link'
+                onClick={() => {
+                  setDataUseVisible(true);
+
+                  if (!dataUseBlob) {
+                    downloadTermsOfUse(setDataUseBlob);
+                  }
+                }}
+              >
+                Terms of Use
+              </Button>
             </Space>
             <Divider style={{ marginTop: '20px' }} />
+            {dataUseVisible && (
+              <IframeModal onClose={() => setDataUseVisible(false)} blobToDisplay={dataUseBlob} />
+            )}
           </center>
         </Space>
 
