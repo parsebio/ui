@@ -28,11 +28,13 @@ const CookieBanner = () => {
 
   const handleAcceptAll = async () => {
     setBannerVisible(false);
+    setModalVisible(false);
     await updateUserChoice(true);
   };
 
   const handleRejectAll = async () => {
     setBannerVisible(false);
+    setModalVisible(false);
     await updateUserChoice(false);
   };
 
