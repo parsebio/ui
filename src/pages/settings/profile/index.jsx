@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import Auth from '@aws-amplify/auth';
-import nextConfig from 'next/config';
 import _ from 'lodash';
 import {
-  Form, Input, Empty, Row, Col, Button, Space, Checkbox, Typography,
+  Form, Input, Empty, Row, Col, Button, Space,
 } from 'antd';
 import { useRouter } from 'next/router';
-
+import { institutionCognitoKey } from 'utils/constants';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadUser } from 'redux/actions/user';
-
-const { Text } = Typography;
 
 const ProfileSettings = () => {
   const router = useRouter();
@@ -39,17 +36,15 @@ const ProfileSettings = () => {
     setNewAttributes(newChanges);
   };
 
-  const agreedEmailsKey = 'custom:agreed_emails';
-
   const updateDetails = async () => {
     const { name, email } = changedUserAttributes;
     const { oldPassword, newPassword, confirmNewPassword } = changedPasswordAttributes;
 
     const invalidPasswordErrors = ['InvalidPasswordException', 'InvalidParameterException', 'NotAuthorizedException'];
-    if (name || email || changedUserAttributes[agreedEmailsKey]) {
+    if (name || email) {
       setEmailError(false);
       await Auth.updateUserAttributes(user, changedUserAttributes)
-        .then((a) => pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3))
+        .then(() => pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3))
         .catch(() => {
           setEmailError(true);
         });
@@ -101,7 +96,9 @@ const ProfileSettings = () => {
                 <h2 style={{ marginTop: '16px' }}>Profile settings:</h2>
                 <Form.Item label='Full name'>
                   <Input
-                    onChange={(e) => setChanges({ changedUserAttributes: { name: e.target.value } })}
+                    onChange={
+                      (e) => setChanges({ changedUserAttributes: { name: e.target.value } })
+                    }
                     placeholder={user.attributes.name}
                   />
                 </Form.Item>
@@ -114,28 +111,15 @@ const ProfileSettings = () => {
                     type='email'
                     // disabled until we can validate the changing of email
                     disabled
-                    onChange={(e) => setChanges({ changedUserAttributes: { email: e.target.value } })}
+                    onChange={(e) => (
+                      setChanges({ changedUserAttributes: { email: e.target.value } })
+                    )}
                     placeholder={user.attributes.email}
                   />
                 </Form.Item>
                 {/* no information for the institution currently */}
                 <Form.Item label='Institution:'>
-                  <Input disabled placeholder={user.attributes.institution} />
-                </Form.Item>
-                <Form.Item
-                  label='Updates: '
-                >
-                  <Space align='start' style={{ marginTop: '5px' }}>
-                    <Checkbox
-                      defaultChecked={user.attributes[agreedEmailsKey] === 'true'}
-                      onChange={(e) => setChanges({
-                        changedUserAttributes: { [agreedEmailsKey]: e.target.checked.toString() },
-                      })}
-                    />
-                    <Text>
-                      I agree to receive updates about new features in Trailmaker, research done with Trailmaker, and Trailmaker community events. (No external marketing.)
-                    </Text>
-                  </Space>
+                  <Input disabled placeholder={user.attributes[institutionCognitoKey]} />
                 </Form.Item>
                 <h2 style={{ marginTop: '40px' }}>Password settings:</h2>
                 <Form.Item
@@ -144,7 +128,9 @@ const ProfileSettings = () => {
                   help={oldPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { oldPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => (
+                      setChanges({ changedPasswordAttributes: { oldPassword: e.target.value } })
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
@@ -154,7 +140,9 @@ const ProfileSettings = () => {
                   help={newPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { newPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => (
+                      setChanges({ changedPasswordAttributes: { newPassword: e.target.value } })
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
@@ -164,7 +152,11 @@ const ProfileSettings = () => {
                   help={newPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { confirmNewPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => (
+                      setChanges({
+                        changedPasswordAttributes: { confirmNewPassword: e.target.value },
+                      })
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
