@@ -130,8 +130,8 @@ const ContentWrapper = (props) => {
 
   const { activeSecondaryAnalysisId } = useSelector((state) => state.secondaryAnalyses.meta);
   const { current: analysisStatus } = useSelector(
-    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
-  );
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status,
+  ) ?? {};
 
   const qcStatusKey = backendStatus?.pipeline?.status;
   const qcRunning = qcStatusKey === 'RUNNING';
