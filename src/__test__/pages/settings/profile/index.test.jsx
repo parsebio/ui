@@ -78,7 +78,7 @@ describe('Profile page', () => {
       { [cookiesAgreedCognitoKey]: '' },
     );
 
-    expect(cookiesSpy).toHaveBeenCalledWith(expect.stringMatching(/^username=;expires=Thu, 01 Jan 1970 00:00:00 GMT/));
+    expect(cookiesSpy).toHaveBeenCalledWith('username=;expires=Thu, 01 Jan 1970 00:00:00 GMT');
     expect(document.cookie).toEqual('');
   });
 
