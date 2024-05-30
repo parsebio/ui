@@ -10,6 +10,7 @@ import { saveProcessingSettings } from 'redux/actions/experimentSettings';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { loadEmbedding } from 'redux/actions/embedding';
 import { runCellSetsClustering } from 'redux/actions/cellSets';
+import { getBackendStatus } from 'redux/selectors';
 
 const runOnlyConfigureEmbedding = async (experimentId, embeddingMethod, dispatch) => {
   await dispatch(saveProcessingSettings(experimentId, 'configureEmbedding'));
@@ -56,6 +57,8 @@ const getURL = (experimentId) => `/v2/experiments/${experimentId}/qc`;
 
 const runQC = (experimentId) => async (dispatch, getState) => {
   const { processing } = getState().experimentSettings;
+  const previousQcFailed = getBackendStatus(experimentId)(getState()).status.pipeline.error;
+
   const { changedQCFilters } = processing.meta;
 
   const embeddingChanged = changedQCFilters.has('embeddingSettings');
@@ -63,7 +66,7 @@ const runQC = (experimentId) => async (dispatch, getState) => {
   const otherChanged = [...changedQCFilters].some((value) => value !== 'embeddingSettings' && value !== 'clusteringSettings');
 
   // if only embedding or clustering changed
-  if (!otherChanged) {
+  if (!otherChanged && !previousQcFailed) {
     if (embeddingChanged) {
       runOnlyConfigureEmbedding(
         experimentId,
