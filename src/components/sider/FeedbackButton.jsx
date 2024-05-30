@@ -112,18 +112,19 @@ const FeedbackButton = (props) => {
         <Card size='small' style={{ padding: '0.5em', width: '400px' }}>
           For help using the platform, check out:
           <div style={{ margin: '1em' }}>
-            {/* <a href='PUT PARSE USER GUIDE URL' target='_blank' rel='noreferrer'>
-              <InfoCircleFilled />
-              {' '}
-              User guide
-            </a>
-            {' '}
-            <br /> */}
             <a href='https://www.parsebiosciences.com/data-analysis' target='_blank' rel='noreferrer'>
               <InfoCircleFilled />
               {' '}
               Our website
             </a>
+            {' '}
+            <br />
+            <a href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide' target='_blank' rel='noreferrer'>
+              <InfoCircleFilled />
+              {' '}
+              User guide
+            </a>
+            {' '}
             <br />
             <a href='https://courses.trailmaker.parsebiosciences.com/' target='_blank' rel='noreferrer'>
               <InfoCircleFilled />
