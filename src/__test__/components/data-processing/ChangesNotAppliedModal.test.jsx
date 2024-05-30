@@ -38,6 +38,9 @@ jest.mock('utils/AppRouteProvider', () => ({
 
 getBackendStatus.mockImplementation(() => () => ({
   status: {
+    pipeline: {
+      error: 'some-error',
+    },
     gem2s: {
       shouldRerun: true,
     },
