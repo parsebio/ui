@@ -118,11 +118,10 @@ const FileUploadModal = (props) => {
     }
   };
 
-  const removeFile = (fileName) => {
+  const removeFile = (fileIdx) => {
     const newArray = _.cloneDeep(files.valid);
-
-    const fileIdx = newArray.findIndex((file) => file.fileObject.name === fileName);
     newArray.splice(fileIdx, 1);
+
     setFiles({ valid: newArray, invalid: files.invalid });
   };
 
@@ -215,7 +214,7 @@ const FileUploadModal = (props) => {
             </Space>
             <Text type='secondary'>
               <i>
-                Don't have data in an accepted format? Reach out to us using the feedback button at the top of the page.
+                {'Don\'t have data in an accepted format? Reach out to us using the feedback button at the top of the page.'}
               </i>
             </Text>
           </Space>
@@ -265,7 +264,7 @@ const FileUploadModal = (props) => {
                 size='small'
                 itemLayout='horizontal'
                 grid='{column: 4}'
-                renderItem={(file) => (
+                renderItem={(file, index) => (
                   <List.Item
                     key={file.name}
                     style={{ width: '100%' }}
@@ -292,7 +291,7 @@ const FileUploadModal = (props) => {
                       >
                         {fileUploadUtils[selectedTech].getFilePathToDisplay(file.fileObject.path)}
                       </Text>
-                      <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.fileObject.name); }} />
+                      <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(index); }} />
                     </Space>
                   </List.Item>
                 )}
