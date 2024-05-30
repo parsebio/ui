@@ -57,7 +57,7 @@ const getURL = (experimentId) => `/v2/experiments/${experimentId}/qc`;
 
 const runQC = (experimentId) => async (dispatch, getState) => {
   const { processing } = getState().experimentSettings;
-  const previousQcFailed = getBackendStatus(getState())(experimentId).status.pipeline.error;
+  const previousQcFailed = getBackendStatus(experimentId)(getState()).status.pipeline.error;
 
   const { changedQCFilters } = processing.meta;
 
