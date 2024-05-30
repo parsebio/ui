@@ -102,8 +102,8 @@ const Pipeline = () => {
   const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
 
   const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
-    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
-  );
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status,
+  ) ?? {};
 
   const pipelineCanBeRun = !['created', 'running'].includes(currentStatus);
   const pipelineRunAccessible = currentStatus !== 'not_created';
