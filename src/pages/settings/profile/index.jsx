@@ -86,11 +86,13 @@ const ProfileSettings = () => {
   const resetCookiesPreferences = async () => {
     function deleteAllCookies() {
       const cookies = document.cookie.split(';');
-
       cookies.forEach((cookie) => {
         const eqPos = cookie.indexOf('=');
         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        // Deleting cookie for the current path
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        // Deleting cookie for all paths
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
       });
     }
     try {
