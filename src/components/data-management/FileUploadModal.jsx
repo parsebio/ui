@@ -121,7 +121,7 @@ const FileUploadModal = (props) => {
   const removeFile = (fileName) => {
     const newArray = _.cloneDeep(files.valid);
 
-    const fileIdx = newArray.findIndex((file) => file.name === fileName);
+    const fileIdx = newArray.findIndex((file) => file.fileObject.name === fileName);
     newArray.splice(fileIdx, 1);
     setFiles({ valid: newArray, invalid: files.invalid });
   };
@@ -292,7 +292,7 @@ const FileUploadModal = (props) => {
                       >
                         {fileUploadUtils[selectedTech].getFilePathToDisplay(file.fileObject.path)}
                       </Text>
-                      <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.name); }} />
+                      <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.fileObject.name); }} />
                     </Space>
                   </List.Item>
                 )}
