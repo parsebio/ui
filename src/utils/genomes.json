@@ -5,6 +5,7 @@
   { "name": "Oar_v3.1", "species": "Ovis aries (Sheep)"},
   { "name": "Mmul10", "species": "Macaca mulatta (Rhesus monkey)"},
   { "name": "GRCz11", "species": "Danio rerio (Zebrafish)"},
+  { "name": "ARS-UCD1.3", "species": "Bos taurus (Cow)"},
   { "name": "GRCh38_GRCm39", "species": "Mixed human and mouse"},
   { "name": "ARS-UCD1.2_Oar_v3.1", "species": "Mixed cow and sheep"},
   { "name": "Sscrofa11.1_Oar_v3.1", "species": "Mixed pig and sheep"}
