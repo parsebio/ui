@@ -160,23 +160,6 @@ jobs:
         run: |-
           npm run build
 
-      - id: upload-build-out
-        name: Upload Next.js build output
-        uses: actions/upload-artifact@v4
-        with:
-          name: next-build-out
-          path: |
-            .next/
-            !.next/cache
-          retention-days: 14
-
-      - id: download-build-out
-        name: Download Next.js build output
-        uses: actions/download-artifact@v4
-        with:
-          name: next-build-out
-          path: .next/
-
       - id: ref
         name: Format docker tag and repository name.
         run: |-
