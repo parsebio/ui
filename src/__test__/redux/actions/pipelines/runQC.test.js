@@ -139,7 +139,11 @@ describe('runQC action', () => {
     saveProcessingSettings.mockImplementation(() => () => Promise.resolve());
 
     const onlyClusteringSettingsChangedState = _.cloneDeep(initialState);
-    onlyClusteringSettingsChangedState.experimentSettings.processing.meta.changedQCFilters = new Set(['clusteringSettings']);
+    onlyClusteringSettingsChangedState.experimentSettings.processing.meta.changedQCFilters = new Set(['configureEmbedding']);
+
+    // Make sure the methods differ
+    onlyClusteringSettingsChangedState.experimentSettings.processing.configureEmbedding.clusteringSettings.method = 'leiden';
+    onlyClusteringSettingsChangedState.experimentSettings.originalProcessing.configureEmbedding.clusteringSettings.method = 'louvain';
 
     const store = mockStore(onlyClusteringSettingsChangedState);
     await store.dispatch(runQC(experimentId));
