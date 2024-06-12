@@ -97,9 +97,6 @@ const DataProcessingPage = ({ experimentId }) => {
 
   const changesOutstanding = Boolean(changedQCFilters.size);
 
-  console.log('changesOutstandingDebug');
-  console.log(changesOutstanding);
-
   const [runQCAuthorized, setRunQCAuthorized] = useState(null);
 
   const qcVersionIsOld = pipelineVersion < config.pipelineVersionToRerunQC;
