@@ -44,7 +44,7 @@ exports[`runQC action Runs only the embedding if only changed filter was embeddi
   },
   {
     "payload": {
-      "embeddingType": "umap",
+      "embeddingType": "tsne",
     },
     "type": "embeddings/loading",
   },

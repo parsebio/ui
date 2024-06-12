@@ -111,7 +111,11 @@ describe('runQC action', () => {
     saveProcessingSettings.mockImplementation(() => () => Promise.resolve());
 
     const onlyEmbeddingSettingsChangedState = _.cloneDeep(initialState);
-    onlyEmbeddingSettingsChangedState.experimentSettings.processing.meta.changedQCFilters = new Set(['embeddingSettings']);
+    onlyEmbeddingSettingsChangedState.experimentSettings.processing.meta.changedQCFilters = new Set(['configureEmbedding']);
+
+    // Make sure the methods differ
+    onlyEmbeddingSettingsChangedState.experimentSettings.processing.configureEmbedding.embeddingSettings.method = 'tsne';
+    onlyEmbeddingSettingsChangedState.experimentSettings.originalProcessing.configureEmbedding.embeddingSettings.method = 'umap';
 
     const store = mockStore(onlyEmbeddingSettingsChangedState);
     await store.dispatch(runQC(experimentId));
