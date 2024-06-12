@@ -17,7 +17,7 @@
     "start": "NODE_ENV=development node server.js",
     "build": "next build",
     "prod": "NODE_ENV=production node server.js",
-    "pretest": "",
+    "pretest": "eslint ./src",
     "test": "jest --silent",
     "coverage": "jest --coverage --silent",
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand",
