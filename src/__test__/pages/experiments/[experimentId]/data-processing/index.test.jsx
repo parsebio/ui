@@ -14,7 +14,7 @@ import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialS
 import initialCellSetsState from 'redux/reducers/cellSets/initialState';
 import initialSamplesState, { sampleTemplate } from 'redux/reducers/samples/initialState';
 
-import { getBackendStatus } from 'redux/selectors';
+import { getBackendStatus, getChangedStepKeys } from 'redux/selectors';
 import '__test__/test-utils/setupTests';
 
 import { runQC } from 'redux/actions/pipeline';
@@ -79,6 +79,8 @@ getBackendStatus.mockImplementation(() => () => ({
     },
   },
 }));
+
+getChangedStepKeys.mockImplementation(() => () => (new Set([])));
 
 const getStore = (experimentId, settings = {}) => {
   const initialState = {
