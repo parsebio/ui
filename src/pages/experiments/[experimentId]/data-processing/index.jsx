@@ -95,7 +95,12 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
     (state) => state.experimentSettings.processing.meta.changedQCFilters,
   );
 
+  console.log('changedQCFiltersDebug');
+  console.log(changedQCFilters);
   const changesOutstanding = Boolean(changedQCFilters.size);
+
+  console.log('changesOutstandingDebug');
+  console.log(changesOutstanding);
 
   const [runQCAuthorized, setRunQCAuthorized] = useState(null);
 
@@ -337,7 +342,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         <ConfigureEmbedding
           experimentId={expId}
           key={key}
-          onConfigChange={(settingType) => onConfigChange(settingType)}
+          onConfigChange={() => onConfigChange(key)}
           stepHadErrors={getStepHadErrors(key)}
         />
       ),
@@ -505,16 +510,16 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
                               ) : pipelineNotFinished
                                 && !pipelineRunning
                                 && !isStepComplete(key) ? (
-                                  <>
-                                    <Text
-                                      type='danger'
-                                      strong
-                                    >
-                                      <WarningOutlined />
-                                    </Text>
-                                    <span style={{ marginLeft: '0.25rem' }}>{text}</span>
-                                  </>
-                                )
+                                <>
+                                  <Text
+                                    type='danger'
+                                    strong
+                                  >
+                                    <WarningOutlined />
+                                  </Text>
+                                  <span style={{ marginLeft: '0.25rem' }}>{text}</span>
+                                </>
+                              )
                                 : <></>}
                             </Option>
                           );
