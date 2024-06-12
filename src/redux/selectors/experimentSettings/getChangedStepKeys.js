@@ -6,12 +6,15 @@ const getChangedStepKeys = (stepKey) => (state) => {
   const currentStepSettings = state.processing[stepKey];
   const originalStepSettings = state.originalProcessing[stepKey];
 
-  const changedKeys = [];
+  const changedKeys = new Set();
+
+  // The processing config hasn't loaded yet
+  if (_.isNil(currentStepSettings)) return [];
 
   // Store the key of every entry that changed
   Object.entries(currentStepSettings).forEach(([key, value]) => {
     if (!_.isEqual(value, originalStepSettings[key])) {
-      changedKeys.push(key);
+      changedKeys.add(key);
     }
   });
 

@@ -67,14 +67,14 @@ const runQC = (experimentId) => async (dispatch, getState) => {
   if (onlyConfigureEmbeddingChanged && !qcFailed) {
     const changedKeys = getChangedStepKeys('configureEmbedding')(getState());
 
-    if (changedKeys.includes('embeddingSettings')) {
+    if (changedKeys.has('embeddingSettings')) {
       runOnlyConfigureEmbedding(
         experimentId,
         processing.configureEmbedding.embeddingSettings.method,
         dispatch,
       );
     }
-    if (changedKeys.includes('clusteringSettings')) {
+    if (changedKeys.has('clusteringSettings')) {
       runOnlyClustering(
         experimentId,
         processing.configureEmbedding.clusteringSettings.methodSettings.louvain.resolution,
@@ -91,11 +91,6 @@ const runQC = (experimentId) => async (dispatch, getState) => {
     processingConfigDiff[stepKey] = stepConfig;
   });
 
-  console.log('changedQCFiltersDebug');
-  console.log(changedQCFilters);
-
-  console.log('processingConfigDiffDebug');
-  console.log(processingConfigDiff);
   try {
     // We are only sending the configuration that we know changed
     // with respect to the one that is already persisted in dynamodb
