@@ -21,7 +21,7 @@ jest.mock('@aws-amplify/auth', () => ({
   })),
 }));
 
-describe('Share expeirment modal', () => {
+describe('Share project modal', () => {
   const onCancel = jest.fn();
   enableFetchMocks();
 
@@ -49,7 +49,7 @@ describe('Share expeirment modal', () => {
     await act(async () => render(
       <ShareProjectModal
         onCancel={onCancel}
-        experiment={{
+        project={{
           id: fake.EXPERIMENT_ID,
           name: fake.EXPERIMENT_NAME,
         }}
