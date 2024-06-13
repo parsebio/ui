@@ -28,7 +28,7 @@ import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
-import ShareProjectModal from 'components/data-management/ShareProjectModal';
+import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 
 const { Text, Title } = Typography;
 const keyToTitle = {

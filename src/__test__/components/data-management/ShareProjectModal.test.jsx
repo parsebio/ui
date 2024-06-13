@@ -9,7 +9,7 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import mockAPI, {
 } from '__test__/test-utils/mockAPI';
 
-import ShareProjectModal from 'components/data-management/ShareProjectModal';
+import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 
 jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
