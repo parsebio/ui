@@ -34,7 +34,7 @@ const mockStore = configureStore([thunk]);
 enableFetchMocks();
 
 const experimentId = 'experiment-id';
-const sampleIds = ['sample1, sample2'];
+const sampleIds = ['sample1', 'sample2'];
 
 const initialExperimentState = generateExperimentSettingsMock(sampleIds);
 
@@ -208,7 +208,15 @@ describe('runQC action', () => {
         body: JSON.stringify({
           processingConfigDiff: {
             cellSizeDistribution: {
-              'sample1, sample2': {
+              sample1: {
+                auto: true,
+                enabled: true,
+                filterSettings: {
+                  minCellSize: 10800,
+                  binStep: 200,
+                },
+              },
+              sample2: {
                 auto: true,
                 enabled: true,
                 filterSettings: {
