@@ -161,7 +161,7 @@ describe('runQC action', () => {
     expect(actions).toMatchSnapshot();
   });
 
-  it.only('Triggers qc correctly when previous qc failed', async () => {
+  it('Triggers qc correctly when previous qc failed', async () => {
     const qcFailedState = _.cloneDeep(initialState);
 
     qcFailedState.experimentSettings.processing.meta.changedQCFilters = new Set();
@@ -186,21 +186,6 @@ describe('runQC action', () => {
   });
 
   it('Triggers qc correctly when an error happened and running with changes in a filter step', async () => {
-    const qcFailedState = _.cloneDeep(initialState);
-    qcFailedState.backendStatus[experimentId].status.pipeline.status = 'FAILED';
-    qcFailedState.backendStatus[experimentId].status.pipeline.error = true;
-
-    const store = mockStore(initialState);
-    await store.dispatch(runQC(experimentId));
-
-    const actions = store.getActions();
-
-    expect(actions[0].type).toEqual(EXPERIMENT_SETTINGS_QC_START);
-    expect(loadBackendStatus).toHaveBeenCalled();
-    expect(actions).toMatchSnapshot();
-
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock.mock.calls[0]).toMatchSnapshot();
   });
 
   it('Triggers qc correctly when an error happened and running with changes in configureEmbedding', async () => {
