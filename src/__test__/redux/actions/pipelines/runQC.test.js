@@ -232,6 +232,61 @@ describe('runQC action', () => {
     expect(fetchMock.mock.calls[0]).toMatchSnapshot();
   });
 
-  it.skip('Triggers qc correctly when an error happened and running with changes in configureEmbedding', async () => {
+  it('Triggers qc correctly when an error happened and running with changes in configureEmbedding', async () => {
+    const qcFailedState = _.cloneDeep(initialState);
+
+    // Make sure the methods differ
+    qcFailedState.experimentSettings.processing.configureEmbedding.clusteringSettings.method = 'leiden';
+    qcFailedState.experimentSettings.originalProcessing.configureEmbedding.clusteringSettings.method = 'louvain';
+
+    qcFailedState.experimentSettings.processing.meta.changedQCFilters = new Set(['configureEmbedding']);
+    qcFailedState.backendStatus[experimentId].status.pipeline.status = 'FAILED';
+    qcFailedState.backendStatus[experimentId].status.pipeline.error = true;
+
+    const store = mockStore(qcFailedState);
+    await store.dispatch(runQC(experimentId));
+
+    const actions = store.getActions();
+
+    expect(actions[0].type).toEqual(EXPERIMENT_SETTINGS_QC_START);
+    expect(loadBackendStatus).toHaveBeenCalled();
+    expect(actions).toMatchSnapshot();
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining(`/v2/experiments/${experimentId}/qc`),
+      expect.objectContaining({
+        body: JSON.stringify({
+          processingConfigDiff: {
+            configureEmbedding: {
+              enabled: true,
+              embeddingSettings: {
+                method: 'umap',
+                useSaved: false,
+                methodSettings: {
+                  umap: {
+                    minimumDistance: 0.1,
+                    distanceMetric: 'euclidean',
+                  },
+                  tsne: {
+                    perplexity: 30,
+                    learningRate: 200,
+                  },
+                },
+              },
+              clusteringSettings: {
+                method: 'leiden',
+                methodSettings: {
+                  louvain: {
+                    resolution: 0.5,
+                  },
+                },
+              },
+            },
+          },
+        }),
+      }),
+    );
+    expect(fetchMock.mock.calls[0]).toMatchSnapshot();
   });
 });
