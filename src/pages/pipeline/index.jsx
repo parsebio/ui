@@ -464,26 +464,27 @@ const Pipeline = () => {
                           : ''}
                       placement='left'
                     >
-
-                      {pipelineCanBeRun && (
-                        <LaunchAnalysisButton />
-                      )}
-                      {pipelineRunAccessible && (
-                        <Button
-                          type='primary'
-                          style={{ marginBottom: '10px' }}
-                          loading={statusLoading || buttonClicked}
-                          onClick={() => {
-                            setButtonClicked(true);
-                            navigateTo(
-                              modules.SECONDARY_ANALYSIS_OUTPUT,
-                              { secondaryAnalysisId: activeSecondaryAnalysisId },
-                            );
-                          }}
-                        >
-                          Go to output
-                        </Button>
-                      )}
+                      <Space direction='horizontal'>
+                        {pipelineCanBeRun && (
+                          <LaunchAnalysisButton />
+                        )}
+                        {pipelineRunAccessible && (
+                          <Button
+                            type='primary'
+                            style={{ marginBottom: '10px' }}
+                            loading={statusLoading || buttonClicked}
+                            onClick={() => {
+                              setButtonClicked(true);
+                              navigateTo(
+                                modules.SECONDARY_ANALYSIS_OUTPUT,
+                                { secondaryAnalysisId: activeSecondaryAnalysisId },
+                              );
+                            }}
+                          >
+                            Go to output
+                          </Button>
+                        )}
+                      </Space>
                     </Tooltip>
 
                   </Space>
