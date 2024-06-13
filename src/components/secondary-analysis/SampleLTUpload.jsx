@@ -102,12 +102,16 @@ const SampleLTUpload = (props) => {
   }, [file]);
 
   const beginUpload = async () => {
-    if (uploadedFileId) {
+    try {
+      if (uploadedFileId) {
       // Important to wait before creating the new file, otherwise we break a unique constraint
-      await dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
+        await dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
+      }
+      await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], [], 'samplelt', dispatch);
+      dispatch(updateSecondaryAnalysis(secondaryAnalysisId, { sampleNames }));
+    } catch (e) {
+      console.error(e);
     }
-    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], [], 'samplelt', dispatch);
-    dispatch(updateSecondaryAnalysis(secondaryAnalysisId, { sampleNames }));
   };
 
   const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';

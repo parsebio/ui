@@ -11,7 +11,7 @@ import processSampleUpload from 'utils/upload/processSampleUpload';
 import DownloadDataButton from 'components/data-management/DownloadDataButton';
 import LaunchAnalysisButton from 'components/data-management/LaunchAnalysisButton';
 import FileUploadModal from 'components/data-management/FileUploadModal';
-import ShareExperimentModal from 'components/data-management/ShareExperimentModal';
+import ShareProjectModal from 'components/data-management/ShareProjectModal';
 
 const ProjectMenu = () => {
   const dispatch = useDispatch();
@@ -71,9 +71,9 @@ const ProjectMenu = () => {
           </div>
         )}
         {shareExperimentModalVisible && (
-          <ShareExperimentModal
+          <ShareProjectModal
             onCancel={() => setShareExperimentModalVisible(false)}
-            experiment={activeExperiment}
+            project={activeExperiment}
           />
         )}
         <LaunchAnalysisButton />

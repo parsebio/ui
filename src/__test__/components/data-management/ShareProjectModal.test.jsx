@@ -9,7 +9,7 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import mockAPI, {
 } from '__test__/test-utils/mockAPI';
 
-import ShareExperimentModal from 'components/data-management/ShareExperimentModal';
+import ShareProjectModal from 'components/data-management/ShareProjectModal';
 
 jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
@@ -47,7 +47,7 @@ describe('Share expeirment modal', () => {
 
   const renderShareExperimentModal = async () => {
     await act(async () => render(
-      <ShareExperimentModal
+      <ShareProjectModal
         onCancel={onCancel}
         experiment={{
           id: fake.EXPERIMENT_ID,

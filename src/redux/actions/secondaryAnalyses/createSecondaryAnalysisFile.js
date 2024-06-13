@@ -1,9 +1,9 @@
 import fetchAPI from 'utils/http/fetchAPI';
-import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { SECONDARY_ANALYSIS_FILES_ERROR, SECONDARY_ANALYSIS_FILES_LOADED } from 'redux/actionTypes/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
 import dayjs from 'dayjs';
 import cache from 'utils/cache';
+import handleError from 'utils/http/handleError';
 
 const createSecondaryAnalysisFile = (
   secondaryAnalysisId, file, type, fileHandle = null,
@@ -50,7 +50,7 @@ const createSecondaryAnalysisFile = (
     }
     return uploadUrlParams;
   } catch (e) {
-    pushNotificationMessage('error', 'Something went wrong while uploading your file.');
+    handleError(e);
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_ERROR,
       payload: {

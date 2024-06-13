@@ -28,6 +28,7 @@ import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
+import ShareProjectModal from 'components/data-management/ShareProjectModal';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -59,11 +60,16 @@ const Pipeline = () => {
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [shareProjectModalVisible, setShareProjectModalVisible] = useState(false);
 
   const user = useSelector((state) => state.user.current);
 
   const initialLoadPending = useSelector(
     (state) => state.secondaryAnalyses.meta.initialLoadPending, _.isEqual,
+  );
+  const secondaryAnalyses = useSelector(
+    (state) => state.secondaryAnalyses,
+    _.isEqual,
   );
 
   const activeSecondaryAnalysisId = useSelector(
@@ -434,22 +440,34 @@ const Pipeline = () => {
                       {`Run ID: ${activeSecondaryAnalysisId}`}
                     </Text>
                   </Space>
-                  <Tooltip
-                    title={!isAllValid && fastqsMatch
-                      ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                      : !fastqsMatch
-                        ? 'You should upload exactly one pair of FASTQ files per sublibrary. Please check the FASTQs section.'
-                        : ''}
-                    placement='left'
-                  >
-                    <Space align='baseline'>
-                      <Text strong style={{ marginRight: '10px' }}>
-                        {`Current status: ${pipelineStatusToDisplay[currentStatus] || ''}`}
-                      </Text>
+
+                  <Space align='baseline'>
+                    <Text strong style={{ marginRight: '10px' }}>
+                      {`Current status: ${pipelineStatusToDisplay[currentStatus] || ''}`}
+                    </Text>
+                    <Button
+                      onClick={() => setShareProjectModalVisible(!shareProjectModalVisible)}
+                    >
+                      Share
+                    </Button>
+                    {shareProjectModalVisible && (
+                      <ShareProjectModal
+                        onCancel={() => setShareProjectModalVisible(false)}
+                        project={secondaryAnalyses[activeSecondaryAnalysisId]}
+                      />
+                    )}
+                    <Tooltip
+                      title={!isAllValid && fastqsMatch
+                        ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
+                        : !fastqsMatch
+                          ? 'You should upload exactly one pair of FASTQ files per sublibrary. Please check the FASTQs section.'
+                          : ''}
+                      placement='left'
+                    >
+
                       {pipelineCanBeRun && (
                         <LaunchAnalysisButton />
                       )}
-
                       {pipelineRunAccessible && (
                         <Button
                           type='primary'
@@ -466,8 +484,9 @@ const Pipeline = () => {
                           Go to output
                         </Button>
                       )}
-                    </Space>
-                  </Tooltip>
+                    </Tooltip>
+
+                  </Space>
                 </div>
                 <Text strong>Description:</Text>
                 <div style={{ flex: 1, overflowY: 'auto' }}>

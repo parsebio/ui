@@ -1,5 +1,6 @@
 import fetchAPI from 'utils/http/fetchAPI';
 import { SECONDARY_ANALYSIS_FILES_DELETE, SECONDARY_ANALYSES_ERROR } from 'redux/actionTypes/secondaryAnalyses';
+import handleError from 'utils/http/handleError';
 
 const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (dispatch, getState) => {
   // Abort upload if it is ongoing
@@ -24,6 +25,7 @@ const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (disp
       },
     });
   } catch (e) {
+    handleError(e);
     dispatch({
       type: SECONDARY_ANALYSES_ERROR,
       payload: {

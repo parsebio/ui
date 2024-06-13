@@ -2,12 +2,12 @@ import fetchAPI from 'utils/http/fetchAPI';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 
-const revokeRole = async (userEmail, experimentInfo) => {
-  const { experimentId, experimentName } = experimentInfo;
+const revokeRole = async (userEmail, projectInfo) => {
+  const { id, name } = projectInfo;
 
   try {
     await fetchAPI(
-      `/v2/access/${experimentId}`,
+      `/v2/access/${id}`,
       {
         method: 'DELETE',
         headers: {
@@ -19,7 +19,7 @@ const revokeRole = async (userEmail, experimentInfo) => {
       },
     );
 
-    pushNotificationMessage('success', `${userEmail} removed from ${experimentName}.`);
+    pushNotificationMessage('success', `${userEmail} removed from ${name}.`);
   } catch (e) {
     handleError(e, 'Error removing user.');
   }
