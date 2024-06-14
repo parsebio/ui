@@ -50,7 +50,7 @@ const createSecondaryAnalysisFile = (
     }
     return uploadUrlParams;
   } catch (e) {
-    handleError(e);
+    handleError(e, 'Something went wrong while uploading your file.');
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_ERROR,
       payload: {
