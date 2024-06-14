@@ -7,6 +7,10 @@
   { "name": "GRCz11", "species": "Danio rerio (Zebrafish)"},
   { "name": "ARS-UCD1.3", "species": "Bos taurus (Cow)"},
   { "name": "Ssal_v3.1", "species": "Salmo salar (Atlantic Salmon)" },
+  { "name": "Felis_catus_9.0", "species": "Felis catus (Cat)" },
+  { "name": "mRatBN7.2", "species": "Rattus norvegicus (Rat)" },
+  { "name": "E.scolopes-V2.2", "species": "Euprymna scolopes (Hawaiian Bobtail Squid)" },
+  { "name": "ASM2113471v1", "species": "Daphnia pulex (Common Water Flea)" },
   { "name": "GRCh38_GRCm39", "species": "Mixed human and mouse"},
   { "name": "ARS-UCD1.2_Oar_v3.1", "species": "Mixed cow and sheep"},
   { "name": "Sscrofa11.1_Oar_v3.1", "species": "Mixed pig and sheep"}
