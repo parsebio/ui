@@ -67,10 +67,6 @@ const Pipeline = () => {
   const initialLoadPending = useSelector(
     (state) => state.secondaryAnalyses.meta.initialLoadPending, _.isEqual,
   );
-  const secondaryAnalyses = useSelector(
-    (state) => state.secondaryAnalyses,
-    _.isEqual,
-  );
 
   const activeSecondaryAnalysisId = useSelector(
     (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
@@ -453,7 +449,7 @@ const Pipeline = () => {
                     {shareProjectModalVisible && (
                       <ShareProjectModal
                         onCancel={() => setShareProjectModalVisible(false)}
-                        project={secondaryAnalyses[activeSecondaryAnalysisId]}
+                        project={{ name: analysisName, id: activeSecondaryAnalysisId }}
                       />
                     )}
                     <Tooltip
