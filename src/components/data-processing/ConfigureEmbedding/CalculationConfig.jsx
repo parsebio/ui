@@ -54,10 +54,7 @@ const CalculationConfig = (props) => {
   }, [umapSettings]);
 
   const updateSettings = (diff) => {
-    // updates to configure embedding run on worker if they are the only changes
-    // need to know if change was to embedding or clustering settings
-    const settingType = Object.keys(diff)[0];
-    onConfigChange(settingType);
+    onConfigChange();
 
     dispatch(updateFilterSettings(
       FILTER_UUID,
