@@ -49,7 +49,7 @@ import PropTypes from 'prop-types';
 import SingleComponentMultipleDataContainer from 'components/SingleComponentMultipleDataContainer';
 import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
-import { getBackendStatus, getChangedStepKeys } from 'redux/selectors';
+import { getBackendStatus, getFilterChanges } from 'redux/selectors';
 
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadSamples } from 'redux/actions/samples';
@@ -93,7 +93,7 @@ const DataProcessingPage = ({ experimentId }) => {
     (state) => state.experimentSettings.processing.meta.changedQCFilters,
   );
 
-  const changedConfigureEmbeddingKeys = useSelector(getChangedStepKeys('configureEmbedding'));
+  const changedConfigureEmbeddingKeys = useSelector(getFilterChanges('configureEmbedding'));
 
   const changesOutstanding = Boolean(changedQCFilters.size);
 

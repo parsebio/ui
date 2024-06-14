@@ -1,4 +1,4 @@
-import getChangedStepKeys from './getChangedStepKeys';
+import getFilterChanges from './getFilterChanges';
 
 /* eslint-disable-next-line import/prefer-default-export */
-export { getChangedStepKeys };
+export { getFilterChanges };

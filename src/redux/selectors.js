@@ -42,8 +42,8 @@ const getSelectedMetadataTracks = (...params) => (state) => (
   componentConfigSelectors.getSelectedMetadataTracks(...params)(state)
 );
 
-const getChangedStepKeys = (...params) => (state) => (
-  experimentSettingsSelectors.getChangedStepKeys(...params)(state.experimentSettings)
+const getFilterChanges = (...params) => (state) => (
+  experimentSettingsSelectors.getFilterChanges(...params)(state.experimentSettings)
 );
 
 export {
@@ -57,5 +57,5 @@ export {
   getFastqFiles,
   getSampleLTFile,
   getSelectedMetadataTracks,
-  getChangedStepKeys,
+  getFilterChanges,
 };

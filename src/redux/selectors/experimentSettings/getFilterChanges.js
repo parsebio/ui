@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
 
-const getChangedStepKeys = (stepKey) => (state) => {
+const getFilterChanges = (stepKey) => (state) => {
   const currentStepSettings = state.processing[stepKey];
   const originalStepSettings = state.originalProcessing[stepKey];
 
@@ -21,4 +21,4 @@ const getChangedStepKeys = (stepKey) => (state) => {
   return changedKeys;
 };
 
-export default createMemoizedSelector(getChangedStepKeys);
+export default createMemoizedSelector(getFilterChanges);

@@ -10,7 +10,7 @@ import { saveProcessingSettings } from 'redux/actions/experimentSettings';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { loadEmbedding } from 'redux/actions/embedding';
 import { runCellSetsClustering } from 'redux/actions/cellSets';
-import { getBackendStatus, getChangedStepKeys } from 'redux/selectors';
+import { getBackendStatus, getFilterChanges } from 'redux/selectors';
 
 const runOnlyConfigureEmbedding = async (experimentId, embeddingMethod, dispatch) => {
   await dispatch(saveProcessingSettings(experimentId, 'configureEmbedding'));
@@ -65,7 +65,7 @@ const runQC = (experimentId) => async (dispatch, getState) => {
 
   // if only embedding changed and the qc didn't fail
   if (onlyConfigureEmbeddingChanged && !qcFailed) {
-    const changedKeys = getChangedStepKeys('configureEmbedding')(getState());
+    const changedKeys = getFilterChanges('configureEmbedding')(getState());
 
     if (changedKeys.has('embeddingSettings')) {
       runOnlyConfigureEmbedding(
