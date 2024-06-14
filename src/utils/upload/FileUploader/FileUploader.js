@@ -5,7 +5,7 @@ import { AsyncGzip } from 'fflate';
 import filereaderStream from 'filereader-stream';
 
 import UploadStatus from 'utils/upload/UploadStatus';
-import ChunksUploader from 'utils/upload/FileUploader/ChunksUploader';
+import PartUploader from 'utils/upload/FileUploader/PartUploader';
 
 class FileUploader {
   constructor(
@@ -48,7 +48,7 @@ class FileUploader {
 
     this.currentChunk = null;
 
-    this.partsUploader = new ChunksUploader(uploadParams, abortController);
+    this.partUploader = new PartUploader(uploadParams, abortController);
   }
 
   async upload() {
@@ -121,7 +121,7 @@ class FileUploader {
     this.readStream.destroy();
 
     this.gzipStream?.terminate();
-    this.partsUploader.abort();
+    this.partUploader.abort();
 
     this.onStatusUpdate(status);
 
@@ -132,7 +132,7 @@ class FileUploader {
   #handleChunkLoadFinished = async (chunk) => {
     try {
       const onUploadProgress = this.#createOnUploadProgress(this.pendingChunks);
-      await this.partsUploader.uploadChunk(chunk, onUploadProgress);
+      await this.partUploader.uploadChunk(chunk, onUploadProgress);
     } catch (e) {
       this.#cancelExecution(UploadStatus.UPLOAD_ERROR, e);
     }
@@ -141,7 +141,7 @@ class FileUploader {
     this.pendingChunks -= 1;
 
     if (this.pendingChunks === 0) {
-      const uploadedParts = await this.partsUploader.finishUpload();
+      const uploadedParts = await this.partUploader.finishUpload();
 
       this.resolve(uploadedParts);
     }
