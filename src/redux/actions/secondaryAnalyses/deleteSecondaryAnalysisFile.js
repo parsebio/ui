@@ -25,7 +25,7 @@ const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (disp
       },
     });
   } catch (e) {
-    handleError(e);
+    handleError(e, 'Something went wrong while deleting your file.');
     dispatch({
       type: SECONDARY_ANALYSES_ERROR,
       payload: {
