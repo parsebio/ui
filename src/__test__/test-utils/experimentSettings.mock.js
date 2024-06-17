@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import initialState from 'redux/reducers/experimentSettings/initialState';
 
 const sampleifiedConfig = (sampleIds, configToReplicate) => {
@@ -138,7 +140,7 @@ const generateExperimentSettingsMock = (sampleIds) => {
   return {
     ...initialState,
     processing: mockedProcessingConfig,
-    originalProcessing: mockedProcessingConfig,
+    originalProcessing: _.cloneDeep(mockedProcessingConfig),
     info: {
       ...initialState.info,
       pipelineVersion: 1,

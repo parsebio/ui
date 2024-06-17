@@ -11,9 +11,9 @@ import processSampleUpload from 'utils/upload/processSampleUpload';
 import DownloadDataButton from 'components/data-management/DownloadDataButton';
 import LaunchAnalysisButton from 'components/data-management/LaunchAnalysisButton';
 import FileUploadModal from 'components/data-management/FileUploadModal';
-import ShareExperimentModal from 'components/data-management/ShareExperimentModal';
+import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 
-const ProjectMenu = () => {
+const ExperimentMenu = () => {
   const dispatch = useDispatch();
   const samples = useSelector((state) => state.samples);
   const activeExperimentId = useSelector((state) => state.experiments.meta.activeExperimentId);
@@ -71,9 +71,9 @@ const ProjectMenu = () => {
           </div>
         )}
         {shareExperimentModalVisible && (
-          <ShareExperimentModal
+          <ShareProjectModal
             onCancel={() => setShareExperimentModalVisible(false)}
-            experiment={activeExperiment}
+            project={activeExperiment}
           />
         )}
         <LaunchAnalysisButton />
@@ -89,4 +89,4 @@ const ProjectMenu = () => {
   );
 };
 
-export default ProjectMenu;
+export default ExperimentMenu;
