@@ -43,7 +43,7 @@ const SampleLTUpload = (props) => {
 
     const isSampleNameCell = (cell) => typeof cell === 'string' && cell.includes('Sample Name');
 
-    // Find the row and column index where 'Sample Name' is mentioned
+    // Find the row where 'Sample Name' is mentioned
     const sampleNameRowIndex = rows.findIndex((row) => row.some(isSampleNameCell));
     if (sampleNameRowIndex === -1) {
       throw new Error('Sample Name column not found.');
@@ -51,7 +51,7 @@ const SampleLTUpload = (props) => {
 
     const sampleNameColumnIndex = rows[sampleNameRowIndex].findIndex(isSampleNameCell);
 
-    // Extract the number of samples from the row containing "Number of Samples (Step 2):"
+    // Extract the number of samples from the cell "Number of Samples"
     const numberOfSamplesRow = rows.find((row) => row.some((cell) => typeof cell === 'string' && cell.includes('Number of Samples')));
     if (!numberOfSamplesRow) {
       throw new Error('Number of Samples not found.');
@@ -63,7 +63,7 @@ const SampleLTUpload = (props) => {
     const extractedSampleNames = rows.slice(sampleNameRowIndex + 1)
       .map((row) => row[sampleNameColumnIndex])
       .slice(0, numberOfSamples)
-      .filter((name) => name !== null); // Only take the specified number of sample names
+      .filter((name) => name !== null);
 
     return extractedSampleNames;
   };
