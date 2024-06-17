@@ -99,7 +99,7 @@ const SampleLTUpload = (props) => {
           }
         }
       } catch (error) {
-        warnings.push(`Failed to read ${selectedFile.name}: ${error.message}`);
+        warnings.push(`${selectedFile.name}: ${error.message}`);
         setFile(false);
       }
     } else {
