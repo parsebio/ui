@@ -11,13 +11,13 @@ const SliderWithInput = (props) => {
     min, max, value, onUpdate, disabled, step, debounceTime, sliderMaxWidth,
   } = props;
 
-  const [, handleChange] = useUpdateDebounced(onUpdate, value);
+  const [, handleChange] = useUpdateDebounced(onUpdate, value, debounceTime);
 
   const [localValue, setLocalValue] = useState(value);
 
-  const debouncedOnChange = useCallback(
-    _.debounce((changedValue) => handleChange(changedValue), debounceTime), [],
-  );
+  // const debouncedOnChange = useCallback(
+  //   _.debounce((changedValue) => handleChange(changedValue), debounceTime), [],
+  // );
 
   useEffect(() => {
     setLocalValue(parseFloat(value));
@@ -52,7 +52,7 @@ const SliderWithInput = (props) => {
 
         setLocalValue(changedValueWithinBounds);
 
-        debouncedOnChange(changedValueWithinBounds);
+        handleChange(changedValueWithinBounds);
       }}
       onPressEnter={() => { handleChange(localValue); }}
       onStep={(newValue) => {
