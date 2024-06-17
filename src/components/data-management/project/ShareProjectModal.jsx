@@ -11,8 +11,8 @@ import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
 
 const { Text } = Typography;
 
-const ShareExperimentModal = (props) => {
-  const { onCancel, experiment } = props;
+const ShareProjectModal = (props) => {
+  const { onCancel, project } = props;
   const [usersWithAccess, setUsersWithAccess] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -22,7 +22,7 @@ const ShareExperimentModal = (props) => {
     const getCurrentUser = await Auth.currentAuthenticatedUser();
     setCurrentUser(getCurrentUser.attributes.email);
 
-    const userRole = await loadRoles(experiment.id);
+    const userRole = await loadRoles(project.id);
     setUsersWithAccess(userRole);
   };
 
@@ -52,8 +52,8 @@ const ShareExperimentModal = (props) => {
     await sendInvites(
       addedUsers,
       {
-        experimentId: experiment.id,
-        experimentName: experiment.name,
+        id: project.id,
+        name: project.name,
         role,
       },
     );
@@ -77,7 +77,7 @@ const ShareExperimentModal = (props) => {
     >
       <Space direction='vertical' style={{ width: '100%' }}>
         <Text strong>
-          {experiment.name}
+          {project.name}
         </Text>
         <Row gutter={10} style={{ width: '110%' }}>
 
@@ -133,7 +133,7 @@ const ShareExperimentModal = (props) => {
                         onClick={() => {
                           revokeRole(
                             user.email,
-                            { experimentId: experiment.id, experimentName: experiment.name },
+                            { id: project.id, name: project.name },
                           );
 
                           onCancel();
@@ -161,9 +161,9 @@ const ShareExperimentModal = (props) => {
   );
 };
 
-ShareExperimentModal.propTypes = {
+ShareProjectModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
-  experiment: PropTypes.object.isRequired,
+  project: PropTypes.object.isRequired,
 };
 
-export default ShareExperimentModal;
+export default ShareProjectModal;
