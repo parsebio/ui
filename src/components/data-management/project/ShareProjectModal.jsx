@@ -62,7 +62,7 @@ const ShareProjectModal = (props) => {
   };
 
   const explorerInfoText = projectType === 'tertiary' ? 'The user will be able to use Data Exploration and Plots and Tables modules, but will not be able to make any changes to samples or metadata in Data Management or re-run the pipeline in the Data Processing module.'
-    : 'The user will be able to view the pipeline outputs, but not make any changes to the pipeline run. Any linked downstream analyses to this pipeline run need to be separately shared.';
+    : 'The user will be able to view the pipeline outputs, but not make any changes to the pipeline run. Any linked downstream analyses (related project in the Insights module) to this pipeline run needs to be  shared separately.';
   return (
     <Modal
       open
