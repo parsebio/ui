@@ -250,6 +250,35 @@ class FileUploader {
     }
   }
 
+  // #handleChunkLoadFinished = async (chunk) => {
+  //     // This assigns a part number to each chunk that arrives
+  //     // They are read in order, so it should be safe
+  //     this.partNumberIt += 1;
+  //     try {
+  //       await this.#uploadChunk(chunk, this.partNumberIt);
+
+  //       // To track when all chunks have been uploaded
+  //       this.pendingChunks -= 1;
+
+  //       if (this.pendingChunks > 0) {
+  //         await this.#releaseUploadSlot();
+  //       }
+
+  //       if (this.pendingChunks === 0) {
+  //         // S3 expects parts to be sorted by number
+  //         this.uploadedParts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
+  //           if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
+
+  //           return PartNumber1 > PartNumber2 ? 1 : -1;
+  //         });
+
+  //         this.resolve(this.uploadedParts);
+  //       }
+  //     } catch (e) {
+  //       this.#abortUpload(e);
+  //     }
+  //   }
+
   //   #createOnUploadProgress = (chunkNumber) => (progress) => {
   //     // partNumbers are 1-indexed, so we need to subtract 1 for the array index
   //     this.uploadedPartPercentages[chunkNumber - 1] = progress.progress;
