@@ -448,6 +448,7 @@ const Pipeline = () => {
                     </Button>
                     {shareProjectModalVisible && (
                       <ShareProjectModal
+                        projectType='secondary'
                         onCancel={() => setShareProjectModalVisible(false)}
                         project={{ name: analysisName, id: activeSecondaryAnalysisId }}
                       />

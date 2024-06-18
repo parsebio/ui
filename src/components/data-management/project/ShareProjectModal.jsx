@@ -12,7 +12,7 @@ import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
 const { Text } = Typography;
 
 const ShareProjectModal = (props) => {
-  const { onCancel, project } = props;
+  const { onCancel, project, projectType } = props;
   const [usersWithAccess, setUsersWithAccess] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -61,6 +61,8 @@ const ShareProjectModal = (props) => {
     onCancel();
   };
 
+  const explorerInfoText = projectType === 'tertiary' ? 'The user will be able to use Data Exploration and Plots and Tables modules, but will not be able to make any changes to samples or metadata in Data Management or re-run the pipeline in the Data Processing module.'
+    : 'The user will be able to view the pipeline outputs, but not make any changes to the pipeline run. Any linked downstream analyses to this pipeline run need to be separately shared.';
   return (
     <Modal
       open
@@ -150,9 +152,7 @@ const ShareProjectModal = (props) => {
             </Card>
             <Text>
               <b>Explorer: </b>
-              the user will be able to use Data Exploration and Plots and Tables modules,
-              but will not be able to make any changes to samples or metadata in Data Management or
-              re-run the pipeline in the Data Processing module.
+              {explorerInfoText}
             </Text>
           </Space>
         </Row>
@@ -164,6 +164,7 @@ const ShareProjectModal = (props) => {
 ShareProjectModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
+  projectType: PropTypes.string.isRequired,
 };
 
 export default ShareProjectModal;

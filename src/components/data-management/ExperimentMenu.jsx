@@ -72,6 +72,7 @@ const ExperimentMenu = () => {
         )}
         {shareExperimentModalVisible && (
           <ShareProjectModal
+            projectType='tertiary'
             onCancel={() => setShareExperimentModalVisible(false)}
             project={activeExperiment}
           />
