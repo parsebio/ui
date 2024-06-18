@@ -175,17 +175,17 @@ class FileUploader {
     });
   }
 
-  #cancelExecution = (status, e) => {
-    this.readStream.destroy();
+  // #cancelExecution = (status, e) => {
+  //   this.readStream.destroy();
 
-    this.gzipStream?.terminate();
-    this.partUploader.abort();
+  //   this.gzipStream?.terminate();
+  //   this.partUploader.abort();
 
-    this.onStatusUpdate(status);
+  //   this.onStatusUpdate(status);
 
-    this.reject(e);
-    console.error(e);
-  }
+  //   this.reject(e);
+  //   console.error(e);
+  // }
 
   #abortUpload = (e) => {
     this.abortController?.abort(e.message);
