@@ -217,7 +217,7 @@ class FileUploader {
       }
 
       if (this.pendingChunks === 0) {
-        const uploadedParts = await this.partsUploader.finishUpload();
+        const uploadedParts = await this.partUploader.finishUpload();
 
         this.resolve(uploadedParts);
       }
