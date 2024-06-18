@@ -94,7 +94,7 @@ const SampleLTUpload = (props) => {
           if (sampleNamesAreUnique) {
             setFile(selectedFile);
           } else {
-            warnings.push(`${selectedFile.name}: Sample names are not unique. Make sure all samples have unique names and reupload.`);
+            warnings.push(`Error with ${selectedFile.name}: Sample names are not unique. Make sure all samples have unique names and reupload.`);
             setFile(false);
           }
         }
