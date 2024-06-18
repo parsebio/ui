@@ -72,7 +72,7 @@ class PartUploader {
     } = this.#uploadParams;
 
     const queryParams = new URLSearchParams({ bucket, key });
-    const url = `/v2/experiments/${experimentId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
+    const url = `/v2/projects/${experimentId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
 
     return await fetchAPI(url, { method: 'GET' });
   };
