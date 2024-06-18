@@ -4,13 +4,13 @@ import {
   Slider, Form,
   Radio, Input, Space,
 } from 'antd';
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const TitleDesign = (props) => {
   const {
     onUpdate, config, allowTitleChange, placeHolder,
   } = props;
-  const [newConfig, handleChange] = useUpdateThrottled(onUpdate, config);
+  const [newConfig, handleChange] = useUpdateDebounced(onUpdate, config);
   return (
     <Space direction='vertical' style={{ width: '80%' }}>
       <Form

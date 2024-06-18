@@ -19,6 +19,7 @@ import processSampleUpload from 'utils/upload/processSampleUpload';
 import validate from 'utils/upload/validateSeurat';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import mockFile from '__test__/test-utils/mockFile';
+import { setupNavigatorLocks, teardownNavigatorLocks } from '__test__/test-utils/mockLocks';
 
 const MB = 1024 * 1024;
 jest.mock('../../../utils/upload/fileUploadConfig', () => ({
@@ -125,12 +126,11 @@ describe('processUpload', () => {
         result = { status: 200, body: JSON.stringify(mockUploadUrlParams) };
       }
 
-      const queryParams = new URLSearchParams({ bucket, key: mockSampleFileId });
-      if (url.endsWith(`/v2/experiments/${mockExperimentId}/upload/${uploadId}/part/1/signedUrl?${queryParams}`)) {
+      if (url.endsWith(`/v2/projects/${mockExperimentId}/upload/${uploadId}/part/1/signedUrl`)) {
         result = { status: 200, body: JSON.stringify('theSignedUrl') };
       }
 
-      if (url.endsWith(`/v2/experiments/${mockExperimentId}/upload/${uploadId}/part/2/signedUrl?${queryParams}`)) {
+      if (url.endsWith(`/v2/projects/${mockExperimentId}/upload/${uploadId}/part/2/signedUrl`)) {
         result = { status: 200, body: JSON.stringify('theSignedUrl2') };
       }
 
@@ -142,6 +142,12 @@ describe('processUpload', () => {
     });
 
     store = mockStore(initialState);
+
+    setupNavigatorLocks();
+  });
+
+  afterEach(() => {
+    teardownNavigatorLocks();
   });
 
   it('Uploads and updates redux correctly when there are no errors', async () => {
@@ -187,8 +193,8 @@ describe('processUpload', () => {
       ({ status }) => status === UploadStatus.UPLOADED,
     );
 
-    // There are 1 files actions with status uploading
-    expect(uploadingStatusProperties.length).toEqual(1);
+    // There are 2 files actions with status uploading
+    expect(uploadingStatusProperties.length).toEqual(2);
     // There are 1 files actions with status uploaded
     expect(uploadedStatusProperties.length).toEqual(1);
 
@@ -219,7 +225,7 @@ describe('processUpload', () => {
 
     axios.request.mockImplementation(uploadError);
 
-    await processSampleUpload(
+    processSampleUpload(
       getValidFiles(),
       sampleType,
       store.getState().samples,
@@ -256,7 +262,7 @@ describe('processUpload', () => {
     );
 
     // There are 1 files actions with status uploading
-    expect(uploadingFileProperties.length).toEqual(1);
+    expect(uploadingFileProperties.length).toEqual(2);
     // There are 1 files actions with status upload error
     expect(errorFileProperties.length).toEqual(1);
     // There are no file actions with status successfully uploaded

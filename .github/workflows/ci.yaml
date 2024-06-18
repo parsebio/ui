@@ -6,9 +6,10 @@ on:
   release:
     types:
       - released
-  pull_request_target:
+  pull_request:
     branches:
       - master
+      - secondary-analysis-master
     types:
       - labeled
       - unlabeled
@@ -25,35 +26,15 @@ permissions:
   contents: read
 
 jobs:
-  is-safe-to-run:
-    name: Sensitive jobs are safe to be run
-    runs-on: ubuntu-20.04
-    if: (github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name, 'safe to run')) || github.event_name == 'release' || github.event_name == 'push'
-    steps:
-      - id: is-safe-to-run
-        name: Is safe to run
-        run: |-
-          echo "Safe to run, checks will proceed"
-  is-not-safe-to-run:
-    name: Sensitive jobs aren't labeled safe to be run
-    runs-on: ubuntu-20.04
-    if: (github.event_name == 'pull_request_target' && !contains(github.event.pull_request.labels.*.name, 'safe to run'))
-    steps:
-      - id: is-not-safe-to-run
-        name: The pull request hasn't been labeled safe to run
-        run: |-
-          echo "Pull request not labeled safe to run"
-          exit 1
-
   uncheck-integration-test:
+    permissions: read-all
     name: Mark integration test as not run
     runs-on: ubuntu-20.04
-    needs: is-safe-to-run
-    if: github.event_name == 'pull_request_target'
+    if: github.event_name == 'pull_request'
     steps:
       - id: get-pr-body
         name: Get the current PR body
-        uses: jwalton/gh-find-current-pr@v1
+        uses: jwalton/gh-find-current-pr@master
         with:
           state: open
 
@@ -92,7 +73,6 @@ jobs:
     # and post comments.
     permissions: write-all
     runs-on: ubuntu-20.04
-    needs: is-safe-to-run
     env:
       CI: true
     steps:
@@ -129,14 +109,10 @@ jobs:
           test-command: 'npm run coverage'
           coverage-comment: false
 
-      - id: upload-coverage
-        name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-
       - id: check-licenses
         name: Check licenses
         env:
-          ALLOWED_LICENSES: 'MIT;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;BSD;CC0-1.0;0BSD;Unlicense;(MIT AND Zlib);(Unlicense OR Apache-2.0);BSD-3-Clause OR MIT;(MIT OR Apache-2.0);CC-BY-4.0;Apache-Style;(Apache-2.0 OR MPL-1.1);WTFPL;(WTFPL OR MIT);EPL-1.0;(MIT AND BSD-3-Clause);(MIT OR CC0-1.0);Custom: https://github.com/aws-amplify/amplify-js;SGI-B-2.0'
+          ALLOWED_LICENSES: 'MIT;Apache-2.0;BSD-3-Clause;ISC;BSD-2-Clause;BSD;CC0-1.0;0BSD;Unlicense;(MIT AND Zlib);(Unlicense OR Apache-2.0);BSD-3-Clause OR MIT;(MIT OR Apache-2.0);CC-BY-4.0;Apache-Style;(Apache-2.0 OR MPL-1.1);WTFPL;(WTFPL OR MIT);EPL-1.0;(MIT AND BSD-3-Clause);(MIT OR CC0-1.0);Custom: https://github.com/aws-amplify/amplify-js;SGI-B-2.0;Custom: http://github.com/substack/node-bufferlist;'
           EXCLUDE_PACKAGES: 'cartocolor@4.0.2;turf-jsts@1.2.3;gl-vec2@1.3.0;flatbuffers@1.12.0;text-encoding-utf-8@1.0.2'
         run: |-
           npm install -g license-checker
@@ -145,7 +121,6 @@ jobs:
   build-docker:
     name: Build Docker container
     runs-on: ubuntu-20.04
-    needs: is-safe-to-run
     outputs:
       ref-id: ${{ steps.ref.outputs.ref-id }}
       image-tag: ${{ steps.ref.outputs.image-tag }}
@@ -185,29 +160,13 @@ jobs:
         run: |-
           npm run build
 
-      - id: upload-build-out
-        name: Upload Next.js build output
-        uses: actions/upload-artifact@v2
-        with:
-          name: next-build-out
-          path: |
-            .next/
-            !.next/cache
-
-      - id: download-build-out
-        name: Download Next.js build output
-        uses: actions/download-artifact@v2
-        with:
-          name: next-build-out
-          path: .next/
-
       - id: ref
         name: Format docker tag and repository name.
         run: |-
-          if [ "${{ github.event_name }}" = "pull_request_target" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
             # Construct the PR_GITHUB_REF for our pull request copying GITHUB_REF's format
             # We can't use GITHUB_REF because it is set to master in this event
-            # More info: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target
+            # More info: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
             PR_GITHUB_REF="refs/pull/${{ github.event.pull_request.number }}/merge"
             REF_ID=$(echo $PR_GITHUB_REF | sed 's/\//-/g')
           else
@@ -227,7 +186,7 @@ jobs:
           if [ "${{ github.event_name }}" = "release" ] && [ "${{ github.event.action }}" = "released" ]; then
             COMMIT_SHA=""
             IMAGE_TAG="${REF_ID/refs-tags-/}"
-          elif [ "${{ github.event_name }}" = "pull_request_target" ]; then
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
             COMMIT_SHA="${{ github.sha }}"
             IMAGE_TAG="$REF_ID-$COMMIT_SHA-$TIMESTAMP"
           else
@@ -238,7 +197,7 @@ jobs:
           # We can easily build the image-tag from REF_ID and COMMIT_SHA for non-production releases.
           # But we can not easily create the image tag for production releases, so we're bulding it here
           echo "image-tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
-          # This will take a GitHub repo name like `hms-dbmi-cellenics/releases`
+          # This will take a GitHub repo name like `parsebio/releases`
           # and turns it into `releases`. This will be the name of the
           # ECR repository.
           IMAGE_REPO_NAME=$(echo $GITHUB_REPOSITORY | awk -F '/' '{print $2}')
@@ -285,7 +244,7 @@ jobs:
   deploy:
     name: Deploy to Kubernetes
     runs-on: ubuntu-20.04
-    needs: [build-docker, is-safe-to-run]
+    needs: [build-docker]
     strategy:
       max-parallel: 1
       matrix:
@@ -324,7 +283,7 @@ jobs:
             export IMAGE_POLICY_TYPE="semver"
             export IMAGE_POLICY_KEY="range"
             export IMAGE_POLICY_VALUE=">=0.0.0"
-            export REPLICA_COUNT="4"
+            export REPLICA_COUNT="8"
             export MANIFEST_PATH="./production"
           fi
 
@@ -433,14 +392,14 @@ jobs:
           user_name: Biomage CI/CD
 
       - name: Change name of deployment file for staging deployment
-        if: (github.event_name == 'pull_request_target' || github.event_name == 'push') && matrix.environment == 'staging'
+        if: (github.event_name == 'pull_request' || github.event_name == 'push') && matrix.environment == 'staging'
         env:
           DEPLOYMENT_NAME: ${{ steps.fill-metadata.outputs.deployment-name }}
           REF_ID: ${{ needs.build-docker.outputs.ref-id }}
         run: |-
           mv $DEPLOYMENT_NAME.yaml $REF_ID.yaml
       - name: Push staging deployment template to releases
-        if: (github.event_name == 'pull_request_target' || github.event_name == 'push') && matrix.environment == 'staging'
+        if: (github.event_name == 'pull_request' || github.event_name == 'push') && matrix.environment == 'staging'
         uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
@@ -454,25 +413,25 @@ jobs:
   ready-to-merge:
     name: Ready for merging
     runs-on: ubuntu-20.04
-    needs: [deploy, is-safe-to-run]
+    needs: [deploy]
     steps:
       - id: ready-to-merge
         name: Signal readiness to merge
         run: |-
           exit 0
 
-  report-if-failed:
-    name: Report if workflow failed
-    runs-on: ubuntu-20.04
-    needs: [test, build-docker, deploy, is-safe-to-run]
-    if: failure() && github.ref == 'refs/heads/master'
-    steps:
-      - id: send-to-slack
-        name: Send failure notification to Slack on failure
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.WORKFLOW_STATUS_BOT_TOKEN }}
-        uses: voxmedia/github-action-slack-notify-build@v1
-        with:
-          channel: workflow-failures
-          status: FAILED
-          color: danger
+  # report-if-failed:
+  #   name: Report if workflow failed
+  #   runs-on: ubuntu-20.04
+  #   needs: [test, build-docker, deploy]
+  #   if: failure() && github.ref == 'refs/heads/master'
+  #   steps:
+  #     - id: send-to-slack
+  #       name: Send failure notification to Slack on failure
+  #       env:
+  #         SLACK_BOT_TOKEN: ${{ secrets.SLACK_API_TOKEN }}
+  #       uses: voxmedia/github-action-slack-notify-build@v1
+  #       with:
+  #         channel: workflow-failures
+  #         status: FAILED
+  #         color: danger

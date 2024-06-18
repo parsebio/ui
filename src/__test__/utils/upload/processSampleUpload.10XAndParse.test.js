@@ -21,6 +21,7 @@ import validateParse from 'utils/upload/validateParse';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { sampleTech } from 'utils/constants';
 import mockFile from '__test__/test-utils/mockFile';
+import { setupNavigatorLocks, teardownNavigatorLocks } from '__test__/test-utils/mockLocks';
 
 enableFetchMocks();
 
@@ -173,8 +174,7 @@ const mockProcessUploadCalls = () => {
       result = { status: 200, body: JSON.stringify(mockUploadUrlParams) };
     }
 
-    const queryParams = new URLSearchParams({ bucket, key });
-    if (url.endsWith(`/v2/experiments/${mockExperimentId}/upload/${uploadId}/part/1/signedUrl?${queryParams}`)) {
+    if (url.endsWith(`/v2/projects/${mockExperimentId}/upload/${uploadId}/part/1/signedUrl`)) {
       result = { status: 200, body: JSON.stringify('theSignedUrl') };
     }
 
@@ -202,6 +202,12 @@ describe.each([
     validateParse.mockReset().mockImplementation(() => { });
 
     store = mockStore(initialState);
+
+    setupNavigatorLocks();
+  });
+
+  afterEach(() => {
+    teardownNavigatorLocks();
   });
 
   it('Uploads and updates redux correctly when there are no errors', async () => {
@@ -259,11 +265,11 @@ describe.each([
     expect(_.map(store.getActions(), 'type')).toEqual([
       ...Array(2).fill(SAMPLES_VALIDATING_UPDATED),
       SAMPLES_SAVING, SAMPLES_CREATED, SAMPLES_SAVED,
-      ...Array(6).fill(SAMPLES_FILE_UPDATE),
+      ...Array(9).fill(SAMPLES_FILE_UPDATE),
     ]);
 
     // There are 3 files actions with status uploading
-    expect(uploadingStatusProperties.length).toEqual(3);
+    expect(uploadingStatusProperties.length).toEqual(6);
     // There are 3 files actions with status uploaded
     expect(uploadedStatusProperties.length).toEqual(3);
 
@@ -348,8 +354,8 @@ describe.each([
       ({ status }) => status === UploadStatus.UPLOADED,
     );
 
-    // There are 3 files actions with status uploading
-    expect(uploadingFileProperties.length).toEqual(3);
+    // There are 6 files actions with status uploading
+    expect(uploadingFileProperties.length).toEqual(6);
     // There are 3 files actions with status upload error
     expect(errorFileProperties.length).toEqual(3);
     // There are no file actions with status successfully uploaded

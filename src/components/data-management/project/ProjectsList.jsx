@@ -4,40 +4,44 @@ import PropTypes from 'prop-types';
 import { Space, Skeleton } from 'antd';
 import { VariableSizeList as List } from 'react-window';
 import integrationTestConstants from 'utils/integrationTestConstants';
-import ProjectCard from './ProjectCard';
-
+import ExperimentCard from './ExperimentCard';
+import SecondaryAnalysisCard from './SecondaryAnalysisCard';
 // This makes sure that all the projects can be viewed properly inside the list
 // TODO : This has to be done properly in CSS
 const windowMargin = 130;// px
 
 const Row = ({
-  index, data, style, setSize,
+  // eslint-disable-next-line react/prop-types
+  index, data, style, setSize, projectType,
 }) => {
   const rowRef = useRef();
-  const experiment = data[index];
+  const project = data[index];
 
   useEffect(() => {
     if (rowRef.current) {
       setSize(index, rowRef.current.getBoundingClientRect().height);
     }
-  }, [setSize, index, experiment]);
+  }, [setSize, index, project]);
 
   return (
     <Space style={{ ...style, width: '100%' }}>
       <div ref={rowRef}>
-        <ProjectCard key={experiment.id} experimentId={experiment.id} />
+        {projectType === 'secondaryAnalyses'
+          ? (<SecondaryAnalysisCard secondaryAnalysisId={project.id} />)
+          : (
+            <ExperimentCard key={project.id} experimentId={project.id} />
+          )}
       </div>
     </Space>
   );
 };
 
 const ProjectsList = (props) => {
-  const { height, filter } = props;
+  const { height, filter, projectType } = props;
   const listRef = useRef();
   const sizeMap = useRef({});
 
-  const experiments = useSelector((state) => state.experiments);
-
+  const projects = useSelector((state) => state[projectType]);
   const setSize = useCallback((index, size) => {
     sizeMap.current[index] = size + 5;
     //  if the height gets changed, we need to reset the heights
@@ -47,13 +51,13 @@ const ProjectsList = (props) => {
 
   const getSize = (index) => sizeMap.current[index] || 204; // default height if not yet measured
 
-  const filteredExperiments = experiments.ids
-    .map((id) => experiments[id])
+  const filteredProjects = projects.ids
+    .map((id) => projects[id])
     .filter((exp) => (exp.name.match(filter) || exp.id.match(filter)));
 
-  if (experiments.meta.loading) {
+  if (projects.meta.loading) {
     return ([...Array(5)].map((_, idx) => <Skeleton key={`skeleton-${idx}`} role='progressbar' active />));
-  } if (filteredExperiments.length === 0) {
+  } if (filteredProjects.length === 0) {
     return (<div data-test-id={integrationTestConstants.ids.PROJECTS_LIST} />);
   }
   return (
@@ -62,9 +66,9 @@ const ProjectsList = (props) => {
         ref={listRef}
         height={height - windowMargin}
         width='100%'
-        itemCount={filteredExperiments.length}
+        itemCount={filteredProjects.length}
         itemSize={getSize}
-        itemData={filteredExperiments}
+        itemData={filteredProjects}
       >
         {({ data, index, style }) => (
           <Row
@@ -72,6 +76,7 @@ const ProjectsList = (props) => {
             index={index}
             style={style}
             setSize={setSize}
+            projectType={projectType}
           />
         )}
       </List>
@@ -82,6 +87,7 @@ const ProjectsList = (props) => {
 ProjectsList.propTypes = {
   height: PropTypes.number,
   filter: PropTypes.object.isRequired,
+  projectType: PropTypes.string.isRequired,
 };
 
 ProjectsList.defaultProps = {

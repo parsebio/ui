@@ -46,7 +46,7 @@ const webpackConfigRules = (config, { dev }) => {
       options: {
         workerParallelJobs: 50,
         // additional node.js arguments
-        workerNodeArgs: ['--max-old-space-size=1024'],
+        workerNodeArgs: ['--max-old-space-size=2048'],
       },
       loader: 'thread-loader',
     });

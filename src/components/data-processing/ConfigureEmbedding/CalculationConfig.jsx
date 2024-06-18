@@ -54,10 +54,7 @@ const CalculationConfig = (props) => {
   }, [umapSettings]);
 
   const updateSettings = (diff) => {
-    // updates to configure embedding run on worker if they are the only changes
-    // need to know if change was to embedding or clustering settings
-    const settingType = Object.keys(diff)[0];
-    onConfigChange(settingType);
+    onConfigChange();
 
     dispatch(updateFilterSettings(
       FILTER_UUID,
@@ -344,19 +341,20 @@ const CalculationConfig = (props) => {
               </Option>
             </Select>
           </Form.Item>
-          <Form.Item label={(
-            <span>
-              Resolution&nbsp;
-              <Tooltip overlay={(
-                <span>
-                  Resolution is a parameter for the Louvain community detection algorithm that alters the number of the recovered clusters. Smaller resolution recovers fewer clusters while larger resolution recovers more clusters. The default is 0.8.
-                </span>
-              )}
-              >
-                <QuestionCircleOutlined />
-              </Tooltip>
-            </span>
-          )}
+          <Form.Item
+            label={(
+              <span>
+                Resolution&nbsp;
+                <Tooltip overlay={(
+                  <span>
+                    Resolution is a parameter for the Louvain community detection algorithm that alters the number of the recovered clusters. Smaller resolution recovers fewer clusters while larger resolution recovers more clusters. The default is 0.8.
+                  </span>
+                )}
+                >
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            )}
           >
             <SliderWithInput
               min={0}

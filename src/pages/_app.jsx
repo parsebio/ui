@@ -1,16 +1,19 @@
-import '../../assets/self-styles.less';
 import '../../assets/nprogress.css';
+
+import _ from 'lodash';
+import '../index.css';
 
 import Amplify, { Credentials } from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
+import { ConfigProvider } from 'antd';
 import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import { DefaultSeo } from 'next-seo';
 
 import { wrapper } from 'redux/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import AppRouteProvider from 'utils/AppRouteProvider';
 import ContentWrapper from 'components/ContentWrapper';
@@ -21,6 +24,19 @@ import UnauthorizedPage from 'pages/401';
 import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
+import { brandColors, notAgreedToTermsStatus, cookiesAgreedCognitoKey } from 'utils/constants';
+
+import 'antd/dist/antd.variable.min.css';
+import { loadUser } from 'redux/actions/user';
+import { setUpDispatch } from 'utils/http/fetchAPI';
+
+ConfigProvider.config({
+  theme: {
+    primaryColor: brandColors.DARK_LILAC,
+    infoColor: brandColors.STEEL_PINK,
+    warningColor: brandColors.STEEL_PINK,
+  },
+});
 
 const mockCredentialsForInframock = () => {
   Credentials.get = async () => ({
@@ -54,9 +70,14 @@ Amplify.configure({
 const addDashesToExperimentId = (experimentId) => experimentId.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
 
 const WrappedApp = ({ Component, pageProps }) => {
-  const { httpError, amplifyConfig } = pageProps;
+  const { httpError, amplifyConfig, errorOrigin } = pageProps;
+
+  const dispatch = useDispatch();
+
+  setUpDispatch(dispatch);
+
   const router = useRouter();
-  const { experimentId: urlExperimentId } = router.query;
+  const { experimentId: urlExperimentId, secondaryAnalysisId } = router.query;
 
   // If the experimentId exists (we are not is data management) and
   // is the old version (without dashes), then add them
@@ -64,15 +85,21 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   const experimentData = useSelector(
     (state) => (experimentId ? state.experimentSettings.info : {}),
+    _.isEqual,
   );
 
   const [amplifyConfigured, setAmplifyConfigured] = useState(!amplifyConfig);
 
   const environment = useSelector((state) => state.networkResources.environment);
+  const cookiesAgreed = useSelector((state) => (
+    state?.user?.current?.attributes[cookiesAgreedCognitoKey] || false
+  )) === 'true';
 
   useEffect(() => {
-    initTracking(environment);
-  }, []);
+    if (cookiesAgreed) {
+      initTracking(environment);
+    }
+  }, [cookiesAgreed, environment]);
 
   useEffect(() => {
     if (amplifyConfig) {
@@ -98,29 +125,41 @@ const WrappedApp = ({ Component, pageProps }) => {
     // If there was an error querying the API, display an error state.
     if (httpError) {
       if (httpError === 404) {
+        const projectType = errorOrigin === 'experiment' ? 'analysis' : 'pipeline run';
         return (
           <NotFoundPage
-            title={'Analysis doesn\'t exist'}
-            subTitle={'We searched, but we couldn\'t find the analysis you\'re looking for.'}
-            hint='It may have been deleted by the project owner. Go home to see your own projects and analyses.'
+            title={`${projectType} doesn't exist`}
+            subTitle={`We searched, but we couldn't find the ${projectType} you're looking for.`}
+            hint='It may have been deleted by the project owner.'
           />
         );
       }
 
       if (httpError === 403) {
-        return (
-          <NotFoundPage
-            title='Analysis not found'
-            subTitle={'You don\'t have access to this analysis. The owner may have made it private.'}
-            hint='If somebody gave you this link, they may need to invite you to their project.'
-          />
-        );
+        if (errorOrigin === 'experiment') {
+          return (
+            <NotFoundPage
+              title='Analysis not found'
+              subTitle={'You don\'t have access to this analysis. The owner may have made it private.'}
+              hint='If somebody gave you this link, they may need to invite you to their project.'
+            />
+          );
+        }
+        if (errorOrigin === 'secondaryAnalysis') {
+          return (
+            <NotFoundPage
+              title='Pipeline run not found'
+              subTitle={'Or you don\'t have access to it.'}
+            />
+          );
+        }
       }
-      if (httpError === 424) {
+      if (httpError === notAgreedToTermsStatus) {
+        dispatch(loadUser());
         return (
           <NotFoundPage
             title='Terms agreement required'
-            subTitle='You cannot access your analysis in Cellenics until you have agreed to our updated privacy policy.'
+            subTitle='You cannot access your analysis in Trailmaker until you have agreed to our updated privacy policy.'
             hint='Go to Data Management to accept the terms.'
             primaryActionText='Go to Data Management'
           />
@@ -145,10 +184,12 @@ const WrappedApp = ({ Component, pageProps }) => {
       <AppRouteProvider>
         <ContentWrapper
           routeExperimentId={experimentId}
+          routeAnalysisId={secondaryAnalysisId}
           experimentData={experimentData}
         >
           <Component
             experimentId={experimentId}
+            secondaryAnalysisId={secondaryAnalysisId}
             experimentData={experimentData}
             {...pageProps}
           />
@@ -160,19 +201,22 @@ const WrappedApp = ({ Component, pageProps }) => {
   return (
     <>
       <DefaultSeo
-        titleTemplate='%s &middot; Cellenics'
-        defaultTitle='Cellenics'
-        description='Cellenics turns your single cell datasets into meaningful biology. It’s free for academic researchers, and you get world-class quality analytical insight: simple data upload, data integration for batch effect correction, beautiful publication-quality figures, and much more.'
+        titleTemplate='%s &middot; Trailmaker'
+        defaultTitle='Trailmaker'
+        description='Trailmaker turns your single cell datasets into meaningful biology. It’s free for academic researchers, and you get world-class quality analytical insight: simple data upload, data integration for batch effect correction, beautiful publication-quality figures, and much more.'
         openGraph={{
           type: 'website',
           locale: 'en_US',
-          site_name: 'Cellenics',
+          site_name: 'Trailmaker',
         }}
       />
       <TagManager
+        cookiesAgreed={cookiesAgreed}
         environment={environment}
       />
-      {mainContent(Component, pageProps)}
+      <ConfigProvider>
+        {mainContent(Component, pageProps)}
+      </ConfigProvider>
     </>
   );
 };
@@ -216,6 +260,11 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
       await getExperimentInfo(ctx, store, Auth);
     }
 
+    if (query?.secondaryAnalysisId) {
+      const { default: getAnalysisInfo } = (await import('utils/ssr/getAnalysisInfo'));
+      await getAnalysisInfo(ctx, store, Auth);
+    }
+
     return { pageProps: { ...pageProps, amplifyConfig } };
   } catch (e) {
     console.error(e);
@@ -225,8 +274,12 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
       e = new APIError(500);
     }
     res.statusCode = e.statusCode;
-
-    return { pageProps: { ...pageProps, amplifyConfig, httpError: e.statusCode || true } };
+    const errorOrigin = query?.experimentId ? 'experiment' : query?.secondaryAnalysisId ? 'secondaryAnalysis' : '';
+    return {
+      pageProps: {
+        ...pageProps, amplifyConfig, httpError: e.statusCode || true, errorOrigin,
+      },
+    };
   }
 };
 /* eslint-enable global-require */

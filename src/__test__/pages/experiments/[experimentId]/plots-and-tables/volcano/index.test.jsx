@@ -34,7 +34,7 @@ const experimentId = fake.EXPERIMENT_ID;
 const plotUuid = 'volcanoPlotMain';
 const defaultProps = { experimentId };
 
-jest.mock('components/header/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
@@ -114,7 +114,7 @@ describe('Volcano plot page', () => {
   it('Loads controls and elements', async () => {
     await renderVolcanoPlotPage(storeState);
 
-    expect(screen.getByText(new RegExp(plotNames.VOLCANO_PLOT, 'i'))).toBeInTheDocument();
+    expect(screen.getAllByText(new RegExp(plotNames.VOLCANO_PLOT, 'i'))).toHaveLength(3);
 
     expect(screen.getByText(/Differential expression/i)).toBeInTheDocument();
     expect(screen.getByText(/Main schema/i)).toBeInTheDocument();

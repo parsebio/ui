@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadExperiments } from 'redux/actions/experiments';
+import { loadExperiments, createExperiment } from 'redux/actions/experiments';
 
-import Header from 'components/Header';
 import MultiTileContainer from 'components/MultiTileContainer';
-import NewProjectModal from 'components/data-management/NewProjectModal';
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import ProjectDetails from 'components/data-management/project/ProjectDetails';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
@@ -12,7 +10,8 @@ import loadBackendStatus from 'redux/actions/backendStatus/loadBackendStatus';
 import { loadSamples } from 'redux/actions/samples';
 import ExampleExperimentsSpace from 'components/data-management/ExampleExperimentsSpace';
 import Loader from 'components/Loader';
-import { privacyPolicyIsNotAccepted } from 'utils/deploymentInfo';
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
+import NewProjectModal from 'components/data-management/project/NewProjectModal';
 
 const DataManagementPage = () => {
   const dispatch = useDispatch();
@@ -26,10 +25,11 @@ const DataManagementPage = () => {
   const activeExperiment = experiments[activeExperimentId];
   const domainName = useSelector((state) => state.networkResources?.domainName);
 
-  const [newProjectModalVisible, setNewProjectModalVisible] = useState(false);
+  const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
 
   useEffect(() => {
-    if (privacyPolicyIsNotAccepted(user, domainName)) return;
+    if (termsOfUseNotAccepted(user, domainName)) return;
+
     if (experiments.ids.length === 0) dispatch(loadExperiments());
   }, [user]);
 
@@ -48,7 +48,7 @@ const DataManagementPage = () => {
   useEffect(() => {
     if (!activeExperimentId
       || !activeExperiment
-       || privacyPolicyIsNotAccepted(user, domainName)
+      || termsOfUseNotAccepted(user, domainName)
     ) return;
 
     dispatch(loadProcessingSettings(activeExperimentId));
@@ -67,6 +67,7 @@ const DataManagementPage = () => {
       component: (width, height) => (
         <ProjectsListContainer
           height={height}
+          projectType='experiments'
           onCreateNewProject={() => setNewProjectModalVisible(true)}
         />
       ),
@@ -105,11 +106,14 @@ const DataManagementPage = () => {
 
   return (
     <>
-      <Header title='Data Management' />
-      {newProjectModalVisible ? (
+      {NewProjectModalVisible ? (
         <NewProjectModal
+          projectType='experiments'
           onCancel={() => { setNewProjectModalVisible(false); }}
-          onCreate={() => { setNewProjectModalVisible(false); }}
+          onCreate={async (name, description) => {
+            await dispatch(createExperiment(name, description));
+            setNewProjectModalVisible(false);
+          }}
         />
       ) : (<></>)}
       <MultiTileContainer

@@ -23,7 +23,7 @@ const launchPathwayService = (serviceName, genesList, species) => {
       url = serviceUrls[pathwayServices.ENRICHR][species];
       params = {
         list: data.gene_names.join('\n'),
-        description: `Cellenics ENRICHR run with ${total} genes`,
+        description: `Trailmaker ENRICHR run with ${total} genes`,
       };
       postFormRequest(url, params, { enctype: 'multipart/form-data' });
       break;

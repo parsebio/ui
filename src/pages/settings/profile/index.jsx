@@ -1,24 +1,18 @@
 import React, { useState } from 'react';
 import Auth from '@aws-amplify/auth';
-import nextConfig from 'next/config';
 import _ from 'lodash';
 import {
-  Form, Input, Empty, Row, Col, Button, Space, Checkbox, Typography,
+  Form, Input, Empty, Row, Col, Button, Space, Divider,
 } from 'antd';
 import { useRouter } from 'next/router';
-
-import Header from 'components/Header';
+import { institutionCognitoKey, cookiesAgreedCognitoKey } from 'utils/constants';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadUser } from 'redux/actions/user';
-
-import { AccountId } from 'utils/deploymentInfo';
-
-const accountId = nextConfig()?.publicRuntimeConfig?.accountId;
-
-const { Text } = Typography;
+import downloadTermsOfUse from 'utils/downloadTermsOfUse';
+import IframeModal from 'utils/IframeModal';
 
 const ProfileSettings = () => {
   const router = useRouter();
@@ -37,6 +31,8 @@ const ProfileSettings = () => {
   };
   const [newAttributes, setNewAttributes] = useState(initialState);
   const { changedPasswordAttributes, changedUserAttributes } = newAttributes;
+  const [dataUseVisible, setDataUseVisible] = useState(false);
+  const [dataUseBlob, setDataUseBlob] = useState(null);
 
   const setChanges = (object) => {
     const newChanges = _.cloneDeep(newAttributes);
@@ -44,17 +40,15 @@ const ProfileSettings = () => {
     setNewAttributes(newChanges);
   };
 
-  const agreedEmailsKey = 'custom:agreed_emails';
-
   const updateDetails = async () => {
     const { name, email } = changedUserAttributes;
     const { oldPassword, newPassword, confirmNewPassword } = changedPasswordAttributes;
 
     const invalidPasswordErrors = ['InvalidPasswordException', 'InvalidParameterException', 'NotAuthorizedException'];
-    if (name || email || changedUserAttributes[agreedEmailsKey]) {
+    if (name || email) {
       setEmailError(false);
       await Auth.updateUserAttributes(user, changedUserAttributes)
-        .then((a) => pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3))
+        .then(() => pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3))
         .catch(() => {
           setEmailError(true);
         });
@@ -89,14 +83,34 @@ const ProfileSettings = () => {
 
     setNewAttributes(initialState);
   };
+  const resetCookiesPreferences = async () => {
+    function deleteAllCookies() {
+      const cookies = document.cookie.split(';');
+      cookies.forEach((cookie) => {
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        // Deleting cookie for the current path
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        // Deleting cookie for all paths
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
+      });
+    }
+    try {
+      await Auth.updateUserAttributes(user, {
+        [cookiesAgreedCognitoKey]: '',
+      });
 
+      deleteAllCookies();
+
+      pushNotificationMessage('success', 'Cookies preferences reset', 3);
+    } catch (e) {
+      handleError(e, e.message);
+    }
+  };
   // the user might not be loaded already - then return <Empty/>
   if (user) {
     return (
       <>
-        <Header
-          title='Profile'
-        />
         <Space direction='vertical' style={{ width: '100%', padding: '20px', background: ' white' }}>
           <Row type='flex'>
             <Col xl={{ span: 12, offset: 6 }} span={24}>
@@ -109,7 +123,9 @@ const ProfileSettings = () => {
                 <h2 style={{ marginTop: '16px' }}>Profile settings:</h2>
                 <Form.Item label='Full name'>
                   <Input
-                    onChange={(e) => setChanges({ changedUserAttributes: { name: e.target.value } })}
+                    onChange={
+                      (e) => setChanges({ changedUserAttributes: { name: e.target.value } })
+                    }
                     placeholder={user.attributes.name}
                   />
                 </Form.Item>
@@ -122,32 +138,24 @@ const ProfileSettings = () => {
                     type='email'
                     // disabled until we can validate the changing of email
                     disabled
-                    onChange={(e) => setChanges({ changedUserAttributes: { email: e.target.value } })}
+                    onChange={(e) => (
+                      setChanges({ changedUserAttributes: { email: e.target.value } })
+                    )}
                     placeholder={user.attributes.email}
                   />
                 </Form.Item>
                 {/* no information for the institution currently */}
                 <Form.Item label='Institution:'>
-                  <Input disabled placeholder={user.attributes.institution} />
+                  <Input disabled placeholder={user.attributes[institutionCognitoKey]} />
                 </Form.Item>
-                {accountId !== AccountId.HMS
-                  && (
-                    <Form.Item
-                      label='Updates: '
-                    >
-                      <Space align='start' style={{ marginTop: '5px' }}>
-                        <Checkbox
-                          defaultChecked={user.attributes[agreedEmailsKey] === 'true'}
-                          onChange={(e) => setChanges({
-                            changedUserAttributes: { [agreedEmailsKey]: e.target.checked.toString() },
-                          })}
-                        />
-                        <Text>
-                          I agree to receive updates about new features in Cellenics, research done with Cellenics, and Cellenics community events. (No external marketing.)
-                        </Text>
-                      </Space>
-                    </Form.Item>
-                  )}
+                <center>
+                  <Button
+                    onClick={resetCookiesPreferences}
+                    disabled={!user.attributes[cookiesAgreedCognitoKey]}
+                  >
+                    Reset Cookies Preferences
+                  </Button>
+                </center>
                 <h2 style={{ marginTop: '40px' }}>Password settings:</h2>
                 <Form.Item
                   label='Current password:' // pragma: allowlist secret
@@ -155,7 +163,9 @@ const ProfileSettings = () => {
                   help={oldPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { oldPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => (
+                      setChanges({ changedPasswordAttributes: { oldPassword: e.target.value } })
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
@@ -165,7 +175,9 @@ const ProfileSettings = () => {
                   help={newPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { newPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => (
+                      setChanges({ changedPasswordAttributes: { newPassword: e.target.value } })
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
@@ -175,7 +187,11 @@ const ProfileSettings = () => {
                   help={newPasswordError || ''}
                 >
                   <Input.Password
-                    onChange={(e) => setChanges({ changedPasswordAttributes: { confirmNewPassword: e.target.value } })} // pragma: allowlist secret
+                    onChange={(e) => (
+                      setChanges({
+                        changedPasswordAttributes: { confirmNewPassword: e.target.value },
+                      })
+                    )} // pragma: allowlist secret
                     visibilityToggle={false}
                   />
                 </Form.Item>
@@ -201,6 +217,40 @@ const ProfileSettings = () => {
               </Row>
             </Col>
           </Row>
+          <center>
+            <Divider style={{ marginTop: '40px' }} />
+            <h2>Policy Documents:</h2>
+            <Space>
+              <Button
+                type='link'
+                onClick={() => window.open('https://www.parsebiosciences.com/privacy-policy/', '_blank').focus()}
+              >
+                Privacy Policy
+              </Button>
+              <Button
+                type='link'
+                onClick={() => window.open('https://www.parsebiosciences.com/trailmaker-cookie-policy/', '_blank').focus()}
+              >
+                Cookie Policy
+              </Button>
+              <Button
+                type='link'
+                onClick={() => {
+                  setDataUseVisible(true);
+
+                  if (!dataUseBlob) {
+                    downloadTermsOfUse(setDataUseBlob);
+                  }
+                }}
+              >
+                Terms of Use
+              </Button>
+            </Space>
+            <Divider style={{ marginTop: '20px' }} />
+            {dataUseVisible && (
+              <IframeModal onClose={() => setDataUseVisible(false)} blobToDisplay={dataUseBlob} />
+            )}
+          </center>
         </Space>
 
       </>

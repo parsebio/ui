@@ -32,7 +32,7 @@ jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn(() => Promise.resolve({
     attributes: {
       name: 'mockUserName',
-      'custom:agreed_terms': 'true',
+      'custom:agreed_terms_v2': 'true',
     },
   })),
   federatedSignIn: jest.fn(),
@@ -252,6 +252,10 @@ describe('Samples table', () => {
     await act(async () => {
       userEvent.click(firstSampleDeleteButton);
     });
+    await waitFor(() => {
+      expect(screen.queryByText('Yes')).toBeInTheDocument();
+    });
+    userEvent.click(screen.getByText('Yes'));
 
     // The first sample should be deleted
     const sampleNames = Object.values(samples).map((sample) => sample.name);

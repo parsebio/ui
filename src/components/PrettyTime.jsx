@@ -15,7 +15,6 @@ const PrettyTime = (props) => {
   const localIsoTime = dayjs(isoTime).format('LLLL');
 
   const [displayedTime, setDisplayedTime] = useState(relativeTime);
-
   return (
     <span
       style={{ textDecoration: 'underline dotted' }}

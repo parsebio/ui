@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
 
@@ -13,7 +14,9 @@ import { sampleTech } from 'utils/constants';
 import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import uploadFileToS3 from 'utils/upload/multipartUpload';
+import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
+import UploadsCoordinatorError from 'utils/errors/upload/UploadsCoordinatorError';
+import FileUploaderError from 'utils/errors/upload/FileUploaderError';
 
 const createAndUploadSampleFile = async (
   file, fileType, experimentId, sampleId, dispatch, selectedTech,
@@ -43,7 +46,7 @@ const createAndUploadSampleFile = async (
   const fileName = file.fileObject.name;
 
   try {
-    const { uploadId, bucket, key } = await beginSampleFileUpload(
+    const uploadUrlParams = await beginSampleFileUpload(
       experimentId,
       sampleFileId,
       getMetadata(fileName, selectedTech),
@@ -57,19 +60,19 @@ const createAndUploadSampleFile = async (
       );
     };
 
-    const uploadUrlParams = {
-      uploadId, fileId: sampleFileId, bucket, key,
+    const options = {
+      compress: !file.compressed,
     };
 
-    await uploadFileToS3(
+    await UploadsCoordinator.get().uploadFile([
       experimentId,
       file,
-      !file.compressed,
       uploadUrlParams,
       'sample',
       abortController,
       updateSampleFileUploadProgress,
-    );
+      options,
+    ]);
   } catch (e) {
     dispatch(updateSampleFileUpload(
       experimentId, sampleId, sampleFileId, fileType, UploadStatus.UPLOAD_ERROR,

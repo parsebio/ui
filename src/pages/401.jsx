@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Result, Button, Typography } from 'antd';
-import Auth from '@aws-amplify/auth';
-import FeedbackButton from 'components/header/FeedbackButton';
+import FeedbackButton from 'components/sider/FeedbackButton';
+import signIn from 'utils/signIn';
 
 const { Title } = Typography;
 
@@ -38,7 +38,7 @@ const UnauthorizedPage = ({ title, subTitle, hint }) => (
     )}
     extra={(
       <>
-        <Button type='primary' onClick={() => Auth.federatedSignIn()}>
+        <Button type='primary' onClick={() => signIn()}>
           Log in
         </Button>
         <FeedbackButton />

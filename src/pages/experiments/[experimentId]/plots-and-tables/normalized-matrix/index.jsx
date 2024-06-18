@@ -5,6 +5,7 @@ import {
   Button,
   Space,
   Alert,
+  PageHeader,
 } from 'antd';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,7 +17,6 @@ import {
 
 import { loadCellSets } from 'redux/actions/cellSets';
 
-import Header from 'components/Header';
 import PlotContainer from 'components/plots/PlotContainer';
 import Loader from 'components/Loader';
 
@@ -208,11 +208,17 @@ const NormalizedMatrixPage = (props) => {
 
   return (
     <>
-      <Header title={plotNames.NORMALIZED_EXPRESSION_MATRIX} />
+      <PageHeader
+        title='Normalized Expression Matrix'
+        style={{
+          width: '100%', paddingTop: '10px', paddingBottom: '10px',
+        }}
+      />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={plotUuid}
         plotType={plotType}
+        plotName={plotNames.NORMALIZED_EXPRESSION_MATRIX}
         plotStylingConfig={plotStylingConfig}
         customControlPanel={renderControlPanel()}
         controlsOnly

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Form, InputNumber, Select, Tooltip, Typography,
+  Form, InputNumber, Select, Space, Tooltip,
 } from 'antd';
 
 import {
@@ -9,7 +9,6 @@ import {
 } from '@ant-design/icons';
 
 const { Option } = Select;
-const { Text } = Typography;
 
 const NormalisationOptions = (props) => {
   const {
@@ -20,36 +19,39 @@ const NormalisationOptions = (props) => {
 
   return (
     <>
-      <Form.Item label='# of HVGs'>
-        <InputNumber
-          value={numGenes}
-          step={100}
-          min={1}
-          onChange={(value) => {
-            onChange();
-            setNumGenes(value);
-          }}
-          onPressEnter={(e) => e.preventDefault()}
-          onStep={(value) => onUpdate({
-            dataIntegration: {
-              methodSettings: {
-                [methodId]: {
-                  numGenes: value,
+      <Form.Item>
+        <Space wrap>
+          # of HVGs :
+          <InputNumber
+            value={numGenes}
+            step={100}
+            min={1}
+            onChange={(value) => {
+              onChange();
+              setNumGenes(value);
+            }}
+            onPressEnter={(e) => e.preventDefault()}
+            onStep={(value) => onUpdate({
+              dataIntegration: {
+                methodSettings: {
+                  [methodId]: {
+                    numGenes: value,
+                  },
                 },
               },
-            },
-          })}
-          onBlur={(e) => onUpdate({
-            dataIntegration: {
-              methodSettings: {
-                [methodId]: {
-                  numGenes: parseInt(e.target.value, 0),
+            })}
+            onBlur={(e) => onUpdate({
+              dataIntegration: {
+                methodSettings: {
+                  [methodId]: {
+                    numGenes: parseInt(e.target.value, 0),
+                  },
                 },
               },
-            },
-          })}
-          disabled={disabled}
-        />
+            })}
+            disabled={disabled}
+          />
+        </Space>
         {' '}
         <Tooltip overlay={(
           <span>
@@ -72,51 +74,55 @@ const NormalisationOptions = (props) => {
           <QuestionCircleOutlined />
         </Tooltip>
       </Form.Item>
-      <Form.Item label={(
-        <span>
-          Normalization&nbsp;
-          <Tooltip overlay={(
-            <span>
-              Normalization aims to remove technical variation that is not biologically relevant, e.g. sequencing depth.
-              There are several methods to achieve normalization.
-              "SCTransform" claims to recover sharper biological distinction compared to log-normalization.
-              SCTransform can only be applied when the integration method is set to Seurat v4.
-              Normalization is applied to each sample before integration.
-              Further info can be found
-              <a
-                href='https://satijalab.org/seurat/articles/sctransform_vignette.html'
-                target='_blank'
-                rel='noreferrer'
-              >
-                {' '}
-                <code>here</code>
-              </a>
-            </span>
-          )}
-          >
-            <QuestionCircleOutlined />
-          </Tooltip>
-        </span>
-      )}
-      >
-        <Select
-          value={config.normalisation}
-          onChange={(val) => onUpdate({
-            dataIntegration: {
-              methodSettings: {
-                [methodId]: { normalisation: val },
+      <Form.Item>
+        <Space>
+          <span>
+            Normalization
+            <Tooltip overlay={(
+              <span>
+                Normalization aims to remove technical variation that
+                is not biologically relevant, e.g. sequencing depth.
+                There are several methods to achieve normalization.
+                "SCTransform" claims to recover sharper
+                biological distinction compared to log-normalization.
+                SCTransform can only be applied when the integration method is set to Seurat v4.
+                Normalization is applied to each sample before integration.
+                Further info can be found
+                <a
+                  href='https://satijalab.org/seurat/articles/sctransform_vignette.html'
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  {' '}
+                  <code>here</code>
+                </a>
+              </span>
+            )}
+            >
+              {' '}
+              <QuestionCircleOutlined />
+            </Tooltip>
+            :
+          </span>
+          <Select
+            value={config.normalisation}
+            onChange={(val) => onUpdate({
+              dataIntegration: {
+                methodSettings: {
+                  [methodId]: { normalisation: val },
+                },
               },
-            },
-          })}
-          disabled={disabled}
-        >
-          <Option value='logNormalize'>LogNormalize</Option>
+            })}
+            disabled={disabled}
+          >
+            <Option value='logNormalize'>LogNormalize</Option>
 
-          <Option value='SCT' disabled={methodId !== 'seuratv4'}>
-            SCTransform
-          </Option>
-        </Select>
+            <Option value='SCT' disabled={methodId !== 'seuratv4'}>
+              SCTransform
+            </Option>
+          </Select>
 
+        </Space>
       </Form.Item>
     </>
   );

@@ -1,5 +1,7 @@
 import React from 'react';
-import { screen, render } from '@testing-library/react';
+import {
+  screen, render, waitFor,
+} from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
@@ -32,7 +34,7 @@ jest.mock('redux/selectors');
 jest.mock('utils/socketConnection');
 jest.mock('utils/data-management/calculateGem2sRerunStatus');
 jest.mock('utils/data-management/calculateQCRerunStatus');
-
+jest.mock('components/CookieBanner', () => () => null);
 jest.mock('next/router', () => ({
   __esModule: true,
   useRouter: jest.fn(),
@@ -41,7 +43,9 @@ jest.mock('next/router', () => ({
 jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
     attributes: {
-      'custom:agreed_terms': 'true',
+      'custom:agreed_terms_v2': 'true',
+      'custom:agreed_cookies_v1': 'true',
+      name: 'Tester Testson',
     },
   })),
   federatedSignIn: jest.fn(),
@@ -144,7 +148,7 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.getByText('Data Management')).toBeInTheDocument();
+    expect(screen.getByText('Pipeline')).toBeInTheDocument();
     expect(screen.getByText(experimentName)).toBeInTheDocument();
     expect(screen.getByText('Data Processing')).toBeInTheDocument();
     expect(screen.getByText('Data Exploration')).toBeInTheDocument();
@@ -153,9 +157,6 @@ describe('ContentWrapper', () => {
 
   it('links are disabled if there is no experimentId', async () => {
     await renderContentWrapper();
-
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
 
     // Data Processing link is disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
@@ -173,9 +174,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper();
 
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
-
     // Data Processing link is disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
 
@@ -191,9 +189,6 @@ describe('ContentWrapper', () => {
     calculateQCRerunStatus.mockReturnValue({ rerun: true, reasons: [], complete: true });
 
     await renderContentWrapper();
-
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
 
     // Data Processing link is disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
@@ -230,9 +225,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    // Data Management is not disabled
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
-
     // Data Processing link is not disabled
     expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'false');
 
@@ -250,21 +242,22 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.getByText('Data Management').closest('li')).toHaveAttribute('aria-disabled', 'false');
-    expect(screen.getByText('Data Processing').closest('li')).toHaveAttribute('aria-disabled', 'true');
-    expect(screen.getByText('Data Exploration').closest('li')).toHaveAttribute('aria-disabled', 'true');
-    expect(screen.getByText('Plots and Tables').closest('li')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByText('Data Processing')).not.toBeInTheDocument();
+    expect(screen.queryByText('Data Exploration')).not.toBeInTheDocument();
+    expect(screen.queryByText('Plots and Tables')).not.toBeInTheDocument();
   });
 
   it('has the correct sider and layout style when opened / closed', async () => {
-    const siderHasWidth = (container, expectedWidth) => {
+    const siderHasWidth = async (container, expectedWidth) => {
       const div = container.firstChild;
 
       const [sidebar, content] = Array.from(div.children);
 
       const expandedComputedStyle = getComputedStyle(sidebar).getPropertyValue('width');
       expect(expandedComputedStyle).toEqual(expectedWidth);
-      expect(content.getAttribute('style')).toMatch(`margin-left: ${expectedWidth}`);
+      await waitFor(() => {
+        expect(content.getAttribute('style')).toMatch(`margin-left: ${expectedWidth}`);
+      });
     };
 
     const { container } = await renderContentWrapper();
@@ -275,12 +268,12 @@ describe('ContentWrapper', () => {
     // Click so the sidebar collapse
     userEvent.click(screen.getByLabelText('left'));
 
-    siderHasWidth(container, collapsedWidth);
+    await siderHasWidth(container, collapsedWidth);
 
     // Click so the sidebar open
     userEvent.click(screen.getByLabelText('right'));
 
-    siderHasWidth(container, expandedWidth);
+    await siderHasWidth(container, expandedWidth);
   });
 
   // PROBLEMATIC
@@ -312,7 +305,6 @@ describe('ContentWrapper', () => {
 
     await renderContentWrapper(experimentId, experimentData);
 
-    expect(screen.queryByText('Data Management')).not.toBeInTheDocument();
     expect(Auth.federatedSignIn).toHaveBeenCalled();
   });
 
