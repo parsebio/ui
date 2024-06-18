@@ -44,8 +44,6 @@ class PartUploader {
     this.#partNumberIt += 1;
     const partNumber = this.#partNumberIt;
 
-    const signedUrl = await this.#getSignedUrlForPart(partNumber);
-
     const mergedChunks = new Uint8Array(this.#getAccumulatedUploadSize());
     this.#accumulatedChunks.reduce((offset, chunk) => {
       mergedChunks.set(chunk, offset);
@@ -55,7 +53,7 @@ class PartUploader {
 
     const partResponse = await putInS3(
       mergedChunks,
-      signedUrl,
+      async () => this.#getSignedUrlForPart(partNumber),
       this.#abortController,
       // this.#createOnUploadProgress(partNumber),
     );
@@ -71,10 +69,16 @@ class PartUploader {
       projectId, uploadId, bucket, key,
     } = this.#uploadParams;
 
-    const queryParams = new URLSearchParams({ bucket, key });
-    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl?${queryParams}`;
+    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
 
-    return await fetchAPI(url, { method: 'GET' });
+    return await fetchAPI(
+      url,
+      {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify({ bucket, key }),
+      },
+    );
   };
 }
 
