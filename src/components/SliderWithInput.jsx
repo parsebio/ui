@@ -15,10 +15,6 @@ const SliderWithInput = (props) => {
 
   const [localValue, setLocalValue] = useState(value);
 
-  // const debouncedOnChange = useCallback(
-  //   _.debounce((changedValue) => handleChange(changedValue), debounceTime), [],
-  // );
-
   useEffect(() => {
     setLocalValue(parseFloat(value));
   }, [value]);
