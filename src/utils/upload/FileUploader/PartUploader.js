@@ -33,7 +33,7 @@ class PartUploader {
   uploadChunk = async (chunk, onUploadProgress) => {
     this.#accumulatedChunks.push({ chunk, onUploadProgress });
 
-    // Upload if we have accumulated 5MB of size
+    // Upload if we have accumulated partSize
     const canUpload = this.#getAccumulatedUploadSize() > this.#partSize;
     if (!canUpload) return;
 
@@ -53,7 +53,7 @@ class PartUploader {
     const partNumber = this.#partNumberIt;
 
     const mergedChunks = new Uint8Array(this.#getAccumulatedUploadSize());
-    this.#accumulatedChunks.reduce((offset, chunk) => {
+    this.#accumulatedChunks.reduce((offset, { chunk, onUploadProgress }) => {
       mergedChunks.set(chunk, offset);
 
       return offset + chunk.length;
@@ -70,7 +70,7 @@ class PartUploader {
     this.#uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
   }
 
-  #getAccumulatedUploadSize = () => _.sum(_.map(this.#accumulatedChunks, 'length'))
+  #getAccumulatedUploadSize = () => _.sum(_.map(this.#accumulatedChunks, 'chunk.length'))
 
   #getSignedUrlForPart = async (partNumber) => {
     const {
