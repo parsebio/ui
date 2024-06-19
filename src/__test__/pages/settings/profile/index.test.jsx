@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/router';
 import { makeStore } from 'redux/store';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
-import Auth from '@aws-amplify/auth';
+import { Auth } from '@aws-amplify/auth';
 import ProfileSettings from 'pages/settings/profile';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { Provider } from 'react-redux';
@@ -18,7 +18,9 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
   __esModule: true,
 }));
-jest.mock('@aws-amplify/auth', () => jest.fn());
+jest.mock('@aws-amplify/auth', () => ({
+  Auth: jest.fn(),
+}));
 jest.mock('utils/pushNotificationMessage');
 
 const updateMock = jest.fn(() => Promise.resolve(true));

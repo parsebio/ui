@@ -115,7 +115,7 @@ const ProfileSettings = () => {
 
               <Form
                 layout='horizontal'
-                labelCol={{ span: '6' }}
+                labelCol={{ span: '10' }}
                 wrapperCol={{ span: '18' }}
               >
                 <h2 style={{ marginTop: '16px' }}>Profile settings:</h2>
