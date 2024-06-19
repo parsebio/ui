@@ -6,11 +6,10 @@ import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import Auth from '@aws-amplify/auth';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { useRouter } from 'next/router';
 import preloadAll from 'jest-next-dynamic';
-
+import { Auth } from '@aws-amplify/auth';
 import ContentWrapper from 'components/ContentWrapper';
 import AppRouteProvider from 'utils/AppRouteProvider';
 
@@ -41,14 +40,16 @@ jest.mock('next/router', () => ({
 }));
 
 jest.mock('@aws-amplify/auth', () => ({
-  currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
-    attributes: {
-      'custom:agreed_terms_v2': 'true',
-      'custom:agreed_cookies_v1': 'true',
-      name: 'Tester Testson',
-    },
-  })),
-  federatedSignIn: jest.fn(),
+  Auth: {
+    currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
+      attributes: {
+        'custom:agreed_terms_v2': 'true',
+        'custom:agreed_cookies_v1': 'true',
+        name: 'Tester Testson',
+      },
+    })),
+    federatedSignIn: jest.fn(),
+  },
 }));
 
 jest.mock('utils/socketConnection', () => ({

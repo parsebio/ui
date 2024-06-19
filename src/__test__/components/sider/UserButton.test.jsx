@@ -4,7 +4,7 @@ import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 
-import Auth from '@aws-amplify/auth';
+import { Auth } from '@aws-amplify/auth';
 
 import UserButton from 'components/sider/UserButton';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
@@ -23,8 +23,9 @@ const renderUserButton = async (store) => {
     );
   });
 };
-
-jest.mock('@aws-amplify/auth', () => jest.fn());
+jest.mock('@aws-amplify/auth', () => ({
+  Auth: jest.fn(),
+}));
 
 const userName = 'Mock user';
 
