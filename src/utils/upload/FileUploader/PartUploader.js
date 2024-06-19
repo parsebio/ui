@@ -3,17 +3,25 @@ import _ from 'lodash';
 import fetchAPI from 'utils/http/fetchAPI';
 import putInS3 from 'utils/upload/putInS3';
 
-const fiveMB = 5 * 1024 * 1024;
+const PART_COUNT_MAX = 10000;
+const PART_SIZE_MIN = 5 * 1024 * 1024;
 
 class PartUploader {
-  constructor(uploadParams, abortController) {
+  constructor(uploadParams, abortController, fileSize) {
     this.#uploadParams = uploadParams;
     this.#abortController = abortController;
+
+    // Can't have more than 10000 parts
+    const minPartSize = Math.ceil(fileSize / PART_COUNT_MAX);
+    // Can't have parts be size less than 5MB
+    this.#partSize = Math.max(minPartSize, PART_SIZE_MIN);
   }
 
   #uploadParams;
 
   #abortController;
+
+  #partSize;
 
   // Used to assign partNumbers to each chunk
   #partNumberIt = 0;
@@ -26,7 +34,7 @@ class PartUploader {
     this.#accumulatedChunks.push({ chunk, onUploadProgress });
 
     // Upload if we have accumulated 5MB of size
-    const canUpload = this.#getAccumulatedUploadSize() > fiveMB;
+    const canUpload = this.#getAccumulatedUploadSize() > this.#partSize;
     if (!canUpload) return;
 
     await this.#executeUpload();

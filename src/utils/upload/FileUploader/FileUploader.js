@@ -58,7 +58,7 @@ class FileUploader {
 
     this.currentChunk = null;
 
-    this.partUploader = new PartUploader(uploadParams, abortController);
+    this.partUploader = new PartUploader(uploadParams, abortController, file.size);
 
     this.#subscribeToAbortSignal();
   }
