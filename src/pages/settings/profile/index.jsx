@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Auth from '@aws-amplify/auth';
+import { Auth } from '@aws-amplify/auth';
 import _ from 'lodash';
 import {
   Form, Input, Empty, Row, Col, Button, Space, Divider,
@@ -97,10 +97,7 @@ const ProfileSettings = () => {
       await dispatch(updateUserAttributes(user, {
         [cookiesAgreedCognitoKey]: '',
       }));
-
       deleteAllCookies();
-
-      pushNotificationMessage('success', 'Cookies preferences reset', 3);
     } catch (e) {
       handleError(e, e.message);
     }
