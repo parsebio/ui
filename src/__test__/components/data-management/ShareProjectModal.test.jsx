@@ -53,6 +53,7 @@ describe('Share project modal', () => {
           id: fake.EXPERIMENT_ID,
           name: fake.EXPERIMENT_NAME,
         }}
+        explorerInfoText='custom explorer info text'
       />,
     ));
   };
@@ -65,6 +66,7 @@ describe('Share project modal', () => {
     expect(screen.getAllByRole('combobox').length).toEqual(2);
     expect(screen.getByText('bob@bob.com')).toBeInTheDocument();
     expect(screen.getByText('Done')).toBeInTheDocument();
+    expect(screen.getByText('custom explorer info text')).toBeInTheDocument();
 
     const revokeButtons = screen.getAllByRole('button', { name: 'Revoke' });
     expect(revokeButtons.length).toEqual(2);
