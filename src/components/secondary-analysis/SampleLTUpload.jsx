@@ -36,22 +36,34 @@ const SampleLTUpload = (props) => {
     const rows = await readExcelFile(excelFile, { sheet: sheets[0].name });
 
     if (sheets.length !== 3
-      || !rows.some((row) => row.some((cell) => typeof cell === 'string'
-        && (cell.includes('Evercode WT') || cell.includes('Parse Biosciences'))))) {
+        || !rows.some((row) => row.some((cell) => typeof cell === 'string'
+            && (cell.includes('Evercode WT') || cell.includes('Parse Biosciences'))))) {
       throw new Error('Not a valid Parse Biosciences sample loading table.');
     }
 
     const isSampleNameCell = (cell) => typeof cell === 'string' && cell.includes('Sample Name');
 
-    // Find the row and column index where 'Sample Name' is mentioned
-    // 'sample name' lowercase is located elsewhere and should not be found
+    // Find the row where 'Sample Name' is mentioned
     const sampleNameRowIndex = rows.findIndex((row) => row.some(isSampleNameCell));
+    if (sampleNameRowIndex === -1) {
+      throw new Error('Sample Name column not found.');
+    }
 
-    // Extract sample names from the rows following the 'Sample Name' row
     const sampleNameColumnIndex = rows[sampleNameRowIndex].findIndex(isSampleNameCell);
 
+    // Extract the number of samples from the cell "Number of Samples"
+    const numberOfSamplesRow = rows.find((row) => row.some((cell) => typeof cell === 'string' && cell.includes('Number of Samples')));
+    if (!numberOfSamplesRow) {
+      throw new Error('Number of Samples not found.');
+    }
+
+    const numberOfSamples = numberOfSamplesRow.filter((cell) => typeof cell === 'number')[0];
+
+    // Extract sample names from the rows following the 'Sample Name' row
     const extractedSampleNames = rows.slice(sampleNameRowIndex + 1)
-      .map((row) => row[sampleNameColumnIndex]).filter((name) => name !== null);
+      .map((row) => row[sampleNameColumnIndex])
+      .slice(0, numberOfSamples)
+      .filter((name) => name !== null);
 
     return extractedSampleNames;
   };
@@ -82,12 +94,12 @@ const SampleLTUpload = (props) => {
           if (sampleNamesAreUnique) {
             setFile(selectedFile);
           } else {
-            warnings.push(`${selectedFile.name}: Sample names are not unique. Make sure all samples have unique names and reupload.`);
+            warnings.push(`Error with ${selectedFile.name}: Sample names are not unique. Make sure all samples have unique names and reupload.`);
             setFile(false);
           }
         }
       } catch (error) {
-        warnings.push(`Failed to read ${selectedFile.name}: ${error.message}`);
+        warnings.push(`${selectedFile.name}: ${error.message}`);
         setFile(false);
       }
     } else {
