@@ -397,6 +397,7 @@ const ContentWrapper = (props) => {
             pipelineType={currentStatusScreen.type}
             pipelineErrorMessage={currentStatusScreen?.message}
             completedSteps={currentStatusScreen?.completedSteps}
+            experimentName={experimentName}
           />
         );
       }
