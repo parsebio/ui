@@ -15,6 +15,8 @@ class PartUploader {
     const minPartSize = Math.ceil(fileSize / PART_COUNT_MAX);
     // Can't have parts be size less than 5MB
     this.#partSize = Math.max(minPartSize, PART_SIZE_MIN);
+
+    this.#partUploadLock = `partUploadLock${this.#uploadParams.uploadId}`;
   }
 
   #uploadParams;
@@ -22,6 +24,8 @@ class PartUploader {
   #abortController;
 
   #partSize;
+
+  #partUploadLock;
 
   // Used to assign partNumbers to each chunk
   #partNumberIt = 0;
@@ -49,25 +53,28 @@ class PartUploader {
   }
 
   #executeUpload = async () => {
-    this.#partNumberIt += 1;
-    const partNumber = this.#partNumberIt;
+    await navigator.locks.request(this.#partUploadLock, async () => {
+      this.#partNumberIt += 1;
+      const partNumber = this.#partNumberIt;
 
-    const mergedChunks = new Uint8Array(this.#getAccumulatedUploadSize());
-    this.#accumulatedChunks.reduce((offset, { chunk, onUploadProgress }) => {
-      mergedChunks.set(chunk, offset);
+      const mergedChunks = new Uint8Array(this.#getAccumulatedUploadSize());
 
-      return offset + chunk.length;
-    }, 0);
+      this.#accumulatedChunks.reduce((offset, { chunk, onUploadProgress }) => {
+        mergedChunks.set(chunk, offset);
 
-    const partResponse = await putInS3(
-      mergedChunks,
-      async () => this.#getSignedUrlForPart(partNumber),
-      this.#abortController,
-      // this.#createOnUploadProgress(partNumber),
-    );
+        return offset + chunk.length;
+      }, 0);
 
-    this.#accumulatedChunks = [];
-    this.#uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
+      const partResponse = await putInS3(
+        mergedChunks,
+        async () => this.#getSignedUrlForPart(partNumber),
+        this.#abortController,
+        // this.#createOnUploadProgress(partNumber),
+      );
+
+      this.#accumulatedChunks = [];
+      this.#uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
+    });
   }
 
   #getAccumulatedUploadSize = () => _.sum(_.map(this.#accumulatedChunks, 'chunk.length'))
