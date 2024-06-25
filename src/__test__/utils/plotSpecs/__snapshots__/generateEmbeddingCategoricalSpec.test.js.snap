@@ -2,7 +2,7 @@
 
 exports[`filterCells generates correct louvain clusters data with one sample in particular 1`] = `
 {
-  "cellSetLegendsData": [
+  "cellSetsPlotData": [
     {
       "color": "#e377c2",
       "key": "louvain-0",
@@ -243,7 +243,7 @@ exports[`filterCells generates correct louvain clusters data with one sample in 
 
 exports[`filterCells generates correct samples data with one sample in particular 1`] = `
 {
-  "cellSetLegendsData": [
+  "cellSetsPlotData": [
     {
       "color": "#8c564b",
       "key": "b62028a1-ffa0-4f10-823d-93c9ddb88898",
@@ -497,7 +497,7 @@ exports[`filterCells generates correct samples data with one sample in particula
 
 exports[`filterCells works correctly with some repeated names in louvain clusters 1`] = `
 {
-  "cellSetLegendsData": [
+  "cellSetsPlotData": [
     {
       "color": "#e377c2",
       "key": "louvain-0",
@@ -1092,7 +1092,7 @@ exports[`filterCells works correctly with some repeated names in louvain cluster
 
 exports[`generateData generates correct data with 1 cluster 1`] = `
 {
-  "cellSetLegendsData": [
+  "cellSetsPlotData": [
     {
       "color": "#1f77b4",
       "key": "louvain-5",
@@ -1226,7 +1226,7 @@ exports[`generateData generates correct data with 1 cluster 1`] = `
 
 exports[`generateData generates correct data with all louvain clusters 1`] = `
 {
-  "cellSetLegendsData": [
+  "cellSetsPlotData": [
     {
       "color": "#e377c2",
       "key": "louvain-0",
