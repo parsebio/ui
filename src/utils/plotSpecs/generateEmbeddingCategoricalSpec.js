@@ -4,7 +4,7 @@ import { getAllCells, getSampleCells } from 'utils/cellSets';
 
 const paddingSize = 5;
 
-const generateSpec = (config, method, plotData, cellSetLegendsData) => {
+const generateSpec = (config, method, plotData, cellSetsPlotData) => {
   const xScaleDomain = config.axesRanges.xAxisAuto
     ? { data: 'values', field: 'x' }
     : [config.axesRanges.xMin, config.axesRanges.xMax];
@@ -95,12 +95,12 @@ const generateSpec = (config, method, plotData, cellSetLegendsData) => {
     );
 
     const legendSize = colorSymbolSize + _.max(
-      cellSetLegendsData.map((legendData) => legendData.name.length * characterSizeHorizontal),
+      cellSetsPlotData.map((legendData) => legendData.name.length * characterSizeHorizontal),
     );
 
     // only 20 rows per column if the legend is on the right
     const legendColumns = positionIsRight
-      ? Math.ceil(cellSetLegendsData.length / maxLegendItemsPerCol)
+      ? Math.ceil(cellSetsPlotData.length / maxLegendItemsPerCol)
       : Math.floor((config.dimensions.width) / legendSize);
     const labelLimit = positionIsRight ? 0 : legendSize;
 
@@ -183,19 +183,19 @@ const generateSpec = (config, method, plotData, cellSetLegendsData) => {
       {
         name: 'cellSetLabelColors',
         type: 'ordinal',
-        range: cellSetLegendsData.map(({ color }) => color),
+        range: cellSetsPlotData.map(({ color }) => color),
         domain: { data: 'values', field: 'cellSetKey' },
       },
       {
         name: 'cellSetMarkColors',
         type: 'ordinal',
-        range: cellSetLegendsData.map(({ color }) => color),
-        domain: cellSetLegendsData.map(({ key }) => key),
+        range: cellSetsPlotData.map(({ color }) => color),
+        domain: cellSetsPlotData.map(({ key }) => key),
       },
       {
         name: 'sampleToName',
         type: 'ordinal',
-        range: cellSetLegendsData.map(({ name }) => name),
+        range: cellSetsPlotData.map(({ name }) => name),
       },
     ],
     axes: [
@@ -284,7 +284,7 @@ const filterCells = (cellSets, sampleKey, groupBy) => {
     return acc;
   }, []);
 
-  let cellSetLegendsData = [];
+  let cellSetsPlotData = [];
   const addedCellSetKeys = new Set();
 
   filteredCells = filteredCells.reduce((acc, cell) => {
@@ -299,7 +299,7 @@ const filterCells = (cellSets, sampleKey, groupBy) => {
 
     if (!addedCellSetKeys.has(key)) {
       addedCellSetKeys.add(key);
-      cellSetLegendsData.push({ key, name, color });
+      cellSetsPlotData.push({ key, name, color });
     }
 
     acc[cell.cellId] = {
@@ -313,17 +313,17 @@ const filterCells = (cellSets, sampleKey, groupBy) => {
   }, {});
 
   // Sort legends to show them in the order that cellSetKeys are stored
-  cellSetLegendsData = _.sortBy(
-    cellSetLegendsData,
+  cellSetsPlotData = _.sortBy(
+    cellSetsPlotData,
     ({ key }) => _.indexOf(cellSetKeys, key),
   );
 
-  return { filteredCells, cellSetLegendsData };
+  return { filteredCells, cellSetsPlotData };
 };
 
 // Generate dynamic data from redux store
 const generateData = (cellSets, sampleKey, groupBy, embeddingData) => {
-  const { filteredCells, cellSetLegendsData } = filterCells(cellSets, sampleKey, groupBy);
+  const { filteredCells, cellSetsPlotData } = filterCells(cellSets, sampleKey, groupBy);
 
   const plotData = embeddingData
     .map((coordinates, cellId) => ({ cellId, coordinates }))
@@ -338,7 +338,7 @@ const generateData = (cellSets, sampleKey, groupBy, embeddingData) => {
       };
     });
 
-  return { plotData, cellSetLegendsData };
+  return { plotData, cellSetsPlotData };
 };
 
 export {
