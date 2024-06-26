@@ -48,6 +48,10 @@
     "species": "Daphnia pulex (Common Water Flea)"
   },
   {
+    "name": "MustPutFur",
+    "species": "Mustela furo (Ferret)"
+  },
+  {
     "name": "Gmax_v2",
     "species": "Glycine max (Soybean)"
   },
@@ -58,6 +62,10 @@
   {
     "name": "Gmax_v6",
     "species": "Glycine max (Soybean)"
+  },
+  {
+    "name": "GRCh38-custom-1",
+    "species": "Homo sapiens (Human)"
   },
   {
     "name": "GRCh38_GRCm39",
