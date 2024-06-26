@@ -329,7 +329,7 @@ const insertClusterColorsSpec = (
         name: 'cellSetLabelColors',
         type: 'ordinal',
         range: cellSetsPlotData.map(({ color }) => color),
-        domain: { data: 'embedding', field: 'cellSetKey' },
+        domain: cellSetsPlotData.map(({ key }) => key),
       },
       {
         name: 'cellSetToName',
