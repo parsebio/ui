@@ -124,14 +124,8 @@ const generateSpec = (config, groupName, data, displayLabels = true) => {
       {
         name: 'trackKeyToTrackName',
         type: 'ordinal',
-        domain: {
-          data: 'trackGroupData',
-          field: 'track',
-        },
-        range: {
-          data: 'trackGroupData',
-          field: 'trackName',
-        },
+        domain: { data: 'trackGroupData', field: 'track' },
+        range: { data: 'trackGroupData', field: 'trackName' },
       },
       {
         name: 'color',
@@ -152,14 +146,8 @@ const generateSpec = (config, groupName, data, displayLabels = true) => {
       {
         name: 'cellSetColors',
         type: 'ordinal',
-        range: {
-          data: 'trackGroupData',
-          field: 'color',
-        },
-        domain: {
-          data: 'trackGroupData',
-          field: 'key',
-        },
+        range: { data: 'trackGroupData', field: 'color' },
+        domain: { data: 'trackGroupData', field: 'key' },
       },
       {
         name: 'cellSetNames',
