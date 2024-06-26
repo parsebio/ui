@@ -375,8 +375,8 @@ const insertClusterColorsSpec = (
     {
       name: 'cellSetMarkColors',
       type: 'ordinal',
-      range: { data: 'embedding', field: 'color' },
-      domain: { data: 'embedding', field: 'cellSetKey' },
+      range: cellSetLegendsData.map(({ color }) => color),
+      domain: cellSetLegendsData.map(({ key }) => key),
     },
   ];
 
