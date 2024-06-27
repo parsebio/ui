@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, Empty } from 'antd';
+import pipelineWarningUserMessages from 'utils/pipelineErrorUserMessages';
+
+import { Table, Empty, Alert } from 'antd';
 
 const FilterResultTable = (props) => {
   const { tableData } = props;
@@ -17,7 +19,7 @@ const FilterResultTable = (props) => {
       return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
     }
 
-    const { before, after } = tableData;
+    const { before, after, warnings = [] } = tableData;
 
     // Rearrange data to fit table
     const titles = {
@@ -67,13 +69,23 @@ const FilterResultTable = (props) => {
     ];
 
     return (
-      <Table
-        bordered
-        dataSource={dataSource}
-        columns={columns}
-        pagination={false}
-        size='small'
-      />
+      <div>
+        {warnings.length > 0 && (
+          warnings.map((warning) => (
+            <Alert
+              message={pipelineWarningUserMessages[warning]}
+              type='info'
+              showIcon
+            />
+          )))}
+        <Table
+          bordered
+          dataSource={dataSource}
+          columns={columns}
+          pagination={false}
+          size='small'
+        />
+      </div>
     );
   };
 
