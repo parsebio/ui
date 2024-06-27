@@ -184,7 +184,7 @@ const generateSpec = (config, method, plotData, cellSetsPlotData) => {
         name: 'cellSetLabelColors',
         type: 'ordinal',
         range: cellSetsPlotData.map(({ color }) => color),
-        domain: { data: 'values', field: 'cellSetKey' },
+        domain: cellSetsPlotData.map(({ key }) => key),
       },
       {
         name: 'cellSetMarkColors',
