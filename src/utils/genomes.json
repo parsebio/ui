@@ -72,6 +72,10 @@
     "species": "Mixed human and mouse"
   },
   {
+    "name": "GRCm38_HM175",
+    "species": "Mixed mouse and Hepatitis A virus"
+  },
+  {
     "name": "ARS-UCD1.2_Oar_v3.1",
     "species": "Mixed cow and sheep"
   },
