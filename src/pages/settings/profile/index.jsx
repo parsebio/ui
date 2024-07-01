@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Auth from '@aws-amplify/auth';
+import { Auth } from '@aws-amplify/auth';
 import _ from 'lodash';
 import {
   Form, Input, Empty, Row, Col, Button, Space, Divider,
@@ -10,7 +10,7 @@ import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import { useSelector, useDispatch } from 'react-redux';
-import { loadUser } from 'redux/actions/user';
+import { updateUserAttributes, loadUser } from 'redux/actions/user';
 import downloadTermsOfUse from 'utils/downloadTermsOfUse';
 import IframeModal from 'utils/IframeModal';
 
@@ -47,11 +47,9 @@ const ProfileSettings = () => {
     const invalidPasswordErrors = ['InvalidPasswordException', 'InvalidParameterException', 'NotAuthorizedException'];
     if (name || email) {
       setEmailError(false);
-      await Auth.updateUserAttributes(user, changedUserAttributes)
-        .then(() => pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3))
-        .catch(() => {
-          setEmailError(true);
-        });
+      await dispatch(
+        updateUserAttributes(user, changedUserAttributes, () => setEmailError(true)),
+      );
     }
     if (oldPassword || newPassword || confirmNewPassword) {
       setOldPasswordError(false);
@@ -96,13 +94,10 @@ const ProfileSettings = () => {
       });
     }
     try {
-      await Auth.updateUserAttributes(user, {
+      await dispatch(updateUserAttributes(user, {
         [cookiesAgreedCognitoKey]: '',
-      });
-
+      }));
       deleteAllCookies();
-
-      pushNotificationMessage('success', 'Cookies preferences reset', 3);
     } catch (e) {
       handleError(e, e.message);
     }
@@ -117,7 +112,7 @@ const ProfileSettings = () => {
 
               <Form
                 layout='horizontal'
-                labelCol={{ span: '6' }}
+                labelCol={{ span: '10' }}
                 wrapperCol={{ span: '18' }}
               >
                 <h2 style={{ marginTop: '16px' }}>Profile settings:</h2>

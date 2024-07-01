@@ -12,8 +12,8 @@ import {
 
 import styles from 'components/data-management/TermsOfUseIntercept.module.css';
 
-import pushNotificationMessage from 'utils/pushNotificationMessage';
-import endUserMessages from 'utils/endUserMessages';
+import { updateUserAttributes } from 'redux/actions/user';
+import { useDispatch } from 'react-redux';
 import {
   termsOfUseCognitoKey,
   institutionCognitoKey,
@@ -24,7 +24,8 @@ import IframeModal from 'utils/IframeModal';
 const { Text } = Typography;
 
 const TermsOfUseIntercept = (props) => {
-  const { user, onOk } = props;
+  const dispatch = useDispatch();
+  const { user } = props;
 
   const {
     attributes: {
@@ -55,18 +56,13 @@ const TermsOfUseIntercept = (props) => {
       maskClosable={false}
       width={700}
       onOk={async () => {
-        await Auth.updateUserAttributes(
+        await dispatch(updateUserAttributes(
           user,
           {
             [termsOfUseCognitoKey]: agreedTerms,
             [institutionCognitoKey]: institution,
           },
-        )
-          .then(() => {
-            pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3);
-            onOk();
-          })
-          .catch(() => pushNotificationMessage('error', endUserMessages.ERROR_SAVING, 3));
+        ));
       }}
       onCancel={async () => Auth.signOut()}
     >
@@ -164,7 +160,6 @@ const TermsOfUseIntercept = (props) => {
 
 TermsOfUseIntercept.propTypes = {
   user: PropTypes.object.isRequired,
-  onOk: PropTypes.func.isRequired,
 };
 
 TermsOfUseIntercept.defaultProps = {};

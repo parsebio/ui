@@ -397,6 +397,7 @@ const ContentWrapper = (props) => {
             pipelineType={currentStatusScreen.type}
             pipelineErrorMessage={currentStatusScreen?.message}
             completedSteps={currentStatusScreen?.completedSteps}
+            experimentName={experimentName}
           />
         );
       }
@@ -530,7 +531,7 @@ const ContentWrapper = (props) => {
       <DndProvider backend={MultiBackend} options={HTML5ToTouch}>
         {/* Privacy policy only for biomage deployment */}
         {termsOfUseNotAccepted(user, domainName) && (
-          <TermsOfUseIntercept user={user} onOk={() => dispatch(loadUser())} />
+          <TermsOfUseIntercept user={user} />
         )}
         <BrowserAlert />
 

@@ -82,7 +82,7 @@ const fileUploadUtils = {
     ],
     requiredFiles: [sampleFileType.BARCODES_10_X, sampleFileType.FEATURES_10_X, sampleFileType.MATRIX_10_X],
     fileUploadParagraphs: [
-      'For each sample, upload a folder containing the 3 required files. The folder\'s name will be used to name the sample in it. You can change this name later in Data Management.',
+      'For each sample, upload a folder containing the 3 required files. The folder\'s name will be used to name the sample in it. You can change this name later in Insights.',
       'The required files for each sample are:',
     ],
     dropzoneText: 'Drag and drop folders here or click to browse.',
@@ -150,7 +150,7 @@ const fileUploadUtils = {
     fileUploadParagraphs: [
       `For each sample, upload a folder containing the required file. The folder's
       name will be used to name the sample in it.
-      You can change this name later in Data Management.`,
+      You can change this name later in Insights.`,
     ],
     dropzoneText: 'Drag and drop folders here or click to browse.',
     webkitdirectory: '',
@@ -166,7 +166,7 @@ const fileUploadUtils = {
     requiredFiles: ['10x_h5'],
     fileUploadParagraphs: [`For each sample, upload a folder containing the h5 file. The folder's
     name will be used to name the sample in it.
-    You can change this name later in Data Management.`],
+    You can change this name later in Insights.`],
     isNameValid: (fileName) => fileName.toLowerCase().match(/.*matrix.h5(.gz)?$/),
     getCorrespondingType: () => '10x_h5',
     filterFiles: filterFilesDefaultConstructor(sampleTech.H5),
@@ -192,7 +192,7 @@ const fileUploadUtils = {
     requiredFiles: ['matrixParse', 'barcodesParse', 'featuresParse'],
     fileUploadParagraphs: [
       'Directly upload the single folder output by the Parse\'s pipeline.',
-      'For each sample, the files contained in either the "DGE_unfiltered" or "DGE_filtered" folders will be used. The containing folder\'s name will be used to name the sample in it. You can change this name later in Data Management.',
+      'For each sample, the files contained in either the "DGE_unfiltered" or "DGE_filtered" folders will be used. The containing folder\'s name will be used to name the sample in it. You can change this name later in Insights.',
       'Note that files inside the folder "all-samples" ("all-well" in previous versions) are not supported currently and will be ignored.',
       'The expected files in at least one of the DGE folders are:',
     ],

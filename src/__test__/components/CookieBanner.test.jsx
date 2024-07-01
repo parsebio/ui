@@ -5,10 +5,9 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import CookieBanner from 'components/CookieBanner';
 import { cookiesAgreedCognitoKey } from 'utils/constants';
-import Auth from '@aws-amplify/auth';
+import { updateUserAttributes } from 'redux/actions/user';
 
-// Mock AWS Amplify Auth
-jest.mock('@aws-amplify/auth', () => ({
+jest.mock('redux/actions/user', () => ({
   updateUserAttributes: jest.fn(),
 }));
 
@@ -30,7 +29,6 @@ describe('CookieBanner', () => {
         <CookieBanner />
       </Provider>,
     );
-
     // Check if the banner is visible
     expect(screen.getByText(/We use cookies to improve your experience/i)).toBeInTheDocument();
 
@@ -38,7 +36,7 @@ describe('CookieBanner', () => {
     fireEvent.click(screen.getByText('Accept All'));
 
     // Expect the updateUserAttributes to be called with true
-    expect(Auth.updateUserAttributes).toHaveBeenCalledWith(expect.anything(), {
+    expect(updateUserAttributes).toHaveBeenCalledWith(expect.anything(), {
       [cookiesAgreedCognitoKey]: 'true',
     });
   });
@@ -57,7 +55,7 @@ describe('CookieBanner', () => {
     fireEvent.click(screen.getByText('Reject'));
 
     // Expect the updateUserAttributes to be called with false
-    expect(Auth.updateUserAttributes).toHaveBeenCalledWith(expect.anything(), {
+    expect(updateUserAttributes).toHaveBeenCalledWith(expect.anything(), {
       [cookiesAgreedCognitoKey]: 'false',
     });
   });
@@ -75,7 +73,7 @@ describe('CookieBanner', () => {
 
     // Simulate accepting all cookies
     fireEvent.click(screen.getAllByText('Accept All')[0]);
-    expect(Auth.updateUserAttributes).toHaveBeenCalledWith(expect.anything(), {
+    expect(updateUserAttributes).toHaveBeenCalledWith(expect.anything(), {
       [cookiesAgreedCognitoKey]: 'true',
     });
   });
