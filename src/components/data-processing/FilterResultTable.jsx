@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import pipelineWarningUserMessages from 'utils/pipelineErrorUserMessages';
+import pipelineWarningUserMessages from 'utils/pipelineWarningUserMessages';
 
 import { Table, Empty, Alert } from 'antd';
 
