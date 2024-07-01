@@ -58,7 +58,7 @@ class FileUploader {
 
     this.currentChunk = null;
 
-    this.partUploader = new PartUploader(uploadParams, abortController, file.size);
+    this.partUploader = new PartUploader(uploadParams, abortController, file.size, file.path);
 
     this.#subscribeToAbortSignal();
   }
@@ -207,6 +207,7 @@ class FileUploader {
     try {
       // const onUploadProgress = this.#createOnUploadProgress(this.pendingChunks);
       const onUploadProgress = () => [];
+
       await this.partUploader.uploadChunk(chunk, onUploadProgress);
 
       // To track when all chunks have been uploaded
