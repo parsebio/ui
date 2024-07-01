@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
@@ -61,6 +62,7 @@ const Pipeline = () => {
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [shareProjectModalVisible, setShareProjectModalVisible] = useState(false);
+  const domainName = useSelector((state) => state.networkResources?.domainName);
 
   const user = useSelector((state) => state.user.current);
 
@@ -111,7 +113,9 @@ const Pipeline = () => {
   const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useConditionalEffect(() => {
-    if (initialLoadPending) dispatch(loadSecondaryAnalyses());
+    if (initialLoadPending && termsOfUseNotAccepted(user, domainName)) {
+      dispatch(loadSecondaryAnalyses());
+    }
   }, [user]);
 
   useEffect(() => {
