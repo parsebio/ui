@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
-import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
 import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
@@ -30,6 +29,7 @@ import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecon
 import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -62,7 +62,6 @@ const Pipeline = () => {
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [shareProjectModalVisible, setShareProjectModalVisible] = useState(false);
-  const domainName = useSelector((state) => state.networkResources?.domainName);
 
   const user = useSelector((state) => state.user.current);
 
@@ -103,6 +102,8 @@ const Pipeline = () => {
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
   const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
 
+  const domainName = useSelector((state) => state.networkResources?.domainName);
+
   const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
 
   const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
@@ -113,9 +114,9 @@ const Pipeline = () => {
   const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useConditionalEffect(() => {
-    if (initialLoadPending && termsOfUseNotAccepted(user, domainName)) {
-      dispatch(loadSecondaryAnalyses());
-    }
+    if (termsOfUseNotAccepted(user, domainName)) return;
+
+    if (initialLoadPending) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
   useEffect(() => {
