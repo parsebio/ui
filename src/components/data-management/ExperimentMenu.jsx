@@ -73,7 +73,7 @@ const ExperimentMenu = () => {
         {shareExperimentModalVisible && (
           <ShareProjectModal
             explorerInfoText='The user will be able to use Data Exploration and Plots and Tables modules,
-            but will not be able to make any changes to samples or metadata in Data Management or re-run the pipeline in the Data Processing module.'
+            but will not be able to make any changes to samples or metadata in Insights or re-run the pipeline in the Data Processing module.'
             onCancel={() => setShareExperimentModalVisible(false)}
             project={activeExperiment}
           />
