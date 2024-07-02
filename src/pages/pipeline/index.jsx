@@ -29,6 +29,7 @@ import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecon
 import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -101,6 +102,8 @@ const Pipeline = () => {
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
   const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
 
+  const domainName = useSelector((state) => state.networkResources?.domainName);
+
   const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
 
   const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
@@ -111,6 +114,8 @@ const Pipeline = () => {
   const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useConditionalEffect(() => {
+    if (termsOfUseNotAccepted(user, domainName)) return;
+
     if (initialLoadPending) dispatch(loadSecondaryAnalyses());
   }, [user]);
 

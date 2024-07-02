@@ -8,6 +8,10 @@
     "species": "Mus musculus (Mouse)"
   },
   {
+    "name": "GRCh38-mScarlet-GFP",
+    "species": "Custom Human with mScarlet and GFP"
+  },
+  {
     "name": "BDGP6.46",
     "species": "Drosophila melanogaster (Fruit fly)"
   },
@@ -68,8 +72,16 @@
     "species": "Homo sapiens (Human)"
   },
   {
+    "name": "PFal3D7",
+    "species": "Plasmodium falciparum 3D7"
+  },
+  {
     "name": "GRCh38_GRCm39",
     "species": "Mixed human and mouse"
+  },
+  {
+    "name": "GRCm38_HM175",
+    "species": "Mixed mouse and Hepatitis A virus"
   },
   {
     "name": "ARS-UCD1.2_Oar_v3.1",
