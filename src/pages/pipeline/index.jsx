@@ -160,7 +160,6 @@ const Pipeline = () => {
         .then(({ default: connectionPromise }) => connectionPromise)
         .then((io) => {
           io.on('uploadStatus', (message) => {
-            console.log('RECEIVED MESSAGE SOCKET IO ', message);
             dispatch({
               type: SECONDARY_ANALYSIS_FILES_LOADED,
               payload: {
