@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import pipelineWarningUserMessages from 'utils/pipelineWarningUserMessages';
+import filterResultWarningMessages from 'utils/filterResultWarningMessages';
 
 import { Table, Empty, Alert } from 'antd';
 
@@ -73,7 +73,7 @@ const FilterResultTable = (props) => {
         {warnings.length > 0 && (
           warnings.map((warning) => (
             <Alert
-              message={pipelineWarningUserMessages[warning]}
+              message={filterResultWarningMessages[warning]}
               type='info'
               showIcon
             />
