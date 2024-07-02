@@ -6,7 +6,10 @@ const secondaryAnalysisFilesLoaded = produce((draft, action) => {
   draft[secondaryAnalysisId].files.loading = false;
 
   files.forEach((file) => {
-    draft[secondaryAnalysisId].files.data[file.id] = file;
+    draft[secondaryAnalysisId].files.data[file.id] = {
+      ...draft[secondaryAnalysisId].files.data[file.id],
+      ...file,
+    };
 
     draft[secondaryAnalysisId].files.data[file.id].upload.status = {
       current: file.upload.status,

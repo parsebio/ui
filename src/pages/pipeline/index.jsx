@@ -12,6 +12,7 @@ import UploadFastqForm from 'components/secondary-analysis/UploadFastqForm';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
+import { SECONDARY_ANALYSIS_FILES_LOADED } from 'redux/actionTypes/secondaryAnalyses';
 import {
   loadSecondaryAnalyses, updateSecondaryAnalysis,
   createSecondaryAnalysis, loadSecondaryAnalysisFiles, loadSecondaryAnalysisStatus,
@@ -23,6 +24,7 @@ import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
 import usePolling from 'utils/customHooks/usePolling';
+
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
@@ -152,16 +154,28 @@ const Pipeline = () => {
     await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
   }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
 
-  // Poll for files (in case the cli is uploading)
-  usePolling(async () => {
-    // If executing, no need to get files updates
-    if (
-      !activeSecondaryAnalysisId
-      || ['running', 'created'].includes(currentSecondaryAnalysisStatus)
-    ) return;
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('utils/socketConnection')
+        .then(({ default: connectionPromise }) => connectionPromise)
+        .then((io) => {
+          io.on('uploadStatus', (message) => {
+            console.log('RECEIVED MESSAGE SOCKET IO ', message);
+            dispatch({
+              type: SECONDARY_ANALYSIS_FILES_LOADED,
+              payload: {
+                secondaryAnalysisId: message.secondaryAnalysisId,
+                files: message.files,
+              },
+            });
+          });
 
-    await dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
-  }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
+          return () => {
+            io.off('uploadStatus');
+          };
+        });
+    }
+  }, [dispatch]);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
