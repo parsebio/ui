@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Auth } from '@aws-amplify/auth';
+import * as reactamplify from '@aws-amplify/ui-react';
 import _ from 'lodash';
 import {
   Form, Input, Empty, Row, Col, Button, Space, Divider,
@@ -13,13 +14,31 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateUserAttributes, loadUser } from 'redux/actions/user';
 import downloadTermsOfUse from 'utils/downloadTermsOfUse';
 import IframeModal from 'utils/IframeModal';
+import TOTPSetupComp from './TOTPSetup';
+import MFASetup from './MFASetup';
+
+console.log('reactamplifyDebug');
+console.log(reactamplify);
+console.log('reactamplifyAuthenticatorDebug');
+console.log(reactamplify.Authenticator);
 
 const ProfileSettings = () => {
   const router = useRouter();
 
   const dispatch = useDispatch();
+  const checkedMFARef = useRef(false);
 
   const user = useSelector((state) => state.user.current);
+
+  useEffect(() => {
+    if (checkedMFARef.current || _.isNil(user)) return;
+
+    checkedMFARef.current = true;
+
+    console.log('AuthDebug');
+    console.log(Auth);
+    // Auth.setUpTOTP(user);
+  }, [user]);
 
   const [oldPasswordError, setOldPasswordError] = useState(null);
   const [newPasswordError, setNewPasswordError] = useState(null);
@@ -51,6 +70,10 @@ const ProfileSettings = () => {
         updateUserAttributes(user, changedUserAttributes, () => setEmailError(true)),
       );
     }
+
+    // const a = await Auth.setupTOTP(user);
+
+    // return;
     if (oldPassword || newPassword || confirmNewPassword) {
       setOldPasswordError(false);
       setNewPasswordError(false);
@@ -65,15 +88,19 @@ const ProfileSettings = () => {
       } else if (!newPassword?.match(passwordValidity)) {
         setNewPasswordError('Password should include at least 8 characters, a number, special character, uppercase letter, lowercase letter.');
       } else {
-        await Auth.changePassword(user, oldPassword, newPassword)
-          .then(() => pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3))
-          .catch((e) => {
-            if (invalidPasswordErrors.includes(e.code)) {
-              setOldPasswordError("Doesn't match old password.");
-            } else {
-              handleError(e, e.message);
-            }
-          });
+        console.log('RGNREON');
+        const a = await Auth.setupTOTP(user);
+        console.log('aDebug');
+        console.log(a);
+        // await Auth.changePassword(user, oldPassword, newPassword)
+        //   .then(() => pushNotificationMessage('success', endUserMessages.ACCOUNT_DETAILS_UPDATED, 3))
+        //   .catch((e) => {
+        //     if (invalidPasswordErrors.includes(e.code)) {
+        //       setOldPasswordError("Doesn't match old password.");
+        //     } else {
+        //       handleError(e, e.message);
+        //     }
+        //   });
       }
     }
 
@@ -104,6 +131,8 @@ const ProfileSettings = () => {
   };
   // the user might not be loaded already - then return <Empty/>
   if (user) {
+    return (<MFASetup user={user} />);
+    // return (<TOTPSetupComp onTOTPEvent={() => { }} authData={user} />);
     return (
       <>
         <Space direction='vertical' style={{ width: '100%', padding: '20px', background: ' white' }}>
