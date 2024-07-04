@@ -6,7 +6,7 @@ import { Button, Modal, message } from 'antd';
 import TotpSetup from 'pages/settings/profile/TotpSetup';
 
 const MfaSetupButton = ({ user }) => {
-  const [showTOTPSetup, setShowTOTPSetup] = useState(false);
+  const [showTotpSetup, setShowTotpSetup] = useState(false);
 
   const [mfaEnabled, setMfaEnabled] = useState(null);
 
@@ -25,7 +25,7 @@ const MfaSetupButton = ({ user }) => {
     await Auth.setPreferredMFA(user, mfaValue);
 
     setMfaEnabled(enabled);
-    setShowTOTPSetup(false);
+    setShowTotpSetup(false);
     message.success(`MFA is now ${enabled ? 'enabled' : 'disabled'}`);
   };
 
@@ -38,14 +38,14 @@ const MfaSetupButton = ({ user }) => {
       {mfaEnabled ? (
         <Button onClick={disableMFA}>Disable MFA</Button>
       ) : (
-        <Button onClick={() => setShowTOTPSetup(true)}>Enable MFA</Button>
+        <Button onClick={() => setShowTotpSetup(true)}>Enable MFA</Button>
       )}
 
-      {showTOTPSetup && (
+      {showTotpSetup && (
         <Modal
           open
           width={600}
-          onCancel={() => setShowTOTPSetup(false)}
+          onCancel={() => setShowTotpSetup(false)}
           footer={null}
         >
           <TotpSetup onTOTPSucceeded={() => changeMFAEnabled(true)} user={user} />
