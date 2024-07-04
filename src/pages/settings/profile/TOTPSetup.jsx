@@ -108,7 +108,7 @@ const TOTPSetup = (props) => {
   return (
     <Form layout='vertical'>
       <Divider orientation='left'>
-        1. Set up your authenticator application
+        1. Set up the account in your authenticator application
       </Divider>
       <Row style={{ height: '100%' }} wrap={false}>
         {qrSection}
