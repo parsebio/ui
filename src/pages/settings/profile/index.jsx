@@ -119,7 +119,6 @@ const ProfileSettings = () => {
   };
   // the user might not be loaded already - then return <Empty/>
   if (user) {
-    return (<MfaSetupButton user={user} />);
     return (
       <>
         <Space direction='vertical' style={{ width: '100%', padding: '20px', background: ' white' }}>
@@ -261,6 +260,8 @@ const ProfileSettings = () => {
             {dataUseVisible && (
               <IframeModal onClose={() => setDataUseVisible(false)} blobToDisplay={dataUseBlob} />
             )}
+            <MfaSetupButton user={user} />
+            <Divider style={{ marginTop: '20px' }} />
           </center>
         </Space>
 
