@@ -26,6 +26,7 @@ const TOTPSetup = (props) => {
 
   const handleInputChange = (evt) => {
     const { name, value } = evt.target;
+
     setInputs((prevInputs) => ({
       ...prevInputs,
       [name]: value,
@@ -39,11 +40,6 @@ const TOTPSetup = (props) => {
   };
 
   const verifyTotpToken = () => {
-    if (!inputs) {
-      console.error('no input');
-      return;
-    }
-
     const { totpCode } = inputs;
     Auth.verifyTotpToken(user, totpCode)
       .then(() => {
