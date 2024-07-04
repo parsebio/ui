@@ -15,7 +15,7 @@ import downloadTermsOfUse from 'utils/downloadTermsOfUse';
 import IframeModal from 'utils/IframeModal';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
-import MFASetup from './MFASetup';
+import MfaSetupButton from './MfaSetup';
 
 const ProfileSettings = () => {
   const router = useRouter();
@@ -122,7 +122,7 @@ const ProfileSettings = () => {
   };
   // the user might not be loaded already - then return <Empty/>
   if (user) {
-    return (<MFASetup user={user} />);
+    return (<MfaSetupButton user={user} />);
     return (
       <>
         <Space direction='vertical' style={{ width: '100%', padding: '20px', background: ' white' }}>
