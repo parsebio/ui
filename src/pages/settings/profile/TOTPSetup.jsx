@@ -36,17 +36,11 @@ const TOTPSetup = (props) => {
     setCode(data);
   };
 
-  const verifyTotpToken = () => {
-    Auth.verifyTotpToken(user, totpAuthCode)
-      .then(() => {
-        Auth.setPreferredMFA(user, 'TOTP');
-        message.success('Setup TOTP successfully!');
-        onTOTPEvent('Setup TOTP', 'SUCCESS', user);
-      })
-      .catch((err) => {
-        message.error('Setup TOTP failed!');
-        console.error(err);
-      });
+  const verifyTotpToken = async () => {
+    await Auth.verifyTotpToken(user, totpAuthCode);
+
+    await Auth.setPreferredMFA(user, 'TOTP');
+    onTOTPEvent('Setup TOTP', 'SUCCESS', user);
   };
 
   const renderQrCode = () => {
