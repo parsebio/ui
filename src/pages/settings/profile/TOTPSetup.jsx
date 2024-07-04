@@ -85,7 +85,7 @@ const TOTPSetup = (props) => {
 
   const qrSection = (
     <Space align='center' direction='vertical' style={{ width: '50%' }}>
-      <Title level={5}>Scan the qr code</Title>
+      <Title style={{ fontSize: 15 }} level={5}>Scan the qr code</Title>
       <center>
         {renderQrCode(code)}
       </center>
@@ -94,7 +94,7 @@ const TOTPSetup = (props) => {
 
   const plainCodeSection = (
     <Space align='center' direction='vertical' style={{ height: '100%', width: '50%' }}>
-      <Title level={5}>Or enter the setup key</Title>
+      <Title style={{ fontSize: 15 }} level={5}>Or enter the setup key</Title>
       <Text style={{ top: '50%', bottom: '50%' }}>
         <pre>{code}</pre>
       </Text>
@@ -103,7 +103,7 @@ const TOTPSetup = (props) => {
 
   return (
     <Form layout='vertical'>
-      <Divider orientation='left'>
+      <Divider orientation='left' orientationMargin='10px'>
         1. Set up the account in your authenticator application
       </Divider>
       <Row style={{ height: '100%' }} wrap={false}>
@@ -112,11 +112,11 @@ const TOTPSetup = (props) => {
         {plainCodeSection}
       </Row>
 
-      <Divider orientation='left'>
+      <Divider orientation='left' orientationMargin='10px'>
         2. Verify
       </Divider>
 
-      <Form.Item label='Enter here the security code your application shows after:'>
+      <Form.Item label='Enter here the 6 digit code your application shows:'>
         <Input autoFocus name='totpCode' onChange={handleInputChange} />
       </Form.Item>
       <Form.Item>
