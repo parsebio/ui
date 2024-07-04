@@ -2,12 +2,14 @@ import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import Auth from '@aws-amplify/auth';
+
 import {
   Input, Button, Typography, Space, Divider, Row,
 } from 'antd';
 
 import { totpQrcode } from '@aws-amplify/ui';
 import QRCode from 'qrcode.react';
+import { ClipLoader } from 'react-spinners';
 
 const { Title, Text } = Typography;
 
@@ -83,6 +85,17 @@ const TotpSetup = (props) => {
       </Text>
     </Space>
   );
+
+  if (!setupKey) {
+    return (
+      <center>
+        <ClipLoader
+          size={50}
+          color='#8f0b10'
+        />
+      </center>
+    );
+  }
 
   return (
     <Space direction='vertical'>
