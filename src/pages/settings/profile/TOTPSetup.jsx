@@ -24,12 +24,6 @@ const TOTPSetup = (props) => {
     setup();
   }, []);
 
-  const triggerTOTPEvent = (event, data) => {
-    if (onTOTPEvent) {
-      onTOTPEvent(event, data);
-    }
-  };
-
   const handleInputChange = (evt) => {
     const { name, value } = evt.target;
     setInputs((prevInputs) => ({
@@ -61,7 +55,7 @@ const TOTPSetup = (props) => {
       .then(() => {
         Auth.setPreferredMFA(user, 'TOTP');
         message.success('Setup TOTP successfully!');
-        triggerTOTPEvent('Setup TOTP', 'SUCCESS', user);
+        onTOTPEvent('Setup TOTP', 'SUCCESS', user);
       })
       .catch((err) => {
         message.error('Setup TOTP failed!');
@@ -128,10 +122,12 @@ const TOTPSetup = (props) => {
   );
 };
 
-TOTPSetup.defaultProps = {};
+TOTPSetup.defaultProps = {
+  onTOTPEvent: () => { },
+};
 
 TOTPSetup.propTypes = {
-  onTOTPEvent: PropTypes.func.isRequired,
+  onTOTPEvent: PropTypes.func,
   user: PropTypes.object.isRequired,
 };
 
