@@ -12,10 +12,10 @@ import UploadFastqForm from 'components/secondary-analysis/UploadFastqForm';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
 import MultiTileContainer from 'components/MultiTileContainer';
 import NewProjectModal from 'components/data-management/project/NewProjectModal';
-import { SECONDARY_ANALYSIS_FILES_LOADED } from 'redux/actionTypes/secondaryAnalyses';
 import {
   loadSecondaryAnalyses, updateSecondaryAnalysis,
   createSecondaryAnalysis, loadSecondaryAnalysisFiles, loadSecondaryAnalysisStatus,
+  storeLoadedAnalysisFiles,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
@@ -155,26 +155,18 @@ const Pipeline = () => {
   }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      import('utils/socketConnection')
-        .then(({ default: connectionPromise }) => connectionPromise)
-        .then((io) => {
-          io.on('uploadStatus', (message) => {
-            dispatch({
-              type: SECONDARY_ANALYSIS_FILES_LOADED,
-              payload: {
-                secondaryAnalysisId: message.secondaryAnalysisId,
-                files: message.files,
-              },
-            });
-          });
-
-          return () => {
-            io.off('uploadStatus');
-          };
+    import('utils/socketConnection')
+      .then(({ default: connectionPromise }) => connectionPromise)
+      .then((io) => {
+        io.on(`cliUploadStatus-${activeSecondaryAnalysisId}`, (message) => {
+          dispatch(storeLoadedAnalysisFiles(activeSecondaryAnalysisId, message.files));
         });
-    }
-  }, []);
+
+        return () => {
+          io.off('uploadStatus');
+        };
+      });
+  }, [activeSecondaryAnalysisId]);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {

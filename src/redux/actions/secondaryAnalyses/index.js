@@ -13,6 +13,7 @@ import launchSecondaryAnalysis from './launchSecondaryAnalysis';
 import cancelSecondaryAnalysis from './cancelSecondaryAnalysis';
 import resumeUploads from './resumeUploads';
 import loadSecondaryAnalysisLogs from './loadSecondaryAnalysisLogs';
+import storeLoadedAnalysisFiles from './storeLoadedAnalysisFiles';
 
 export {
   loadSecondaryAnalyses,
@@ -30,4 +31,5 @@ export {
   cancelSecondaryAnalysis,
   resumeUploads,
   loadSecondaryAnalysisLogs,
+  storeLoadedAnalysisFiles,
 };
