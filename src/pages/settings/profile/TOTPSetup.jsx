@@ -5,12 +5,15 @@ import Auth from '@aws-amplify/auth';
 import {
   Form, Input, Button, Typography, message,
   Space,
+  Col,
+  Divider,
+  Row,
 } from 'antd';
 
 import { totpQrcode } from '@aws-amplify/ui';
 import QRCode from 'qrcode.react';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const TOTPSetup = (props) => {
   const { onTOTPEvent, user } = props;
@@ -80,24 +83,49 @@ const TOTPSetup = (props) => {
         <div className={totpQrcode}>
           <QRCode value={otpauthUrl} />
         </div>
-        <Form.Item label={I18n.get('Enter here the security code your application shows after scanning:')}>
-          <Input autoFocus name='totpCode' onChange={handleInputChange} />
-        </Form.Item>
       </>
     );
   };
 
-  return (
-    <Form layout='vertical'>
-      <Title level={5}>Enter the setup key: </Title>
-      <Space>{code}</Space>
-      <Title level={5}>{I18n.get('Enter the setup key or scan the qr code')}</Title>
+  const qrSection = (
+    <Space align='center' direction='vertical' style={{ width: '50%' }}>
+      <Title level={5}>Scan the qr code</Title>
       <center>
         {renderQrCode(code)}
       </center>
+    </Space>
+  );
+
+  const plainCodeSection = (
+    <Space align='center' direction='vertical' style={{ height: '100%', width: '50%' }}>
+      <Title level={5}>Or enter the setup key</Title>
+      <Text style={{ top: '50%', bottom: '50%' }}>
+        <pre>{code}</pre>
+      </Text>
+    </Space>
+  );
+
+  return (
+    <Form layout='vertical'>
+      <Divider orientation='left'>
+        1. Set up your authenticator application
+      </Divider>
+      <Row style={{ height: '100%' }} wrap={false}>
+        {qrSection}
+        <Divider orientation='center' type='vertical' style={{ width: '1px', height: '200px' }} />
+        {plainCodeSection}
+      </Row>
+
+      <Divider orientation='left'>
+        2. Verify
+      </Divider>
+
+      <Form.Item label='Enter here the security code your application shows after:'>
+        <Input autoFocus name='totpCode' onChange={handleInputChange} />
+      </Form.Item>
       <Form.Item>
         <Button type='primary' onClick={verifyTotpToken} block>
-          {I18n.get('Verify Security Token')}
+          Verify Security Token
         </Button>
       </Form.Item>
     </Form>
