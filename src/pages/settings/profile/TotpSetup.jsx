@@ -89,7 +89,7 @@ const TotpSetup = (props) => {
       </Divider>
 
       <Form.Item>
-        <Input autoFocus name='totpCode' onChange={handleInputChange} placeholder='Enter here the 6 digit code your application shows:' />
+        <Input onChange={handleInputChange} placeholder='Enter here the 6 digit code your application shows:' />
       </Form.Item>
       <Form.Item>
         <Button type='primary' onClick={verify} block>
