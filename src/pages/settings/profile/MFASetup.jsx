@@ -40,9 +40,11 @@ const MFASetup = ({ user }) => {
         <Button onClick={() => setShowTOTPSetup(true)}>Enable MFA</Button>
       )}
 
-      <Modal open={showTOTPSetup} width={600} onCancel={() => setShowTOTPSetup(false)}>
-        <TOTPSetup onTOTPSucceeded={() => changeMFAEnabled(true)} user={user} />
-      </Modal>
+      {showTOTPSetup && (
+        <Modal open width={600} onCancel={() => setShowTOTPSetup(false)}>
+          <TOTPSetup onTOTPSucceeded={() => changeMFAEnabled(true)} user={user} />
+        </Modal>
+      )}
     </>
   );
 };
