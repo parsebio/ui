@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 
 import Auth from '@aws-amplify/auth';
 import {
-  Form, Input, Button, Typography,
-  Space,
-  Divider,
-  Row,
+  Form, Input, Button, Typography, Space, Divider, Row,
 } from 'antd';
 
 import { totpQrcode } from '@aws-amplify/ui';
