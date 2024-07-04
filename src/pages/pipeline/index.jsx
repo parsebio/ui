@@ -158,7 +158,7 @@ const Pipeline = () => {
     import('utils/socketConnection')
       .then(({ default: connectionPromise }) => connectionPromise)
       .then((io) => {
-        io.on(`cliUploadStatus-${activeSecondaryAnalysisId}`, (message) => {
+        io.on(`fileUpdates-${activeSecondaryAnalysisId}`, (message) => {
           dispatch(storeLoadedAnalysisFiles(activeSecondaryAnalysisId, message.files));
         });
 
