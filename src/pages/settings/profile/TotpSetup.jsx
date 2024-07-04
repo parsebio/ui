@@ -17,6 +17,8 @@ const TotpSetup = (props) => {
   const [code, setCode] = useState(null);
   const [totpAuthCode, setTotpAuthCode] = useState(null);
 
+  const [errorMessage, setErrorMessage] = useState(null);
+
   useEffect(() => {
     initialSetup();
   }, []);
@@ -36,9 +38,18 @@ const TotpSetup = (props) => {
   };
 
   const verify = async () => {
-    await Auth.verifyTotpToken(user, totpAuthCode);
+    try {
+      await Auth.verifyTotpToken(user, totpAuthCode);
+      onTOTPSucceeded();
+    } catch (error) {
+      if (error.type === 'EnableSoftwareTokenMFAException'
+        && error.message.includes('Code mismatch')
+      ) {
+        setErrorMessage('Invalid code, please try again');
+      }
 
-    onTOTPSucceeded();
+      setErrorMessage('An unexpected error happened, please try again.');
+    }
   };
 
   const renderQrCode = () => {
@@ -99,6 +110,11 @@ const TotpSetup = (props) => {
           Verify Security Token
         </Button>
       </center>
+
+      {errorMessage
+        && (
+          <Text type='danger'>{errorMessage}</Text>
+        )}
     </Space>
   );
 };
