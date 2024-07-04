@@ -21,7 +21,7 @@ const TOTPSetup = (props) => {
   const [inputs, setInputs] = useState({});
 
   useEffect(() => {
-    getSetupCode();
+    initialSetup();
   }, []);
 
   const handleInputChange = (evt) => {
@@ -32,7 +32,7 @@ const TOTPSetup = (props) => {
     }));
   };
 
-  const getSetupCode = async () => {
+  const initialSetup = async () => {
     const data = await Auth.setupTOTP(user);
 
     setCode(data);
