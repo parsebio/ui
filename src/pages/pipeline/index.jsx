@@ -174,7 +174,7 @@ const Pipeline = () => {
           };
         });
     }
-  }, [dispatch]);
+  }, []);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
