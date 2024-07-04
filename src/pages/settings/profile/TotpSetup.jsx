@@ -87,7 +87,12 @@ const TotpSetup = (props) => {
         2. Verify
       </Divider>
 
-      <Input onChange={handleInputChange} placeholder='Enter here the 6 digit code (token) your application shows' />
+      <div>
+        <Title style={{ fontSize: 14 }} level={5}>
+          Enter the 6 digit code (token) your application shows
+        </Title>
+        <Input style={{ marginTop: '5px' }} onChange={handleInputChange} placeholder='Enter code here' />
+      </div>
 
       <center>
         <Button type='primary' onClick={verify} disabled={!verifyEnabled} style={{ marginTop: '20px', width: '50%' }}>
