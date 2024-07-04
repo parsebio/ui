@@ -73,7 +73,7 @@ const TotpSetup = (props) => {
   );
 
   return (
-    <Form layout='vertical'>
+    <Space direction='vertical'>
       <Divider orientation='left' orientationMargin='10px'>
         1. Set up the account in your authenticator application
       </Divider>
@@ -87,15 +87,14 @@ const TotpSetup = (props) => {
         2. Verify
       </Divider>
 
-      <Form.Item>
-        <Input onChange={handleInputChange} placeholder='Enter here the 6 digit code your application shows:' />
-      </Form.Item>
-      <Form.Item>
-        <Button type='primary' onClick={verify} disabled={!verifyEnabled}>
+      <Input onChange={handleInputChange} placeholder='Enter here the 6 digit code (token) your application shows' />
+
+      <center>
+        <Button type='primary' onClick={verify} disabled={!verifyEnabled} style={{ marginTop: '20px', width: '50%' }}>
           Verify Security Token
         </Button>
-      </Form.Item>
-    </Form>
+      </center>
+    </Space>
   );
 };
 
