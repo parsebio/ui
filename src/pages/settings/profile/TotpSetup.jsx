@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import Auth from '@aws-amplify/auth';
@@ -23,6 +23,8 @@ const TotpSetup = (props) => {
   useEffect(() => {
     initialSetup();
   }, []);
+
+  const verifyEnabled = useMemo(() => totpAuthCode && totpAuthCode.length === 6, [totpAuthCode]);
 
   const handleInputChange = (event) => {
     const { target: { value } } = event;
@@ -92,7 +94,7 @@ const TotpSetup = (props) => {
         <Input onChange={handleInputChange} placeholder='Enter here the 6 digit code your application shows:' />
       </Form.Item>
       <Form.Item>
-        <Button type='primary' onClick={verify} block>
+        <Button type='primary' onClick={verify} disabled={!verifyEnabled}>
           Verify Security Token
         </Button>
       </Form.Item>
