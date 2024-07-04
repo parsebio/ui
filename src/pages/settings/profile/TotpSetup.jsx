@@ -14,7 +14,7 @@ const { Title, Text } = Typography;
 const TotpSetup = (props) => {
   const { onTOTPSucceeded, user } = props;
 
-  const [code, setCode] = useState(null);
+  const [setupKey, setSetupKey] = useState(null);
   const [totpAuthCode, setTotpAuthCode] = useState(null);
 
   const [errorMessage, setErrorMessage] = useState(null);
@@ -34,7 +34,7 @@ const TotpSetup = (props) => {
   const initialSetup = async () => {
     const data = await Auth.setupTOTP(user);
 
-    setCode(data);
+    setSetupKey(data);
   };
 
   const verify = async () => {
@@ -53,10 +53,10 @@ const TotpSetup = (props) => {
   };
 
   const renderQrCode = () => {
-    if (!code) return null;
+    if (!setupKey) return null;
 
     const issuer = encodeURI('AWSCognito');
-    const otpauthUrl = `otpauth://totp/${issuer}:${user.username}?secret=${code}&issuer=${issuer}`;
+    const otpauthUrl = `otpauth://totp/${issuer}:${user.username}?secret=${setupKey}&issuer=${issuer}`;
 
     return (
       <div className={totpQrcode}>
@@ -69,7 +69,7 @@ const TotpSetup = (props) => {
     <Space align='center' direction='vertical' style={{ width: '50%' }}>
       <Title style={{ fontSize: 15 }} level={5}>Scan the qr code</Title>
       <center>
-        {renderQrCode(code)}
+        {renderQrCode(setupKey)}
       </center>
     </Space>
   );
@@ -78,7 +78,7 @@ const TotpSetup = (props) => {
     <Space align='center' direction='vertical' style={{ height: '100%', width: '50%' }}>
       <Title style={{ fontSize: 15 }} level={5}>Or enter the setup key</Title>
       <Text style={{ top: '50%', bottom: '50%' }}>
-        <pre>{code}</pre>
+        <pre>{setupKey}</pre>
       </Text>
     </Space>
   );
