@@ -18,19 +18,16 @@ const TOTPSetup = (props) => {
   const { onTOTPEvent, user } = props;
 
   const [code, setCode] = useState(null);
-  const [inputs, setInputs] = useState({});
+  const [totpCode, setTotpCode] = useState(null);
 
   useEffect(() => {
     initialSetup();
   }, []);
 
-  const handleInputChange = (evt) => {
-    const { name, value } = evt.target;
+  const handleInputChange = (event) => {
+    const { target: value } = event;
 
-    setInputs((prevInputs) => ({
-      ...prevInputs,
-      [name]: value,
-    }));
+    setTotpCode(value);
   };
 
   const initialSetup = async () => {
@@ -40,7 +37,6 @@ const TOTPSetup = (props) => {
   };
 
   const verifyTotpToken = () => {
-    const { totpCode } = inputs;
     Auth.verifyTotpToken(user, totpCode)
       .then(() => {
         Auth.setPreferredMFA(user, 'TOTP');
