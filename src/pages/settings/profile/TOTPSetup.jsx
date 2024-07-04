@@ -36,7 +36,7 @@ const TOTPSetup = (props) => {
     setCode(data);
   };
 
-  const verifyTotpToken = async () => {
+  const verify = async () => {
     await Auth.verifyTotpToken(user, totpAuthCode);
 
     await Auth.setPreferredMFA(user, 'TOTP');
@@ -46,7 +46,7 @@ const TOTPSetup = (props) => {
   const renderQrCode = () => {
     if (!code) return null;
 
-    const issuer = encodeURI(I18n.get('AWSCognito'));
+    const issuer = encodeURI('AWSCognito');
     const otpauthUrl = `otpauth://totp/${issuer}:${user.username}?secret=${code}&issuer=${issuer}`;
 
     return (
@@ -93,7 +93,7 @@ const TOTPSetup = (props) => {
         <Input autoFocus name='totpCode' onChange={handleInputChange} />
       </Form.Item>
       <Form.Item>
-        <Button type='primary' onClick={verifyTotpToken} block>
+        <Button type='primary' onClick={verify} block>
           Verify Security Token
         </Button>
       </Form.Item>
