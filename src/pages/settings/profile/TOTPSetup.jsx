@@ -21,7 +21,7 @@ const TOTPSetup = (props) => {
   const [inputs, setInputs] = useState({});
 
   useEffect(() => {
-    setup();
+    getSetupCode();
   }, []);
 
   const handleInputChange = (evt) => {
@@ -32,16 +32,10 @@ const TOTPSetup = (props) => {
     }));
   };
 
-  const setup = () => {
-    if (!Auth || typeof Auth.setupTOTP !== 'function') {
-      throw new Error('No Auth module found, please ensure @aws-amplify/auth is imported');
-    }
+  const getSetupCode = async () => {
+    const data = await Auth.setupTOTP(user);
 
-    Auth.setupTOTP(user)
-      .then((data) => {
-        setCode(data);
-      })
-      .catch((err) => console.debug('totp setup failed', err));
+    setCode(data);
   };
 
   const verifyTotpToken = () => {
