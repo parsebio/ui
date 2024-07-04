@@ -55,8 +55,9 @@ const TotpSetup = (props) => {
   const renderQrCode = () => {
     if (!setupKey) return null;
 
-    const issuer = encodeURI('AWSCognito');
-    const otpauthUrl = `otpauth://totp/${issuer}:${user.username}?secret=${setupKey}&issuer=${issuer}`;
+    const issuer = encodeURI('Trailmaker');
+
+    const otpauthUrl = `otpauth://totp/${issuer}:${user.attributes.email}?secret=${setupKey}&issuer=${issuer}`;
 
     return (
       <div className={totpQrcode}>
