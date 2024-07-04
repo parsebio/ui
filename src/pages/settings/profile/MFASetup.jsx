@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Auth from '@aws-amplify/auth';
 import { Button, Modal, message } from 'antd';
 
-import TOTPSetupComponent from 'pages/settings/profile/TOTPSetup';
+import TOTPSetup from 'pages/settings/profile/TOTPSetup';
 
 const MFASetup = ({ user }) => {
   const [showTOTPSetup, setShowTOTPSetup] = useState(false);
@@ -22,7 +22,7 @@ const MFASetup = ({ user }) => {
   const changeMFAEnabled = async (enabled) => {
     const mfaValue = enabled ? 'TOTP' : 'NOMFA';
 
-    const data = await Auth.setPreferredMFA(user, mfaValue);
+    await Auth.setPreferredMFA(user, mfaValue);
 
     message.success(`MFA is now: ${enabled ? 'enabled' : 'disabled'}`);
   };
@@ -40,7 +40,7 @@ const MFASetup = ({ user }) => {
       )}
 
       <Modal open={showTOTPSetup} width={600} onCancel={() => setShowTOTPSetup(false)}>
-        <TOTPSetupComponent onTOTPEvent={() => { }} user={user} />
+        <TOTPSetup onTOTPEvent={() => { }} user={user} />
       </Modal>
     </>
   );
