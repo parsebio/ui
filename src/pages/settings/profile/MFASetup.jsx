@@ -24,7 +24,7 @@ const MFASetup = ({ user }) => {
 
     await Auth.setPreferredMFA(user, mfaValue);
 
-    message.success(`MFA is now: ${enabled ? 'enabled' : 'disabled'}`);
+    message.success(`MFA is now ${enabled ? 'enabled' : 'disabled'}`);
   };
 
   const disableMFA = async () => {
