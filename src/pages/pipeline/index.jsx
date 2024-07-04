@@ -158,6 +158,8 @@ const Pipeline = () => {
     import('utils/socketConnection')
       .then(({ default: connectionPromise }) => connectionPromise)
       .then((io) => {
+        // remove previous listeners, in case the secondary analysis has changed
+        io.off();
         io.on(`fileUpdates-${activeSecondaryAnalysisId}`, (message) => {
           dispatch(storeLoadedAnalysisFile(activeSecondaryAnalysisId, message.file));
         });
