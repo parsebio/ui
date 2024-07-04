@@ -16,8 +16,8 @@ const { Title, Text } = Typography;
 
 const TOTPSetup = (props) => {
   const { onTOTPEvent, user } = props;
-  const [code, setCode] = useState(null);
 
+  const [code, setCode] = useState(null);
   const [inputs, setInputs] = useState({});
 
   useEffect(() => {
@@ -62,12 +62,11 @@ const TOTPSetup = (props) => {
 
     const issuer = encodeURI(I18n.get('AWSCognito'));
     const otpauthUrl = `otpauth://totp/${issuer}:${user.username}?secret=${code}&issuer=${issuer}`;
+
     return (
-      <>
-        <div className={totpQrcode}>
-          <QRCode value={otpauthUrl} />
-        </div>
-      </>
+      <div className={totpQrcode}>
+        <QRCode value={otpauthUrl} />
+      </div>
     );
   };
 
