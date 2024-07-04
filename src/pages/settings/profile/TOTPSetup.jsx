@@ -5,7 +5,6 @@ import Auth from '@aws-amplify/auth';
 import {
   Form, Input, Button, Typography, message,
   Space,
-  Col,
   Divider,
   Row,
 } from 'antd';
@@ -18,7 +17,7 @@ const { Title, Text } = Typography;
 const TOTPSetup = (props) => {
   const { onTOTPEvent, user } = props;
   const [code, setCode] = useState(null);
-  const [setupMessage, setSetupMessage] = useState(null);
+
   const [inputs, setInputs] = useState({});
 
   useEffect(() => {
@@ -32,7 +31,6 @@ const TOTPSetup = (props) => {
   };
 
   const handleInputChange = (evt) => {
-    setSetupMessage(null);
     const { name, value } = evt.target;
     setInputs((prevInputs) => ({
       ...prevInputs,
@@ -41,8 +39,6 @@ const TOTPSetup = (props) => {
   };
 
   const setup = () => {
-    setSetupMessage(null);
-
     if (!Auth || typeof Auth.setupTOTP !== 'function') {
       throw new Error('No Auth module found, please ensure @aws-amplify/auth is imported');
     }
