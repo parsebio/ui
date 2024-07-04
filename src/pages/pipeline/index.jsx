@@ -15,7 +15,7 @@ import NewProjectModal from 'components/data-management/project/NewProjectModal'
 import {
   loadSecondaryAnalyses, updateSecondaryAnalysis,
   createSecondaryAnalysis, loadSecondaryAnalysisFiles, loadSecondaryAnalysisStatus,
-  storeLoadedAnalysisFiles,
+  storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
@@ -159,7 +159,7 @@ const Pipeline = () => {
       .then(({ default: connectionPromise }) => connectionPromise)
       .then((io) => {
         io.on(`fileUpdates-${activeSecondaryAnalysisId}`, (message) => {
-          dispatch(storeLoadedAnalysisFiles(activeSecondaryAnalysisId, [message.file]));
+          dispatch(storeLoadedAnalysisFile(activeSecondaryAnalysisId, message.file));
         });
 
         return () => {
