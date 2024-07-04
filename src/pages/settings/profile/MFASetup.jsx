@@ -25,6 +25,7 @@ const MFASetup = ({ user }) => {
     await Auth.setPreferredMFA(user, mfaValue);
 
     setMfaEnabled(enabled);
+    setShowTOTPSetup(false);
     message.success(`MFA is now ${enabled ? 'enabled' : 'disabled'}`);
   };
 
