@@ -66,9 +66,6 @@ const ProfileSettings = () => {
       );
     }
 
-    // const a = await Auth.setupTOTP(user);
-
-    // return;
     if (oldPassword || newPassword || confirmNewPassword) {
       setOldPasswordError(false);
       setNewPasswordError(false);
