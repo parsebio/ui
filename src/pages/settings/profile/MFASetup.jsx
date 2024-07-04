@@ -41,7 +41,12 @@ const MFASetup = ({ user }) => {
       )}
 
       {showTOTPSetup && (
-        <Modal open width={600} onCancel={() => setShowTOTPSetup(false)}>
+        <Modal
+          open
+          width={600}
+          onCancel={() => setShowTOTPSetup(false)}
+          footer={null}
+        >
           <TOTPSetup onTOTPSucceeded={() => changeMFAEnabled(true)} user={user} />
         </Modal>
       )}
