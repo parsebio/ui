@@ -159,7 +159,7 @@ const Pipeline = () => {
       .then(({ default: connectionPromise }) => connectionPromise)
       .then((io) => {
         io.on(`fileUpdates-${activeSecondaryAnalysisId}`, (message) => {
-          dispatch(storeLoadedAnalysisFiles(activeSecondaryAnalysisId, message.files));
+          dispatch(storeLoadedAnalysisFiles(activeSecondaryAnalysisId, [message.file]));
         });
 
         return () => {
