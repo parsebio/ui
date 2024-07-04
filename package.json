@@ -49,7 +49,6 @@
     "@aws-sdk/client-cognito-identity-provider": "^3.11.0",
     "@aws-sdk/client-sts": "^3.12.0",
     "@aws-sdk/credential-provider-web-identity": "^3.12.0",
-    "@aws-sdk/util-utf8-browser": "^3.259.0",
     "@babel/core": "^7.21.0",
     "@babel/plugin-transform-runtime": "^7.21.0",
     "@babel/polyfill": "^7.8.7",
