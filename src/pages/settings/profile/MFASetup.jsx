@@ -24,6 +24,7 @@ const MFASetup = ({ user }) => {
 
     await Auth.setPreferredMFA(user, mfaValue);
 
+    setMfaEnabled(enabled);
     message.success(`MFA is now ${enabled ? 'enabled' : 'disabled'}`);
   };
 
@@ -40,7 +41,7 @@ const MFASetup = ({ user }) => {
       )}
 
       <Modal open={showTOTPSetup} width={600} onCancel={() => setShowTOTPSetup(false)}>
-        <TOTPSetup onTOTPEvent={() => { }} user={user} />
+        <TOTPSetup onTOTPSucceeded={() => changeMFAEnabled(true)} user={user} />
       </Modal>
     </>
   );

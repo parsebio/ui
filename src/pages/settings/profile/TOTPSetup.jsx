@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { I18n } from '@aws-amplify/core';
+
 import Auth from '@aws-amplify/auth';
 import {
-  Form, Input, Button, Typography, message,
+  Form, Input, Button, Typography,
   Space,
   Divider,
   Row,
@@ -15,7 +15,7 @@ import QRCode from 'qrcode.react';
 const { Title, Text } = Typography;
 
 const TOTPSetup = (props) => {
-  const { onTOTPEvent, user } = props;
+  const { onTOTPSucceeded, user } = props;
 
   const [code, setCode] = useState(null);
   const [totpAuthCode, setTotpAuthCode] = useState(null);
@@ -25,7 +25,7 @@ const TOTPSetup = (props) => {
   }, []);
 
   const handleInputChange = (event) => {
-    const { target: value } = event;
+    const { target: { value } } = event;
 
     setTotpAuthCode(value);
   };
@@ -39,8 +39,7 @@ const TOTPSetup = (props) => {
   const verify = async () => {
     await Auth.verifyTotpToken(user, totpAuthCode);
 
-    await Auth.setPreferredMFA(user, 'TOTP');
-    onTOTPEvent('Setup TOTP', 'SUCCESS', user);
+    onTOTPSucceeded();
   };
 
   const renderQrCode = () => {
@@ -101,12 +100,10 @@ const TOTPSetup = (props) => {
   );
 };
 
-TOTPSetup.defaultProps = {
-  onTOTPEvent: () => { },
-};
+TOTPSetup.defaultProps = {};
 
 TOTPSetup.propTypes = {
-  onTOTPEvent: PropTypes.func,
+  onTOTPSucceeded: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
 };
 
