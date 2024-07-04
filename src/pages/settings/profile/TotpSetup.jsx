@@ -77,9 +77,9 @@ const TotpSetup = (props) => {
       <Divider orientation='left' orientationMargin='10px'>
         1. Set up the account in your authenticator application
       </Divider>
-      <Row style={{ height: '100%' }} wrap={false}>
+      <Row style={{ height: '200px' }} wrap={false}>
         {qrSection}
-        <Divider orientation='center' type='vertical' style={{ width: '1px', height: '200px' }} />
+        <Divider orientation='center' type='vertical' style={{ width: '1px', height: '100%' }} />
         {plainCodeSection}
       </Row>
 
