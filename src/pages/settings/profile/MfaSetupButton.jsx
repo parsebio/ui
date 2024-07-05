@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Auth } from '@aws-amplify/auth';
 import {
@@ -22,7 +22,7 @@ const MfaSetupButton = ({ user }) => {
     loadMfaEnabled();
   }, []);
 
-  const changeMFAEnabled = async (enabled) => {
+  const changeMFAEnabled = useCallback(async (enabled) => {
     const mfaValue = enabled ? cognitoMFA.enabled : cognitoMFA.disabled;
 
     await Auth.setPreferredMFA(user, mfaValue);
@@ -30,18 +30,14 @@ const MfaSetupButton = ({ user }) => {
     setMfaEnabled(enabled);
     setShowTotpSetup(false);
     message.success(`MFA is now ${enabled ? 'enabled' : 'disabled'}`);
-  };
-
-  const disableMfa = async () => {
-    changeMFAEnabled(false);
-  };
+  }, [user]);
 
   return (
     <>
       {mfaEnabled ? (
         <Popconfirm
           title='Are you sure you want to disable MFA?'
-          onConfirm={disableMfa}
+          onConfirm={() => changeMFAEnabled(false)}
           okText='Yes'
           cancelText='No'
         >
