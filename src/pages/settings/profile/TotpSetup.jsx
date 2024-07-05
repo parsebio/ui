@@ -5,6 +5,7 @@ import Auth from '@aws-amplify/auth';
 
 import {
   Input, Button, Typography, Space, Divider, Row,
+  Tooltip,
 } from 'antd';
 
 import { totpQrcode } from '@aws-amplify/ui';
@@ -100,7 +101,11 @@ const TotpSetup = (props) => {
   return (
     <Space direction='vertical'>
       <Divider orientation='left' orientationMargin='10px'>
-        1. Set up the account in your authenticator application
+        1. Set up the account in your
+        {' '}
+        <Tooltip title='There is a wide variety of authentication apps available. For example, Google Authenticator is a popular choice that you can download onto your phone'>
+          <Text style={{ color: '#9966b8' }} color='#9966b8'>authenticator application</Text>
+        </Tooltip>
       </Divider>
       <Row style={{ height: '200px' }} wrap={false}>
         {qrSection}
