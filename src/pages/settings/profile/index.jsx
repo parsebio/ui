@@ -15,7 +15,7 @@ import downloadTermsOfUse from 'utils/downloadTermsOfUse';
 import IframeModal from 'utils/IframeModal';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
-import MfaSetupButton from './MfaSetup';
+import MfaSetupButton from './MfaSetupButton';
 
 const ProfileSettings = () => {
   const router = useRouter();
@@ -227,6 +227,7 @@ const ProfileSettings = () => {
               </Row>
             </Col>
           </Row>
+          <MfaSetupButton user={user} />
           <center>
             <Divider style={{ marginTop: '40px' }} />
             <h2>Policy Documents:</h2>
@@ -260,8 +261,6 @@ const ProfileSettings = () => {
             {dataUseVisible && (
               <IframeModal onClose={() => setDataUseVisible(false)} blobToDisplay={dataUseBlob} />
             )}
-            <MfaSetupButton user={user} />
-            <Divider style={{ marginTop: '20px' }} />
           </center>
         </Space>
 
