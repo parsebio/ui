@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Auth from '@aws-amplify/auth';
-import { Button, Modal, message } from 'antd';
+import {
+  Button, Modal, Popconfirm, message,
+} from 'antd';
 
 import TotpSetup from 'pages/settings/profile/TotpSetup';
 
@@ -29,10 +31,21 @@ const MfaSetupButton = ({ user }) => {
     message.success(`MFA is now ${enabled ? 'enabled' : 'disabled'}`);
   };
 
+  const disableMfa = async () => {
+    changeMFAEnabled(false);
+  };
+
   return (
     <>
       {mfaEnabled ? (
-        <Button onClick={() => changeMFAEnabled(false)}>Disable MFA</Button>
+        <Popconfirm
+          title='Are you sure you want to disable MFA?'
+          onConfirm={disableMfa}
+          okText='Yes'
+          cancelText='No'
+        >
+          <Button>Disable MFA</Button>
+        </Popconfirm>
       ) : (
         <Button type='primary' onClick={() => setShowTotpSetup(true)}>Enable MFA</Button>
       )}

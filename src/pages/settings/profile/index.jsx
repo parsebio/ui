@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Auth } from '@aws-amplify/auth';
 
 import _ from 'lodash';
@@ -21,19 +21,8 @@ const ProfileSettings = () => {
   const router = useRouter();
 
   const dispatch = useDispatch();
-  const checkedMFARef = useRef(false);
 
   const user = useSelector((state) => state.user.current);
-
-  useEffect(() => {
-    if (checkedMFARef.current || _.isNil(user)) return;
-
-    checkedMFARef.current = true;
-
-    console.log('AuthDebug');
-    console.log(Auth);
-    // Auth.setUpTOTP(user);
-  }, [user]);
 
   const [oldPasswordError, setOldPasswordError] = useState(null);
   const [newPasswordError, setNewPasswordError] = useState(null);
