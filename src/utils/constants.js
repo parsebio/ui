@@ -91,7 +91,8 @@ const cellSetsUpdatedMessages = {
 };
 
 const cognitoMFA = {
-  enabled: 'TOTP',
+  // enabled: 'TOTP',
+  enabled: 'SOFTWARE_TOKEN_MFA',
   disabled: 'NOMFA',
 };
 

@@ -15,7 +15,7 @@ const MfaSetupButton = ({ user }) => {
 
   const loadMfaEnabled = async () => {
     const mfaType = await Auth.getPreferredMFA(user);
-    setMfaEnabled(mfaType === 'SOFTWARE_TOKEN_MFA');
+    setMfaEnabled(mfaType === cognitoMFA.enabled);
   };
 
   useEffect(() => {
