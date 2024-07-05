@@ -45,13 +45,12 @@ const TotpSetup = (props) => {
       await Auth.verifyTotpToken(user, totpAuthCode);
       onTOTPSucceeded();
     } catch (error) {
-      if (error.type === 'EnableSoftwareTokenMFAException'
-        && error.message.includes('Code mismatch')
-      ) {
-        setErrorMessage('Invalid code, please try again');
+      if (error.message === 'Code mismatch') {
+        setErrorMessage('Invalid code, please check the six-digit code is correct and try again. If the problem persists, try setting up the account again.');
+        return;
       }
 
-      setErrorMessage('An unexpected error happened, please try again.');
+      setErrorMessage('An unexpected error happened, please try again. If the problem persists, contact support.');
     }
   };
 
