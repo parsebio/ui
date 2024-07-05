@@ -39,7 +39,7 @@ const renderProfileSettingsPage = (store, newState = {}) => {
   );
 };
 
-const setUpAuthMocks = () => {
+const setUpAuthMocks = (mfaType = cognitoMFA.disabled) => {
   Auth.currentAuthenticatedUser = jest.fn(() => Promise.resolve({
     attributes: {
       name: userName,
@@ -51,7 +51,7 @@ const setUpAuthMocks = () => {
   Auth.signOut = jest.fn(() => { });
   Auth.federatedSignIn = jest.fn(() => { });
   Auth.updateUserAttributes = updateMock;
-  Auth.getPreferredMFA = jest.fn(() => Promise.resolve(cognitoMFA.disabled));
+  Auth.getPreferredMFA = jest.fn(() => Promise.resolve(mfaType));
   Auth.setupTOTP = jest.fn(() => Promise.resolve(mockSetupKey));
   Auth.verifyTotpToken = jest.fn(() => Promise.resolve());
   Auth.setPreferredMFA = jest.fn(() => Promise.resolve());
@@ -135,9 +135,6 @@ describe('Profile page', () => {
       userEvent.click(screen.getByText('Enable MFA'));
     });
 
-    console.log('screenDebug');
-    screen.debug(undefined, 1000000);
-
     // Shows modal
     expect(screen.getByText('Scan the qr code')).toBeInTheDocument();
     expect(screen.getByText('Enter the 6 digit code (token) your application shows')).toBeInTheDocument();
@@ -165,6 +162,27 @@ describe('Profile page', () => {
   });
 
   it('Can disable MFA', async () => {
+    // Make mfa begin as enabled
+    Auth.mockReset();
+    setUpAuthMocks(cognitoMFA.enabled);
 
+    await act(async () => {
+      renderProfileSettingsPage(store);
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText('Disable MFA'));
+    });
+
+    // Are you sure pops up
+    expect(screen.getByText('Are you sure you want to disable MFA?')).toBeInTheDocument();
+
+    // Click confirm
+    await act(async () => {
+      userEvent.click(screen.getByText('Yes'));
+    });
+
+    expect(Auth.setPreferredMFA).toHaveBeenCalledTimes(1);
+    expect(Auth.setPreferredMFA).toHaveBeenCalledWith(user, cognitoMFA.disabled);
   });
 });
