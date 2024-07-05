@@ -29,14 +29,10 @@ const MfaSetupButton = ({ user }) => {
     message.success(`MFA is now ${enabled ? 'enabled' : 'disabled'}`);
   };
 
-  const disableMFA = async () => {
-    await changeMFAEnabled(false);
-  };
-
   return (
     <>
       {mfaEnabled ? (
-        <Button onClick={disableMFA}>Disable MFA</Button>
+        <Button onClick={() => changeMFAEnabled(false)}>Disable MFA</Button>
       ) : (
         <Button type='primary' onClick={() => setShowTotpSetup(true)}>Enable MFA</Button>
       )}
