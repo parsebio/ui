@@ -38,7 +38,7 @@ const MfaSetupButton = ({ user }) => {
       {mfaEnabled ? (
         <Button onClick={disableMFA}>Disable MFA</Button>
       ) : (
-        <Button onClick={() => setShowTotpSetup(true)}>Enable MFA</Button>
+        <Button type='primary' onClick={() => setShowTotpSetup(true)}>Enable MFA</Button>
       )}
 
       {showTotpSetup && (

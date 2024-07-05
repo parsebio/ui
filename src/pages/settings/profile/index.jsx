@@ -227,7 +227,18 @@ const ProfileSettings = () => {
               </Row>
             </Col>
           </Row>
-          <MfaSetupButton user={user} />
+          <Row type='flex'>
+            <Col xl={{ span: 12, offset: 6 }} span={24}>
+              <h2 style={{ marginTop: '40px' }}>Multi-factor authentication:</h2>
+              <p>
+                Multi-factor authentication (MFA) adds a layer of security to your account
+                by requesting an extra authentication step.
+              </p>
+              <center>
+                <MfaSetupButton user={user} />
+              </center>
+            </Col>
+          </Row>
           <center>
             <Divider style={{ marginTop: '40px' }} />
             <h2>Policy Documents:</h2>
