@@ -10,7 +10,7 @@ import { Auth } from '@aws-amplify/auth';
 import ProfileSettings from 'pages/settings/profile';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { Provider } from 'react-redux';
-import { cookiesAgreedCognitoKey } from 'utils/constants';
+import { cognitoMFA, cookiesAgreedCognitoKey } from 'utils/constants';
 import { loadUser } from 'redux/actions/user';
 import loadDeploymentInfo from 'redux/actions/networkResources/loadDeploymentInfo';
 
@@ -47,6 +47,7 @@ const setUpAuthMocks = () => {
   Auth.signOut = jest.fn(() => { });
   Auth.federatedSignIn = jest.fn(() => { });
   Auth.updateUserAttributes = updateMock;
+  Auth.getPreferredMFA = jest.fn(() => Promise.resolve(cognitoMFA.disabled));
 };
 
 const userName = 'Arthur Dent';

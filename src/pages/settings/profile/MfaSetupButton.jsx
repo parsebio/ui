@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Auth from '@aws-amplify/auth';
+import { Auth } from '@aws-amplify/auth';
 import {
   Button, Modal, Popconfirm, message,
 } from 'antd';
 
 import TotpSetup from 'pages/settings/profile/TotpSetup';
+import { cognitoMFA } from 'utils/constants';
 
 const MfaSetupButton = ({ user }) => {
   const [showTotpSetup, setShowTotpSetup] = useState(false);
@@ -22,7 +23,7 @@ const MfaSetupButton = ({ user }) => {
   }, []);
 
   const changeMFAEnabled = async (enabled) => {
-    const mfaValue = enabled ? 'TOTP' : 'NOMFA';
+    const mfaValue = enabled ? cognitoMFA.enabled : cognitoMFA.disabled;
 
     await Auth.setPreferredMFA(user, mfaValue);
 
