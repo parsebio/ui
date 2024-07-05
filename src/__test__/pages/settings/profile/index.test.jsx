@@ -23,7 +23,11 @@ jest.mock('@aws-amplify/auth', () => ({
 }));
 jest.mock('utils/pushNotificationMessage');
 
+const mockSetupKey = 'mock-setup-key';
+
 const updateMock = jest.fn(() => Promise.resolve(true));
+
+const user = { attributes: { 'custom:agreed_cookies_v1': 'true', 'custom:agreed_terms_v2': 'true', name: 'Arthur Dent' } };
 
 const profileSettingsPageFactory = createTestComponentFactory(ProfileSettings);
 
@@ -48,6 +52,9 @@ const setUpAuthMocks = () => {
   Auth.federatedSignIn = jest.fn(() => { });
   Auth.updateUserAttributes = updateMock;
   Auth.getPreferredMFA = jest.fn(() => Promise.resolve(cognitoMFA.disabled));
+  Auth.setupTOTP = jest.fn(() => Promise.resolve(mockSetupKey));
+  Auth.verifyTotpToken = jest.fn(() => Promise.resolve());
+  Auth.setPreferredMFA = jest.fn(() => Promise.resolve());
 };
 
 const userName = 'Arthur Dent';
@@ -117,5 +124,47 @@ describe('Profile page', () => {
 
     expect(updateMock).toHaveBeenCalledTimes(1);
     expect(pushNotificationMessage).toHaveBeenCalledTimes(1);
+  });
+
+  it('Can enable MFA', async () => {
+    await act(async () => {
+      renderProfileSettingsPage(store);
+    });
+
+    await act(async () => {
+      userEvent.click(screen.getByText('Enable MFA'));
+    });
+
+    console.log('screenDebug');
+    screen.debug(undefined, 1000000);
+
+    // Shows modal
+    expect(screen.getByText('Scan the qr code')).toBeInTheDocument();
+    expect(screen.getByText('Enter the 6 digit code (token) your application shows')).toBeInTheDocument();
+
+    // Shows the loaded setup key
+    expect(screen.getByText(mockSetupKey)).toBeInTheDocument();
+
+    const codeVerifyInput = screen.getByPlaceholderText('Enter code here');
+
+    // Write code to verify
+    await act(async () => {
+      userEvent.type(codeVerifyInput, '123456');
+    });
+
+    // Click button to verify
+    await act(async () => {
+      userEvent.click(screen.getByText('Verify Security Token'));
+    });
+
+    expect(Auth.verifyTotpToken).toHaveBeenCalledTimes(1);
+    expect(Auth.verifyTotpToken).toHaveBeenCalledWith(user, '123456');
+
+    expect(Auth.setPreferredMFA).toHaveBeenCalledTimes(1);
+    expect(Auth.setPreferredMFA).toHaveBeenCalledWith(user, cognitoMFA.enabled);
+  });
+
+  it('Can disable MFA', async () => {
+
   });
 });
