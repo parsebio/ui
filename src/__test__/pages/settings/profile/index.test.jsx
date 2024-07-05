@@ -126,7 +126,7 @@ describe('Profile page', () => {
     expect(pushNotificationMessage).toHaveBeenCalledTimes(1);
   });
 
-  it('Can enable MFA', async () => {
+  const enableMFA = async () => {
     await act(async () => {
       renderProfileSettingsPage(store);
     });
@@ -153,12 +153,46 @@ describe('Profile page', () => {
     await act(async () => {
       userEvent.click(screen.getByText('Verify Security Token'));
     });
+  };
+
+  it('Can enable MFA', async () => {
+    await enableMFA();
 
     expect(Auth.verifyTotpToken).toHaveBeenCalledTimes(1);
     expect(Auth.verifyTotpToken).toHaveBeenCalledWith(user, '123456');
 
     expect(Auth.setPreferredMFA).toHaveBeenCalledTimes(1);
     expect(Auth.setPreferredMFA).toHaveBeenCalledWith(user, cognitoMFA.enabled);
+  });
+
+  it('Handles MFA enable failure with wrong code input', async () => {
+    Auth.verifyTotpToken
+      .mockReset()
+      .mockImplementation(() => Promise.reject(new Error('Code mismatch')));
+
+    await enableMFA();
+
+    expect(Auth.verifyTotpToken).toHaveBeenCalledTimes(1);
+    expect(Auth.verifyTotpToken).toHaveBeenCalledWith(user, '123456');
+
+    expect(Auth.setPreferredMFA).toHaveBeenCalledTimes(0);
+
+    expect(screen.getByText('Invalid code, please check the six-digit code is correct and try again. If the problem persists, try setting up the account again.')).toBeInTheDocument();
+  });
+
+  it('Handles MFA enable failure with random error', async () => {
+    Auth.verifyTotpToken
+      .mockReset()
+      .mockImplementation(() => Promise.reject(new Error('Random error')));
+
+    await enableMFA();
+
+    expect(Auth.verifyTotpToken).toHaveBeenCalledTimes(1);
+    expect(Auth.verifyTotpToken).toHaveBeenCalledWith(user, '123456');
+
+    expect(Auth.setPreferredMFA).toHaveBeenCalledTimes(0);
+
+    expect(screen.getByText('An unexpected error happened, please try again. If the problem persists, contact support.')).toBeInTheDocument();
   });
 
   it('Can disable MFA', async () => {
