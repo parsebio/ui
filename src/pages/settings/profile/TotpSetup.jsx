@@ -23,7 +23,7 @@ const TotpSetup = (props) => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    initialSetup();
+    loadSetupKey();
   }, []);
 
   const verifyEnabled = useMemo(() => totpAuthCode && totpAuthCode.length === 6, [totpAuthCode]);
@@ -34,7 +34,7 @@ const TotpSetup = (props) => {
     setTotpAuthCode(value);
   };
 
-  const initialSetup = async () => {
+  const loadSetupKey = async () => {
     const data = await Auth.setupTOTP(user);
 
     setSetupKey(data);
