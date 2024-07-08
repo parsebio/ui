@@ -30,6 +30,13 @@ const MfaSetupButton = ({ user }) => {
     setMfaEnabled(enabled);
     setShowTotpSetup(false);
     message.success(`MFA is now ${enabled ? 'enabled' : 'disabled'}`);
+
+    if (enabled) {
+      // await dispatch(loadUser());
+      await Auth.signOut();
+      // eslint-disable-next-line no-self-assign
+      window.location.reload();
+    }
   }, [user]);
 
   return (
