@@ -43,20 +43,8 @@ class PartUploader {
 
       // Upload if we have accumulated partSize
       const canUpload = this.#getAccumulatedUploadSize() > this.#partSize;
-      if (this.#filePathDebug.includes('matrix')) {
-        console.log('thisaccumulatedChunksDebug');
-        console.log(this.#accumulatedChunks);
-
-        console.log('canUploadDebug');
-        console.log(canUpload);
-      }
 
       if (!canUpload) return;
-
-      if (this.#filePathDebug.includes('matrix')) {
-        console.log('uploadingAccumulatedchunksDebug');
-        console.log(this.#accumulatedChunks);
-      }
 
       await this.#executeUpload();
     });
@@ -72,7 +60,7 @@ class PartUploader {
 
   #executeUpload = async () => {
     this.#partNumberIt += 1;
-    console.log('beginningUpload ', this.#partNumberIt);
+
     const partNumber = this.#partNumberIt;
 
     const mergedChunks = new Uint8Array(this.#getAccumulatedUploadSize());
@@ -90,14 +78,8 @@ class PartUploader {
       // this.#createOnUploadProgress(partNumber),
     );
 
-    if (this.#filePathDebug.includes('matrix')) {
-      console.log('partResponseDebug');
-      console.log(partResponse);
-    }
-
     this.#accumulatedChunks = [];
     this.#uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
-    console.log('endingUpload', this.#partNumberIt);
   }
 
   #getAccumulatedUploadSize = () => _.sum(_.map(this.#accumulatedChunks, 'chunk.length'))
