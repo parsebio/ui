@@ -31,8 +31,12 @@ const MfaSetupButton = ({ user }) => {
     setShowTotpSetup(false);
     message.success(`MFA is now ${enabled ? 'enabled' : 'disabled'}`);
 
+    // Doing Auth.signOut() here and refreshing doesn't actually logout the user
+    // There's some kind of bug with amplify 4.x that, if we don't do this workaround,
+    // will cause the user to not be able to logout when they try to.
+    // It's not only us:
+    // - https://stackoverflow.com/questions/77920641/cannot-sign-out-after-setting-up-totp-mfa-in-cognito-using-amplify
     if (enabled) {
-      // await dispatch(loadUser());
       await Auth.signOut();
       // eslint-disable-next-line no-self-assign
       window.location.reload();
