@@ -8,6 +8,10 @@
     "species": "Mus musculus (Mouse)"
   },
   {
+    "name": "GRCh38-mScarlet-GFP",
+    "species": "Custom Human with mScarlet and GFP"
+  },
+  {
     "name": "BDGP6.46",
     "species": "Drosophila melanogaster (Fruit fly)"
   },
@@ -67,6 +71,14 @@
     "name": "GRCh38-custom-1",
     "species": "Homo sapiens (Human)"
   },
+  {
+    "name": "PFal3D7",
+    "species": "Plasmodium falciparum 3D7"
+  },
+  {
+    "name": "xenLae10",
+    "species": "Xenopus laevis v10.1 (African clawed frog)"
+  }, 
   {
     "name": "GRCh38_GRCm39",
     "species": "Mixed human and mouse"
