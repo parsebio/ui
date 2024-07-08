@@ -65,8 +65,11 @@ class PartUploader {
 
     const mergedChunks = new Uint8Array(this.#getAccumulatedUploadSize());
 
+    const mergedOnUploadProgresses = [];
     this.#accumulatedChunks.reduce((offset, { chunk, onUploadProgress }) => {
       mergedChunks.set(chunk, offset);
+
+      mergedOnUploadProgresses.push(onUploadProgress);
 
       return offset + chunk.length;
     }, 0);
@@ -75,7 +78,7 @@ class PartUploader {
       mergedChunks,
       async () => this.#getSignedUrlForPart(partNumber),
       this.#abortController,
-      // this.#createOnUploadProgress(partNumber),
+      (progress) => mergedOnUploadProgresses.forEach((cb) => cb(progress)),
     );
 
     this.#accumulatedChunks = [];

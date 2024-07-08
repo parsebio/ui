@@ -1,9 +1,11 @@
+import _ from 'lodash';
 import { AsyncGzip } from 'fflate';
 import filereaderStream from 'filereader-stream';
 
 import PartUploader from 'utils/upload/FileUploader/PartUploader';
 import FileUploaderError from 'utils/errors/upload/FileUploaderError';
 import fetchAPI from 'utils/http/fetchAPI';
+import UploadStatus from '../UploadStatus';
 
 class FileUploader {
   constructor(
@@ -44,6 +46,8 @@ class FileUploader {
     this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
     this.freeUploadSlots = 3;
 
+    this.progressTrackingLock = `progressTracking${this.uploadParams.uploadId}`;
+
     // Used to assign partNumbers to each chunk
     this.partNumberIt = 0;
 
@@ -73,6 +77,7 @@ class FileUploader {
       }
 
       const nextPartNumber = uploadedParts.length + 1;
+
       // setting all previous parts as uploaded
       // this.uploadedPartPercentages.fill(1, 0, nextPartNumber - 1);
       for (let i = 0; i < nextPartNumber - 1; i += 1) {
@@ -205,8 +210,10 @@ class FileUploader {
     // They are read in order, so it should be safe
     this.partNumberIt += 1;
     try {
-      // const onUploadProgress = this.#createOnUploadProgress(this.pendingChunks);
-      const onUploadProgress = () => [];
+      let onUploadProgress;
+      await navigator.locks.request(this.progressTrackingLock, async () => {
+        onUploadProgress = this.#createOnUploadProgress(this.partNumberIt);
+      });
 
       await this.partUploader.uploadChunk(chunk, onUploadProgress);
 
@@ -227,13 +234,17 @@ class FileUploader {
     }
   }
 
-  //   #createOnUploadProgress = (chunkNumber) => (progress) => {
-  //     // partNumbers are 1-indexed, so we need to subtract 1 for the array index
-  //     this.uploadedPartPercentages[chunkNumber - 1] = progress.progress;
+  chunkNumbersDebug = [];
 
-  //     const percentage = (_.mean(this.uploadedPartPercentages) * 100).toFixed(2);
-  //     this.onStatusUpdate(UploadStatus.UPLOADING, Math.floor(percentage));
-  //   };
+  #createOnUploadProgress = (chunkNumber) => (progress) => {
+    this.chunkNumbersDebug.push(chunkNumber);
+    // partNumbers are 1-indexed, so we need to subtract 1 for the array index
+    this.uploadedPartPercentages[chunkNumber - 1] = progress.progress;
+
+    const percentage = (_.mean(this.uploadedPartPercentages) * 100).toFixed(2);
+
+    this.onStatusUpdate(UploadStatus.UPLOADING, percentage);
+  };
 
   #reserveUploadSlot = async () => (
     await navigator.locks.request(this.freeUploadSlotsLock, async () => {
