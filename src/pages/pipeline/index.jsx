@@ -372,7 +372,7 @@ const Pipeline = () => {
           setButtonClicked(false);
         });
     };
-
+    console.log('firstTimeLaunch', firstTimeLaunch);
     if (firstTimeLaunch) {
       return (
         <Button
@@ -431,13 +431,14 @@ const Pipeline = () => {
           display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
         }}
         >
+          {console.log('activeSecondaryAnalysisId', activeSecondaryAnalysisId)}
           {
             activeSecondaryAnalysisId ? (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
                   <Space direction='vertical'>
                     <Title level={4}>{analysisName}</Title>
-                    <Text type='secondary'>
+                    <Text type='secondary' data-testid='run-id'>
                       {`Run ID: ${activeSecondaryAnalysisId}`}
                     </Text>
                   </Space>
@@ -468,6 +469,7 @@ const Pipeline = () => {
                       placement='left'
                     >
                       <Space direction='horizontal'>
+                        {console.log('PIPELINE CAN BE RUN ', pipelineCanBeRun)}
                         {pipelineCanBeRun && (
                           <LaunchAnalysisButton />
                         )}
@@ -580,7 +582,7 @@ const Pipeline = () => {
           {currentStep.render()}
         </Modal>
       )}
-      <div style={{ height: '100vh', overflowY: 'auto' }}>
+      <div data-testid='pipeline-container' style={{ height: '100vh', overflowY: 'auto' }}>
         {NewProjectModalVisible && (
           <NewProjectModal
             projectType='secondaryAnalyses'
@@ -592,8 +594,8 @@ const Pipeline = () => {
             }}
           />
         )}
-
         <MultiTileContainer
+          data-testid='multi-tile-container'
           tileMap={TILE_MAP}
           initialArrangement={windows}
         />
