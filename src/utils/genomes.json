@@ -76,6 +76,10 @@
     "species": "Plasmodium falciparum 3D7"
   },
   {
+    "name": "xenLae10",
+    "species": "Xenopus laevis v10.1 (African clawed frog)"
+  }, 
+  {
     "name": "GRCh38_GRCm39",
     "species": "Mixed human and mouse"
   },

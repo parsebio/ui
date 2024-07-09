@@ -15,6 +15,7 @@ import NewProjectModal from 'components/data-management/project/NewProjectModal'
 import {
   loadSecondaryAnalyses, updateSecondaryAnalysis,
   createSecondaryAnalysis, loadSecondaryAnalysisFiles, loadSecondaryAnalysisStatus,
+  storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
@@ -23,6 +24,7 @@ import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
 import usePolling from 'utils/customHooks/usePolling';
+
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
@@ -152,16 +154,21 @@ const Pipeline = () => {
     await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
   }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
 
-  // Poll for files (in case the cli is uploading)
-  usePolling(async () => {
-    // If executing, no need to get files updates
-    if (
-      !activeSecondaryAnalysisId
-      || ['running', 'created'].includes(currentSecondaryAnalysisStatus)
-    ) return;
+  useEffect(() => {
+    import('utils/socketConnection')
+      .then(({ default: connectionPromise }) => connectionPromise)
+      .then((io) => {
+        // remove previous listeners, in case the secondary analysis has changed
+        io.off();
+        io.on(`fileUpdates-${activeSecondaryAnalysisId}`, (message) => {
+          dispatch(storeLoadedAnalysisFile(activeSecondaryAnalysisId, message.file));
+        });
 
-    await dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
-  }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
+        return () => {
+          io.off('uploadStatus');
+        };
+      });
+  }, [activeSecondaryAnalysisId]);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
