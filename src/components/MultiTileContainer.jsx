@@ -23,7 +23,7 @@ const renderWindow = (tile, width, height, style) => {
 
 const MultiTileContainer = ({ tileMap, initialArrangement, ...props }) => {
   const dragDropManager = useDragDropManager();
-  console.log('RENDERING !! ', tileMap);
+
   return (
     <div style={{ height: '100%', width: '100%', margin: 0 }} {...props}>
       <Mosaic
@@ -42,7 +42,6 @@ const MultiTileContainer = ({ tileMap, initialArrangement, ...props }) => {
                 toolbarControls={tileMap[id]?.toolbarControls}
               >
 
-                {console.log('RENDERING HERE AS WELL')}
                 {renderWindow(tileMap[id]?.component, width, height, tileMap[id]?.style)}
               </MosaicWindow>
             )}

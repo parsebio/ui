@@ -476,7 +476,6 @@ const Pipeline = () => {
                       placement='left'
                     >
                       <Space direction='horizontal'>
-                        {console.log('PIPELINE CAN BE RUN ', pipelineCanBeRun)}
                         {pipelineCanBeRun && (
                           <LaunchAnalysisButton />
                         )}

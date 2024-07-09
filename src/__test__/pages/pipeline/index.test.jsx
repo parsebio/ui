@@ -1,32 +1,33 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { act } from 'react-dom/test-utils';
+
 import {
   render, screen, waitFor, fireEvent,
 } from '@testing-library/react';
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
 import '@testing-library/jest-dom';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
-import _ from 'lodash';
-import { useAppRouter } from 'utils/AppRouteProvider';
-import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
 import Pipeline from 'pages/pipeline/index';
 import {
-  loadSecondaryAnalyses, loadSecondaryAnalysisFiles,
-  loadSecondaryAnalysisStatus, launchSecondaryAnalysis,
+  updateSecondaryAnalysis, setActiveSecondaryAnalysis,
 } from 'redux/actions/secondaryAnalyses';
-import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 import { modules } from 'utils/constants';
 import '__test__/test-utils/setupTests';
+import mockAPI, {
+  generateDefaultMockAPIResponses,
+  promiseResponse,
+} from '__test__/test-utils/mockAPI';
+import { makeStore } from 'redux/store';
+import { mockAnalysisIds } from '__test__/data/secondaryAnalyses/secondary_analyses';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
-const mockStore = configureMockStore([thunk]);
+const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
+const mockNavigateTo = jest.fn();
 
-jest.mock('redux/actions/secondaryAnalyses', () => ({
-  loadSecondaryAnalyses: jest.fn(() => ({ type: 'LOAD_SECONDARY_ANALYSES' })),
-  loadSecondaryAnalysisFiles: jest.fn(() => ({ type: 'LOAD_SECONDARY_ANALYSIS_FILES' })),
-  loadSecondaryAnalysisStatus: jest.fn(() => ({ type: 'LOAD_SECONDARY_ANALYSIS_STATUS' })),
-}));
+jest.mock('react-resize-detector', () => (props) => {
+  const { children } = props;
+  return children({ width: 800, height: 600 });
+});
 
 jest.mock('@aws-amplify/auth', () => ({
   Auth: {
@@ -42,141 +43,136 @@ jest.mock('@aws-amplify/auth', () => ({
 
 jest.mock('utils/AppRouteProvider', () => ({
   useAppRouter: jest.fn(() => ({
-    navigateTo: jest.fn(),
+    navigateTo: mockNavigateTo,
   })),
 }));
-
-const initialState = {
-  user: {
-    current: { id: 'user-1', name: 'mockUserName', attributes: { 'custom:agreed_terms_v2': 'true' } },
-  },
-  secondaryAnalyses: {
-    meta: {
-      initialLoadPending: true,
-      activeSecondaryAnalysisId: 'analysis-1',
-    },
-    'analysis-1': {
-      name: 'some analysis',
-      id: 'analysis-1',
-      status: {
-        current: 'not_created',
-        loading: false,
-      },
-      files: {
-        data: {
-          '07286c9c-9392-4591-8b1c-c47b355e1108': {
-            id: '07286c9c-9392-4591-8b1c-c47b355e1108',
-            name: 'S1_R1.fastq.gz',
-            size: '70154428',
-            type: 'fastq',
-            upload: {
-              status: {
-                current: 'uploaded',
-                loading: false,
-              },
-            },
-            createdAt: '2024-07-02 16:00:15.08919+00',
-          },
-          '1be1689c-0909-496b-bcf9-c29abb3733cf': {
-            id: '1be1689c-0909-496b-bcf9-c29abb3733cf',
-            name: 'S1_R2.fastq.gz',
-            size: '55879599',
-            type: 'fastq',
-            upload: {
-              status: {
-                current: 'uploaded',
-                loading: false,
-              },
-            },
-            createdAt: '2024-07-02 16:00:16.941129+00',
-          },
-          samplelt: {
-            id: 'samplelt',
-            name: 'samplelt.xlsm',
-            upload: {
-              status: {
-                current: 'uploaded',
-                loading: false,
-              },
-            },
-            type: 'samplelt',
-          },
-        },
-        loading: false,
-        error: false,
-      },
-    },
-  },
-  networkResources: {
-    domainName: 'testing',
-  },
-};
-
-const store = mockStore(initialState);
+let storeState;
 
 enableFetchMocks();
-const route = 'pipeline';
-const defaultProps = { route };
-const pipelinePageFactory = createTestComponentFactory(Pipeline, defaultProps);
 
 describe('Pipeline Page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     fetchMock.resetMocks();
-    fetchMock.doMock();
+    fetchMock.mockIf(/.*/, mockAPI(mockAPIResponses));
+    storeState = makeStore();
   });
 
-  const renderPipelinePage = async (currentStore = store) => await render(
-    <Provider store={currentStore}>
-      {pipelinePageFactory()}
+  const renderPipelinePage = async () => await render(
+    <Provider store={storeState}>
+      <DndProvider backend={HTML5Backend}>
+        <Pipeline />
+        {/* {pipelinePageFactory()} */}
+      </DndProvider>
     </Provider>,
   );
 
-  it('renders the Pipeline page and checks elements', async () => {
+  it('renders the Pipeline page and launches an analysis', async () => {
     await renderPipelinePage();
-
     await waitFor(() => {
       const multiTileContainer = screen.queryByTestId('multi-tile-container');
       expect(multiTileContainer).toBeInTheDocument();
     });
 
     await waitFor(() => {
-      const runId = screen.getByText(/create run to get started/i);
+      const runId = screen.getByText(/run id/i);
       console.log('runId', runId); // Debugging line
       expect(runId).toBeInTheDocument();
+      expect(screen.getByText(/experimental setup/i)).toBeInTheDocument();
+      expect(screen.getByText(/sample loading table/i)).toBeInTheDocument();
+      expect(screen.getByText(/reference genome/i)).toBeInTheDocument();
+      expect(screen.getByText(/fastq files/i)).toBeInTheDocument();
+      expect(screen.getByText(/run the pipeline/i)).toBeInTheDocument();
+      expect(screen.getByText(/share/i)).toBeInTheDocument();
+      expect(screen.getByText(/description/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/runs/i).length).toBe(3);
+      expect(screen.getAllByText(/run details/i).length).toBe(3);
     });
 
-    // Additional assertions or actions can be added here
+    // filled in analysis should have details shown on the page
+    await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
+    await waitFor(() => {
+      expect(screen.getByText(/File name:/i)).toBeInTheDocument();
+      expect(screen.getByText(/pbmc_1Mreads sltab.xlsm/i)).toBeInTheDocument();
+    });
+
+    expect(screen.getByText(/S1_R1.fastq.gz/i)).toBeInTheDocument();
+    expect(screen.getByText(/S1_R2.fastq.gz/i)).toBeInTheDocument();
+    expect(screen.getByText(/S2_R1.fastq.gz/i)).toBeInTheDocument();
+    expect(screen.getByText(/S2_R2.fastq.gz/i)).toBeInTheDocument();
+    expect(screen.getByText(/Kit type:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Evercode WT/i)).toBeInTheDocument();
+    expect(screen.getByText(/Chemistry version:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Number of sublibraries:/i)).toBeInTheDocument();
+    expect(screen.getByText(/Mmul10/i)).toBeInTheDocument();
+
+    // sample names are shown on click
+    fireEvent.click(screen.getByText(/View sample names/i));
+    expect(screen.getByText(/sample_1/i)).toBeInTheDocument();
+    expect(screen.getByText(/sample_2/i)).toBeInTheDocument();
+    expect(screen.getByText(/sample_3/i)).toBeInTheDocument();
   });
 
-  // it('launches the pipeline', async () => {
-  //   const { navigateTo } = useAppRouter();
+  it('launches the pipeline', async () => {
+    const launchSecondaryAnalysisResponse = {
+      ...mockAPIResponses,
+      [`/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}/launch`]: () => promiseResponse(JSON.stringify({ status: 'success' })),
+    };
 
-  //   const mockState = {
-  //     ...initialState,
-  //     secondaryAnalyses: {
-  //       ...initialState.secondaryAnalyses,
-  //       'analysis-1': {
-  //         ...initialState.secondaryAnalyses['analysis-1'],
-  //         status: {
-  //           loading: false,
-  //           shouldRerun: false,
-  //           current: 'not_created',
-  //         },
-  //       },
-  //     },
-  //   };
+    fetchMock.mockIf(/.*/, mockAPI(launchSecondaryAnalysisResponse));
+    await renderPipelinePage();
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.latestTest);
+    });
 
-  //   const newStore = mockStore(mockState);
+    await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
 
-  //   await renderPipelinePage(newStore);
-  //   await waitFor(() => {
-  //     expect(screen.getByText('Run the pipeline')).toBeInTheDocument();
-  //   });
-  //   fireEvent.click(screen.getByText('Run the pipeline'));
+    // switches to run that can be launched
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.readyToLaunch);
+    });
 
-  //   await waitFor(() => {
-  //     expect(navigateTo).toHaveBeenCalledWith(modules.SECONDARY_ANALYSIS_OUTPUT, { secondaryAnalysisId: 'analysis-1' });
-  //   });
-  // });
+    await waitFor(() => {
+      expect(screen.getByText('Run the pipeline')).toBeInTheDocument();
+    });
+
+    await fireEvent.click(screen.getByText(/Run the pipeline/i));
+
+    await waitFor(() => {
+      const numberOfCalls = fetchMock.mock.calls.length - 1;
+      expect(fetchMock.mock.calls[numberOfCalls][0]).toContain(`/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}/launch`);
+    });
+
+    await waitFor(() => {
+      expect(mockNavigateTo).toHaveBeenCalledWith(
+        modules.SECONDARY_ANALYSIS_OUTPUT, { secondaryAnalysisId: mockAnalysisIds.readyToLaunch },
+      );
+    });
+  });
+
+  it('cannot launch pipeline when number of sublibraries does not match FASTQ files', async () => {
+    const updateSecondaryAnalysisResponse = {
+      ...mockAPIResponses,
+      [`/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}$`]: () => promiseResponse(JSON.stringify({ status: 'success' })),
+    };
+
+    fetchMock.mockIf(/.*/, mockAPI(updateSecondaryAnalysisResponse));
+    await renderPipelinePage();
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.latestTest);
+    });
+    await storeState.dispatch(
+      updateSecondaryAnalysis(mockAnalysisIds.readyToLaunch, { numberOfSublibraries: 3 }),
+    );
+    await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.readyToLaunch);
+    });
+
+    expect(screen.getByText(/Run the pipeline/i).closest('button')).toBeDisabled();
+  });
 });
