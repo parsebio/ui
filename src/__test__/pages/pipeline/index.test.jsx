@@ -8,7 +8,7 @@ import '@testing-library/jest-dom';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import Pipeline from 'pages/pipeline/index';
 import {
-  updateSecondaryAnalysis, setActiveSecondaryAnalysis,
+  updateSecondaryAnalysis, setActiveSecondaryAnalysis, storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import { modules } from 'utils/constants';
 import '__test__/test-utils/setupTests';
@@ -28,7 +28,22 @@ jest.mock('react-resize-detector', () => (props) => {
   const { children } = props;
   return children({ width: 800, height: 600 });
 });
+jest.mock('utils/socketConnection', () => {
+  const mockEmit = jest.fn();
+  const mockOn = jest.fn();
 
+  return {
+    __esModule: true,
+    default: new Promise((resolve) => {
+      resolve({
+        emit: mockEmit, on: mockOn, id: '5678', off: jest.fn(),
+      });
+    }),
+    mockEmit,
+    mockOn,
+  };
+});
+jest.mock('redux/actions/secondaryAnalyses/storeLoadedAnalysisFile');
 jest.mock('@aws-amplify/auth', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn(() => Promise.resolve({
@@ -62,7 +77,6 @@ describe('Pipeline Page', () => {
     <Provider store={storeState}>
       <DndProvider backend={HTML5Backend}>
         <Pipeline />
-        {/* {pipelinePageFactory()} */}
       </DndProvider>
     </Provider>,
   );
@@ -175,4 +189,19 @@ describe('Pipeline Page', () => {
 
     expect(screen.getByText(/Run the pipeline/i).closest('button')).toBeDisabled();
   });
+
+  // it('updates file status from socket message', async () => {
+  //   // storeLoadedAnalysisFile.mockImplementation(jest.fn());
+  //   await renderPipelinePage();
+
+  //   const socketMock = await import('utils/socketConnection');
+  //   const message = { file: { id: 'file1', status: 'uploaded' } };
+
+  //   socketMock.default.then((io) => {
+  //     io.emit(`fileUpdates-${mockAnalysisIds.latestTest}`, message);
+  //   });
+  //   await waitFor(() => {
+  //     expect(storeLoadedAnalysisFile).toHaveBeenCalledWith('activeSecondaryAnalysisId', message.file);
+  //   });
+  // });
 });
