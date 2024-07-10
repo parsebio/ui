@@ -1,6 +1,5 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-
 import {
   render, screen, waitFor, fireEvent,
 } from '@testing-library/react';
@@ -20,7 +19,6 @@ import { makeStore } from 'redux/store';
 import { mockAnalysisIds } from '__test__/data/secondaryAnalyses/secondary_analyses';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { io as mockIo } from 'socket.io-client';
 
 const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
 const mockNavigateTo = jest.fn();
@@ -40,7 +38,7 @@ jest.mock('utils/socketConnection', () => ({
     });
   }),
 }));
-jest.mock('redux/actions/secondaryAnalyses/storeLoadedAnalysisFile');
+jest.mock('redux/actions/secondaryAnalyses/storeLoadedAnalysisFile', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
 jest.mock('@aws-amplify/auth', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn(() => Promise.resolve({
@@ -86,9 +84,7 @@ describe('Pipeline Page', () => {
     });
 
     await waitFor(() => {
-      const runId = screen.getByText(/run id/i);
-
-      expect(runId).toBeInTheDocument();
+      expect(screen.getByText(`Run ID: ${mockAnalysisIds.emptyAnalysis}`)).toBeInTheDocument();
       expect(screen.getByText(/experimental setup/i)).toBeInTheDocument();
       expect(screen.getByText(/sample loading table/i)).toBeInTheDocument();
       expect(screen.getByText(/reference genome/i)).toBeInTheDocument();
@@ -134,7 +130,7 @@ describe('Pipeline Page', () => {
     await renderPipelinePage();
     await waitFor(() => {
       const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
-      expect(activeId).toBe(mockAnalysisIds.latestTest);
+      expect(activeId).toBe(mockAnalysisIds.emptyAnalysis);
     });
 
     await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
@@ -173,7 +169,7 @@ describe('Pipeline Page', () => {
     await renderPipelinePage();
     await waitFor(() => {
       const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
-      expect(activeId).toBe(mockAnalysisIds.latestTest);
+      expect(activeId).toBe(mockAnalysisIds.emptyAnalysis);
     });
     await storeState.dispatch(
       updateSecondaryAnalysis(mockAnalysisIds.readyToLaunch, { numberOfSublibraries: 3 }),
@@ -187,6 +183,111 @@ describe('Pipeline Page', () => {
     expect(screen.getByText(/Run the pipeline/i).closest('button')).toBeDisabled();
   });
 
+  it('navigates to the status screen if the pipeline is in progress', async () => {
+    const inProgressPipelineResponse = {
+      ...mockAPIResponses,
+      [`/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}/executionStatus`]: () => promiseResponse(JSON.stringify({
+        current: 'running',
+        shouldRerun: false,
+      })),
+    };
+
+    fetchMock.mockIf(/.*/, mockAPI(inProgressPipelineResponse));
+    await renderPipelinePage();
+
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.emptyAnalysis);
+    });
+
+    await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
+
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.readyToLaunch);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Go to output')).toBeInTheDocument();
+    });
+
+    await fireEvent.click(screen.getByText(/Go to output/i));
+
+    await waitFor(() => {
+      expect(mockNavigateTo).toHaveBeenCalledWith(
+        modules.SECONDARY_ANALYSIS_OUTPUT, { secondaryAnalysisId: mockAnalysisIds.readyToLaunch },
+      );
+    });
+  });
+
+  it('allows rerunning the pipeline if it failed', async () => {
+    const failedPipelineResponse = {
+      ...mockAPIResponses,
+      [`/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}/executionStatus`]: () => promiseResponse(JSON.stringify({
+        current: 'failed',
+        shouldRerun: true,
+      })),
+    };
+
+    fetchMock.mockIf(/.*/, mockAPI(failedPipelineResponse));
+    await renderPipelinePage();
+
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.emptyAnalysis);
+    });
+
+    await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
+
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.readyToLaunch);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Rerun the pipeline')).toBeInTheDocument();
+    });
+    expect(screen.getByText('Rerun the pipeline').closest('button')).not.toBeDisabled();
+  });
+
+  it('Empty runs cannot be launched', async () => {
+    const mockApiResponsesEmptyAnalysis = generateDefaultMockAPIResponses(mockAnalysisIds.emptyAnalysis);
+    fetchMock.mockIf(/.*/, mockAPI(mockApiResponsesEmptyAnalysis));
+    await renderPipelinePage();
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.emptyAnalysis);
+    });
+    await waitFor(() => {
+      expect(screen.getByText('Run the pipeline')).toBeInTheDocument();
+    });
+    expect(screen.getByText('Run the pipeline').closest('button')).toBeDisabled();
+  });
+
+  it('Unchanged finished pipelines cannot be rerun', async () => {
+    const finishedPipelineResponse = {
+      ...mockAPIResponses,
+      [`/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}/executionStatus`]: () => promiseResponse(JSON.stringify({
+        current: 'finished',
+        shouldRerun: false,
+      })),
+    };
+    fetchMock.mockIf(/.*/, mockAPI(finishedPipelineResponse));
+    await renderPipelinePage();
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.emptyAnalysis);
+    });
+    await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
+    await waitFor(() => {
+      const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+      expect(activeId).toBe(mockAnalysisIds.readyToLaunch);
+    });
+    await waitFor(() => {
+      expect(screen.getByText('Rerun the pipeline').closest('button')).toBeDisabled();
+    });
+  });
+
   it('updates file status from socket message', async () => {
     await renderPipelinePage();
 
@@ -194,11 +295,15 @@ describe('Pipeline Page', () => {
     const message = { file: { id: 'file1', status: 'uploaded' } };
 
     socketMock.default.then((io) => {
-      io.emit(`fileUpdates-${mockAnalysisIds.latestTest}`, message);
+      io.on.mockImplementationOnce((event, callback) => {
+        if (event === `fileUpdates-${mockAnalysisIds.emptyAnalysis}`) {
+          callback(message);
+        }
+      });
     });
 
     await waitFor(() => {
-      expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(mockAnalysisIds.latestTest, message.file);
+      expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(mockAnalysisIds.emptyAnalysis, message.file);
     });
   });
 });

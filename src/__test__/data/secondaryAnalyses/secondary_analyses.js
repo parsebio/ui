@@ -1,11 +1,11 @@
 const mockAnalysisIds = {
   readyToLaunch: '868f4a31-da46-41a9-b18a-16b91a58302b',
   newProject: 'b936b0d2-0443-4a9c-884e-78da1f6002eb',
-  latestTest: '06076ad1-c8c8-42fb-a425-974288a364a5',
+  emptyAnalysis: '06076ad1-c8c8-42fb-a425-974288a364a5',
 };
 const mockSecondaryAnalyses = [
   {
-    id: mockAnalysisIds.latestTest,
+    id: mockAnalysisIds.emptyAnalysis,
     name: 'latest test',
     description: '',
     refGenome: null,

@@ -1,4 +1,5 @@
 {
     "current": "not_created",
-    "shouldRerun": true
+    "shouldRerun": true,
+    "loading": false
 }
