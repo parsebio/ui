@@ -587,7 +587,7 @@ const Pipeline = () => {
           {currentStep.render()}
         </Modal>
       )}
-      <div style={{ height: '100vh', overflowY: 'auto' }}>
+      <div data-testid='pipeline-container' style={{ height: '100vh', overflowY: 'auto' }}>
         {NewProjectModalVisible && (
           <NewProjectModal
             projectType='secondaryAnalyses'
@@ -599,8 +599,8 @@ const Pipeline = () => {
             }}
           />
         )}
-
         <MultiTileContainer
+          data-testid='multi-tile-container'
           tileMap={TILE_MAP}
           initialArrangement={windows}
         />
