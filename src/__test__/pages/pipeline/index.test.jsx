@@ -20,6 +20,7 @@ import { makeStore } from 'redux/store';
 import { mockAnalysisIds } from '__test__/data/secondaryAnalyses/secondary_analyses';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { io as mockIo } from 'socket.io-client';
 
 const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
 const mockNavigateTo = jest.fn();
@@ -28,21 +29,17 @@ jest.mock('react-resize-detector', () => (props) => {
   const { children } = props;
   return children({ width: 800, height: 600 });
 });
-jest.mock('utils/socketConnection', () => {
-  const mockEmit = jest.fn();
-  const mockOn = jest.fn();
-
-  return {
-    __esModule: true,
-    default: new Promise((resolve) => {
-      resolve({
-        emit: mockEmit, on: mockOn, id: '5678', off: jest.fn(),
-      });
-    }),
-    mockEmit,
-    mockOn,
-  };
-});
+jest.mock('utils/socketConnection', () => ({
+  __esModule: true,
+  default: new Promise((resolve) => {
+    resolve({
+      emit: jest.fn(),
+      on: jest.fn(),
+      off: jest.fn(),
+      id: '5678',
+    });
+  }),
+}));
 jest.mock('redux/actions/secondaryAnalyses/storeLoadedAnalysisFile');
 jest.mock('@aws-amplify/auth', () => ({
   Auth: {
@@ -90,7 +87,7 @@ describe('Pipeline Page', () => {
 
     await waitFor(() => {
       const runId = screen.getByText(/run id/i);
-      console.log('runId', runId); // Debugging line
+
       expect(runId).toBeInTheDocument();
       expect(screen.getByText(/experimental setup/i)).toBeInTheDocument();
       expect(screen.getByText(/sample loading table/i)).toBeInTheDocument();
@@ -190,18 +187,18 @@ describe('Pipeline Page', () => {
     expect(screen.getByText(/Run the pipeline/i).closest('button')).toBeDisabled();
   });
 
-  // it('updates file status from socket message', async () => {
-  //   // storeLoadedAnalysisFile.mockImplementation(jest.fn());
-  //   await renderPipelinePage();
+  it('updates file status from socket message', async () => {
+    await renderPipelinePage();
 
-  //   const socketMock = await import('utils/socketConnection');
-  //   const message = { file: { id: 'file1', status: 'uploaded' } };
+    const socketMock = await import('utils/socketConnection');
+    const message = { file: { id: 'file1', status: 'uploaded' } };
 
-  //   socketMock.default.then((io) => {
-  //     io.emit(`fileUpdates-${mockAnalysisIds.latestTest}`, message);
-  //   });
-  //   await waitFor(() => {
-  //     expect(storeLoadedAnalysisFile).toHaveBeenCalledWith('activeSecondaryAnalysisId', message.file);
-  //   });
-  // });
+    socketMock.default.then((io) => {
+      io.emit(`fileUpdates-${mockAnalysisIds.latestTest}`, message);
+    });
+
+    await waitFor(() => {
+      expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(mockAnalysisIds.latestTest, message.file);
+    });
+  });
 });

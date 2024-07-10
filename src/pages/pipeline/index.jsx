@@ -379,7 +379,7 @@ const Pipeline = () => {
           setButtonClicked(false);
         });
     };
-    console.log('firstTimeLaunch', firstTimeLaunch);
+
     if (firstTimeLaunch) {
       return (
         <Button
@@ -438,14 +438,13 @@ const Pipeline = () => {
           display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
         }}
         >
-          {console.log('activeSecondaryAnalysisId', activeSecondaryAnalysisId)}
           {
             activeSecondaryAnalysisId ? (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
                   <Space direction='vertical'>
                     <Title level={4}>{analysisName}</Title>
-                    <Text type='secondary' data-testid='run-id'>
+                    <Text type='secondary'>
                       {`Run ID: ${activeSecondaryAnalysisId}`}
                     </Text>
                   </Space>
