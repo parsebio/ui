@@ -46,7 +46,7 @@ class FileUploader {
     this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
     this.freeUploadSlots = 3;
 
-    // Used to assign partNumbers to each chunk
+    // Used to track chunk numbers when filling the progress bar
     this.chunkNumberIt = 0;
     this.chunkNumberItLock = `chunkNumberItLock${this.uploadParams.uploadId}`;
 
