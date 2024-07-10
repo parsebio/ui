@@ -46,10 +46,9 @@ class FileUploader {
     this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
     this.freeUploadSlots = 3;
 
-    this.progressTrackingLock = `progressTracking${this.uploadParams.uploadId}`;
-
     // Used to assign partNumbers to each chunk
-    this.partNumberIt = 0;
+    this.chunkNumberIt = 0;
+    this.chunkNumberItLock = `chunkNumberItLock${this.uploadParams.uploadId}`;
 
     this.readStream = null;
     this.gzipStream = null;
@@ -84,9 +83,12 @@ class FileUploader {
         this.uploadedPartPercentages[i] = 1;
       }
 
-      this.partNumberIt = nextPartNumber - 1;
+      await navigator.locks.request(this.chunkNumberItLock, async () => {
+        this.chunkNumberIt = nextPartNumber - 1;
+        offset = this.chunkNumberIt * this.chunkSize;
+      });
+
       this.pendingChunks = this.totalChunks - nextPartNumber + 1;
-      offset = this.partNumberIt * this.chunkSize;
     }
 
     return new Promise((resolve, reject) => {
@@ -206,13 +208,11 @@ class FileUploader {
   }
 
   #handleChunkLoadFinished = async (chunk) => {
-    // This assigns a part number to each chunk that arrives
-    // They are read in order, so it should be safe
-    this.partNumberIt += 1;
     try {
       let onUploadProgress;
-      await navigator.locks.request(this.progressTrackingLock, async () => {
-        onUploadProgress = this.#createOnUploadProgress(this.partNumberIt);
+      await navigator.locks.request(this.chunkNumberItLock, async () => {
+        this.chunkNumberIt += 1;
+        onUploadProgress = this.#createOnUploadProgress(this.chunkNumberIt);
       });
 
       await this.partUploader.uploadChunk(chunk, onUploadProgress);

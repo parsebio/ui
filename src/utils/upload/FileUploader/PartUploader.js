@@ -31,7 +31,7 @@ class PartUploader {
   #partUploadLock;
 
   // Used to assign partNumbers to each chunk
-  #partNumberIt = 0;
+  #uploadPartNumberIt = 0;
 
   #accumulatedChunks = [];
 
@@ -59,9 +59,9 @@ class PartUploader {
   }
 
   #executeUpload = async () => {
-    this.#partNumberIt += 1;
+    this.#uploadPartNumberIt += 1;
 
-    const partNumber = this.#partNumberIt;
+    const partNumber = this.#uploadPartNumberIt;
 
     const mergedChunks = new Uint8Array(this.#getAccumulatedUploadSize());
 
