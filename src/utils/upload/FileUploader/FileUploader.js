@@ -5,6 +5,7 @@ import filereaderStream from 'filereader-stream';
 import PartUploader from 'utils/upload/FileUploader/PartUploader';
 import FileUploaderError from 'utils/errors/upload/FileUploaderError';
 import fetchAPI from 'utils/http/fetchAPI';
+import NotImplementedError from 'utils/errors/NotImplementedError';
 import UploadStatus from '../UploadStatus';
 
 class FileUploader {
@@ -25,6 +26,13 @@ class FileUploader {
       throw new Error('FileUploader: Missing required parameters');
     }
     const { resumeUpload, compress, retryPolicy = 'normal' } = options;
+
+    if (resumeUpload && compress) {
+      // This should be fine for our current use cases:
+      // 1 - Secondary analysis: Resumable non-compressing uploads
+      // 2 - Tertiary analysis: Compressing non-resumable uploads
+      throw new NotImplementedError('Resumable and compressing uploads at the same time is not implemented yet');
+    }
 
     this.file = file;
     this.compress = compress;
