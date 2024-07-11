@@ -388,14 +388,14 @@ const generateSpec = (config, plotData) => {
   }
 
   if (config?.legend.enabled) {
-    const groups = _.keys(plotData.groups);
-    const groupNames = groups.map((id) => plotData.groups[id].name);
-    const groupColors = groups.map((id) => plotData.groups[id].color);
+    const groupKeys = _.keys(plotData.groups);
+    const groupNames = groupKeys.map((id) => plotData.groups[id].name);
+    const groupColors = groupKeys.map((id) => plotData.groups[id].color);
 
     const positionIsRight = config.legend.position === 'right';
 
     const legendColumns = positionIsRight
-      ? Math.ceil(groups.length / 20)
+      ? Math.ceil(groupKeys.length / 20)
       : Math.floor(config.dimensions.width / 85);
     const labelLimit = positionIsRight ? 0 : 85;
     if (positionIsRight) {
@@ -407,8 +407,16 @@ const generateSpec = (config, plotData) => {
       name: 'legend',
       type: 'ordinal',
       range: groupColors,
-      domain: groupNames,
+      domain: groupKeys,
     });
+
+    spec.scales.push({
+      name: 'sampleToName',
+      type: 'ordinal',
+      range: groupNames,
+      domain: groupKeys,
+    });
+
     spec.legends = [
       {
         fill: 'legend',
@@ -421,6 +429,16 @@ const generateSpec = (config, plotData) => {
         labelFont: config?.fontStyle.font,
         columns: legendColumns,
         labelLimit,
+        encode: {
+          labels: {
+            update: {
+              text: {
+                scale: 'sampleToName', field: 'label',
+              },
+              fill: { value: config?.colour.masterColour },
+            },
+          },
+        },
       },
     ];
   }

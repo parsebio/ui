@@ -160,8 +160,8 @@ const WrappedApp = ({ Component, pageProps }) => {
           <NotFoundPage
             title='Terms agreement required'
             subTitle='You cannot access your analysis in Trailmaker until you have agreed to our updated privacy policy.'
-            hint='Go to Data Management to accept the terms.'
-            primaryActionText='Go to Data Management'
+            hint='Go to Insights or Pipeline to accept the terms.'
+            primaryActionText='Go to Insights or Pipeline'
           />
         );
       }

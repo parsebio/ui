@@ -49,7 +49,7 @@ const GEM2SLoadingScreen = (props) => {
     toBeRun: {
       status: 'toBeRun',
       title: 'Let\'s upload and pre-process your data.',
-      subTitle: 'Your data needs to be uploaded and pre-processed before it can be explored. To begin, go to Data Management.',
+      subTitle: 'Your data needs to be uploaded and pre-processed before it can be explored. To begin, go to Insights.',
       showProgress: false,
       image: '/undraw_To_the_stars_qhyy.svg',
       alt: 'A rocket ship ready for take-off.',
@@ -89,7 +89,7 @@ const GEM2SLoadingScreen = (props) => {
       return (
         <Link as={dataManagementPath} href={dataManagementPath} passHref>
           <Button type='primary' key='console'>
-            Go to Data Management
+            Go to Insights
           </Button>
         </Link>
       );
@@ -134,7 +134,7 @@ const GEM2SLoadingScreen = (props) => {
               {pipelineStatus === 'subsetting' && (
                 <Text type='secondary'>
                   <br />
-                  Your new project containing only the selected cell sets will be available in the Data Management module
+                  Your new project containing only the selected cell sets will be available in the Insights module
                 </Text>
               )}
             </div>

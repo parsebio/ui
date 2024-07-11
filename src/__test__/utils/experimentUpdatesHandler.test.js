@@ -70,9 +70,11 @@ const mockQcUpdate = {
 
 const mockGem2sUpdate = {
   type: updateTypes.GEM2S,
-  item: {
-    processingConfig: {
-      mockProcessingConfig: 'mockProcessingConfig',
+  output: {
+    item: {
+      processingConfig: {
+        mockProcessingConfig: 'mockProcessingConfig',
+      },
     },
   },
   status: {

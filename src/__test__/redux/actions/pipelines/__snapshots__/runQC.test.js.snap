@@ -13,7 +13,7 @@ exports[`runQC action Dispatches events properly 2`] = `
 [
   "http://localhost:3000/v2/experiments/experiment-id/qc",
   {
-    "body": "{"processingConfigDiff":{"cellSizeDistribution":{"sample1, sample2":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200}}}}}",
+    "body": "{"processingConfigDiff":{"cellSizeDistribution":{"sample1":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200}},"sample2":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200}}}}}",
     "headers": {
       "Content-Type": "application/json",
     },
@@ -44,9 +44,75 @@ exports[`runQC action Runs only the embedding if only changed filter was embeddi
   },
   {
     "payload": {
-      "embeddingType": "umap",
+      "embeddingType": "tsne",
     },
     "type": "embeddings/loading",
+  },
+]
+`;
+
+exports[`runQC action Triggers qc correctly when an error happened and running with changes in a filter step 1`] = `
+[
+  {
+    "payload": {},
+    "type": "experimentSettings/startQC",
+  },
+]
+`;
+
+exports[`runQC action Triggers qc correctly when an error happened and running with changes in a filter step 2`] = `
+[
+  "http://localhost:3000/v2/experiments/experiment-id/qc",
+  {
+    "body": "{"processingConfigDiff":{"cellSizeDistribution":{"sample1":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200}},"sample2":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200}}}}}",
+    "headers": {
+      "Content-Type": "application/json",
+    },
+    "method": "POST",
+  },
+]
+`;
+
+exports[`runQC action Triggers qc correctly when an error happened and running with changes in configureEmbedding 1`] = `
+[
+  {
+    "payload": {},
+    "type": "experimentSettings/startQC",
+  },
+]
+`;
+
+exports[`runQC action Triggers qc correctly when an error happened and running with changes in configureEmbedding 2`] = `
+[
+  "http://localhost:3000/v2/experiments/experiment-id/qc",
+  {
+    "body": "{"processingConfigDiff":{"configureEmbedding":{"enabled":true,"embeddingSettings":{"method":"umap","useSaved":false,"methodSettings":{"umap":{"minimumDistance":0.1,"distanceMetric":"euclidean"},"tsne":{"perplexity":30,"learningRate":200}}},"clusteringSettings":{"method":"leiden","methodSettings":{"louvain":{"resolution":0.5}}}}}}",
+    "headers": {
+      "Content-Type": "application/json",
+    },
+    "method": "POST",
+  },
+]
+`;
+
+exports[`runQC action Triggers qc correctly when previous qc failed 1`] = `
+[
+  {
+    "payload": {},
+    "type": "experimentSettings/startQC",
+  },
+]
+`;
+
+exports[`runQC action Triggers qc correctly when previous qc failed 2`] = `
+[
+  "http://localhost:3000/v2/experiments/experiment-id/qc",
+  {
+    "body": "{"processingConfigDiff":{}}",
+    "headers": {
+      "Content-Type": "application/json",
+    },
+    "method": "POST",
   },
 ]
 `;
