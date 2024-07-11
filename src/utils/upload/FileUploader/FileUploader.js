@@ -191,18 +191,6 @@ class FileUploader {
     });
   }
 
-  // #cancelExecution = (status, e) => {
-  //   this.readStream.destroy();
-
-  //   this.gzipStream?.terminate();
-  //   this.partUploader.abort();
-
-  //   this.onStatusUpdate(status);
-
-  //   this.reject(e);
-  //   console.error(e);
-  // }
-
   #abortUpload = (e) => {
     this.abortController?.abort(e.message);
     console.error(e);
