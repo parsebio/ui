@@ -21,11 +21,11 @@ const renderWindow = (tile, width, height, style) => {
   );
 };
 
-const MultiTileContainer = ({ tileMap, initialArrangement }) => {
+const MultiTileContainer = ({ tileMap, initialArrangement, ...props }) => {
   const dragDropManager = useDragDropManager();
 
   return (
-    <div style={{ height: '100%', width: '100%', margin: 0 }}>
+    <div style={{ height: '100%', width: '100%', margin: 0 }} {...props}>
       <Mosaic
         dragAndDropManager={dragDropManager}
         renderTile={(id, path) => (
@@ -41,6 +41,7 @@ const MultiTileContainer = ({ tileMap, initialArrangement }) => {
                 title={id}
                 toolbarControls={tileMap[id]?.toolbarControls}
               >
+
                 {renderWindow(tileMap[id]?.component, width, height, tileMap[id]?.style)}
               </MosaicWindow>
             )}
