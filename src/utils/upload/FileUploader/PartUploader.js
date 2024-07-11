@@ -62,8 +62,6 @@ class PartUploader {
 
   #executeUpload = async () => {
     const partNumber = this.#uploadedParts.length + 1;
-    console.log('partNumberDebug');
-    console.log(partNumber);
 
     const mergedChunks = new Uint8Array(this.#getAccumulatedUploadSize());
 
@@ -84,8 +82,7 @@ class PartUploader {
     );
 
     this.#accumulatedChunks = [];
-    console.log('thisuploadedPartsDebug');
-    console.log(this.#uploadedParts);
+
     this.#uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
   }
 
