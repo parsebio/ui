@@ -55,8 +55,6 @@ const TotpSetup = (props) => {
   };
 
   const renderQrCode = () => {
-    if (!setupKey) return null;
-
     const issuer = encodeURI('Trailmaker');
 
     const otpauthUrl = `otpauth://totp/${issuer}:${user.attributes.email}?secret=${setupKey}&issuer=${issuer}`;
@@ -67,6 +65,17 @@ const TotpSetup = (props) => {
       </div>
     );
   };
+
+  if (!setupKey) {
+    return (
+      <center>
+        <ClipLoader
+          size={50}
+          color='#8f0b10'
+        />
+      </center>
+    );
+  }
 
   const qrSection = (
     <Space align='center' direction='vertical' style={{ width: '50%' }}>
@@ -85,17 +94,6 @@ const TotpSetup = (props) => {
       </Text>
     </Space>
   );
-
-  if (!setupKey) {
-    return (
-      <center>
-        <ClipLoader
-          size={50}
-          color='#8f0b10'
-        />
-      </center>
-    );
-  }
 
   return (
     <Space direction='vertical'>
