@@ -61,15 +61,16 @@ class FileUploader {
 
     this.currentChunk = null;
 
-    this.partUploader = new PartUploader(uploadParams, abortController, file.size, file.path);
-
     this.#subscribeToAbortSignal();
   }
 
   async upload() {
     let offset = 0;
+
+    let uploadedParts = [];
+
     if (this.resumeUpload) {
-      const uploadedParts = await this.#getUploadedParts();
+      uploadedParts = await this.#getUploadedParts();
 
       if (uploadedParts.length === this.totalChunks) {
         return uploadedParts;
@@ -90,6 +91,14 @@ class FileUploader {
 
       this.pendingChunks = this.totalChunks - nextPartNumber + 1;
     }
+
+    this.partUploader = new PartUploader(
+      this.uploadParams,
+      this.abortController,
+      this.file.size,
+      this.file.path,
+      uploadedParts,
+    );
 
     return new Promise((resolve, reject) => {
       this.resolve = resolve;

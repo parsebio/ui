@@ -7,7 +7,7 @@ const PART_COUNT_MAX = 10000;
 const PART_SIZE_MIN = 5 * 1024 * 1024;
 
 class PartUploader {
-  constructor(uploadParams, abortController, fileSize, filePath) {
+  constructor(uploadParams, abortController, fileSize, filePath, uploadedParts) {
     this.#uploadParams = uploadParams;
     this.#abortController = abortController;
     this.#filePathDebug = filePath;
@@ -18,6 +18,8 @@ class PartUploader {
     this.#partSize = Math.max(minPartSize, PART_SIZE_MIN);
 
     this.#partUploadLock = `partUploadLock${this.#uploadParams.uploadId}`;
+
+    this.#uploadedParts = uploadedParts;
   }
 
   #uploadParams;
@@ -35,7 +37,7 @@ class PartUploader {
 
   #accumulatedChunks = [];
 
-  #uploadedParts = [];
+  #uploadedParts;
 
   uploadChunk = async (chunk, onUploadProgress) => {
     await navigator.locks.request(this.#partUploadLock, async () => {
@@ -59,9 +61,9 @@ class PartUploader {
   }
 
   #executeUpload = async () => {
-    this.#uploadPartNumberIt += 1;
-
-    const partNumber = this.#uploadPartNumberIt;
+    const partNumber = this.#uploadedParts.length + 1;
+    console.log('partNumberDebug');
+    console.log(partNumber);
 
     const mergedChunks = new Uint8Array(this.#getAccumulatedUploadSize());
 
@@ -82,6 +84,8 @@ class PartUploader {
     );
 
     this.#accumulatedChunks = [];
+    console.log('thisuploadedPartsDebug');
+    console.log(this.#uploadedParts);
     this.#uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
   }
 
