@@ -173,6 +173,9 @@ const CellLevelUploadModal = (props) => {
           </Title>
           <Paragraph>
             Upload a single file, containing the cell-level metadata in a tab-separated format (.tsv) file.
+            <br />
+            It is crucial that your file remains in this format, as spaces or other characters in place of tabs can cause errors.
+            <br />
             {' '}
             <br />
             Column
@@ -198,6 +201,44 @@ const CellLevelUploadModal = (props) => {
             {' '}
             and you want to add cell-type annotation, you would write a file as follows:
             <Table size='small' pagination={false} dataSource={exampleTable.dataSource} columns={exampleTable.columns} />
+            {' '}
+            <br />
+            <b>Important notes:</b>
+            <ul>
+              {' '}
+              <br />
+              <li>
+                <b>Common issues:</b>
+                <ul>
+                  <li>Files created or edited in some software might inadvertently replace tabs with spaces. Always double-check the format before uploading.</li>
+                </ul>
+              </li>
+              <li>
+                <b>Ensure tab-separation:</b>
+                <ul>
+                  <li>
+                    <b>Excel users:</b>
+                    {' '}
+                    When saving your file in Excel, use "Save As" and select the format "Text (Tab delimited) (*.txt)". Then, change the file extension from `.txt` to `.tsv`.
+                  </li>
+                  <li>
+                    <b>Text editor users:</b>
+                    {' '}
+                    If you use a text editor (such as Notepad or TextEdit), manually check that columns are separated by a single tab character.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <b>Verification:</b>
+                <ul>
+                  <li>
+                    <b>Visual check:</b>
+                    {' '}
+                    Open your .tsv file in a simple text editor (such as Notepad on Windows or TextEdit on Mac) and verify that columns are separated by tabs.
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </Paragraph>
         </Col>
       </Row>

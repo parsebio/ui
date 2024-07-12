@@ -1,5 +1,7 @@
 const generateSpec = (config, groupName, data, displayLabels = true) => {
   const cellSetNames = data.trackGroupData.map(({ name }) => name);
+  const cellSetColors = data.trackGroupData.map(({ color }) => color);
+  const cellSetKeys = data.trackGroupData.map(({ key }) => key);
 
   const extraLabels = displayLabels ? [
     {
@@ -124,14 +126,8 @@ const generateSpec = (config, groupName, data, displayLabels = true) => {
       {
         name: 'trackKeyToTrackName',
         type: 'ordinal',
-        domain: {
-          data: 'trackGroupData',
-          field: 'track',
-        },
-        range: {
-          data: 'trackGroupData',
-          field: 'trackName',
-        },
+        domain: { data: 'trackGroupData', field: 'track' },
+        range: { data: 'trackGroupData', field: 'trackName' },
       },
       {
         name: 'color',
@@ -152,14 +148,8 @@ const generateSpec = (config, groupName, data, displayLabels = true) => {
       {
         name: 'cellSetColors',
         type: 'ordinal',
-        range: {
-          data: 'trackGroupData',
-          field: 'color',
-        },
-        domain: {
-          data: 'trackGroupData',
-          field: 'key',
-        },
+        range: cellSetColors,
+        domain: cellSetKeys,
       },
       {
         name: 'cellSetNames',

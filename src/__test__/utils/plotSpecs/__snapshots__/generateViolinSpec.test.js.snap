@@ -157,6 +157,19 @@ exports[`generateData generate spec returns the right data 1`] = `
     {
       "columns": 1,
       "direction": "horizontal",
+      "encode": {
+        "labels": {
+          "update": {
+            "fill": {
+              "value": "#000000",
+            },
+            "text": {
+              "field": "label",
+              "scale": "sampleToName",
+            },
+          },
+        },
+      },
       "fill": "legend",
       "labelFont": "sans-serif",
       "labelLimit": 0,
@@ -341,10 +354,10 @@ exports[`generateData generate spec returns the right data 1`] = `
     },
     {
       "domain": [
-        "New Cluster",
-        "New Cluster2",
-        "New Cluster3",
-        "New Cluster4",
+        "8297d513-6268-4ab0-a03e-e74a23ecec07",
+        "99a7746b-7f9d-4e54-8acf-53031e4ff023",
+        "25ca1d7f-40ac-4bdc-9625-2272478e7db7",
+        "b452c7ed-d907-4923-b7ff-fcafadc0b807",
       ],
       "name": "legend",
       "range": [
@@ -352,6 +365,22 @@ exports[`generateData generate spec returns the right data 1`] = `
         "#d3fe14",
         "#c9080a",
         "#fec7f8",
+      ],
+      "type": "ordinal",
+    },
+    {
+      "domain": [
+        "8297d513-6268-4ab0-a03e-e74a23ecec07",
+        "99a7746b-7f9d-4e54-8acf-53031e4ff023",
+        "25ca1d7f-40ac-4bdc-9625-2272478e7db7",
+        "b452c7ed-d907-4923-b7ff-fcafadc0b807",
+      ],
+      "name": "sampleToName",
+      "range": [
+        "New Cluster",
+        "New Cluster2",
+        "New Cluster3",
+        "New Cluster4",
       ],
       "type": "ordinal",
     },

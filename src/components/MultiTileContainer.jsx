@@ -41,6 +41,7 @@ const MultiTileContainer = ({ tileMap, initialArrangement }) => {
                 title={id}
                 toolbarControls={tileMap[id]?.toolbarControls}
               >
+
                 {renderWindow(tileMap[id]?.component, width, height, tileMap[id]?.style)}
               </MosaicWindow>
             )}
