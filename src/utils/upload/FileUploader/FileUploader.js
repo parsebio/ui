@@ -213,30 +213,28 @@ class FileUploader {
   }
 
   #handleChunkLoadFinished = async (chunk) => {
-    try {
-      let onUploadProgress;
-      await navigator.locks.request(this.chunkNumberItLock, async () => {
+    await navigator.locks.request(this.chunkNumberItLock, async () => {
+      try {
         this.chunkNumberIt += 1;
-        onUploadProgress = this.#createOnUploadProgress(this.chunkNumberIt);
-      });
+        const onUploadProgress = this.#createOnUploadProgress(this.chunkNumberIt);
 
-      await this.partUploader.uploadChunk(chunk, onUploadProgress);
+        await this.partUploader.uploadChunk(chunk, onUploadProgress);
 
-      // To track when all chunks have been uploaded
-      this.pendingChunks -= 1;
+        // To track when all chunks have been uploaded
+        this.pendingChunks -= 1;
 
-      if (this.pendingChunks > 0) {
-        await this.#releaseUploadSlot();
+        if (this.pendingChunks > 0) {
+          await this.#releaseUploadSlot();
+        }
+        if (this.pendingChunks === 0) {
+          const uploadedParts = await this.partUploader.finishUpload();
+
+          this.resolve(uploadedParts);
+        }
+      } catch (e) {
+        this.#abortUpload(e);
       }
-
-      if (this.pendingChunks === 0) {
-        const uploadedParts = await this.partUploader.finishUpload();
-
-        this.resolve(uploadedParts);
-      }
-    } catch (e) {
-      this.#abortUpload(e);
-    }
+    });
   }
 
   chunkNumbersDebug = [];
