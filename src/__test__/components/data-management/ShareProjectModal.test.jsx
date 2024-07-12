@@ -9,7 +9,7 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import mockAPI, {
 } from '__test__/test-utils/mockAPI';
 
-import ShareExperimentModal from 'components/data-management/ShareExperimentModal';
+import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 
 jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
@@ -21,7 +21,7 @@ jest.mock('@aws-amplify/auth', () => ({
   })),
 }));
 
-describe('Share expeirment modal', () => {
+describe('Share project modal', () => {
   const onCancel = jest.fn();
   enableFetchMocks();
 
@@ -47,12 +47,13 @@ describe('Share expeirment modal', () => {
 
   const renderShareExperimentModal = async () => {
     await act(async () => render(
-      <ShareExperimentModal
+      <ShareProjectModal
         onCancel={onCancel}
-        experiment={{
+        project={{
           id: fake.EXPERIMENT_ID,
           name: fake.EXPERIMENT_NAME,
         }}
+        explorerInfoText='custom explorer info text'
       />,
     ));
   };
@@ -65,6 +66,7 @@ describe('Share expeirment modal', () => {
     expect(screen.getAllByRole('combobox').length).toEqual(2);
     expect(screen.getByText('bob@bob.com')).toBeInTheDocument();
     expect(screen.getByText('Done')).toBeInTheDocument();
+    expect(screen.getByText('custom explorer info text')).toBeInTheDocument();
 
     const revokeButtons = screen.getAllByRole('button', { name: 'Revoke' });
     expect(revokeButtons.length).toEqual(2);

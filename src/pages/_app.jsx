@@ -24,7 +24,7 @@ import UnauthorizedPage from 'pages/401';
 import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
-import { brandColors, notAgreedToTermsStatus } from 'utils/constants';
+import { brandColors, notAgreedToTermsStatus, cookiesAgreedCognitoKey } from 'utils/constants';
 
 import 'antd/dist/antd.variable.min.css';
 import { loadUser } from 'redux/actions/user';
@@ -91,10 +91,15 @@ const WrappedApp = ({ Component, pageProps }) => {
   const [amplifyConfigured, setAmplifyConfigured] = useState(!amplifyConfig);
 
   const environment = useSelector((state) => state.networkResources.environment);
+  const cookiesAgreed = useSelector((state) => (
+    state?.user?.current?.attributes[cookiesAgreedCognitoKey] || false
+  )) === 'true';
 
   useEffect(() => {
-    initTracking(environment);
-  }, []);
+    if (cookiesAgreed) {
+      initTracking(environment);
+    }
+  }, [cookiesAgreed, environment]);
 
   useEffect(() => {
     if (amplifyConfig) {
@@ -155,8 +160,8 @@ const WrappedApp = ({ Component, pageProps }) => {
           <NotFoundPage
             title='Terms agreement required'
             subTitle='You cannot access your analysis in Trailmaker until you have agreed to our updated privacy policy.'
-            hint='Go to Data Management to accept the terms.'
-            primaryActionText='Go to Data Management'
+            hint='Go to Insights or Pipeline to accept the terms.'
+            primaryActionText='Go to Insights or Pipeline'
           />
         );
       }
@@ -206,6 +211,7 @@ const WrappedApp = ({ Component, pageProps }) => {
         }}
       />
       <TagManager
+        cookiesAgreed={cookiesAgreed}
         environment={environment}
       />
       <ConfigProvider>

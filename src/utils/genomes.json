@@ -1,11 +1,98 @@
 [
-  { "name": "GRCh38", "species": "Homo sapiens (Human)" },
-  { "name": "GRCm39", "species": "Mus musculus (Mouse)" },
-  { "name": "BDGP6.46", "species": "Drosophila melanogaster (Fruit fly)"},
-  { "name": "Oar_v3.1", "species": "Ovis aries (Sheep)"},
-  { "name": "Mmul10", "species": "Macaca mulatta (Rhesus monkey)"},
-  { "name": "GRCz11", "species": "Danio rerio (Zebrafish)"},
-  { "name": "GRCh38_GRCm39", "species": "Mixed human and mouse"},
-  { "name": "ARS-UCD1.2_Oar_v3.1", "species": "Mixed cow and sheep"},
-  { "name": "Sscrofa11.1_Oar_v3.1", "species": "Mixed pig and sheep"}
+  {
+    "name": "GRCh38",
+    "species": "Homo sapiens (Human)"
+  },
+  {
+    "name": "GRCm39",
+    "species": "Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCh38-mScarlet-GFP",
+    "species": "Custom Human with mScarlet and GFP"
+  },
+  {
+    "name": "BDGP6.46",
+    "species": "Drosophila melanogaster (Fruit fly)"
+  },
+  {
+    "name": "Oar_v3.1",
+    "species": "Ovis aries (Sheep)"
+  },
+  {
+    "name": "Mmul10",
+    "species": "Macaca mulatta (Rhesus monkey)"
+  },
+  {
+    "name": "GRCz11",
+    "species": "Danio rerio (Zebrafish)"
+  },
+  {
+    "name": "ARS-UCD1.3",
+    "species": "Bos taurus (Cow)"
+  },
+  {
+    "name": "Ssal_v3.1",
+    "species": "Salmo salar (Atlantic Salmon)"
+  },
+  {
+    "name": "Felis_catus_9.0",
+    "species": "Felis catus (Cat)"
+  },
+  {
+    "name": "mRatBN7.2",
+    "species": "Rattus norvegicus (Rat)"
+  },
+  {
+    "name": "E.scolopes-V2.2",
+    "species": "Euprymna scolopes (Hawaiian Bobtail Squid)"
+  },
+  {
+    "name": "ASM2113471v1",
+    "species": "Daphnia pulex (Common Water Flea)"
+  },
+  {
+    "name": "MustPutFur",
+    "species": "Mustela furo (Ferret)"
+  },
+  {
+    "name": "Gmax_v2",
+    "species": "Glycine max (Soybean)"
+  },
+  {
+    "name": "Gmax_v4",
+    "species": "Glycine max (Soybean)"
+  },
+  {
+    "name": "Gmax_v6",
+    "species": "Glycine max (Soybean)"
+  },
+  {
+    "name": "GRCh38-custom-1",
+    "species": "Homo sapiens (Human)"
+  },
+  {
+    "name": "PFal3D7",
+    "species": "Plasmodium falciparum 3D7"
+  },
+  {
+    "name": "xenLae10",
+    "species": "Xenopus laevis v10.1 (African clawed frog)"
+  }, 
+  {
+    "name": "GRCh38_GRCm39",
+    "species": "Mixed human and mouse"
+  },
+  {
+    "name": "GRCm38_HM175",
+    "species": "Mixed mouse and Hepatitis A virus"
+  },
+  {
+    "name": "ARS-UCD1.2_Oar_v3.1",
+    "species": "Mixed cow and sheep"
+  },
+  {
+    "name": "Sscrofa11.1_Oar_v3.1",
+    "species": "Mixed pig and sheep"
+  }
 ]

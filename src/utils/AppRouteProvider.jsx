@@ -1,9 +1,11 @@
 import React, {
-  useContext, useState, useEffect, useCallback,
+  useContext, useState, useEffect,
 } from 'react';
 import propTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import _ from 'lodash';
+
 import { modules } from 'utils/constants';
 
 import { loadExperiments, setActiveExperiment, switchExperiment } from 'redux/actions/experiments';
@@ -11,7 +13,7 @@ import { loadExperiments, setActiveExperiment, switchExperiment } from 'redux/ac
 import DataProcessingIntercept from 'components/data-processing/DataProcessingIntercept';
 import loadSecondaryAnalyses from 'redux/actions/secondaryAnalyses/loadSecondaryAnalyses';
 import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
-import cache from 'utils/cache';
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 
 /**
  * AppRouteProvider provides a context which allows for checking and interception
@@ -60,6 +62,9 @@ const AppRouteProvider = (props) => {
   const { children } = props;
   const router = useRouter();
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.current, _.isEqual);
+  const domainName = useSelector((state) => state.networkResources?.domainName, _.isEqual);
 
   const [renderIntercept, setRenderIntercept] = useState(null);
   const [currentModule, setCurrentModule] = useState(module.DATA_MANAGEMENT);
@@ -117,7 +122,10 @@ const AppRouteProvider = (props) => {
       dispatch(switchExperiment(experimentId));
     }
 
-    if (nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS) && !nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS_OUTPUT)) {
+    if (
+      nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS)
+      && !nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS_OUTPUT)
+    ) {
       await dispatch(loadSecondaryAnalyses());
 
       // TODO check if this will be needed
@@ -126,15 +134,17 @@ const AppRouteProvider = (props) => {
       }
     }
 
-    if (nextRoute.match(PATH_REGEX.DATA_MANAGEMENT)) {
+    if (nextRoute.match(PATH_REGEX.DATA_MANAGEMENT) && !termsOfUseNotAccepted(user, domainName)) {
       await dispatch(loadExperiments());
 
       if (params.experimentId) {
         dispatch(setActiveExperiment(params.experimentId));
       }
     }
-    // using hard load for the secondary analysi outputs page because we need to load the analysis info
-    // without hardLoad, the secondaryAnalysisId is not present in the query (see _app.jsx file - loadAnalysisInfo)
+    // using hard load for the secondary analysi outputs
+    // page because we need to load the analysis info
+    // without hardLoad, the secondaryAnalysisId is
+    // not present in the query (see _app.jsx file - loadAnalysisInfo)
     if (hardLoad || nextRoute.match(PATH_REGEX.SECONDARY_ANALYSIS_OUTPUT)) {
       window.location = nextRoute;
     } else {

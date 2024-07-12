@@ -34,13 +34,15 @@ jest.mock('utils/AppRouteProvider', () => ({
 }));
 
 jest.mock('@aws-amplify/auth', () => ({
-  currentAuthenticatedUser: jest.fn(() => Promise.resolve({
-    attributes: {
-      name: 'mockUserName',
-      'custom:agreed_terms_v2': 'true',
-    },
-  })),
-  federatedSignIn: jest.fn(),
+  Auth: {
+    currentAuthenticatedUser: jest.fn(() => Promise.resolve({
+      attributes: {
+        name: 'mockUserName',
+        'custom:agreed_terms_v2': 'true',
+      },
+    })),
+    federatedSignIn: jest.fn(),
+  },
 }));
 
 // Necessary due to storage being used in the default SamplesTable.
