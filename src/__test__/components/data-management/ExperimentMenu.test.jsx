@@ -18,7 +18,7 @@ import { experiments } from '__test__/test-utils/mockData';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
 import mockAPI, { generateDefaultMockAPIResponses } from '__test__/test-utils/mockAPI';
 
-import ProjectMenu from 'components/data-management/project/ProjectMenu';
+import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import { loadExperiments, setActiveExperiment } from 'redux/actions/experiments';
 
 const mockNavigateTo = jest.fn();
@@ -68,9 +68,9 @@ const responses = _.merge(defaultAPIResponse, {
 });
 let storeState = null;
 
-const projectMenuFactory = createTestComponentFactory(ProjectMenu);
+const projectMenuFactory = createTestComponentFactory(ExperimentMenu);
 
-describe('ProjectMenu', () => {
+describe('ExperimentMenu', () => {
   beforeEach(async () => {
     enableFetchMocks();
     fetchMock.resetMocks();

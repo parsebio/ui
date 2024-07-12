@@ -1,0 +1,137 @@
+{
+    "current": "finished",
+    "loading": false,
+    "error": false,
+    "progress": {
+        "running": 0,
+        "succeeded": 17,
+        "failed": 0
+    },
+    "tasksData": [
+        {
+            "process": "INQC",
+            "status": "COMPLETED",
+            "taskId": 1,
+            "sublibrary": "s2_S2"
+        },
+        {
+            "process": "INQC",
+            "status": "COMPLETED",
+            "taskId": 2,
+            "sublibrary": "s1_S1"
+        },
+        {
+            "process": "PRE",
+            "status": "COMPLETED",
+            "taskId": 3,
+            "sublibrary": "s2_S2"
+        },
+        {
+            "process": "PRE",
+            "status": "COMPLETED",
+            "taskId": 4,
+            "sublibrary": "s1_S1"
+        },
+        {
+            "process": "ALIGN",
+            "status": "COMPLETED",
+            "taskId": 5,
+            "sublibrary": "s2_S2"
+        },
+        {
+            "process": "ALIGN",
+            "status": "COMPLETED",
+            "taskId": 6,
+            "sublibrary": "s1_S1"
+        },
+        {
+            "process": "POST",
+            "status": "COMPLETED",
+            "taskId": 7,
+            "sublibrary": "s2_S2"
+        },
+        {
+            "process": "POST",
+            "status": "COMPLETED",
+            "taskId": 8,
+            "sublibrary": "s1_S1"
+        },
+        {
+            "process": "MOL",
+            "status": "COMPLETED",
+            "taskId": 9,
+            "sublibrary": "s2_S2"
+        },
+        {
+            "process": "MOL",
+            "status": "COMPLETED",
+            "taskId": 10,
+            "sublibrary": "s1_S1"
+        },
+        {
+            "process": "DGE",
+            "status": "COMPLETED",
+            "taskId": 11,
+            "sublibrary": "s1_S1"
+        },
+        {
+            "process": "DGE",
+            "status": "COMPLETED",
+            "taskId": 12,
+            "sublibrary": "s2_S2"
+        },
+        {
+            "process": "ANA",
+            "status": "COMPLETED",
+            "taskId": 13,
+            "sublibrary": "s1_S1"
+        },
+        {
+            "process": "ANA",
+            "status": "COMPLETED",
+            "taskId": 14,
+            "sublibrary": "s2_S2"
+        },
+        {
+            "process": "REP_CLEAN",
+            "status": "COMPLETED",
+            "taskId": 15,
+            "sublibrary": "s1_S1"
+        },
+        {
+            "process": "REP_CLEAN",
+            "status": "COMPLETED",
+            "taskId": 16,
+            "sublibrary": "s2_S2"
+        },
+        {
+            "process": "COMBINE",
+            "status": "COMPLETED",
+            "taskId": 17,
+            "sublibrary": "s2_S2"
+        },
+        {
+            "process": "COMBINE",
+            "status": "COMPLETED",
+            "taskId": 17,
+            "sublibrary": "s1_S1"
+        }
+    ],
+    "sublibraries": [
+        "s2_S2",
+        "s1_S1"
+    ],
+    "pipelineTasks": [
+        "INQC",
+        "PRE",
+        "ALIGN",
+        "POST",
+        "MOL",
+        "DGE",
+        "ANA",
+        "REP_CLEAN",
+        "COMBINE"
+    ],
+    "totalTasks": 57,
+    "shouldRerun": true
+}

@@ -99,7 +99,7 @@ describe('FileUploadModal', () => {
     expect(screen.getByText(/The folder's name will be used to name the sample in it/i)).toBeInTheDocument();
 
     // And it can later be changed
-    expect(screen.getByText(/You can change this name later in Data Management/i)).toBeInTheDocument();
+    expect(screen.getByText(/You can change this name later in Insights/i)).toBeInTheDocument();
 
     // It shows direction on drag and drop area
     expect(screen.getByText(/Drag and drop folders here or click to browse/i)).toBeInTheDocument();
