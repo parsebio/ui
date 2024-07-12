@@ -12,7 +12,7 @@ import mockAPI, {
 import { loadUser } from 'redux/actions/user';
 import loadDeploymentInfo from 'redux/actions/networkResources/loadDeploymentInfo';
 import { DomainName } from 'utils/deploymentInfo';
-import Auth from '@aws-amplify/auth';
+import { Auth } from '@aws-amplify/auth';
 
 const RepositoryPageFactory = createTestComponentFactory(RepositoryPage);
 
@@ -26,7 +26,9 @@ const renderRepositoryPage = async (store) => {
   });
 };
 
-jest.mock('@aws-amplify/auth', () => jest.fn());
+jest.mock('@aws-amplify/auth', () => ({
+  Auth: jest.fn(),
+}));
 
 jest.mock('components/repository/RepositoryTable.jsx', () => {
   const RepositoryTable = () => <div>Hello, world!!! </div>;

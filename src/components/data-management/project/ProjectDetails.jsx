@@ -15,7 +15,7 @@ import EditableParagraph from 'components/EditableParagraph';
 import { layout } from 'utils/constants';
 
 import SamplesTable from 'components/data-management/SamplesTable';
-import ProjectMenu from 'components/data-management/project/ProjectMenu';
+import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import AddMetadataButton from 'components/data-management/metadata/AddMetadataButton';
 
 const { Text, Title } = Typography;
@@ -63,7 +63,7 @@ const ProjectDetails = ({ width, height }) => {
                 Copy
               </Button>
               <AddMetadataButton samplesTableRef={samplesTableRef} />
-              <ProjectMenu />
+              <ExperimentMenu />
             </Space>
           </div>
 

@@ -29,6 +29,7 @@ const DataManagementPage = () => {
 
   useEffect(() => {
     if (termsOfUseNotAccepted(user, domainName)) return;
+
     if (experiments.ids.length === 0) dispatch(loadExperiments());
   }, [user]);
 

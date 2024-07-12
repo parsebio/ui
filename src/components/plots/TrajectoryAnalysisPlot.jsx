@@ -85,7 +85,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
     }
   }, [experimentId, embeddingMethod, embeddingSettings]);
 
-  const { plotData: embeddingPlotData, cellSetLegendsData } = useMemo(() => {
+  const { plotData: embeddingPlotData, cellSetsPlotData } = useMemo(() => {
     if (
       !config
       || !cellSets.accessible
@@ -152,7 +152,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
   const calculatePlotSpec = () => {
     if (
       !embeddingPlotData
-      || !cellSetLegendsData
+      || !cellSetsPlotData
     ) return;
 
     const {
@@ -191,7 +191,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
       displaySettings,
       embeddingPlotData,
       pseudotimeData,
-      cellSetLegendsData,
+      cellSetsPlotData,
       startingNodesData,
       config.selectedNodes,
       startingNodesPlotData?.nodes,
@@ -285,7 +285,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
         actions={actions}
         signalListeners={
           startingNodesPlotData?.nodes
-          && displaySettings.showStartingNodes ? plotListeners : {}
+            && displaySettings.showStartingNodes ? plotListeners : {}
         }
       />
     </center>
