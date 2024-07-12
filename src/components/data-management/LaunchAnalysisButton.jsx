@@ -13,6 +13,7 @@ import integrationTestConstants from 'utils/integrationTestConstants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 import { WarningOutlined } from '@ant-design/icons';
+import fileUploadUtils from 'utils/upload/fileUploadUtils';
 
 const { Text } = Typography;
 
@@ -83,7 +84,9 @@ const LaunchAnalysisButton = () => {
     const metadataKeysAvailable = activeExperiment.metadataKeys.length;
 
     const allSampleFilesUploaded = (sample) => (
-      Object.values(sample.files).every((file) => file.upload.status === UploadStatus.UPLOADED)
+      fileUploadUtils[selectedTech].requiredFiles
+        .every((fileType) => Object.keys(sample.files).includes(fileType))
+      && Object.values(sample.files).every((file) => file.upload.status === UploadStatus.UPLOADED)
     );
 
     const allSampleMetadataInserted = (sample) => {

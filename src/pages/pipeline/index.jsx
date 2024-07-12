@@ -15,6 +15,7 @@ import NewProjectModal from 'components/data-management/project/NewProjectModal'
 import {
   loadSecondaryAnalyses, updateSecondaryAnalysis,
   createSecondaryAnalysis, loadSecondaryAnalysisFiles, loadSecondaryAnalysisStatus,
+  storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
@@ -23,11 +24,14 @@ import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
 import usePolling from 'utils/customHooks/usePolling';
+
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
+import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
+import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -59,6 +63,7 @@ const Pipeline = () => {
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [shareProjectModalVisible, setShareProjectModalVisible] = useState(false);
 
   const user = useSelector((state) => state.user.current);
 
@@ -99,16 +104,20 @@ const Pipeline = () => {
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
   const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
 
+  const domainName = useSelector((state) => state.networkResources?.domainName);
+
   const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
 
   const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
-    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status ?? {},
-  );
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status,
+  ) ?? {};
 
   const pipelineCanBeRun = !['created', 'running'].includes(currentStatus);
   const pipelineRunAccessible = currentStatus !== 'not_created';
 
   useConditionalEffect(() => {
+    if (termsOfUseNotAccepted(user, domainName)) return;
+
     if (initialLoadPending) dispatch(loadSecondaryAnalyses());
   }, [user]);
 
@@ -145,16 +154,21 @@ const Pipeline = () => {
     await dispatch(loadSecondaryAnalysisStatus(activeSecondaryAnalysisId));
   }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
 
-  // Poll for files (in case the cli is uploading)
-  usePolling(async () => {
-    // If executing, no need to get files updates
-    if (
-      !activeSecondaryAnalysisId
-      || ['running', 'created'].includes(currentSecondaryAnalysisStatus)
-    ) return;
+  useEffect(() => {
+    import('utils/socketConnection')
+      .then(({ default: connectionPromise }) => connectionPromise)
+      .then((io) => {
+        // remove previous listeners, in case the secondary analysis has changed
+        io.off();
+        io.on(`fileUpdates-${activeSecondaryAnalysisId}`, (message) => {
+          dispatch(storeLoadedAnalysisFile(activeSecondaryAnalysisId, message.file));
+        });
 
-    await dispatch(loadSecondaryAnalysisFiles(activeSecondaryAnalysisId));
-  }, [activeSecondaryAnalysisId, currentSecondaryAnalysisStatus]);
+        return () => {
+          io.off('uploadStatus');
+        };
+      });
+  }, [activeSecondaryAnalysisId]);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
@@ -434,40 +448,56 @@ const Pipeline = () => {
                       {`Run ID: ${activeSecondaryAnalysisId}`}
                     </Text>
                   </Space>
-                  <Tooltip
-                    title={!isAllValid && fastqsMatch
-                      ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                      : !fastqsMatch
-                        ? 'You should upload exactly one pair of FASTQ files per sublibrary. Please check the FASTQs section.'
-                        : ''}
-                    placement='left'
-                  >
-                    <Space align='baseline'>
-                      <Text strong style={{ marginRight: '10px' }}>
-                        {`Current status: ${pipelineStatusToDisplay[currentStatus] || ''}`}
-                      </Text>
-                      {pipelineCanBeRun && (
-                        <LaunchAnalysisButton />
-                      )}
 
-                      {pipelineRunAccessible && (
-                        <Button
-                          type='primary'
-                          style={{ marginBottom: '10px' }}
-                          loading={statusLoading || buttonClicked}
-                          onClick={() => {
-                            setButtonClicked(true);
-                            navigateTo(
-                              modules.SECONDARY_ANALYSIS_OUTPUT,
-                              { secondaryAnalysisId: activeSecondaryAnalysisId },
-                            );
-                          }}
-                        >
-                          Go to output
-                        </Button>
-                      )}
-                    </Space>
-                  </Tooltip>
+                  <Space align='baseline'>
+                    <Text strong style={{ marginRight: '10px' }}>
+                      {`Current status: ${pipelineStatusToDisplay[currentStatus] || ''}`}
+                    </Text>
+                    <Button
+                      onClick={() => setShareProjectModalVisible(!shareProjectModalVisible)}
+                    >
+                      Share
+                    </Button>
+                    {shareProjectModalVisible && (
+                      <ShareProjectModal
+                        explorerInfoText='The user will be able to view the pipeline outputs, but not
+                         make any changes to the pipeline run. Any linked downstream analyses (related project in the Insights module) to this pipeline run needs to be  shared separately.'
+                        onCancel={() => setShareProjectModalVisible(false)}
+                        project={{ name: analysisName, id: activeSecondaryAnalysisId }}
+                      />
+                    )}
+                    <Tooltip
+                      title={!isAllValid && fastqsMatch
+                        ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
+                        : !fastqsMatch
+                          ? 'You should upload exactly one pair of FASTQ files per sublibrary. Please check the FASTQs section.'
+                          : ''}
+                      placement='left'
+                    >
+                      <Space direction='horizontal'>
+                        {pipelineCanBeRun && (
+                          <LaunchAnalysisButton />
+                        )}
+                        {pipelineRunAccessible && (
+                          <Button
+                            type='primary'
+                            style={{ marginBottom: '10px' }}
+                            loading={statusLoading || buttonClicked}
+                            onClick={() => {
+                              setButtonClicked(true);
+                              navigateTo(
+                                modules.SECONDARY_ANALYSIS_OUTPUT,
+                                { secondaryAnalysisId: activeSecondaryAnalysisId },
+                              );
+                            }}
+                          >
+                            Go to output
+                          </Button>
+                        )}
+                      </Space>
+                    </Tooltip>
+
+                  </Space>
                 </div>
                 <Text strong>Description:</Text>
                 <div style={{ flex: 1, overflowY: 'auto' }}>
@@ -557,7 +587,7 @@ const Pipeline = () => {
           {currentStep.render()}
         </Modal>
       )}
-      <div style={{ height: '100vh', overflowY: 'auto' }}>
+      <div data-testid='pipeline-container' style={{ height: '100vh', overflowY: 'auto' }}>
         {NewProjectModalVisible && (
           <NewProjectModal
             projectType='secondaryAnalyses'
@@ -569,7 +599,6 @@ const Pipeline = () => {
             }}
           />
         )}
-
         <MultiTileContainer
           tileMap={TILE_MAP}
           initialArrangement={windows}

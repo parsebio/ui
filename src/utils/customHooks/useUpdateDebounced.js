@@ -5,7 +5,7 @@ import {
 
 // A custom hook for the sliders in plot styling for throttling the dispatching of updates to redux
 const useUpdateDebounced = (onUpdate, value, throttleTime = 1000) => {
-  const updateThrottled = useCallback(_.debounce((obj) => onUpdate(obj), throttleTime), [onUpdate]);
+  const updateDebounced = useCallback(_.debounce((obj) => onUpdate(obj), throttleTime), [onUpdate]);
   const [newValue, setNewValue] = useState(value);
   // if the config is changed - update the newConfig too
   useEffect(() => {
@@ -18,7 +18,7 @@ const useUpdateDebounced = (onUpdate, value, throttleTime = 1000) => {
     const changes = _.cloneDeep(newValue);
     _.merge(changes, updatedField);
     setNewValue(changes);
-    updateThrottled(updatedField);
+    updateDebounced(updatedField);
   };
   return [newValue, update];
 };

@@ -112,20 +112,21 @@ const FeedbackButton = (props) => {
         <Card size='small' style={{ padding: '0.5em', width: '400px' }}>
           For help using the platform, check out:
           <div style={{ margin: '1em' }}>
-            <a href='https://www.biomage.net/user-guide' target='_blank' rel='noreferrer'>
+            <a href='https://www.parsebiosciences.com/data-analysis' target='_blank' rel='noreferrer'>
+              <InfoCircleFilled />
+              {' '}
+              Our website
+            </a>
+            {' '}
+            <br />
+            <a href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide' target='_blank' rel='noreferrer'>
               <InfoCircleFilled />
               {' '}
               User guide
             </a>
             {' '}
             <br />
-            <a href='https://www.youtube.com/@biomageltd4616/featured' target='_blank' rel='noreferrer'>
-              <InfoCircleFilled />
-              {' '}
-              Tutorial videos
-            </a>
-            <br />
-            <a href='https://courses.biomage.net' target='_blank' rel='noreferrer'>
+            <a href='https://courses.trailmaker.parsebiosciences.com/' target='_blank' rel='noreferrer'>
               <InfoCircleFilled />
               {' '}
               Free single cell RNA-seq data analysis course
