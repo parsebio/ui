@@ -18,7 +18,7 @@ const generateSpec = (config, method, plotData, colouring) => {
     doubletScores: 'Doublet scores',
   };
 
-  const legendTitle = legendTitles[colouring] || 'Legend';
+  const legendTitle = legendTitles[colouring] || config.shownGene;
 
   let legend = [];
 

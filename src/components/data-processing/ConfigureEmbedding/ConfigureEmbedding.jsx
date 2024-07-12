@@ -135,8 +135,8 @@ const ConfigureEmbedding = (props) => {
     const { loading, data: plotData, error } = cellMeta[colouring];
 
     const yAxisLabels = {
-      numOfGenes: 'log10 (number of genes)',
-      numOfUmis: 'log10 (number of UMIs)',
+      numOfGenes: 'Log10 (number of genes)',
+      numOfUmis: 'Log10 (number of UMIs)',
       mitochondrialContent: 'Mitochondrial fraction reads',
       doubletScores: 'Doublet scores',
     };
