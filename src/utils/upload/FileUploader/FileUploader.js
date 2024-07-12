@@ -54,9 +54,10 @@ class FileUploader {
     this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
     this.freeUploadSlots = 3;
 
+    this.handleChunkLoadFinished = `handleChunkLoadFinished${this.uploadParams.uploadId}`;
+
     // Used to track chunk numbers when filling the progress bar
     this.chunkNumberIt = 0;
-    this.chunkNumberItLock = `chunkNumberItLock${this.uploadParams.uploadId}`;
 
     this.readStream = null;
     this.gzipStream = null;
@@ -92,10 +93,8 @@ class FileUploader {
         this.uploadedPartPercentages[i] = 1;
       }
 
-      await navigator.locks.request(this.chunkNumberItLock, async () => {
-        this.chunkNumberIt = nextPartNumber - 1;
-        offset = this.chunkNumberIt * this.chunkSize;
-      });
+      this.chunkNumberIt = nextPartNumber - 1;
+      offset = this.chunkNumberIt * this.chunkSize;
 
       this.pendingChunks = this.totalChunks - nextPartNumber + 1;
     }
@@ -213,7 +212,7 @@ class FileUploader {
   }
 
   #handleChunkLoadFinished = async (chunk) => {
-    await navigator.locks.request(this.chunkNumberItLock, async () => {
+    await navigator.locks.request(this.handleChunkLoadFinished, async () => {
       try {
         this.chunkNumberIt += 1;
         const onUploadProgress = this.#createOnUploadProgress(this.chunkNumberIt);
