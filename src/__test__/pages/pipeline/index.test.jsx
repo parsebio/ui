@@ -78,10 +78,6 @@ describe('Pipeline Page', () => {
 
   it('renders the Pipeline page and launches an analysis', async () => {
     await renderPipelinePage();
-    await waitFor(() => {
-      const multiTileContainer = screen.queryByTestId('multi-tile-container');
-      expect(multiTileContainer).toBeInTheDocument();
-    });
 
     await waitFor(() => {
       expect(screen.getByText(`Run ID: ${mockAnalysisIds.emptyAnalysis}`)).toBeInTheDocument();

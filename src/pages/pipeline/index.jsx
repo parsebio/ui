@@ -600,7 +600,6 @@ const Pipeline = () => {
           />
         )}
         <MultiTileContainer
-          data-testid='multi-tile-container'
           tileMap={TILE_MAP}
           initialArrangement={windows}
         />
