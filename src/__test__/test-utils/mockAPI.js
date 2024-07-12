@@ -5,8 +5,10 @@ import cellSetsData from '__test__/data/cell_sets.json';
 import backendStatusData from '__test__/data/backend_status.json';
 import processingConfigData from '__test__/data/processing_config.json';
 import mockDemoExperiments from '__test__/test-utils/mockData/mockDemoExperiments.json';
-
+import { mockSecondaryAnalyses } from '__test__/data/secondaryAnalyses/secondary_analyses';
+import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/secondary_analysis_status_default.json';
 import fake from '__test__/test-utils/constants';
+import mockAnalysisFiles from '__test__/data/secondaryAnalyses/secondary_analysis_files';
 
 import {
   responseData,
@@ -42,23 +44,23 @@ const fetchWorkMock = (
   return workerDataResult(mockedResults[experimentId]);
 });
 
-const generateDefaultMockAPIResponses = (experimentId) => ({
-  [`experiments/${experimentId}$`]: () => promiseResponse(
-    JSON.stringify(responseData.experiments.find(({ id }) => id === experimentId)),
+const generateDefaultMockAPIResponses = (projectId) => ({
+  [`experiments/${projectId}$`]: () => promiseResponse(
+    JSON.stringify(responseData.experiments.find(({ id }) => id === projectId)),
   ),
-  [`experiments/${experimentId}/processingConfig$`]: () => promiseResponse(
+  [`experiments/${projectId}/processingConfig$`]: () => promiseResponse(
     JSON.stringify(processingConfigData),
   ),
-  [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(
+  [`experiments/${projectId}/cellSets$`]: () => promiseResponse(
     JSON.stringify(cellSetsData),
   ),
-  [`experiments/${experimentId}/backendStatus$`]: () => promiseResponse(
+  [`experiments/${projectId}/backendStatus$`]: () => promiseResponse(
     JSON.stringify(backendStatusData),
   ),
   experiments$: () => promiseResponse(
     JSON.stringify(responseData.experiments),
   ),
-  [`experiments/${experimentId}/samples$`]: () => promiseResponse(
+  [`experiments/${projectId}/samples$`]: () => promiseResponse(
     JSON.stringify(responseData.samples[0]),
   ),
   '/v2/experiments/examples$': () => promiseResponse(
@@ -67,7 +69,16 @@ const generateDefaultMockAPIResponses = (experimentId) => ({
   'experiments/clone$': () => promiseResponse(
     JSON.stringify(fake.CLONED_EXPERIMENT_ID),
   ),
-  [`/v2/workRequest/${experimentId}`]: () => statusResponse(200, 'OK'),
+  [`/v2/workRequest/${projectId}`]: () => statusResponse(200, 'OK'),
+  '/v2/secondaryAnalysis$': () => promiseResponse(
+    JSON.stringify(mockSecondaryAnalyses),
+  ),
+  [`/v2/secondaryAnalysis/${projectId}/executionStatus`]: () => promiseResponse(
+    JSON.stringify(mockSecondaryAnalysisStatusDefault),
+  ),
+  [`/v2/secondaryAnalysis/${projectId}/files`]: () => promiseResponse(
+    JSON.stringify(mockAnalysisFiles),
+  ),
 });
 
 const mockAPI = (apiMapping) => (req) => {
