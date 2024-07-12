@@ -9,10 +9,10 @@ const { Text } = Typography;
 
 const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
   const renderCard = (step, index, isFlex = false) => (
-    <Col key={step.key} span={isFlex ? 8 : 24} style={isFlex ? { flex: 1, display: 'flex' } : {}}>
+    <Col key={step.key} span={isFlex ? 8 : 24} style={isFlex ? { flex: 0.5, display: 'flex', marginRight: '1vh' } : {}}>
       <Card
         bordered
-        style={{ width: '100%', marginRight: isFlex ? '1vh' : '0' }}
+        style={{ width: '100%' }}
         loading={step.isLoading}
         size='small'
         title={(

@@ -11,6 +11,7 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
+
 import {
   CheckOutlined,
   CloseOutlined,
@@ -20,11 +21,8 @@ import {
   RightOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import config from 'config';
@@ -51,24 +49,23 @@ import PropTypes from 'prop-types';
 import SingleComponentMultipleDataContainer from 'components/SingleComponentMultipleDataContainer';
 import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
-import { getBackendStatus } from 'redux/selectors';
+import { getBackendStatus, getFilterChanges } from 'redux/selectors';
 
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadSamples } from 'redux/actions/samples';
 import { runQC } from 'redux/actions/pipeline';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { modules, sampleTech } from 'utils/constants';
 import QCRerunDisabledModal from 'components/modals/QCRerunDisabledModal';
 import isUserAuthorized from 'utils/isUserAuthorized';
 import { getURL } from 'redux/actions/pipeline/runQC';
 import { ClipLoader } from 'react-spinners';
-import { sampleTech } from 'utils/constants';
 
 const { Text } = Typography;
 const { Option } = Select;
 
-const DataProcessingPage = ({ experimentId, experimentData }) => {
+const DataProcessingPage = ({ experimentId }) => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
 
@@ -95,6 +92,8 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
   const changedQCFilters = useSelector(
     (state) => state.experimentSettings.processing.meta.changedQCFilters,
   );
+
+  const changedConfigureEmbeddingKeys = useSelector(getFilterChanges('configureEmbedding'));
 
   const changesOutstanding = Boolean(changedQCFilters.size);
 
@@ -173,17 +172,17 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         processingConfig[step][key]?.prefiltered)));
   };
 
-  const sampleDisabledMessage = (step, sampleTechnology) => {
+  const sampleDisabledMessage = (step, sampleTechnologyParam) => {
     if (checkIfSampleIsPrefiltered(step)) {
-      return 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.'
+      return 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.';
     }
 
-    if (sampleTechnology === sampleTech.PARSE && step === 'classifier') {
-      return 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.'
+    if (sampleTechnologyParam === sampleTech.PARSE && step === 'classifier') {
+      return 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.';
     }
 
-    return 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.'
-  }
+    return 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.';
+  };
 
   const steps = [
     {
@@ -193,7 +192,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <Classifier
@@ -218,7 +216,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <CellSizeDistribution
@@ -242,7 +239,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <MitochondrialContent
@@ -266,7 +262,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <GenesVsUMIs
@@ -291,7 +286,8 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         <span>
           A single barcode might correspond to more than one cell.
           In such cases, it is not possible to distinguish which reads came from which cell.
-          Such barcodes cause problems in the downstream analysis as they appear as an intermediate type.
+          Such barcodes cause problems in the downstream
+          analysis as they appear as an intermediate type.
           Barcodes with a high probability of being a doublet should be excluded.
           The probability of being a doublet is calculated using "scDblFinder".
           For each sample, the default threshold tries to minimize both the deviation in the
@@ -303,7 +299,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <DoubletScores
@@ -343,7 +338,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         <ConfigureEmbedding
           experimentId={expId}
           key={key}
-          onConfigChange={(settingType) => onConfigChange(settingType)}
+          onConfigChange={() => onConfigChange(key)}
           stepHadErrors={getStepHadErrors(key)}
         />
       ),
@@ -510,17 +505,18 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
                                 </>
                               ) : pipelineNotFinished
                                 && !pipelineRunning
-                                && !isStepComplete(key) ? (
-                                <>
-                                  <Text
-                                    type='danger'
-                                    strong
-                                  >
-                                    <WarningOutlined />
-                                  </Text>
-                                  <span style={{ marginLeft: '0.25rem' }}>{text}</span>
-                                </>
-                              )
+                                && !isStepComplete(key)
+                                ? (
+                                  <>
+                                    <Text
+                                      type='danger'
+                                      strong
+                                    >
+                                      <WarningOutlined />
+                                    </Text>
+                                    <span style={{ marginLeft: '0.25rem' }}>{text}</span>
+                                  </>
+                                )
                                 : <></>}
                             </Option>
                           );
@@ -703,8 +699,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
                   Do you want to start?
                 </p>
                 {
-                  !(changedQCFilters.size === 1 && changedQCFilters.has('embeddingSettings'))
-                  && (
+                  !(changedQCFilters.size === 1 && changedConfigureEmbeddingKeys.has('embeddingSettings')) && (
                     <Alert
                       message='Note that you will lose your previous Louvain or Leiden clusters.'
                       type='warning'

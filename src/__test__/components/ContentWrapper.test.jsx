@@ -1,14 +1,15 @@
 import React from 'react';
-import { screen, render } from '@testing-library/react';
+import {
+  screen, render, waitFor,
+} from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
-import Auth from '@aws-amplify/auth';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { useRouter } from 'next/router';
 import preloadAll from 'jest-next-dynamic';
-
+import { Auth } from '@aws-amplify/auth';
 import ContentWrapper from 'components/ContentWrapper';
 import AppRouteProvider from 'utils/AppRouteProvider';
 
@@ -32,20 +33,23 @@ jest.mock('redux/selectors');
 jest.mock('utils/socketConnection');
 jest.mock('utils/data-management/calculateGem2sRerunStatus');
 jest.mock('utils/data-management/calculateQCRerunStatus');
-
+jest.mock('components/CookieBanner', () => () => null);
 jest.mock('next/router', () => ({
   __esModule: true,
   useRouter: jest.fn(),
 }));
 
 jest.mock('@aws-amplify/auth', () => ({
-  currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
-    attributes: {
-      'custom:agreed_terms_v2': 'true',
-      name: 'Tester Testson',
-    },
-  })),
-  federatedSignIn: jest.fn(),
+  Auth: {
+    currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
+      attributes: {
+        'custom:agreed_terms_v2': 'true',
+        'custom:agreed_cookies_v1': 'true',
+        name: 'Tester Testson',
+      },
+    })),
+    federatedSignIn: jest.fn(),
+  },
 }));
 
 jest.mock('utils/socketConnection', () => ({
@@ -245,14 +249,16 @@ describe('ContentWrapper', () => {
   });
 
   it('has the correct sider and layout style when opened / closed', async () => {
-    const siderHasWidth = (container, expectedWidth) => {
+    const siderHasWidth = async (container, expectedWidth) => {
       const div = container.firstChild;
 
       const [sidebar, content] = Array.from(div.children);
 
       const expandedComputedStyle = getComputedStyle(sidebar).getPropertyValue('width');
       expect(expandedComputedStyle).toEqual(expectedWidth);
-      expect(content.getAttribute('style')).toMatch(`margin-left: ${expectedWidth}`);
+      await waitFor(() => {
+        expect(content.getAttribute('style')).toMatch(`margin-left: ${expectedWidth}`);
+      });
     };
 
     const { container } = await renderContentWrapper();
@@ -263,12 +269,12 @@ describe('ContentWrapper', () => {
     // Click so the sidebar collapse
     userEvent.click(screen.getByLabelText('left'));
 
-    siderHasWidth(container, collapsedWidth);
+    await siderHasWidth(container, collapsedWidth);
 
     // Click so the sidebar open
     userEvent.click(screen.getByLabelText('right'));
 
-    siderHasWidth(container, expandedWidth);
+    await siderHasWidth(container, expandedWidth);
   });
 
   // PROBLEMATIC

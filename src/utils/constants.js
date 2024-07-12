@@ -90,6 +90,7 @@ const cellSetsUpdatedMessages = {
   ScTypeAnnotate: endUserMessages.SUCCESS_CELL_SETS_ANNOTATED,
 };
 
+const cookiesAgreedCognitoKey = 'custom:agreed_cookies_v1';
 const termsOfUseCognitoKey = 'custom:agreed_terms_v2';
 const institutionCognitoKey = 'custom:institution';
 
@@ -109,4 +110,5 @@ export {
   termsOfUseCognitoKey,
   institutionCognitoKey,
   notAgreedToTermsStatus,
+  cookiesAgreedCognitoKey,
 };

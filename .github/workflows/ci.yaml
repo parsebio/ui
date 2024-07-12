@@ -160,23 +160,6 @@ jobs:
         run: |-
           npm run build
 
-      - id: upload-build-out
-        name: Upload Next.js build output
-        uses: actions/upload-artifact@v4
-        with:
-          name: next-build-out
-          path: |
-            .next/
-            !.next/cache
-          retention-days: 14
-
-      - id: download-build-out
-        name: Download Next.js build output
-        uses: actions/download-artifact@v4
-        with:
-          name: next-build-out
-          path: .next/
-
       - id: ref
         name: Format docker tag and repository name.
         run: |-
@@ -300,7 +283,7 @@ jobs:
             export IMAGE_POLICY_TYPE="semver"
             export IMAGE_POLICY_KEY="range"
             export IMAGE_POLICY_VALUE=">=0.0.0"
-            export REPLICA_COUNT="4"
+            export REPLICA_COUNT="8"
             export MANIFEST_PATH="./production"
           fi
 
@@ -430,7 +413,7 @@ jobs:
   ready-to-merge:
     name: Ready for merging
     runs-on: ubuntu-20.04
-    needs: [deploy]
+    needs: [deploy, test]
     steps:
       - id: ready-to-merge
         name: Signal readiness to merge
