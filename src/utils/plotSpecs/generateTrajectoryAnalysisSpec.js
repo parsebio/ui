@@ -308,7 +308,7 @@ const generateBaseSpec = (
 const insertClusterColorsSpec = (
   spec,
   config,
-  cellSetLegendsData,
+  cellSetsPlotData,
 ) => {
   if (config?.legend.enabled) {
     const positionIsRight = config.legend.position === 'right';
@@ -319,7 +319,7 @@ const insertClusterColorsSpec = (
     );
 
     const legendColumns = positionIsRight
-      ? Math.ceil(cellSetLegendsData.length / maxLegendItemsPerCol)
+      ? Math.ceil(cellSetsPlotData.length / maxLegendItemsPerCol)
       : Math.floor(config.dimensions.width / maxLabelLength);
     const labelLimit = positionIsRight ? maxLabelLength : 0;
 
@@ -328,13 +328,13 @@ const insertClusterColorsSpec = (
       {
         name: 'cellSetLabelColors',
         type: 'ordinal',
-        range: cellSetLegendsData.map(({ color }) => color),
-        domain: { data: 'embedding', field: 'cellSetKey' },
+        range: cellSetsPlotData.map(({ color }) => color),
+        domain: cellSetsPlotData.map(({ key }) => key),
       },
       {
         name: 'cellSetToName',
         type: 'ordinal',
-        range: cellSetLegendsData.map(({ name }) => name),
+        range: cellSetsPlotData.map(({ name }) => name),
       },
     ];
 
@@ -375,8 +375,8 @@ const insertClusterColorsSpec = (
     {
       name: 'cellSetMarkColors',
       type: 'ordinal',
-      range: { data: 'embedding', field: 'color' },
-      domain: { data: 'embedding', field: 'cellSetKey' },
+      range: cellSetsPlotData.map(({ color }) => color),
+      domain: cellSetsPlotData.map(({ key }) => key),
     },
   ];
 
@@ -665,7 +665,7 @@ const insertPseudotimeSpec = (spec, config, pseudotime) => {
 
 const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) => {
   const plotData = [];
-  const cellSetLegendsData = [];
+  const cellSetsPlotData = [];
 
   let selectedCellSetObjects = Object.keys(cellSets.properties)
     .filter((key) => selectedCellSets.includes(key))
@@ -692,7 +692,7 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
   selectedCellSetObjects.forEach((cellSet) => {
     const { key, name, color } = cellSet;
 
-    cellSetLegendsData.push(({ key, name, color }));
+    cellSetsPlotData.push(({ key, name, color }));
 
     cellSet.cellIds.forEach((cellId) => {
       if (!embedding[cellId]) return;
@@ -710,7 +710,7 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
 
   return {
     plotData,
-    cellSetLegendsData,
+    cellSetsPlotData,
   };
 };
 
@@ -775,7 +775,7 @@ const generateTrajectoryAnalysisSpec = (
   displaySettings,
   embeddingPlotData,
   pseudotimeData,
-  cellSetLegendsData,
+  cellSetsPlotData,
   startingNodesData,
   selectedNodeIds,
   nodesData,
@@ -785,14 +785,14 @@ const generateTrajectoryAnalysisSpec = (
     config,
     embeddingPlotData,
     viewState,
-    cellSetLegendsData.length,
+    cellSetsPlotData.length,
     embeddingMethod,
   );
 
   if (displaySettings.showPseudotimeValues && pseudotimeData) {
     insertPseudotimeSpec(spec, config, pseudotimeData);
   } else {
-    insertClusterColorsSpec(spec, config, cellSetLegendsData);
+    insertClusterColorsSpec(spec, config, cellSetsPlotData);
   }
 
   if (startingNodesData && displaySettings.showStartingNodes) {

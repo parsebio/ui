@@ -112,10 +112,10 @@ let component;
 const method = 'UMAP';
 const {
   plotData,
-  cellSetLegendsData,
+  cellSetsPlotData,
 } = generateData(cellSets, config.selectedSample, config.selectedCellSet, embeddingData);
 
-const spec = generateSpec(config, method, plotData, cellSetLegendsData);
+const spec = generateSpec(config, method, plotData, cellSetsPlotData);
 
 const testPlot = () => mount(
   <Provider store={store}>

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Tabs, Button, Dropdown,
-} from 'antd';
-import { DownOutlined, PictureOutlined, ToolOutlined } from '@ant-design/icons';
+import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
@@ -14,23 +11,19 @@ import Embedding from 'components/data-exploration/embedding/Embedding';
 import HeatmapPlot, { COMPONENT_TYPE } from 'components/data-exploration/heatmap/HeatmapPlot';
 import HeatmapSettings from 'components/data-exploration/heatmap/HeatmapSettings';
 import MosaicCloseButton from 'components/MosaicCloseButton';
-import { updateLayout, addWindow } from 'redux/actions/layout/index';
-import SearchMenu from 'components/SearchMenu';
+import { updateLayout } from 'redux/actions/layout/index';
+
 import 'react-mosaic-component/react-mosaic-component.css';
 import MultiTileContainer from 'components/MultiTileContainer';
 import { loadGeneExpression } from 'redux/actions/genes';
 import getHighestDispersionGenes from 'utils/getHighestDispersionGenes';
 
-const { TabPane } = Tabs;
-
-const ExplorationViewPage = ({
-  experimentId, experimentData,
-}) => {
+const ExplorationViewPage = ({ experimentId }) => {
   const dispatch = useDispatch();
   const layout = useSelector((state) => state.layout);
   const { windows, panel } = layout;
   const [selectedTab, setSelectedTab] = useState(panel);
-  const [addMenuVisible, setAddMenuVisible] = useState(false);
+
   const { method } = useSelector((state) => (
     state.experimentSettings.processing?.configureEmbedding?.embeddingSettings
   )) || false;
@@ -52,7 +45,6 @@ const ExplorationViewPage = ({
   }, [geneData]);
 
   const methodUppercase = method ? method.toUpperCase() : ' ';
-  const embeddingTitle = `${methodUppercase} Embedding`;
 
   useEffect(() => {
     if (method && windows) {
@@ -127,51 +119,6 @@ const ExplorationViewPage = ({
     },
   };
 
-  const categoryItems = {
-    Genes: [
-      {
-        description: 'Create and manage interesting groupings of cells.',
-        key: 'Cell sets and Metadata',
-      },
-      {
-        description: 'Find, organize, and annotate genes in your data set.',
-        key: 'Gene list',
-        group: 'Genes',
-      },
-      {
-        description: 'Find and explore the most characteristic genes in a set of cells.',
-        key: 'Differential expression',
-        group: 'Genes',
-      },
-    ],
-    Plots: [
-      {
-        key: `${methodUppercase}`,
-        description: `Visualize cells clustered by genetic expression using a ${embeddingTitle}.`,
-      },
-      {
-        key: 'Heatmap',
-        description: 'Gain a high-level understanding of expression levels across large groups of genes and cells.',
-      },
-    ],
-  };
-
-  const categoryInfo = {
-    Plots: <PictureOutlined />,
-    Tools: <ToolOutlined />,
-  };
-
-  const searchMenu = (
-    <SearchMenu
-      options={categoryItems}
-      categoryInfo={categoryInfo}
-      onSelect={(key, category, belongsToGroup) => {
-        dispatch(addWindow(key, belongsToGroup));
-        setAddMenuVisible(false);
-      }}
-    />
-  );
-
   return (
     <>
       <MultiTileContainer
@@ -184,7 +131,6 @@ const ExplorationViewPage = ({
 
 ExplorationViewPage.propTypes = {
   experimentId: PropTypes.string.isRequired,
-  experimentData: PropTypes.object.isRequired,
 };
 
 export default ExplorationViewPage;

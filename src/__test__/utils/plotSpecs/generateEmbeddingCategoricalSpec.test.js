@@ -31,7 +31,7 @@ describe('filterCells', () => {
       .map(({ key, name, color }) => ({ key, name, color }));
 
     // Contains the 2 expected louvain cellSets
-    expect(result.cellSetLegendsData).toEqual(expectedCellSetKeys);
+    expect(result.cellSetsPlotData).toEqual(expectedCellSetKeys);
 
     // CellIds are filtered fine
     expect(result).toMatchSnapshot();
@@ -43,7 +43,7 @@ describe('filterCells', () => {
     const result = filterCells(mockCellSetsReduxObject, sampleKey, 'sample');
 
     // Contains one single legend
-    expect(result.cellSetLegendsData).toEqual([{
+    expect(result.cellSetsPlotData).toEqual([{
       color: '#8c564b',
       key: sampleKey,
       name: 'KO',
@@ -75,7 +75,7 @@ describe('filterCells', () => {
       .map(({ key, name, color }) => ({ key, name, color }));
 
     // Contains all the louvain cellSets (and in the correct order)
-    expect(result.cellSetLegendsData).toEqual(expectedCellSetKeys);
+    expect(result.cellSetsPlotData).toEqual(expectedCellSetKeys);
 
     // CellIds are filtered fine
     expect(result).toMatchSnapshot();
@@ -103,7 +103,7 @@ describe('generateData', () => {
       .map(({ key, name, color }) => ({ key, name, color }));
 
     // Contains all the louvain cellSets (and in the correct order)
-    expect(result.cellSetLegendsData).toEqual(expectedCellSetKeys);
+    expect(result.cellSetsPlotData).toEqual(expectedCellSetKeys);
 
     // CellIds are filtered fine
     expect(result).toMatchSnapshot();
@@ -118,7 +118,7 @@ describe('generateData', () => {
       .map(({ key, name, color }) => ({ key, name, color }));
 
     // Contains all the louvain cellSets (and in the correct order)
-    expect(result.cellSetLegendsData).toEqual(expectedCellSetKeys);
+    expect(result.cellSetsPlotData).toEqual(expectedCellSetKeys);
 
     // CellIds are filtered fine
     expect(result).toMatchSnapshot();
