@@ -17,14 +17,13 @@ import _ from 'lodash';
 import PlotStyling from 'components/plots/styling/PlotStyling';
 import MultiTileContainer from 'components/MultiTileContainer';
 
-const PLOT = 'Plot';
 const CONTROLS = 'Controls';
 const DEFAULT_ORIENTATION = 'row';
 
 const PlotContainer = (props) => {
   const {
     experimentId,
-    plotUuid, plotType, plotInfo,
+    plotUuid, plotType, plotInfo, plotName,
     plotStylingConfig, defaultActiveKey,
     extraToolbarControls, extraControlPanels, customControlPanel, controlsOnly,
     showResetButton, onPlotReset,
@@ -123,7 +122,7 @@ const PlotContainer = (props) => {
   );
 
   const TILE_MAP = {
-    [PLOT]: {
+    [plotName]: {
       toolbarControls: renderPlotToolbarControls(),
       component: () => children,
       style: {
@@ -145,7 +144,7 @@ const PlotContainer = (props) => {
 
   const windows = {
     direction: tileDirection,
-    first: PLOT,
+    first: plotName,
     second: CONTROLS,
     splitPercentage: 75,
   };
@@ -182,6 +181,7 @@ PlotContainer.propTypes = {
   plotUuid: PropTypes.string.isRequired,
   plotType: PropTypes.string.isRequired,
   plotInfo: PropTypes.node,
+  plotName: PropTypes.string,
   plotStylingConfig: PropTypes.arrayOf(PropTypes.object),
   defaultActiveKey: PropTypes.string || PropTypes.arrayOf(PropTypes.string),
   extraToolbarControls: PropTypes.node || PropTypes.arrayOf(PropTypes.node),
@@ -193,10 +193,12 @@ PlotContainer.propTypes = {
   showResetButton: PropTypes.bool,
   onPlotReset: PropTypes.func,
   saveDebounceTime: PropTypes.number,
+
 };
 
 PlotContainer.defaultProps = {
   plotInfo: null,
+  plotName: 'Plot',
   extraToolbarControls: null,
   extraControlPanels: null,
   customControlPanel: null,

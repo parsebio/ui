@@ -29,13 +29,15 @@ jest.mock('utils/AppRouteProvider', () => ({
   })),
 }));
 jest.mock('@aws-amplify/auth', () => ({
-  currentAuthenticatedUser: jest.fn(() => Promise.resolve({
-    attributes: {
-      name: 'mockUserName',
-      'custom:agreed_terms': 'true',
-    },
-  })),
-  federatedSignIn: jest.fn(),
+  Auth: {
+    currentAuthenticatedUser: jest.fn(() => Promise.resolve({
+      attributes: {
+        name: 'mockUserName',
+        'custom:agreed_terms_v2': 'true',
+      },
+    })),
+    federatedSignIn: jest.fn(),
+  },
 }));
 
 // Necessary due to storage being used in the default SamplesTable.
@@ -252,6 +254,10 @@ describe('Samples table', () => {
     await act(async () => {
       userEvent.click(firstSampleDeleteButton);
     });
+    await waitFor(() => {
+      expect(screen.queryByText('Yes')).toBeInTheDocument();
+    });
+    userEvent.click(screen.getByText('Yes'));
 
     // The first sample should be deleted
     const sampleNames = Object.values(samples).map((sample) => sample.name);

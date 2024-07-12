@@ -1,8 +1,8 @@
-[![codecov](https://codecov.io/gh/hms-dbmi-cellenics/ui/branch/master/graph/badge.svg?token=zI99mV1YZo)](https://codecov.io/gh/hms-dbmi-cellenics/ui)
+[![codecov](https://codecov.io/gh/parsebio/ui/branch/master/graph/badge.svg?token=zI99mV1YZo)](https://codecov.io/gh/parsebio/ui)
 ui
 ==
 
-The user interface of Cellenics - cloud based Single Cell RNA seq Analysis web platform.
+The user interface of Trailmaker - cloud based Single Cell RNA seq Analysis web platform.
 
 ## Development
 
@@ -49,10 +49,10 @@ See more available commands like syntax checking with `make help`.
 Note that since the UI is not connected to the backend, you should see an empty screen saying `You are not connected to the backend.`
 To get it running end-to-end locally with mocked dataset, you will need to set up and run each of these:
 
-- API: https://github.com/hms-dbmi-cellenics/api
-- Inframock: https://github.com/hms-dbmi-cellenics/inframock
-- worker: https://github.com/hms-dbmi-cellenics/worker
-- pipeline: https://github.com/hms-dbmi-cellenics/pipeline
+- API: https://github.com/parsebio/api
+- Inframock: https://github.com/parsebio/inframock
+- worker: https://github.com/parsebio/worker
+- pipeline: https://github.com/parsebio/pipeline
 
 Just follow the README of each of them for instructions on how to get it to run.
 
@@ -110,7 +110,7 @@ The script will produce HTML artifacts that will open in your default browser as
 
 ### Browser cache
 
-Browser cache enabled by default in production environment. This can be disabled by adding the entry 
+Browser cache enabled by default in production environment. This can be disabled by adding the entry
 "disableCache" to "true" via the console using the command:
 
     localStorage.setItem("disableCache", "true")

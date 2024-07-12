@@ -22,7 +22,7 @@ import createTestComponentFactory from '__test__/test-utils/testComponentFactory
 import { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
 
 jest.mock('components/plots/ExportAsCSV', () => jest.fn(() => (<></>)));
-jest.mock('components/header/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
@@ -70,7 +70,8 @@ describe('Frequency plots and tables index page', () => {
 
   it('Renders all control panels', async () => {
     await renderFrequencyIndex();
-    expect(screen.getByText(new RegExp(plotNames.FREQUENCY_PLOT, 'i'))).toBeInTheDocument();
+
+    expect(screen.getAllByText(new RegExp(plotNames.FREQUENCY_PLOT, 'i'))).toHaveLength(3);
 
     expect(screen.getByText(/Select data/i)).toBeInTheDocument();
     expect(screen.getByText(/Plot type/i)).toBeInTheDocument();

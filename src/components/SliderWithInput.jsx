@@ -1,25 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Slider, InputNumber, Space,
-} from 'antd';
+import { Slider, InputNumber, Space } from 'antd';
 
 import _ from 'lodash';
 
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const SliderWithInput = (props) => {
   const {
-    min, max, value, onUpdate, disabled, step,
+    min, max, value, onUpdate, disabled, step, debounceTime, sliderMaxWidth,
   } = props;
 
-  const [, handleChange] = useUpdateThrottled(onUpdate, value);
+  const [, handleChange] = useUpdateDebounced(onUpdate, value, debounceTime);
 
   const [localValue, setLocalValue] = useState(value);
-
-  const debouncedOnChange = useCallback(
-    _.debounce((changedValue) => handleChange(changedValue), 1000), [],
-  );
 
   useEffect(() => {
     setLocalValue(parseFloat(value));
@@ -27,42 +21,49 @@ const SliderWithInput = (props) => {
 
   const stepToSet = step ?? max / 200;
 
+  const slider = (
+    <Slider
+      value={localValue}
+      min={min}
+      max={max}
+      onChange={setLocalValue}
+      onAfterChange={handleChange}
+      step={stepToSet}
+      disabled={disabled}
+      style={{
+        minWidth: 100, display: 'inline-block', flexGrow: 100, margin: '0.5em', maxWidth: sliderMaxWidth,
+      }}
+    />
+  );
+
+  const input = (
+    <InputNumber
+      value={localValue}
+      min={min}
+      max={max}
+      onChange={(changedValue) => {
+        if (changedValue === value) { return; }
+
+        const changedValueWithinBounds = _.clamp(changedValue, min, max);
+
+        setLocalValue(changedValueWithinBounds);
+
+        handleChange(changedValueWithinBounds);
+      }}
+      onPressEnter={() => { handleChange(localValue); }}
+      onStep={(newValue) => {
+        handleChange(newValue);
+      }}
+      step={stepToSet}
+      disabled={disabled}
+      style={{ width: 80, display: 'inline-block' }}
+    />
+  );
+
   return (
-    <Space align='start'>
-      <Slider
-        value={localValue}
-        min={min}
-        max={max}
-        onChange={setLocalValue}
-        onAfterChange={handleChange}
-        step={stepToSet}
-        disabled={disabled}
-        style={{
-          minWidth: 100, display: 'inline-block', flexGrow: 100, margin: '0.5em',
-        }}
-      />
-
-      <InputNumber
-        value={localValue}
-        min={min}
-        max={max}
-        onChange={(changedValue) => {
-          if (changedValue === value) { return; }
-
-          const changedValueWithinBounds = Math.min(Math.max(changedValue, min), max);
-
-          setLocalValue(changedValueWithinBounds);
-
-          debouncedOnChange(changedValueWithinBounds);
-        }}
-        onPressEnter={() => { handleChange(localValue); }}
-        onStep={(newValue) => {
-          handleChange(newValue);
-        }}
-        step={stepToSet}
-        disabled={disabled}
-        style={{ width: 80, display: 'inline-block' }}
-      />
+    <Space align='start' wrap>
+      {slider}
+      {input}
     </Space>
   );
 };
@@ -74,11 +75,15 @@ SliderWithInput.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   step: PropTypes.number,
+  debounceTime: PropTypes.number,
+  sliderMaxWidth: PropTypes.number,
 };
 
 SliderWithInput.defaultProps = {
   disabled: false,
   step: null,
+  debounceTime: 1000,
+  sliderMaxWidth: 200,
 };
 
 export default SliderWithInput;

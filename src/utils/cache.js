@@ -67,7 +67,7 @@ class BrowserCache {
 
       const item = data;
       if (item.ttl < Date.now()) {
-        await this._remove(key);
+        await this.remove(key);
         return null;
       }
       if (this.head !== key) this._setHead(key);
@@ -83,7 +83,7 @@ class BrowserCache {
   // ttl is set to 12 hours by default
   async set(key, value, ttl = 43200) {
     if (this.size >= this.maxSize) {
-      await this._remove(this.tail);
+      await this.remove(this.tail);
     }
     if (ttl && typeof ttl === 'number') {
       // eslint-disable-next-line no-param-reassign
@@ -141,7 +141,7 @@ class BrowserCache {
     }
   }
 
-  async _remove(key) {
+  async remove(key) {
     if (this.tail === key) {
       if (this.lru[this.tail].next) {
         const { next } = this.lru[this.tail];

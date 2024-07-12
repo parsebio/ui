@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import '__test__/test-utils/setupTests';
 import {
-  screen, render, waitFor, within,
+  screen, render, waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import _ from 'lodash';

@@ -26,7 +26,7 @@ describe('downloadFromUrl', () => {
   });
 
   it('Uses filename if provided', () => {
-    downloadFromUrl(mockDownloadUrl, 'mockFileName');
+    downloadFromUrl(mockDownloadUrl, { fileName: 'mockFileName' });
 
     // A new link is created with the correct attributes
     expect(linkSpy).toHaveBeenCalledWith('a');

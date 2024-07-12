@@ -10,7 +10,6 @@ import {
   updatePlotConfig,
 } from 'redux/actions/componentConfig/index';
 import { loadCellSets } from 'redux/actions/cellSets';
-import Header from 'components/Header';
 import PlotContainer from 'components/plots/PlotContainer';
 import ViolinPlotMain from 'components/plots/ViolinPlotMain';
 import { getCellSets, getPlotConfigs } from 'redux/selectors';
@@ -144,11 +143,11 @@ const ViolinIndex = ({ experimentId }) => {
   );
   return (
     <>
-      <Header title={plotNames.VIOLIN_PLOT} />
       <PlotContainer
         experimentId={experimentId}
         plotUuid={selectedPlotUuid}
         plotType={plotType}
+        plotName={plotNames.VIOLIN_PLOT}
         plotStylingConfig={plotStylingConfig}
         plotInfo='In order to rename existing clusters or create new ones, use the cell set tool, located in the Data Exploration page.'
         extraControlPanels={renderExtraPanels()}

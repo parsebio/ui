@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import {
   Slider, Form, Input, Switch,
 } from 'antd';
-import useUpdateThrottled from 'utils/customHooks/useUpdateThrottled';
+import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
 const AxesDesign = (props) => {
   const { onUpdate, config } = props;
-  const [newConfig, handleChange] = useUpdateThrottled(onUpdate, config, 200);
+  const [newConfig, handleChange] = useUpdateDebounced(onUpdate, config, 200);
 
   return (
     <Form
@@ -19,7 +19,7 @@ const AxesDesign = (props) => {
       <p><strong>Axes Settings</strong></p>
       <Form.Item label='X-Axis Title'>
         <Input
-          value={config.axes.xAxisText}
+          value={newConfig.axes.xAxisText}
           onChange={(e) => {
             handleChange({
               axes: {
@@ -33,7 +33,7 @@ const AxesDesign = (props) => {
 
       <Form.Item label='Y-Axis Title'>
         <Input
-          value={config.axes.yAxisText}
+          value={newConfig.axes.yAxisText}
           onChange={(e) => {
             handleChange({
               axes: {

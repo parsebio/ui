@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, Empty } from 'antd';
+import filterResultWarningMessages from 'utils/filterResultWarningMessages';
+
+import { Table, Empty, Alert } from 'antd';
 
 const FilterResultTable = (props) => {
   const { tableData } = props;
@@ -17,11 +19,11 @@ const FilterResultTable = (props) => {
       return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
     }
 
-    const { before, after } = tableData;
+    const { before, after, warnings = [] } = tableData;
 
     // Rearrange data to fit table
     const titles = {
-      num_cells: 'Estimated number of cells',
+      num_cells: 'Number of barcodes',
       total_genes: 'Total number of genes',
       median_genes: 'Median number of genes per cell',
       median_umis: 'Median UMI counts per cell',
@@ -67,13 +69,23 @@ const FilterResultTable = (props) => {
     ];
 
     return (
-      <Table
-        bordered
-        dataSource={dataSource}
-        columns={columns}
-        pagination={false}
-        size='small'
-      />
+      <div>
+        {warnings.length > 0 && (
+          warnings.map((warning) => (
+            <Alert
+              message={filterResultWarningMessages[warning]}
+              type='info'
+              showIcon
+            />
+          )))}
+        <Table
+          bordered
+          dataSource={dataSource}
+          columns={columns}
+          pagination={false}
+          size='small'
+        />
+      </div>
     );
   };
 

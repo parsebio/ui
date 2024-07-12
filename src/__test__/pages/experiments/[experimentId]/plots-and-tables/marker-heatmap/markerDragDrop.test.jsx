@@ -25,7 +25,7 @@ import createTestComponentFactory from '__test__/test-utils/testComponentFactory
 import waitForComponentToPaint from '__test__/test-utils/waitForComponentToPaint';
 import { arrayMoveImmutable } from 'utils/arrayUtils';
 
-jest.mock('components/header/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;

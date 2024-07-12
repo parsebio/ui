@@ -1,7 +1,7 @@
 import { Gunzip } from 'fflate';
 
 import { sampleTech } from 'utils/constants';
-import techOptions from 'utils/upload/fileUploadSpecifications';
+import techOptions from 'utils/upload/fileUploadUtils';
 import readFileToBuffer from 'utils/upload/readFileToBuffer';
 
 const Verdict = {
@@ -15,7 +15,7 @@ const MATRIX_SIGNATURE = Buffer.from('%%MatrixMarket');
 
 const GZIP_SIGNATURE = Buffer.from([0x1f, 0x8b]);
 
-const isGzipped = async (file) => {
+const getShouldCompress = async (file) => {
   const data = await readFileToBuffer(file.slice(0, 16));
   const hasGzipSignature = !data.slice(0, 2).compare(GZIP_SIGNATURE);
   return hasGzipSignature ? Verdict.VALID_ZIPPED : Verdict.VALID_UNZIPPED;
@@ -50,14 +50,14 @@ const inspectH5File = async (file) => {
   if (!techOptions[sampleTech.H5].isNameValid(file.name)) {
     return Verdict.INVALID_NAME;
   }
-  return await isGzipped(file);
+  return await getShouldCompress(file);
 };
 
 const inspect10XFile = async (file) => {
   // if name is valid, inspect first 16 bytes to validate format
 
   let data = await readFileToBuffer(file.slice(0, 16));
-  const verdict = await isGzipped(file);
+  const verdict = await getShouldCompress(file);
 
   if (verdict === Verdict.VALID_ZIPPED) {
     // if gzipped, decompress a small chunk to further validate contents
@@ -87,11 +87,12 @@ const inspect10XFile = async (file) => {
   return Verdict.INVALID_FORMAT;
 };
 
-const inspectRhapsodyFile = async (file) => await isGzipped(file);
+const inspectRhapsodyFile = async (file) => await getShouldCompress(file);
 
-const inspectParseFile = async (file) => await isGzipped(file);
+const inspectParseFile = async (file) => await getShouldCompress(file);
 
 export {
   inspectFile,
   Verdict,
+  getShouldCompress,
 };

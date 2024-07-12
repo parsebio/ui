@@ -11,7 +11,7 @@ import configureMockStore from 'redux-mock-store';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 
-import techOptions, { techNamesToDisplay } from 'utils/upload/fileUploadSpecifications';
+import techOptions, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import { sampleTech } from 'utils/constants';
 
 import mockFile from '__test__/test-utils/mockFile';
@@ -64,15 +64,30 @@ const renderFileUploadModal = async (store, currentSelectedTech = null) => {
   )));
 };
 
-const chromiumTech = techNamesToDisplay[sampleTech['10X']];
 const seuratTech = techNamesToDisplay[sampleTech.SEURAT];
+
+const selectTech = (selectedTech) => {
+  const displayedName = techNamesToDisplay[selectedTech];
+
+  const techSelection = screen.getByRole('combobox', { name: 'sampleTechnologySelect' });
+
+  act(() => {
+    fireEvent.change(techSelection, { target: { value: selectedTech } });
+  });
+
+  // The 2nd option is the selection
+  const option = screen.getByText(displayedName, { selector: '.ant-select-item-option-content' });
+
+  act(() => {
+    fireEvent.click(option);
+  });
+};
 
 describe('FileUploadModal', () => {
   it('contains required components for Chromium 10X', async () => {
     await renderFileUploadModal(initialStore);
 
-    // It has a select button to select technology
-    expect(screen.getByText(chromiumTech)).toBeInTheDocument();
+    selectTech(sampleTech['10X']);
 
     // It contains instructions on what files can be uploaded
     expect(screen.getByText(/For each sample, upload a folder containing/i)).toBeInTheDocument();
@@ -84,7 +99,7 @@ describe('FileUploadModal', () => {
     expect(screen.getByText(/The folder's name will be used to name the sample in it/i)).toBeInTheDocument();
 
     // And it can later be changed
-    expect(screen.getByText(/You can change this name later in Data Management/i)).toBeInTheDocument();
+    expect(screen.getByText(/You can change this name later in Insights/i)).toBeInTheDocument();
 
     // It shows direction on drag and drop area
     expect(screen.getByText(/Drag and drop folders here or click to browse/i)).toBeInTheDocument();
@@ -107,26 +122,11 @@ describe('FileUploadModal', () => {
   it('contains required components for Seurat', async () => {
     await renderFileUploadModal(initialStore);
 
-    // It has default chromium selected
-    expect(screen.queryAllByText(chromiumTech).length).toBe(1);
+    // It has default parse selected
+    expect(screen.queryAllByText(techNamesToDisplay[sampleTech.PARSE]).length).toBe(1);
     expect(screen.queryAllByText(seuratTech).length).toBe(0);
 
-    // Switch file upload to Seurat
-    const chosenTech = sampleTech.SEURAT;
-    const displayedName = techNamesToDisplay[chosenTech];
-
-    const techSelection = screen.getByRole('combobox', { name: 'sampleTechnologySelect' });
-
-    act(() => {
-      fireEvent.change(techSelection, { target: { value: sampleTech.SEURAT } });
-    });
-
-    // The 2nd option is the selection
-    const option = screen.getByText(displayedName);
-
-    act(() => {
-      fireEvent.click(option);
-    });
+    selectTech(sampleTech.SEURAT);
 
     // Lists the requirements of the Seurat object
     expect(screen.getByText(/The Seurat object must contain the following slots and metadata:/i)).toBeInTheDocument();
@@ -167,6 +167,8 @@ describe('FileUploadModal', () => {
   it('drag and drop works with valid 10X Chromium file', async () => {
     await renderFileUploadModal(initialStore);
 
+    selectTech(sampleTech['10X']);
+
     expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
     // It has a select button to select technology
     const uploadInput = document.querySelector(
@@ -201,22 +203,7 @@ describe('FileUploadModal', () => {
   it('drag and drop works with valid Seurat file', async () => {
     await renderFileUploadModal(initialStore);
 
-    // Switch file upload to Seurat
-    const chosenTech = sampleTech.SEURAT;
-    const displayedName = techNamesToDisplay[chosenTech];
-
-    const techSelection = screen.getByRole('combobox', { name: 'sampleTechnologySelect' });
-
-    act(() => {
-      fireEvent.change(techSelection, { target: { value: sampleTech.SEURAT } });
-    });
-
-    // The 2nd option is the selection
-    const option = screen.getByText(displayedName);
-
-    act(() => {
-      fireEvent.click(option);
-    });
+    selectTech(sampleTech.SEURAT);
 
     expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
 
@@ -253,22 +240,7 @@ describe('FileUploadModal', () => {
   it('drag and drop works with valid Seurat file when different experiment has valid uploaded Seurat object', async () => {
     await renderFileUploadModal(prevUpDiffExpStore);
 
-    // Switch file upload to Seurat
-    const chosenTech = sampleTech.SEURAT;
-    const displayedName = techNamesToDisplay[chosenTech];
-
-    const techSelection = screen.getByRole('combobox', { name: 'sampleTechnologySelect' });
-
-    act(() => {
-      fireEvent.change(techSelection, { target: { value: sampleTech.SEURAT } });
-    });
-
-    // The 2nd option is the selection
-    const option = screen.getByText(displayedName);
-
-    act(() => {
-      fireEvent.click(option);
-    });
+    selectTech(sampleTech.SEURAT);
 
     expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
 
@@ -312,22 +284,7 @@ describe('FileUploadModal', () => {
 
     expect(techInput).toBeEnabled();
 
-    // Switch file upload to Seurat
-    const chosenTech = sampleTech.SEURAT;
-    const displayedName = techNamesToDisplay[chosenTech];
-
-    const techSelection = screen.getByRole('combobox', { name: 'sampleTechnologySelect' });
-
-    act(() => {
-      fireEvent.change(techSelection, { target: { value: sampleTech.SEURAT } });
-    });
-
-    // The 2nd option is the selection
-    const option = screen.getByText(displayedName);
-
-    act(() => {
-      fireEvent.click(option);
-    });
+    selectTech(sampleTech.SEURAT);
 
     expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
 
@@ -436,20 +393,7 @@ describe('FileUploadModal', () => {
     await renderFileUploadModal(initialStore);
 
     // Switch file upload to Parse
-    const displayedName = techNamesToDisplay[sampleTech.PARSE];
-
-    const techSelection = screen.getByRole('combobox', { name: 'sampleTechnologySelect' });
-
-    act(() => {
-      fireEvent.change(techSelection, { target: { value: sampleTech.PARSE } });
-    });
-
-    // The 2nd option is the selection
-    const option = screen.getByText(displayedName);
-
-    act(() => {
-      fireEvent.click(option);
-    });
+    selectTech(sampleTech.PARSE);
 
     // It mentions the files that can be uploaded
     techOptions[sampleTech.PARSE].acceptedFiles.forEach((filename) => {
@@ -457,13 +401,13 @@ describe('FileUploadModal', () => {
     });
 
     expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
-    // It has a select button to select technology
+
     const uploadInput = document.querySelector(
       `[data-test-id="${integrationTestConstants.ids.FILE_UPLOAD_INPUT}"]`,
     );
 
     // create an all genes file (features)
-    const file = mockFile('all_genes.csv.gz', '/WT13');
+    const file = mockFile('all_genes.csv.gz', '/WT13/DGE_unfiltered');
 
     //  drop it into drop-zone
     await act(async () => {
@@ -477,6 +421,82 @@ describe('FileUploadModal', () => {
     // It shows up as ready to upload
     expect(await screen.findByText(/To upload/)).toBeInTheDocument();
     expect(await screen.findByText(file.path.slice(1))).toBeInTheDocument();
+
+    const uploadButtonText = screen.getAllByText(/Upload/i).pop();
+    const uploadButton = uploadButtonText.closest('button');
+
+    // Upload is enabled because the file is considered valid
+    expect(uploadButton).not.toBeDisabled();
+  });
+
+  it('drag and drop works with Parse file, invalid files are shown in warning', async () => {
+    await renderFileUploadModal(initialStore);
+
+    // Switch file upload to Parse
+    selectTech(sampleTech.PARSE);
+
+    const uploadInput = document.querySelector(
+      `[data-test-id="${integrationTestConstants.ids.FILE_UPLOAD_INPUT}"]`,
+    );
+
+    // create an all genes file (features)
+    const files = [
+      // 4 valid files
+      mockFile('all_genes.csv.gz', '/WT13/DGE_unfiltered'),
+      mockFile('all_genes.csv.gz', '/WT14/DGE_filtered'),
+      mockFile('all_genes.csv.gz', '/WT15'),
+      // This one should be ignored, /WT13/DGE_unfiltered takes precedence
+      mockFile('all_genes.csv.gz', '/WT13/DGE_filtered'),
+      // 1 invalid file
+      mockFile('all_genes.csv.gz', '/all-sample'),
+    ];
+
+    //  drop it into drop-zone
+    await act(async () => {
+      Object.defineProperty(uploadInput, 'files', {
+        value: files,
+        configurable: true,
+      });
+
+      fireEvent.drop(uploadInput);
+    });
+
+    // Valid files show up
+    expect(await screen.findByText(/To upload/)).toBeInTheDocument();
+    expect(await screen.findAllByText('WT13/DGE_unfiltered/all_genes.csv.gz')).toHaveLength(2);
+    expect(await screen.findByText('WT14/DGE_filtered/all_genes.csv.gz')).toBeInTheDocument();
+    expect(await screen.findByText('WT15/all_genes.csv.gz')).toBeInTheDocument();
+
+    // WT13/DGE_filtered doesn't because it is valid but superseded by WT13/DGE_unfiltered
+    expect(screen.queryByText('WT13/DGE_filtered/all_genes.csv.gz')).not.toBeInTheDocument();
+
+    // Warning shows up with offer to expand
+    expect(screen.getByText(/1 file was ignored. Click to display/i)).toBeInTheDocument();
+
+    // Add a new invalid file
+    await act(async () => {
+      Object.defineProperty(uploadInput, 'files', {
+        value: [mockFile('invalidName.csv.gz', 'KO/DGE_unfiltered')],
+        configurable: true,
+      });
+
+      fireEvent.drop(uploadInput);
+    });
+
+    // Now warning shows plural version
+    expect(screen.getByText(/2 files were ignored. Click to display/i)).toBeInTheDocument();
+
+    // But invalid files don't show up yet
+    expect(screen.queryByText('all-sample/all_genes.csv.gz')).not.toBeInTheDocument();
+    expect(screen.queryByText('KO/DGE_unfiltered/invalidName.csv.gz')).not.toBeInTheDocument();
+
+    await act(() => {
+      fireEvent.click(screen.getByText(/2 files were ignored. Click to display/i));
+    });
+
+    // All invalid files are shown here
+    expect(screen.getByText('all-sample/all_genes.csv.gz')).toBeInTheDocument();
+    expect(screen.getByText('KO/DGE_unfiltered/invalidName.csv.gz')).toBeInTheDocument();
 
     const uploadButtonText = screen.getAllByText(/Upload/i).pop();
     const uploadButton = uploadButtonText.closest('button');

@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default {
   ACCOUNT_DETAILS_UPDATED: 'Account details updated successfully.',
   CONNECTION_ERROR: 'Could not connect to the server. Check your internet connection and refresh the page.',
@@ -43,6 +45,15 @@ export default {
   ERROR_STARTING_PIPLELINE: 'We couldn\'t start working on your data.',
   ERROR_SIGN_IN: 'We couldn\'t sign you in. Please try again.',
   ERROR_DOWNLOADING_SEURAT_OBJECT: 'We couldn\'t get the processed Seurat object.',
+  ERROR_MULTIPLE_SAMPLELT_FILES: 'More than one Sample Loading Table was selected, only one will be used.',
+  ERROR_FAILED_SAMPLELT_FILE: 'Sample Loading Table must be a valid excel .xlsm file',
+  ERROR_HIDDEN_FILE: 'Files starting with "." or "MACOSX" are hidden or system.',
+  ERROR_NOT_FASTQ: 'File name does not end with ".fastq.gz" or ".fq.gz".',
+  ERROR_ALREADY_UPLOADED: 'File already uploaded or is being uploaded.',
+  ERROR_READ_PAIR_NOT_IN_NAME: 'File name must include "_R1" or "_R2" (its read pair). Valid example: "S1_R1.fast.gz"',
+  ERROR_TOO_MANY_READS_IN_NAME: 'File name can\'t contain "_R1" or "_R2" (its read pair) more than once. Valid example: "S1_R1.fast.gz"',
+  ERROR_MORE_FILES_THAN_SUBLIBRARIES: 'You have uploaded more pairs of FASTQ files than the specified number of sublibraries. Please check the input number of sublibraries or contact support about concatenating your FASTQ files.',
+  ERROR_LESS_FILES_THAN_SUBLIBRARIES: "You have uploaded less pairs of FASTQ files than the specified number of sublibraries. Please check the input number of sublibraries or make sure your FASTQ files haven't been concatenated.",
   FEEDBACK_ERROR: 'We couldn\'t process your feedback. Please try submitting again.',
   FEEDBACK_SUCCESSFUL: 'Your feedback has been successfully sent. Thank you!',
   REFERRAL_ERROR: 'We couldn\'t process your referral. Please try submitting again.',
@@ -65,4 +76,8 @@ export default {
   SHARE_FAILURE: 'We weren\'t able to share the project',
   ERROR_CLONING_DEFAULT: 'We couldn\'t clone the project.',
   ERROR_CLONING_PIPELINE_LOCKED: 'We couldn\'t clone the project because data processing is currently running, wait until it finishes and try again',
+  ERROR_LAUNCHING_SECONDARY_ANALYSIS: 'There was a problem launching the pipeline.',
+  ERROR_FASTQS_INCORRECTLY_PAIRED: 'Some fastqs are missing their corresponding read pairs.',
+  ERROR_CANCELLING_SECONDARY_ANALYSIS: 'There was a problem cancelling your analysis.',
+  ERROR_CELL_SETS_ANNOTATION_FAILED: 'ScType annotation unsuccessful. Please ensure dataset contains gene symbols.',
 };

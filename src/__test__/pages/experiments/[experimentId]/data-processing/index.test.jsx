@@ -14,7 +14,7 @@ import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialS
 import initialCellSetsState from 'redux/reducers/cellSets/initialState';
 import initialSamplesState, { sampleTemplate } from 'redux/reducers/samples/initialState';
 
-import { getBackendStatus } from 'redux/selectors';
+import { getBackendStatus, getFilterChanges } from 'redux/selectors';
 import '__test__/test-utils/setupTests';
 
 import { runQC } from 'redux/actions/pipeline';
@@ -28,7 +28,7 @@ import config from 'config';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-jest.mock('components/header/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('redux/actions/experimentSettings/processingConfig/saveProcessingSettings');
 jest.mock('redux/actions/experiments', () => ({
   cloneExperiment: jest.fn(() => () => { }),
@@ -79,6 +79,8 @@ getBackendStatus.mockImplementation(() => () => ({
     },
   },
 }));
+
+getFilterChanges.mockImplementation(() => () => (new Set([])));
 
 const getStore = (experimentId, settings = {}) => {
   const initialState = {
@@ -154,12 +156,6 @@ describe('DataProcessingPage', () => {
         {dataProcessingPageFactory()}
       </Provider>,
     );
-
-    // It contains the title Data Processing
-    const titles = screen.getAllByText('Data Processing');
-
-    // One for breadcrumb, one for title
-    expect(titles).toHaveLength(1);
 
     // It shows the first filter step - Classifier filter
     expect(screen.getByText(/Classifier/i)).toBeInTheDocument();

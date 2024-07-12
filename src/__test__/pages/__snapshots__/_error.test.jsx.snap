@@ -252,7 +252,7 @@ exports[`ErrorPage Should post error to Slack if environment is production 1`] =
       },
     },
     "networkResources": {
-      "domainName": "cellenics.hms.harvard.edu",
+      "domainName": "app.trailmaker.parsebiosciences.com",
       "environment": "production",
     },
     "samples": {
@@ -261,6 +261,16 @@ exports[`ErrorPage Should post error to Slack if environment is production 1`] =
         "loading": false,
         "saving": false,
         "validating": [],
+      },
+    },
+    "secondaryAnalyses": {
+      "ids": [],
+      "meta": {
+        "activeSecondaryAnalysisId": null,
+        "error": false,
+        "initialLoadPending": true,
+        "loading": false,
+        "saving": false,
       },
     },
     "user": {
@@ -522,7 +532,7 @@ exports[`ErrorPage Should post error to Slack if environment is staging 1`] = `
       },
     },
     "networkResources": {
-      "domainName": "cellenics.hms.harvard.edu",
+      "domainName": "app.trailmaker.parsebiosciences.com",
       "environment": "staging",
     },
     "samples": {
@@ -531,6 +541,16 @@ exports[`ErrorPage Should post error to Slack if environment is staging 1`] = `
         "loading": false,
         "saving": false,
         "validating": [],
+      },
+    },
+    "secondaryAnalyses": {
+      "ids": [],
+      "meta": {
+        "activeSecondaryAnalysisId": null,
+        "error": false,
+        "initialLoadPending": true,
+        "loading": false,
+        "saving": false,
       },
     },
     "user": {

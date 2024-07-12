@@ -6,7 +6,6 @@ import {
 import PropTypes from 'prop-types';
 
 import { useSelector, useDispatch } from 'react-redux';
-import UploadStatus from 'utils/upload/UploadStatus';
 
 import uploadMetadataFile from 'redux/actions/experiments/uploadMetadataFile';
 import { sampleTech } from 'utils/constants';
@@ -14,9 +13,8 @@ import {
   createCellLevelMetadata,
   updateCellLevelMetadataFileUpload,
 } from 'redux/actions/experiments';
-import { prepareAndUploadFileToS3 } from 'utils/upload/processUpload';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import loadAndCompressIfNecessary from 'utils/upload/loadAndCompressIfNecessary';
+import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
 import MetadataUploadModal from './MetadataUploadModal';
 import CellLevelUploadModal from './CellLevelUploadModal';
 
@@ -51,19 +49,27 @@ const AddMetadataButton = ({ samplesTableRef }) => {
     const uploadUrlParams = await dispatch(
       createCellLevelMetadata(activeExperimentId, getSignedURLsParams),
     );
-
-    if (!file.fileObject) {
-      file.fileObject = await loadAndCompressIfNecessary(
-        file, () => onUpdateUploadStatus(UploadStatus.COMPRESSING),
-      );
-    }
+    const options = {
+      compress: !file.compressed,
+    };
 
     try {
-      await prepareAndUploadFileToS3(file, uploadUrlParams, 'cellLevelMeta', new AbortController(), onUpdateUploadStatus);
+      await UploadsCoordinator.get().uploadFile(
+        [
+          activeExperimentId,
+          file,
+          uploadUrlParams,
+          'cellLevelMeta',
+          new AbortController(),
+          onUpdateUploadStatus,
+          options,
+        ],
+      );
     } catch (e) {
       pushNotificationMessage('error', 'Something went wrong while uploading your metadata file.');
       console.log(e);
     }
+
     setCellLevelUploading(false);
     return file;
   };
@@ -106,7 +112,11 @@ const AddMetadataButton = ({ samplesTableRef }) => {
         }}
         trigger={['click']}
         placement='bottomRight'
-        disabled={activeExperiment.sampleIds?.length === 0 || isSubsetted || selectedTech === sampleTech.SEURAT}
+        disabled={
+          activeExperiment.sampleIds?.length === 0
+          || isSubsetted
+          || selectedTech === sampleTech.SEURAT
+        }
       >
         <Button>
           Metadata

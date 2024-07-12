@@ -18,13 +18,13 @@ import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-des
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
 
-import config from 'config';
 import { sampleTech } from 'utils/constants';
-import techOptions, { techNamesToDisplay } from 'utils/upload/fileUploadSpecifications';
+import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import handleError from 'utils/http/handleError';
-import { fileObjectToFileRecord, getFileSampleAndName } from 'utils/upload/processUpload';
+import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import endUserMessages from 'utils/endUserMessages';
+import ExpandableList from 'components/ExpandableList';
 
 const { Text, Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -53,6 +53,8 @@ const extraHelpText = {
   [sampleTech.PARSE]: () => <></>,
 };
 
+const emptyFiles = { valid: [], invalid: [] };
+
 const FileUploadModal = (props) => {
   const { onUpload, onCancel, currentSelectedTech } = props;
 
@@ -61,27 +63,27 @@ const FileUploadModal = (props) => {
   const previouslyUploadedSamples = Object.keys(samples)
     .filter((key) => samples[key].experimentId === activeExperimentId);
 
-  const guidanceFileLink = 'https://drive.google.com/file/d/1VPaB-yofuExinY2pXyGEEx-w39_OPubO/view';
-
-  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech['10X']);
+  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech.PARSE);
   const [canUpload, setCanUpload] = useState(false);
-  const [filesList, setFilesList] = useState([]);
+  const [files, setFiles] = useState(emptyFiles);
 
   useEffect(() => {
-    setCanUpload(filesList.length && filesList.every((file) => !file.errors));
-  }, [filesList]);
+    setCanUpload(files.valid.length && files.valid.every((file) => !file.errors));
+  }, [files]);
 
   useEffect(() => {
-    setFilesList([]);
+    setFiles(emptyFiles);
   }, [selectedTech]);
 
   // Handle on Drop
   const onDrop = async (acceptedFiles) => {
     // Remove all hidden files
-    let filteredFiles = acceptedFiles
+    const filteredFiles = acceptedFiles
       .filter((file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'));
 
     if (selectedTech === sampleTech.SEURAT) {
+      // TODO1 this needs to be further refactored before it is moved into
+      // fileUploadUtils as a filterFiles call, right now it's a bit unnecessarily complicated
       const newFiles = await Promise.all(filteredFiles.map((file) => (
         fileObjectToFileRecord(file, selectedTech)
       )));
@@ -91,7 +93,7 @@ const FileUploadModal = (props) => {
         return;
       }
 
-      const allFiles = [...filesList, ...newFiles];
+      const allFiles = [...files.valid, ...newFiles];
       if (allFiles.length > 1) {
         handleError('error', endUserMessages.ERROR_SEURAT_MULTIPLE_FILES);
       }
@@ -102,43 +104,28 @@ const FileUploadModal = (props) => {
         return;
       }
 
-      setFilesList([seuratFile]);
+      setFiles({ valid: [seuratFile], invalid: [] });
     } else {
-      let filesNotInFolder = false;
+      const {
+        valid: newFiles,
+        invalid,
+      } = await fileUploadUtils[selectedTech].filterFiles(filteredFiles);
 
-      filteredFiles = filteredFiles
-        // Remove all files that aren't in a folder
-        .filter((fileObject) => {
-          const inFolder = fileObject.path.includes('/');
-
-          filesNotInFolder ||= !inFolder;
-
-          return inFolder;
-        })
-        // Remove all files that don't fit the current technology's valid names
-        .filter((file) => techOptions[selectedTech].isNameValid(file.name));
-
-      if (filesNotInFolder) {
-        handleError('error', endUserMessages.ERROR_FILES_FOLDER);
-      }
-
-      const newFiles = await Promise.all(filteredFiles.map((file) => (
-        fileObjectToFileRecord(file, selectedTech)
-      )));
-
-      setFilesList([...filesList, ...newFiles]);
+      setFiles({
+        valid: [...files.valid, ...newFiles],
+        invalid: [...files.invalid, ...invalid],
+      });
     }
   };
 
-  const removeFile = (fileName) => {
-    const newArray = _.cloneDeep(filesList);
-
-    const fileIdx = newArray.findIndex((file) => file.name === fileName);
+  const removeFile = (fileIdx) => {
+    const newArray = _.cloneDeep(files.valid);
     newArray.splice(fileIdx, 1);
-    setFilesList(newArray);
+
+    setFiles({ valid: newArray, invalid: files.invalid });
   };
 
-  const { fileUploadParagraphs, dropzoneText, webkitdirectory } = techOptions[selectedTech];
+  const { fileUploadParagraphs, dropzoneText, webkitdirectory } = fileUploadUtils[selectedTech];
 
   const renderHelpText = () => (
     <>
@@ -151,7 +138,7 @@ const FileUploadModal = (props) => {
           ))
         }
         <List
-          dataSource={techOptions[selectedTech].inputInfo}
+          dataSource={fileUploadUtils[selectedTech].inputInfo}
           size='small'
           itemLayout='vertical'
           bordered
@@ -170,8 +157,6 @@ const FileUploadModal = (props) => {
     </>
   );
 
-  const getFilePathToDisplay = (fileObject) => _.trim(Object.values(getFileSampleAndName(fileObject.path)).join('/'), '/');
-
   return (
     <Modal
       title=''
@@ -186,8 +171,8 @@ const FileUploadModal = (props) => {
           block
           disabled={!canUpload}
           onClick={() => {
-            onUpload(filesList, selectedTech);
-            setFilesList([]);
+            onUpload(files.valid, selectedTech);
+            setFiles(emptyFiles);
           }}
         >
           Upload
@@ -229,11 +214,7 @@ const FileUploadModal = (props) => {
             </Space>
             <Text type='secondary'>
               <i>
-                Is your dataset generated using another single cell RNA-seq technology (e.g. Nadia, inDrop, etc.)? Email us to find out if we can support your data:
-                <a href={`mailto:${config.supportEmail}`}>
-                  {' '}
-                  {config.supportEmail}
-                </a>
+                {'Don\'t have data in an accepted format? Reach out to us using the feedback button at the top of the page.'}
               </i>
             </Text>
           </Space>
@@ -251,23 +232,6 @@ const FileUploadModal = (props) => {
       </Row>
 
       <Row>
-        <Col span={24}>
-          <Paragraph type='secondary'>
-            <i>
-              Don’t have the data in the accepted format? Email us for help with file conversion (e.g. from Fastq or H5 file):
-              <a href={`mailto:${config.supportEmail}`}>{config.supportEmail}</a>
-            </i>
-            <span style={{ display: 'block', height: '0.6rem' }} />
-            <i>
-              More guidance on supported file types and formats is available
-              <a rel='noreferrer' target='_blank' href={guidanceFileLink}> here</a>
-              .
-            </i>
-          </Paragraph>
-        </Col>
-      </Row>
-
-      <Row>
         {/* eslint-disable react/jsx-props-no-spreading */}
         <Col span={24}>
           <Dropzone onDrop={onDrop} multiple>
@@ -278,7 +242,11 @@ const FileUploadModal = (props) => {
                 {...getRootProps({ className: 'dropzone' })}
                 id='dropzone'
               >
-                <input data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT} {...getInputProps()} webkitdirectory={webkitdirectory} />
+                <input
+                  data-test-id={integrationTestConstants.ids.FILE_UPLOAD_INPUT}
+                  {...getInputProps()}
+                  webkitdirectory={webkitdirectory}
+                />
                 <Empty description={dropzoneText} image={Empty.PRESENTED_IMAGE_SIMPLE} />
               </div>
             )}
@@ -288,17 +256,15 @@ const FileUploadModal = (props) => {
       <Row>
         <Col span={24}>
           {/* eslint-enable react/jsx-props-no-spreading */}
-
-          {filesList.length ? (
+          {files.valid.length ? (
             <>
               <Divider orientation='center'>To upload</Divider>
               <List
-                dataSource={filesList}
+                dataSource={files.valid}
                 size='small'
                 itemLayout='horizontal'
                 grid='{column: 4}'
-                renderItem={(file) => (
-
+                renderItem={(file, index) => (
                   <List.Item
                     key={file.name}
                     style={{ width: '100%' }}
@@ -315,20 +281,38 @@ const FileUploadModal = (props) => {
                           </>
                         )}
                       <Text
-                        ellipsis={{ tooltip: file.name }}
+                        ellipsis={{
+                          tooltip:
+                            fileUploadUtils[selectedTech].getFilePathToDisplay(
+                              file.fileObject.path,
+                            ),
+                        }}
                         style={{ width: '200px' }}
                       >
-                        {getFilePathToDisplay(file.fileObject)}
-
+                        {fileUploadUtils[selectedTech].getFilePathToDisplay(file.fileObject.path)}
                       </Text>
-                      <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.name); }} />
+                      <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(index); }} />
                     </Space>
                   </List.Item>
-
                 )}
               />
             </>
           ) : ''}
+          {files.invalid.length > 0 && (
+            <ExpandableList
+              expandedTitle='Ignored files'
+              dataSource={files.invalid}
+              getItemText={(file) => _.trim(file.path, '/')}
+              getItemExplanation={(file) => file.rejectReason}
+              collapsedExplanation={(
+                <>
+                  {
+                    `${files.invalid.length}${files.invalid.length > 1 ? ' files were' : ' file was'} ignored. Click to display`
+                  }
+                </>
+              )}
+            />
+          )}
         </Col>
       </Row>
     </Modal>

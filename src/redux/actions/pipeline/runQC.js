@@ -9,10 +9,11 @@ import {
 import { saveProcessingSettings } from 'redux/actions/experimentSettings';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { loadEmbedding } from 'redux/actions/embedding';
+import { runCellSetsClustering } from 'redux/actions/cellSets';
+import { getBackendStatus, getFilterChanges } from 'redux/selectors';
 
 const runOnlyConfigureEmbedding = async (experimentId, embeddingMethod, dispatch) => {
   await dispatch(saveProcessingSettings(experimentId, 'configureEmbedding'));
-
   dispatch({
     type: EXPERIMENT_SETTINGS_DISCARD_CHANGED_QC_FILTERS,
     payload: {},
@@ -24,6 +25,22 @@ const runOnlyConfigureEmbedding = async (experimentId, embeddingMethod, dispatch
       experimentId,
       embeddingMethod,
       true,
+    ),
+  );
+};
+
+const runOnlyClustering = async (experimentId, resolution, dispatch) => {
+  await dispatch(saveProcessingSettings(experimentId, 'configureEmbedding'));
+  dispatch({
+    type: EXPERIMENT_SETTINGS_DISCARD_CHANGED_QC_FILTERS,
+    payload: {},
+  });
+
+  // Only configure embedding was changed so we run loadEmbedding
+  dispatch(
+    runCellSetsClustering(
+      experimentId,
+      resolution,
     ),
   );
 };
@@ -40,14 +57,30 @@ const getURL = (experimentId) => `/v2/experiments/${experimentId}/qc`;
 
 const runQC = (experimentId) => async (dispatch, getState) => {
   const { processing } = getState().experimentSettings;
+  const qcFailed = getBackendStatus(experimentId)(getState()).status.pipeline.error;
+
   const { changedQCFilters } = processing.meta;
 
-  if (changedQCFilters.size === 1 && changedQCFilters.has('configureEmbedding')) {
-    runOnlyConfigureEmbedding(
-      experimentId,
-      processing.configureEmbedding.embeddingSettings.method,
-      dispatch,
-    );
+  const onlyConfigureEmbeddingChanged = changedQCFilters.has('configureEmbedding') && changedQCFilters.size === 1;
+
+  // if only embedding changed and the qc didn't fail
+  if (onlyConfigureEmbeddingChanged && !qcFailed) {
+    const changedKeys = getFilterChanges('configureEmbedding')(getState());
+
+    if (changedKeys.has('embeddingSettings')) {
+      runOnlyConfigureEmbedding(
+        experimentId,
+        processing.configureEmbedding.embeddingSettings.method,
+        dispatch,
+      );
+    }
+    if (changedKeys.has('clusteringSettings')) {
+      runOnlyClustering(
+        experimentId,
+        processing.configureEmbedding.clusteringSettings.methodSettings.louvain.resolution,
+        dispatch,
+      );
+    }
 
     return;
   }

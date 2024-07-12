@@ -3,15 +3,12 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { getTrackingDetails } from 'utils/tracking';
 
-import getDomainSpecificContent from 'utils/getDomainSpecificContent';
-
-const TagManager = ({ environment }) => {
+const TagManager = ({ environment, cookiesAgreed }) => {
   const { enabled, containerId } = getTrackingDetails(environment);
-
   // if tracking is not enabled don't add tag manager to the head
-  if (!enabled) return (null);
+  if (!enabled || !cookiesAgreed) return (null);
 
-  const matomoName = getDomainSpecificContent('matomoName');
+  const matomoName = 'biomage';
 
   const mtmTrackingCode = `var _mtm = window._mtm = window._mtm || [];
             _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
@@ -27,6 +24,7 @@ const TagManager = ({ environment }) => {
 
 TagManager.propTypes = {
   environment: PropTypes.oneOf(['development', 'staging', 'production']).isRequired,
+  cookiesAgreed: PropTypes.bool.isRequired,
 };
 
 export default TagManager;

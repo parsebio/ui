@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Input, Space, Tooltip, Typography,
+  Button, Input, Space, Tooltip, Typography, Popconfirm,
 } from 'antd';
 
 import {
@@ -16,6 +16,7 @@ const EditableField = (props) => {
   const {
     value,
     deleteEnabled,
+    confirmDelete,
     showEdit,
     onAfterSubmit,
     onAfterCancel,
@@ -24,6 +25,8 @@ const EditableField = (props) => {
     validationFunc,
     onEditing,
     formatter,
+    disabled,
+    message,
     onDelete,
   } = props;
 
@@ -137,8 +140,9 @@ const EditableField = (props) => {
         {
           showEdit
             ? (
-              <Tooltip placement='top' title='Edit' mouseLeaveDelay={0} ref={editButton}>
+              <Tooltip placement='top' title={message} mouseLeaveDelay={0} ref={editButton}>
                 <Button
+                  disabled={disabled}
                   aria-label='Edit'
                   size='small'
                   shape='circle'
@@ -163,15 +167,35 @@ const EditableField = (props) => {
           {
             deleteEnabled
               ? (
-                <Tooltip placement='top' title='Delete' mouseLeaveDelay={0}>
-                  <Button
-                    data-test-class={integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON}
-                    aria-label='Delete'
-                    size='small'
-                    shape='circle'
-                    icon={<DeleteOutlined />}
-                    onClick={deleteEditableField}
-                  />
+                <Tooltip placement='top' title={message} mouseLeaveDelay={0}>
+                  {confirmDelete ? (
+                    <Popconfirm
+                      title={confirmDelete}
+                      onConfirm={deleteEditableField}
+                      okText='Yes'
+                      disabled={disabled}
+                      cancelText='No'
+                    >
+                      <Button
+                        disabled={disabled}
+                        data-test-class={integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON}
+                        aria-label='Delete'
+                        size='small'
+                        shape='circle'
+                        icon={<DeleteOutlined />}
+                      />
+                    </Popconfirm>
+                  ) : (
+                    <Button
+                      disabled={disabled}
+                      data-test-class={integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON}
+                      aria-label='Delete'
+                      size='small'
+                      shape='circle'
+                      icon={<DeleteOutlined />}
+                      onClick={deleteEditableField}
+                    />
+                  )}
                 </Tooltip>
               ) : <></>
           }
@@ -196,7 +220,10 @@ EditableField.defaultProps = {
   value: null,
   showEdit: true,
   deleteEnabled: true,
+  confirmDelete: false,
   defaultEditing: false,
+  disabled: false,
+  message: 'Edit',
   formatter: (value) => value,
 };
 
@@ -208,9 +235,12 @@ EditableField.propTypes = {
   onEditing: PropTypes.func,
   validationFunc: PropTypes.func,
   deleteEnabled: PropTypes.bool,
+  confirmDelete: PropTypes.string,
   showEdit: PropTypes.bool,
   renderBold: PropTypes.bool,
   defaultEditing: PropTypes.bool,
+  disabled: PropTypes.bool,
+  message: PropTypes.string,
   formatter: PropTypes.func,
 };
 

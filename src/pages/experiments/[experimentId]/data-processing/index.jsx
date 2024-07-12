@@ -11,6 +11,7 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
+
 import {
   CheckOutlined,
   CloseOutlined,
@@ -20,11 +21,8 @@ import {
   RightOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import config from 'config';
@@ -44,7 +42,6 @@ import ConfigureEmbedding from 'components/data-processing/ConfigureEmbedding/Co
 import DataIntegration from 'components/data-processing/DataIntegration/DataIntegration';
 import DoubletScores from 'components/data-processing/DoubletScores/DoubletScores';
 import GenesVsUMIs from 'components/data-processing/GenesVsUMIs/GenesVsUMIs';
-import Header from 'components/Header';
 import MitochondrialContent from 'components/data-processing/MitochondrialContent/MitochondrialContent';
 import PipelineRedirectToDataProcessing from 'components/PipelineRedirectToDataProcessing';
 import PlatformError from 'components/PlatformError';
@@ -52,14 +49,14 @@ import PropTypes from 'prop-types';
 import SingleComponentMultipleDataContainer from 'components/SingleComponentMultipleDataContainer';
 import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
-import { getBackendStatus } from 'redux/selectors';
+import { getBackendStatus, getFilterChanges } from 'redux/selectors';
 
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadSamples } from 'redux/actions/samples';
 import { runQC } from 'redux/actions/pipeline';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { modules, sampleTech } from 'utils/constants';
 import QCRerunDisabledModal from 'components/modals/QCRerunDisabledModal';
 import isUserAuthorized from 'utils/isUserAuthorized';
 import { getURL } from 'redux/actions/pipeline/runQC';
@@ -68,7 +65,7 @@ import { ClipLoader } from 'react-spinners';
 const { Text } = Typography;
 const { Option } = Select;
 
-const DataProcessingPage = ({ experimentId, experimentData }) => {
+const DataProcessingPage = ({ experimentId }) => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
 
@@ -96,6 +93,8 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
     (state) => state.experimentSettings.processing.meta.changedQCFilters,
   );
 
+  const changedConfigureEmbeddingKeys = useSelector(getFilterChanges('configureEmbedding'));
+
   const changesOutstanding = Boolean(changedQCFilters.size);
 
   const [runQCAuthorized, setRunQCAuthorized] = useState(null);
@@ -105,6 +104,8 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
   const [stepIdx, setStepIdx] = useState(0);
   const [runQCModalVisible, setRunQCModalVisible] = useState(false);
   const [inputsList, setInputsList] = useState([]);
+
+  const sampleTechnology = samples[sampleKeys[0]]?.type;
 
   useEffect(() => {
     // If processingConfig is not loaded then reload
@@ -171,15 +172,26 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         processingConfig[step][key]?.prefiltered)));
   };
 
+  const sampleDisabledMessage = (step, sampleTechnologyParam) => {
+    if (checkIfSampleIsPrefiltered(step)) {
+      return 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.';
+    }
+
+    if (sampleTechnologyParam === sampleTech.PARSE && step === 'classifier') {
+      return 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.';
+    }
+
+    return 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.';
+  };
+
   const steps = [
     {
       key: 'classifier',
       name: getUserFriendlyQCStepName('classifier'),
-      description: 'The Classifier filter is based on the ‘emptyDrops’ method which distinguishes between droplets containing cells and ambient RNA. Droplets are filtered based on the False Discovery Rate (FDR) value - the red line on the density plot. In the knee plot, the ‘mixed’ population shown in grey contains some cells that are filtered out and some that remain and can be filtered further in the next filter.',
+      description: 'The Classifier filter is based on the "emptyDrops" method which identifies cell barcodes arising from the background medium (contains ambient RNA). Cell barcodes are filtered based on the false discovery rate (FDR) - the red line on the density plot. In the knee plot, the "mixed" population shown in grey contains some cells that are filtered out and some that remain and can be filtered further in the next filter.',
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <Classifier
@@ -200,11 +212,10 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
     {
       key: 'cellSizeDistribution',
       name: getUserFriendlyQCStepName('cellSizeDistribution'),
-      description: 'The number of unique molecular identifiers (#UMIs) per cell distinguishes real cells (high #UMIs per cell) from empty droplets (low #UMIs per cell). This filter is used to detect empty droplets and fine-tunes the Classifier filter. In some datasets this filter might be used instead of the Classifier filter.',
+      description: 'The number of unique molecular identifiers (#UMIs) per cell barcode distinguishes between cells (high #UMIs) and  background medium or cellular fragments (low #UMIs). This filter can be used in addition to the Classifier filter to  further remove cell barcodes with low #UMIs. In some datasets this filter might be used instead of the Classifier filter.',
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <CellSizeDistribution
@@ -224,11 +235,10 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
     {
       key: 'mitochondrialContent',
       name: getUserFriendlyQCStepName('mitochondrialContent'),
-      description: 'A high percentage of mitochondrial reads is an indicator of cell death. UMIs mapped to mitochondrial genes are calculated as a percentage of total UMIs. The percentage of mitochondrial reads depends on the cell type. The typical cut-off range is 10-50%, with the default cut-off set to 3 median absolute deviations above the median.',
+      description: 'A high percentage of mitochondrial reads is an indicator of cell death. UMIs mapped to mitochondrial genes are calculated as a percentage of total UMIs. The percentage of mitochondrial reads depends on the cell type. The typical cut-off range is 5-30%, with the default cut-off set to 3 median absolute deviations above the median.',
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <MitochondrialContent
@@ -248,11 +258,10 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
     {
       key: 'numGenesVsNumUmis',
       name: getUserFriendlyQCStepName('numGenesVsNumUmis'),
-      description: 'The number of expressed genes per cell and number of UMIs per cell is expected to have a linear relationship. This filter is used to exclude outliers (e.g. many UMIs originating from only a few genes).',
+      description: 'The number of expressed genes per cell and number of UMIs per cell is expected to have a linear relationship, until the maximum number of genes is reached and the curve tends to plateau. This filter is used to exclude outliers (e.g. many UMIs originating from only a few genes).',
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <GenesVsUMIs
@@ -275,11 +284,12 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       name: getUserFriendlyQCStepName('doubletScores'),
       description: (
         <span>
-          Droplets may contain more than one cell.
+          A single barcode might correspond to more than one cell.
           In such cases, it is not possible to distinguish which reads came from which cell.
-          Such “cells” cause problems in the downstream analysis as they appear as an intermediate type.
-          “Cells” with a high probability of being a doublet should be excluded.
-          The probability of being a doublet is calculated using ‘scDblFinder’.
+          Such barcodes cause problems in the downstream
+          analysis as they appear as an intermediate type.
+          Barcodes with a high probability of being a doublet should be excluded.
+          The probability of being a doublet is calculated using "scDblFinder".
           For each sample, the default threshold tries to minimize both the deviation in the
           expected number of doublets and the error of a trained classifier. For more details see
           {' '}
@@ -289,7 +299,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
       multiSample: true,
       render: (key) => (
         <SingleComponentMultipleDataContainer
-          defaultActiveKey={sampleKeys}
           inputsList={inputsList}
           baseComponentRenderer={(sample) => (
             <DoubletScores
@@ -496,7 +505,8 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
                                 </>
                               ) : pipelineNotFinished
                                 && !pipelineRunning
-                                && !isStepComplete(key) ? (
+                                && !isStepComplete(key)
+                                ? (
                                   <>
                                     <Text
                                       type='danger'
@@ -648,9 +658,7 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
         {
           !checkIfSampleIsEnabled(key) ? (
             <Alert
-              message={checkIfSampleIsPrefiltered(key)
-                ? 'This filter is disabled because the one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.'
-                : 'This filter is disabled. You can still modify and save changes, but the filter will not be applied to your data.'}
+              message={sampleDisabledMessage(key, sampleTechnology)}
               type='info'
               showIcon
             />
@@ -664,11 +672,6 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
 
   return (
     <>
-      <Header
-        experimentId={experimentId}
-        experimentData={experimentData}
-        title='Data Processing'
-      />
       <Space direction='vertical' style={{ width: '100%', padding: '0 10px' }}>
         {runQCModalVisible && (
           runQCAuthorized === null ? <ClipLoader />
@@ -692,9 +695,17 @@ const DataProcessingPage = ({ experimentId, experimentData }) => {
               >
                 <p>
                   This might take several minutes.
-                  Your navigation within Cellenics will be restricted during this time.
+                  Your navigation within Trailmaker will be restricted during this time.
                   Do you want to start?
                 </p>
+                {
+                  !(changedQCFilters.size === 1 && changedConfigureEmbeddingKeys.has('embeddingSettings')) && (
+                    <Alert
+                      message='Note that you will lose your previous Louvain or Leiden clusters.'
+                      type='warning'
+                    />
+                  )
+                }
               </Modal>
             )
         )}
