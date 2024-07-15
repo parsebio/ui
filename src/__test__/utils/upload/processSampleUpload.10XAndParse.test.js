@@ -277,9 +277,9 @@ describe.each([
     // because the files fit in a single chunk
     expect(mockAxiosCalls.length).toBe(3);
     // Each put call is made with the correct information
-    expect(mockAxiosCalls[0].data).toBeInstanceOf(Buffer);
-    expect(mockAxiosCalls[1].data).toBeInstanceOf(Buffer);
-    expect(mockAxiosCalls[2].data).toBeInstanceOf(Buffer);
+    expect(mockAxiosCalls[0].data).toBeInstanceOf(Uint8Array);
+    expect(mockAxiosCalls[1].data).toBeInstanceOf(Uint8Array);
+    expect(mockAxiosCalls[2].data).toBeInstanceOf(Uint8Array);
 
     // axios request calls are correct
     expect(axios.request.mock.calls.map((call) => _.omit(call[0], 'data'))).toMatchSnapshot();
