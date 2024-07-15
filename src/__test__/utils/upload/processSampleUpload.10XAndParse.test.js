@@ -291,7 +291,7 @@ describe.each([
       store,
       [{
         type: SAMPLES_FILE_UPDATE,
-        payload: { fileDiff: { upload: { status: UploadStatus.UPLOADING, progress: 50 } } },
+        payload: { fileDiff: { upload: { status: UploadStatus.UPLOADING, progress: '50.00' } } },
       }],
       { matcher: waitForActions.matchers.containing },
     );
