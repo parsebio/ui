@@ -209,7 +209,7 @@ describe('processUpload', () => {
       store,
       [{
         type: SAMPLES_FILE_UPDATE,
-        payload: { fileDiff: { upload: { status: UploadStatus.UPLOADING, progress: 25 } } },
+        payload: { fileDiff: { upload: { status: UploadStatus.UPLOADING, progress: '25.00' } } },
       }],
       { matcher: waitForActions.matchers.containing },
     );
