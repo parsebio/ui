@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { Auth } from '@aws-amplify/auth';
+
 import _ from 'lodash';
 import {
   Form, Input, Empty, Row, Col, Button, Space, Divider,
 } from 'antd';
 import { useRouter } from 'next/router';
 import { institutionCognitoKey, cookiesAgreedCognitoKey } from 'utils/constants';
-import endUserMessages from 'utils/endUserMessages';
-import pushNotificationMessage from 'utils/pushNotificationMessage';
+
 import handleError from 'utils/http/handleError';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUserAttributes, loadUser } from 'redux/actions/user';
 import downloadTermsOfUse from 'utils/downloadTermsOfUse';
 import IframeModal from 'utils/IframeModal';
+import pushNotificationMessage from 'utils/pushNotificationMessage';
+import endUserMessages from 'utils/endUserMessages';
+import MfaSetupButton from './MfaSetupButton';
 
 const ProfileSettings = () => {
   const router = useRouter();
@@ -51,6 +54,7 @@ const ProfileSettings = () => {
         updateUserAttributes(user, changedUserAttributes, () => setEmailError(true)),
       );
     }
+
     if (oldPassword || newPassword || confirmNewPassword) {
       setOldPasswordError(false);
       setNewPasswordError(false);
@@ -210,6 +214,18 @@ const ProfileSettings = () => {
                   </Button>
                 </Space>
               </Row>
+            </Col>
+          </Row>
+          <Row type='flex'>
+            <Col xl={{ span: 12, offset: 6 }} span={24}>
+              <h2 style={{ marginTop: '40px' }}>Multi-factor authentication:</h2>
+              <p>
+                Multi-factor authentication (MFA) adds a layer of security to your account
+                by requesting an extra authentication step.
+              </p>
+              <center>
+                <MfaSetupButton user={user} />
+              </center>
             </Col>
           </Row>
           <center>
