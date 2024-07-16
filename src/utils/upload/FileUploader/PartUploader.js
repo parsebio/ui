@@ -29,9 +29,6 @@ class PartUploader {
 
   #partUploadLock;
 
-  // Used to assign partNumbers to each chunk
-  #uploadPartNumberIt = 0;
-
   #accumulatedChunks = [];
 
   #uploadedParts;
