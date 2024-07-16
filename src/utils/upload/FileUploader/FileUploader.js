@@ -103,7 +103,6 @@ class FileUploader {
       this.uploadParams,
       this.abortController,
       this.file.size,
-      this.file.path,
       uploadedParts,
     );
 

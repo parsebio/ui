@@ -7,10 +7,9 @@ const PART_COUNT_MAX = 10000;
 const PART_SIZE_MIN = 5 * 1024 * 1024;
 
 class PartUploader {
-  constructor(uploadParams, abortController, fileSize, filePath, uploadedParts) {
+  constructor(uploadParams, abortController, fileSize, uploadedParts) {
     this.#uploadParams = uploadParams;
     this.#abortController = abortController;
-    this.#filePathDebug = filePath;
 
     // Can't have more than 10000 parts
     const minPartSize = Math.ceil(fileSize / PART_COUNT_MAX);
@@ -23,8 +22,6 @@ class PartUploader {
   }
 
   #uploadParams;
-
-  #filePathDebug;
 
   #abortController;
 
