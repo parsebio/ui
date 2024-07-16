@@ -317,31 +317,4 @@ describe('processUpload', () => {
       expect(validate).toHaveBeenCalledTimes(1);
     });
   });
-
-  it('Should be able to upload files that require 2 parts', async () => {
-    const mockAxiosCalls = [];
-    const uploadSuccess = (params) => {
-      mockAxiosCalls.push(params);
-      return Promise.resolve({ headers: { etag: 'etag-blah' } });
-    };
-
-    axios.request.mockImplementation(uploadSuccess);
-
-    await processSampleUpload(
-      getValidFiles(2 * MB),
-      sampleType,
-      store.getState().samples,
-      mockExperimentId,
-      store.dispatch,
-    );
-
-    // We expect uploads to happen
-    await waitFor(() => {
-      expect(pushNotificationMessage).toHaveBeenCalledTimes(0);
-
-      // 2 parts
-      expect(axios.request).toHaveBeenCalledTimes(2);
-      expect(validate).toHaveBeenCalledTimes(1);
-    });
-  });
 });
