@@ -116,5 +116,33 @@ describe('PartUploader', () => {
       expect(axios.request).not.toHaveBeenCalled();
       expect(fetchMock).not.toHaveBeenCalled();
     });
+
+    it('uploads 2 parts over 5 mb each', async () => {
+      const chunk1 = getChunk(6 * MB);
+      const chunk2 = getChunk(6 * MB);
+
+      await partUploader.uploadChunk(chunk1, mockOnUploadProgress);
+
+      // Upload because we reached the minimum 5mb
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(axios.request).toHaveBeenCalledTimes(1);
+
+      fetchMock.mockClear();
+      axios.request.mockClear();
+
+      await partUploader.uploadChunk(chunk2, mockOnUploadProgress);
+      // Upload because we reached the minimum 5mb
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(axios.request).toHaveBeenCalledTimes(1);
+
+      fetchMock.mockClear();
+      axios.request.mockClear();
+
+      await partUploader.finishUpload();
+
+      // Nothing else to upload
+      expect(axios.request).not.toHaveBeenCalled();
+      expect(fetchMock).not.toHaveBeenCalled();
+    });
   });
 });
