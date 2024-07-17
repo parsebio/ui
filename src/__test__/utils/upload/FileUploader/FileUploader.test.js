@@ -86,5 +86,21 @@ describe('FileUploader', () => {
         );
       }).toThrow('FileUploader: Missing required parameters');
     });
+
+    it('throws if resumeUpload and compress are both true', () => {
+      const badOptions = { ...options, compress: true };
+
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new FileUploader(
+          file,
+          chunkSize,
+          uploadParams,
+          abortController,
+          onStatusUpdate,
+          badOptions,
+        );
+      }).toThrow('Resumable and compressing uploads at the same time is not implemented yet');
+    });
   });
 });
