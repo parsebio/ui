@@ -8,7 +8,6 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { setupNavigatorLocks } from '__test__/test-utils/mockLocks';
 
 import FileUploader from 'utils/upload/FileUploader/FileUploader';
-import PartUploader from 'utils/upload/FileUploader/PartUploader';
 import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 import { waitFor } from '@testing-library/react';
 
@@ -43,6 +42,11 @@ const mockFileReaderStream = {
   resume: jest.fn(),
 };
 
+const mockPartUploader = {
+  uploadChunk: jest.fn(),
+  finishUpload: jest.fn(),
+};
+
 jest.mock('axios', () => ({ request: jest.fn() }));
 jest.mock('fflate', () => ({ AsyncGzip: jest.fn(() => mockAsyncGzip) }));
 jest.mock('filereader-stream', () => ({
@@ -52,16 +56,15 @@ jest.mock('filereader-stream', () => ({
 
 jest.mock('utils/upload/FileUploader/PartUploader', () => ({
   __esModule: true,
-  default: jest.fn().mockImplementation(() => ({
-    uploadChunk: jest.fn(),
-    finishUpload: jest.fn(),
-  })),
+  default: jest.fn().mockImplementation(() => mockPartUploader),
 }));
 
 const MB = 1024 * 1024;
 
+const getChunk = (size) => ({ length: size });
+
 const getDefaultConstructorParams = () => {
-  const file = { size: 5 * MB };
+  const file = { size: 10 * MB };
   const chunkSize = 10;
   const uploadParams = {
     projectId: mockProjectId,
@@ -171,8 +174,13 @@ describe('FileUploader', () => {
         expect(mockFileReaderCallbacks.data).toBeDefined();
       });
 
-      // console.log('')
-      // mockFileReaderCallbacks.data();
+      mockFileReaderCallbacks.data(getChunk(5 * MB));
+
+      await waitFor(() => {
+        expect(mockPartUploader.uploadChunk).toHaveBeenCalledTimes(1);
+      });
+      expect(mockPartUploader.finishUpload).not.toHaveBeenCalled();
+
       // await resPromise;
     });
   });
