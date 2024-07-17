@@ -1,11 +1,14 @@
 import axios from 'axios';
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
+import { AsyncGzip } from 'fflate';
+import filereaderStream from 'filereader-stream';
 
 import mockAPI, { generateDefaultMockAPIResponses } from '__test__/test-utils/mockAPI';
+import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
+
 import { setupNavigatorLocks } from '__test__/test-utils/mockLocks';
 
-import PartUploader from 'utils/upload/FileUploader/PartUploader';
 import FileUploader from 'utils/upload/FileUploader/FileUploader';
+import PartUploader from 'utils/upload/FileUploader/PartUploader';
 import { resumeUpload } from 'utils/upload/processSecondaryUpload';
 
 const mockAbortController = {
@@ -19,7 +22,36 @@ const mockUploadId = 'mock-upload-id';
 const mockBucket = 'mock-bucket';
 const mockKey = 'mock-key';
 
+const mockUploadChunk = jest.fn();
+const mockFinishUpload = jest.fn();
+
+const mockAsyncGzip = {
+  push: jest.fn(),
+  onData: jest.fn(),
+  terminate: jest.fn(),
+};
+
+const mockFileReaderStream = {
+  on: jest.fn(),
+  destroy: jest.fn(),
+  pause: jest.fn(),
+  resume: jest.fn(),
+};
+
 jest.mock('axios', () => ({ request: jest.fn() }));
+jest.mock('fflate', () => ({ AsyncGzip: jest.fn(() => mockAsyncGzip) }));
+jest.mock('filereader-stream', () => ({
+  __esModule: true,
+  default: jest.fn().mockImplementation(() => mockFileReaderStream),
+}));
+
+jest.mock('utils/upload/FileUploader/PartUploader', () => ({
+  __esModule: true,
+  default: jest.fn().mockImplementation(() => ({
+    uploadChunk: jest.fn(),
+    finishUpload: jest.fn(),
+  })),
+}));
 
 const MB = 1024 * 1024;
 
@@ -37,7 +69,7 @@ const getDefaultConstructorParams = () => {
   const onStatusUpdate = jest.fn();
   const options = {
     compress: false,
-    resumeUpload: true,
+    resumeUpload: false,
     retryPolicy: 'normal',
   };
 
@@ -50,6 +82,8 @@ const getDefaultConstructorParams = () => {
     options,
   };
 };
+
+enableFetchMocks();
 
 describe('FileUploader', () => {
   beforeEach(() => {
@@ -88,7 +122,7 @@ describe('FileUploader', () => {
     });
 
     it('throws if resumeUpload and compress are both true', () => {
-      const badOptions = { ...options, compress: true };
+      const badOptions = { ...options, resumeUpload: true, compress: true };
 
       expect(() => {
         // eslint-disable-next-line no-new
@@ -101,6 +135,32 @@ describe('FileUploader', () => {
           badOptions,
         );
       }).toThrow('Resumable and compressing uploads at the same time is not implemented yet');
+    });
+  });
+
+  describe('Upload', () => {
+    beforeEach(() => {
+      setupNavigatorLocks();
+
+      const mockAPIResponses = generateDefaultMockAPIResponses(mockProjectId);
+
+      fetchMock.resetMocks();
+      fetchMock.mockIf(/.*/, mockAPI(mockAPIResponses));
+    });
+
+    it('works', async () => {
+      const {
+        file, chunkSize, uploadParams, abortController, onStatusUpdate, options,
+      } = getDefaultConstructorParams();
+
+      const fileUploader = new FileUploader(
+        file, chunkSize, uploadParams, abortController, onStatusUpdate, options,
+      );
+
+      mockUploadChunk.mockResolvedValueOnce();
+      mockFinishUpload.mockResolvedValueOnce();
+
+      await fileUploader.upload();
     });
   });
 });
