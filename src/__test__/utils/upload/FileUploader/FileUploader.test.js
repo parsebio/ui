@@ -1,19 +1,18 @@
-import axios from 'axios';
-import { AsyncGzip } from 'fflate';
-import filereaderStream from 'filereader-stream';
-
 import mockAPI, { generateDefaultMockAPIResponses } from '__test__/test-utils/mockAPI';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import { setupNavigatorLocks } from '__test__/test-utils/mockLocks';
 
 import FileUploader from 'utils/upload/FileUploader/FileUploader';
-import { resumeUpload } from 'utils/upload/processSecondaryUpload';
+
 import { waitFor } from '@testing-library/react';
 
+let abortCallback;
 const mockAbortController = {
   signal: {
-    addEventListener: jest.fn(),
+    addEventListener: jest.fn((event, callback) => {
+      if (event === 'abort') abortCallback = callback;
+    }),
   },
 };
 
@@ -27,7 +26,6 @@ const mockFinishUpload = jest.fn();
 
 const mockAsyncGzip = {
   push: jest.fn(),
-  onData: jest.fn(),
   terminate: jest.fn(),
 };
 
@@ -189,6 +187,48 @@ describe('FileUploader', () => {
       });
 
       await resPromise;
+    });
+
+    it('handles the abort signal', async () => {
+      const {
+        file, chunkSize, uploadParams, abortController, onStatusUpdate, options,
+      } = getDefaultConstructorParams();
+
+      const fileUploader = new FileUploader(
+        file,
+        chunkSize,
+        uploadParams,
+        abortController,
+        onStatusUpdate,
+        {
+          ...options,
+          compress: true,
+        },
+      );
+
+      mockUploadChunk.mockResolvedValueOnce();
+      mockFinishUpload.mockResolvedValueOnce();
+
+      const resPromise = fileUploader.upload();
+
+      await waitFor(() => {
+        expect(mockFileReaderCallbacks.data).toBeDefined();
+      });
+
+      mockFileReaderCallbacks.data(getChunk(5 * MB));
+      mockAsyncGzip.ondata(null, getChunk(4 * MB));
+
+      await waitFor(() => {
+        expect(mockPartUploader.uploadChunk).toHaveBeenCalledTimes(1);
+      });
+      expect(mockPartUploader.finishUpload).not.toHaveBeenCalled();
+
+      abortCallback({ target: { reason: 'random reason' } });
+
+      expect(mockFileReaderStream.destroy).toHaveBeenCalledTimes(1);
+      expect(mockAsyncGzip.terminate).toHaveBeenCalledTimes(1);
+
+      await expect(async () => await resPromise).rejects.toThrow('random reason');
     });
   });
 });
