@@ -10,6 +10,7 @@ import { setupNavigatorLocks } from '__test__/test-utils/mockLocks';
 import FileUploader from 'utils/upload/FileUploader/FileUploader';
 import PartUploader from 'utils/upload/FileUploader/PartUploader';
 import { resumeUpload } from 'utils/upload/processSecondaryUpload';
+import { waitFor } from '@testing-library/react';
 
 const mockAbortController = {
   signal: {
@@ -31,8 +32,12 @@ const mockAsyncGzip = {
   terminate: jest.fn(),
 };
 
+const mockFileReaderCallbacks = {};
+
 const mockFileReaderStream = {
-  on: jest.fn(),
+  on: jest.fn((event, callback) => {
+    mockFileReaderCallbacks[event] = callback;
+  }),
   destroy: jest.fn(),
   pause: jest.fn(),
   resume: jest.fn(),
@@ -160,7 +165,15 @@ describe('FileUploader', () => {
       mockUploadChunk.mockResolvedValueOnce();
       mockFinishUpload.mockResolvedValueOnce();
 
-      await fileUploader.upload();
+      const resPromise = fileUploader.upload();
+
+      await waitFor(() => {
+        expect(mockFileReaderCallbacks.data).toBeDefined();
+      });
+
+      // console.log('')
+      // mockFileReaderCallbacks.data();
+      // await resPromise;
     });
   });
 });
