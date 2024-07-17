@@ -6,7 +6,7 @@ import { setupNavigatorLocks } from '__test__/test-utils/mockLocks';
 
 import PartUploader from 'utils/upload/FileUploader/PartUploader';
 
-const mockAbortController = jest.fn();
+const mockAbortController = { signal: 'mockSignal' };
 
 const mockProjectId = 'mock-project-id';
 const mockUploadId = 'mock-upload-id';
@@ -90,6 +90,9 @@ describe('PartUploader', () => {
       // Uploaded even though it didn't reach 5mb because we know it's the last part
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(axios.request).toHaveBeenCalledTimes(1);
+
+      // passes the mockAbortController.signal to the axios request
+      expect(axios.request.mock.calls[0][0].signal).toEqual(mockAbortController.signal);
     });
 
     it('Uploads single part for 2 under 5mb parts', async () => {
