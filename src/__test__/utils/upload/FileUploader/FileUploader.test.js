@@ -189,6 +189,68 @@ describe('FileUploader', () => {
       await resPromise;
     });
 
+    it('works with compression', async () => {
+      const {
+        file, chunkSize, uploadParams, abortController, onStatusUpdate, options,
+      } = getDefaultConstructorParams();
+
+      const fileUploader = new FileUploader(
+        file,
+        chunkSize,
+        uploadParams,
+        abortController,
+        onStatusUpdate,
+        { ...options, compress: true },
+      );
+
+      mockUploadChunk.mockResolvedValueOnce();
+      mockFinishUpload.mockResolvedValueOnce();
+
+      const resPromise = fileUploader.upload();
+
+      await waitFor(() => {
+        expect(mockFileReaderCallbacks.data).toBeDefined();
+        expect(mockAsyncGzip.ondata).toBeDefined();
+      });
+
+      mockFileReaderCallbacks.data(getChunk(5 * MB));
+
+      // Compress calls are shifted by one to deal with the difference in stream handling
+      // So no call yet
+      expect(mockAsyncGzip.push).not.toHaveBeenCalled();
+
+      mockFileReaderCallbacks.data(getChunk(5 * MB));
+
+      // Now push because we have the previous chunk in the buffer
+      await waitFor(() => {
+        expect(mockAsyncGzip.push).toHaveBeenCalledTimes(1);
+      });
+
+      // Return the compressed chunk
+      mockAsyncGzip.ondata(null, getChunk(4 * MB));
+
+      await waitFor(() => {
+        expect(mockPartUploader.uploadChunk).toHaveBeenCalledTimes(1);
+      });
+      expect(mockPartUploader.finishUpload).not.toHaveBeenCalled();
+
+      // Reader finish reading so now the last part gets pushed over to gzip
+      mockFileReaderCallbacks.end();
+
+      await waitFor(() => {
+        expect(mockAsyncGzip.push).toHaveBeenCalledTimes(2);
+      });
+
+      mockAsyncGzip.ondata(null, getChunk(4 * MB));
+
+      await waitFor(() => {
+        expect(mockPartUploader.uploadChunk).toHaveBeenCalledTimes(2);
+        expect(mockPartUploader.finishUpload).toHaveBeenCalledTimes(1);
+      });
+
+      await resPromise;
+    });
+
     it('handles the abort signal', async () => {
       const {
         file, chunkSize, uploadParams, abortController, onStatusUpdate, options,
@@ -200,10 +262,7 @@ describe('FileUploader', () => {
         uploadParams,
         abortController,
         onStatusUpdate,
-        {
-          ...options,
-          compress: true,
-        },
+        { ...options, compress: true },
       );
 
       mockUploadChunk.mockResolvedValueOnce();
