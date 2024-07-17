@@ -52,6 +52,10 @@ const getDefaultConstructorParams = () => {
 };
 
 describe('FileUploader', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('constructor', () => {
     const {
       file, chunkSize, uploadParams, abortController, onStatusUpdate, options,
