@@ -65,7 +65,7 @@ const getChunk = (size) => ({ length: size });
 
 const getDefaultConstructorParams = () => {
   const file = { size: 10 * MB };
-  const chunkSize = 10;
+  const chunkSize = 5 * MB;
   const uploadParams = {
     projectId: mockProjectId,
     uploadId: mockUploadId,
@@ -181,7 +181,14 @@ describe('FileUploader', () => {
       });
       expect(mockPartUploader.finishUpload).not.toHaveBeenCalled();
 
-      // await resPromise;
+      mockFileReaderCallbacks.data(getChunk(5 * MB));
+
+      await waitFor(() => {
+        expect(mockPartUploader.uploadChunk).toHaveBeenCalledTimes(2);
+        expect(mockPartUploader.finishUpload).toHaveBeenCalledTimes(1);
+      });
+
+      await resPromise;
     });
   });
 });
