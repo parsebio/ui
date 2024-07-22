@@ -8,77 +8,65 @@
     "species": "Mus musculus (Mouse)"
   },
   {
-    "name": "GRCh38-mScarlet-GFP",
-    "species": "Custom Human with mScarlet and GFP"
-  },
-  {
-    "name": "BDGP6.46",
-    "species": "Drosophila melanogaster (Fruit fly)"
-  },
-  {
-    "name": "Oar_v3.1",
-    "species": "Ovis aries (Sheep)"
-  },
-  {
-    "name": "Mmul10",
-    "species": "Macaca mulatta (Rhesus monkey)"
-  },
-  {
-    "name": "GRCz11",
-    "species": "Danio rerio (Zebrafish)"
-  },
-  {
     "name": "ARS-UCD1.3",
     "species": "Bos taurus (Cow)"
-  },
-  {
-    "name": "Ssal_v3.1",
-    "species": "Salmo salar (Atlantic Salmon)"
-  },
-  {
-    "name": "Felis_catus_9.0",
-    "species": "Felis catus (Cat)"
-  },
-  {
-    "name": "mRatBN7.2",
-    "species": "Rattus norvegicus (Rat)"
-  },
-  {
-    "name": "E.scolopes-V2.2",
-    "species": "Euprymna scolopes (Hawaiian Bobtail Squid)"
   },
   {
     "name": "ASM2113471v1",
     "species": "Daphnia pulex (Common Water Flea)"
   },
   {
+    "name": "GRCz11",
+    "species": "Danio rerio (Zebrafish)"
+  },
+  {
+    "name": "BDGP6.46",
+    "species": "Drosophila melanogaster (Fruit fly)"
+  },
+  {
+    "name": "Felis_catus_9.0",
+    "species": "Felis catus (Cat)"
+  },
+  {
+    "name": "Mmul10",
+    "species": "Macaca mulatta (Rhesus monkey)"
+  },
+  {
+    "name": "mRatBN7.2",
+    "species": "Rattus norvegicus (Rat)"
+  },
+  {
+    "name": "Oar_v3.1",
+    "species": "Ovis aries (Sheep)"
+  },
+  {
     "name": "MustPutFur",
     "species": "Mustela furo (Ferret)"
   },
   {
-    "name": "Gmax_v2",
-    "species": "Glycine max (Soybean)"
-  },
-  {
-    "name": "Gmax_v4",
-    "species": "Glycine max (Soybean)"
-  },
-  {
-    "name": "Gmax_v6",
-    "species": "Glycine max (Soybean)"
-  },
-  {
-    "name": "GRCh38-custom-1",
-    "species": "Homo sapiens (Human)"
+    "name": "Ssal_v3.1",
+    "species": "Salmo salar (Atlantic Salmon)"
   },
   {
     "name": "PFal3D7",
     "species": "Plasmodium falciparum 3D7"
   },
   {
+    "name": "E.scolopes-V2.2",
+    "species": "Euprymna scolopes (Hawaiian Bobtail Squid)"
+  },
+  {
     "name": "xenLae10",
     "species": "Xenopus laevis v10.1 (African clawed frog)"
-  }, 
+  },
+  {
+    "name": "ARS-UCD1.2_Oar_v3.1",
+    "species": "Mixed cow and sheep"
+  },
+  {
+    "name": "Sscrofa11.1_Oar_v3.1",
+    "species": "Mixed pig and sheep"
+  },
   {
     "name": "GRCh38_GRCm39",
     "species": "Mixed human and mouse"
@@ -88,11 +76,43 @@
     "species": "Mixed mouse and Hepatitis A virus"
   },
   {
-    "name": "ARS-UCD1.2_Oar_v3.1",
-    "species": "Mixed cow and sheep"
+    "name": "GRCh38-custom-1",
+    "species": "Custom Homo sapiens (human)"
   },
   {
-    "name": "Sscrofa11.1_Oar_v3.1",
-    "species": "Mixed pig and sheep"
+    "name": "GRCh38_eGFP",
+    "species": "Custom Homo sapiens (human) eGFP"
+  },
+  {
+    "name": "GRCh38-mScarlet-GFP",
+    "species": "Custom Homo sapiens (human) with mScarlet and GFP"
+  },
+  {
+    "name": "mTSC-custom",
+    "species": "Custom Mus musculus Trophoblast Stem Cells"
+  },
+  {
+    "name": "mm39-custom-2",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
+    "name": "mm39-tdTom",
+    "species": "Custom Mus musculus (mouse) with tdTomato"
+  },
+  {
+    "name": "mm39_MA10",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
+    "name": "Gmax_v2",
+    "species": "Custom Glycine max (Soybean)"
+  },
+  {
+    "name": "Gmax_v4",
+    "species": "Custom Glycine max (Soybean)"
+  },
+  {
+    "name": "Gmax_v6",
+    "species": "Custom Glycine max (Soybean)"
   }
 ]
