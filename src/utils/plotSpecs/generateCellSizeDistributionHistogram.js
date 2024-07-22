@@ -9,7 +9,7 @@ const generateSpec = (config, plotData, highestUmi) => {
 
   const yScaleDomain = config.axesRanges.yAxisAuto
     ? { data: 'binned', field: 'count' }
-    : [config.axesRanges.xMin, config.axesRanges.xMax];
+    : [config.axesRanges.yMin, config.axesRanges.yMax];
 
   legend = !config.legend.enabled ? null : [
     {
