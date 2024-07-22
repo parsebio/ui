@@ -79,6 +79,11 @@ const generateDefaultMockAPIResponses = (projectId) => ({
   [`/v2/secondaryAnalysis/${projectId}/files`]: () => promiseResponse(
     JSON.stringify(mockAnalysisFiles),
   ),
+  [`/v2/projects/${projectId}/upload/.*/part/\\d+/signedUrl$`]: (req) => {
+    const partNumber = req.url.match(/part\/(\d+)\/signedUrl/)[1];
+
+    return promiseResponse(JSON.stringify(`mockSignedUrl${partNumber}`));
+  },
 });
 
 const mockAPI = (apiMapping) => (req) => {
