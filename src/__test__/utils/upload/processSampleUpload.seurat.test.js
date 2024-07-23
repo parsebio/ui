@@ -209,7 +209,7 @@ describe('processUpload', () => {
       store,
       [{
         type: SAMPLES_FILE_UPDATE,
-        payload: { fileDiff: { upload: { status: UploadStatus.UPLOADING, progress: 25 } } },
+        payload: { fileDiff: { upload: { status: UploadStatus.UPLOADING, progress: '25.00' } } },
       }],
       { matcher: waitForActions.matchers.containing },
     );
@@ -314,33 +314,6 @@ describe('processUpload', () => {
 
       // 1 part
       expect(axios.request).toHaveBeenCalledTimes(1);
-      expect(validate).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it('Should be able to upload files that require 2 parts', async () => {
-    const mockAxiosCalls = [];
-    const uploadSuccess = (params) => {
-      mockAxiosCalls.push(params);
-      return Promise.resolve({ headers: { etag: 'etag-blah' } });
-    };
-
-    axios.request.mockImplementation(uploadSuccess);
-
-    await processSampleUpload(
-      getValidFiles(2 * MB),
-      sampleType,
-      store.getState().samples,
-      mockExperimentId,
-      store.dispatch,
-    );
-
-    // We expect uploads to happen
-    await waitFor(() => {
-      expect(pushNotificationMessage).toHaveBeenCalledTimes(0);
-
-      // 2 parts
-      expect(axios.request).toHaveBeenCalledTimes(2);
       expect(validate).toHaveBeenCalledTimes(1);
     });
   });

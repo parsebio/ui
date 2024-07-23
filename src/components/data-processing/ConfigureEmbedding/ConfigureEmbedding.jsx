@@ -133,11 +133,21 @@ const ConfigureEmbedding = (props) => {
 
   const renderViolin = (colouring, config, actions) => {
     const { loading, data: plotData, error } = cellMeta[colouring];
+
+    const yAxisLabels = {
+      numOfGenes: 'Log10 (number of genes)',
+      numOfUmis: 'Log10 (number of UMIs)',
+      mitochondrialContent: 'Mitochondrial fraction reads',
+      doubletScores: 'Doublet scores',
+    };
+
+    const yAxisLabel = yAxisLabels[colouring] || plotColouring;
+
     const modifiedConfig = {
       ...config,
       axes: {
         ...config.axes,
-        yAxisText: config.axes.yAxisText || plotColouring,
+        yAxisText: yAxisLabel,
       },
     };
     return (
@@ -162,6 +172,7 @@ const ConfigureEmbedding = (props) => {
         experimentId={experimentId}
         plotData={plotData}
         config={config}
+        colouring={colouring}
         loading={loading}
         error={error}
         reloadPlotData={() => dispatch(loadCellMeta(experimentId, colouring))}
