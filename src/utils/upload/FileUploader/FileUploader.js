@@ -1,13 +1,12 @@
-/* eslint-disable no-unused-expressions */
 import _ from 'lodash';
-
 import { AsyncGzip } from 'fflate';
 import filereaderStream from 'filereader-stream';
 
-import fetchAPI from 'utils/http/fetchAPI';
-import putInS3 from 'utils/upload/putInS3';
-import UploadStatus from 'utils/upload/UploadStatus';
+import PartUploader from 'utils/upload/FileUploader/PartUploader';
 import FileUploaderError from 'utils/errors/upload/FileUploaderError';
+import fetchAPI from 'utils/http/fetchAPI';
+import NotImplementedError from 'utils/errors/NotImplementedError';
+import UploadStatus from '../UploadStatus';
 
 class FileUploader {
   constructor(
@@ -28,9 +27,17 @@ class FileUploader {
     }
     const { resumeUpload, compress, retryPolicy = 'normal' } = options;
 
+    if (resumeUpload && compress) {
+      // This should be fine for our current use cases:
+      // 1 - Secondary analysis: Resumable non-compressing uploads
+      // 2 - Tertiary analysis: Compressing non-resumable uploads
+      throw new NotImplementedError('Resumable and compressing uploads at the same time is not implemented yet');
+    }
+
     this.file = file;
     this.compress = compress;
     this.chunkSize = chunkSize;
+
     this.uploadParams = uploadParams;
     this.resumeUpload = resumeUpload;
     this.retryPolicy = retryPolicy;
@@ -47,13 +54,13 @@ class FileUploader {
     this.freeUploadSlotsLock = `freeUploadSlots${this.uploadParams.uploadId}`;
     this.freeUploadSlots = 3;
 
-    // Used to assign partNumbers to each chunk
-    this.partNumberIt = 0;
+    this.handleChunkLoadFinished = `handleChunkLoadFinished${this.uploadParams.uploadId}`;
+
+    // Used to track chunk numbers when filling the progress bar
+    this.chunkNumberIt = 0;
 
     this.readStream = null;
     this.gzipStream = null;
-
-    this.uploadedParts = [];
 
     this.resolve = null;
     this.reject = null;
@@ -68,25 +75,36 @@ class FileUploader {
 
   async upload() {
     let offset = 0;
+
+    let uploadedParts = [];
+
     if (this.resumeUpload) {
-      const uploadedParts = await this.#getUploadedParts();
+      uploadedParts = await this.#getUploadedParts();
 
       if (uploadedParts.length === this.totalChunks) {
         return uploadedParts;
       }
 
       const nextPartNumber = uploadedParts.length + 1;
+
       // setting all previous parts as uploaded
       // this.uploadedPartPercentages.fill(1, 0, nextPartNumber - 1);
       for (let i = 0; i < nextPartNumber - 1; i += 1) {
         this.uploadedPartPercentages[i] = 1;
-        this.uploadedParts.push(uploadedParts[i]);
       }
 
-      this.partNumberIt = nextPartNumber - 1;
+      this.chunkNumberIt = nextPartNumber - 1;
+      offset = this.chunkNumberIt * this.chunkSize;
+
       this.pendingChunks = this.totalChunks - nextPartNumber + 1;
-      offset = this.partNumberIt * this.chunkSize;
     }
+
+    this.partUploader = new PartUploader(
+      this.uploadParams,
+      this.abortController,
+      this.file.size,
+      uploadedParts,
+    );
 
     return new Promise((resolve, reject) => {
       this.resolve = resolve;
@@ -109,36 +127,6 @@ class FileUploader {
     this.abortController.signal.addEventListener('abort', (reason) => this.#cleanupExecution(reason));
   }
 
-  #uploadChunk = async (compressedPart, partNumber) => {
-    const partResponse = await putInS3(
-      compressedPart,
-      () => this.#getSignedUrlForPart(partNumber),
-      this.abortController,
-      this.#createOnUploadProgress(partNumber),
-      this.retryPolicy,
-    );
-
-    this.uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
-  }
-
-  #getSignedUrlForPart = async (partNumber) => {
-    const {
-      projectId, uploadId, bucket, key,
-    } = this.uploadParams;
-
-    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
-    return await fetchAPI(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        bucket,
-        key,
-      }),
-    });
-  };
-
   #getUploadedParts = async () => {
     const {
       projectId, uploadId, bucket, key,
@@ -156,14 +144,6 @@ class FileUploader {
       }),
     });
   }
-
-  #createOnUploadProgress = (partNumber) => (progress) => {
-    // partNumbers are 1-indexed, so we need to subtract 1 for the array index
-    this.uploadedPartPercentages[partNumber - 1] = progress.progress;
-
-    const percentage = (_.mean(this.uploadedPartPercentages) * 100).toFixed(2);
-    this.onStatusUpdate(UploadStatus.UPLOADING, parseFloat(percentage));
-  };
 
   #setupGzipStreamHandlers = () => {
     this.gzipStream.ondata = async (err, chunk) => {
@@ -231,33 +211,41 @@ class FileUploader {
   }
 
   #handleChunkLoadFinished = async (chunk) => {
-    // This assigns a part number to each chunk that arrives
-    // They are read in order, so it should be safe
-    this.partNumberIt += 1;
-    try {
-      await this.#uploadChunk(chunk, this.partNumberIt);
+    await navigator.locks.request(this.handleChunkLoadFinished, async () => {
+      try {
+        this.chunkNumberIt += 1;
+        const onUploadProgress = this.#createOnUploadProgress(this.chunkNumberIt);
 
-      // To track when all chunks have been uploaded
-      this.pendingChunks -= 1;
+        await this.partUploader.uploadChunk(chunk, onUploadProgress);
 
-      if (this.pendingChunks > 0) {
-        await this.#releaseUploadSlot();
+        // To track when all chunks have been uploaded
+        this.pendingChunks -= 1;
+
+        if (this.pendingChunks > 0) {
+          await this.#releaseUploadSlot();
+        }
+        if (this.pendingChunks === 0) {
+          const uploadedParts = await this.partUploader.finishUpload();
+
+          this.resolve(uploadedParts);
+        }
+      } catch (e) {
+        this.#abortUpload(e);
       }
-
-      if (this.pendingChunks === 0) {
-        // S3 expects parts to be sorted by number
-        this.uploadedParts.sort(({ PartNumber: PartNumber1 }, { PartNumber: PartNumber2 }) => {
-          if (PartNumber1 === PartNumber2) throw new Error('Non-unique partNumbers found, each number should be unique');
-
-          return PartNumber1 > PartNumber2 ? 1 : -1;
-        });
-
-        this.resolve(this.uploadedParts);
-      }
-    } catch (e) {
-      this.#abortUpload(e);
-    }
+    });
   }
+
+  chunkNumbersDebug = [];
+
+  #createOnUploadProgress = (chunkNumber) => (progress) => {
+    this.chunkNumbersDebug.push(chunkNumber);
+    // partNumbers are 1-indexed, so we need to subtract 1 for the array index
+    this.uploadedPartPercentages[chunkNumber - 1] = progress.progress;
+
+    const percentage = (_.mean(this.uploadedPartPercentages) * 100).toFixed(2);
+
+    this.onStatusUpdate(UploadStatus.UPLOADING, percentage);
+  };
 
   #reserveUploadSlot = async () => (
     await navigator.locks.request(this.freeUploadSlotsLock, async () => {
