@@ -4,7 +4,7 @@ const generateSpec = (config, plotData, highestUmi) => {
   const coloringExpressionPlot = `(datum.bin1 < ${config.minCellSize}) ? 'low' : 'high'`;
 
   const xScaleDomain = config.axesRanges.xAxisAuto
-    ? [1000, highestUmi]
+    ? [0, highestUmi]
     : [config.axesRanges.xMin, config.axesRanges.xMax];
 
   const yScaleDomain = config.axesRanges.yAxisAuto
