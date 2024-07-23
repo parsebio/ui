@@ -313,7 +313,7 @@ const CalculationConfig = (props) => {
           <Form.Item>
             <p>
               <strong style={{ marginRight: '0.5rem' }}>Downsampling settings:</strong>
-              <Tooltip title='Large datasets (e.g. >100,000 cells) can be downsampled specifically for the integration step. This speeds up the time it takes to integrate large datasets using some methods (especially Seurat_v4 and FastMNN), and enables large datasets to successfully complete the pipeline. Once the data are integrated, the full data are available for downstream analysis and visualization.'>
+              <Tooltip title='Large datasets (e.g. >100,000 cells) can be downsampled specifically for the integration step. This speeds up the time it takes to integrate large datasets using some methods, and enables large datasets to successfully complete the pipeline. Once the data are integrated, the full data are available for downstream analysis and visualization. Note that downsampling is not available when Seuratv4 is selected as the integration method.'>
                 <QuestionCircleOutlined />
               </Tooltip>
             </p>
@@ -371,6 +371,7 @@ const CalculationConfig = (props) => {
                   }
                   updateSettings({ downsampling: downsamplingSettings });
                 }}
+                disabled={dataIntegration.method === 'seuratv4' || disabled}
               >
                 <Option value={downsamplingMethods.NONE}>
                   No Downsampling
