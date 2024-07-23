@@ -3,6 +3,7 @@ import EditableField from 'components/EditableField';
 
 import userEvent from '@testing-library/user-event';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
+
 const EditableFieldFactory = createTestComponentFactory(EditableField);
 
 const renderEditableField = (props = {}) => render(EditableFieldFactory(props));
@@ -19,7 +20,6 @@ describe('EditableField', () => {
     expect(screen.queryByLabelText('Save')).toBeNull();
     expect(screen.queryByLabelText('Cancel')).toBeNull();
   });
-
 
   it('The user can toggle between editing mode and non-editing mode', () => {
     const mockOnEdit = jest.fn();

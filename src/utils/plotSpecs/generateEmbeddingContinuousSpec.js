@@ -2,7 +2,7 @@
 
 import { getAllCells, getSampleCells } from 'utils/cellSets';
 
-const generateSpec = (config, method, plotData) => {
+const generateSpec = (config, method, plotData, colouring) => {
   const xScaleDomain = config.axesRanges.xAxisAuto
     ? { data: 'plotData', field: 'x' }
     : [config.axesRanges.xMin, config.axesRanges.xMax];
@@ -10,6 +10,15 @@ const generateSpec = (config, method, plotData) => {
   const yScaleDomain = config.axesRanges.yAxisAuto
     ? { data: 'plotData', field: 'y' }
     : [config.axesRanges.yMin, config.axesRanges.yMax];
+
+  const legendTitles = {
+    numOfGenes: 'Log10 (number of genes)',
+    numOfUmis: 'Log10 (number of UMIs)',
+    mitochondrialContent: 'Mitochondrial fraction reads',
+    doubletScores: 'Doublet scores',
+  };
+
+  const legendTitle = legendTitles[colouring] || config.shownGene;
 
   let legend = [];
 
@@ -19,7 +28,7 @@ const generateSpec = (config, method, plotData) => {
         fill: 'color',
         type: 'symbol',
         orient: config.legend.position,
-        title: config.shownGene,
+        title: legendTitle,
         labelColor: config.colour.masterColour,
         titleColor: config.colour.masterColour,
         symbolType: 'circle',

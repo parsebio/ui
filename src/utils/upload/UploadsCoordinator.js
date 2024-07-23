@@ -1,7 +1,7 @@
 import fetchAPI from 'utils/http/fetchAPI';
 import fileUploadConfig from 'utils/upload/fileUploadConfig';
 import UploadStatus from 'utils/upload/UploadStatus';
-import FileUploader from 'utils/upload/FileUploader';
+import FileUploader from 'utils/upload/FileUploader/FileUploader';
 import UploadsCoordinatorError from 'utils/errors/upload/UploadsCoordinatorError';
 
 class UploadsCoordinator {
