@@ -14,6 +14,7 @@ const putInS3 = async (
 ) => {
   try {
     const signedUrl = await signedUrlGenerator();
+
     return await axios.request({
       method: 'put',
       data: blob,

@@ -90,6 +90,11 @@ const cellSetsUpdatedMessages = {
   ScTypeAnnotate: endUserMessages.SUCCESS_CELL_SETS_ANNOTATED,
 };
 
+const cognitoMFA = {
+  enabled: 'SOFTWARE_TOKEN_MFA',
+  disabled: 'NOMFA',
+};
+
 const cookiesAgreedCognitoKey = 'custom:agreed_cookies_v1';
 const termsOfUseCognitoKey = 'custom:agreed_terms_v2';
 const institutionCognitoKey = 'custom:institution';
@@ -111,4 +116,5 @@ export {
   institutionCognitoKey,
   notAgreedToTermsStatus,
   cookiesAgreedCognitoKey,
+  cognitoMFA,
 };
