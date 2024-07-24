@@ -16,10 +16,11 @@ const MIN_CELL_SIZE_PLACEHOLDER = 10800;
 
 const CellSizeDistributionConfig = (props) => {
   const {
-    config, disabled, updateSettings, highestUmi, plotType,
+    config, disabled, updateSettings, highestUmi, plotType, xAxisMax,
   } = props;
 
   const withinRange = (cellSize) => Math.max(Math.min(cellSize, highestUmi), 0);
+  const maxBinStep = xAxisMax / 25 || 500;
 
   return (
     <>
@@ -49,7 +50,8 @@ const CellSizeDistributionConfig = (props) => {
       <Form.Item label='Bin step'>
         <SliderWithInput
           min={100}
-          max={5000}
+          max={maxBinStep}
+          step={Math.round(maxBinStep / 50)}
           value={config.binStep}
           onUpdate={(value) => {
             updateSettings({ binStep: value });
@@ -66,6 +68,7 @@ CellSizeDistributionConfig.defaultProps = {
   disabled: false,
   highestUmi: null,
   plotType: null,
+  xAxisMax: null,
 };
 CellSizeDistributionConfig.propTypes = {
   updateSettings: PropTypes.func,
@@ -73,6 +76,7 @@ CellSizeDistributionConfig.propTypes = {
   disabled: PropTypes.bool,
   highestUmi: PropTypes.number,
   plotType: PropTypes.string,
+  xAxisMax: PropTypes.number,
 };
 
 export default CellSizeDistributionConfig;
