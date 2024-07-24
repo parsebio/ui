@@ -23,17 +23,6 @@ const CellSizeDistribution = ({
     (state) => state.componentConfig[
       generateDataProcessingPlotUuid(sampleId, filterName, 1)]?.plotData,
   );
-  const { xMax, xAxisAuto } = useSelector((state) => {
-    const config = state.componentConfig[
-      generateDataProcessingPlotUuid(sampleId, filterName, 1)
-    ]?.config?.axesRanges;
-    return {
-      xMax: config?.xMax ?? HIGHEST_UMI_DEFAULT,
-      xAxisAuto: config?.xAxisAuto ?? true,
-    };
-  });
-
-  const xMaxToPlot = xAxisAuto ? highestUmi : xMax;
 
   useEffect(() => {
     setHighestUmi(_.maxBy(histogramPlotData,
@@ -90,7 +79,7 @@ const CellSizeDistribution = ({
     }];
 
   const renderCalculationConfig = () => (
-    <CalculationConfig highestUmi={highestUmi} xAxisMax={xMaxToPlot} />);
+    <CalculationConfig highestUmi={highestUmi} />);
   return (
     <PlotLayout
       experimentId={experimentId}

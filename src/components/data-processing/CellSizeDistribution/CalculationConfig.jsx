@@ -16,11 +16,12 @@ const MIN_CELL_SIZE_PLACEHOLDER = 10800;
 
 const CellSizeDistributionConfig = (props) => {
   const {
-    config, disabled, updateSettings, highestUmi, plotType, xAxisMax,
+    config, disabled, updateSettings, highestUmi, plotType,
   } = props;
 
   const withinRange = (cellSize) => Math.max(Math.min(cellSize, highestUmi), 0);
-  const maxBinStep = Math.round(xAxisMax / 25) || 500;
+
+  const maxBinStep = Math.round(highestUmi / 25) || 500;
 
   return (
     <>
@@ -68,7 +69,6 @@ CellSizeDistributionConfig.defaultProps = {
   disabled: false,
   highestUmi: null,
   plotType: null,
-  xAxisMax: null,
 };
 CellSizeDistributionConfig.propTypes = {
   updateSettings: PropTypes.func,
@@ -76,7 +76,6 @@ CellSizeDistributionConfig.propTypes = {
   disabled: PropTypes.bool,
   highestUmi: PropTypes.number,
   plotType: PropTypes.string,
-  xAxisMax: PropTypes.number,
 };
 
 export default CellSizeDistributionConfig;
