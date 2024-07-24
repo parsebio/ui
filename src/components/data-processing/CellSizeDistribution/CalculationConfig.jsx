@@ -21,6 +21,8 @@ const CellSizeDistributionConfig = (props) => {
 
   const withinRange = (cellSize) => Math.max(Math.min(cellSize, highestUmi), 0);
 
+  const maxBinStep = Math.round(highestUmi / 25) || 500;
+
   return (
     <>
 
@@ -49,7 +51,8 @@ const CellSizeDistributionConfig = (props) => {
       <Form.Item label='Bin step'>
         <SliderWithInput
           min={100}
-          max={400}
+          max={maxBinStep}
+          step={10}
           value={config.binStep}
           onUpdate={(value) => {
             updateSettings({ binStep: value });

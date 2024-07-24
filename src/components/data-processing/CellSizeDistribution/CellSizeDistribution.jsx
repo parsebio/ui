@@ -78,7 +78,8 @@ const CellSizeDistribution = ({
       controls: ['font'],
     }];
 
-  const renderCalculationConfig = () => <CalculationConfig highestUmi={highestUmi} />;
+  const renderCalculationConfig = () => (
+    <CalculationConfig highestUmi={highestUmi} />);
   return (
     <PlotLayout
       experimentId={experimentId}
