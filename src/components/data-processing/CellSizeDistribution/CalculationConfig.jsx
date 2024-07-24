@@ -52,7 +52,7 @@ const CellSizeDistributionConfig = (props) => {
         <SliderWithInput
           min={100}
           max={maxBinStep}
-          step={Math.round(maxBinStep / 50)}
+          step={10}
           value={config.binStep}
           onUpdate={(value) => {
             updateSettings({ binStep: value });
