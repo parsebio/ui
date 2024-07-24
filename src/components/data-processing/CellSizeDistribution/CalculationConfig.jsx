@@ -20,7 +20,7 @@ const CellSizeDistributionConfig = (props) => {
   } = props;
 
   const withinRange = (cellSize) => Math.max(Math.min(cellSize, highestUmi), 0);
-  const maxBinStep = xAxisMax / 25 || 500;
+  const maxBinStep = Math.round(xAxisMax / 25) || 500;
 
   return (
     <>
