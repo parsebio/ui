@@ -26,7 +26,7 @@ const DiffExprSelect = (props) => {
       children.unshift({ key: 'rest', name: `Rest of ${properties[rootKey].name}` });
     }
 
-    const shouldDisable = (rootKey, key) => {
+    const shouldDisable = (key) => {
       // Should always disable something already selected.
       const isAlreadySelected = Object.values(selectedComparison)?.includes(key);
 
@@ -40,7 +40,7 @@ const DiffExprSelect = (props) => {
 
     if (selectedComparison) {
       return children.map(({ key, name }) => (
-        <Option key={key} disabled={shouldDisable(rootKey, key)}>
+        <Option key={key} disabled={shouldDisable(key)}>
           {name}
         </Option>
       ));
@@ -99,5 +99,6 @@ DiffExprSelect.propTypes = {
   option: PropTypes.string.isRequired,
   filterTypes: PropTypes.array.isRequired,
   onSelectCluster: PropTypes.func.isRequired,
+  value: PropTypes.string,
 };
 export default DiffExprSelect;

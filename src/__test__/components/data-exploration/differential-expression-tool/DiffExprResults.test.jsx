@@ -386,7 +386,10 @@ describe('DiffExprResults', () => {
     // Adding a filter and applying it
     const dropdown = component.find('Dropdown');
     dropdown.simulate('click', 'Up-regulated');
-    await waitForActions(withResultStore, [DIFF_EXPR_ORDERING_SET, DIFF_EXPR_LOADING, DIFF_EXPR_LOADED]);
+    await waitForActions(
+      withResultStore,
+      [DIFF_EXPR_ORDERING_SET, DIFF_EXPR_LOADING, DIFF_EXPR_LOADED],
+    );
 
     // closing the modal
     const closeButton = component.find('.ant-modal-close');

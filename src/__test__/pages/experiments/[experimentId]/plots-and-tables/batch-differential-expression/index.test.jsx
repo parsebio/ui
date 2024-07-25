@@ -77,13 +77,13 @@ describe('Batch differential expression tests ', () => {
       'Fake louvain clusters',
       'Custom cell sets',
       'Some Cell Level Track',
-      'Another Cell Level Track'
+      'Another Cell Level Track',
     ];
 
     const sampleBasedClasses = [
       'Samples',
       'Track_1',
-      'Sample Cell Level Track'
+      'Sample Cell Level Track',
     ];
 
     const sampleBasedSets = [
@@ -93,12 +93,12 @@ describe('Batch differential expression tests ', () => {
     // Shows the correct cell classes as options
     cellBasedClasses.forEach((text) => {
       expect(screen.getByText(text)).toBeInTheDocument();
-    })
+    });
 
     // Doesn't show the samples or sample-based metadata cell classes as options
     sampleBasedClasses.forEach((text) => {
       expect(screen.queryByText(text)).not.toBeInTheDocument();
-    })
+    });
 
     // Check compareBetweenSamplesRadio
     await act(() => userEvent.click(compareBetweenSamplesRadio));
@@ -125,7 +125,6 @@ describe('Batch differential expression tests ', () => {
     expect(screen.getByText(/Select samples or metadata.../i)).toBeInTheDocument();
 
     await act(() => userEvent.click(screen.getAllByText('Select a cell set...')[0]));
-
 
     const someLouvainCellSets = Array.from({ length: 11 }, (x, index) => `Cluster ${index}`);
     // Shows only some of the louvain options and not the others

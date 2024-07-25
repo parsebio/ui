@@ -1,3 +1,4 @@
+// TODO Fix the disable eslint rules here
 import React, { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
@@ -5,6 +6,7 @@ const type = 'DraggableBodyRow';
 
 const DraggableBodyRow = React.forwardRef((props, ref) => {
   const {
+    // eslint-disable-next-line react/prop-types
     index, moveRow, className, style, ...restProps
   } = props;
 
@@ -37,6 +39,7 @@ const DraggableBodyRow = React.forwardRef((props, ref) => {
       ref={ref}
       className={`${className}${isOver ? dropClassName : ''}`}
       style={{ cursor: 'move', ...style }}
+      // eslint-disable-next-line react/jsx-props-no-spreading
       {...restProps}
     />
   );

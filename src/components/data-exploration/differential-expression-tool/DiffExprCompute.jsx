@@ -163,7 +163,9 @@ const DiffExprCompute = (props) => {
             Compare cell sets within a sample/group
             <Tooltip overlay={(
               <span>
-                For finding marker genes that distinguish one cluster from another. The calculation uses the presto implementation of the Wilcoxon rank sum test and auROC analysis. For more information see the
+                For finding marker genes that distinguish one cluster from another.
+                The calculation uses the presto implementation of the Wilcoxon
+                rank sum test and auROC analysis. For more information see the
                 {' '}
                 <a
                   href='https://rdrr.io/github/immunogenomics/presto/f/vignettes/getting-started.Rmd'
@@ -188,7 +190,12 @@ const DiffExprCompute = (props) => {
             {
               numSamples === 1 ? (
                 <Tooltip
-                  overlay={(<span>Comparison between samples/groups is not possible with a dataset that contains only 1 sample</span>)}
+                  overlay={(
+                    <span>
+                      Comparison between samples/groups is not
+                      possible with a dataset that contains only 1 sample
+                    </span>
+                  )}
                 >
                   Compare a selected cell set between samples/groups
                 </Tooltip>
@@ -199,7 +206,8 @@ const DiffExprCompute = (props) => {
             <Tooltip overlay={(
               <>
                 <span>
-                  For finding genes that are differentially expressed between two experimental groups. This analysis uses a
+                  For finding genes that are differentially expressed
+                  between two experimental groups. This analysis uses a
                   {' '}
                   <a
                     href='http://bioconductor.org/books/3.14/OSCA.workflows/segerstolpe-human-pancreas-smart-seq2.html#segerstolpe-comparison'
@@ -212,10 +220,7 @@ const DiffExprCompute = (props) => {
                 </span>
                 <br />
                 <span>
-                  For between-group comparisons, genes that are unlikely to be significantly differentially expressed due to very
-                  low counts across all samples are excluded before statistical tests. This is done to reduce the impact of multiple
-                  hypothesis correction. As a result, the 'between comparison' result table may display fewer genes than the total
-                  number of genes detected in the experiment.
+                  {'For between-group comparisons, genes that are unlikely to be significantly differentially expressed due to very low counts across all samples are excluded before statistical tests. This is done to reduce the impact of multiple hypothesis correction. As a result, the \'between comparison\' result table may display fewer genes than the total number of genes detected in the experiment.'}
                 </span>
               </>
             )}

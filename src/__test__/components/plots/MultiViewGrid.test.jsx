@@ -25,7 +25,7 @@ describe('MultiViewGrid', () => {
     nrows: 1,
     ncols: 3,
   };
-  let plotConfigs;
+
   const experimentId = 'experiment1';
   const plotUuid = 'ViolinMain';
   const plotType = 'violin';
@@ -53,15 +53,6 @@ describe('MultiViewGrid', () => {
       embeddings: {},
       cellSets: { accessible: true },
     });
-
-    plotConfigs = {
-      'ViolinMain-0': { shownGene: 'gene1' },
-      'ViolinMain-1': { shownGene: 'gene2' },
-      'ViolinMain-2': { shownGene: 'gene3' },
-    };
-    // act(() => {
-
-    // });
   });
 
   const renderComponent = () => {
@@ -70,7 +61,7 @@ describe('MultiViewGrid', () => {
         <MultiViewGrid
           experimentId={experimentId}
           renderPlot={(uuid) => <div>{uuid}</div>}
-          updateAllWithChanges={() => {}}
+          updateAllWithChanges={() => { }}
           plotType={plotType}
           plotUuid={plotUuid}
         />

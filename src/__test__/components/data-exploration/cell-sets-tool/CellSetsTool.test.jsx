@@ -194,7 +194,9 @@ describe('CellSetsTool', () => {
 
     // Uncomment test to test for the existence of the cell sets test
     // There should be a button for subsetting cellsets
-    // const subsetCellSetsOperation = screen.getByLabelText(/Create new experiment from selected cellsets/i);
+    // const subsetCellSetsOperation = screen.getByLabelText(
+    // /Create new experiment from selected cellsets/i
+    // );
     // expect(subsetCellSetsOperation).toBeInTheDocument();
   });
 

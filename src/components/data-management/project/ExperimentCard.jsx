@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Card, Descriptions,
 } from 'antd';
-import { blue } from '@ant-design/colors';
+
 import { useSelector, useDispatch } from 'react-redux';
 
 import { brandColors } from 'utils/constants';

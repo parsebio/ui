@@ -10,7 +10,7 @@ const findTop = (elem) => {
   // until obj.offsetParent is undefined, needed to compare with event.clientY for drag event
   do {
     posTop += elem.offsetTop;
-  } while (elem = elem.offsetParent);
+  } while (elem === elem.offsetParent);
 
   return posTop;
 };
@@ -29,10 +29,12 @@ const ScrollOnDrag = (treeScrollable) => {
 
     // drag event ends with relY = -treeTop, currently hardcoded to ignore
     if (relY < 0 && relY !== -treeTop + tablist.scrollTop) {
+      // eslint-disable-next-line no-param-reassign
       interval = setInterval(() => { treeScrollable.scrollTop -= 5; }, 20);
     }
 
     if (relY > treeHeight) {
+      // eslint-disable-next-line no-param-reassign
       interval = setInterval(() => { treeScrollable.scrollTop += 5; }, 20);
     }
   };

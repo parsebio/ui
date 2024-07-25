@@ -1,7 +1,7 @@
 import React, {
   useState, useEffect,
 } from 'react';
-import _ from 'lodash';
+
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Collapse, InputNumber, Form, Select, Typography, Tooltip, Alert,
@@ -139,7 +139,7 @@ const CalculationConfig = (props) => {
           <Tooltip overlay={(
             <span>
               A metric determines how similarity between cells is measured.
-              "Euclidean" is the standard for most normalized datasets.
+              &quot;Euclidean&quot; is the standard for most normalized datasets.
               Cosine might be a good choice for unnormalized data.
               More information
               <a
@@ -302,9 +302,10 @@ const CalculationConfig = (props) => {
               <Tooltip overlay={(
                 <span>
                   Louvain and Leiden are graph-based clustering methods which are the most popular
-                  clustering algorithm in scRNA-seq data analysis since they have been reported to have outperformed other
-                  clustering methods in many situations.
-                  They are also more efficient than other cluster methods which is crucial large scRNA-seq datasets.
+                  clustering algorithm in scRNA-seq data analysis since they have been
+                  reported to have outperformed other clustering methods in many situations.
+                  They are also more efficient than other cluster methods which
+                  is crucial large scRNA-seq datasets.
                   <a
                     href='https://en.wikipedia.org/wiki/Louvain_method'
                     target='_blank'
@@ -347,7 +348,10 @@ const CalculationConfig = (props) => {
                 Resolution&nbsp;
                 <Tooltip overlay={(
                   <span>
-                    Resolution is a parameter for the Louvain community detection algorithm that alters the number of the recovered clusters. Smaller resolution recovers fewer clusters while larger resolution recovers more clusters. The default is 0.8.
+                    Resolution is a parameter for the Louvain community detection
+                    algorithm that alters the number of the recovered clusters.
+                    Smaller resolution recovers fewer clusters while larger resolution
+                    recovers more clusters. The default is 0.8.
                   </span>
                 )}
                 >
@@ -378,7 +382,6 @@ const CalculationConfig = (props) => {
 };
 
 CalculationConfig.propTypes = {
-  experimentId: PropTypes.string.isRequired,
   onConfigChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
 };
