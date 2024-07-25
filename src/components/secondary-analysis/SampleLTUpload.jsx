@@ -138,6 +138,17 @@ const SampleLTUpload = (props) => {
         <Form.Item
           name='projectName'
         >
+          <Text>
+            Upload your sample loading table in the .xlsm format.
+            <br />
+            You must use the Parse Biosciences official templates which can be accessed by Parse Biosciences customers via our
+            <a href='https://support.parsebiosciences.com/hc/en-us/articles/9482740811924-Evercode-Sample-Loading-Tables' target='_blank' rel='noopener noreferrer'> support suite</a>
+            .
+            <br />
+            Other excel files will not work.
+          </Text>
+          <br />
+          <br />
           <Dropzone onDrop={onDrop}>
             {({ getRootProps, getInputProps }) => (
               <div
