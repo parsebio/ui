@@ -82,17 +82,18 @@ const DiffExprResults = (props) => {
     ));
   };
 
-  const optionName = (word) => {
-    const [rootGroup, clusterName] = word.split('/');
-
+  const optionName = (key) => {
     let printString = '';
 
-    if (!clusterName) {
-      printString = _.capitalize(rootGroup);
-    } else if (clusterName === 'rest') {
-      printString = `Rest of ${properties[rootGroup].name}`;
+    const isNode = properties[key];
+
+    if (key === 'rest') {
+      const parentName = properties[properties[cellSet].parentNodeKey].name;
+      printString = `Rest of ${parentName}`;
+    } else if (!isNode) {
+      printString = _.capitalize(key);
     } else {
-      printString = properties[clusterName]?.name || _.capitalize(clusterName);
+      printString = properties[key]?.name;
     }
 
     return <strong>{printString}</strong>;
