@@ -132,6 +132,7 @@ const PipelineLogsViewer = (props) => {
                         <Button
                           icon={<SyncOutlined />}
                           onClick={handleRefresh}
+                          data-testid='refresh-logs-button'
                           style={{
                             position: 'absolute',
                             top: '1vh',
