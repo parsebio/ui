@@ -82,7 +82,7 @@ const DiffExprResults = (props) => {
     ));
   };
 
-  const optionName = (key) => {
+  const renderOptionName = (key) => {
     let printString = '';
 
     const isNode = properties[key];
@@ -165,15 +165,15 @@ const DiffExprResults = (props) => {
       {settingsListed
         ? (
           <div id='settingsText'>
-            {optionName(cellSet)}
+            {renderOptionName(cellSet)}
             {' '}
             vs.
             {' '}
-            {optionName(compareWith)}
+            {renderOptionName(compareWith)}
             {' '}
             in
             {' '}
-            {optionName(basis)}
+            {renderOptionName(basis)}
           </div>
         ) : <div />}
       <GeneTable
