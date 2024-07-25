@@ -53,7 +53,7 @@ const DiffExprCompute = (props) => {
       const theOnlySampleOption = {
         ...comparisonGroup[ComparisonType.WITHIN],
         type: ComparisonType.WITHIN,
-        basis: `sample/${samples[0].key}`,
+        basis: `${samples[0].key}`,
       };
       dispatch(setComparisonGroup(theOnlySampleOption));
     }
@@ -87,12 +87,11 @@ const DiffExprCompute = (props) => {
    * @param {string} cellSet The key of the cell set.
    * @param {string} option The option string (`cellSet` or `compareWith`).
    */
-  const onSelectCluster = (cellSet, option) => {
+  const onSelectCluster = (cellSetKey, option) => {
     dispatch(setComparisonGroup({
       ...comparisonGroup[selectedComparison],
       type: selectedComparison,
-      [option]:
-        cellSet,
+      [option]: cellSetKey,
     }));
   };
 

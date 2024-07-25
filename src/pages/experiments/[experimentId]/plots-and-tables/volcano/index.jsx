@@ -20,7 +20,7 @@ import {
   updatePlotConfig,
   loadPlotConfig,
 } from 'redux/actions/componentConfig';
-import { getCellSetKey } from 'utils/cellSets';
+
 import PlatformError from 'components/PlatformError';
 import { setComparisonGroup } from 'redux/actions/differentialExpression';
 import Loader from 'components/Loader';
@@ -155,15 +155,9 @@ const VolcanoPlotPage = (props) => {
   };
 
   const generateExportDropdown = () => {
-    let {
+    const {
       cellSet, compareWith,
     } = comparison.group[comparison.type];
-
-    // Remove 'groups' from 'group/cluster' name for use in filename below
-    if (cellSet && compareWith) {
-      cellSet = getCellSetKey(cellSet);
-      compareWith = getCellSetKey(compareWith);
-    }
 
     const date = dayjs.utc().format('YYYY-MM-DD-HH-mm-ss');
     const fileName = `de_${experimentId}_${cellSet}_vs_${compareWith}_${date}.csv`;
