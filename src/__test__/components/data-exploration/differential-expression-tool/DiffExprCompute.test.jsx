@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import {
   render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
@@ -16,8 +17,9 @@ import initialCellsetsState from 'redux/reducers/cellSets/initialState';
 import initialDiffExprState from 'redux/reducers/differentialExpression/initialState';
 
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
+import cellSetsData from '__test__/data/cell_sets.json';
 
-import mockAPI, { generateDefaultMockAPIResponses } from '__test__/test-utils/mockAPI';
+import mockAPI, { generateDefaultMockAPIResponses, promiseResponse } from '__test__/test-utils/mockAPI';
 import fake from '__test__/test-utils/constants';
 
 jest.mock('components/Loader');
@@ -37,6 +39,8 @@ const DiffExprComputeFactory = createTestComponentFactory(DiffExprCompute, defau
 const mockAPIresponses = generateDefaultMockAPIResponses(experimentId);
 
 const renderDiffExprCompute = async (store) => {
+  await storeState.dispatch(loadCellSets(experimentId));
+
   await act(async () => {
     render(
       <Provider store={store}>
@@ -56,7 +60,6 @@ describe('DiffExprCompute', () => {
     fetchMock.mockIf(/.*/, mockAPI(mockAPIresponses));
 
     storeState = makeStore();
-    await storeState.dispatch(loadCellSets(experimentId));
   });
 
   it('Renders correctly with no comparison method', async () => {
@@ -316,5 +319,44 @@ describe('DiffExprCompute', () => {
     // The other options should still be the same
     expect(cellSet2Selection.querySelector(selectionBoxItemSelector)).toHaveTextContent(/Cluster 2/i);
     expect(sampleOrGroupSelection.querySelector(selectionBoxItemSelector)).toHaveTextContent(/WT1/);
+  });
+
+  it('Rest of is disabled if no leftover cell sets in cell class', async () => {
+    // Set up custom cell sets with one single element, thus it should be posible to
+    // select custom cell sets but not to select "rest of custom" because there won't be
+    // any leftover cellsets in custom
+    const customCellSetsData = _.cloneDeep(cellSetsData);
+    _.find(customCellSetsData.cellSets, { key: 'louvain' }).children = [{
+      key: 'custom-1',
+      name: 'Custom 1',
+      color: '#8c564b',
+      cellIds: [1, 2, 3, 4, 5],
+    }];
+
+    const customMockAPIresponses = {
+      ...generateDefaultMockAPIResponses(experimentId),
+      [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(
+        JSON.stringify(customCellSetsData),
+      ),
+    };
+
+    fetchMock.mockClear();
+    fetchMock.mockIf(/.*/, mockAPI(customMockAPIresponses));
+
+    await renderDiffExprCompute(storeState);
+
+    // Select compare between groups
+    userEvent.click(screen.getByText('Compare cell sets within a sample/group'));
+
+    // Choose cell set
+    const selectCellSet = screen.getByRole('combobox', { name: /Compare cell set/i });
+    userEvent.click(selectCellSet);
+
+    userEvent.click(screen.getByText(/Custom 1/));
+    // Select the 1st group
+    const selectGroup1 = screen.getByRole('combobox', { name: /and cell set:/i });
+    userEvent.click(selectGroup1);
+
+    expect(screen.getByText(/Rest of fake louvain clusters/).parentElement).toHaveClass('ant-select-item-option-disabled');
   });
 });
