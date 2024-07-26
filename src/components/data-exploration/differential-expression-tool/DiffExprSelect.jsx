@@ -1,4 +1,6 @@
 import React from 'react';
+import _ from 'lodash';
+
 import { composeTree } from 'utils/cellSets';
 import PropTypes from 'prop-types';
 import {
@@ -35,7 +37,11 @@ const DiffExprSelect = (props) => {
 
       const isNotInTheSameGroup = rootKey !== parentGroup;
 
-      return isAlreadySelected || (option === 'compareWith' && isNotInTheSameGroup);
+      // If the button is "rest of ..." then we should disable it if there is no rest available
+      // (if selectedComparison.cellSet chose the only avilable cell set in that cell class)
+      const noRestAvailable = option === 'compareWith' && key === 'rest' && _.find(hierarchy, { key: parentGroup }).children.length <= 1;
+
+      return isAlreadySelected || (option === 'compareWith' && isNotInTheSameGroup) || noRestAvailable;
     };
 
     if (selectedComparison) {
