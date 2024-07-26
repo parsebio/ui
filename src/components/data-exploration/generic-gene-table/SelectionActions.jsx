@@ -1,7 +1,7 @@
 /* eslint-disable jsx-quotes */
 import React, { useState, useEffect } from 'react';
 import {
-  Button, Typography, Row, Divider, Tooltip,
+  Button, Typography, Row, Divider,
 } from 'antd';
 
 import PropTypes from 'prop-types';

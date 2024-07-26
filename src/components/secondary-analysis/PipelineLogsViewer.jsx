@@ -154,6 +154,7 @@ const PipelineLogsViewer = (props) => {
                       }}
                       >
                         {selectedLogs.data.map((entry, index) => (
+                          // eslint-disable-next-line react/no-array-index-key
                           <div key={`${entry}-${index}`} style={{ marginBottom: '0.5vh' }}>{entry || 'No logs yet'}</div>
                         ))}
                       </div>

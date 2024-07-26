@@ -184,7 +184,8 @@ const LaunchPathwayAnalysisModal = (props) => {
             It is
             <b> strongly recommended </b>
             {' '}
-            to input the reference list of genes by setting it in &quot;Reference List&quot; in the PantherDB results page
+            to input the reference list of genes by setting it
+            in &quot;Reference List&quot; in the PantherDB results page
             and re-run the pathway analysis.
             {' '}
             <Button

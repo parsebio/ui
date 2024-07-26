@@ -15,6 +15,7 @@ const HierarchicalTreeGenes = (props) => {
 
     // if dropped in place, ignore
     // dragNode.key is str, dropPosition is int
+    // eslint-disable-next-line eqeqeq
     if (dragNode.key == dropPosition) return;
 
     // dragOver is true for positions where dropToGap is false

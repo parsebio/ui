@@ -289,7 +289,7 @@ const DataProcessingPage = ({ experimentId }) => {
           Such barcodes cause problems in the downstream
           analysis as they appear as an intermediate type.
           Barcodes with a high probability of being a doublet should be excluded.
-          The probability of being a doublet is calculated using "scDblFinder".
+          The probability of being a doublet is calculated using &quot;scDblFinder&quot;.
           For each sample, the default threshold tries to minimize both the deviation in the
           expected number of doublets and the error of a trained classifier. For more details see
           {' '}
@@ -721,7 +721,6 @@ const DataProcessingPage = ({ experimentId }) => {
 
 DataProcessingPage.propTypes = {
   experimentId: PropTypes.string.isRequired,
-  experimentData: PropTypes.object.isRequired,
 };
 
 export default DataProcessingPage;

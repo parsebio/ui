@@ -129,7 +129,9 @@ describe('ContentWrapper', () => {
 
     navigator.userAgent = chromeUA;
 
-    calculateGem2sRerunStatus.mockImplementation(() => ({ rerun: true, reasons: [], complete: false }));
+    calculateGem2sRerunStatus.mockImplementation(
+      () => ({ rerun: true, reasons: [], complete: false }),
+    );
 
     await store.dispatch(loadExperiments());
     await store.dispatch(setActiveExperiment(experimentId));

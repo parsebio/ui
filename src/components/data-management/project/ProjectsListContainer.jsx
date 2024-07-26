@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import { modules } from 'utils/constants';
-import { useSelector } from 'react-redux';
+
 import ProjectsList from './ProjectsList';
 import ProjectSearchBox from './ProjectSearchBox';
 

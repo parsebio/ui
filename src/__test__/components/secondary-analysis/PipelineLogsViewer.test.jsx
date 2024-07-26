@@ -18,7 +18,6 @@ import { mockAnalysisIds } from '__test__/data/secondaryAnalyses/secondary_analy
 import mockSecondaryAnalysisLogs from '__test__/data/secondaryAnalyses/secondary_analysis_logs.json';
 import mockSecondaryAnalysisStatusFinished from '__test__/data/secondaryAnalyses/secondary_analysis_status_finished.json';
 import _ from 'lodash';
-import { act } from 'react-dom/test-utils';
 
 const customResponses = {
   [`/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}/executionStatus`]: () => promiseResponse(JSON.stringify(mockSecondaryAnalysisStatusFinished)),

@@ -10,7 +10,7 @@ import { getCellSetsHierarchyByType } from 'redux/selectors';
 import { useSelector } from 'react-redux';
 
 const getGroupByOptions = (cellSetsHierarchyType) => {
-  const options = useSelector(getCellSetsHierarchyByType(cellSetsHierarchyType))
+  const options = useSelector(getCellSetsHierarchyByType(cellSetsHierarchyType));
   const selectOptions = [];
   if (!options.length) {
     return;

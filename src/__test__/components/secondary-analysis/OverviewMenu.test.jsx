@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import OverviewMenu from 'components/secondary-analysis/OverviewMenu';
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined } from '@ant-design/icons';
 
 const wizardSteps = [
   {
@@ -22,7 +21,13 @@ const wizardSteps = [
 const setCurrentStep = jest.fn();
 
 const renderComponent = (editable = true) => {
-  render(<OverviewMenu wizardSteps={wizardSteps} setCurrentStep={setCurrentStep} editable={editable} />);
+  render(
+    <OverviewMenu
+      wizardSteps={wizardSteps}
+      setCurrentStep={setCurrentStep}
+      editable={editable}
+    />,
+  );
 };
 
 describe('OverviewMenu', () => {

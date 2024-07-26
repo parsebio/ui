@@ -14,9 +14,9 @@ exports[`DiffExprResults fetches all the genes 2`] = `
 {
   "payload": {
     "comparisonGroup": {
-      "basis": "scratchpad/scratchpad-a",
-      "cellSet": "louvain/cluster-a",
-      "compareWith": "louvain/cluster-b",
+      "basis": "scratchpad-a",
+      "cellSet": "cluster-a",
+      "compareWith": "cluster-b",
     },
     "comparisonType": "between",
     "data": [

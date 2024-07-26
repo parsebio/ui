@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -15,8 +16,6 @@ import {
 } from 'antd';
 import { CheckCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
 import Dropzone from 'react-dropzone';
-
-import config from 'config';
 
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
@@ -160,7 +159,8 @@ const MetadataUploadModal = (props) => {
         <Col span={24}>
           <Paragraph type='secondary'>
             <i>
-              Don’t have the data in an accepted format? Reach out to us using the feedback button at the top of the page.
+              Don’t have the data in an accepted format?
+              Reach out to us using the feedback button at the top of the page.
             </i>
           </Paragraph>
         </Col>

@@ -23,9 +23,9 @@ const mockStore = configureStore([thunk]);
 describe('loadDifferentialExpression action', () => {
   const experimentId = '1234';
   const cellSets = {
-    cellSet: 'louvain/louvain-0',
-    compareWith: 'louvain/louvain-1',
-    basis: 'condition/condition-control',
+    cellSet: 'louvain-0',
+    compareWith: 'louvain-1',
+    basis: 'condition-control',
   };
   const comparisonType = 'within';
 

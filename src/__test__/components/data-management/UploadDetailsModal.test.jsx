@@ -30,6 +30,7 @@ const defaultProps = {
 };
 
 const renderUploadDetailsModal = (props = {}) => {
+  // eslint-disable-next-line react/jsx-props-no-spreading
   render(<UploadDetailsModal {...defaultProps} {...props} />);
 };
 

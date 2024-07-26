@@ -12,8 +12,16 @@ import GeneSearchBar from 'components/plots/GeneSearchBar';
 
 const MarkerGeneSelection = (props) => {
   const {
-    config, plotUuid, genesToDisable, onUpdate, onReset, onGenesChange, onGenesSelect, showGeneTable,
+    config,
+    plotUuid,
+    genesToDisable,
+    onUpdate,
+    onReset,
+    onGenesChange,
+    onGenesSelect,
+    showGeneTable,
   } = props;
+
   const [numGenes, setNumGenes] = useState(config.nMarkerGenes);
 
   const renderOptions = () => {

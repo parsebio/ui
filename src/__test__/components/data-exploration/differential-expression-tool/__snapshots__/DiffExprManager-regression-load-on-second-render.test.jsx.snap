@@ -14,9 +14,9 @@ exports[`DiffExprManager regression test - diff exp would not reload after \`go 
 {
   "payload": {
     "comparisonGroup": {
-      "basis": "scratchpad/scratchpad-a",
-      "cellSet": "louvain/cluster-a",
-      "compareWith": "louvain/cluster-b",
+      "basis": "scratchpad-a",
+      "cellSet": "cluster-a",
+      "compareWith": "cluster-b",
     },
     "comparisonType": "between",
     "data": [
@@ -82,9 +82,9 @@ exports[`DiffExprManager regression test - diff exp would not reload after \`go 
 {
   "payload": {
     "comparisonGroup": {
-      "basis": "scratchpad/scratchpad-a",
-      "cellSet": "louvain/cluster-a",
-      "compareWith": "louvain/cluster-b",
+      "basis": "scratchpad-a",
+      "cellSet": "cluster-a",
+      "compareWith": "cluster-b",
     },
     "comparisonType": "between",
     "data": [
@@ -170,9 +170,9 @@ exports[`DiffExprManager regression test - diff exp would not reload after \`go 
 {
   "payload": {
     "comparisonGroup": {
-      "basis": "scratchpad/scratchpad-a",
-      "cellSet": "louvain/cluster-a",
-      "compareWith": "louvain/cluster-b",
+      "basis": "scratchpad-a",
+      "cellSet": "cluster-a",
+      "compareWith": "cluster-b",
     },
     "comparisonType": "between",
     "data": [
