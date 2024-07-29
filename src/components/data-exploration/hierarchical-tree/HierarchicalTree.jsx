@@ -85,7 +85,9 @@ const HierarchicalTree = (props) => {
     if (fromPosition === toPosition) return;
 
     // if dropping below the initial position subtract 1, if dropping to secondary position add 1
-    const newPosition = toPosition - (fromPosition < toPosition ? 1 : 0) + (!sameLevel ? 0 : addDragOverPosition);
+    const newPosition = toPosition
+      - (fromPosition < toPosition ? 1 : 0)
+      + (!sameLevel ? 0 : addDragOverPosition);
 
     onCellSetReorder(dragNode.key, newPosition);
   }, [treeData]);

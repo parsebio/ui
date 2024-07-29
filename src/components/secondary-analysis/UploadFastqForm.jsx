@@ -209,7 +209,7 @@ const UploadFastqForm = (props) => {
     if (entry.kind === 'file') {
       subFiles.push(entry);
     } else if (entry.kind === 'directory') {
-      // eslint-disable-next-line no-restricted-syntax
+      // eslint-disable-next-line no-restricted-syntax, no-unused-vars
       for await (const currEntry of entry.values()) {
         const nestedFiles = await getAllFiles(currEntry);
         subFiles.push(...nestedFiles);
@@ -275,17 +275,20 @@ const UploadFastqForm = (props) => {
                 </li>
                 <li>
                   Uploading large FASTQ files can take multiple hours or even days.
-                  You must keep your computer running and your browser tab open for the duration of the upload.
+                  You must keep your computer running and
+                  your browser tab open for the duration of the upload.
                 </li>
                 <li>
-                  If your internet connection fails, file upload will resume from the last checkpoint.
+                  If your internet connection fails, file
+                  upload will resume from the last checkpoint.
                   Checkpoints are created every 128 MB.
                 </li>
               </ul>
               <InfoCircleOutlined />
               {' '}
               FASTQ files are deleted from Trailmaker 30 days after upload. After this time,
-              your Pipeline Run Details and any Outputs will continue to be available but the FASTQ files will be marked as 'Expired'.
+              your Pipeline Run Details and any Outputs will continue
+              to be available but the FASTQ files will be marked as &apos;Expired&apos;.
               {' '}
               <br />
               <br />

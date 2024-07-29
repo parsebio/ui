@@ -56,7 +56,7 @@ const TrajectoryAnalysisNodeSelector = (props) => {
         <p>
           Choose
           {' '}
-          <strong>Starting nodes > Show</strong>
+          <strong>Starting nodes &gt; Show</strong>
           {' '}
           under
           {' '}
@@ -85,7 +85,8 @@ const TrajectoryAnalysisNodeSelector = (props) => {
                 . Nodes inside the selection will be added to the selection.
               </p>
               <p>
-                Move around the plot by panning (click and drag) and zooming (pinch and zoom/scroll).
+                Move around the plot by panning
+                (click and drag) and zooming (pinch and zoom/scroll).
               </p>
               <p>
                 Deselect nodes by clicking on a selected node, or by clicking

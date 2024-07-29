@@ -13,7 +13,10 @@ const FontDesign = (props) => {
       <Form.Item>
         <Space direction='vertical' style={{ width: '80%' }}>
           <p><strong>Font Styles</strong></p>
-          <Radio.Group onChange={(e) => onUpdate({ fontStyle: { font: e.target.value } })} value={config.fontStyle.font}>
+          <Radio.Group
+            onChange={(e) => onUpdate({ fontStyle: { font: e.target.value } })}
+            value={config.fontStyle.font}
+          >
             <Radio value='sans-serif'>Sans-serif</Radio>
             <Radio value='sans'>Sans</Radio>
             <Radio value='monospace'>Monospace</Radio>

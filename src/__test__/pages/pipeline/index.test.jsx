@@ -247,7 +247,9 @@ describe('Pipeline Page', () => {
   });
 
   it('Empty runs cannot be launched', async () => {
-    const mockApiResponsesEmptyAnalysis = generateDefaultMockAPIResponses(mockAnalysisIds.emptyAnalysis);
+    const mockApiResponsesEmptyAnalysis = generateDefaultMockAPIResponses(
+      mockAnalysisIds.emptyAnalysis,
+    );
     fetchMock.mockIf(/.*/, mockAPI(mockApiResponsesEmptyAnalysis));
     await renderPipelinePage();
     await waitFor(() => {
@@ -299,7 +301,9 @@ describe('Pipeline Page', () => {
     });
 
     await waitFor(() => {
-      expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(mockAnalysisIds.emptyAnalysis, message.file);
+      expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(
+        mockAnalysisIds.emptyAnalysis, message.file,
+      );
     });
   });
 });

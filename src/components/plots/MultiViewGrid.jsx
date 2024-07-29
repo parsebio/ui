@@ -106,7 +106,11 @@ const MultiViewGrid = (props) => {
       const customMultiPlotConfig = { plotUuids: [firstPlotUuid] };
       loadComponent(multiViewUuid, multiViewType, true, customMultiPlotConfig);
 
-      const customFirstPlotConfig = { shownGene: highestDispersionGene, title: { text: highestDispersionGene } };
+      const customFirstPlotConfig = {
+        shownGene: highestDispersionGene,
+        title: { text: highestDispersionGene },
+      };
+
       loadComponent(firstPlotUuid, plotType, true, customFirstPlotConfig);
     }
   }, [multiViewConfig, highestDispersionGene, plotConfigs]);

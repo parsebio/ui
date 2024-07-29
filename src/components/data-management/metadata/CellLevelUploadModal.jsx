@@ -172,9 +172,11 @@ const CellLevelUploadModal = (props) => {
             <span style={{ color: 'red', marginRight: '2em' }}>*</span>
           </Title>
           <Paragraph>
-            Upload a single file, containing the cell-level metadata in a tab-separated format (.tsv) file.
+            Upload a single file, containing the cell-level
+            metadata in a tab-separated format (.tsv) file.
             <br />
-            It is crucial that your file remains in this format, as spaces or other characters in place of tabs can cause errors.
+            It is crucial that your file remains in this format,
+            as spaces or other characters in place of tabs can cause errors.
             <br />
             {' '}
             <br />
@@ -210,7 +212,10 @@ const CellLevelUploadModal = (props) => {
               <li>
                 <b>Common issues:</b>
                 <ul>
-                  <li>Files created or edited in some software might inadvertently replace tabs with spaces. Always double-check the format before uploading.</li>
+                  <li>
+                    Files created or edited in some software might inadvertently
+                    replace tabs with spaces. Always double-check the format before uploading.
+                  </li>
                 </ul>
               </li>
               <li>
@@ -219,12 +224,15 @@ const CellLevelUploadModal = (props) => {
                   <li>
                     <b>Excel users:</b>
                     {' '}
-                    When saving your file in Excel, use "Save As" and select the format "Text (Tab delimited) (*.txt)". Then, change the file extension from `.txt` to `.tsv`.
+                    When saving your file in Excel, use &quot;Save As&quot; and select the format
+                    &quot;Text (Tab delimited) (*.txt)&quot;.
+                    Then, change the file extension from `.txt` to `.tsv`.
                   </li>
                   <li>
                     <b>Text editor users:</b>
                     {' '}
-                    If you use a text editor (such as Notepad or TextEdit), manually check that columns are separated by a single tab character.
+                    If you use a text editor (such as Notepad or TextEdit),
+                    manually check that columns are separated by a single tab character.
                   </li>
                 </ul>
               </li>
@@ -234,7 +242,9 @@ const CellLevelUploadModal = (props) => {
                   <li>
                     <b>Visual check:</b>
                     {' '}
-                    Open your .tsv file in a simple text editor (such as Notepad on Windows or TextEdit on Mac) and verify that columns are separated by tabs.
+                    Open your .tsv file in a simple text editor
+                    (such as Notepad on Windows or TextEdit on Mac)
+                    and verify that columns are separated by tabs.
                   </li>
                 </ul>
               </li>

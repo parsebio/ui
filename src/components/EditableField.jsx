@@ -178,7 +178,9 @@ const EditableField = (props) => {
                     >
                       <Button
                         disabled={disabled}
-                        data-test-class={integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON}
+                        data-test-class={
+                          integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON
+                        }
                         aria-label='Delete'
                         size='small'
                         shape='circle'
@@ -188,7 +190,9 @@ const EditableField = (props) => {
                   ) : (
                     <Button
                       disabled={disabled}
-                      data-test-class={integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON}
+                      data-test-class={
+                        integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON
+                      }
                       aria-label='Delete'
                       size='small'
                       shape='circle'

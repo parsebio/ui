@@ -36,6 +36,14 @@ const Row = ({
   );
 };
 
+Row.propTypes = {
+  projectType: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  data: PropTypes.array.isRequired,
+  style: PropTypes.object.isRequired,
+  setSize: PropTypes.func.isRequired,
+};
+
 const ProjectsList = (props) => {
   const { height, filter, projectType } = props;
   const listRef = useRef();
@@ -56,6 +64,7 @@ const ProjectsList = (props) => {
     .filter((exp) => (exp.name.match(filter) || exp.id.match(filter)));
 
   if (projects.meta.loading) {
+    // eslint-disable-next-line react/no-array-index-key
     return ([...Array(5)].map((_, idx) => <Skeleton key={`skeleton-${idx}`} role='progressbar' active />));
   } if (filteredProjects.length === 0) {
     return (<div data-test-id={integrationTestConstants.ids.PROJECTS_LIST} />);

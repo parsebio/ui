@@ -82,7 +82,10 @@ const PlotLayout = ({
       // some filters have settings stored under filterSettings.methodSettings[method]
       // like the mitochondrial content one
       // so we need to check if the current filter is one of them
-      const expConfigSettings = filterSettings.method ? filterSettings.methodSettings[filterSettings.method] : filterSettings;
+      const expConfigSettings = filterSettings.method
+        ? filterSettings.methodSettings[filterSettings.method]
+        : filterSettings;
+
       _.merge(newConfig, expConfigSettings);
       setPlot(plots[selectedPlot].plot(newConfig, selectedPlotData, allowedPlotActions));
     }
@@ -106,6 +109,7 @@ const PlotLayout = ({
       return (
         <Space direction='vertical'>
           {Object.entries(plots).map(([key, plotObj]) => (
+            // eslint-disable-next-line jsx-a11y/control-has-associated-label
             <button
               type='button'
               key={key}

@@ -9,7 +9,6 @@ import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';
 import updateExperiment from 'redux/actions/experiments/updateExperiment';
 import loadExperiments from 'redux/actions/experiments/loadExperiments';
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import { makeStore } from 'redux/store';
 import fake from '__test__/test-utils/constants';
@@ -22,7 +21,6 @@ jest.mock('redux/actions/experiments/updateExperiment', () => jest.fn(() => ({ t
 jest.mock('redux/actions/experiments/loadExperiments', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
 
 describe('Notify by email component', () => {
-
   beforeEach(() => {
     jest.clearAllMocks();
     storeState = makeStore();

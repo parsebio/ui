@@ -120,8 +120,6 @@ describe('Select Data', () => {
       );
     });
 
-    const cellSetSelect = screen.getByRole('combobox', { name: 'selectCellSets' });
-
     // Changing first option
     userEvent.click(screen.getByRole('combobox', { name: 'selectCellSets' }));
     userEvent.click(screen.getByText(/Samples/));

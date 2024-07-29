@@ -72,6 +72,10 @@ const HeatmapCellInfo = (props) => {
   return (<></>);
 };
 
+HeatmapCellInfo.defaultProps = {
+  geneExpression: undefined,
+};
+
 HeatmapCellInfo.propTypes = {
   containerWidth: PropTypes.number.isRequired,
   containerHeight: PropTypes.number.isRequired,
@@ -79,7 +83,7 @@ HeatmapCellInfo.propTypes = {
   geneName: PropTypes.string.isRequired,
   geneExpression: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.number),
-    PropTypes.oneOf([undefined, null])
+    PropTypes.oneOf([undefined, null]),
   ]),
   coordinates: PropTypes.object.isRequired,
 };

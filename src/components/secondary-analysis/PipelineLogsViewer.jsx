@@ -132,6 +132,7 @@ const PipelineLogsViewer = (props) => {
                         <Button
                           icon={<SyncOutlined />}
                           onClick={handleRefresh}
+                          data-testid='refresh-logs-button'
                           style={{
                             position: 'absolute',
                             top: '1vh',
@@ -153,6 +154,7 @@ const PipelineLogsViewer = (props) => {
                       }}
                       >
                         {selectedLogs.data.map((entry, index) => (
+                          // eslint-disable-next-line react/no-array-index-key
                           <div key={`${entry}-${index}`} style={{ marginBottom: '0.5vh' }}>{entry || 'No logs yet'}</div>
                         ))}
                       </div>

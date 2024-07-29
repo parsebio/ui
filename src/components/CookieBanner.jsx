@@ -102,7 +102,8 @@ const CookieBanner = () => {
       >
         <Divider style={{ marginTop: 0 }}>Essential Cookies</Divider>
         <Checkbox checked disabled>
-          Essential cookies are crucial to your experience of a website, enabling core features like user logins and account management.
+          Essential cookies are crucial to your experience of a website,
+          enabling core features like user logins and account management.
         </Checkbox>
 
         <Divider>Other cookies and Session Replay Technology</Divider>
@@ -110,8 +111,10 @@ const CookieBanner = () => {
           checked={consent.performance}
           onChange={(e) => setConsent({ ...consent, performance: e.target.checked })}
         >
-          We track how you use the website during your visit. This includes taking a recording of your actions on the website
-          (“Session Replay Technology”). You can ask us not to do it by unchecking this checkbox or clicking “reject other cookies”.
+          We track how you use the website during your visit.
+          This includes taking a recording of your actions on the website
+          (“Session Replay Technology”). You can ask us not to do it by
+          unchecking this checkbox or clicking “reject other cookies”.
         </Checkbox>
       </Modal>
     </div>

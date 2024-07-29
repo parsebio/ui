@@ -34,19 +34,6 @@ const dropFilesIntoDropzone = async (inputElement, files) => {
   });
 };
 
-const cellLevelMock = {
-  id: '5a7b24a9-4b38-4f92-a2d9-d49a15d13f67',
-  name: 'asdasdcell_level.tsv',
-  createdAt: '2023-10-31 12:33:40.747552+00',
-  size: '253',
-  experimentId: '606fb0ae-faef-448c-8679-1c223b268a0c',
-  percentProgress: 100,
-};
-const successfulUpload = {
-  ...cellLevelMock,
-  uploadStatus: 'uploaded',
-};
-
 const renderCellLevelUploadModal = async (cellLevelMeta = false) => {
   act(() => {
     render(

@@ -138,7 +138,11 @@ const CellSetsTool = (props) => {
           <CellSetOperation
             icon={<MergeCellsOutlined />}
             onCreate={(name, color) => {
-              dispatch(createCellSet(experimentId, name, color, union(selectedCellSetKeys, properties)));
+              dispatch(
+                createCellSet(
+                  experimentId, name, color, union(selectedCellSetKeys, properties),
+                ),
+              );
             }}
             ariaLabel='Union of selected'
             helpTitle='Create new cell set by combining selected sets in the current tab.'
@@ -147,7 +151,9 @@ const CellSetsTool = (props) => {
             icon={<BlockOutlined />}
             onCreate={(name, color) => {
               dispatch(
-                createCellSet(experimentId, name, color, intersection(selectedCellSetKeys, properties)),
+                createCellSet(
+                  experimentId, name, color, intersection(selectedCellSetKeys, properties),
+                ),
               );
             }}
             ariaLabel='Intersection of selected'

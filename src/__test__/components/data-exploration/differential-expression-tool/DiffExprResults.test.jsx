@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
@@ -92,9 +92,9 @@ const resultState = {
       type: 'between',
       group: {
         between: {
-          cellSet: 'louvain/cluster-a',
-          compareWith: 'louvain/cluster-b',
-          basis: 'scratchpad/scratchpad-a',
+          cellSet: 'cluster-a',
+          compareWith: 'cluster-b',
+          basis: 'scratchpad-a',
         },
       },
       advancedFilters: [],
@@ -386,7 +386,10 @@ describe('DiffExprResults', () => {
     // Adding a filter and applying it
     const dropdown = component.find('Dropdown');
     dropdown.simulate('click', 'Up-regulated');
-    await waitForActions(withResultStore, [DIFF_EXPR_ORDERING_SET, DIFF_EXPR_LOADING, DIFF_EXPR_LOADED]);
+    await waitForActions(
+      withResultStore,
+      [DIFF_EXPR_ORDERING_SET, DIFF_EXPR_LOADING, DIFF_EXPR_LOADED],
+    );
 
     // closing the modal
     const closeButton = component.find('.ant-modal-close');

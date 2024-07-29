@@ -39,7 +39,8 @@ const PlotContainer = (props) => {
 
   const { config } = useSelector((state) => state.componentConfig[plotUuid] || {});
   const debounceSave = useCallback(
-    _.debounce(() => dispatch(savePlotConfig(experimentId, plotUuid)), saveDebounceTime), [plotUuid],
+    _.debounce(() => dispatch(savePlotConfig(experimentId, plotUuid)), saveDebounceTime),
+    [plotUuid],
   );
   const defaultOnUpdate = (obj) => {
     dispatch(updatePlotConfig(plotUuid, obj));

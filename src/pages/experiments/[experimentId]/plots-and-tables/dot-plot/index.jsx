@@ -451,7 +451,7 @@ const DotPlotPage = (props) => {
                 There is no data to show.
               </p>
               <p>
-                Select another option from the 'Select data' menu.
+                Select another option from the &apos;Select data&apos; menu.
               </p>
             </>
           )}
@@ -474,7 +474,7 @@ const DotPlotPage = (props) => {
                 A comparison can not be run to determine the top marker genes.
               </p>
               <p>
-                Select another option from the 'Select data' menu.
+                Select another option from the &apos;Select data&apos; menu.
               </p>
             </>
           )}

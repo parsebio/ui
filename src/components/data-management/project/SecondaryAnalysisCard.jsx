@@ -12,7 +12,6 @@ import PrettyTime from 'components/PrettyTime';
 import { deleteSecondaryAnalysis, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import ProjectDeleteModal from 'components/data-management/project/ProjectDeleteModal';
 import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
-import _ from 'lodash';
 import { brandColors } from 'utils/constants';
 
 const { Item } = Descriptions;

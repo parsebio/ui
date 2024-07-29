@@ -56,7 +56,10 @@ const PointDesign = (props) => {
             <>
               <p><strong>Point Shape</strong></p>
               <Form.Item>
-                <Radio.Group onChange={(e) => onUpdate({ marker: { shape: e.target.value } })} value={config.marker.shape}>
+                <Radio.Group
+                  onChange={(e) => onUpdate({ marker: { shape: e.target.value } })}
+                  value={config.marker.shape}
+                >
                   <Radio value='circle'>Circle</Radio>
                   <Radio value='diamond'>Diamond</Radio>
                 </Radio.Group>

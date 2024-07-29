@@ -83,9 +83,9 @@ const storeState = {
       type: 'between',
       group: {
         between: {
-          cellSet: 'louvain/cluster-a',
-          compareWith: 'louvain/cluster-b',
-          basis: 'scratchpad/scratchpad-a',
+          cellSet: 'cluster-a',
+          compareWith: 'cluster-b',
+          basis: 'scratchpad-a',
         },
       },
       advancedFilters: [],

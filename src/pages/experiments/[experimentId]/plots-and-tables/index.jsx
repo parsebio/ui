@@ -5,7 +5,7 @@ import PlotsTablesContainer from 'components/plots/PlotsTablesContainer';
 import SingleTileContainer from 'components/SingleTileContainer';
 
 const PlotsTablesHome = (props) => {
-  const { experimentId, experimentData } = props;
+  const { experimentId } = props;
 
   return (
     <>
@@ -18,7 +18,6 @@ const PlotsTablesHome = (props) => {
 
 PlotsTablesHome.propTypes = {
   experimentId: PropTypes.string.isRequired,
-  experimentData: PropTypes.object.isRequired,
 };
 
 export default PlotsTablesHome;

@@ -69,6 +69,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
     const sortedHtmlUrls = sortedKeys.reduce((obj, key) => {
+      // eslint-disable-next-line no-param-reassign
       obj[key] = htmlUrls[key];
       return obj;
     }, {});
