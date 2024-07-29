@@ -134,7 +134,8 @@ const GEM2SLoadingScreen = (props) => {
               {pipelineStatus === 'subsetting' && (
                 <Text type='secondary'>
                   <br />
-                  Your new project containing only the selected cell sets will be available in the Insights module
+                  Your new project containing only the selected
+                  cell sets will be available in the Insights module
                 </Text>
               )}
             </div>

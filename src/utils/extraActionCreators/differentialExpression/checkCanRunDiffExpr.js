@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
 import { ComparisonType } from 'components/data-exploration/differential-expression-tool/DiffExprCompute';
-import { getCellSetKey, getCellSetClassKey } from 'utils/cellSets';
 
 const MIN_NUM_CELLS_IN_GROUP = 10;
 const NUM_SAMPLES_SHOW_ERROR = 1;
@@ -47,29 +46,24 @@ const checkCanRunDiffExpr = (
   ) {
     return canRunDiffExprResults.FALSE;
   }
-  const basisCellSetKey = getCellSetKey(basis);
-  const cellSetKey = getCellSetKey(cellSet);
-  const compareWithKey = getCellSetKey(compareWith);
 
   let basisCellIds = [];
-  if (basisCellSetKey === 'all') {
+  if (basis === 'all') {
     const allCellIds = sampleKeys.reduce((cumulativeCellIds, key) => {
       const { cellIds } = properties[key];
       return cumulativeCellIds.concat(Array.from(cellIds));
     }, []);
     basisCellIds = new Set(allCellIds);
   } else {
-    basisCellIds = properties[basisCellSetKey].cellIds;
+    basisCellIds = properties[basis].cellIds;
   }
 
-  const cellSetCellIds = Array.from(properties[cellSetKey].cellIds);
+  const cellSetCellIds = Array.from(properties[cellSet].cellIds);
 
   let compareWithCellIds = [];
-  if (['rest', 'background'].includes(compareWithKey)) {
-    const parentKey = getCellSetClassKey(cellSet);
-
-    const otherGroupKeys = hierarchy.find((obj) => obj.key === parentKey)
-      .children.filter((child) => child.key !== cellSetKey);
+  if (['rest', 'background'].includes(compareWith)) {
+    const otherGroupKeys = hierarchy.find((obj) => obj.key === properties[cellSet]?.parentNodeKey)
+      .children.filter((child) => child.key !== cellSet);
 
     compareWithCellIds = otherGroupKeys.reduce(
       (cumulativeGroupKeys, child) => cumulativeGroupKeys.concat(
@@ -77,7 +71,7 @@ const checkCanRunDiffExpr = (
       ), [],
     );
   } else {
-    compareWithCellIds = Array.from(properties[compareWithKey].cellIds);
+    compareWithCellIds = Array.from(properties[compareWith].cellIds);
   }
 
   // Intersect the basis cell set with each group cell set

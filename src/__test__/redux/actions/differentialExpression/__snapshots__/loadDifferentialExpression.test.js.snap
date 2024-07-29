@@ -34,9 +34,9 @@ exports[`loadDifferentialExpression action Dispatches appropriately on success f
 {
   "payload": {
     "comparisonGroup": {
-      "basis": "condition/condition-control",
-      "cellSet": "louvain/louvain-0",
-      "compareWith": "louvain/louvain-1",
+      "basis": "condition-control",
+      "cellSet": "louvain-0",
+      "compareWith": "louvain-1",
     },
     "comparisonType": "within",
     "data": [
@@ -92,9 +92,9 @@ exports[`loadDifferentialExpression action Dispatches appropriately on success f
 {
   "payload": {
     "comparisonGroup": {
-      "basis": "condition/condition-control",
-      "cellSet": "louvain/louvain-0",
-      "compareWith": "louvain/louvain-1",
+      "basis": "condition-control",
+      "cellSet": "louvain-0",
+      "compareWith": "louvain-1",
     },
     "comparisonType": "within",
     "data": [
@@ -168,9 +168,9 @@ exports[`loadDifferentialExpression action Doesnt crash if total is 0 1`] = `
   {
     "payload": {
       "comparisonGroup": {
-        "basis": "condition/condition-control",
-        "cellSet": "louvain/louvain-0",
-        "compareWith": "louvain/louvain-1",
+        "basis": "condition-control",
+        "cellSet": "louvain-0",
+        "compareWith": "louvain-1",
       },
       "comparisonType": "within",
       "data": [],

@@ -25,7 +25,6 @@ const GeneListTool = (props) => {
     (state) => state.genes.properties.views[tableUuid]?.fetching,
   );
   const tableRowKeys = useSelector((state) => state.genes.properties.views[tableUuid]?.data);
-  const total = useSelector((state) => state.genes.properties.views[tableUuid]?.total);
 
   const initialLoad = useRef(true);
 

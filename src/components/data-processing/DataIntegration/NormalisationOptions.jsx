@@ -44,7 +44,7 @@ const NormalisationOptions = (props) => {
               dataIntegration: {
                 methodSettings: {
                   [methodId]: {
-                    numGenes: parseInt(e.target.value, 0),
+                    numGenes: parseInt(e.target.value, 10),
                   },
                 },
               },
@@ -57,7 +57,7 @@ const NormalisationOptions = (props) => {
           <span>
             Number of genes to mark as top highly variable genes (HVGs).
             Integration as well as PCA is based on a sensible selection of HVGs.
-            Here, this number selects the top variable genes based on the "vst" method.
+            Here, this number selects the top variable genes based on the &quot;vst&quot; method.
             The default 2000 has been found to be a sensible for many cases.
             Further info can be found
             <a
@@ -83,7 +83,7 @@ const NormalisationOptions = (props) => {
                 Normalization aims to remove technical variation that
                 is not biologically relevant, e.g. sequencing depth.
                 There are several methods to achieve normalization.
-                "SCTransform" claims to recover sharper
+                &quot;SCTransform&quot; claims to recover sharper
                 biological distinction compared to log-normalization.
                 SCTransform can only be applied when the integration method is set to Seurat v4.
                 Normalization is applied to each sample before integration.

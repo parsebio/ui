@@ -66,7 +66,8 @@ const LandingPage = () => {
                   have already been pre-processed. Supported
                   file types include: output files from the Pipeline module,
                   count matrices of multiple technology
-                  types, H5 files, and Seurat objects. Explore your data and generate publication-ready
+                  types, H5 files, and Seurat objects.
+                  Explore your data and generate publication-ready
                   figures with Insights!
                 </p>
                 <Button size='large' type='primary' onClick={() => navigateTo(modules.DATA_MANAGEMENT)}>Take me to Insights</Button>

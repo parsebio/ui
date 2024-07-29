@@ -12,7 +12,7 @@ const createTestComponentFactory = (Component, defaultProps = {}) => (customProp
     customProps,
   );
 
-  const [ComponentWithContext, getBackend] = wrapWithTestBackend(Component);
+  const [ComponentWithContext] = wrapWithTestBackend(Component);
 
   // eslint-disable-next-line react/jsx-props-no-spreading
   return <ComponentWithContext {...props} />;

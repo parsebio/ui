@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, Form, Button, Space, Select, InputNumber, Dropdown, Menu, Divider, Row,
+  Modal, Form, Button, Space, Select, InputNumber, Dropdown, Divider, Row,
 } from 'antd';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -79,11 +79,10 @@ const AdvancedFilteringModal = (props) => {
     setAvailableCriteriaOptions(filteredCriteriaOptions);
   }, [availableColumns.length]);
 
-
   const onClickPresetFilter = (add, e) => {
     const selectedFilter = availablePresetFilters.find((filter) => filter.label === e.key);
     add(selectedFilter);
-  }
+  };
 
   const presetFilterItems = availablePresetFilters.map((filter) => ({
     label: filter.label,
@@ -168,7 +167,7 @@ const AdvancedFilteringModal = (props) => {
                   <Dropdown
                     menu={{
                       items: presetFilterItems,
-                      onClick: (e) => onClickPresetFilter(add, e)
+                      onClick: (e) => onClickPresetFilter(add, e),
                     }}
                   >
                     <Button icon={<PlusOutlined />}>
@@ -178,7 +177,7 @@ const AdvancedFilteringModal = (props) => {
                 </Space>
               </Row>
               <Divider style={{ marginBottom: '10px' }} />
-              <div align='end' style={{ marginTop: '0px', width: '100%' }}>
+              <div style={{ marginTop: '0px', width: '100%' }}>
                 <Form.Item style={{ marginBottom: '-10px', marginTop: '0px' }}>
                   <Button type='primary' htmlType='submit' disabled={diffExprLoading}>
                     Apply filters
@@ -189,7 +188,7 @@ const AdvancedFilteringModal = (props) => {
           )}
         </Form.List>
       </Form>
-    </Modal >
+    </Modal>
   );
 };
 

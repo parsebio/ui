@@ -112,6 +112,5 @@ describe('Select cell sets tests ', () => {
     });
 
     expect(mockOnUpdate).toHaveBeenCalled();
-
   });
 });

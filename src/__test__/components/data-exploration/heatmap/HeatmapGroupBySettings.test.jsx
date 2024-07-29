@@ -1,16 +1,12 @@
 import React from 'react';
-import {
-  shallow, mount,
-} from 'enzyme';
+import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import waitForActions from 'redux-mock-store-await-actions';
 import thunk from 'redux-thunk';
 import { act } from 'react-dom/test-utils';
 
 import configureMockStore from 'redux-mock-store';
-import {
-  Button, Dropdown,
-} from 'antd';
+import { Dropdown } from 'antd';
 import { UPDATE_CONFIG } from 'redux/actionTypes/componentConfig';
 import HeatmapGroupBySettings from 'components/data-exploration/heatmap/HeatmapGroupBySettings';
 import '__test__/test-utils/setupTests';
@@ -142,7 +138,7 @@ describe('HeatmapGroupBySettings', () => {
 
     // When the other group by is clicked...
     const buttons = menuItems[0].label.props.children;
-    act(() => { buttons[0].props.onClick() });
+    act(() => { buttons[0].props.onClick(); });
     component.update();
 
     await waitForActions(store, [UPDATE_CONFIG]);
@@ -168,7 +164,7 @@ describe('HeatmapGroupBySettings', () => {
     expect(groupByItems.at(1).text()).toEqual('louvain clusters');
 
     // when the groupby is clicked again
-    act(() => { buttons[0].props.onClick() });
+    act(() => { buttons[0].props.onClick(); });
     component.update();
 
     await waitForActions(store, [UPDATE_CONFIG]);
@@ -206,7 +202,7 @@ describe('HeatmapGroupBySettings', () => {
 
     // Add a louvain group by
     const addButtons = menuItems[0].label.props.children;
-    act(() => { addButtons[0].props.onClick() });
+    act(() => { addButtons[0].props.onClick(); });
 
     await waitForActions(store, [UPDATE_CONFIG]);
     component.update();

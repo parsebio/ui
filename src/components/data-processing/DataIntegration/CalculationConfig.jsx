@@ -11,7 +11,6 @@ import {
   Checkbox,
   Tooltip,
   Alert,
-  Row,
 } from 'antd';
 
 import {
@@ -119,16 +118,22 @@ const CalculationConfig = (props) => {
         {' '}
         <Tooltip overlay={(
           <span>
-            To integrate data, dimensional reduction is performed to find so called "anchors".
-            cross-dataset pairs of cells that are in a matched biological state (‘anchors’), are both to correct for technical
+            To integrate data, dimensional reduction is performed to
+            find so called &quot;anchors&quot;.
+            cross-dataset pairs of cells that are in a matched
+            biological state (‘anchors’), are both to correct for technical
             differences between datasets
-            (i.e. batch effect correction), and to perform comparative scRNA-seq analysis across experimental conditions.
-            CCA is well-suited when cell types are conserved, but there are very substantial differences
+            (i.e. batch effect correction), and to
+            perform comparative scRNA-seq analysis across experimental conditions.
+            CCA is well-suited when cell types are conserved,
+            but there are very substantial differences
             in gene expression across experiments.
-            However, CCA-based integration may also lead to overcorrection, especially when a large proportion of cells are
+            However, CCA-based integration may also lead to overcorrection,
+            especially when a large proportion of cells are
             non-overlapping across datasets.
 
-            RPCA-based integration runs significantly faster, and also represents a more conservative approach where
+            RPCA-based integration runs significantly faster, and also
+            represents a more conservative approach where
             cells in different biological states are less likely to ‘align’ after integration.
             More info
             <a
@@ -244,6 +249,7 @@ const CalculationConfig = (props) => {
                   onPressEnter={(e) => e.preventDefault()}
                   onStep={(value) => updateSettings({ dimensionalityReduction: { numPCs: value } })}
                   onBlur={(e) => updateSettings(
+                    // eslint-disable-next-line radix
                     { dimensionalityReduction: { numPCs: parseInt(e.target.value, 0) } },
                   )}
                   disabled={disabled}
@@ -328,7 +334,8 @@ const CalculationConfig = (props) => {
                   overlay={(
                     <>
                       <span style={downsampling.method === downsamplingMethods.GEOSKETCH ? {} : { display: 'none' }}>
-                        Geometric sketching finds random subsamples of a dataset that preserve the underlying geometry,
+                        Geometric sketching finds random subsamples
+                        of a dataset that preserve the underlying geometry,
                         which is described in this paper:
                         <a
                           href='https://www.sciencedirect.com/science/article/pii/S2405471219301528'
@@ -336,7 +343,10 @@ const CalculationConfig = (props) => {
                           rel='noreferrer'
                         >
                           {' '}
-                          <code>Geometric sketching compactly summarizes the single-cell transcriptomic landscape</code>
+                          <code>
+                            Geometric sketching compactly summarizes
+                            the single-cell transcriptomic landscape
+                          </code>
                         </a>
                       </span>
                       <span style={downsampling.method === downsamplingMethods.NONE ? {} : { display: 'none' }}>
@@ -396,7 +406,7 @@ const CalculationConfig = (props) => {
                       downsampling: {
                         methodSettings:
                         {
-                          [downsampling.method]: { percentageToKeep: parseInt(value, 0) },
+                          [downsampling.method]: { percentageToKeep: parseInt(value, 10) },
                         },
 
                       },

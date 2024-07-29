@@ -1,11 +1,11 @@
 import fetchWork from 'utils/work/fetchWork';
 import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
-import { getCellSetKey } from 'utils/cellSets';
 import { getArray } from 'utils/arrayUtils';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 
-const getBatchDiffExpr = (experimentId,
-  comparison, chosenOperation, batchClusterNames) => async (dispatch, getState) => {
+const getBatchDiffExpr = (
+  experimentId, comparison, chosenOperation, batchClusterNames,
+) => async (dispatch, getState) => {
   const {
     cellSet, compareWith, comparisonType,
   } = comparison;
@@ -24,8 +24,8 @@ const getBatchDiffExpr = (experimentId,
     workBody = {
       name: 'BatchDifferentialExpression',
       experimentId,
-      cellSet: [getCellSetKey(cellSet)],
-      compareWith: getCellSetKey(compareWith),
+      cellSet: [cellSet],
+      compareWith,
       basis: batchClusterNames,
       comparisonType,
     };

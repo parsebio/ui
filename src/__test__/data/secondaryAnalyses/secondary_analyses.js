@@ -18,6 +18,7 @@ const mockSecondaryAnalyses = [
     parfileList: {
       start_timeout: 1000,
     },
+    status: {},
   },
   {
     id: mockAnalysisIds.readyToLaunch,
@@ -37,6 +38,7 @@ const mockSecondaryAnalyses = [
     parfileList: {
       start_timeout: 1000,
     },
+    status: {},
   },
   {
     id: mockAnalysisIds.newProject,
@@ -52,6 +54,7 @@ const mockSecondaryAnalyses = [
     parfileList: {
       start_timeout: 1000,
     },
+    status: {},
   },
 ];
 

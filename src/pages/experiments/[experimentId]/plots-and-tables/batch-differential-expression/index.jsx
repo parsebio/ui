@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { loadCellSets } from 'redux/actions/cellSets';
 import PropTypes from 'prop-types';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { plotNames } from 'utils/constants';
+
 import Loader from 'components/Loader';
 import DiffExprSelect from 'components/data-exploration/differential-expression-tool/DiffExprSelect';
 import getBatchDiffExpr from 'utils/extraActionCreators/differentialExpression/getBatchDiffExpr';
@@ -346,7 +346,8 @@ const BatchDiffExpression = (props) => {
                       style={{ width: '50%' }}
                       description={(
                         <>
-                          One or more of the selected samples/groups does not contain enough cells in the selected cell set.
+                          One or more of the selected samples/groups does
+                          not contain enough cells in the selected cell set.
                           Those comparisons will be skipped.
                         </>
                       )}
@@ -361,8 +362,10 @@ const BatchDiffExpression = (props) => {
                         style={{ width: '50%' }}
                         description={(
                           <>
-                            For one of more of the comparisons, there are fewer than 3 samples with the minimum number of cells (10).
-                            Only logFC values will be calculated and results should be used for exploratory purposes only.
+                            For one of more of the comparisons, there are fewer
+                            than 3 samples with the minimum number of cells (10).
+                            Only logFC values will be calculated and results
+                            should be used for exploratory purposes only.
                           </>
                         )}
                         type='warning'
