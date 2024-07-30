@@ -28,12 +28,18 @@ const getHtmlUrlsFromZip = async (fileBlob) => {
 
 const getReports = async (secondaryAnalysisId, retries = 3) => {
   try {
-    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/reports`);
+    const { signedUrl, downloadOptions } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadOutputFile`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ fileName: 'output_combined/all_summaries.zip' }),
+    });
 
     const response = await fetch(signedUrl);
     const zip = await response.blob();
 
-    return await getHtmlUrlsFromZip(zip);
+    return { htmlUrls: await getHtmlUrlsFromZip(zip), downloadOptions };
   } catch (error) {
     if (retries > 0) {
       console.error(`Retrying getReports, attempts remaining: ${retries - 1}`);
