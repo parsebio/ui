@@ -155,6 +155,10 @@ const UploadFastqForm = (props) => {
         rejectReason: endUserMessages.ERROR_NOT_FASTQ,
       },
       {
+        validate: (file) => ['.gz'].some((ext) => file.name.endsWith(ext)),
+        rejectReason: endUserMessages.ERROR_FASTQ_NOT_GZIPPED,
+      },
+      {
         validate: (file) => {
           // file is invalid if its already uploaded or uploading
           const uploadedFileId = Object.keys(secondaryAnalysisFiles)
