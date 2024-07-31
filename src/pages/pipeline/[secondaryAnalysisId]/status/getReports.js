@@ -28,12 +28,12 @@ const getHtmlUrlsFromZip = async (fileBlob) => {
 
 const getReports = async (secondaryAnalysisId, retries = 3) => {
   try {
-    const { signedUrl, downloadOptions } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadOutputFile`, {
+    const fileName = encodeURIComponent('output_combined/all_summaries.zip');
+    const { signedUrl, downloadOptions } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadOutputFile?fileName=${fileName}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ fileName: 'output_combined/all_summaries.zip' }),
     });
 
     const response = await fetch(signedUrl);

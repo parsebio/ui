@@ -55,12 +55,12 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   };
 
   const downloadOutput = useCallback(async (type) => {
-    const { signedUrl } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadOutputFile`, {
+    const fileName = encodeURIComponent(type);
+    const { signedUrl } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/downloadOutputFile?fileName=${fileName}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ fileName: type }),
     });
     downloadFromUrl(signedUrl, { fileName: type });
   }, [secondaryAnalysisId]);
