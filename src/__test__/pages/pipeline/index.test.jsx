@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import {
   render, screen, waitFor, fireEvent,
 } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import Pipeline from 'pages/pipeline/index';
@@ -19,6 +20,8 @@ import { makeStore } from 'redux/store';
 import { mockAnalysisIds } from '__test__/data/secondaryAnalyses/secondary_analyses';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import userEvent from '@testing-library/user-event';
+import endUserMessages from 'utils/endUserMessages';
 
 const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
 const mockNavigateTo = jest.fn();
@@ -304,6 +307,73 @@ describe('Pipeline Page', () => {
       expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(
         mockAnalysisIds.emptyAnalysis, message.file,
       );
+    });
+  });
+
+  describe.only('Upload fastq tests', () => {
+    const originalGetElementById = document.getElementById;
+
+    let onDropCallback;
+
+    beforeEach(() => {
+      document.getElementById = jest.fn().mockReturnValue({
+        addEventListener: (event, callback) => { if (event === 'drop') onDropCallback = callback; },
+        scrollIntoView: jest.fn(),
+        removeEventListener: jest.fn(),
+      });
+    });
+
+    afterEach(() => {
+      document.getElementById = originalGetElementById;
+    });
+
+    it('Cant upload non-gzipped fastq files', async () => {
+      await renderPipelinePage();
+
+      await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
+
+      // switches to run that can be launched
+      await waitFor(() => {
+        const activeId = storeState.getState().secondaryAnalyses.meta.activeSecondaryAnalysisId;
+        expect(activeId).toBe(mockAnalysisIds.readyToLaunch);
+      });
+
+      // Fastq files section exists
+      userEvent.click(screen.getByText('Fastq files'));
+
+      // Open fastq files modal
+      act(() => {
+        userEvent.click(screen.getByTestId('edit-button-Fastq files'));
+      });
+
+      // Check it opened fastq files modal
+      screen.getByText('Upload your Fastq files:');
+
+      // Assigned a callback for adding files
+      expect(onDropCallback).toBeDefined();
+
+      const fileR1 = { kind: 'file', name: 'file_R1.fastq' };
+      const fileR2 = { kind: 'file', name: 'file_R2.fastq' };
+      const fileR1Drop = { getAsFileSystemHandle: () => fileR1 };
+      const fileR2Drop = { getAsFileSystemHandle: () => fileR2 };
+
+      await act(async () => {
+        await onDropCallback({
+          preventDefault: jest.fn(),
+          dataTransfer: { items: [fileR1Drop, fileR2Drop] },
+        });
+      });
+
+      expect(screen.getByRole('button', { name: /Upload/ })).toBeInTheDocument();
+
+      const ignoredFilesWarning = screen.getByText('2 files were ignored, click to display');
+      expect(ignoredFilesWarning).toBeInTheDocument();
+
+      await act(() => {
+        userEvent.click(ignoredFilesWarning);
+      });
+
+      expect(screen.getAllByText(endUserMessages.ERROR_FASTQ_NOT_GZIPPED).length).toEqual(2);
     });
   });
 });

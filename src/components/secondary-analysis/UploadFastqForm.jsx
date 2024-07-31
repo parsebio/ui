@@ -155,6 +155,10 @@ const UploadFastqForm = (props) => {
         rejectReason: endUserMessages.ERROR_NOT_FASTQ,
       },
       {
+        validate: (file) => ['.gz'].some((ext) => file.name.endsWith(ext)),
+        rejectReason: endUserMessages.ERROR_FASTQ_NOT_GZIPPED,
+      },
+      {
         validate: (file) => {
           // file is invalid if its already uploaded or uploading
           const uploadedFileId = Object.keys(secondaryAnalysisFiles)
@@ -197,7 +201,7 @@ const UploadFastqForm = (props) => {
       const opts = { multiple: true };
       const handles = await window.showOpenFilePicker(opts);
       document.getElementById('uploadButton').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return validateAndSetFiles(handles, secondaryAnalysisFiles);
+      return validateAndSetFiles(handles);
     } catch (err) {
       console.error('Error picking files:', err);
     }
@@ -229,7 +233,7 @@ const UploadFastqForm = (props) => {
 
     document.getElementById('uploadButton').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    return validateAndSetFiles(newFiles.flat(), secondaryAnalysisFiles);
+    return validateAndSetFiles(newFiles.flat());
   };
 
   const removeFile = (fileName) => {
