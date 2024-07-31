@@ -239,7 +239,7 @@ EditableField.propTypes = {
   onEditing: PropTypes.func,
   validationFunc: PropTypes.func,
   deleteEnabled: PropTypes.bool,
-  confirmDelete: PropTypes.bool,
+  confirmDelete: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   showEdit: PropTypes.bool,
   renderBold: PropTypes.bool,
   defaultEditing: PropTypes.bool,
