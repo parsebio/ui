@@ -25,7 +25,7 @@ import writeToFileURL from 'utils/upload/writeToFileURL';
 import {
   SECONDARY_ANALYSES_UPDATED,
 } from 'redux/actionTypes/secondaryAnalyses';
-import { DownOutlined, WarningOutlined } from '@ant-design/icons';
+import { DownOutlined } from '@ant-design/icons';
 import PipelineLogsViewer from 'components/secondary-analysis/PipelineLogsViewer';
 
 const { Text, Paragraph, Title } = Typography;
@@ -37,6 +37,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const [reports, setReports] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
+  const [downloadOptionsMenuItems, setDownloadOptionsMenuItems] = useState(null);
 
   const secondaryAnalysis = useSelector((state) => state.secondaryAnalyses[secondaryAnalysisId]);
   const associatedExperimentId = secondaryAnalysis?.experimentId;
@@ -53,6 +54,18 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     });
   };
 
+  const downloadOutput = useCallback(async (type) => {
+    const fileName = encodeURIComponent(type);
+    const { signedUrl } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
+    downloadFromUrl(signedUrl, { fileName: type });
+  }, [secondaryAnalysisId]);
+
+  const downloadLogs = useCallback(async () => {
+    const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logFile`, {}, { parseJson: false });
+    const logsFile = await logsResponse.arrayBuffer();
+    downloadFromUrl(writeToFileURL(logsFile), { fileName: `${secondaryAnalysisId}.log` });
+  }, [secondaryAnalysisId]);
+
   const setupReports = useCallback(async () => {
     if (!associatedExperimentId) {
       // if you stay in the loading screen when the pipeline finishes
@@ -62,7 +75,25 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       await loadAssociatedExperiment();
     }
 
-    const htmlUrls = await getReports(secondaryAnalysisId);
+    const { htmlUrls, downloadOptions } = await getReports(secondaryAnalysisId);
+
+    const menuLinks = downloadOptions.map((option) => ({
+      label: (
+        <Tooltip
+          title={option.description}
+          placement='right'
+          mouseEnterDelay={0.05}
+        >
+          <Space>
+            {option.label}
+          </Space>
+        </Tooltip>
+      ),
+      key: option.key,
+      onClick: () => downloadOutput(option.key),
+    }));
+
+    setDownloadOptionsMenuItems(menuLinks);
 
     // natural sort reports
     const sortedKeys = Object.keys(htmlUrls)
@@ -93,110 +124,16 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     secondaryAnalysis?.status?.current === 'finished'
   ), [secondaryAnalysis?.status?.current]);
 
-  const outputDownloadParams = useMemo(() => ({
-    all: {
-      uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/allOutputFiles`,
-      fileName: 'all_files.zip',
-    },
-    combined: {
-      uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/combinedOutput`,
-      fileName: 'combined_output.zip',
-    },
-    summaries: {
-      uri: `/v2/secondaryAnalysis/${secondaryAnalysisId}/reports`,
-      fileName: 'all_summaries.zip',
-    },
-  }), [secondaryAnalysisId]);
-
-  const downloadOutput = useCallback(async (type) => {
-    const { uri, fileName } = outputDownloadParams[type];
-    const signedUrl = await fetchAPI(uri);
-    downloadFromUrl(signedUrl, { fileName });
-  }, [outputDownloadParams]);
-
-  const downloadReports = useCallback(async () => {
-    const logsResponse = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/logFile`, {}, { parseJson: false });
-    const logsFile = await logsResponse.arrayBuffer();
-    downloadFromUrl(writeToFileURL(logsFile), { fileName: `${secondaryAnalysisId}.log` });
-  }, [secondaryAnalysisId]);
-
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
   }, [secondaryAnalysisId, secondaryAnalysis?.status?.current]);
 
-  const menuItems = [
-    {
-      key: 'combined',
-      onClick: (e) => {
-        e.domEvent.stopPropagation();
-        downloadOutput('combined');
-      },
-      label: (
-        <Tooltip
-          title='Download count matrices and intermediate files for the combined sublibraries.'
-          placement='right'
-          mouseEnterDelay={0.05}
-        >
-          <Space>
-            Combined Output
-          </Space>
-        </Tooltip>
-      ),
-    },
-    {
-      key: 'reports',
-      onClick: (e) => {
-        e.domEvent.stopPropagation();
-        downloadOutput('summaries');
-      },
-      label: (
-        <Tooltip
-          title='Download all_summaries.zip file with html reports, QC metrics and log files.'
-          placement='right'
-          mouseEnterDelay={0.05}
-        >
-          <Space>
-            Reports
-          </Space>
-        </Tooltip>
-      ),
-    },
-    {
-      key: 'all',
-      onClick: (e) => {
-        e.domEvent.stopPropagation();
-        downloadOutput('all');
-      },
-      label: (
-
-        <Tooltip
-          title={(
-            <>
-              <WarningOutlined />
-              {' '}
-              Warning: Downloading all output files might take a long time.
-            </>
-          )}
-          placement='right'
-          mouseEnterDelay={0.05}
-          overlayStyle={{
-            background: '#B6007C',
-          }}
-        >
-          <Space>
-            All files
-          </Space>
-        </Tooltip>
-      ),
-    },
-  ];
-
   const renderDownloadOutputButton = () => (
     <Dropdown
       trigger={['click']}
       menu={{
-        items: menuItems,
+        items: downloadOptionsMenuItems,
       }}
     >
       <Button type='primary' disabled={!secondaryAnalysisFinished}>
@@ -207,7 +144,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   );
 
   const renderDownloadLogsButton = () => (
-    <Button type='primary' onClick={() => downloadReports()}>
+    <Button type='primary' onClick={() => downloadLogs()}>
       Download Logs
       {' '}
       <DownOutlined />

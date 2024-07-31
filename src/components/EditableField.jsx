@@ -224,7 +224,7 @@ EditableField.defaultProps = {
   value: null,
   showEdit: true,
   deleteEnabled: true,
-  confirmDelete: false,
+  confirmDelete: null,
   defaultEditing: false,
   disabled: false,
   message: 'Edit',
