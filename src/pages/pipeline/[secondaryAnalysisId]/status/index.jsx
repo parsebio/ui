@@ -81,6 +81,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     }
 
     const { htmlUrls, downloadOptions } = await getReports(secondaryAnalysisId);
+
     const menuLinks = downloadOptions.map((option) => ({
       label: (
         <Tooltip
