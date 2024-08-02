@@ -6,12 +6,14 @@ import React, {
 import PropTypes from 'prop-types';
 import {
   Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip, Typography, Card, Progress, Spin,
+  Divider,
 } from 'antd';
 import _ from 'lodash';
 import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
   loadSecondaryAnalysisStatus, updateSecondaryAnalysis,
   cancelSecondaryAnalysis,
@@ -323,6 +325,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           </Button>
         )}
       </Space>
+      <Divider style={{ width: '100%', margin: '0' }} />
       {
         reports ? (
           <iframe src={URL.createObjectURL(reports[selectedReport])} title='My Document' style={{ height: '100%', width: '100%' }} />
