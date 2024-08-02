@@ -92,7 +92,12 @@ const DownloadDataButton = () => {
           color={downloadingProcessedSeurat ? 'white' : ''}
           title={
             downloadingProcessedSeurat
-              ? <Loader experimentId={activeExperimentId} />
+              ? (
+                <center>
+                  <Loader experimentId={activeExperimentId} />
+                  <p style={{ color: 'black' }}>Do not leave this page</p>
+                </center>
+              )
               : pipelineHasRun
                 ? 'With Data Processing filters and settings applied'
                 : 'Launch analysis to process data'
