@@ -324,8 +324,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
           </Button>
         )}
       </Space>
-      <Divider style={{ width: '100%', marginTop: '0px' }} />
-
       {
         reports ? (
           <iframe src={URL.createObjectURL(reports[selectedReport])} title='My Document' style={{ height: '100%', width: '100%' }} />
@@ -334,7 +332,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         )
       }
     </>
-
   );
 };
 
