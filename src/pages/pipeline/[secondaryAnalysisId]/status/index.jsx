@@ -6,7 +6,6 @@ import React, {
 import PropTypes from 'prop-types';
 import {
   Button, Select, Space, Switch, Popconfirm, Dropdown, Tooltip, Typography, Card, Progress, Spin,
-  Divider,
 } from 'antd';
 import _ from 'lodash';
 import fetchAPI from 'utils/http/fetchAPI';
