@@ -58,7 +58,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const downloadOutput = useCallback(async (type) => {
     const fileName = encodeURIComponent(type);
-    const { signedUrl } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
+    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
     downloadFromUrl(signedUrl, { fileName: type });
   }, [secondaryAnalysisId]);
 
@@ -77,9 +77,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       await loadAssociatedExperiment();
     }
 
-    const { htmlUrls, downloadOptions } = await getReports(secondaryAnalysisId);
-
-    const menuLinks = downloadOptions.map((option) => ({
+    const outputFileDownloadOptions = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadOptions`);
+    const menuLinks = outputFileDownloadOptions.map((option) => ({
       label: (
         <Tooltip
           title={option.description}
@@ -94,6 +93,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       key: option.key,
       onClick: () => downloadOutput(option.key),
     }));
+
+    const htmlUrls = await getReports(secondaryAnalysisId);
 
     setDownloadOptionsMenuItems(menuLinks);
 
