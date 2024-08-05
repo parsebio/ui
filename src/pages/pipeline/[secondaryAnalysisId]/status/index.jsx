@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, {
-  useCallback, useEffect, useState, useMemo,
+  useCallback, useEffect, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -58,7 +58,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const downloadOutput = useCallback(async (type) => {
     const fileName = encodeURIComponent(type);
-    const { signedUrl } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
+    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
     downloadFromUrl(signedUrl, { fileName: type });
   }, [secondaryAnalysisId]);
 
@@ -77,9 +77,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       await loadAssociatedExperiment();
     }
 
-    const { htmlUrls, downloadOptions } = await getReports(secondaryAnalysisId);
-
-    const menuLinks = downloadOptions.map((option) => ({
+    const outputFileDownloadOptions = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadOptions`);
+    const menuLinks = outputFileDownloadOptions.map((option) => ({
       label: (
         <Tooltip
           title={option.description}
@@ -94,8 +93,9 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       key: option.key,
       onClick: () => downloadOutput(option.key),
     }));
-
     setDownloadOptionsMenuItems(menuLinks);
+
+    const htmlUrls = await getReports(secondaryAnalysisId);
 
     // natural sort reports
     const sortedKeys = Object.keys(htmlUrls)
@@ -122,10 +122,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     setupReports();
   }, [secondaryAnalysis?.status.current]);
 
-  const secondaryAnalysisFinished = useMemo(() => (
-    secondaryAnalysis?.status?.current === 'finished'
-  ), [secondaryAnalysis?.status?.current]);
-
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
@@ -138,7 +134,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         items: downloadOptionsMenuItems,
       }}
     >
-      <Button type='primary' disabled={!secondaryAnalysisFinished}>
+      <Button type='primary' disabled={!downloadOptionsMenuItems}>
         Download Output
         <DownOutlined />
       </Button>
