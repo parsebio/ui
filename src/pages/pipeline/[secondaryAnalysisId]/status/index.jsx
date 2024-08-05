@@ -123,10 +123,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     setupReports();
   }, [secondaryAnalysis?.status.current]);
 
-  const secondaryAnalysisFinished = useMemo(() => (
-    secondaryAnalysis?.status?.current === 'finished'
-  ), [secondaryAnalysis?.status?.current]);
-
   usePolling(async () => {
     if (!['running', 'created'].includes(secondaryAnalysis?.status?.current)) return;
     await dispatch(loadSecondaryAnalysisStatus(secondaryAnalysisId));
@@ -139,7 +135,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         items: downloadOptionsMenuItems,
       }}
     >
-      <Button type='primary' disabled={!secondaryAnalysisFinished}>
+      <Button type='primary' disabled={!downloadOptionsMenuItems}>
         Download Output
         <DownOutlined />
       </Button>
