@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, {
-  useCallback, useEffect, useState, useMemo,
+  useCallback, useEffect, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 import {
