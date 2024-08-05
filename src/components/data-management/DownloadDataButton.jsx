@@ -14,7 +14,7 @@ import pipelineStatus from 'utils/pipelineStatusValues';
 import { exportQCParameters, filterQCParameters } from 'utils/data-management/exportQCParameters';
 
 import { loadBackendStatus } from 'redux/actions/backendStatus/index';
-
+import Loader from 'components/Loader';
 import { getBackendStatus } from 'redux/selectors';
 import handleError from 'utils/http/handleError';
 import downloadProcessedMatrix from 'utils/extraActionCreators/downloadProcessedMatrix';
@@ -82,17 +82,25 @@ const DownloadDataButton = () => {
   const menuItems = [
     {
       key: 'download-processed-seurat',
-      disabled: !pipelineHasRun || backendLoading,
+      disabled: !pipelineHasRun || backendLoading || downloadingProcessedSeurat,
       onClick: (e) => {
         e.domEvent.stopPropagation();
         downloadExperimentData('processed-matrix');
       },
       label: (
         <Tooltip
+          color={downloadingProcessedSeurat ? 'white' : ''}
           title={
-            pipelineHasRun
-              ? 'With Data Processing filters and settings applied'
-              : 'Launch analysis to process data'
+            downloadingProcessedSeurat
+              ? (
+                <center>
+                  <Loader experimentId={activeExperimentId} />
+                  <p style={{ color: 'black' }}>Do not leave this page</p>
+                </center>
+              )
+              : pipelineHasRun
+                ? 'With Data Processing filters and settings applied'
+                : 'Launch analysis to process data'
           }
           placement='left'
         >
