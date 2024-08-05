@@ -93,10 +93,9 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       key: option.key,
       onClick: () => downloadOutput(option.key),
     }));
+    setDownloadOptionsMenuItems(menuLinks);
 
     const htmlUrls = await getReports(secondaryAnalysisId);
-
-    setDownloadOptionsMenuItems(menuLinks);
 
     // natural sort reports
     const sortedKeys = Object.keys(htmlUrls)
