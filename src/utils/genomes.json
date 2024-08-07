@@ -88,6 +88,14 @@
     "species": "Custom Homo sapiens (human) with mScarlet and GFP"
   },
   {
+    "name": "GRCh38_229E",
+    "species": "Custom Homo sapiens (human) 229E"
+  },
+  {
+    "name": "GRCh37_EBV",
+    "species": "Custom Homo sapiens (human) with EBV"
+  },
+  {
     "name": "mTSC-custom",
     "species": "Custom Mus musculus Trophoblast Stem Cells"
   },
