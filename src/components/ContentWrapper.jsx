@@ -115,10 +115,10 @@ const ContentWrapper = (props) => {
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
 
-  const sampleId = Object.keys(samples).find(
+  const firstSampleId = Object.keys(samples).find(
     (id) => samples[id].experimentId === currentExperimentId,
   );
-  const selectedTechnology = sampleId ? samples[sampleId].type : false;
+  const selectedTechnology = firstSampleId ? samples[firstSampleId].type : false;
 
   const experimentName = experimentData?.experimentName || experiment?.name;
   const secondaryAnalysisName = useSelector(
@@ -146,7 +146,7 @@ const ContentWrapper = (props) => {
   const gem2sRunningError = backendErrors.includes(gem2sStatusKey);
   const completedGem2sSteps = backendStatus?.gem2s?.completedSteps;
   const seuratStatusKey = backendStatus?.seurat?.status;
-  console.log('SEURAT STATUS KEY ', seuratStatusKey, selectedTechnology);
+
   const isSeurat = seuratStatusKey && selectedTechnology === 'seurat';
 
   const [pipelinesRerunStatus, setPipelinesRerunStatus] = useState(null);
@@ -263,9 +263,6 @@ const ContentWrapper = (props) => {
   };
 
   const getCurrentStatusScreen = () => {
-    console.log('IS SEURAT', isSeurat);
-    console.log('SEURAT RUNNING', seuratRunning);
-    console.log('SEURAT RUNNING ERROR', seuratRunningError);
     if (isSeurat) {
       return getSeuratStatus();
     }
