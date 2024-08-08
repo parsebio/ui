@@ -352,4 +352,39 @@ describe('ContentWrapper', () => {
 
     expect(screen.queryByText(/Browser not supported/)).not.toBeInTheDocument();
   });
+  it('renders child components if project is Seurat and processed', async () => {
+    getBackendStatus.mockImplementation(() => () => ({
+      [experimentId]: {
+        loading: false,
+        error: false,
+        status: {
+          gem2s: {
+            startDate: null,
+            stopDate: null,
+            status: 'NOT_CREATED',
+            error: false,
+            completedSteps: [],
+            shouldRerun: true,
+          },
+          seurat: {
+            startDate: '2024-08-07T13:54:40.816Z',
+            stopDate: '2024-08-07T13:57:54.996Z',
+            status: 'SUCCEEDED',
+            error: false,
+            completedSteps: [
+              'DownloadSeurat',
+              'ProcessSeurat',
+              'UploadSeuratToAWS',
+            ],
+            shouldRerun: false,
+          },
+        },
+      },
+    }));
+
+    const { getByText } = await renderContentWrapper(experimentId, experimentData);
+    await waitFor(() => {
+      expect(getByText('Test')).toBeInTheDocument();
+    });
+  });
 });

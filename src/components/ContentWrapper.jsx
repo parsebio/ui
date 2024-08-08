@@ -114,7 +114,11 @@ const ContentWrapper = (props) => {
 
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
-  const selectedTechnology = (samples[experiment?.sampleIds?.[0]]?.type || false);
+
+  const firstSampleId = Object.keys(samples).find(
+    (id) => samples[id].experimentId === currentExperimentId,
+  );
+  const selectedTechnology = firstSampleId ? samples[firstSampleId].type : false;
 
   const experimentName = experimentData?.experimentName || experiment?.name;
   const secondaryAnalysisName = useSelector(
