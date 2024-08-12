@@ -1,10 +1,20 @@
+import sys
+
+# Check minimum required python version is available
+if sys.version_info < (3, 6):
+    
+    print("This script requires Python 3.6 or later. You are using Python {}.{}.{}. Upgrade your python version to 3.6 or higher and try again.".format(
+            sys.version_info.major, sys.version_info.minor, sys.version_info.micro
+        )
+    )
+    exit(0)
+
 import argparse
 import glob
 import json
 import math
 import os
 import re
-import sys
 import time
 import urllib.error
 import urllib.request
@@ -45,14 +55,14 @@ def wipe_file(file_path):
 
 def get_resume_params_from_file():
     if not os.path.exists(RESUME_PARAMS_PATH):
-        raise Exception(f"No resume parameters file {RESUME_PARAMS_PATH} found, try beginning a new upload")
+        raise Exception("No resume parameters file {} found, try beginning a new upload".format(RESUME_PARAMS_PATH))
 
     with open(RESUME_PARAMS_PATH, "r") as file:
         lines = file.read().splitlines()
 
         if len(lines) != 6:
             raise Exception(
-                f"Resume files {RESUME_PARAMS_PATH} corrupted. You can delete the files that didn't finish through the browser and upload them again without resume"
+                "Resume files {} corrupted. You can delete the files that didn't finish through the browser and upload them again without resume".format(RESUME_PARAMS_PATH)
             )
 
         analysis_id = lines[0]
@@ -228,12 +238,12 @@ class UploadTracker:
             file.write(
                 "\n".join(
                     [
-                        f"{self.analysis_id}",
+                        "{}".format(self.analysis_id),
                         json.dumps(self.upload_params),
                         str(self.current_file_created),
-                        f"{','.join(self.file_paths)}",
-                        f"{self.current_file_index}",
-                        f"{','.join([str(offset) for offset in self.completed_parts_by_thread])}",
+                        "{}".format(','.join(self.file_paths)),
+                        "{}".format(self.current_file_index),
+                        "{}".format(','.join([str(offset) for offset in self.completed_parts_by_thread])),
                     ]
                 )
             )
@@ -259,7 +269,7 @@ class UploadTracker:
 
     def get_parts_etags(self):
         if not os.path.exists(ETAGS_PATH):
-            raise Exception(f"File {ETAGS_PATH} doesn't exist")
+            raise Exception("File {} doesn't exist".format(ETAGS_PATH))
 
         with open(ETAGS_PATH, "r") as file:
             lines = file.read().splitlines()
@@ -289,7 +299,7 @@ class UploadTracker:
         with self.files_lock:
             with open(ETAGS_PATH, "a") as file:
                 # write etag without the double commas
-                file.write(f"{part_number},{etag}")
+                file.write("{},{}".format(part_number, etag))
                 file.write("\n")
 
             self.completed_parts_by_thread[thread_index] += 1
@@ -322,7 +332,7 @@ class ProgressDisplayer:
     def finish(self):
         sys.stdout.write(ERASE_CURRENT_LINE)
         sys.stdout.write(ERASE_UPPER_LINE)
-        sys.stdout.write(f"\rUploaded file {self.file_path}\n")
+        sys.stdout.write("\rUploaded file {}\n".format(self.file_path))
         print()  # Move to the next line
 
     def _display_progress(self):
@@ -331,8 +341,8 @@ class ProgressDisplayer:
 
         sys.stdout.write(ERASE_UPPER_LINE)
 
-        sys.stdout.write(f"\rUploading file {self.file_path}\n")
-        sys.stdout.write(f"\rProgress: [{progress_bar:<50}] {percentage:.2f}%")
+        sys.stdout.write("\rUploading file {}\n".format(self.file_path))
+        sys.stdout.write("\rProgress: [{:<50}] {:.2f}%".format(progress_bar, percentage))
 
 
 # Manages the upload of a single file
@@ -370,14 +380,14 @@ class FileUploader:
 
     def get_signed_url_for_part(self, part_number):
         response = http_post(
-            f"{base_url}/analysis/{self.analysis_id}/cliUpload/{self.upload_id}/part/{part_number}/signedUrl",
-            {"x-api-token": f"Bearer {self.api_token}"},
+            "{}/analysis/{}/cliUpload/{}/part/{}/signedUrl".format(base_url, self.analysis_id, self.upload_id, part_number=part_number),
+            {"x-api-token": "Bearer {}".format(self.api_token)},
             json_data={"key": self.key},
         )
 
         if response.status_code != 200:
             raise Exception(
-                f"Failed to begin upload of part of the file to our servers, check your internet connection and try resuming the upload"
+                "Failed to begin upload of part of the file to our servers, check your internet connection and try resuming the upload"
             )
 
         return response.json()
@@ -388,8 +398,8 @@ class FileUploader:
         sorted_parts = sorted(parts, key=lambda part: part["PartNumber"])
 
         response = http_post(
-            f"{base_url}/analysis/{self.analysis_id}/cliUpload/CompleteMultipartUpload",
-            {"X-Api-Token": f"Bearer {self.api_token}"},
+            "{}/analysis/{}/cliUpload/CompleteMultipartUpload".format(base_url, self.analysis_id),
+            {"X-Api-Token": "Bearer {}".format(self.api_token)},
             json_data={
                 "key": self.key,
                 "uploadId": self.upload_id,
@@ -400,7 +410,7 @@ class FileUploader:
 
         if response.status_code != 200:
             raise Exception(
-                f"Failed to complete upload for file {self.file_path}, check your internet connection and try resuming the upload"
+                "Failed to complete upload for file {}, check your internet connection and try resuming the upload".format(self.file_path)
             )
 
     def upload_part(self, part, part_number):
@@ -408,7 +418,7 @@ class FileUploader:
 
         response = http_put_part(signed_url, part)
         if response.status_code != 200:
-            raise Exception(f"""Upload of part of the file failed, check your internet connection and try resuming the upload, \n\nError details: {response.text}""")
+            raise Exception("""Upload of part of the file failed, check your internet connection and try resuming the upload, \n\nError details: {}""".format(response.text))
 
         # With localstack the ETag is returned lowercase for some reason
         etag = response.headers.get("ETag", response.headers.get("etag"))
@@ -523,28 +533,28 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
     file_name = os.path.basename(file_path)
     file_size = os.path.getsize(file_path)
 
-    url = f"{base_url}/analysis/{analysis_id}/cliUpload/begin"
+    url = "{}/analysis/{}/cliUpload/begin".format(base_url, analysis_id)
 
     response = http_post(
         url,
-        {"X-Api-Token": f"Bearer {api_token}"},
+        {"X-Api-Token": "Bearer {}".format(api_token)},
         json_data={"name": file_name, "size": file_size},
     )
 
     if response.status_code != 200:
         if response.status_code == 401:
             raise Exception(
-                f"Not authorized to upload files to this run, please verify your --run_id and --token"
+                "Not authorized to upload files to this run, please verify your --run_id and --token"
             )
 
         if response.status_code == 409:
             raise Exception(
-                f"File {file_path} already exists in the run. Please remove the existing one from the platform using the browser before uploading this file"
+                "File {} already exists in the run. Please remove the existing one from the platform using the browser before uploading this file".format(file_path)
             )
         if response.status_code == 404:
-            raise Exception(f"Error 404: Not found")
+            raise Exception("Error 404: Not found")
 
-        raise Exception(f"Failed to begin upload for file {file_path}, please check your files and internet connection and try again by resuming the upload\nIf the problem persists try starting the upload again from the beginning. \n\n {response.text}")
+        raise Exception("Failed to begin upload for file {}, please check your files and internet connection and try again by resuming the upload\nIf the problem persists try starting the upload again from the beginning. \n\n {}".format(file_path, response.text))
 
     upload_params = response.json()
 
@@ -578,7 +588,7 @@ def show_resume_option():
             return False
 
         print(
-            f"It seems an interrupted upload for analysis id: {analysis_id} can be resumed, or will be lost if a new upload is started"
+            "It seems an interrupted upload for analysis id: {} can be resumed, or will be lost if a new upload is started".format(analysis_id)
         )
         print()
         print("It included the following files:")
@@ -620,17 +630,17 @@ def check_names_are_valid(files):
 
         if not (file_name.endswith(".fastq.gz") or file_name.endswith(".fq.gz")):
             raise Exception(
-                f"File {file_name} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported"
+                "File {} does not end with .fastq.gz or fq.gz, only gzip compressed fastq files are supported".format(file_name)
             )
 
         if not re.search(regex, file_name):
             raise Exception(
-                f"File {file_name} must either: contain _R1 or _R2 in its name, or end with _1 or _2, please check the file name to ensure it is a valid fastq pair"
+                "File {} must either: contain _R1 or _R2 in its name, or end with _1 or _2, please check the file name to ensure it is a valid fastq pair".format(file_name)
             )
 
         if file_name.count("_R1") + file_name.count("_R2") > 1:
             raise Exception(
-                f"File {file_name} can't contain \"_R1\" or \"_R2\" (its read pair) more than once. Valid example: \"S1_R1.fast.gz\""
+                "File {} can't contain \"_R1\" or \"_R2\" (its read pair) more than once. Valid example: \"S1_R1.fast.gz\"".format(file_name)
             )
 
 def get_common_name(match, match_index):
@@ -638,7 +648,7 @@ def get_common_name(match, match_index):
     end = match.end(match_index)
 
     original_string = match.string
-    return f"{original_string[:start]}#{original_string[end:]}"
+    return "{}#{}".format(original_string[:start], original_string[end:])
 
 def check_fastq_pairs_complete(files):
     file_names = [file.split("/")[-1] for file in files]
@@ -667,21 +677,13 @@ def check_fastq_pairs_complete(files):
     if len(single_files) > 0:
         single_files_str =  "\n".join(single_files)
         raise Exception(
-            f"""Some of your files do not have a matching read pair. Please ensure that, for each sublibrary, you have a pair of Fastq files with the same name except for _R1 or _R2\n
+            """Some of your files do not have a matching read pair. Please ensure that, for each sublibrary, you have a pair of Fastq files with the same name except for _R1 or _R2\n
 The following files are missing their read pair:\n
-{single_files_str}
-""")
+{}
+""".format(single_files_str))
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
-    # Check minimum required python version is available
-    if sys.version_info < (3, 6):
-        raise Exception(
-            "This script requires Python 3.6 or later. You are using Python {}.{}.{}. Upgrade your python version to 3.6 or higher and try again.".format(
-                sys.version_info.major, sys.version_info.minor, sys.version_info.micro
-            )
-        )
-
     non_resumable_args = args.run_id or args.file
 
     if non_resumable_args and args.resume:
