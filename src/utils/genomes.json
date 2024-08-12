@@ -36,6 +36,10 @@
     "species": "Rattus norvegicus (Rat)"
   },
   {
+    "name": "OryCun2",
+    "species": "Oryctolagus cuniculus (Rabbit)"
+  },
+  {
     "name": "Oar_v3.1",
     "species": "Ovis aries (Sheep)"
   },
@@ -46,6 +50,10 @@
   {
     "name": "Ssal_v3.1",
     "species": "Salmo salar (Atlantic Salmon)"
+  },
+  {
+    "name": "ASM223467v1",
+    "species": "Oryzias latipes (Medaka)"
   },
   {
     "name": "PFal3D7",
