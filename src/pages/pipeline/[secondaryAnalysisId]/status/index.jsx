@@ -88,7 +88,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       const commonLabel = (
         <Tooltip
           title={option.description}
-          placement='right'
+          placement='left'
           mouseEnterDelay={0.05}
         >
           <Space>
