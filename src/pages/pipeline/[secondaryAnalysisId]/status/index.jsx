@@ -112,7 +112,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               key: `${option.key}-copy`,
               onClick: async () => {
                 const signedUrl = await downloadOutput(option.key, true);
-                navigator.clipboard.writeText(`wget ${signedUrl}`);
+                navigator.clipboard.writeText(`curl -o ${option.key} "${signedUrl}"`);
                 pushNotificationMessage('success', 'Download command copied.');
               },
             },
