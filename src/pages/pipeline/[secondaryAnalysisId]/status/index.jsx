@@ -82,48 +82,48 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       await loadAssociatedExperiment();
     }
 
-  const outputFileDownloadOptions = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadOptions`);
+    const outputFileDownloadOptions = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadOptions`);
 
-  const menuLinks = outputFileDownloadOptions.map((option) => {
-    const commonLabel = (
-      <Tooltip
-        title={option.description}
-        placement='right'
-        mouseEnterDelay={0.05}
-      >
-        <Space>
-          {option.label}
-        </Space>
-      </Tooltip>
-    );
+    const menuLinks = outputFileDownloadOptions.map((option) => {
+      const commonLabel = (
+        <Tooltip
+          title={option.description}
+          placement='right'
+          mouseEnterDelay={0.05}
+        >
+          <Space>
+            {option.label}
+          </Space>
+        </Tooltip>
+      );
 
-    const baseOption = {
-      label: commonLabel,
-      key: option.key,
-      onClick: !option.copySignedUrl ? () => downloadOutput(option.key) : undefined,
-    };
+      const baseOption = {
+        label: commonLabel,
+        key: option.key,
+        onClick: !option.copySignedUrl ? () => downloadOutput(option.key) : undefined,
+      };
 
-    if (option.copySignedUrl) {
-      baseOption.children = [
-        {
-          label: 'Download',
-          key: `${option.key}-download`,
-          onClick: () => downloadOutput(option.key),
-        },
-        {
-          label: 'Copy download command',
-          key: `${option.key}-copy`,
-          onClick: () => {
-            const signedUrl = downloadOutput(option.key, true);
-            navigator.clipboard.writeText(`wget ${signedUrl}`);
-            pushNotificationMessage('success', `Download command copied.`);
+      if (option.copySignedUrl) {
+        baseOption.children = [
+          {
+            label: 'Download',
+            key: `${option.key}-download`,
+            onClick: () => downloadOutput(option.key),
           },
-        },
-      ];
-    }
+          {
+            label: 'Copy download command',
+            key: `${option.key}-copy`,
+            onClick: () => {
+              const signedUrl = downloadOutput(option.key, true);
+              navigator.clipboard.writeText(`wget ${signedUrl}`);
+              pushNotificationMessage('success', 'Download command copied.');
+            },
+          },
+        ];
+      }
 
-    return baseOption;
-  });
+      return baseOption;
+    });
 
     setDownloadOptionsMenuItems(menuLinks);
 
