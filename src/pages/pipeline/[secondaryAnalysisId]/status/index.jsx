@@ -97,32 +97,34 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         </Tooltip>
       );
 
-      const baseOption = {
-        label: commonLabel,
-        key: option.key,
-        onClick: !option.copySignedUrl ? () => downloadOutput(option.key) : undefined,
-      };
-
       if (option.copySignedUrl) {
-        baseOption.children = [
-          {
-            label: 'Download',
-            key: `${option.key}-download`,
-            onClick: () => downloadOutput(option.key),
-          },
-          {
-            label: 'Copy download command',
-            key: `${option.key}-copy`,
-            onClick: () => {
-              const signedUrl = downloadOutput(option.key, true);
-              navigator.clipboard.writeText(`wget ${signedUrl}`);
-              pushNotificationMessage('success', 'Download command copied.');
+        return {
+          label: commonLabel,
+          key: option.key,
+          children: [
+            {
+              label: 'Download',
+              key: `${option.key}-download`,
+              onClick: () => downloadOutput(option.key),
             },
-          },
-        ];
+            {
+              label: 'Copy download command',
+              key: `${option.key}-copy`,
+              onClick: async () => {
+                const signedUrl = await downloadOutput(option.key, true);
+                navigator.clipboard.writeText(`wget ${signedUrl}`);
+                pushNotificationMessage('success', 'Download command copied.');
+              },
+            },
+          ],
+        };
       }
 
-      return baseOption;
+      return {
+        label: commonLabel,
+        key: option.key,
+        onClick: () => downloadOutput(option.key),
+      };
     });
 
     setDownloadOptionsMenuItems(menuLinks);
