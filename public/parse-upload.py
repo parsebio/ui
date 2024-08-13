@@ -2,7 +2,7 @@ import sys
 
 # Check minimum required python version is available
 if sys.version_info < (3, 6):
-    
+
     print("This script requires Python 3.6 or later. You are using Python {}.{}.{}. Upgrade your python version to 3.6 or higher and try again.".format(
             sys.version_info.major, sys.version_info.minor, sys.version_info.micro
         )
@@ -22,13 +22,14 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, wait
 from threading import Event, Lock
 
+SCRIPT_VERSION = "1.0.0"
+
 MAX_RETRIES = 8  # Max number of retries to upload each PART_SIZE part
 THREADS_COUNT = 20
 
 # S3 multipart upload limits
 PART_SIZE_MIN = 5 * 1024 * 1024
 PART_COUNT_MAX = 10000
-
 
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
 
@@ -144,6 +145,15 @@ def http_put_part(signed_url, data):
     except Exception as e:
         return HTTPResponse(e)
 
+def http_get(url, headers):
+    try:
+        request = urllib.request.Request(url, headers=headers, method="GET")
+
+        with urllib.request.urlopen(request) as response:
+            return HTTPResponse(response, response.read())
+
+    except Exception as e:
+        return HTTPResponse(e)
 
 def http_post(url, headers, json_data={}):
     headers["Content-Type"] = "application/json"
@@ -157,7 +167,6 @@ def http_post(url, headers, json_data={}):
 
     except Exception as e:
         return HTTPResponse(e)
-
 
 # Manages
 # - the parameters required for upload,
@@ -542,6 +551,9 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
     )
 
     if response.status_code != 200:
+        if response.status_code == 400:
+            print("responseDebug")
+            print(response)
         if response.status_code == 401:
             raise Exception(
                 "Not authorized to upload files to this run, please verify your --run_id and --token"
@@ -682,6 +694,21 @@ The following files are missing their read pair:\n
 {}
 """.format(single_files_str))
 
+def check_script_version_is_latest(api_token):
+    response = http_get(
+        "{}/cliUpload/latestScriptVersion".format(base_url),
+        {"x-api-token": "Bearer {}".format(api_token)}
+    )
+
+    if response.status_code != 200:
+        raise Exception("Failed to check the version of the script, please check your internet connection and try again")
+
+    latest_version = response.json()
+
+    if (latest_version != SCRIPT_VERSION):
+        raise Exception("The script you are using is outdated. Please download the latest version from the browser application")
+
+
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
     non_resumable_args = args.run_id or args.file
@@ -714,6 +741,7 @@ def prepare_upload(args):
 
         check_names_are_valid(files)
         check_fastq_pairs_complete(files)
+        check_script_version_is_latest(args.token)
 
         upload_tracker = UploadTracker.fromScratch(
             args.run_id, files, args.max_threads_count, args.token
