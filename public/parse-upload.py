@@ -61,7 +61,12 @@ def get_resume_params_from_file():
     with open(RESUME_PARAMS_PATH, "r") as file:
         lines = file.read().splitlines()
 
-        if len(lines) != 6:
+        if (len(lines) < 7 or lines[6] != SCRIPT_VERSION):
+            print("""[WARNING] The upload you are about to resume seems to have been begun with an older script than the one you are using now.
+This might lead to unexpected errors. If you encounter any issues, consider beginning the upload again from scratch.""")
+            input("If you want to continue with the current version, press ENTER. Otherwise, press CTRL+C to cancel the upload")
+
+        if len(lines) != 7:
             raise Exception(
                 "Resume files {} corrupted. You can delete the files that didn't finish through the browser and upload them again without resume".format(RESUME_PARAMS_PATH)
             )
@@ -81,7 +86,7 @@ def get_resume_params_from_file():
             file_paths,
             current_file_index,
             completed_parts_by_thread,
-            current_file_created,
+            current_file_created
         )
 
 
@@ -253,6 +258,7 @@ class UploadTracker:
                         "{}".format(','.join(self.file_paths)),
                         "{}".format(self.current_file_index),
                         "{}".format(','.join([str(offset) for offset in self.completed_parts_by_thread])),
+                        SCRIPT_VERSION,
                     ]
                 )
             )
@@ -694,7 +700,7 @@ The following files are missing their read pair:\n
 {}
 """.format(single_files_str))
 
-def check_script_version_is_latest(api_token):
+def check_script_version_is_latest(api_token, raise_error=False):
     response = http_get(
         "{}/cliUpload/latestScriptVersion".format(base_url),
         {"x-api-token": "Bearer {}".format(api_token)}
@@ -705,9 +711,14 @@ def check_script_version_is_latest(api_token):
 
     latest_version = response.json()
 
-    if (latest_version != SCRIPT_VERSION):
+    outdated = latest_version < SCRIPT_VERSION
+
+    if (outdated and raise_error):
         raise Exception("The script you are using is outdated. Please download the latest version from the browser application")
 
+    if outdated and not raise_error:
+        print("""[Warning] The script you are using is outdated. It is recommended to download the newest version from the browser application and begin the upload from scratch""")
+        input("If you want to continue with the current version, press ENTER. Otherwise, press CTRL+C to cancel the upload")
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
