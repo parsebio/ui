@@ -350,6 +350,7 @@ const insertClusterColorsSpec = (
         offset: 20,
         symbolType: 'circle',
         symbolSize: 200,
+        clipHeight: 200, // Add this line to make the legend scrollable
         encode: {
           labels: {
             update: {
@@ -621,6 +622,7 @@ const insertPseudotimeSpec = (spec, config, pseudotime) => {
         offset: 40,
         columns: legendColumns,
         labelLimit,
+        clipHeight: 200, // Add this line to make the legend scrollable
       },
     ];
   }
