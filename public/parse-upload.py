@@ -700,7 +700,7 @@ The following files are missing their read pair:\n
 {}
 """.format(single_files_str))
 
-def check_script_version_is_latest(api_token, raise_error):
+def check_script_version_is_latest(api_token, resume):
     response = http_get(
         "{}/cliUpload/latestScriptVersion".format(base_url),
         {"x-api-token": "Bearer {}".format(api_token)}
@@ -713,10 +713,10 @@ def check_script_version_is_latest(api_token, raise_error):
 
     outdated = latest_version < SCRIPT_VERSION
 
-    if (outdated and raise_error):
+    if (outdated and not resume):
         raise Exception("The script you are using is outdated. Please download the latest version from the browser application")
 
-    if outdated and not raise_error:
+    if outdated and resume:
         print("""[Warning] The script you are using is outdated. It is recommended to download the newest version from the browser application and begin the upload from scratch""")
         input("If you want to continue with the current version, press ENTER. Otherwise, press CTRL+C to cancel the upload")
 
@@ -743,9 +743,10 @@ def prepare_upload(args):
         if not args.file:
             raise Exception("At least one file is required")
 
+    check_script_version_is_latest(args.token, resume)
+
     upload_tracker = None
     if resume:
-        check_script_version_is_latest(args.token, raise_error=False)
         upload_tracker = UploadTracker.fromResumeFile(args.token)
     else:
         # Take list of glob patterns and expand and flatten them into a list of files
@@ -753,7 +754,6 @@ def prepare_upload(args):
 
         check_names_are_valid(files)
         check_fastq_pairs_complete(files)
-        check_script_version_is_latest(args.token, raise_error=True)
 
         upload_tracker = UploadTracker.fromScratch(
             args.run_id, files, args.max_threads_count, args.token
