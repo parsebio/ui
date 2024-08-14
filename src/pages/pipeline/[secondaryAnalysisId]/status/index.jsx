@@ -57,14 +57,14 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     });
   };
 
-  const downloadOutput = useCallback(async (type, copyCommand = false) => {
+  const getSignedUrl = async (type) => {
     const fileName = encodeURIComponent(type);
-    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
-    if (!copyCommand) {
-      downloadFromUrl(signedUrl, { fileName: type });
-    } else {
-      return signedUrl;
-    }
+    return await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
+  };
+
+  const downloadOutput = useCallback(async (type) => {
+    const signedUrl = await getSignedUrl(type);
+    downloadFromUrl(signedUrl, { fileName: type });
   }, [secondaryAnalysisId]);
 
   const downloadLogs = useCallback(async () => {
@@ -111,7 +111,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               label: 'Copy download command',
               key: `${option.key}-copy`,
               onClick: async () => {
-                const signedUrl = await downloadOutput(option.key, true);
+                const signedUrl = await getSignedUrl(option.key);
                 navigator.clipboard.writeText(`curl -o ${option.key} "${signedUrl}"`);
                 pushNotificationMessage('success', 'Download command copied.');
               },
