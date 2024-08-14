@@ -759,7 +759,6 @@ def prepare_upload(args):
             args.run_id, files, args.max_threads_count, args.token
         )
 
-    if not resume:
         show_files_to_upload_warning(upload_tracker.file_paths)
 
     return upload_tracker
