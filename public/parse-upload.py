@@ -34,7 +34,7 @@ PART_COUNT_MAX = 10000
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
 
 # Staging url
-# default_prod_api_url = "https://api-default.staging.trailmaker.parsebiosciences.com/"
+# default_prod_api_url = "https://api-default.staging.trailmaker.parsebiosciences.com/v2"
 
 # Production url
 default_prod_api_url = "https://api.app.trailmaker.parsebiosciences.com/v2"
@@ -54,22 +54,23 @@ def wipe_file(file_path):
         pass
 
 
-def get_resume_params_from_file():
+def get_resume_params_from_file(version_check=False):
     if not os.path.exists(RESUME_PARAMS_PATH):
         raise Exception("No resume parameters file {} found, try beginning a new upload".format(RESUME_PARAMS_PATH))
 
     with open(RESUME_PARAMS_PATH, "r") as file:
         lines = file.read().splitlines()
 
-        if (len(lines) < 7 or lines[6] != SCRIPT_VERSION):
-            print("""[WARNING] The upload you are about to resume seems to have been begun with an older script than the one you are using now.
-This might lead to unexpected errors. If you encounter any issues, consider beginning the upload again from scratch.""")
-            input("If you want to continue with the current version, press ENTER. Otherwise, press CTRL+C to cancel the upload")
+        if (version_check):
+            if (len(lines) < 7 or lines[6] != SCRIPT_VERSION):
+                print("""[WARNING] The upload you are about to resume seems to have been begun with an older script than the one you are using now.
+    This might lead to unexpected errors. If you encounter any issues, consider beginning the upload again from scratch.""")
+                input("If you want to continue with the current version, press ENTER. Otherwise, press CTRL+C to cancel the upload\n")
 
-        if len(lines) != 7:
-            raise Exception(
-                "Resume files {} corrupted. You can delete the files that didn't finish through the browser and upload them again without resume".format(RESUME_PARAMS_PATH)
-            )
+            if not (len(lines) in [6,7]):
+                raise Exception(
+                    "Resume file {} corrupted. You can delete the fastq files that didn't finish through the browser and upload them again from scratch".format(RESUME_PARAMS_PATH)
+                )
 
         analysis_id = lines[0]
         upload_params = json.loads(lines[1])
@@ -224,7 +225,7 @@ class UploadTracker:
             current_file_index,
             completed_parts_by_thread,
             current_file_created,
-        ) = get_resume_params_from_file()
+        ) = get_resume_params_from_file(version_check=True)
 
         return cls(
             analysis_id,
@@ -395,7 +396,7 @@ class FileUploader:
 
     def get_signed_url_for_part(self, part_number):
         response = http_post(
-            "{}/analysis/{}/cliUpload/{}/part/{}/signedUrl".format(base_url, self.analysis_id, self.upload_id, part_number=part_number),
+            "{}/analysis/{}/cliUpload/{}/part/{}/signedUrl".format(base_url, self.analysis_id, self.upload_id, part_number),
             {"x-api-token": "Bearer {}".format(self.api_token)},
             json_data={"key": self.key},
         )
@@ -707,11 +708,11 @@ def check_script_version_is_latest(api_token, resume):
     )
 
     if response.status_code != 200:
-        raise Exception("Failed to check the version of the script, please check your internet connection and try again")
+        raise Exception("Failed to check the version of the script: {} {}".format(response.status_code, response.text))
 
-    latest_version = response.json()
+    latest_version = response.json()["version"]
 
-    outdated = latest_version < SCRIPT_VERSION
+    outdated = SCRIPT_VERSION != latest_version
 
     if (outdated and not resume):
         raise Exception("The script you are using is outdated. Please download the latest version from the browser application")
