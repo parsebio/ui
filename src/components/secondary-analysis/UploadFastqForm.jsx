@@ -468,7 +468,7 @@ const UploadFastqForm = (props) => {
           <Text>
             To perform a command-line upload, download this script:
             {' '}
-            <a href='/parse-upload.py' download>parse-upload.py</a>
+            <a href='/parse-upload-1.0.0.py' download>parse-upload-1.0.0.py</a>
 
             <br />
             <br />
@@ -477,14 +477,14 @@ const UploadFastqForm = (props) => {
             <br />
             <pre>
               <Paragraph copyable={{
-                text: `python parse-upload.py \\
+                text: `python parse-upload-1.0.0.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
   --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
   `,
               }}
               >
-                {`python parse-upload.py \\
+                {`python parse-upload-1.0.0.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
   --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
