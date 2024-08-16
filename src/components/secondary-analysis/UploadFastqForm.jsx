@@ -46,6 +46,8 @@ const getMatchingPairFor = (fileName) => {
   return matchingPair;
 };
 
+const parseUploadScriptVersion = '1.0.0';
+
 const UploadFastqForm = (props) => {
   const {
     secondaryAnalysisId, renderFastqFilesTable, setFilesNotUploaded,
@@ -468,7 +470,7 @@ const UploadFastqForm = (props) => {
           <Text>
             To perform a command-line upload, download this script:
             {' '}
-            <a href='/parse-upload-1.0.0.py' download>parse-upload-1.0.0.py</a>
+            <a href={`/parse-upload-${parseUploadScriptVersion}.py`} download>{`parse-upload-${parseUploadScriptVersion}.py`}</a>
 
             <br />
             <br />
@@ -477,14 +479,14 @@ const UploadFastqForm = (props) => {
             <br />
             <pre>
               <Paragraph copyable={{
-                text: `python parse-upload-1.0.0.py \\
+                text: `python parse-upload-${parseUploadScriptVersion}.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
   --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
   `,
               }}
               >
-                {`python parse-upload-1.0.0.py \\
+                {`python parse-upload-${parseUploadScriptVersion}.py \\
   --token ${newToken || 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
   --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
