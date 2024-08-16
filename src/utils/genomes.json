@@ -68,6 +68,10 @@
     "species": "Xenopus laevis v10.1 (African clawed frog)"
   },
   {
+    "name": "bColLiv1",
+    "species":"Columba livia (rock pigeon)"
+  },
+  {
     "name": "ARS-UCD1.2_Oar_v3.1",
     "species": "Mixed cow and sheep"
   },
