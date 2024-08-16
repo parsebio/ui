@@ -15,11 +15,9 @@ const downloadFromUrl = (url, options = {}) => {
   link.click();
 
   setTimeout(() => {
-    if (url.startsWith('blob:')) {
-      URL.revokeObjectURL(link.href);
-    }
+    URL.revokeObjectURL(link.href);
     link.parentNode.removeChild(link);
-  }, 1000);
+  }, 0);
 };
 
 export default downloadFromUrl;

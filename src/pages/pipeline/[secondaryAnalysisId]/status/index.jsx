@@ -64,8 +64,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const downloadOutput = useCallback(async (type) => {
     const signedUrl = await getSignedUrl(type);
-    console.log('FILE NAME HERE ', `${secondaryAnalysisId}_${type}`);
-    downloadFromUrl(signedUrl, { fileName: `${secondaryAnalysisId}_${type}` });
+    downloadFromUrl(signedUrl);
   }, [secondaryAnalysisId]);
 
   const downloadLogs = useCallback(async () => {
