@@ -14,13 +14,12 @@ const downloadFromUrl = (url, options = {}) => {
   document.body.appendChild(link);
   link.click();
 
-  // Delay the revocation of the object URL to ensure the download starts
   setTimeout(() => {
     if (url.startsWith('blob:')) {
       URL.revokeObjectURL(link.href);
     }
     link.parentNode.removeChild(link);
-  }, 1000); // Increased delay to 1000ms
+  }, 1000);
 };
 
 export default downloadFromUrl;

@@ -36,8 +36,8 @@ const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => 
     const data = await fetchWork(
       experimentId, body, getState, dispatch, { timeout },
     );
-    console.log('DATA IS ', data);
-    downloadFromUrl(writeToFileURL(data), { fileName: `asd_${experimentId}_processed_matrix.rds` });
+
+    downloadFromUrl(writeToFileURL(data), { fileName: `${experimentId}_processed_matrix.rds` });
   } catch (e) {
     handleError(e, endUserMessages.ERROR_DOWNLOADING_SEURAT_OBJECT);
   }
