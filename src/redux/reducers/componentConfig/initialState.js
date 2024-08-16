@@ -315,8 +315,6 @@ const trajectoryAnalysisInitialConfig = {
   },
   selectedNodes: [],
   selectedCellSets: ['louvain'],
-  embeddingCellSet: 'louvain',
-  embeddingSample: 'All',
 };
 
 // PLOTS & TABLES - Multi view
