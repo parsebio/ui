@@ -35,6 +35,8 @@ const ExperimentMenu = () => {
     setUploadModalVisible(false);
   };
 
+  console.log('SAMPLESSS');
+  console.log(samples);
   return (
     <>
       <Space>

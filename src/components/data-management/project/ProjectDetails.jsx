@@ -4,11 +4,13 @@ import React, { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Space, Typography, Button,
+  Space, Typography, Button, Select,
 } from 'antd';
 import {
   cloneExperiment, updateExperiment, loadExperiments, setActiveExperiment,
 } from 'redux/actions/experiments';
+
+import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 
 import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
@@ -67,6 +69,24 @@ const ProjectDetails = ({ width, height }) => {
             </Space>
           </div>
 
+        </div>
+        <div>
+          <Text strong>
+            Parse Kit Type:
+          </Text>
+          {' '}
+          <br />
+          <Select
+            value={activeExperiment.kit}
+            onChange={(text) => {
+              if (text !== activeExperiment.kit) {
+                dispatch(updateExperiment(activeExperimentId, { kit: text }));
+              }
+            }}
+            options={kitOptions}
+            style={{ paddingTop: '1em', paddingBottom: '1em' }}
+            placeholder='Select the kit you used in your experiment'
+          />
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
           <Text strong>
