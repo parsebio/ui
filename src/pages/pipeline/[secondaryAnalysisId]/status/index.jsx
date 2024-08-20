@@ -64,7 +64,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
   const downloadOutput = useCallback(async (type) => {
     const signedUrl = await getSignedUrl(type);
-    downloadFromUrl(signedUrl, { fileName: type });
+    downloadFromUrl(signedUrl);
   }, [secondaryAnalysisId]);
 
   const downloadLogs = useCallback(async () => {
@@ -112,7 +112,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               key: `${option.key}-copy`,
               onClick: async () => {
                 const signedUrl = await getSignedUrl(option.key);
-                navigator.clipboard.writeText(`curl -o ${option.key} "${signedUrl}"`);
+                navigator.clipboard.writeText(`curl -o ${secondaryAnalysisId}_${option.key} "${signedUrl}"`);
                 pushNotificationMessage('success', 'Download command copied.');
               },
             },
