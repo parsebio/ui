@@ -69,6 +69,9 @@ const LaunchAnalysisButton = () => {
     );
   }, [backendStatus, activeExperimentId, samples, activeExperiment]);
 
+  console.log('BACKEND STATUS');
+  console.log(backendStatus);
+
   const cellLevelMetadataIsReady = (
     _.isNil(activeExperiment.cellLevelMetadata)
     || activeExperiment.cellLevelMetadata.uploadStatus === UploadStatus.UPLOADED

@@ -19,6 +19,7 @@ import { layout } from 'utils/constants';
 import SamplesTable from 'components/data-management/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import AddMetadataButton from 'components/data-management/metadata/AddMetadataButton';
+import { updateSample } from 'redux/actions/samples';
 
 const { Text, Title } = Typography;
 
@@ -32,6 +33,7 @@ const ProjectDetails = ({ width, height }) => {
 
   const { activeExperimentId } = useSelector((state) => state.experiments.meta);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
+  const firstSample = useSelector((state) => state.samples[activeExperiment.sampleIds[0]]);
 
   const samplesTableRef = useRef();
 
@@ -40,6 +42,9 @@ const ProjectDetails = ({ width, height }) => {
     await dispatch(loadExperiments());
     dispatch(setActiveExperiment(newExperimentId));
   };
+
+  console.log('EXPERIMENT');
+  console.log(activeExperiment);
 
   return (
     // The height of this div has to be fixed to enable sample scrolling
@@ -77,10 +82,12 @@ const ProjectDetails = ({ width, height }) => {
           {' '}
           <br />
           <Select
-            value={activeExperiment.kit}
-            onChange={(text) => {
-              if (text !== activeExperiment.kit) {
-                dispatch(updateExperiment(activeExperimentId, { kit: text }));
+            value={firstSample?.kit}
+            onChange={(newKit) => {
+              if (newKit !== firstSample?.kit) {
+                activeExperiment.sampleIds.forEach((sampleId) => {
+                  dispatch(updateSample(sampleId, { kit: newKit }));
+                });
               }
             }}
             options={kitOptions}
