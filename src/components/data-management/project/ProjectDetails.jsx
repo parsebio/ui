@@ -75,26 +75,29 @@ const ProjectDetails = ({ width, height }) => {
           </div>
 
         </div>
-        <div>
-          <Text strong>
-            Parse Kit Type:
-          </Text>
-          {' '}
-          <br />
-          <Select
-            value={firstSample?.kit}
-            onChange={(newKit) => {
-              if (newKit !== firstSample?.kit) {
-                activeExperiment.sampleIds.forEach((sampleId) => {
-                  dispatch(updateSample(sampleId, { kit: newKit }));
-                });
-              }
-            }}
-            options={kitOptions}
-            style={{ paddingTop: '1em', paddingBottom: '1em' }}
-            placeholder='Select the kit you used in your experiment'
-          />
-        </div>
+        {firstSample?.type === 'parse' && (
+          <div>
+            <Text strong>
+              Parse Kit Type:
+            </Text>
+            {' '}
+            <br />
+            <Select
+              value={firstSample?.kit}
+              onChange={(newKit) => {
+                if (newKit !== firstSample?.kit) {
+                  activeExperiment.sampleIds.forEach((sampleId) => {
+                    dispatch(updateSample(sampleId, { kit: newKit }));
+                  });
+                }
+              }}
+              options={kitOptions}
+              style={{ paddingTop: '1em', paddingBottom: '1em' }}
+              placeholder='Select the kit you used in your experiment'
+            />
+          </div>
+        )}
+
         <div style={{ flex: 1, overflowY: 'auto' }}>
           <Text strong>
             Description:
