@@ -43,9 +43,6 @@ const ProjectDetails = ({ width, height }) => {
     dispatch(setActiveExperiment(newExperimentId));
   };
 
-  console.log('EXPERIMENT');
-  console.log(activeExperiment);
-
   return (
     // The height of this div has to be fixed to enable sample scrolling
     <div
