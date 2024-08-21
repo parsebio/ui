@@ -109,19 +109,23 @@
   },
   {
     "name": "mTSC-custom",
-    "species": "Custom Mus musculus Trophoblast Stem Cells"
+    "species": "Custom Mus musculus (mouse) Trophoblast Stem Cells"
   },
   {
     "name": "mm39-custom-2",
     "species": "Custom Mus musculus (mouse)"
   },
   {
-    "name": "mm39-tdTom",
-    "species": "Custom Mus musculus (mouse) with tdTomato"
-  },
-  {
     "name": "mm39_MA10",
     "species": "Custom Mus musculus (mouse)"
+  },
+  {
+    "name": "GRCm39-GFPh",
+    "species": "Custom Mus musculus (mouse) with  GFPh"
+  },
+  {
+    "name": "mm39-tdTom",
+    "species": "Custom Mus musculus (mouse) with tdTomato"
   },
   {
     "name": "Gmax_v2",
