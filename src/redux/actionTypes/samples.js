@@ -11,7 +11,7 @@ const SAMPLES_CREATED = `${SAMPLES}/created`;
 const SAMPLES_UPDATE = `${SAMPLES}/update`;
 
 /**
- * Update sample.
+ * Bulk Update sample kits.
  */
 const SAMPLES_BULK_KIT_UPDATE = `${SAMPLES}/bulkKitUpdate`;
 
