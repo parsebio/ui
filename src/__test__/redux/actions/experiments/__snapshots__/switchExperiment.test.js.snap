@@ -348,6 +348,7 @@ exports[`switch experiment  Then updates the experiment info 1`] = `
           },
         },
       },
+      "kit": undefined,
       "lastModified": "2021-12-07 17:38:42.036+00",
       "metadata": {
         "age": "BL",
@@ -381,6 +382,7 @@ exports[`switch experiment  Then updates the experiment info 1`] = `
           },
         },
       },
+      "kit": undefined,
       "lastModified": "2021-12-07 17:38:42.036+00",
       "metadata": {
         "age": "BL",
@@ -414,6 +416,7 @@ exports[`switch experiment  Then updates the experiment info 1`] = `
           },
         },
       },
+      "kit": undefined,
       "lastModified": "2021-12-07 17:38:42.036+00",
       "metadata": {
         "age": "BL",
@@ -789,6 +792,7 @@ exports[`switch experiment  switches the experiment to its initial values 1`] = 
           },
         },
       },
+      "kit": undefined,
       "lastModified": "2021-12-07 17:38:42.036+00",
       "metadata": {
         "age": "BL",
@@ -822,6 +826,7 @@ exports[`switch experiment  switches the experiment to its initial values 1`] = 
           },
         },
       },
+      "kit": undefined,
       "lastModified": "2021-12-07 17:38:42.036+00",
       "metadata": {
         "age": "BL",
@@ -855,6 +860,7 @@ exports[`switch experiment  switches the experiment to its initial values 1`] = 
           },
         },
       },
+      "kit": undefined,
       "lastModified": "2021-12-07 17:38:42.036+00",
       "metadata": {
         "age": "BL",

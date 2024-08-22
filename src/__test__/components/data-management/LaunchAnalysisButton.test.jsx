@@ -114,6 +114,7 @@ const withDataState = {
         barcodes10x: { valid: true, upload: { status: UploadStatus.UPLOADED } },
         matrix10x: { valid: true, upload: { status: UploadStatus.UPLOADED } },
       },
+      sampleKits: null,
     },
     [sample2Uuid]: {
       ...sampleTemplate,
@@ -127,6 +128,7 @@ const withDataState = {
         barcodes10x: { valid: true, upload: { status: UploadStatus.UPLOADED } },
         matrix10x: { valid: true, upload: { status: UploadStatus.UPLOADED } },
       },
+      sampleKits: null,
     },
   },
   backendStatus: {
