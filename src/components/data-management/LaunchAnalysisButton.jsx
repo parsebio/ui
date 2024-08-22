@@ -81,7 +81,7 @@ const LaunchAnalysisButton = () => {
     const testSampleUuid = activeExperiment.sampleIds[0];
     if (samples[testSampleUuid] === undefined) return false;
 
-    if (samples[testSampleUuid].kit === undefined) return false;
+    if (samples[testSampleUuid].kit === null) return false;
 
     const metadataKeysAvailable = activeExperiment.metadataKeys.length;
 
