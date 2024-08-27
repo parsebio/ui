@@ -19,7 +19,7 @@ import { layout } from 'utils/constants';
 import SamplesTable from 'components/data-management/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import AddMetadataButton from 'components/data-management/metadata/AddMetadataButton';
-import { batchUpdateSampleKits } from 'redux/actions/samples';
+import { bulkUpdateSampleKits } from 'redux/actions/samples';
 
 const { Text, Title } = Typography;
 
@@ -83,7 +83,7 @@ const ProjectDetails = ({ width, height }) => {
               value={kit}
               onChange={(newKit) => {
                 if (newKit !== kit) {
-                  dispatch(batchUpdateSampleKits(activeExperiment.sampleIds, newKit));
+                  dispatch(bulkUpdateSampleKits(activeExperiment.sampleIds, newKit));
                 }
               }}
               options={kitOptions}

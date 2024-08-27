@@ -1,6 +1,6 @@
 import createSamples from './createSamples';
 import updateSample from './updateSample';
-import batchUpdateSampleKits from './batchUpdateSampleKits';
+import bulkUpdateSampleKits from './bulkUpdateSampleKits';
 import loadSamples from './loadSamples';
 import deleteSamples from './deleteSamples';
 import createSampleFile from './createSampleFile';
@@ -10,7 +10,7 @@ import validateSamples from './validateSamples';
 export {
   createSamples,
   updateSample,
-  batchUpdateSampleKits,
+  bulkUpdateSampleKits,
   loadSamples,
   deleteSamples,
   createSampleFile,

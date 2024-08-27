@@ -8,7 +8,7 @@ import handleError from 'utils/http/handleError';
 import fetchAPI from 'utils/http/fetchAPI';
 import { loadBackendStatus } from '../backendStatus';
 
-const batchUpdateSampleKits = (sampleUuids, kit) => async (dispatch, getState) => {
+const bulkUpdateSampleKits = (sampleUuids, kit) => async (dispatch, getState) => {
   if (sampleUuids.length === 0) {
     throw new Error('sampleUuids array cannot be empty');
   }
@@ -63,4 +63,4 @@ const batchUpdateSampleKits = (sampleUuids, kit) => async (dispatch, getState) =
   }
 };
 
-export default batchUpdateSampleKits;
+export default bulkUpdateSampleKits;
