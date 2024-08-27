@@ -8,16 +8,16 @@ import handleError from 'utils/http/handleError';
 import fetchAPI from 'utils/http/fetchAPI';
 import { loadBackendStatus } from '../backendStatus';
 
-const bulkUpdateSampleKits = (sampleUuids, kit) => async (dispatch, getState) => {
-  if (sampleUuids.length === 0) {
-    throw new Error('sampleUuids array cannot be empty');
+const bulkUpdateSampleKits = (sampleIds, kit) => async (dispatch, getState) => {
+  if (sampleIds.length === 0) {
+    throw new Error('sampleIds array cannot be empty');
   }
 
   // In api v2 experimentId and experimentId are the same
-  const { experimentId } = getState().samples[sampleUuids[0]];
+  const { experimentId } = getState().samples[sampleIds[0]];
 
   const url = `/v2/experiments/${experimentId}/samples/kit`;
-  const body = { sampleUuids, kit };
+  const body = { sampleIds, kit };
 
   dispatch({
     type: SAMPLES_SAVING,
@@ -45,7 +45,7 @@ const bulkUpdateSampleKits = (sampleUuids, kit) => async (dispatch, getState) =>
     dispatch({
       type: SAMPLES_BULK_KIT_UPDATE,
       payload: {
-        sampleUuids,
+        sampleIds,
         kit,
       },
     });

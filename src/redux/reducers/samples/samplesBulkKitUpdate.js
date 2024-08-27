@@ -2,9 +2,9 @@
 import produce from 'immer';
 
 const samplesBulkKitUpdate = produce((draft, action) => {
-  const { sampleUuids, kit } = action.payload;
+  const { sampleIds, kit } = action.payload;
 
-  sampleUuids.forEach((id) => {
+  sampleIds.forEach((id) => {
     draft[id].kit = kit;
   });
 });
