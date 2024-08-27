@@ -14,8 +14,8 @@ const updateSample = (sampleUuid, diff) => async (dispatch, getState) => {
   // In api v2 experimentId and experimentId are the same
   const { experimentId } = getState().samples[sampleUuid];
 
-  if (_.isNil(diff.name) & _.isNil(diff.kit) || diff.option || diff.metadata) {
-    throw new Error('This action can be used to update only the name and kit in sample');
+  if (_.isNil(diff.name) || diff.option || diff.metadata) {
+    throw new Error('This action can be used to update only the name in sample');
   }
 
   const url = `/v2/experiments/${experimentId}/samples/${sampleUuid}`;
