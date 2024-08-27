@@ -33,7 +33,7 @@ const ProjectDetails = ({ width, height }) => {
 
   const { activeExperimentId } = useSelector((state) => state.experiments.meta);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
-  const firstSample = useSelector((state) => state.samples[activeExperiment.sampleIds[0]]);
+  const {kit, type} useSelector((state) => _.pick(state.samples[activeExperiment.sampleIds[0]], ['kit', 'type']));
 
   const samplesTableRef = useRef();
 
@@ -72,7 +72,7 @@ const ProjectDetails = ({ width, height }) => {
           </div>
 
         </div>
-        {firstSample?.type === 'parse' && (
+        {type === 'parse' && (
           <div>
             <Text strong>
               Parse Kit Type:
@@ -80,9 +80,9 @@ const ProjectDetails = ({ width, height }) => {
             {' '}
             <br />
             <Select
-              value={firstSample?.kit}
+              value={kit}
               onChange={(newKit) => {
-                if (newKit !== firstSample?.kit) {
+                if (newKit !== kit) {
                   dispatch(batchUpdateSampleKits(activeExperiment.sampleIds, newKit));
                 }
               }}
