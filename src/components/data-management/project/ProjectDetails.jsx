@@ -33,7 +33,7 @@ const ProjectDetails = ({ width, height }) => {
 
   const { activeExperimentId } = useSelector((state) => state.experiments.meta);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
-  const {kit, type} useSelector((state) => _.pick(state.samples[activeExperiment.sampleIds[0]], ['kit', 'type']));
+  const { kit, type } = useSelector((state) => _.pick(state.samples[activeExperiment.sampleIds[0]], ['kit', 'type']));
 
   const samplesTableRef = useRef();
 
