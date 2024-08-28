@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {
   Space, Typography, Button, Select,
 } from 'antd';
+import _ from 'lodash';
 import {
   cloneExperiment, updateExperiment, loadExperiments, setActiveExperiment,
 } from 'redux/actions/experiments';
