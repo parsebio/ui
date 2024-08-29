@@ -88,7 +88,7 @@ const ProjectDetails = ({ width, height }) => {
                 }
               }}
               options={kitOptions}
-              style={{ paddingTop: '1em', paddingBottom: '1em' }}
+              style={{ paddingTop: '1em', paddingBottom: '1em', width: '15em' }}
               placeholder='Select the kit you used in your experiment'
             />
           </div>
