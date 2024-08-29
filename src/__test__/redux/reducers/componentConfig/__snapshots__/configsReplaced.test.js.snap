@@ -505,8 +505,6 @@ exports[`configsReplaced Replaces existing state 1`] = `
         "height": 550,
         "width": 700,
       },
-      "embeddingCellSet": "louvain",
-      "embeddingSample": "All",
       "fontStyle": {
         "colour": "#000000",
         "font": "sans-serif",

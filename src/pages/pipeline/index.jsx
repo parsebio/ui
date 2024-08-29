@@ -470,7 +470,7 @@ const Pipeline = () => {
                       title={!isAllValid && fastqsMatch
                         ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
                         : !fastqsMatch
-                          ? 'You should upload exactly one pair of FASTQ files per sublibrary. Please check the FASTQs section.'
+                          ? 'All sections must be completed to run the pipeline. You should upload exactly one pair of FASTQ files per sublibrary - check that the number of FASTQ file pairs matches the number of sublibraries specified in the Experimental setup section.'
                           : ''}
                       placement='left'
                     >

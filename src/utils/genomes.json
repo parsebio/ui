@@ -68,6 +68,10 @@
     "species": "Xenopus laevis v10.1 (African clawed frog)"
   },
   {
+    "name": "bColLiv1",
+    "species":"Columba livia (rock pigeon)"
+  },
+  {
     "name": "ARS-UCD1.2_Oar_v3.1",
     "species": "Mixed cow and sheep"
   },
@@ -105,19 +109,27 @@
   },
   {
     "name": "mTSC-custom",
-    "species": "Custom Mus musculus Trophoblast Stem Cells"
+    "species": "Custom Mus musculus (mouse) Trophoblast Stem Cells"
   },
   {
     "name": "mm39-custom-2",
     "species": "Custom Mus musculus (mouse)"
   },
   {
+    "name": "mm39_MA10",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
+    "name": "GRCm39-GFPh",
+    "species": "Custom Mus musculus (mouse) with  GFPh"
+  },
+  {
     "name": "mm39-tdTom",
     "species": "Custom Mus musculus (mouse) with tdTomato"
   },
   {
-    "name": "mm39_MA10",
-    "species": "Custom Mus musculus (mouse)"
+    "name": "GRCm39_td_cre_wpre",
+    "species": "Custom Mus musculus (mouse) with tdTomato, CRE and WPRE"
   },
   {
     "name": "Gmax_v2",

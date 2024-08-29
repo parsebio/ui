@@ -71,17 +71,13 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
     (state) => state.componentConfig[plotUuid]?.plotData?.nodes !== undefined,
   );
 
-  const embeddingSample = useSelector(
-    (state) => state.componentConfig[plotUuid]?.config?.embeddingSample,
-  );
-
   const embeddingSettings = useSelector(
     (state) => state.experimentSettings.originalProcessing
       ?.configureEmbedding?.embeddingSettings,
   );
 
   const numLegendItems = useSelector(
-    getCellSetsHierarchyByKeys([embeddingSample]),
+    getCellSetsHierarchyByKeys(selectedCellSets),
   )[0]?.children?.length;
 
   const {
@@ -217,7 +213,7 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
 
     return (
       <Space direction='vertical'>
-        {showLegendAlert && numLegendItems > MAX_LEGEND_ITEMS && <PlotLegendAlert />}
+        {showLegendAlert && <PlotLegendAlert />}
         <TrajectoryAnalysisPlot
           ref={resetZoomRef}
           experimentId={experimentId}

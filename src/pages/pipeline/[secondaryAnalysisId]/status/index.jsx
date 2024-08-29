@@ -13,6 +13,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import usePolling from 'utils/customHooks/usePolling';
 import { useDispatch, useSelector } from 'react-redux';
+import pushNotificationMessage from 'utils/pushNotificationMessage';
 
 import {
   loadSecondaryAnalysisStatus, updateSecondaryAnalysis,
@@ -56,10 +57,14 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     });
   };
 
-  const downloadOutput = useCallback(async (type) => {
+  const getSignedUrl = async (type) => {
     const fileName = encodeURIComponent(type);
-    const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
-    downloadFromUrl(signedUrl, { fileName: type });
+    return await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
+  };
+
+  const downloadOutput = useCallback(async (type) => {
+    const signedUrl = await getSignedUrl(type);
+    downloadFromUrl(signedUrl);
   }, [secondaryAnalysisId]);
 
   const downloadLogs = useCallback(async () => {
@@ -78,21 +83,50 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     }
 
     const outputFileDownloadOptions = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadOptions`);
-    const menuLinks = outputFileDownloadOptions.map((option) => ({
-      label: (
+
+    const menuLinks = outputFileDownloadOptions.map((option) => {
+      const commonLabel = (
         <Tooltip
           title={option.description}
-          placement='right'
+          placement='left'
           mouseEnterDelay={0.05}
         >
           <Space>
             {option.label}
           </Space>
         </Tooltip>
-      ),
-      key: option.key,
-      onClick: () => downloadOutput(option.key),
-    }));
+      );
+
+      if (option.copySignedUrl) {
+        return {
+          label: commonLabel,
+          key: option.key,
+          children: [
+            {
+              label: 'Download',
+              key: `${option.key}-download`,
+              onClick: () => downloadOutput(option.key),
+            },
+            {
+              label: 'Copy download command',
+              key: `${option.key}-copy`,
+              onClick: async () => {
+                const signedUrl = await getSignedUrl(option.key);
+                navigator.clipboard.writeText(`curl -o ${secondaryAnalysisId}_${option.key} "${signedUrl}"`);
+                pushNotificationMessage('success', 'Download command copied.');
+              },
+            },
+          ],
+        };
+      }
+
+      return {
+        label: commonLabel,
+        key: option.key,
+        onClick: () => downloadOutput(option.key),
+      };
+    });
+
     setDownloadOptionsMenuItems(menuLinks);
 
     const htmlUrls = await getReports(secondaryAnalysisId);
