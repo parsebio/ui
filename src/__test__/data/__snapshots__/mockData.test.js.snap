@@ -57,6 +57,7 @@ exports[`Mock data Describes samples 1`] = `
       },
     },
     "id": "test9188-d682-test-mock-cb6d644cmock-0",
+    "kit": null,
     "metadata": {
       "age": "BL",
       "timePoint": "BL",
@@ -121,6 +122,7 @@ exports[`Mock data Describes samples 1`] = `
       },
     },
     "id": "test9188-d682-test-mock-cb6d644cmock-1",
+    "kit": null,
     "metadata": {
       "age": "BL",
       "timePoint": "BL",
@@ -185,6 +187,7 @@ exports[`Mock data Describes samples 1`] = `
       },
     },
     "id": "test9188-d682-test-mock-cb6d644cmock-2",
+    "kit": null,
     "metadata": {
       "age": "BL",
       "timePoint": "BL",
@@ -320,6 +323,7 @@ exports[`Mock response data Describes samples response 1`] = `
         },
       },
       "id": "test9188-d682-test-mock-cb6d644cmock-0",
+      "kit": null,
       "metadata": {
         "age": "BL",
         "timePoint": "BL",
@@ -384,6 +388,7 @@ exports[`Mock response data Describes samples response 1`] = `
         },
       },
       "id": "test9188-d682-test-mock-cb6d644cmock-1",
+      "kit": null,
       "metadata": {
         "age": "BL",
         "timePoint": "BL",
@@ -448,6 +453,7 @@ exports[`Mock response data Describes samples response 1`] = `
         },
       },
       "id": "test9188-d682-test-mock-cb6d644cmock-2",
+      "kit": null,
       "metadata": {
         "age": "BL",
         "timePoint": "BL",

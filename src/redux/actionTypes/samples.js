@@ -11,6 +11,11 @@ const SAMPLES_CREATED = `${SAMPLES}/created`;
 const SAMPLES_UPDATE = `${SAMPLES}/update`;
 
 /**
+ * Bulk Update sample kits.
+ */
+const SAMPLES_BULK_KIT_UPDATE = `${SAMPLES}/bulkKitUpdate`;
+
+/**
  * Delete sample.
  */
 const SAMPLES_DELETE = `${SAMPLES}/delete`;
@@ -62,6 +67,7 @@ const SAMPLES_VALIDATING_UPDATED = `${SAMPLES}/validatingUpdated`;
 export {
   SAMPLES_CREATED,
   SAMPLES_UPDATE,
+  SAMPLES_BULK_KIT_UPDATE,
   SAMPLES_DELETE,
   SAMPLES_FILE_UPDATE,
   SAMPLES_OPTIONS_UPDATE,

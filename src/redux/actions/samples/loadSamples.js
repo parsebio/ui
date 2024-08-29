@@ -40,6 +40,7 @@ const adaptedToRedux = (samples, experimentId) => {
       type: sample.sampleTechnology,
       options: sample.options,
       uuid: sample.id,
+      kit: sample.kit,
     };
   });
 

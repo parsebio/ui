@@ -18,7 +18,7 @@ import UploadStatus from 'utils/upload/UploadStatus';
 // ones we should not create new samples,
 // just reuse their sampleIds and upload the new files
 const splitByAlreadyExistingSamples = (
-  newSamples, sampleIds, samples, sampleTechnology, options,
+  newSamples, sampleIds, samples, sampleTechnology, options, kit,
 ) => {
   const alreadyCreatedSampleIds = {};
 
@@ -39,6 +39,7 @@ const splitByAlreadyExistingSamples = (
       name,
       sampleTechnology,
       options,
+      kit,
     }));
 
   return { samplesToCreate, alreadyCreatedSampleIds };
@@ -64,17 +65,20 @@ const createSamples = (
   if (!Object.values(sampleTech).includes(sampleTechnology)) throw new Error(`Sample technology ${sampleTechnology} is not recognized`);
 
   let options = defaultSampleOptions[sampleTechnology] || {};
+  let kit = null;
 
-  // If there are other samples in the same experiment, use the options value from the other samples
+  // If there are other samples in the same experiment, use the options and kit
+  // values from the other samples
   if (experiment.sampleIds.length) {
     const firstSampleId = experiment.sampleIds[0];
     options = samples[firstSampleId].options;
+    kit = samples[firstSampleId].kit;
   }
 
   const {
     samplesToCreate, alreadyCreatedSampleIds,
   } = splitByAlreadyExistingSamples(
-    newSamples, experiment.sampleIds, samples, sampleTechnology, options,
+    newSamples, experiment.sampleIds, samples, sampleTechnology, options, kit,
   );
 
   if (samplesToCreate.length === 0) {

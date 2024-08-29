@@ -10,7 +10,7 @@ const calculateGem2sRerunStatus = (gem2sBackendStatus, activeExperiment) => {
 
   const rerunReasons = [];
   if (!pipelineSuccessful) rerunReasons.push('data has not been processed sucessfully');
-  if (shouldRerun) rerunReasons.push('the experiment samples/metadata have been modified');
+  if (shouldRerun) rerunReasons.push('the experiment samples/metadata or kit information have been modified');
 
   return ({
     rerun: _.isNil(activeExperiment.parentExperimentId) && (!pipelineSuccessful || shouldRerun),

@@ -13,6 +13,7 @@ import {
   SAMPLES_OPTIONS_UPDATE,
   SAMPLES_CREATED,
   SAMPLES_VALIDATING_UPDATED,
+  SAMPLES_BULK_KIT_UPDATE,
 } from '../../actionTypes/samples';
 import initialState from './initialState';
 import samplesCreated from './samplesCreated';
@@ -29,6 +30,7 @@ import samplesLoading from './samplesLoading';
 import samplesValueInMetadataTrackUpdated from './samplesValueInMetadataTrackUpdated';
 import experimentsMetadataRename from './experimentsMetadataRename';
 import samplesValidatingUpdated from './samplesValidatingUpdated';
+import samplesBulkKitUpdate from './samplesBulkKitUpdate';
 
 const samplesReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -38,6 +40,10 @@ const samplesReducer = (state = initialState, action) => {
 
     case SAMPLES_UPDATE: {
       return samplesUpdate(state, action);
+    }
+
+    case SAMPLES_BULK_KIT_UPDATE: {
+      return samplesBulkKitUpdate(state, action);
     }
 
     case SAMPLES_DELETE: {

@@ -12,6 +12,7 @@ const sampleTemplate = {
   files: {},
   metadata: {},
   options: {},
+  kit: null,
 };
 
 // TODO: Update, this initial state doesn't even match the previously used structure

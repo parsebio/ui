@@ -4,11 +4,14 @@ import React, { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Space, Typography, Button,
+  Space, Typography, Button, Select,
 } from 'antd';
+import _ from 'lodash';
 import {
   cloneExperiment, updateExperiment, loadExperiments, setActiveExperiment,
 } from 'redux/actions/experiments';
+
+import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 
 import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
@@ -17,6 +20,7 @@ import { layout } from 'utils/constants';
 import SamplesTable from 'components/data-management/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import AddMetadataButton from 'components/data-management/metadata/AddMetadataButton';
+import { bulkUpdateSampleKits } from 'redux/actions/samples';
 
 const { Text, Title } = Typography;
 
@@ -30,6 +34,7 @@ const ProjectDetails = ({ width, height }) => {
 
   const { activeExperimentId } = useSelector((state) => state.experiments.meta);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
+  const { kit, type } = useSelector((state) => _.pick(state.samples[activeExperiment.sampleIds[0]], ['kit', 'type']));
 
   const samplesTableRef = useRef();
 
@@ -68,6 +73,27 @@ const ProjectDetails = ({ width, height }) => {
           </div>
 
         </div>
+        {type === 'parse' && (
+          <div>
+            <Text strong>
+              Parse Kit Type:
+            </Text>
+            {' '}
+            <br />
+            <Select
+              value={kit}
+              onChange={(newKit) => {
+                if (newKit !== kit) {
+                  dispatch(bulkUpdateSampleKits(activeExperiment.sampleIds, newKit));
+                }
+              }}
+              options={kitOptions}
+              style={{ paddingTop: '1em', paddingBottom: '1em', width: '15em' }}
+              placeholder='Select the kit you used in your experiment'
+            />
+          </div>
+        )}
+
         <div style={{ flex: 1, overflowY: 'auto' }}>
           <Text strong>
             Description:
