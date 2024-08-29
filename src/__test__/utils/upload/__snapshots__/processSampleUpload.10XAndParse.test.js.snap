@@ -5,7 +5,7 @@ exports[`processUpload 10x, v2 Should not upload files if there are errors begin
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -110,7 +110,7 @@ exports[`processUpload 10x, v2 Should not upload files if there are errors creat
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -125,7 +125,7 @@ exports[`processUpload 10x, v2 Updates redux correctly when there are file uploa
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -472,7 +472,7 @@ exports[`processUpload 10x, v2 Uploads and updates redux correctly when there ar
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -637,7 +637,7 @@ exports[`processUpload 10x, v3 Should not upload files if there are errors begin
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -742,7 +742,7 @@ exports[`processUpload 10x, v3 Should not upload files if there are errors creat
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -757,7 +757,7 @@ exports[`processUpload 10x, v3 Updates redux correctly when there are file uploa
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1104,7 +1104,7 @@ exports[`processUpload 10x, v3 Uploads and updates redux correctly when there ar
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"10x","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1269,7 +1269,7 @@ exports[`processUpload parse, null Should not upload files if there are errors b
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"parse","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"parse","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1374,7 +1374,7 @@ exports[`processUpload parse, null Should not upload files if there are errors c
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"parse","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"parse","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1389,7 +1389,7 @@ exports[`processUpload parse, null Updates redux correctly when there are file u
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"parse","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"parse","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1736,7 +1736,7 @@ exports[`processUpload parse, null Uploads and updates redux correctly when ther
   [
     "http://localhost:3000/v2/experiments/project-uuid/samples",
     {
-      "body": "[{"name":"WT13","sampleTechnology":"parse","options":{}}]",
+      "body": "[{"name":"WT13","sampleTechnology":"parse","options":{},"kit":null}]",
       "headers": {
         "Content-Type": "application/json",
       },
