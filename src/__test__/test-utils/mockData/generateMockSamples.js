@@ -32,6 +32,7 @@ const mockSampleTemplate = (experimentId, sampleId, idx) => ({
     },
   },
   options: {},
+  kit: null,
 });
 
 const generateMockSamples = (experimentId, numSamples = 3) => {
