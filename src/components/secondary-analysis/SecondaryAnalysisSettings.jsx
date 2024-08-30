@@ -53,11 +53,11 @@ const SecondaryAnalysisSettings = (props) => {
   }, []);
 
   const changeKit = useCallback((kit) => {
-    const newMaxSublibraries = calculateMaxSublibraries(kit);
+    calculateMaxSublibraries(kit);
     // changing the kit, changes the default selected number of sublibraries and samples
     setFormValues((prevFormValues) => ({
       ...prevFormValues,
-      numOfSublibraries: newMaxSublibraries,
+      numOfSublibraries: 1,
       kit,
     }));
   }, [calculateMaxSublibraries]);
@@ -118,7 +118,8 @@ const SecondaryAnalysisSettings = (props) => {
                     sublibraries
                   </a>
                   {' '}
-                  to be processed in this pipeline run:
+                  to be processed in this pipeline run. Note that this number should match
+                  the number of FASTQ file pairs that you plan to upload.
                 </div>
                 <SliderWithInput
                   style={{ marginLeft: '20px', width: '20%' }}
