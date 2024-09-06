@@ -4,6 +4,7 @@ import {
   CELL_SETS_LOADED, CELL_SETS_LOADING, CELL_SETS_ERROR,
 } from 'redux/actionTypes/cellSets';
 import endUserMessages from 'utils/endUserMessages';
+import downloadFromS3 from 'utils/work/downloadFromS3';
 
 const loadCellSets = (experimentId, forceReload = false) => async (dispatch, getState) => {
   const {
@@ -24,17 +25,25 @@ const loadCellSets = (experimentId, forceReload = false) => async (dispatch, get
   });
 
   try {
-    const data = await fetchAPI(`/v2/experiments/${experimentId}/cellSets`);
+    const signedUrl = await fetchAPI(`/v2/experiments/${experimentId}/cellSets`);
+
+    const response = await fetch(signedUrl);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch from signed URL: ${response.statusText}`);
+    }
+    const cellSetsData = await downloadFromS3('CellSets', signedUrl);
 
     dispatch({
       type: CELL_SETS_LOADED,
       payload: {
         experimentId,
-        data: data.cellSets,
+        data: cellSetsData.cellSets,
       },
     });
   } catch (e) {
     const errorMessage = handleError(e, endUserMessages.ERROR_FETCHING_CELL_SETS);
+    console.error(e);
     dispatch({
       type: CELL_SETS_ERROR,
       payload: { error: errorMessage },
