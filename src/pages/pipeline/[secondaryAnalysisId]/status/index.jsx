@@ -346,7 +346,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         {associatedExperimentId && (
           <Button
             onClick={async () => {
-              navigateTo(modules.DATA_EXPLORATION,
+              navigateTo(modules.DATA_PROCESSING,
                 { experimentId: associatedExperimentId }, false, true);
             }}
             type='primary'
