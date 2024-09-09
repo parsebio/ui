@@ -27,11 +27,6 @@ const loadCellSets = (experimentId, forceReload = false) => async (dispatch, get
   try {
     const signedUrl = await fetchAPI(`/v2/experiments/${experimentId}/cellSets`);
 
-    const response = await fetch(signedUrl);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch from signed URL: ${response.statusText}`);
-    }
     const cellSetsData = await downloadFromS3('CellSets', signedUrl);
 
     dispatch({
