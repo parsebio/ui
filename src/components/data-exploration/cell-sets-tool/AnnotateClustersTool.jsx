@@ -67,7 +67,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
 
   const { cellSets } = useSelector((state) => state);
 
-  const allCellSetsValid = Object.entries(cellSets.properties).every(([key, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1000);
+  const allCellSetsValid = Object.entries(cellSets.properties).every(([key, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 100);
   return (
     <Space direction='vertical'>
       <Radio.Group>
