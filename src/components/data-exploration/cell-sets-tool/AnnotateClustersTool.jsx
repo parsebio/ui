@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import {
   Button,
-  Radio, Select, Space, Tooltip,
+  Radio, Select, Space, Tooltip, Alert,
 } from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
@@ -67,7 +67,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
 
   const { cellSets } = useSelector((state) => state);
 
-  const allCellSetsValid = Object.entries(cellSets.properties).every(([key, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1);
+  const allCellSetsValid = Object.entries(cellSets.properties).every(([key, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1000);
   return (
     <Space direction='vertical'>
       <Radio.Group>
@@ -95,7 +95,14 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
           onChange={setSpecies}
         />
       </Space>
-
+      {!allCellSetsValid
+      && (
+        <Alert
+          message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
+          type='info'
+          showIcon
+        />
+      )}
       <Button
         onClick={() => {
           dispatch(runCellSetsAnnotation(experimentId, species, tissue));
