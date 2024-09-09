@@ -7,7 +7,7 @@ import {
   Radio, Select, Space, Tooltip,
 } from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const tissueOptions = [
   'Immune system',
@@ -65,6 +65,9 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
   const [tissue, setTissue] = useState(null);
   const [species, setSpecies] = useState(null);
 
+  const { cellSets } = useSelector((state) => state);
+
+  const allCellSetsValid = Object.entries(cellSets.properties).every(([key, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1);
   return (
     <Space direction='vertical'>
       <Radio.Group>
@@ -98,7 +101,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
           dispatch(runCellSetsAnnotation(experimentId, species, tissue));
           onRunAnnotation();
         }}
-        disabled={_.isNil(tissue) || _.isNil(species)}
+        disabled={_.isNil(tissue) || _.isNil(species) || !allCellSetsValid}
         style={{ marginTop: '20px' }}
       >
         Compute
