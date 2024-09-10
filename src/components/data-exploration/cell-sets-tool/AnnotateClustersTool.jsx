@@ -98,13 +98,13 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
         />
       </Space>
       {!allClustersValid
-      && (
-        <Alert
-          message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
-          type='info'
-          showIcon
-        />
-      )}
+        && (
+          <Alert
+            message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
+            type='info'
+            showIcon
+          />
+        )}
       <Button
         onClick={() => {
           dispatch(runCellSetsAnnotation(experimentId, species, tissue));
