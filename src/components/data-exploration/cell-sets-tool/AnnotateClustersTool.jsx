@@ -67,7 +67,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
 
   const { cellSets } = useSelector((state) => state);
 
-  const allCellSetsValid = Object.entries(cellSets.properties).every(([key, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 99);
+  const allCellSetsValid = Object.entries(cellSets.properties).every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 99);
   return (
     <Space direction='vertical'>
       <Radio.Group>
@@ -96,13 +96,13 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
         />
       </Space>
       {!allCellSetsValid
-      && (
-        <Alert
-          message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
-          type='info'
-          showIcon
-        />
-      )}
+        && (
+          <Alert
+            message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
+            type='info'
+            showIcon
+          />
+        )}
       <Button
         onClick={() => {
           dispatch(runCellSetsAnnotation(experimentId, species, tissue));
