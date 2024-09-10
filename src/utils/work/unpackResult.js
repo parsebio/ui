@@ -10,10 +10,10 @@ const unpackResult = async (storageResp, taskName = null) => {
 
   // cell sets dont come compressed
   if (taskName === 'CellSets') {
-    return new Uint8Array(arrayBuf);
+    return arrayBuf;
   }
 
-  return decompressUint8Array(new Uint8Array(arrayBuf));
+  return decompressUint8Array(arrayBuf);
 };
 
 const decompressUint8Array = async (array) => (
