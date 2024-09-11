@@ -81,10 +81,10 @@ const generateDefaultMockAPIResponses = (projectId) => ({
   '/v2/secondaryAnalysis$': () => promiseResponse(
     JSON.stringify(mockSecondaryAnalyses),
   ),
-  [`/v2/secondaryAnalysis/${projectId}/executionStatus$`]: () => promiseResponse(
+  [`/v2/secondaryAnalysis/${projectId}/executionStatus`]: () => promiseResponse(
     JSON.stringify(mockSecondaryAnalysisStatusDefault),
   ),
-  [`/v2/secondaryAnalysis/${projectId}/files$`]: () => promiseResponse(
+  [`/v2/secondaryAnalysis/${projectId}/files`]: () => promiseResponse(
     JSON.stringify(mockAnalysisFiles),
   ),
   [`/v2/projects/${projectId}/upload/.*/part/\\d+/signedUrl$`]: (req) => {
