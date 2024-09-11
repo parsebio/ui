@@ -7,7 +7,6 @@ import { act } from 'react-dom/test-utils';
 import _ from 'lodash';
 import mockAPI, {
   statusResponse,
-  promiseResponse,
   generateDefaultMockAPIResponses,
 } from '__test__/test-utils/mockAPI';
 import cellSetsData from '__test__/data/cell_sets.json';
