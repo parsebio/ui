@@ -19,7 +19,7 @@ import initialDiffExprState from 'redux/reducers/differentialExpression/initialS
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
 import cellSetsData from '__test__/data/cell_sets.json';
 
-import mockAPI, { generateDefaultMockAPIResponses, promiseResponse } from '__test__/test-utils/mockAPI';
+import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloadCellSetsFromS3Mock } from '__test__/test-utils/mockAPI';
 import fake from '__test__/test-utils/constants';
 
 jest.mock('components/Loader');
@@ -335,9 +335,12 @@ describe('DiffExprCompute', () => {
 
     const customMockAPIresponses = {
       ...generateDefaultMockAPIResponses(experimentId),
-      [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(
-        JSON.stringify(customCellSetsData),
-      ),
+      [`experiments/${experimentId}/cellSets$`]: () => {
+        setupDownloadCellSetsFromS3Mock(customCellSetsData);
+        return promiseResponse(
+          JSON.stringify('mock-cellsets-signed-url'),
+        );
+      },
     };
 
     fetchMock.mockClear();

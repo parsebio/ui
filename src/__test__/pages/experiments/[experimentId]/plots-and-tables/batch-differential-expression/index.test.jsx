@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import { makeStore } from 'redux/store';
-import mockAPI, { generateDefaultMockAPIResponses, promiseResponse } from '__test__/test-utils/mockAPI';
+import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloadCellSetsFromS3Mock } from '__test__/test-utils/mockAPI';
 import * as getBatchDiffExpr from 'utils/extraActionCreators/differentialExpression/getBatchDiffExpr';
 import * as checkCanRunDiffExprModule from 'utils/extraActionCreators/differentialExpression/checkCanRunDiffExpr';
 import mockLoader from 'components/Loader';
@@ -32,7 +32,12 @@ describe('Batch differential expression tests ', () => {
 
   const mockApiResponses = {
     ...generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
-    [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => promiseResponse(JSON.stringify(customCellSetsData)),
+    [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => {
+      setupDownloadCellSetsFromS3Mock(customCellSetsData);
+      return promiseResponse(
+        JSON.stringify('mock-cellsets-signed-url'),
+      );
+    },
   };
 
   let getBatchDiffExprSpy;

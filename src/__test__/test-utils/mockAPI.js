@@ -1,6 +1,4 @@
 import _ from 'lodash';
-
-// Default platform data
 import backendStatusData from '__test__/data/backend_status.json';
 import processingConfigData from '__test__/data/processing_config.json';
 import mockDemoExperiments from '__test__/test-utils/mockData/mockDemoExperiments.json';
@@ -8,25 +6,23 @@ import { mockSecondaryAnalyses } from '__test__/data/secondaryAnalyses/secondary
 import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/secondary_analysis_status_default.json';
 import fake from '__test__/test-utils/constants';
 import mockAnalysisFiles from '__test__/data/secondaryAnalyses/secondary_analysis_files';
-
+import downloadFromS3 from 'utils/work/downloadFromS3';
 import {
   responseData,
 } from '__test__/test-utils/mockData';
 
-// Mock downloadFromS3 to return cell sets data when the signed URL is used
-jest.mock('utils/work/downloadFromS3', () => jest.fn().mockImplementation((resource, signedUrl) => {
-  // eslint-disable-next-line global-require
-  const cellSetsData = require('__test__/data/cell_sets.json'); // Load the JSON file dynamically within the mock
-  if (signedUrl === 'mock-signed-url') {
-    return Promise.resolve({ cellSets: cellSetsData });
-  }
-  return Promise.reject(new Error('Invalid signed URL'));
-}));
+const setupDownloadCellSetsFromS3Mock = (customCellSets = false) => {
+  downloadFromS3.mockImplementation((resource, signedUrl) => {
+    // eslint-disable-next-line global-require
+    const cellSetsData = require('__test__/data/cell_sets.json');
+    if (signedUrl === 'mock-cellsets-signed-url') {
+      return Promise.resolve(customCellSets || cellSetsData);
+    }
+    return Promise.reject(new Error('Invalid signed URL'));
+  });
+};
 
-const promiseResponse = (
-  response,
-  options = {},
-) => Promise.resolve(new Response(response, options));
+const promiseResponse = (response, options = {}) => Promise.resolve(new Response(response, options));
 
 const statusResponse = (code, body) => (
   Promise.resolve({
@@ -43,13 +39,10 @@ const delayedResponse = (response, delay = 10000, options = {}) => new Promise((
 
 const workerDataResult = (data) => Promise.resolve(_.cloneDeep(data));
 
-const fetchWorkMock = (
-  mockedResults,
-) => ((experimentId, body) => {
+const fetchWorkMock = (mockedResults) => ((experimentId, body) => {
   if (typeof mockedResults[body.name] === 'function') {
     return mockedResults[body.name]();
   }
-
   return workerDataResult(mockedResults[experimentId]);
 });
 
@@ -60,9 +53,12 @@ const generateDefaultMockAPIResponses = (projectId) => ({
   [`experiments/${projectId}/processingConfig$`]: () => promiseResponse(
     JSON.stringify(processingConfigData),
   ),
-  [`experiments/${projectId}/cellSets$`]: () => promiseResponse(
-    JSON.stringify('mock-cellsets-signed-url'), // Returning the signed URL as expected
-  ),
+  [`experiments/${projectId}/cellSets$`]: () => {
+    setupDownloadCellSetsFromS3Mock();
+    return promiseResponse(
+      JSON.stringify('mock-cellsets-signed-url'),
+    );
+  },
   [`experiments/${projectId}/backendStatus$`]: () => promiseResponse(
     JSON.stringify(backendStatusData),
   ),
@@ -82,15 +78,14 @@ const generateDefaultMockAPIResponses = (projectId) => ({
   '/v2/secondaryAnalysis$': () => promiseResponse(
     JSON.stringify(mockSecondaryAnalyses),
   ),
-  [`/v2/secondaryAnalysis/${projectId}/executionStatus`]: () => promiseResponse(
+  [`/v2/secondaryAnalysis/${projectId}/executionStatus$`]: () => promiseResponse(
     JSON.stringify(mockSecondaryAnalysisStatusDefault),
   ),
-  [`/v2/secondaryAnalysis/${projectId}/files`]: () => promiseResponse(
+  [`/v2/secondaryAnalysis/${projectId}/files$`]: () => promiseResponse(
     JSON.stringify(mockAnalysisFiles),
   ),
   [`/v2/projects/${projectId}/upload/.*/part/\\d+/signedUrl$`]: (req) => {
     const partNumber = req.url.match(/part\/(\d+)\/signedUrl/)[1];
-
     return promiseResponse(JSON.stringify(`mockSignedUrl${partNumber}`));
   },
   '/v2/cliUpload/token$': () => promiseResponse(JSON.stringify('token')),
@@ -119,4 +114,5 @@ export {
   delayedResponse,
   workerDataResult,
   fetchWorkMock,
+  setupDownloadCellSetsFromS3Mock,
 };

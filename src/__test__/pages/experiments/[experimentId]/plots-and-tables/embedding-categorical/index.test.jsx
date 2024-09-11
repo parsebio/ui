@@ -130,7 +130,6 @@ describe('Categorical embedding plot', () => {
     const manyCellSetsResponse = {
       ...generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
       ...customAPIResponses,
-      [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => promiseResponse(JSON.stringify(cellSetsData)),
     };
 
     fetchMock.mockIf(/.*/, mockAPI(manyCellSetsResponse));
