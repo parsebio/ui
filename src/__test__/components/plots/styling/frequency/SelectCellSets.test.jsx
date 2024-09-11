@@ -1,46 +1,34 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
-
 import { Provider } from 'react-redux';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { makeStore } from 'redux/store';
-
-import {
-  screen, render, fireEvent,
-} from '@testing-library/react';
-
+import { render, screen, fireEvent } from '@testing-library/react';
 import '__test__/test-utils/mockWorkerBackend';
 
 import SelectCellSets from 'components/plots/styling/frequency/SelectCellSets';
 import { loadCellSets } from 'redux/actions/cellSets';
-
+import mockAPI, { generateDefaultMockAPIResponses } from '__test__/test-utils/mockAPI';
 import fake from '__test__/test-utils/constants';
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
-
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
 
-const mockOnUpdate = jest.fn().mockImplementation(() => { });
-
-const defaultProps = {
+const mockOnUpdate = jest.fn().mockImplementation(() => {});
+const defaultResponses = generateDefaultMockAPIResponses(fake.EXPERIMENT_ID);
+const selectCellSetsFactory = createTestComponentFactory(SelectCellSets, {
   onUpdate: mockOnUpdate,
   config: initialPlotConfigStates.frequency,
-};
-
-const selectCellSetsFactory = createTestComponentFactory(SelectCellSets, defaultProps);
-
-const cellSetsData = require('__test__/data/cell_sets.json');
+});
 
 let storeState = null;
 
-describe('Select cell sets tests ', () => {
+describe('Select cell sets tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-
     enableFetchMocks();
     fetchMock.resetMocks();
-    fetchMock.doMock();
-    fetchMock.mockResponse(JSON.stringify(cellSetsData));
+    fetchMock.mockIf(/.*/, mockAPI(defaultResponses));
 
     storeState = makeStore();
 
@@ -65,7 +53,7 @@ describe('Select cell sets tests ', () => {
     expect(screen.getByRole('combobox', { name: 'groupBy' })).toBeInTheDocument();
   });
 
-  it('switching cellsets updates the plot', async () => {
+  it('Switching cellsets updates the plot', async () => {
     await act(async () => {
       render(
         <Provider store={storeState}>

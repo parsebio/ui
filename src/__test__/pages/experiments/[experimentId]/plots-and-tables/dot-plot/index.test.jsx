@@ -17,6 +17,7 @@ import mockAPI, {
   // dispatchWorkRequestMock,
   generateDefaultMockAPIResponses,
   promiseResponse,
+  setupDownloadCellSetsFromS3Mock,
   statusResponse,
 } from '__test__/test-utils/mockAPI';
 
@@ -59,9 +60,12 @@ const experimentId = fake.EXPERIMENT_ID;
 const plotUuid = 'dotPlotMain';
 
 const customAPIResponses = {
-  [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(
-    JSON.stringify(_.cloneDeep(cellSetsDataWithScratchpad)),
-  ),
+  [`experiments/${experimentId}/cellSets$`]: () => {
+    setupDownloadCellSetsFromS3Mock(cellSetsDataWithScratchpad);
+    return promiseResponse(
+      JSON.stringify('mock-cellsets-signed-url'),
+    );
+  },
   [`/plots/${plotUuid}$`]: (req) => {
     if (req.method === 'PUT') return promiseResponse(JSON.stringify('OK'));
     return statusResponse(404, 'Not Found');

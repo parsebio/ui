@@ -9,6 +9,7 @@ import mockAPI, {
   statusResponse,
   promiseResponse,
   generateDefaultMockAPIResponses,
+  setupDownloadCellSetsFromS3Mock,
 } from '__test__/test-utils/mockAPI';
 import cellSetsData from '__test__/data/cell_sets.json';
 import { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
@@ -159,7 +160,12 @@ describe('Configure Embedding', () => {
     const manyCellSetsResponse = {
       ...generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
       ...customAPIResponses,
-      [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => promiseResponse(JSON.stringify(cellSetsData)),
+      [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => {
+        setupDownloadCellSetsFromS3Mock(cellSetsData);
+        return promiseResponse(
+          JSON.stringify('mock-cellsets-signed-url'),
+        );
+      },
     };
 
     storeState.dispatch(loadCellSets(fake.EXPERIMENT_ID, true));
