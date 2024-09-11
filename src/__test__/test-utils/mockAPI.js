@@ -7,16 +7,18 @@ import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/
 import fake from '__test__/test-utils/constants';
 import mockAnalysisFiles from '__test__/data/secondaryAnalyses/secondary_analysis_files';
 import downloadFromS3 from 'utils/work/downloadFromS3';
+
 import {
   responseData,
 } from '__test__/test-utils/mockData';
 
-const setupDownloadCellSetsFromS3Mock = (customCellSets = false) => {
+const cellSetsData = require('__test__/data/cell_sets.json');
+
+const setupDownloadCellSetsFromS3Mock = (customCellSets = cellSetsData) => {
   downloadFromS3.mockImplementation((resource, signedUrl) => {
     // eslint-disable-next-line global-require
-    const cellSetsData = require('__test__/data/cell_sets.json');
     if (signedUrl === 'mock-cellsets-signed-url') {
-      return Promise.resolve(customCellSets || cellSetsData);
+      return Promise.resolve(customCellSets);
     }
     return Promise.reject(new Error('Invalid signed URL'));
   });
