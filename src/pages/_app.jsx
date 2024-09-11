@@ -96,9 +96,7 @@ const WrappedApp = ({ Component, pageProps }) => {
   )) === 'true';
 
   useEffect(() => {
-    if (cookiesAgreed) {
-      initTracking(environment);
-    }
+    initTracking(environment, cookiesAgreed);
   }, [cookiesAgreed, environment]);
 
   useEffect(() => {

@@ -31,7 +31,7 @@ let env = Environment.DEVELOPMENT;
 
 const getTrackingDetails = (e) => ({ ...trackingInfo[e] });
 
-const initTracking = async (environment) => {
+const initTracking = async (environment, cookiesEnabled) => {
   // set the environment for the tracking sytem
   env = environment;
   const { siteId, enabled } = getTrackingDetails(env);
@@ -42,7 +42,7 @@ const initTracking = async (environment) => {
   const user = await Auth.currentAuthenticatedUser();
   // first set the user ID and then initialize the tracking so it correctly tracks first page.
   push(['setUserId', user.attributes.email]);
-  init({ url: MATOMO_URL, siteId });
+  init({ url: MATOMO_URL, siteId, disableCookies: !cookiesEnabled });
 };
 
 // reset the user ID when loggging out
