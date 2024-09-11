@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import {
   Button,
-  Radio, Select, Space, Tooltip,
+  Radio, Select, Space, Tooltip, Alert,
 } from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const tissueOptions = [
   'Immune system',
@@ -65,6 +66,10 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
   const [tissue, setTissue] = useState(null);
   const [species, setSpecies] = useState(null);
 
+  const { cellSets } = useSelector(getCellSets());
+
+  const allClustersValid = useMemo(() => Object.entries(cellSets.properties).every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
+
   return (
     <Space direction='vertical'>
       <Radio.Group>
@@ -92,13 +97,20 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
           onChange={setSpecies}
         />
       </Space>
-
+      {!allClustersValid
+        && (
+          <Alert
+            message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
+            type='info'
+            showIcon
+          />
+        )}
       <Button
         onClick={() => {
           dispatch(runCellSetsAnnotation(experimentId, species, tissue));
           onRunAnnotation();
         }}
-        disabled={_.isNil(tissue) || _.isNil(species)}
+        disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}
         style={{ marginTop: '20px' }}
       >
         Compute

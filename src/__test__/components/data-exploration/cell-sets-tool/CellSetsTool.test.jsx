@@ -49,6 +49,7 @@ jest.mock('utils/AppRouteProvider', () => ({
 }));
 
 const cellSetsData = require('__test__/data/cell_sets.json');
+const largeCellSetsData = require('__test__/data/cell_sets_large.json');
 
 const cellSetsWithAnnotatedCellClass = _.cloneDeep(cellSetsData);
 cellSetsWithAnnotatedCellClass.cellSets.push(
@@ -97,6 +98,15 @@ const cellSetsToolFactory = createTestComponentFactory(CellSetsTool, defaultProp
 let storeState;
 
 const mockAPIResponse = generateDefaultMockAPIResponses(experimentId);
+
+// Mocking samples update / delete routes
+const customResponsesLarge = {
+  [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(JSON.stringify(largeCellSetsData)),
+};
+const mockAPIResponseLarge = _.merge(
+  generateDefaultMockAPIResponses(experimentId),
+  customResponsesLarge,
+);
 
 describe('CellSetsTool', () => {
   beforeEach(async () => {
@@ -755,6 +765,10 @@ describe('AnnotateClustersTool', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
+    fetchMock.resetMocks();
+    fetchMock.mockIf(/.*/, mockAPI(mockAPIResponseLarge));
+
+    storeState = makeStore();
     await storeState.dispatch(loadBackendStatus(experimentId));
 
     await act(async () => {
