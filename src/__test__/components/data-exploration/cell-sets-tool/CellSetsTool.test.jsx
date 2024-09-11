@@ -101,7 +101,12 @@ const mockAPIResponse = generateDefaultMockAPIResponses(experimentId);
 
 // Mocking samples update / delete routes
 const customResponsesLarge = {
-  [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(JSON.stringify(largeCellSetsData)),
+  [`experiments/${experimentId}/cellSets$`]: () => {
+    setupDownloadCellSetsFromS3Mock(largeCellSetsData);
+    return promiseResponse(
+      JSON.stringify('mock-cellsets-signed-url'),
+    );
+  },
 };
 const mockAPIResponseLarge = _.merge(
   generateDefaultMockAPIResponses(experimentId),
