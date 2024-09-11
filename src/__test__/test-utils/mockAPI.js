@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
 // Default platform data
-import cellSetsData from '__test__/data/cell_sets.json';
 import backendStatusData from '__test__/data/backend_status.json';
 import processingConfigData from '__test__/data/processing_config.json';
 import mockDemoExperiments from '__test__/test-utils/mockData/mockDemoExperiments.json';
@@ -13,6 +12,16 @@ import mockAnalysisFiles from '__test__/data/secondaryAnalyses/secondary_analysi
 import {
   responseData,
 } from '__test__/test-utils/mockData';
+
+// Mock downloadFromS3 to return cell sets data when the signed URL is used
+jest.mock('utils/work/downloadFromS3', () => jest.fn().mockImplementation((resource, signedUrl) => {
+  // eslint-disable-next-line global-require
+  const cellSetsData = require('__test__/data/cell_sets.json'); // Load the JSON file dynamically within the mock
+  if (signedUrl === 'mock-signed-url') {
+    return Promise.resolve({ cellSets: cellSetsData });
+  }
+  return Promise.reject(new Error('Invalid signed URL'));
+}));
 
 const promiseResponse = (
   response,
@@ -52,7 +61,7 @@ const generateDefaultMockAPIResponses = (projectId) => ({
     JSON.stringify(processingConfigData),
   ),
   [`experiments/${projectId}/cellSets$`]: () => promiseResponse(
-    JSON.stringify(cellSetsData),
+    JSON.stringify('mock-cellsets-signed-url'), // Returning the signed URL as expected
   ),
   [`experiments/${projectId}/backendStatus$`]: () => promiseResponse(
     JSON.stringify(backendStatusData),
