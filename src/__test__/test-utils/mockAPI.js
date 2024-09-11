@@ -1,7 +1,4 @@
 import _ from 'lodash';
-
-// Default platform data
-import cellSetsData from '__test__/data/cell_sets.json';
 import backendStatusData from '__test__/data/backend_status.json';
 import processingConfigData from '__test__/data/processing_config.json';
 import mockDemoExperiments from '__test__/test-utils/mockData/mockDemoExperiments.json';
@@ -9,15 +6,26 @@ import { mockSecondaryAnalyses } from '__test__/data/secondaryAnalyses/secondary
 import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/secondary_analysis_status_default.json';
 import fake from '__test__/test-utils/constants';
 import mockAnalysisFiles from '__test__/data/secondaryAnalyses/secondary_analysis_files';
+import downloadFromS3 from 'utils/work/downloadFromS3';
 
 import {
   responseData,
 } from '__test__/test-utils/mockData';
 
-const promiseResponse = (
-  response,
-  options = {},
-) => Promise.resolve(new Response(response, options));
+const cellSetsData = require('__test__/data/cell_sets.json');
+
+const setupDownloadCellSetsFromS3Mock = (customCellSets = cellSetsData) => {
+  downloadFromS3.mockImplementation((resource, signedUrl) => {
+    // eslint-disable-next-line global-require
+    if (signedUrl === 'mock-cellsets-signed-url') {
+      return Promise.resolve(customCellSets);
+    }
+    return Promise.reject(new Error('Invalid signed URL'));
+  });
+};
+
+const promiseResponse = (response, options = {}) => (
+  Promise.resolve(new Response(response, options)));
 
 const statusResponse = (code, body) => (
   Promise.resolve({
@@ -34,13 +42,10 @@ const delayedResponse = (response, delay = 10000, options = {}) => new Promise((
 
 const workerDataResult = (data) => Promise.resolve(_.cloneDeep(data));
 
-const fetchWorkMock = (
-  mockedResults,
-) => ((experimentId, body) => {
+const fetchWorkMock = (mockedResults) => ((experimentId, body) => {
   if (typeof mockedResults[body.name] === 'function') {
     return mockedResults[body.name]();
   }
-
   return workerDataResult(mockedResults[experimentId]);
 });
 
@@ -51,9 +56,12 @@ const generateDefaultMockAPIResponses = (projectId) => ({
   [`experiments/${projectId}/processingConfig$`]: () => promiseResponse(
     JSON.stringify(processingConfigData),
   ),
-  [`experiments/${projectId}/cellSets$`]: () => promiseResponse(
-    JSON.stringify(cellSetsData),
-  ),
+  [`experiments/${projectId}/cellSets$`]: () => {
+    setupDownloadCellSetsFromS3Mock();
+    return promiseResponse(
+      JSON.stringify('mock-cellsets-signed-url'),
+    );
+  },
   [`experiments/${projectId}/backendStatus$`]: () => promiseResponse(
     JSON.stringify(backendStatusData),
   ),
@@ -81,7 +89,6 @@ const generateDefaultMockAPIResponses = (projectId) => ({
   ),
   [`/v2/projects/${projectId}/upload/.*/part/\\d+/signedUrl$`]: (req) => {
     const partNumber = req.url.match(/part\/(\d+)\/signedUrl/)[1];
-
     return promiseResponse(JSON.stringify(`mockSignedUrl${partNumber}`));
   },
   '/v2/cliUpload/token$': () => promiseResponse(JSON.stringify('token')),
@@ -110,4 +117,5 @@ export {
   delayedResponse,
   workerDataResult,
   fetchWorkMock,
+  setupDownloadCellSetsFromS3Mock,
 };

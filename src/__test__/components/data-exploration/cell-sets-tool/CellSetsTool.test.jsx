@@ -19,7 +19,7 @@ import { createCellSet } from 'redux/actions/cellSets';
 
 import fetchWork from 'utils/work/fetchWork';
 
-import mockAPI, { generateDefaultMockAPIResponses, promiseResponse } from '__test__/test-utils/mockAPI';
+import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloadCellSetsFromS3Mock } from '__test__/test-utils/mockAPI';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
 enableFetchMocks();
@@ -97,18 +97,16 @@ const cellSetsToolFactory = createTestComponentFactory(CellSetsTool, defaultProp
 
 let storeState;
 
-// Mocking samples update / delete routes
-const customResponses = {
-  [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(JSON.stringify(cellSetsData)),
-};
-const mockAPIResponse = _.merge(
-  generateDefaultMockAPIResponses(experimentId),
-  customResponses,
-);
+const mockAPIResponse = generateDefaultMockAPIResponses(experimentId);
 
 // Mocking samples update / delete routes
 const customResponsesLarge = {
-  [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(JSON.stringify(largeCellSetsData)),
+  [`experiments/${experimentId}/cellSets$`]: () => {
+    setupDownloadCellSetsFromS3Mock(largeCellSetsData);
+    return promiseResponse(
+      JSON.stringify('mock-cellsets-signed-url'),
+    );
+  },
 };
 const mockAPIResponseLarge = _.merge(
   generateDefaultMockAPIResponses(experimentId),
@@ -691,7 +689,12 @@ describe('CellSetsTool', () => {
   it('Annotated cell sets has delete buttons', async () => {
     const mockAPICellClassAPIResponse = {
       ...mockAPIResponse,
-      [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(JSON.stringify(cellSetsWithAnnotatedCellClass)),
+      [`experiments/${experimentId}/cellSets$`]: () => {
+        setupDownloadCellSetsFromS3Mock(cellSetsWithAnnotatedCellClass);
+        return promiseResponse(
+          JSON.stringify('mock-cellsets-signed-url'),
+        );
+      },
     };
 
     fetchMock.mockIf(/.*/, mockAPI(mockAPICellClassAPIResponse));
@@ -716,7 +719,12 @@ describe('CellSetsTool', () => {
   it('Deleting annotated cell class deletes the cell class and the cell sets', async () => {
     const mockAPICellClassAPIResponse = {
       ...mockAPIResponse,
-      [`experiments/${experimentId}/cellSets$`]: () => promiseResponse(JSON.stringify(cellSetsWithAnnotatedCellClass)),
+      [`experiments/${experimentId}/cellSets$`]: () => {
+        setupDownloadCellSetsFromS3Mock(cellSetsWithAnnotatedCellClass);
+        return promiseResponse(
+          JSON.stringify('mock-cellsets-signed-url'),
+        );
+      },
     };
 
     fetchMock.mockIf(/.*/, mockAPI(mockAPICellClassAPIResponse));

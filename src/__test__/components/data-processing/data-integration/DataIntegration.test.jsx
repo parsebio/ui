@@ -11,6 +11,7 @@ import mockAPI, {
   statusResponse,
   promiseResponse,
   generateDefaultMockAPIResponses,
+  setupDownloadCellSetsFromS3Mock,
 } from '__test__/test-utils/mockAPI';
 import cellSetsData from '__test__/data/cell_sets.json';
 import { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
@@ -189,7 +190,6 @@ describe('DataIntegration', () => {
     const manySamplesResponse = {
       ...generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
       ...customAPIResponses,
-      [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => promiseResponse(JSON.stringify(cellSetsData)),
     };
 
     storeState.dispatch(loadCellSets(fake.EXPERIMENT_ID, true));
@@ -215,9 +215,12 @@ describe('DataIntegration', () => {
 
     const mockSingleSampleApiResponses = {
       ...generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
-      [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => promiseResponse(
-        JSON.stringify(unisampleCellSetsData),
-      ),
+      [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => {
+        setupDownloadCellSetsFromS3Mock(unisampleCellSetsData);
+        return promiseResponse(
+          JSON.stringify('mock-cellsets-signed-url'),
+        );
+      },
     };
 
     fetchMock

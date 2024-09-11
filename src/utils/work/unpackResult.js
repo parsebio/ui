@@ -7,9 +7,14 @@ const unpackResult = async (storageResp, taskName = null) => {
     return (blob);
   }
 
-  const arrayBuf = await storageResp.arrayBuffer();
+  const arrayBuf = new Uint8Array(await storageResp.arrayBuffer());
 
-  return decompressUint8Array(new Uint8Array(arrayBuf));
+  // cell sets dont come compressed
+  if (taskName === 'CellSets') {
+    return arrayBuf;
+  }
+
+  return decompressUint8Array(arrayBuf);
 };
 
 const decompressUint8Array = async (array) => (

@@ -14,7 +14,9 @@ import { plotNames } from 'utils/constants';
 import endUserMessages from 'utils/endUserMessages';
 
 import { makeStore } from 'redux/store';
-import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, statusResponse } from '__test__/test-utils/mockAPI';
+import mockAPI, {
+  generateDefaultMockAPIResponses, promiseResponse, statusResponse, setupDownloadCellSetsFromS3Mock,
+} from '__test__/test-utils/mockAPI';
 import cellSetsData from '__test__/data/cell_sets_with_clm.json';
 import fetchWork from 'utils/work/fetchWork';
 import writeToFileURL from 'utils/upload/writeToFileURL';
@@ -38,9 +40,12 @@ describe('Normalized matrix index page', () => {
   // simulating intial load of plot
   const customAPIResponses = {
     [`/plots/${plotUuid}$`]: mockResponse,
-    [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => promiseResponse(
-      JSON.stringify(cellSetsData),
-    ),
+    [`experiments/${fake.EXPERIMENT_ID}/cellSets$`]: () => {
+      setupDownloadCellSetsFromS3Mock(cellSetsData);
+      return promiseResponse(
+        JSON.stringify('mock-cellsets-signed-url'),
+      );
+    },
   };
   const mockApiResponses = _.merge(
     generateDefaultMockAPIResponses(fake.EXPERIMENT_ID), customAPIResponses,
