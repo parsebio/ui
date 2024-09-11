@@ -22,7 +22,8 @@ const setupDownloadCellSetsFromS3Mock = (customCellSets = false) => {
   });
 };
 
-const promiseResponse = (response, options = {}) => Promise.resolve(new Response(response, options));
+const promiseResponse = (response, options = {}) => (
+  Promise.resolve(new Response(response, options)));
 
 const statusResponse = (code, body) => (
   Promise.resolve({
