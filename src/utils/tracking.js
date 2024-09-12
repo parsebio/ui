@@ -1,7 +1,8 @@
 import { init, push } from '@socialgouv/matomo-next';
 import { Auth } from '@aws-amplify/auth';
-
+import { DomainName } from 'utils/deploymentInfo';
 import { Environment } from './deploymentInfo';
+import fetchAPI from './http/fetchAPI';
 
 const MATOMO_URL = 'https://biomage.matomo.cloud';
 
@@ -21,7 +22,7 @@ const trackingInfo = {
     containerId: 'FX7UBNS6',
   },
   [Environment.DEVELOPMENT]: {
-    enabled: false,
+    enabled: true,
     siteId: 3,
     containerId: 'lS8ZRMXJ',
   },
@@ -40,7 +41,22 @@ const initTracking = async (environment, cookiesEnabled) => {
   }
 
   const user = await Auth.currentAuthenticatedUser();
+
+  // send the user activity to the tracking system
+  const userActivityBody = {
+    email: user.attributes.email,
+    siteId,
+  };
+  await fetchAPI('/v2/user/tracking', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userActivityBody),
+  });
+
   // first set the user ID and then initialize the tracking so it correctly tracks first page.
+
   push(['setUserId', user.attributes.email]);
   init({ url: MATOMO_URL, siteId, disableCookies: !cookiesEnabled });
 };
