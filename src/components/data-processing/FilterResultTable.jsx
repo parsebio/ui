@@ -67,9 +67,11 @@ const FilterResultTable = (props) => {
         key: 'percentChanged',
       },
     ];
-
+    console.log('WARNINGS');
+    console.log(warnings);
     return (
       <div>
+
         {warnings.length > 0 && (
           warnings.map((warning) => (
             <Alert

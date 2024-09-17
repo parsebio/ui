@@ -51,6 +51,8 @@ import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
 import { getBackendStatus, getFilterChanges } from 'redux/selectors';
 
+import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
+
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadSamples } from 'redux/actions/samples';
 import { runQC } from 'redux/actions/pipeline';
@@ -65,6 +67,14 @@ import { ClipLoader } from 'react-spinners';
 const { Text } = Typography;
 const { Option } = Select;
 
+const filterTablePlotNumber = {
+  classifier: 2,
+  cellSizeDistribution: 3,
+  doubletScores: 1,
+  numGenesVsNumUmis: 1,
+  mitochondrialContent: 2,
+};
+
 const DataProcessingPage = ({ experimentId }) => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
@@ -78,6 +88,8 @@ const DataProcessingPage = ({ experimentId }) => {
   } = useSelector((state) => state.experimentSettings.info);
 
   const samples = useSelector((state) => state.samples);
+
+  const componentConfig = useSelector((state) => state.componentConfig);
 
   const pipelineStatusKey = pipelineStatus?.status;
   const pipelineRunning = pipelineStatusKey === 'RUNNING';
@@ -653,8 +665,33 @@ const DataProcessingPage = ({ experimentId }) => {
       );
     }
 
+    const sampleNamesWithWarning = sampleKeys.filter((sampleKey) => {
+      const plotUUID = generateDataProcessingPlotUuid(sampleKey, key, filterTablePlotNumber[key]);
+      const warnings = componentConfig[plotUUID]?.plotData?.warnings;
+      return warnings?.includes('FILTERED_TOO_MANY_CELLS');
+    }).map((sampleKey) => samples[sampleKey]?.name);
+
+    //
     return (
       <Space direction='vertical' style={{ width: '100%' }}>
+        {
+          getStepHadErrors(key) ? (
+            <Alert
+              message='There was an error while running the pipeline. Check prior steps for warnings.'
+              type='info'
+              showIcon
+            />
+          ) : <></>
+        }
+        {
+          sampleNamesWithWarning.length > 0 ? (
+            <Alert
+              message={`Sample${sampleNamesWithWarning.length > 1 ? 's' : ''} ${sampleNamesWithWarning.join(', ')} ${sampleNamesWithWarning.length > 1 ? 'have' : 'has'} warnings in this filtering step. Double-check the QC plots for ${sampleNamesWithWarning.length > 1 ? 'those samples' : 'that sample'}.`}
+              type='info'
+              showIcon
+            />
+          ) : <></>
+        }
         {
           !checkIfSampleIsEnabled(key) ? (
             <Alert
@@ -664,7 +701,6 @@ const DataProcessingPage = ({ experimentId }) => {
             />
           ) : <></>
         }
-
         {render(key, experimentId)}
       </Space>
     );
