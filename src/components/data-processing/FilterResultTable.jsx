@@ -69,7 +69,6 @@ const FilterResultTable = (props) => {
     ];
     return (
       <div>
-
         {warnings.length > 0 && (
           warnings.map((warning) => (
             <Alert
