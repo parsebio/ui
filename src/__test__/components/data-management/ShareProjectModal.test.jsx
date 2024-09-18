@@ -12,13 +12,15 @@ import mockAPI, {
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 
 jest.mock('@aws-amplify/auth', () => ({
-  currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
-    username: 'mockuser',
-    attributes: {
-      email: 'mock@user.name',
-      name: 'Mocked User',
-    },
-  })),
+  Auth: {
+    currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
+      username: 'mockuser',
+      attributes: {
+        email: 'mock@user.name',
+        name: 'Mocked User',
+      },
+    })),
+  },
 }));
 
 describe('Share project modal', () => {

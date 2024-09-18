@@ -1,7 +1,7 @@
 import { init, push } from '@socialgouv/matomo-next';
-import Auth from '@aws-amplify/auth';
-
+import { Auth } from '@aws-amplify/auth';
 import { Environment } from './deploymentInfo';
+import fetchAPI from './http/fetchAPI';
 
 const MATOMO_URL = 'https://biomage.matomo.cloud';
 
@@ -31,7 +31,7 @@ let env = Environment.DEVELOPMENT;
 
 const getTrackingDetails = (e) => ({ ...trackingInfo[e] });
 
-const initTracking = async (environment) => {
+const initTracking = async (environment, cookiesEnabled) => {
   // set the environment for the tracking sytem
   env = environment;
   const { siteId, enabled } = getTrackingDetails(env);
@@ -40,9 +40,24 @@ const initTracking = async (environment) => {
   }
 
   const user = await Auth.currentAuthenticatedUser();
+
+  // send the user activity manually to the tracking system
+  // as well in case it is blocked by the browser or adblock
+  const userActivityBody = {
+    email: user.attributes.email,
+    siteId,
+  };
+  await fetchAPI('/v2/user/tracking', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userActivityBody),
+  });
+
   // first set the user ID and then initialize the tracking so it correctly tracks first page.
   push(['setUserId', user.attributes.email]);
-  init({ url: MATOMO_URL, siteId });
+  init({ url: MATOMO_URL, siteId, disableCookies: !cookiesEnabled });
 };
 
 // reset the user ID when loggging out
