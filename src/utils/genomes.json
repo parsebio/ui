@@ -32,6 +32,10 @@
     "species": "Felis catus (Cat)"
   },
   {
+    "name": "mAcoDim1_REL_1905",
+    "species": "Acomys dimidiatus (Eastern spiny mouse)"
+  },
+  {
     "name": "Mmul10",
     "species": "Macaca mulatta (Rhesus monkey)"
   },
@@ -138,6 +142,10 @@
   {
     "name": "GRCm39_CRE",
     "species": "Custom Mus musculus (mouse) with CRE"
+  },
+  {
+    "name": "GRCm39_eGFP",
+    "species": "Custom Mus musculus (mouse) with eGFP"
   },
   {
     "name": "Gmax_v2",
