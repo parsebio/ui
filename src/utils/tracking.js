@@ -41,7 +41,8 @@ const initTracking = async (environment, cookiesEnabled) => {
 
   const user = await Auth.currentAuthenticatedUser();
 
-  // send the user activity to the tracking system
+  // send the user activity manually to the tracking system
+  // as well in case it is blocked by the browser or adblock
   const userActivityBody = {
     email: user.attributes.email,
     siteId,
@@ -55,7 +56,6 @@ const initTracking = async (environment, cookiesEnabled) => {
   });
 
   // first set the user ID and then initialize the tracking so it correctly tracks first page.
-
   push(['setUserId', user.attributes.email]);
   init({ url: MATOMO_URL, siteId, disableCookies: !cookiesEnabled });
 };
