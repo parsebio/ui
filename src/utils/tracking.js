@@ -16,12 +16,12 @@ const trackingInfo = {
     containerId: 'lkIodjnO',
   },
   [Environment.STAGING]: {
-    enabled: true,
+    enabled: false,
     siteId: 2,
     containerId: 'FX7UBNS6',
   },
   [Environment.DEVELOPMENT]: {
-    enabled: true,
+    enabled: false,
     siteId: 3,
     containerId: 'lS8ZRMXJ',
   },
