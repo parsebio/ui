@@ -673,7 +673,7 @@ const DataProcessingPage = ({ experimentId }) => {
 
     const pluralWarnings = sampleNamesWithWarning.length > 1;
 
-    const stepWarningMessage = `Sample${pluralWarnings ? 's' : ''} ${pluralWarnings ? 'have' : 'has'} warnings in this filtering step. Double-check the QC plots for ${pluralWarnings ? 'those samples' : 'that sample'}.`;
+    const stepWarningMessage = `Sample${pluralWarnings ? 's' : ''} ${pluralWarnings ? 'have' : 'has'} warnings in this filtering step. Check the QC plots for ${pluralWarnings ? 'those samples' : 'that sample'}.`;
     //
     return (
       <Space direction='vertical' style={{ width: '100%' }}>
