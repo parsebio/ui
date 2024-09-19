@@ -666,11 +666,14 @@ const DataProcessingPage = ({ experimentId }) => {
     }
 
     const sampleNamesWithWarning = sampleKeys.filter((sampleKey) => {
-      const plotUUID = generateDataProcessingPlotUuid(sampleKey, key, filterTablePlotNumber[key]);
-      const warnings = componentConfig[plotUUID]?.plotData?.warnings;
+      const plotUuid = generateDataProcessingPlotUuid(sampleKey, key, filterTablePlotNumber[key]);
+      const warnings = componentConfig[plotUuid]?.plotData?.warnings;
       return warnings?.includes('FILTERED_TOO_MANY_CELLS');
     }).map((sampleKey) => samples[sampleKey]?.name);
 
+    const pluralWarnings = sampleNamesWithWarning.length > 1;
+
+    const stepWarningMessage = `Sample${pluralWarnings ? 's' : ''} ${pluralWarnings ? 'have' : 'has'} warnings in this filtering step. Double-check the QC plots for ${pluralWarnings ? 'those samples' : 'that sample'}.`;
     //
     return (
       <Space direction='vertical' style={{ width: '100%' }}>
@@ -686,7 +689,7 @@ const DataProcessingPage = ({ experimentId }) => {
         {
           sampleNamesWithWarning.length > 0 ? (
             <Alert
-              message={`Sample${sampleNamesWithWarning.length > 1 ? 's' : ''} ${sampleNamesWithWarning.join(', ')} ${sampleNamesWithWarning.length > 1 ? 'have' : 'has'} warnings in this filtering step. Double-check the QC plots for ${sampleNamesWithWarning.length > 1 ? 'those samples' : 'that sample'}.`}
+              message={stepWarningMessage}
               type='info'
               showIcon
             />
