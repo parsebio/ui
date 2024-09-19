@@ -680,7 +680,7 @@ const DataProcessingPage = ({ experimentId }) => {
         {
           getStepHadErrors(key) ? (
             <Alert
-              message='There was an error while running the pipeline. Check prior steps for warnings.'
+              message='There was an error while running Data Processing. Check prior steps for warnings.'
               type='info'
               showIcon
             />
