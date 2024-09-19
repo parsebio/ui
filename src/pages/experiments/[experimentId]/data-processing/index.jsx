@@ -67,7 +67,7 @@ import { ClipLoader } from 'react-spinners';
 const { Text } = Typography;
 const { Option } = Select;
 
-const filterTablePlotNumber = {
+const filterTablePlotIndex = {
   classifier: 2,
   cellSizeDistribution: 3,
   doubletScores: 1,
@@ -666,7 +666,7 @@ const DataProcessingPage = ({ experimentId }) => {
     }
 
     const sampleNamesWithWarning = sampleKeys.filter((sampleKey) => {
-      const plotUuid = generateDataProcessingPlotUuid(sampleKey, key, filterTablePlotNumber[key]);
+      const plotUuid = generateDataProcessingPlotUuid(sampleKey, key, filterTablePlotIndex[key]);
       const warnings = componentConfig[plotUuid]?.plotData?.warnings;
       return warnings?.includes('FILTERED_TOO_MANY_CELLS');
     }).map((sampleKey) => samples[sampleKey]?.name);
