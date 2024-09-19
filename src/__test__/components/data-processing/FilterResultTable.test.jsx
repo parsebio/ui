@@ -1,9 +1,10 @@
 import React from 'react';
-import { Table, Empty } from 'antd';
+import { Table, Empty, Alert } from 'antd';
 import { mount } from 'enzyme';
 
 import FilterResultTable from 'components/data-processing/FilterResultTable';
 import '__test__/test-utils/setupTests';
+import filterResultWarningMessages from 'utils/filterResultWarningMessages';
 
 const correctInput = {
   after: {
@@ -16,6 +17,7 @@ const correctInput = {
     row2: 3,
     row3: 4,
   },
+  warnings: [filterResultWarningMessages.FILTERED_TOO_MANY_CELLS],
 };
 
 describe('FilterResultTable', () => {
@@ -76,5 +78,16 @@ describe('FilterResultTable', () => {
     // 4 columns : title, before, after, percent removed
     expect(columns.length).toBe(4);
     expect(headerRow.length + bodyRow.length).toBe(numRows + 1);
+  });
+
+  it('Should show a Warning if present', () => {
+    const component = mount(
+      <FilterResultTable tableData={correctInput} />,
+    );
+
+    const alert = component.find(Alert);
+
+    // Check that table exists
+    expect(alert.length).toBe(1);
   });
 });
