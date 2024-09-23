@@ -42,13 +42,15 @@ window.location = {
 };
 
 jest.mock('@aws-amplify/auth', () => ({
-  currentAuthenticatedUser: () => Promise.resolve({
-    attributes: {
-      name: 'John Doe',
-      email: 'fake@email.com',
-    },
-    username: '5152fake-eb52-474c-user-mocke8c8user',
-  }),
+  Auth: {
+    currentAuthenticatedUser: () => Promise.resolve({
+      attributes: {
+        name: 'John Doe',
+        email: 'fake@email.com',
+      },
+      username: '5152fake-eb52-474c-user-mocke8c8user',
+    }),
+  },
 }));
 
 jest.mock('stacktrace-js', () => ({

@@ -144,6 +144,10 @@
     "species": "Custom Mus musculus (mouse) with CRE"
   },
   {
+    "name": "GRCm39_eGFP",
+    "species": "Custom Mus musculus (mouse) with eGFP"
+  },
+  {
     "name": "Gmax_v2",
     "species": "Custom Glycine max (Soybean)"
   },

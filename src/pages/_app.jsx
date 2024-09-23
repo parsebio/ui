@@ -96,10 +96,7 @@ const WrappedApp = ({ Component, pageProps }) => {
   )) === 'true';
 
   useEffect(() => {
-    console.log('CHECKING COOKIES');
-    if (cookiesAgreed) {
-      initTracking(environment);
-    }
+    initTracking(environment, cookiesAgreed);
   }, [cookiesAgreed, environment]);
 
   useEffect(() => {

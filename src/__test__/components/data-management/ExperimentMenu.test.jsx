@@ -23,13 +23,15 @@ import { loadExperiments, setActiveExperiment } from 'redux/actions/experiments'
 
 const mockNavigateTo = jest.fn();
 jest.mock('@aws-amplify/auth', () => ({
-  currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
-    username: 'mockuser',
-    attributes: {
-      email: 'mock@user.name',
-      name: 'Mocked User',
-    },
-  })),
+  Auth: {
+    currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
+      username: 'mockuser',
+      attributes: {
+        email: 'mock@user.name',
+        name: 'Mocked User',
+      },
+    })),
+  },
 }));
 jest.mock('utils/AppRouteProvider', () => ({
   useAppRouter: jest.fn(() => ({
