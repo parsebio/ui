@@ -16,7 +16,7 @@ const trackingInfo = {
     containerId: 'lkIodjnO',
   },
   [Environment.STAGING]: {
-    enabled: false,
+    enabled: true,
     siteId: 2,
     containerId: 'FX7UBNS6',
   },
@@ -41,23 +41,31 @@ const initTracking = async (environment, cookiesEnabled) => {
 
   const user = await Auth.currentAuthenticatedUser();
 
-  // send the user activity manually to the tracking system
-  // as well in case it is blocked by the browser or adblock
-  const userActivityBody = {
-    email: user.attributes.email,
-    siteId,
-  };
-  await fetchAPI('/v2/user/tracking', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userActivityBody),
-  });
+  try {
+    // check matoomo.js is available
+    await fetch(`${MATOMO_URL}/matomo.js`);
 
-  // first set the user ID and then initialize the tracking so it correctly tracks first page.
-  push(['setUserId', user.attributes.email]);
-  init({ url: MATOMO_URL, siteId, disableCookies: !cookiesEnabled });
+    // set the user ID and then initialize the tracking so it correctly tracks first page.
+    push(['setUserId', user.attributes.email]);
+    init({ url: MATOMO_URL, siteId, disableCookies: !cookiesEnabled });
+  } catch (error) {
+    console.error('Error initializing tracking', error);
+    if (error instanceof TypeError) {
+      const userActivityBody = {
+        email: user.attributes.email,
+        siteId,
+      };
+
+      // send the user page opened activity manually to the tracking system
+      await fetchAPI('/v2/user/tracking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userActivityBody),
+      });
+    }
+  }
 };
 
 // reset the user ID when loggging out
