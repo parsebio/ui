@@ -43,28 +43,27 @@ const initTracking = async (environment, cookiesEnabled) => {
 
   try {
     // check matoomo.js is available
-    await fetch(`${MATOMO_URL}/matomo.js`);
+    await fetch(`${MATOMO_URL}/matomo.php`, {
+      mode: 'no-cors',
+    });
 
     // set the user ID and then initialize the tracking so it correctly tracks first page.
     push(['setUserId', user.attributes.email]);
     init({ url: MATOMO_URL, siteId, disableCookies: !cookiesEnabled });
   } catch (error) {
-    console.error('Error initializing tracking', error);
-    if (error instanceof TypeError) {
-      const userActivityBody = {
-        email: user.attributes.email,
-        siteId,
-      };
+    const userActivityBody = {
+      email: user.attributes.email,
+      siteId,
+    };
 
-      // send the user page opened activity manually to the tracking system
-      await fetchAPI('/v2/user/tracking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userActivityBody),
-      });
-    }
+    // send the user page opened activity manually to the tracking system
+    await fetchAPI('/v2/user/tracking', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userActivityBody),
+    });
   }
 };
 
