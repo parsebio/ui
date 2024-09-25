@@ -357,8 +357,8 @@ jobs:
             select(di == 5).spec.values.image.tag line_comment = strenv(IMAGE_POLICY_TAG) |
             select(di == 5).spec.values.replicaCount = env(REPLICA_COUNT) |
             select(di == 5).spec.values.serviceAccount.iamRole = "ui-role-" + strenv(KUBERNETES_ENV) |
-            select(di == 5).spec.template.spec.tolerations = [{"key": "platform-pods", "value": "true", "effect": "NoExecute"}] |
-            select(di == 5).spec.template.spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms = [{"matchExpressions": [{"key": "nodegroup-type", "operator": "In", "values": ["platform-pods"]}]}]
+            select(di == 5).spec.tolerations = [{"key": "platform-pods", "value": "true", "effect": "NoExecute"}] |
+            select(di == 5).spec.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms = [{"matchExpressions": [{"key": "nodegroup-type", "operator": "In", "values": ["platform-pods"]}]}]
             ' .flux.yaml > $DEPLOYMENT_NAME-without-host.yaml
 
           if [ "${{ matrix.environment }}" = "production" ]
