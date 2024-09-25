@@ -162,5 +162,9 @@
   {
     "name": "Gmax_v6",
     "species": "Custom Glycine max (Soybean)"
+  },
+  {
+    "name": "dm6_rfp_flp",
+    "species": "Custom Drosophila melanogaster (fruit fly) with RFP and FLP"
   }
 ]
