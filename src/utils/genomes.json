@@ -52,6 +52,10 @@
     "species": "Ovis aries (Sheep)"
   },
   {
+    "name": "ARS-UI_Ramb_v2",
+    "species":"Ovis aries (sheep), Breed: Rambouillet"
+  },
+  {
     "name": "MustPutFur",
     "species": "Mustela furo (Ferret)"
   },
