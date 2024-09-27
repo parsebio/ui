@@ -16,12 +16,12 @@ const trackingInfo = {
     containerId: 'lkIodjnO',
   },
   [Environment.STAGING]: {
-    enabled: false,
+    enabled: true,
     siteId: 2,
     containerId: 'FX7UBNS6',
   },
   [Environment.DEVELOPMENT]: {
-    enabled: false,
+    enabled: true,
     siteId: 3,
     containerId: 'lS8ZRMXJ',
   },
@@ -51,6 +51,7 @@ const initTracking = async (environment, cookiesEnabled) => {
     push(['setUserId', user.attributes.email]);
     init({ url: MATOMO_URL, siteId, disableCookies: !cookiesEnabled });
   } catch (error) {
+    console.log('SENDING TRACKING MANUALLY');
     const userActivityBody = {
       email: user.attributes.email,
       siteId,
