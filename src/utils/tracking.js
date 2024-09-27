@@ -51,7 +51,6 @@ const initTracking = async (environment, cookiesEnabled) => {
     push(['setUserId', user.attributes.email]);
     init({ url: MATOMO_URL, siteId, disableCookies: !cookiesEnabled });
   } catch (error) {
-    console.log('SENDING TRACKING MANUALLY');
     const userActivityBody = {
       email: user.attributes.email,
       siteId,
