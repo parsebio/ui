@@ -136,7 +136,8 @@ describe('CellSetsTool', () => {
     // There should be no delete buttons.
     const deleteButtons = screen.queryByText(/Delete/);
 
-    expect(editButtons.length).toEqual(3);
+    // samples and metadata don’t have edit buttons
+    expect(editButtons.length).toEqual(1);
     expect(deleteButtons).toBeNull();
   });
 

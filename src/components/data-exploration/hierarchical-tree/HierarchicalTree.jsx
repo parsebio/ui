@@ -115,7 +115,7 @@ const HierarchicalTree = (props) => {
         onNodeDelete(modified.key, modified.rootNode);
       }}
       value={modified.name}
-      showEdit={modified.key !== 'scratchpad'}
+      showEdit={modified.key !== 'scratchpad' && parentType !== 'metadataCategorical' && modified.type !== 'metadataCategorical'}
       deleteEnabled={!(
 
         // Disable delete for root node if

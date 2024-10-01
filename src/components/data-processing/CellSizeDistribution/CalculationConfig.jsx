@@ -21,7 +21,9 @@ const CellSizeDistributionConfig = (props) => {
 
   const withinRange = (cellSize) => Math.max(Math.min(cellSize, highestUmi), 0);
 
-  const maxBinStep = Math.round(highestUmi / 25) || 500;
+  let maxBinStep = Math.round(highestUmi / 25) || 500;
+  // default value comes as 200 from the pipeline so can't have a lower maximum than that
+  maxBinStep = maxBinStep < 200 ? 200 : maxBinStep;
 
   return (
     <>

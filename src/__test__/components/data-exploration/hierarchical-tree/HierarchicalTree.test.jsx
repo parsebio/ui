@@ -480,4 +480,36 @@ describe('HierarchicalTree', () => {
     tree.getElement().props.onDrop(dropInfo);
     component.update();
   });
+
+  it('does not show edit icon if showEdit is false', async () => {
+    const treeData = [
+      {
+        key: 'asd-key',
+        type: 'metadataCategorical',
+        name: 'parent 1',
+        rootNode: true,
+        children: [
+          firstChild,
+        ],
+      },
+    ];
+
+    const mockOnNodeUpdate = jest.fn();
+
+    const component = mount(
+      <HierarchicalTree
+        treeData={treeData}
+        experimentId={fake.EXPERIMENT_ID}
+        onNodeUpdate={mockOnNodeUpdate}
+        shouldExpandKeys
+      />,
+    );
+
+    await waitForComponentToPaint(component);
+
+    const parentEditableField = component.find('EditableField').at(0);
+
+    // Verify that the edit icon is not shown because showEdit should be false
+    expect(parentEditableField.find(EditOutlined)).toHaveLength(0);
+  });
 });
