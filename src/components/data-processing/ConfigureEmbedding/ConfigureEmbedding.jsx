@@ -274,7 +274,7 @@ const ConfigureEmbedding = (props) => {
       },
     },
     numOfUmis: {
-      title: 'Number of Transcripts',
+      title: 'Number of transcripts',
       subPlots: {
         embedding: {
           plotUuid: generateDataProcessingPlotUuid(null, filterName, 5),
