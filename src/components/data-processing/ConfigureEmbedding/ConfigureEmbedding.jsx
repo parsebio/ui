@@ -136,7 +136,7 @@ const ConfigureEmbedding = (props) => {
 
     const yAxisLabels = {
       numOfGenes: 'Log10 (number of genes)',
-      numOfUmis: 'Log10 (number of UMIs)',
+      numOfUmis: 'Log10 (number of transcripts)',
       mitochondrialContent: 'Mitochondrial fraction reads',
       doubletScores: 'Doublet scores',
     };
@@ -274,7 +274,7 @@ const ConfigureEmbedding = (props) => {
       },
     },
     numOfUmis: {
-      title: 'Number of UMIs',
+      title: 'Number of Transcripts',
       subPlots: {
         embedding: {
           plotUuid: generateDataProcessingPlotUuid(null, filterName, 5),

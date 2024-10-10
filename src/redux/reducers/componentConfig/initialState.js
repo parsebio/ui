@@ -528,8 +528,8 @@ const cellSizeDistributionHistogram = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: '#UMIs in cell',
-    yAxisText: '#UMIs * #Cells',
+    xAxisText: '#Transcripts in cell',
+    yAxisText: '#Transcripts * #Cells',
   },
   axesRanges: axesRangesBaseState,
   title: {
@@ -556,8 +556,8 @@ const cellSizeDistributionKneePlot = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: 'Cell Rank',
-    yAxisText: 'Cell #UMIs',
+    xAxisText: 'Barcode rank (log scale)',
+    yAxisText: 'Transcripts (log scale)',
   },
   axesRanges: {
     ...axesRangesBaseState,
@@ -618,7 +618,7 @@ const mitochondrialFractionLogHistogram = {
   axes: {
     ...axesBaseState,
     xAxisText: 'Percentage of mitochondrial reads',
-    yAxisText: 'Num of UMIs in cell',
+    yAxisText: '#Transcripts in cell',
   },
   axesRanges: axesRangesBaseState,
   title: {
@@ -646,8 +646,8 @@ const classifierKneePlot = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: 'Cell Rank',
-    yAxisText: 'Cell #UMIs',
+    xAxisText: 'Barcode rank (log scale)',
+    yAxisText: 'Transcripts (log scale)',
   },
   axesRanges: {
     ...axesRangesBaseState,
@@ -679,7 +679,7 @@ const classifierEmptyDropsPlot = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: 'log10[ cell size (UMIs) ]',
+    xAxisText: 'log10[ cell size (transcripts) ]',
     yAxisText: 'FDR (emptyDrops)',
     gridOpacity: 10,
   },
@@ -706,7 +706,7 @@ const featuresVsUMIsScatterplot = {
   },
   axes: {
     ...axesBaseState,
-    xAxisText: 'log10 [molecule counts]',
+    xAxisText: 'log10 [transcript counts]',
     yAxisText: 'log10 [gene counts]',
     gridOpacity: 10,
   },

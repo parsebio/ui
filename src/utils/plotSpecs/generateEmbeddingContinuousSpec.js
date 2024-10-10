@@ -13,7 +13,7 @@ const generateSpec = (config, method, plotData, colouring) => {
 
   const legendTitles = {
     numOfGenes: 'Log10 (number of genes)',
-    numOfUmis: 'Log10 (number of UMIs)',
+    numOfUmis: 'Log10 (number of transcripts)',
     mitochondrialContent: 'Mitochondrial fraction reads',
     doubletScores: 'Doublet scores',
   };

@@ -12,7 +12,7 @@ exports[`configsReplaced Replaces existing state 1`] = `
         "offset": 0,
         "titleFontSize": 13,
         "xAxisRotateLabels": false,
-        "xAxisText": "log10[ cell size (UMIs) ]",
+        "xAxisText": "log10[ cell size (transcripts) ]",
         "yAxisText": "FDR (emptyDrops)",
       },
       "axesRanges": {
@@ -81,7 +81,7 @@ exports[`configsReplaced Replaces existing state 1`] = `
         "titleFontSize": 13,
         "xAxisRotateLabels": false,
         "xAxisText": "Droplet Rank",
-        "yAxisText": "Droplet #UMIs",
+        "yAxisText": "Droplet #transcripts",
       },
       "axesRanges": {
         "xAxisAuto": true,

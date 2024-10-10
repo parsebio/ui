@@ -39,7 +39,7 @@
               "height": 500
           },
           "axes": {
-              "xAxisText": "log10[ cell size (UMIs) ]",
+              "xAxisText": "log10[ cell size (transcripts) ]",
               "yAxisText": "FDR (emptyDrops)",
               "titleFontSize": 13,
               "labelFontSize": 12,
@@ -108,7 +108,7 @@
           },
           "axes": {
               "xAxisText": "Droplet Rank",
-              "yAxisText": "Droplet #UMIs",
+              "yAxisText": "Droplet #transcripts",
               "titleFontSize": 13,
               "labelFontSize": 12,
               "offset": 0,
