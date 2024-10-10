@@ -11,8 +11,8 @@ exports[`loadPlotConfig Loads config properly 1`] = `
       "offset": 0,
       "titleFontSize": 13,
       "xAxisRotateLabels": false,
-      "xAxisText": "#UMIs in cell",
-      "yAxisText": "#UMIs * #Cells",
+      "xAxisText": "#Transcripts in cell",
+      "yAxisText": "#Transcripts * #Cells",
     },
     "axesRanges": {
       "xAxisAuto": true,
@@ -87,8 +87,8 @@ exports[`loadPlotConfig Loads default initial config for plots if plot config is
       "offset": 0,
       "titleFontSize": 13,
       "xAxisRotateLabels": false,
-      "xAxisText": "#UMIs in cell",
-      "yAxisText": "#UMIs * #Cells",
+      "xAxisText": "#Transcripts in cell",
+      "yAxisText": "#Transcripts * #Cells",
     },
     "axesRanges": {
       "xAxisAuto": true,

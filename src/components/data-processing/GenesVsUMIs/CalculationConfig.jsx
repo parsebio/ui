@@ -63,7 +63,7 @@ const GenesVsUMIsConfig = (props) => {
             <span>
               A linear fit works well for most samples and is performed with `MASS::rlm`.
               A spline fit is useful to prevent excluding samples that show a natural saturation
-              in the gene counts at high molecule counts and is performed with `splines::bs`.
+              in the gene counts at high transcript counts and is performed with `splines::bs`.
             </span>
           )}
           >
@@ -82,7 +82,7 @@ const GenesVsUMIsConfig = (props) => {
       </Form.Item>
       <Form.Item label='Prediction interval'>
 
-        <Tooltip title=' Regression of feature counts (genes) vs UMI counts (molecules) is performed for all cells in order to detect outliers.
+        <Tooltip title=' Regression of feature counts (genes) vs transcripts is performed for all cells in order to detect outliers.
             The ‘prediction interval’ is the stringency for defining outliers: it sets the prediction intervals calculated by the R `predict`
             where `level = prediction interval`. Prediction intervals represent the likelihood that the predicted value will be between the upper and
             lower limits of the prediction interval. Prediction intervals are similar to confidence intervals, but on top of the sampling uncertainty,
@@ -90,7 +90,7 @@ const GenesVsUMIsConfig = (props) => {
             plus the random variation of the individual values. Higher prediction interval means higher probability of the value to be inside the range.
             Consequently, the size of the interval will be wider. The higher the prediction level, the less stringent we are when filtering the cells.
             Conversely, the lower the prediction level, the more stringent we are, and we exclude more cells that are far from the behaviour of the
-            relationship between the number of genes and the number of UMIs/molecules.'
+            relationship between the number of genes and the number of transcripts.'
         >
           <InfoCircleOutlined />
         </Tooltip>
