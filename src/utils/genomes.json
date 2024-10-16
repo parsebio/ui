@@ -88,6 +88,10 @@
     "species":"Columba livia (rock pigeon)"
   },
   {
+    "name": "OmykA_1.1",
+    "species":"Oncorhynchus mykiss (Rainbow trout)"
+  },
+  {
     "name": "ARS-UCD1.2_Oar_v3.1",
     "species": "Mixed cow and sheep"
   },
@@ -154,6 +158,10 @@
   {
     "name": "GRCm39_eGFP",
     "species": "Custom Mus musculus (mouse) with eGFP"
+  },
+  {
+    "name": "GRCm38_Usutu",
+    "species": "Custom Mus musculus (mouse) with Usutu virus"
   },
   {
     "name": "Gmax_v2",
