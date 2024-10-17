@@ -120,7 +120,7 @@ const DataProcessingPage = ({ experimentId }) => {
   const [stepIdx, setStepIdx] = useState(0);
   const [runQCModalVisible, setRunQCModalVisible] = useState(false);
   const [inputsList, setInputsList] = useState([]);
-  const [shownSamples, setShownSamples] = useState([]);
+  const [shownSamples, setShownSamples] = useState(sampleKeys);
   const sampleTechnology = samples[sampleKeys[0]]?.type;
 
   useEffect(() => {

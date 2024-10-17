@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getMetadataToSampleIds } from 'redux/selectors';
 import PropTypes from 'prop-types';
 import { TreeSelect } from 'antd';
@@ -7,28 +7,11 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 
 const SelectShownSamplesDropdown = (props) => {
   const { shownSamples, setShownSamples, samples } = props;
-  const maxSelectedSamples = 10;
-  // const [shownMetadata, setShownMetadata] = useState([]);
+  const maxSelectedSamples = 10000;
+  const [shownMetadata, setShownMetadata] = useState([]);
   const metadataInfo = React.useMemo(() => _.omit(
     getMetadataToSampleIds()({ samples }), ['meta'],
   ), [samples]);
-
-  // const selectedTreeNodes = React.useMemo(() => {
-  //   // if (!shownSamples.length) return;
-  //   const selectedMetadataNodes = [...shownSamples];
-
-  //   // find which metadata nodes are selected by checking if all samples in the node are selected
-  //   Object.entries(metadataInfo).forEach(([metadataTrackKey, entry]) => {
-  //     Object.entries(entry).forEach(([metadataValue, sampleIds]) => {
-  //       if (sampleIds.every((sampleId) => shownSamples.includes(sampleId))) {
-  //         selectedMetadataNodes.push(`metadataCategorical-${metadataTrackKey}-${metadataValue}`);
-  //       }
-  //     });
-  //   });
-  //   return selectedMetadataNodes;
-  // console.log('SELECTED TREE NODES ', selectedTreeNodes);
-
-  // }, [shownSamples, metadataInfo]);
 
   const samplesWithoutMeta = _.omit(samples, ['meta']);
 
@@ -60,62 +43,62 @@ const SelectShownSamplesDropdown = (props) => {
   ];
 
   // returns the associated sample ids if the key is metadata
-  // const metadataKeyToSampleIds = (key) => {
-  //   const keySplit = key.split('-');
-  //   if (keySplit[0] === 'metadataCategorical') {
-  //     return metadataInfo[keySplit[1]][keySplit[2]];
-  //   }
-  // };
+  const metadataKeyToSampleIds = (key) => {
+    const keySplit = key.split('-');
+    if (keySplit[0] === 'metadataCategorical') {
+      return metadataInfo[keySplit[1]][keySplit[2]];
+    }
+  };
 
   // Handle selection changes
   const onChange = (selectedKeys) => {
-    // console.log('SE;ECTED VALUE ', selectedKeys, ' SHOWN SAMPLES ', shownSamples);
-    // if the change was a removal, dont convert the selected metadata keys to samples
-    // if (selectedKeys.length < shownSamples.length + shownMetadata.length) {
-    //   const removedKeys = shownSamples.push(...shownMetadata)
-    //      .filter((value) => !selectedKeys.includes(value));
-    //   console.log('REMOVED KEYS ', removedKeys);
-    //   const sampleIdsToRemove = [];
-    //   const metadataToRemove = [];
-    //   removedKeys.forEach((key) => {
-    //     if (metadataKeyToSampleIds(key)) {
-    //       sampleIdsToRemove.push(...metadataKeyToSampleIds(key));
-    //       metadataToRemove.push(key);
-    //     } else {
-    //       sampleIdsToRemove.push(key);
-    //     }
-    //   });
-    //   setShownSamples(shownSamples.filter((value) => !sampleIdsToRemove.includes(value)));
-    //   setShownMetadata(shownMetadata.filter((value) => !metadataToRemove.includes(value)));
-    // } else {
-    let selectedValues = Array.from(new Set(
-      selectedKeys.flatMap((value) => {
-        const valueSplit = value.split('-');
-        if (valueSplit[0] === 'metadataCategorical') {
-          // setShownMetadata([...shownMetadata, value]);
-          return metadataInfo[valueSplit[1]][valueSplit[2]];
+    // if a key is removed
+    if (selectedKeys.length < shownSamples.length + shownMetadata.length) {
+      const removedKeys = [...shownSamples, ...shownMetadata]
+        .filter((value) => !selectedKeys.includes(value));
+      const sampleIdsToRemove = [];
+      const metadataToRemove = [];
+      removedKeys.forEach((key) => {
+        if (metadataKeyToSampleIds(key)) {
+          sampleIdsToRemove.push(...metadataKeyToSampleIds(key));
+          metadataToRemove.push(key);
+        } else {
+          sampleIdsToRemove.push(key);
+          metadataToRemove.push(...shownMetadata);
         }
-        return value;
-      }),
-    ));
-    if (selectedValues.length > maxSelectedSamples) {
-      pushNotificationMessage('warning', `Too many samples, only first ${maxSelectedSamples} selected will be shown.`, 1);
-      selectedValues = selectedValues.slice(0, maxSelectedSamples);
+      });
+      setShownSamples(shownSamples.filter((value) => !sampleIdsToRemove.includes(value)));
+      setShownMetadata(shownMetadata.filter((value) => !metadataToRemove.includes(value)));
+    } else {
+      let selectedValues = Array.from(new Set(
+        selectedKeys.flatMap((value) => {
+          const metadataToSampleIds = metadataKeyToSampleIds(value);
+          if (metadataToSampleIds) {
+            setShownMetadata([...shownMetadata, value]);
+            return metadataToSampleIds;
+          }
+          setShownMetadata([]);
+          return value;
+        }),
+      ));
+      if (selectedValues.length > maxSelectedSamples) {
+        pushNotificationMessage('warning', `Too many samples, only first ${maxSelectedSamples} selected will be shown.`, 1);
+        selectedValues = selectedValues.slice(0, maxSelectedSamples);
+      }
+      setShownSamples(selectedValues);
     }
-    setShownSamples(selectedValues);
-    // }
   };
 
   return (
     <TreeSelect
-      style={{ width: '10vw' }}
-      value={shownSamples}
-      dropdownStyle={{ minWidth: '30vw' }}
+      style={{ width: '14vw' }}
+      value={[...shownSamples, ...shownMetadata]}
+      dropdownStyle={{ minWidth: '32vw' }}
       maxTagCount={0}
-      maxTagPlaceholder={(values) => `${values.length} selected`}
+      maxTagPlaceholder={() => `${shownSamples.length} samples selected`}
       placeholder='Select samples'
       allowClear
-      showSearch={false}
+      // showSearch={false}
       multiple
       popupMatchSelectWidth={false}
       treeDefaultExpandAll
