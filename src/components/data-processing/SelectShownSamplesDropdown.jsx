@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { getMetadataToSampleIds } from 'redux/selectors';
 import PropTypes from 'prop-types';
 import { TreeSelect } from 'antd';
@@ -51,7 +51,7 @@ const SelectShownSamplesDropdown = (props) => {
         value: metadataTrackKey,
         disabled: true,
         title: metadataTrackKey,
-        children: Object.entries(entry).map(([metadataKey, metadataValue]) => ({
+        children: Object.entries(entry).map(([metadataKey]) => ({
           value: `metadataCategorical-${metadataTrackKey}-${metadataKey}`,
           title: metadataKey,
         })),
@@ -72,7 +72,8 @@ const SelectShownSamplesDropdown = (props) => {
     // console.log('SE;ECTED VALUE ', selectedKeys, ' SHOWN SAMPLES ', shownSamples);
     // if the change was a removal, dont convert the selected metadata keys to samples
     // if (selectedKeys.length < shownSamples.length + shownMetadata.length) {
-    //   const removedKeys = shownSamples.push(...shownMetadata).filter((value) => !selectedKeys.includes(value));
+    //   const removedKeys = shownSamples.push(...shownMetadata)
+    //      .filter((value) => !selectedKeys.includes(value));
     //   console.log('REMOVED KEYS ', removedKeys);
     //   const sampleIdsToRemove = [];
     //   const metadataToRemove = [];
