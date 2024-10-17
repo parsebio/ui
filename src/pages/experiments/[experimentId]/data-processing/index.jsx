@@ -47,6 +47,7 @@ import PipelineRedirectToDataProcessing from 'components/PipelineRedirectToDataP
 import PlatformError from 'components/PlatformError';
 import PropTypes from 'prop-types';
 import SingleComponentMultipleDataContainer from 'components/SingleComponentMultipleDataContainer';
+import SelectShownSamplesDropdown from 'components/data-processing/SelectShownSamplesDropdown';
 import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
 import { getBackendStatus, getFilterChanges } from 'redux/selectors';
@@ -87,7 +88,10 @@ const DataProcessingPage = ({ experimentId }) => {
     pipelineVersion,
   } = useSelector((state) => state.experimentSettings.info);
 
-  const samples = useSelector((state) => state.samples);
+  const allSamples = useSelector((state) => state.samples);
+  // there might be samples loaded from other experiments
+  const samples = _.omitBy(allSamples,
+    (value) => value.experimentId && value.experimentId !== experimentId);
 
   const componentConfig = useSelector((state) => state.componentConfig);
 
@@ -116,7 +120,7 @@ const DataProcessingPage = ({ experimentId }) => {
   const [stepIdx, setStepIdx] = useState(0);
   const [runQCModalVisible, setRunQCModalVisible] = useState(false);
   const [inputsList, setInputsList] = useState([]);
-
+  const [shownSamples, setShownSamples] = useState([]);
   const sampleTechnology = samples[sampleKeys[0]]?.type;
 
   useEffect(() => {
@@ -158,15 +162,15 @@ const DataProcessingPage = ({ experimentId }) => {
   };
 
   useEffect(() => {
-    if (sampleKeys && sampleKeys.length > 0 && Object.keys(samples).filter((key) => key !== 'meta').length > 0) {
-      const list = sampleKeys?.map((sampleId) => ({
+    if (Object.keys(samples).filter((key) => key !== 'meta').length > 0) {
+      const list = shownSamples?.map((sampleId) => ({
         key: sampleId,
         headerName: prefixSampleName(samples[sampleId].name),
         params: { key: sampleId },
       }));
       setInputsList(list);
     }
-  }, [samples, sampleKeys]);
+  }, [shownSamples]);
 
   const checkIfSampleIsEnabled = (step) => {
     if (['configureEmbedding', 'dataIntegration'].includes(step)) {
@@ -441,7 +445,7 @@ const DataProcessingPage = ({ experimentId }) => {
             {/* Should be just wide enough that no ellipsis appears */}
             <Row>
               <Col style={{ paddingBottom: '8px', paddingRight: '8px' }}>
-                <Space size='small'>
+                <Space style={{ width: '100%' }}>
                   <Select
                     value={stepIdx}
                     onChange={(idx) => {
@@ -536,6 +540,13 @@ const DataProcessingPage = ({ experimentId }) => {
                       )
                     }
                   </Select>
+                  {currentStep.multiSample && (
+                    <SelectShownSamplesDropdown
+                      samples={samples}
+                      shownSamples={shownSamples}
+                      setShownSamples={setShownSamples}
+                    />
+                  )}
                   {currentStep.description && (
                     <Tooltip title={currentStep.description}>
                       <Button icon={<InfoCircleOutlined />} />

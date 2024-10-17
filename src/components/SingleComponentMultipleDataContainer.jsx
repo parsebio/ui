@@ -15,7 +15,7 @@ const SingleComponentMultipleDataContainer = (props) => {
   const defaultActiveKey = inputsList.slice(0, 50).map(({ key }) => key);
 
   return (
-    <Collapse defaultActiveKey={defaultActiveKey}>
+    <Collapse activeKey={defaultActiveKey}>
       {
         inputsList.map(({ key, headerName, params }) => (
           <Panel header={headerName} key={key}>
