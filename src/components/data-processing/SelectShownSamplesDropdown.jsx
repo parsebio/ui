@@ -3,10 +3,11 @@ import { getMetadataToSampleIds } from 'redux/selectors';
 import PropTypes from 'prop-types';
 import { TreeSelect } from 'antd';
 import _ from 'lodash';
+import pushNotificationMessage from 'utils/pushNotificationMessage';
 
 const SelectShownSamplesDropdown = (props) => {
   const { shownSamples, setShownSamples, samples } = props;
-
+  const maxSelectedSamples = 10;
   // const [shownMetadata, setShownMetadata] = useState([]);
   const metadataInfo = React.useMemo(() => _.omit(
     getMetadataToSampleIds()({ samples }), ['meta'],
@@ -86,7 +87,7 @@ const SelectShownSamplesDropdown = (props) => {
     //   setShownSamples(shownSamples.filter((value) => !sampleIdsToRemove.includes(value)));
     //   setShownMetadata(shownMetadata.filter((value) => !metadataToRemove.includes(value)));
     // } else {
-    const selectedValues = Array.from(new Set(
+    let selectedValues = Array.from(new Set(
       selectedKeys.flatMap((value) => {
         const valueSplit = value.split('-');
         if (valueSplit[0] === 'metadataCategorical') {
@@ -96,6 +97,10 @@ const SelectShownSamplesDropdown = (props) => {
         return value;
       }),
     ));
+    if (selectedValues.length > maxSelectedSamples) {
+      pushNotificationMessage('warning', `Too many samples, only first ${maxSelectedSamples} selected will be shown.`, 1);
+      selectedValues = selectedValues.slice(0, maxSelectedSamples);
+    }
     setShownSamples(selectedValues);
     // }
   };
