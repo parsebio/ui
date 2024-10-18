@@ -451,7 +451,7 @@ const DataProcessingPage = ({ experimentId }) => {
                     onChange={(idx) => {
                       changeStepId(idx);
                     }}
-                    style={{ fontWeight: 'bold', width: 290 }}
+                    style={{ fontWeight: 'bold', width: '19vw' }}
                     placeholder='Jump to a step...'
                   >
                     {
@@ -540,13 +540,6 @@ const DataProcessingPage = ({ experimentId }) => {
                       )
                     }
                   </Select>
-                  {currentStep.multiSample && (
-                    <SelectShownSamplesDropdown
-                      samples={samples}
-                      shownSamples={shownSamples}
-                      setShownSamples={setShownSamples}
-                    />
-                  )}
                   {currentStep.description && (
                     <Tooltip title={currentStep.description}>
                       <Button icon={<InfoCircleOutlined />} />
@@ -577,6 +570,15 @@ const DataProcessingPage = ({ experimentId }) => {
               <Col>
                 {renderRunOrDiscardButtons()}
               </Col>
+            </Row>
+            <Row>
+              {currentStep.multiSample && (
+                <SelectShownSamplesDropdown
+                  samples={samples}
+                  shownSamples={shownSamples}
+                  setShownSamples={setShownSamples}
+                />
+              )}
             </Row>
           </Col>
           <Col>

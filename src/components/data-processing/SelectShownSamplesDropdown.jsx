@@ -5,6 +5,8 @@ import { TreeSelect } from 'antd';
 import _ from 'lodash';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 
+const { SHOW_PARENT } = TreeSelect;
+
 const SelectShownSamplesDropdown = (props) => {
   const { shownSamples, setShownSamples, samples } = props;
   const maxSelectedSamples = 10000;
@@ -90,14 +92,14 @@ const SelectShownSamplesDropdown = (props) => {
 
   return (
     <TreeSelect
-      style={{ width: '14vw' }}
+      style={{ width: '19vw' }}
       value={[...shownSamples, ...shownMetadata]}
-      dropdownStyle={{ minWidth: '32vw' }}
+      dropdownStyle={{ minWidth: '32vw', overflow: 'auto' }}
       maxTagCount={0}
       maxTagPlaceholder={() => `${shownSamples.length} samples selected`}
       placeholder='Select samples'
       allowClear
-      showSearch={false}
+      // showSearch={false}
       multiple
       popupMatchSelectWidth={false}
       treeDefaultExpandAll
