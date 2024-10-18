@@ -20,14 +20,13 @@ const SelectShownSamplesDropdown = (props) => {
       value: 'samples',
       title: 'Samples',
       disabled: true,
-      // todo ignore 'meta' key
       children: Object.entries(samplesWithoutMeta).map(([key, entry]) => ({
         value: key,
         title: entry.name,
       })),
     },
-    {
-      value: 'metdata',
+    ...(Object.keys(metadataInfo).length > 0 ? [{
+      value: 'metadata',
       disabled: true,
       title: 'Metadata tracks',
       children: Object.entries(metadataInfo).map(([metadataTrackKey, entry]) => ({
@@ -39,7 +38,7 @@ const SelectShownSamplesDropdown = (props) => {
           title: metadataKey,
         })),
       })),
-    },
+    }] : []),
   ];
 
   // returns the associated sample ids if the key is metadata
@@ -98,7 +97,7 @@ const SelectShownSamplesDropdown = (props) => {
       maxTagPlaceholder={() => `${shownSamples.length} samples selected`}
       placeholder='Select samples'
       allowClear
-      // showSearch={false}
+      showSearch={false}
       multiple
       popupMatchSelectWidth={false}
       treeDefaultExpandAll
