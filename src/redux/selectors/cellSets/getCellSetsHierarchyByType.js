@@ -10,5 +10,5 @@ const getCellSetsHierarchyByType = (type, keyExceptions = []) => (hierarchy) => 
 
 export default createMemoizedSelector(
   getCellSetsHierarchyByType,
-  { inputSelectors: getCellSetsHierarchy() },
+  { inputSelectors: [getCellSetsHierarchy()] },
 );

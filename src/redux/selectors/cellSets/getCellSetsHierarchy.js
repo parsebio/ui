@@ -9,7 +9,9 @@ const getCellSetsData = (children, properties) => (
   })
 );
 
-const getCellSetsHierarchy = () => (state) => {
+const getCellSetsHierarchy = (keys) => (state) => {
+  console.log('keysDebug');
+  console.log(keys);
   if (!state || !state.accessible) {
     return [];
   }
@@ -30,5 +32,5 @@ const getCellSetsHierarchy = () => (state) => {
 
 export default createMemoizedSelector(
   getCellSetsHierarchy,
-  { inputSelectors: getCellSets() },
+  { inputSelectors: [getCellSets()] },
 );
