@@ -133,8 +133,8 @@ a {
 
 /* Selected menu and sider */
 
-.ant-menu-item-selected {
-    background-color:#9966b8 !important;
+.ant-menu-item-selected{
+  background-color: #9966b8 !important;
 }
 
 .ant-layout-sider-trigger{
@@ -234,11 +234,11 @@ a.ant-btn{
   box-shadow: 0 0 0 5px rgba(153, 102, 184, 0.12) !important;
 }
 
-.ant-slider-track {
+.ant-slider-track, .ant-select-tree-node-selected  {
   background-color: #dad1de !important;
 }
 
-.ant-slider:hover .ant-slider-track {
+.ant-slider:hover .ant-slider-track{
   background-color: #b08bc4 !important;
 }
 
