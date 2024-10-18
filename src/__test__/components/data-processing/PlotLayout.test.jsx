@@ -38,6 +38,9 @@ const initialState = {
         [sampleId]: { filterSettings: {} },
       },
     },
+    info: {
+      sampleIds: ['sample1', 'sample2'],
+    },
   },
 };
 
