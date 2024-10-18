@@ -11,7 +11,7 @@ const SingleComponentMultipleDataContainer = (props) => {
   const [activeKey, setActiveKey] = useState(inputsList.slice(0, 50).map(({ key }) => key));
 
   useEffect(() => {
-    const newKeys = inputsList.map(({ key }) => key);
+    const newKeys = inputsList.slice(0, 50).map(({ key }) => key);
     setActiveKey(newKeys);
   }, [inputsList]);
 

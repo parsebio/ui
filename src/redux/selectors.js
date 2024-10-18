@@ -51,6 +51,10 @@ const getMetadataToSampleIds = (...params) => (state) => (
   samplesSelectors.getMetadataToSampleIds(...params)(state.samples)
 );
 
+const getSamples = (...params) => (state) => (
+  samplesSelectors.getSamples(...params)(state.samples)
+);
+
 export {
   getBackendStatus,
   getCellSets,
@@ -64,4 +68,5 @@ export {
   getSelectedMetadataTracks,
   getFilterChanges,
   getMetadataToSampleIds,
+  getSamples,
 };

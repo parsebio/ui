@@ -50,7 +50,7 @@ import SingleComponentMultipleDataContainer from 'components/SingleComponentMult
 import SelectShownSamplesDropdown from 'components/data-processing/SelectShownSamplesDropdown';
 import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
-import { getBackendStatus, getFilterChanges } from 'redux/selectors';
+import { getBackendStatus, getFilterChanges, getSamples } from 'redux/selectors';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 
@@ -88,11 +88,7 @@ const DataProcessingPage = ({ experimentId }) => {
     pipelineVersion,
   } = useSelector((state) => state.experimentSettings.info);
 
-  const allSamples = useSelector((state) => state.samples);
-  // there might be samples loaded from other experiments
-  const samples = _.omitBy(allSamples,
-    (value) => value.experimentId && value.experimentId !== experimentId);
-
+  const samples = useSelector(getSamples(experimentId));
   const componentConfig = useSelector((state) => state.componentConfig);
 
   const pipelineStatusKey = pipelineStatus?.status;
