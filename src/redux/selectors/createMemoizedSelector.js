@@ -39,8 +39,13 @@ const createMemoizedSelector = (
     comparisonOperator = _.isEqual,
   } = options;
 
+  let inputSelectorsArray = inputSelectors;
+  if (!Array.isArray(inputSelectors)) {
+    inputSelectorsArray = [inputSelectors];
+  }
+
   const makerFunction = (...params) => createSelector(
-    inputSelectors.map((inputSelector) => configureSelector(inputSelector, params)),
+    inputSelectorsArray.map((inputSelector) => configureSelector(inputSelector, params)),
     selector(...params),
   );
 

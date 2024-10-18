@@ -32,5 +32,5 @@ const getCellSetsHierarchy = (keys) => (state) => {
 
 export default createMemoizedSelector(
   getCellSetsHierarchy,
-  { inputSelectors: [getCellSets()] },
+  { inputSelectors: getCellSets() },
 );
