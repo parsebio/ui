@@ -45,9 +45,9 @@ const SelectShownSamplesDropdown = (props) => {
 
   // returns the associated sample ids if the key is metadata
   const metadataKeyToSampleIds = (key) => {
-    const keySplit = key.split('-');
-    if (keySplit[0] === 'metadataCategorical') {
-      return metadataInfo[keySplit[1]][keySplit[2]];
+    const [keyName, metadataTrackKey, metadataKey] = key.split('-');
+    if (keyName === 'metadataCategorical') {
+      return metadataInfo[metadataTrackKey][metadataKey];
     }
   };
 
@@ -59,8 +59,9 @@ const SelectShownSamplesDropdown = (props) => {
       const sampleIdsToRemove = [];
       const metadataToRemove = [];
       removedKeys.forEach((key) => {
-        if (metadataKeyToSampleIds(key)) {
-          sampleIdsToRemove.push(...metadataKeyToSampleIds(key));
+        const sampleIdsFromMetada = metadataKeyToSampleIds(key);
+        if (sampleIdsFromMetada) {
+          sampleIdsToRemove.push(...sampleIdsFromMetada);
           metadataToRemove.push(key);
         } else {
           sampleIdsToRemove.push(key);

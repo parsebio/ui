@@ -1,5 +1,5 @@
-import { omitBy } from 'lodash';
+import _ from 'lodash';
 
-const getSamples = (experimentId) => (samples) => (omitBy(samples,
+const getSamples = (experimentId) => (samples) => (_.omitBy(samples,
   (value) => value.experimentId && value.experimentId !== experimentId));
 export default getSamples;
