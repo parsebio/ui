@@ -14,6 +14,7 @@ const SelectShownSamplesDropdown = (props) => {
 
   const metadataInfo = useSelector(getMetadataToSampleIds(experimentId));
   const samples = useSelector(getSamples(experimentId));
+  const sampleIdsOrdered = useSelector((state) => state.experimentSettings.info.sampleIds);
 
   const samplesWithoutMeta = _.omit(samples, ['meta']);
 
@@ -22,10 +23,13 @@ const SelectShownSamplesDropdown = (props) => {
       value: 'samples',
       title: 'Samples',
       disabled: true,
-      children: Object.entries(samplesWithoutMeta).map(([key, entry]) => ({
-        value: key,
-        title: entry.name,
-      })),
+      children: sampleIdsOrdered.map((key) => {
+        const entry = samplesWithoutMeta[key];
+        return {
+          value: key,
+          title: entry.name,
+        };
+      }),
     },
     ...(Object.keys(metadataInfo).length > 0 ? [{
       value: 'metadata',

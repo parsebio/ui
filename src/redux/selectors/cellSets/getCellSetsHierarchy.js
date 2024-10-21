@@ -9,9 +9,7 @@ const getCellSetsData = (children, properties) => (
   })
 );
 
-const getCellSetsHierarchy = (keys) => (state) => {
-  console.log('keysDebug');
-  console.log(keys);
+const getCellSetsHierarchy = () => (state) => {
   if (!state || !state.accessible) {
     return [];
   }
