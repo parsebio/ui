@@ -1,75 +1,101 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { getMetadataToSampleIds } from 'redux/selectors';
+import configureStore from 'redux-mock-store'; // Import redux-mock-store
+import { Provider } from 'react-redux'; // Import Provider from react-redux
+import { getMetadataToSampleIds, getSamples } from 'redux/selectors';
+import { loadSamples } from 'redux/actions/samples';
 import SelectShownSamplesDropdown from 'components/data-processing/SelectShownSamplesDropdown';
+import mockAPI, {
+  generateDefaultMockAPIResponses,
+} from '__test__/test-utils/mockAPI';
+import updateExperimentInfo from 'redux/actions/experimentSettings/updateExperimentInfo';
+import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
+import fake from '__test__/test-utils/constants';
+import { makeStore } from 'redux/store';
 
-jest.mock('redux/selectors', () => ({
-  getMetadataToSampleIds: jest.fn(),
-}));
-
-jest.mock('utils/pushNotificationMessage', () => jest.fn());
+// jest.mock('redux/selectors', () => ({
+//   getMetadataToSampleIds: jest.fn(),
+//   getSamples: jest.fn(),
+// }));
 
 describe('SelectShownSamplesDropdown', () => {
-  const samples = {
-    sample1: { name: 'Sample 1' },
-    sample2: { name: 'Sample 2' },
-  };
+  // const samples = {
+  //   sample1: { name: 'Sample 1' },
+  //   sample2: { name: 'Sample 2' },
+  // };
 
-  const metadataInfo = {
-    metadata1: { tracka: ['sample1'], trackb: ['sample2'] },
-  };
+  // const metadataInfo = {
+  //   metadata1: { tracka: ['sample1'], trackb: ['sample2'] },
+  // };
 
-  beforeEach(() => {
-    getMetadataToSampleIds.mockReturnValue(() => metadataInfo);
+  // let store;
+  let storeState;
+  beforeEach(async () => {
+    // getMetadataToSampleIds.mockReturnValue(() => metadataInfo);
+    enableFetchMocks();
+    fetchMock.resetMocks();
+    fetchMock.doMock();
+
+    fetchMock.mockIf(/.*/, mockAPI(generateDefaultMockAPIResponses(fake.EXPERIMENT_ID)));
+    storeState = makeStore();
+
+    await storeState.dispatch(updateExperimentInfo({ sampleIds: [`${fake.SAMPLE_ID}-0`, `${fake.SAMPLE_ID}-1`, `${fake.SAMPLE_ID}-2`] }));
+    await storeState.dispatch(loadSamples(fake.EXPERIMENT_ID));
   });
 
   it('renders correctly', () => {
     const { getByText } = render(
-      <SelectShownSamplesDropdown
-        shownSamples={[]}
-        setShownSamples={jest.fn()}
-        samples={samples}
-      />,
+      <Provider store={storeState}>
+        <SelectShownSamplesDropdown
+          shownSampleIds={[]}
+          setShownSampleIds={jest.fn()}
+          experimentId={fake.EXPERIMENT_ID}
+        />
+      </Provider>,
     );
     expect(getByText('Select samples')).toBeInTheDocument();
   });
 
-  it('updates shownSamples and shownMetadata on selection change', () => {
-    const setShownSamples = jest.fn();
+  it('updates shownSampleIds and shownMetadata on selection change', () => {
+    const setShownSampleIds = jest.fn();
     const { getByText, getByTitle } = render(
-      <SelectShownSamplesDropdown
-        shownSamples={[]}
-        setShownSamples={setShownSamples}
-        samples={samples}
-      />,
+      <Provider store={storeState}>
+        <SelectShownSamplesDropdown
+          shownSampleIds={[]}
+          setShownSampleIds={setShownSampleIds}
+          experimentId={fake.EXPERIMENT_ID}
+        />
+      </Provider>,
     );
 
     const treeSelect = getByText('Select samples');
     fireEvent.mouseDown(treeSelect);
 
-    const sampleOption = getByTitle('Sample 1');
+    const sampleOption = getByTitle('Mock sample 0');
     fireEvent.click(sampleOption);
 
-    expect(setShownSamples).toHaveBeenCalledWith(['sample1']);
+    expect(setShownSampleIds).toHaveBeenCalledWith([`${fake.SAMPLE_ID}-0`]);
   });
 
-  it('selecting metadata track, selects its corresponding samples', () => {
-    const setShownSamples = jest.fn();
-    const { getByText, getByTitle } = render(
-      <SelectShownSamplesDropdown
-        shownSamples={[]}
-        setShownSamples={setShownSamples}
-        samples={samples}
-      />,
+  it('selecting metadata track selects its corresponding samples', () => {
+    const setShownSampleIds = jest.fn();
+    const { getByText, getAllByTitle } = render(
+      <Provider store={storeState}>
+        <SelectShownSamplesDropdown
+          shownSampleIds={[]}
+          setShownSampleIds={setShownSampleIds}
+          experimentId={fake.EXPERIMENT_ID}
+        />
+      </Provider>,
     );
 
     const treeSelect = getByText('Select samples');
     fireEvent.mouseDown(treeSelect);
 
-    const metadataOption = getByTitle('tracka');
+    const metadataOption = getAllByTitle('BL')[0];
     fireEvent.click(metadataOption);
 
-    expect(setShownSamples).toHaveBeenCalledWith(['sample1']);
+    expect(setShownSampleIds).toHaveBeenCalledWith([`${fake.SAMPLE_ID}-0`, `${fake.SAMPLE_ID}-1`, `${fake.SAMPLE_ID}-2`]);
   });
 });

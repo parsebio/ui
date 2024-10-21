@@ -14,7 +14,9 @@ import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialS
 import initialCellSetsState from 'redux/reducers/cellSets/initialState';
 import initialSamplesState, { sampleTemplate } from 'redux/reducers/samples/initialState';
 
-import { getBackendStatus, getFilterChanges, getMetadataToSampleIds } from 'redux/selectors';
+import {
+  getBackendStatus, getFilterChanges, getMetadataToSampleIds, getSamples,
+} from 'redux/selectors';
 import '__test__/test-utils/setupTests';
 
 import { runQC } from 'redux/actions/pipeline';
@@ -42,6 +44,7 @@ jest.mock('components/data-processing/GenesVsUMIs/GenesVsUMIs', () => () => <></
 jest.mock('components/data-processing/DoubletScores/DoubletScores', () => () => <></>);
 jest.mock('components/data-processing/DataIntegration/DataIntegration', () => () => <></>);
 jest.mock('components/data-processing/ConfigureEmbedding/ConfigureEmbedding', () => () => <></>);
+jest.mock('components/data-processing/SelectShownSamplesDropdown', () => () => <></>);
 
 const mockNavigateTo = jest.fn();
 
@@ -79,7 +82,21 @@ getBackendStatus.mockImplementation(() => () => ({
     },
   },
 }));
-getMetadataToSampleIds.mockImplementation(() => () => ({}));
+getSamples.mockImplementation(() => () => ({
+  ...initialSamplesState,
+  ids: sampleIds,
+  meta: {
+    loading: false,
+    error: false,
+  },
+  'sample-1': {
+    ...sampleTemplate,
+    name: 'sample-1',
+  },
+}));
+
+// getMetadataToSampleIds.mockImplementation(() => () => ({}));
+// getSamples.mockImplementation(() => () => ({}));
 getFilterChanges.mockImplementation(() => () => (new Set([])));
 
 const getStore = (experimentId, settings = {}) => {
@@ -105,18 +122,6 @@ const getStore = (experimentId, settings = {}) => {
     experiments: { [experimentId]: {} },
     componentConfig: { ...initialPlotConfigStates },
     cellSets: { ...initialCellSetsState },
-    samples: {
-      ...initialSamplesState,
-      ids: sampleIds,
-      meta: {
-        loading: false,
-        error: false,
-      },
-      'sample-1': {
-        ...sampleTemplate,
-        name: 'sample-1',
-      },
-    },
   };
   const newState = _.cloneDeep(initialState);
   const store = mockStore(_.merge(newState, settings));
