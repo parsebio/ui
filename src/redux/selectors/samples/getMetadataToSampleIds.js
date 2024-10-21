@@ -12,13 +12,15 @@ const getMetadataToSampleIds = (experimentId) => (samples) => {
       return;
     }
     Object.entries(entry.metadata)?.forEach(([metadataKey, metadataValue]) => {
-      if (!metadataToSampleIds[metadataKey]) {
-        metadataToSampleIds[metadataKey] = {};
+      let sampleIds = metadataToSampleIds[metadataKey];
+      if (!sampleIds) {
+        sampleIds = {};
+        metadataToSampleIds[metadataKey] = sampleIds;
       }
-      if (!metadataToSampleIds[metadataKey][metadataValue]) {
-        metadataToSampleIds[metadataKey][metadataValue] = [];
+      if (!sampleIds[metadataValue]) {
+        sampleIds[metadataValue] = [];
       }
-      metadataToSampleIds[metadataKey][metadataValue].push(key);
+      sampleIds[metadataValue].push(key);
     });
   });
 
