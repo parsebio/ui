@@ -53,7 +53,7 @@
   },
   {
     "name": "ARS-UI_Ramb_v2",
-    "species":"Ovis aries (sheep), Breed: Rambouillet"
+    "species": "Ovis aries (sheep), Breed: Rambouillet"
   },
   {
     "name": "MustPutFur",
@@ -85,7 +85,11 @@
   },
   {
     "name": "bColLiv1",
-    "species":"Columba livia (rock pigeon)"
+    "species": "Columba livia (rock pigeon)"
+  },
+  {
+    "name": "OmykA_1.1",
+    "species": "Oncorhynchus mykiss (Rainbow trout)"
   },
   {
     "name": "ARS-UCD1.2_Oar_v3.1",
@@ -124,6 +128,10 @@
     "species": "Custom Homo sapiens (human) with EBV"
   },
   {
+    "name": "GRCh38_H3N2",
+    "species": "Custom Homo sapiens (Human) with H3N2"
+  },
+  {
     "name": "mTSC-custom",
     "species": "Custom Mus musculus (mouse) Trophoblast Stem Cells"
   },
@@ -154,6 +162,10 @@
   {
     "name": "GRCm39_eGFP",
     "species": "Custom Mus musculus (mouse) with eGFP"
+  },
+  {
+    "name": "GRCm38_Usutu",
+    "species": "Custom Mus musculus (mouse) with Usutu virus"
   },
   {
     "name": "Gmax_v2",

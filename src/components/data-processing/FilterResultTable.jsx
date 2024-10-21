@@ -26,7 +26,7 @@ const FilterResultTable = (props) => {
       num_cells: 'Number of barcodes',
       total_genes: 'Total number of genes',
       median_genes: 'Median number of genes per cell',
-      median_umis: 'Median UMI counts per cell',
+      median_umis: 'Median transcripts per cell',
     };
 
     const percentChanged = (number, total, decimalPoints = 2) => {

@@ -8,7 +8,7 @@ const config = {
     height: 500,
   },
   axes: {
-    xAxisText: 'log10 [molecule counts]',
+    xAxisText: 'log10 [transcript counts]',
     yAxisText: 'log10 [gene counts]',
     titleFontSize: 13,
     labelFontSize: 12,

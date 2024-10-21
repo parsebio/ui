@@ -18,7 +18,7 @@ const getUserFriendlyQCStepName = (step) => {
     case 'mitochondrialContent':
       return 'Mitochondrial content filter';
     case 'numGenesVsNumUmis':
-      return 'Number of genes vs UMIs filter';
+      return 'Number of genes vs transcripts filter';
     case 'doubletScores':
       return 'Doublet filter';
     case 'dataIntegration':

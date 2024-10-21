@@ -121,7 +121,7 @@ describe('Configure Embedding', () => {
 
     // can select other plots for embedding
     userEvent.click(screen.getByText('Embedding'));
-    ['Samples', 'Mitochondrial fraction reads', 'Doublet score', 'Cell sets', 'Number of genes', 'Number of UMIs'].forEach((plot) => {
+    ['Samples', 'Mitochondrial fraction reads', 'Doublet score', 'Cell sets', 'Number of genes', 'Number of transcripts'].forEach((plot) => {
       userEvent.click(screen.getByText(plot));
       // check that there are two elements with the plot name:
       // * the main plot title
@@ -131,7 +131,7 @@ describe('Configure Embedding', () => {
 
     // can select other plots for violin
     await waitFor(() => userEvent.click(screen.getByText('Violin')));
-    ['Mitochondrial fraction reads', 'Doublet score', 'Number of genes', 'Number of UMIs'].forEach((plot) => {
+    ['Mitochondrial fraction reads', 'Doublet score', 'Number of genes', 'Number of transcripts'].forEach((plot) => {
       userEvent.click(screen.getAllByText(plot)[0]);
       expect(screen.getAllByText(plot).length).toEqual(2);
     });
