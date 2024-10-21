@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { getMetadataToSampleIds } from 'redux/selectors';
+import { useSelector } from 'react-redux';
+import { getMetadataToSampleIds, getSamples } from 'redux/selectors';
 import PropTypes from 'prop-types';
 import { TreeSelect } from 'antd';
 import _ from 'lodash';
 
 const SelectShownSamplesDropdown = (props) => {
-  const { shownSamples, setShownSamples, samples } = props;
+  const {
+    shownSamples, setShownSamples, experimentId,
+  } = props;
 
   const [shownMetadata, setShownMetadata] = useState([]);
 
-  const metadataInfo = React.useMemo(() => _.omit(
-    getMetadataToSampleIds()({ samples }), ['meta'],
-  ), [samples]);
+  const metadataInfo = useSelector(getMetadataToSampleIds(experimentId));
+  const samples = useSelector(getSamples(experimentId));
 
   const samplesWithoutMeta = _.omit(samples, ['meta']);
 
@@ -103,6 +105,6 @@ const SelectShownSamplesDropdown = (props) => {
 SelectShownSamplesDropdown.propTypes = {
   shownSamples: PropTypes.array.isRequired,
   setShownSamples: PropTypes.func.isRequired,
-  samples: PropTypes.object.isRequired,
+  experimentId: PropTypes.string.isRequired,
 };
 export default SelectShownSamplesDropdown;

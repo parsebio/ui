@@ -11,7 +11,7 @@ const configureSelector = (inputSelector, params) => {
 
   // Otherwise, configure it to receive the parameters
   const { func, paramsIngest = emptyParamsIngest } = inputSelector;
-  return func(paramsIngest(...params));
+  return func(...paramsIngest(...params));
 };
 
 // based on https://www.aarongreenwald.com/blog/redux-reselect-parameters

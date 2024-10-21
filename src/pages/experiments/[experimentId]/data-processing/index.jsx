@@ -570,7 +570,7 @@ const DataProcessingPage = ({ experimentId }) => {
             <Row>
               {currentStep.multiSample && (
                 <SelectShownSamplesDropdown
-                  samples={samples}
+                  experimentId={experimentId}
                   shownSamples={shownSamples}
                   setShownSamples={setShownSamples}
                 />
