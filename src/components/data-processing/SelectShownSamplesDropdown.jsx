@@ -3,14 +3,12 @@ import { getMetadataToSampleIds } from 'redux/selectors';
 import PropTypes from 'prop-types';
 import { TreeSelect } from 'antd';
 import _ from 'lodash';
-import pushNotificationMessage from 'utils/pushNotificationMessage';
-
-const { SHOW_PARENT } = TreeSelect;
 
 const SelectShownSamplesDropdown = (props) => {
   const { shownSamples, setShownSamples, samples } = props;
-  const maxSelectedSamples = 10000;
+
   const [shownMetadata, setShownMetadata] = useState([]);
+
   const metadataInfo = React.useMemo(() => _.omit(
     getMetadataToSampleIds()({ samples }), ['meta'],
   ), [samples]);
@@ -55,8 +53,7 @@ const SelectShownSamplesDropdown = (props) => {
   const onChange = (selectedKeys) => {
     // if a key is removed
     if (selectedKeys.length < shownSamples.length + shownMetadata.length) {
-      const removedKeys = [...shownSamples, ...shownMetadata]
-        .filter((value) => !selectedKeys.includes(value));
+      const removedKeys = _.difference([...shownSamples, ...shownMetadata], selectedKeys);
       const sampleIdsToRemove = [];
       const metadataToRemove = [];
       removedKeys.forEach((key) => {
@@ -71,22 +68,16 @@ const SelectShownSamplesDropdown = (props) => {
       setShownSamples(shownSamples.filter((value) => !sampleIdsToRemove.includes(value)));
       setShownMetadata(shownMetadata.filter((value) => !metadataToRemove.includes(value)));
     } else {
-      let selectedValues = Array.from(new Set(
-        selectedKeys.flatMap((value) => {
-          const metadataToSampleIds = metadataKeyToSampleIds(value);
-          if (metadataToSampleIds) {
-            setShownMetadata([...shownMetadata, value]);
-            return metadataToSampleIds;
-          }
-          setShownMetadata([]);
-          return value;
-        }),
-      ));
-      if (selectedValues.length > maxSelectedSamples) {
-        pushNotificationMessage('warning', `Too many samples, only first ${maxSelectedSamples} selected will be shown.`, 1);
-        selectedValues = selectedValues.slice(0, maxSelectedSamples);
+      const addedKeys = _.difference(selectedKeys, [...shownMetadata, ...shownSamples]);
+      const addedMetada = addedKeys.filter((key) => metadataKeyToSampleIds(key))[0];
+
+      if (addedMetada) {
+        setShownSamples(metadataKeyToSampleIds(addedMetada));
+        setShownMetadata([addedMetada]);
+      } else {
+        setShownSamples([...shownSamples, ...addedKeys]);
+        setShownMetadata([]);
       }
-      setShownSamples(selectedValues);
     }
   };
 
