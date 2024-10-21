@@ -12,5 +12,12 @@ const getCellSetsHierarchyByKeys = (keys) => (hierarchy) => {
 
 export default createMemoizedSelector(
   getCellSetsHierarchyByKeys,
-  { inputSelectors: getCellSetsHierarchy() },
+  {
+    inputSelectors: [
+      {
+        func: getCellSetsHierarchy,
+        paramsIngest: (keys) => [keys],
+      },
+    ],
+  },
 );
