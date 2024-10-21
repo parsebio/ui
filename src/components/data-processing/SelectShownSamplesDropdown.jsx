@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 const SelectShownSamplesDropdown = (props) => {
   const {
-    shownSamples, setShownSamples, experimentId,
+    shownSampleIds, setShownSampleIds, experimentId,
   } = props;
 
   const [shownMetadata, setShownMetadata] = useState([]);
@@ -58,8 +58,8 @@ const SelectShownSamplesDropdown = (props) => {
   // Handle selection changes
   const onChange = (selectedKeys) => {
     // if a key is removed
-    if (selectedKeys.length < shownSamples.length + shownMetadata.length) {
-      const removedKeys = _.difference([...shownSamples, ...shownMetadata], selectedKeys);
+    if (selectedKeys.length < shownSampleIds.length + shownMetadata.length) {
+      const removedKeys = _.difference([...shownSampleIds, ...shownMetadata], selectedKeys);
       const sampleIdsToRemove = [];
       const metadataToRemove = [];
       removedKeys.forEach((key) => {
@@ -72,17 +72,17 @@ const SelectShownSamplesDropdown = (props) => {
           metadataToRemove.push(...shownMetadata);
         }
       });
-      setShownSamples(shownSamples.filter((value) => !sampleIdsToRemove.includes(value)));
+      setShownSampleIds(shownSampleIds.filter((value) => !sampleIdsToRemove.includes(value)));
       setShownMetadata(shownMetadata.filter((value) => !metadataToRemove.includes(value)));
     } else {
-      const addedKeys = _.difference(selectedKeys, [...shownMetadata, ...shownSamples]);
+      const addedKeys = _.difference(selectedKeys, [...shownMetadata, ...shownSampleIds]);
       const addedMetada = addedKeys.filter((key) => metadataKeyToSampleIds(key))[0];
 
       if (addedMetada) {
-        setShownSamples(metadataKeyToSampleIds(addedMetada));
+        setShownSampleIds(metadataKeyToSampleIds(addedMetada));
         setShownMetadata([addedMetada]);
       } else {
-        setShownSamples([...shownSamples, ...addedKeys]);
+        setShownSampleIds([...shownSampleIds, ...addedKeys]);
         setShownMetadata([]);
       }
     }
@@ -91,10 +91,10 @@ const SelectShownSamplesDropdown = (props) => {
   return (
     <TreeSelect
       style={{ width: '19vw' }}
-      value={[...shownSamples, ...shownMetadata]}
+      value={[...shownSampleIds, ...shownMetadata]}
       dropdownStyle={{ minWidth: '32vw', overflow: 'auto' }}
       maxTagCount={0}
-      maxTagPlaceholder={() => `${shownSamples.length} samples selected`}
+      maxTagPlaceholder={() => `${shownSampleIds.length} samples selected`}
       placeholder='Select samples'
       allowClear
       // showSearch={false}
@@ -108,8 +108,8 @@ const SelectShownSamplesDropdown = (props) => {
 };
 
 SelectShownSamplesDropdown.propTypes = {
-  shownSamples: PropTypes.array.isRequired,
-  setShownSamples: PropTypes.func.isRequired,
+  shownSampleIds: PropTypes.array.isRequired,
+  setShownSampleIds: PropTypes.func.isRequired,
   experimentId: PropTypes.string.isRequired,
 };
 export default SelectShownSamplesDropdown;

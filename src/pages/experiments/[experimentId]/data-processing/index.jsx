@@ -106,6 +106,7 @@ const DataProcessingPage = ({ experimentId }) => {
   );
 
   const changedConfigureEmbeddingKeys = useSelector(getFilterChanges('configureEmbedding'));
+  const sampleIdsOrdered = useSelector((state) => state.experimentSettings.info.sampleIds);
 
   const changesOutstanding = Boolean(changedQCFilters.size);
 
@@ -116,7 +117,7 @@ const DataProcessingPage = ({ experimentId }) => {
   const [stepIdx, setStepIdx] = useState(0);
   const [runQCModalVisible, setRunQCModalVisible] = useState(false);
   const [inputsList, setInputsList] = useState([]);
-  const [shownSamples, setShownSamples] = useState(sampleKeys);
+  const [shownSampleIds, setShownSampleIds] = useState(sampleKeys);
   const sampleTechnology = samples[sampleKeys[0]]?.type;
 
   useEffect(() => {
@@ -156,17 +157,17 @@ const DataProcessingPage = ({ experimentId }) => {
     if (!name.match(/$sample/ig)) name = `Sample ${name}`;
     return name;
   };
-
   useEffect(() => {
     if (Object.keys(samples).filter((key) => key !== 'meta').length > 0) {
-      const list = shownSamples?.map((sampleId) => ({
+      const shownSampleIdsOrdered = sampleIdsOrdered.filter((key) => shownSampleIds.includes(key));
+      const list = shownSampleIdsOrdered.map((sampleId) => ({
         key: sampleId,
         headerName: prefixSampleName(samples[sampleId].name),
         params: { key: sampleId },
       }));
       setInputsList(list);
     }
-  }, [shownSamples]);
+  }, [shownSampleIds]);
 
   const checkIfSampleIsEnabled = (step) => {
     if (['configureEmbedding', 'dataIntegration'].includes(step)) {
@@ -571,8 +572,8 @@ const DataProcessingPage = ({ experimentId }) => {
               {currentStep.multiSample && (
                 <SelectShownSamplesDropdown
                   experimentId={experimentId}
-                  shownSamples={shownSamples}
-                  setShownSamples={setShownSamples}
+                  shownSampleIds={shownSampleIds}
+                  setShownSampleIds={setShownSampleIds}
                 />
               )}
             </Row>
