@@ -59,9 +59,9 @@ const SelectShownSamplesDropdown = (props) => {
       const sampleIdsToRemove = [];
       const metadataToRemove = [];
       removedKeys.forEach((key) => {
-        const sampleIdsFromMetada = metadataKeyToSampleIds(key);
-        if (sampleIdsFromMetada) {
-          sampleIdsToRemove.push(...sampleIdsFromMetada);
+        const sampleIdsFromMetadata = metadataKeyToSampleIds(key);
+        if (sampleIdsFromMetadata) {
+          sampleIdsToRemove.push(...sampleIdsFromMetadata);
           metadataToRemove.push(key);
         } else {
           sampleIdsToRemove.push(key);
