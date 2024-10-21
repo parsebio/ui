@@ -45,9 +45,9 @@ const SelectShownSamplesDropdown = (props) => {
 
   // returns the associated sample ids if the key is metadata
   const metadataKeyToSampleIds = (key) => {
-    const [keyName, metadataTrackKey, metadataKey] = key.split('-');
-    if (keyName === 'metadataCategorical') {
-      return metadataInfo[metadataTrackKey][metadataKey];
+    const [cellSetType, metadataTrackKey, metadataValueKey] = key.split('-');
+    if (cellSetType === 'metadataCategorical') {
+      return metadataInfo[metadataTrackKey][metadataValueKey];
     }
   };
 
