@@ -3,6 +3,17 @@ import memoize from 'lru-memoize';
 
 import _ from 'lodash';
 
+const emptyParamsIngest = () => [];
+
+const configureSelector = (inputSelector, params) => {
+  // Case it's a normal selector
+  if (inputSelector.func === undefined) return inputSelector;
+
+  // Otherwise, configure it to receive the parameters
+  const { func, paramsIngest = emptyParamsIngest } = inputSelector;
+  return func(...paramsIngest(...params));
+};
+
 // based on https://www.aarongreenwald.com/blog/redux-reselect-parameters
 /**
  *
@@ -28,8 +39,13 @@ const createMemoizedSelector = (
     comparisonOperator = _.isEqual,
   } = options;
 
+  let inputSelectorsArray = inputSelectors;
+  if (!Array.isArray(inputSelectors)) {
+    inputSelectorsArray = [inputSelectors];
+  }
+
   const makerFunction = (...params) => createSelector(
-    inputSelectors,
+    inputSelectorsArray.map((inputSelector) => configureSelector(inputSelector, params)),
     selector(...params),
   );
 

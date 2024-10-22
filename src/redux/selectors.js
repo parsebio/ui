@@ -8,6 +8,7 @@ import * as genesSelectors from './selectors/genes';
 import * as componentConfigSelectors from './selectors/componentConfig';
 import * as secondaryAnalysesSelectors from './selectors/secondaryAnalyses';
 import * as experimentSettingsSelectors from './selectors/experimentSettings';
+import * as samplesSelectors from './selectors/samples';
 
 const getBackendStatus = (...params) => (state) => (
   backendSelectors.getBackendStatus(...params)(state.backendStatus));
@@ -46,6 +47,14 @@ const getFilterChanges = (...params) => (state) => (
   experimentSettingsSelectors.getFilterChanges(...params)(state.experimentSettings)
 );
 
+const getMetadataToSampleIds = (...params) => (state) => (
+  samplesSelectors.getMetadataToSampleIds(...params)(state.samples)
+);
+
+const getSamples = (...params) => (state) => (
+  samplesSelectors.getSamples(...params)(state.samples)
+);
+
 export {
   getBackendStatus,
   getCellSets,
@@ -58,4 +67,6 @@ export {
   getSampleLTFile,
   getSelectedMetadataTracks,
   getFilterChanges,
+  getMetadataToSampleIds,
+  getSamples,
 };

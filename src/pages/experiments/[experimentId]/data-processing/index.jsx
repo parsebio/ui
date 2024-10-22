@@ -47,9 +47,10 @@ import PipelineRedirectToDataProcessing from 'components/PipelineRedirectToDataP
 import PlatformError from 'components/PlatformError';
 import PropTypes from 'prop-types';
 import SingleComponentMultipleDataContainer from 'components/SingleComponentMultipleDataContainer';
+import SelectShownSamplesDropdown from 'components/data-processing/SelectShownSamplesDropdown';
 import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
-import { getBackendStatus, getFilterChanges } from 'redux/selectors';
+import { getBackendStatus, getFilterChanges, getSamples } from 'redux/selectors';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 
@@ -87,8 +88,7 @@ const DataProcessingPage = ({ experimentId }) => {
     pipelineVersion,
   } = useSelector((state) => state.experimentSettings.info);
 
-  const samples = useSelector((state) => state.samples);
-
+  const samples = useSelector(getSamples(experimentId));
   const componentConfig = useSelector((state) => state.componentConfig);
 
   const pipelineStatusKey = pipelineStatus?.status;
@@ -106,6 +106,7 @@ const DataProcessingPage = ({ experimentId }) => {
   );
 
   const changedConfigureEmbeddingKeys = useSelector(getFilterChanges('configureEmbedding'));
+  const sampleIdsOrdered = useSelector((state) => state.experimentSettings.info.sampleIds);
 
   const changesOutstanding = Boolean(changedQCFilters.size);
 
@@ -116,7 +117,7 @@ const DataProcessingPage = ({ experimentId }) => {
   const [stepIdx, setStepIdx] = useState(0);
   const [runQCModalVisible, setRunQCModalVisible] = useState(false);
   const [inputsList, setInputsList] = useState([]);
-
+  const [shownSampleIds, setShownSampleIds] = useState(sampleKeys);
   const sampleTechnology = samples[sampleKeys[0]]?.type;
 
   useEffect(() => {
@@ -156,17 +157,17 @@ const DataProcessingPage = ({ experimentId }) => {
     if (!name.match(/$sample/ig)) name = `Sample ${name}`;
     return name;
   };
-
   useEffect(() => {
-    if (sampleKeys && sampleKeys.length > 0 && Object.keys(samples).filter((key) => key !== 'meta').length > 0) {
-      const list = sampleKeys?.map((sampleId) => ({
+    if (Object.keys(samples).filter((key) => key !== 'meta').length > 0) {
+      const shownSampleIdsOrdered = sampleIdsOrdered.filter((key) => shownSampleIds.includes(key));
+      const list = shownSampleIdsOrdered.map((sampleId) => ({
         key: sampleId,
         headerName: prefixSampleName(samples[sampleId].name),
         params: { key: sampleId },
       }));
       setInputsList(list);
     }
-  }, [samples, sampleKeys]);
+  }, [shownSampleIds]);
 
   const checkIfSampleIsEnabled = (step) => {
     if (['configureEmbedding', 'dataIntegration'].includes(step)) {
@@ -441,13 +442,13 @@ const DataProcessingPage = ({ experimentId }) => {
             {/* Should be just wide enough that no ellipsis appears */}
             <Row>
               <Col style={{ paddingBottom: '8px', paddingRight: '8px' }}>
-                <Space size='small'>
+                <Space style={{ width: '100%' }}>
                   <Select
                     value={stepIdx}
                     onChange={(idx) => {
                       changeStepId(idx);
                     }}
-                    style={{ fontWeight: 'bold', width: 290 }}
+                    style={{ fontWeight: 'bold', width: '19vw' }}
                     placeholder='Jump to a step...'
                   >
                     {
@@ -566,6 +567,15 @@ const DataProcessingPage = ({ experimentId }) => {
               <Col>
                 {renderRunOrDiscardButtons()}
               </Col>
+            </Row>
+            <Row>
+              {currentStep.multiSample && (
+                <SelectShownSamplesDropdown
+                  experimentId={experimentId}
+                  shownSampleIds={shownSampleIds}
+                  setShownSampleIds={setShownSampleIds}
+                />
+              )}
             </Row>
           </Col>
           <Col>

@@ -27,7 +27,6 @@ const PlotLayout = ({
   filterName,
   filterTableUuid,
   sampleId,
-  sampleIds,
   onConfigChange,
   stepDisabled,
   plotStylingControlsConfig,
@@ -58,6 +57,8 @@ const PlotLayout = ({
   const debounceSave = useCallback(
     _.debounce((plotUuid) => dispatch(savePlotConfig(experimentId, plotUuid)), 2000), [],
   );
+
+  const { sampleIds: allSampleIds } = useSelector((state) => state.experimentSettings.info);
 
   const updatePlotWithChanges = (obj) => {
     dispatch(updatePlotConfig(plots[selectedPlot].plotUuid, obj));
@@ -161,7 +162,7 @@ const PlotLayout = ({
               <CalculationConfigContainer
                 filterUuid={filterName}
                 sampleId={sampleId}
-                sampleIds={sampleIds}
+                sampleIds={allSampleIds}
                 onConfigChange={onConfigChange}
                 stepDisabled={stepDisabled}
                 plotType={selectedPlot}
@@ -188,7 +189,6 @@ PlotLayout.propTypes = {
   plots: PropTypes.object.isRequired,
   filterName: PropTypes.string.isRequired,
   sampleId: PropTypes.string.isRequired,
-  sampleIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   onConfigChange: PropTypes.func.isRequired,
   stepDisabled: PropTypes.bool,
   plotStylingControlsConfig: PropTypes.arrayOf(PropTypes.shape({
