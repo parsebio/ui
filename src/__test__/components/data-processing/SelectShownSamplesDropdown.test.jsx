@@ -1,9 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import configureStore from 'redux-mock-store'; // Import redux-mock-store
-import { Provider } from 'react-redux'; // Import Provider from react-redux
-import { getMetadataToSampleIds, getSamples } from 'redux/selectors';
+import { Provider } from 'react-redux';
 import { loadSamples } from 'redux/actions/samples';
 import SelectShownSamplesDropdown from 'components/data-processing/SelectShownSamplesDropdown';
 import mockAPI, {
@@ -14,25 +12,9 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import fake from '__test__/test-utils/constants';
 import { makeStore } from 'redux/store';
 
-// jest.mock('redux/selectors', () => ({
-//   getMetadataToSampleIds: jest.fn(),
-//   getSamples: jest.fn(),
-// }));
-
 describe('SelectShownSamplesDropdown', () => {
-  // const samples = {
-  //   sample1: { name: 'Sample 1' },
-  //   sample2: { name: 'Sample 2' },
-  // };
-
-  // const metadataInfo = {
-  //   metadata1: { tracka: ['sample1'], trackb: ['sample2'] },
-  // };
-
-  // let store;
   let storeState;
   beforeEach(async () => {
-    // getMetadataToSampleIds.mockReturnValue(() => metadataInfo);
     enableFetchMocks();
     fetchMock.resetMocks();
     fetchMock.doMock();

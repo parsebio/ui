@@ -15,7 +15,7 @@ import initialCellSetsState from 'redux/reducers/cellSets/initialState';
 import initialSamplesState, { sampleTemplate } from 'redux/reducers/samples/initialState';
 
 import {
-  getBackendStatus, getFilterChanges, getMetadataToSampleIds, getSamples,
+  getBackendStatus, getFilterChanges, getSamples,
 } from 'redux/selectors';
 import '__test__/test-utils/setupTests';
 
