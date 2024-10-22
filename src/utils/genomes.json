@@ -68,6 +68,10 @@
     "species": "Sus scrofa (Pig)"
   },
   {
+    "name": "sScyCan1-1",
+    "species": "Scyliorhinus canicula (smaller spotted catshark)"
+  },
+  {
     "name": "ASM223467v1",
     "species": "Oryzias latipes (Medaka)"
   },
