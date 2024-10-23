@@ -172,11 +172,13 @@ const PlotLayout = ({
             </Panel>
             <Panel header='Plot styling' key='styling'>
               <div style={{ height: 8 }} />
-              <PlotStyling
-                formConfig={plotStylingControlsConfig}
-                config={selectedPlotConfig}
-                onUpdate={updatePlotWithChanges}
-              />
+              <div style={{ height: '40vh', overflow: 'auto' }}>
+                <PlotStyling
+                  formConfig={plotStylingControlsConfig}
+                  config={selectedPlotConfig}
+                  onUpdate={updatePlotWithChanges}
+                />
+              </div>
             </Panel>
           </Collapse>
         </Col>
