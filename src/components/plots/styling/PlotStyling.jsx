@@ -59,7 +59,11 @@ const PlotStyling = (props) => {
 
     if (Object.getOwnPropertyDescriptor(el, 'controls') && el.controls.length > 0) {
       return (
-        <Panel header={el.panelTitle} key={formatPanelKey(el.panelTitle)}>
+
+        <Panel
+          header={el.panelTitle}
+          key={formatPanelKey(el.panelTitle)}
+        >
           {el.header}
           {el.controls.map((control) => {
             // If control is a string, no prop is passed
@@ -89,10 +93,14 @@ const PlotStyling = (props) => {
   });
 
   return (
-    <Collapse defaultActiveKey={defaultActiveKey} accordion>
-      {extraPanels}
-      {buildForm(formConfig)}
-    </Collapse>
+    <div
+      style={{ height: '50vh', overflow: 'auto' }}
+    >
+      <Collapse defaultActiveKey={defaultActiveKey} accordion>
+        {extraPanels}
+        {buildForm(formConfig)}
+      </Collapse>
+    </div>
   );
 };
 
