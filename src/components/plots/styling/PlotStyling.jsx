@@ -93,14 +93,10 @@ const PlotStyling = (props) => {
   });
 
   return (
-    <div
-      style={{ height: '50vh', overflow: 'auto' }}
-    >
-      <Collapse defaultActiveKey={defaultActiveKey} accordion>
-        {extraPanels}
-        {buildForm(formConfig)}
-      </Collapse>
-    </div>
+    <Collapse defaultActiveKey={defaultActiveKey} accordion>
+      {extraPanels}
+      {buildForm(formConfig)}
+    </Collapse>
   );
 };
 
