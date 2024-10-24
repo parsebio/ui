@@ -5,47 +5,44 @@ import { Empty } from 'antd';
 import { Virtuoso } from 'react-virtuoso';
 
 // Custom collapsible panel component
-const VirtualizedPanel = ({ headerName, children }) => {
-  const [isActive, setIsActive] = useState(true); // Panels are open by default
-
-  const togglePanel = () => {
-    setIsActive(!isActive);
-  };
-
-  return (
-    <div className='virtualized-panel'>
-      <div
-        className='virtualized-panel-header'
-        onClick={togglePanel}
-        style={{
-          background: '#f7f7f7',
-          padding: '10px',
-          cursor: 'pointer',
-          borderBottom: '1px solid #e8e8e8',
-        }}
-      >
-        {headerName}
-      </div>
-      {isActive && (
-        <div
-          className='virtualized-panel-content'
-          style={{ padding: '10px', borderBottom: '1px solid #e8e8e8' }}
-        >
-          {children}
-        </div>
-      )}
+const VirtualizedPanel = ({
+  headerName, children, isActive, onToggle,
+}) => (
+  <div className='virtualized-panel'>
+    <div
+      className='virtualized-panel-header'
+      onClick={onToggle}
+      style={{
+        background: '#f7f7f7',
+        padding: '10px',
+        cursor: 'pointer',
+        borderBottom: '1px solid #e8e8e8',
+      }}
+    >
+      {headerName}
     </div>
-  );
-};
+    {isActive && (
+      <div
+        className='virtualized-panel-content'
+        style={{ padding: '10px', borderBottom: '1px solid #e8e8e8' }}
+      >
+        {children}
+      </div>
+    )}
+  </div>
+);
 
 VirtualizedPanel.propTypes = {
   headerName: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
 };
 
 const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRenderer }) => {
   const containerRef = useRef(null);
   const [containerHeight, setContainerHeight] = useState('100%');
+  const [panelStates, setPanelStates] = useState({});
 
   // get the available height for the component
   useEffect(() => {
@@ -65,6 +62,13 @@ const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRendere
     };
   }, []);
 
+  const togglePanel = (key) => {
+    setPanelStates((prevStates) => ({
+      ...prevStates,
+      [key]: !prevStates[key],
+    }));
+  };
+
   if (!inputsList.length) return <Empty />;
 
   return (
@@ -72,7 +76,12 @@ const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRendere
       <Virtuoso
         data={inputsList}
         itemContent={(index, { key, headerName, params }) => (
-          <VirtualizedPanel key={key} headerName={headerName}>
+          <VirtualizedPanel
+            key={key}
+            headerName={headerName}
+            isActive={panelStates[key] !== false}
+            onToggle={() => togglePanel(key)}
+          >
             {baseComponentRenderer(params)}
           </VirtualizedPanel>
         )}
