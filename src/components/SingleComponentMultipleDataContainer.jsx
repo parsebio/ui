@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Empty } from 'antd';
 import { Virtuoso } from 'react-virtuoso';
@@ -44,18 +44,41 @@ VirtualizedPanel.propTypes = {
 };
 
 const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRenderer }) => {
+  const containerRef = useRef(null);
+  const [containerHeight, setContainerHeight] = useState('100%');
+
+  // get the available height for the component
+  useEffect(() => {
+    const updateHeight = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const availableHeight = window.innerHeight - rect.top;
+        setContainerHeight(availableHeight);
+      }
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, []);
+
   if (!inputsList.length) return <Empty />;
 
   return (
-    <Virtuoso
-      data={inputsList}
-      itemContent={(index, { key, headerName, params }) => (
-        <VirtualizedPanel key={key} headerName={headerName}>
-          {baseComponentRenderer(params)}
-        </VirtualizedPanel>
-      )}
-      style={{ height: '80vh' }} // Adjust the height as needed
-    />
+    <div ref={containerRef}>
+      <Virtuoso
+        data={inputsList}
+        itemContent={(index, { key, headerName, params }) => (
+          <VirtualizedPanel key={key} headerName={headerName}>
+            {baseComponentRenderer(params)}
+          </VirtualizedPanel>
+        )}
+        style={{ height: containerHeight }}
+      />
+    </div>
   );
 };
 

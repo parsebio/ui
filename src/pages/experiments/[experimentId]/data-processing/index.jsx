@@ -760,7 +760,13 @@ const DataProcessingPage = ({ experimentId }) => {
             </Modal>
           )
       )}
-      <div style={{ backgroundColor: 'white', padding: '10px 10px 0px 10px', height: '100vh' }}>
+      <div
+        style={{
+          backgroundColor: 'white',
+          padding: '10px 10px 0px 10px',
+          height: '100%',
+        }}
+      >
         {renderTitle()}
         <Divider />
         {renderContent()}
