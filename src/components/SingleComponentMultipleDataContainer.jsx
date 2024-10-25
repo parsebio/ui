@@ -24,7 +24,7 @@ const VirtualizedPanel = ({
     {isActive && (
       <div
         className='virtualized-panel-content'
-        style={{ padding: '10px', borderBottom: '1px solid #e8e8e8' }}
+        style={{ minHeight: '60vh', padding: '10px', borderBottom: '1px solid #e8e8e8' }}
       >
         {children}
       </div>
@@ -42,7 +42,7 @@ VirtualizedPanel.propTypes = {
 const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRenderer }) => {
   const containerRef = useRef(null);
   const [containerHeight, setContainerHeight] = useState('100%');
-  const [panelStates, setPanelStates] = useState({});
+  const [closedPanels, setClosedPanels] = useState({});
 
   // get the available height for the component
   useEffect(() => {
@@ -63,7 +63,7 @@ const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRendere
   }, []);
 
   const togglePanel = (key) => {
-    setPanelStates((prevStates) => ({
+    setClosedPanels((prevStates) => ({
       ...prevStates,
       [key]: !prevStates[key],
     }));
@@ -79,7 +79,7 @@ const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRendere
           <VirtualizedPanel
             key={key}
             headerName={headerName}
-            isActive={panelStates[key] !== false}
+            isActive={closedPanels[key] !== true}
             onToggle={() => togglePanel(key)}
           >
             {baseComponentRenderer(params)}
