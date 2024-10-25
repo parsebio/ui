@@ -159,7 +159,6 @@ const DataProcessingPage = ({ experimentId }) => {
   };
   useEffect(() => {
     if (Object.keys(samples).filter((key) => key !== 'meta').length > 0) {
-      console.time('DataProcessingPage: shownSampleIdsOrdered');
       const shownSampleIdsOrdered = sampleIdsOrdered.filter((key) => shownSampleIds.includes(key));
       const list = shownSampleIdsOrdered.map((sampleId) => ({
         key: sampleId,
@@ -167,7 +166,6 @@ const DataProcessingPage = ({ experimentId }) => {
         params: { key: sampleId },
       }));
       setInputsList(list);
-      console.timeEnd('DataProcessingPage: shownSampleIdsOrdered');
     }
   }, [shownSampleIds]);
 

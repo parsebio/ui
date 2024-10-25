@@ -58,6 +58,7 @@ const SelectShownSamplesDropdown = (props) => {
   // Handle selection changes
   const onChange = (selectedKeys) => {
     // if a key is removed
+    console.time('doing onchange');
     if (selectedKeys.length < shownSampleIds.length + shownMetadata.length) {
       const removedKeys = _.difference([...shownSampleIds, ...shownMetadata], selectedKeys);
       const sampleIdsToRemove = [];
@@ -86,6 +87,7 @@ const SelectShownSamplesDropdown = (props) => {
         setShownMetadata([]);
       }
     }
+    console.timeEnd('doing onchange');
   };
 
   return (
