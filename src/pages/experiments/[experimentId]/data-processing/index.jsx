@@ -127,7 +127,7 @@ const DataProcessingPage = ({ experimentId }) => {
     }
 
     dispatch(loadSamples(experimentId));
-    dispatch(loadCellSets(experimentId));
+    // dispatch(loadCellSets(experimentId));
 
     isUserAuthorized(experimentId, getURL(experimentId), 'POST').then(setRunQCAuthorized);
   }, []);
