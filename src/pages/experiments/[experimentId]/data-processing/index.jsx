@@ -54,7 +54,7 @@ import { getBackendStatus, getFilterChanges, getSamples } from 'redux/selectors'
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 
-import { loadCellSets } from 'redux/actions/cellSets';
+// import { loadCellSets } from 'redux/actions/cellSets';
 import { loadSamples } from 'redux/actions/samples';
 import { runQC } from 'redux/actions/pipeline';
 
