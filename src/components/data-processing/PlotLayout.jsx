@@ -54,6 +54,7 @@ const PlotLayout = ({
   const selectedConfig = useSelector(
     (state) => state.componentConfig[plots[selectedPlot].plotUuid]?.config,
   );
+
   const debounceSave = useCallback(
     _.debounce((plotUuid) => dispatch(savePlotConfig(experimentId, plotUuid)), 2000), [],
   );
@@ -172,7 +173,7 @@ const PlotLayout = ({
             </Panel>
             <Panel header='Plot styling' key='styling'>
               <div style={{ height: 8 }} />
-              <div style={{ height: '40vh', overflow: 'auto' }}>
+              <div style={{ overflowY: 'auto', maxHeight: selectedConfig?.dimensions?.height + 100 }}>
                 <PlotStyling
                   formConfig={plotStylingControlsConfig}
                   config={selectedPlotConfig}
