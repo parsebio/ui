@@ -24,7 +24,7 @@ const VirtualizedPanel = ({
       style={{
         maxHeight: isActive ? '2000px' : '0px',
         overflow: 'hidden',
-        transition: 'max-height 0.3s ease',
+        transition: 'max-height 0.3s ease-out',
         padding: isActive ? '10px' : '0px',
         borderBottom: isActive ? '1px solid #e8e8e8' : 'none',
       }}
