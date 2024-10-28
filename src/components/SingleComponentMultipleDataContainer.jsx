@@ -22,7 +22,7 @@ const VirtualizedPanel = ({
     </div>
     <div
       style={{
-        maxHeight: isActive ? '500px' : '0px',
+        maxHeight: isActive ? '2000px' : '0px',
         overflow: 'hidden',
         transition: 'max-height 0.3s ease',
         padding: isActive ? '10px' : '0px',
