@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getMetadataToSampleIds, getSamples } from 'redux/selectors';
 import PropTypes from 'prop-types';
-import { TreeSelect, Button } from 'antd';
+import { TreeSelect } from 'antd';
 import _ from 'lodash';
 
 const SelectShownSamplesDropdown = (props) => {
@@ -18,25 +18,10 @@ const SelectShownSamplesDropdown = (props) => {
 
   const samplesWithoutMeta = _.omit(samples, ['meta']);
 
-  const selectAll = () => {
-    setShownSampleIds(sampleIdsOrdered);
-    setShownMetadata([]);
-  };
-
   const treeData = [
     {
-      title: (
-        <Button onClick={selectAll} style={{ width: '50%', marginBottom: '10px' }}>
-          Select All
-        </Button>
-      ),
-      key: 'select-all-button',
-      disabled: true,
-    },
-    {
       value: 'samples',
-      title: 'Samples',
-      disabled: true,
+      title: 'Samples - select all',
       children: sampleIdsOrdered.map((key) => {
         const entry = samplesWithoutMeta[key];
         return {
@@ -92,7 +77,11 @@ const SelectShownSamplesDropdown = (props) => {
       const addedKeys = _.difference(selectedKeys, [...shownMetadata, ...shownSampleIds]);
       const addedMetada = addedKeys.filter((key) => metadataKeyToSampleIds(key))[0];
 
-      if (addedMetada) {
+      // select all samples
+      if (addedKeys[0] === 'samples') {
+        setShownSampleIds(sampleIdsOrdered);
+        setShownMetadata([]);
+      } else if (addedMetada) {
         setShownSampleIds(metadataKeyToSampleIds(addedMetada));
         setShownMetadata([addedMetada]);
       } else {
