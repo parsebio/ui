@@ -79,6 +79,7 @@ const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRendere
         itemContent={(index, { key, headerName, params }) => (
           <VirtualizedPanel
             key={key}
+            increaseViewportBy={2000}
             headerName={headerName}
             isActive={closedPanels[key] !== true}
             onToggle={() => togglePanel(key)}
