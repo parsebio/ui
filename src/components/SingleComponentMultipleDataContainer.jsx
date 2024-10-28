@@ -8,9 +8,8 @@ import { Virtuoso } from 'react-virtuoso';
 const VirtualizedPanel = ({
   headerName, children, isActive, onToggle,
 }) => (
-  <div className='virtualized-panel'>
+  <div>
     <div
-      className='virtualized-panel-header'
       onClick={onToggle}
       style={{
         background: '#f7f7f7',
@@ -21,14 +20,17 @@ const VirtualizedPanel = ({
     >
       {headerName}
     </div>
-    {isActive && (
-      <div
-        className='virtualized-panel-content'
-        style={{ minHeight: '60vh', padding: '10px', borderBottom: '1px solid #e8e8e8' }}
-      >
-        {children}
-      </div>
-    )}
+    <div
+      style={{
+        maxHeight: isActive ? '500px' : '0px',
+        overflow: 'hidden',
+        transition: 'max-height 0.3s ease',
+        padding: isActive ? '10px' : '0px',
+        borderBottom: isActive ? '1px solid #e8e8e8' : 'none',
+      }}
+    >
+      {children}
+    </div>
   </div>
 );
 
@@ -44,7 +46,6 @@ const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRendere
   const [containerHeight, setContainerHeight] = useState(813);
   const [closedPanels, setClosedPanels] = useState({});
 
-  // get the available height for the component
   useEffect(() => {
     const updateHeight = () => {
       if (containerRef.current) {
