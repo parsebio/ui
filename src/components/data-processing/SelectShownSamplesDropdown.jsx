@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getMetadataToSampleIds, getSamples } from 'redux/selectors';
 import PropTypes from 'prop-types';
-import { TreeSelect } from 'antd';
+import { TreeSelect, Button } from 'antd';
 import _ from 'lodash';
 
 const SelectShownSamplesDropdown = (props) => {
@@ -18,7 +18,21 @@ const SelectShownSamplesDropdown = (props) => {
 
   const samplesWithoutMeta = _.omit(samples, ['meta']);
 
+  const selectAll = () => {
+    setShownSampleIds(sampleIdsOrdered);
+    setShownMetadata([]);
+  };
+
   const treeData = [
+    {
+      title: (
+        <Button onClick={selectAll} style={{ width: '50%', marginBottom: '10px' }}>
+          Select All
+        </Button>
+      ),
+      key: 'select-all-button',
+      disabled: true,
+    },
     {
       value: 'samples',
       title: 'Samples',
@@ -97,7 +111,6 @@ const SelectShownSamplesDropdown = (props) => {
       maxTagPlaceholder={() => `${shownSampleIds.length} samples selected`}
       placeholder='Select samples'
       allowClear
-      // showSearch={false}
       multiple
       popupMatchSelectWidth={false}
       treeDefaultExpandAll
@@ -112,4 +125,5 @@ SelectShownSamplesDropdown.propTypes = {
   setShownSampleIds: PropTypes.func.isRequired,
   experimentId: PropTypes.string.isRequired,
 };
+
 export default SelectShownSamplesDropdown;

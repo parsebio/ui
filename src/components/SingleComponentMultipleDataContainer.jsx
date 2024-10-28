@@ -41,7 +41,7 @@ VirtualizedPanel.propTypes = {
 
 const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRenderer }) => {
   const containerRef = useRef(null);
-  const [containerHeight, setContainerHeight] = useState('100%');
+  const [containerHeight, setContainerHeight] = useState(813);
   const [closedPanels, setClosedPanels] = useState({});
 
   // get the available height for the component
