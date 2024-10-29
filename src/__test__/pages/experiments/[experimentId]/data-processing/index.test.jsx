@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { screen, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';

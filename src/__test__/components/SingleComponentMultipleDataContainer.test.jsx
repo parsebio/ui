@@ -1,5 +1,4 @@
-// SingleComponentMultipleDataContainer.test.js
-
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import SingleComponentMultipleDataContainer from 'components/SingleComponentMultipleDataContainer';
