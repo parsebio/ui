@@ -54,6 +54,7 @@ const PlotLayout = ({
   const selectedConfig = useSelector(
     (state) => state.componentConfig[plots[selectedPlot].plotUuid]?.config,
   );
+
   const debounceSave = useCallback(
     _.debounce((plotUuid) => dispatch(savePlotConfig(experimentId, plotUuid)), 2000), [],
   );
@@ -138,7 +139,14 @@ const PlotLayout = ({
     return null;
   };
   return (
-    <>
+    <div
+      style={{
+        height:
+          window.innerWidth <= 1090
+            ? selectedConfig?.dimensions?.height + 1000
+            : selectedConfig?.dimensions?.height + 270,
+      }}
+    >
       <Row gutter={16}>
         <Col span={18}>
           <Row>
@@ -157,7 +165,7 @@ const PlotLayout = ({
           </Row>
         </Col>
         <Col flex='1 0px'>
-          <Collapse defaultActiveKey='settings'>
+          <Collapse defaultActiveKey='settings' accordion>
             <Panel header='Filtering Settings' key='settings'>
               <CalculationConfigContainer
                 filterUuid={filterName}
@@ -172,16 +180,18 @@ const PlotLayout = ({
             </Panel>
             <Panel header='Plot styling' key='styling'>
               <div style={{ height: 8 }} />
-              <PlotStyling
-                formConfig={plotStylingControlsConfig}
-                config={selectedPlotConfig}
-                onUpdate={updatePlotWithChanges}
-              />
+              <div style={{ overflowY: 'auto', maxHeight: selectedConfig?.dimensions?.height + 100 }}>
+                <PlotStyling
+                  formConfig={plotStylingControlsConfig}
+                  config={selectedPlotConfig}
+                  onUpdate={updatePlotWithChanges}
+                />
+              </div>
             </Panel>
           </Collapse>
         </Col>
       </Row>
-    </>
+    </div>
   );
 };
 PlotLayout.propTypes = {

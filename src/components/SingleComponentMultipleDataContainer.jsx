@@ -1,39 +1,106 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Collapse, Empty } from 'antd';
+import { Empty } from 'antd';
+import { Virtuoso } from 'react-virtuoso';
 
-const { Panel } = Collapse;
+// Custom collapsible panel component
+const VirtualizedPanel = ({
+  headerName, children, isActive, onToggle,
+}) => (
+  <div>
+    <div
+      onClick={onToggle}
+      style={{
+        background: '#f7f7f7',
+        padding: '10px',
+        cursor: 'pointer',
+        borderBottom: '1px solid #e8e8e8',
+      }}
+    >
+      {headerName}
+    </div>
+    <div
+      style={{
+        maxHeight: isActive ? '2000px' : '0px',
+        overflow: 'hidden',
+        transition: 'max-height 0.3s ease-out',
+        padding: isActive ? '10px' : '0px',
+        borderBottom: isActive ? '1px solid #e8e8e8' : 'none',
+      }}
+    >
+      {children}
+    </div>
+  </div>
+);
 
-const SingleComponentMultipleDataContainer = (props) => {
-  const { inputsList, baseComponentRenderer } = props;
+VirtualizedPanel.propTypes = {
+  headerName: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  isActive: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+};
 
-  // First 50 dropdowns are open by default
-  const [activeKey, setActiveKey] = useState(inputsList.slice(0, 50).map(({ key }) => key));
+const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRenderer }) => {
+  const containerRef = useRef(null);
+  const [containerHeight, setContainerHeight] = useState(813);
+  const [closedPanels, setClosedPanels] = useState({});
 
   useEffect(() => {
-    const newKeys = inputsList.slice(0, 50).map(({ key }) => key);
-    setActiveKey(newKeys);
-  }, [inputsList]);
+    const updateHeight = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const availableHeight = window.innerHeight - rect.top;
+        setContainerHeight(availableHeight);
+      }
+    };
 
-  const handleCollapseChange = (keys) => {
-    setActiveKey(keys);
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, []);
+
+  const togglePanel = (key) => {
+    setClosedPanels((prevStates) => ({
+      ...prevStates,
+      [key]: !prevStates[key],
+    }));
   };
 
   if (!inputsList.length) return <Empty />;
 
   return (
-    <Collapse activeKey={activeKey} onChange={handleCollapseChange}>
-      {inputsList.map(({ key, headerName, params }) => (
-        <Panel header={headerName} key={key}>
-          {baseComponentRenderer(params)}
-        </Panel>
-      ))}
-    </Collapse>
+    <div ref={containerRef}>
+      <Virtuoso
+        data={inputsList}
+        itemKey={(index) => inputsList[index].key}
+        increaseViewportBy={2000}
+        itemContent={(index, { key, headerName, params }) => (
+          <VirtualizedPanel
+            headerName={headerName}
+            isActive={closedPanels[key] !== true}
+            onToggle={() => togglePanel(key)}
+          >
+            {baseComponentRenderer(params)}
+          </VirtualizedPanel>
+        )}
+        style={{ height: containerHeight }}
+      />
+    </div>
   );
 };
 
 SingleComponentMultipleDataContainer.propTypes = {
-  inputsList: PropTypes.array,
+  inputsList: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      headerName: PropTypes.string.isRequired,
+      params: PropTypes.object.isRequired,
+    }),
+  ),
   baseComponentRenderer: PropTypes.func.isRequired,
 };
 

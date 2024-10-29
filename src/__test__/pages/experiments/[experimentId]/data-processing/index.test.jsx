@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { screen, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -35,6 +36,14 @@ jest.mock('redux/actions/experimentSettings/processingConfig/saveProcessingSetti
 jest.mock('redux/actions/experiments', () => ({
   cloneExperiment: jest.fn(() => () => { }),
   loadExperiments: jest.fn(() => () => { }),
+}));
+
+jest.mock('react-virtuoso', () => ({
+  Virtuoso: ({ data, itemContent, style }) => (
+    <div style={style}>
+      {data.map((item, index) => itemContent(index, item))}
+    </div>
+  ),
 }));
 
 // Mock all filter components

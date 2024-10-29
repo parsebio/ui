@@ -1,7 +1,6 @@
 import {
   Alert,
   Button,
-  Card,
   Col,
   Modal,
   Row,
@@ -10,6 +9,7 @@ import {
   Space,
   Tooltip,
   Typography,
+  Divider,
 } from 'antd';
 
 import {
@@ -438,7 +438,7 @@ const DataProcessingPage = ({ experimentId }) => {
     return (
       <>
         <Row justify='space-between'>
-          <Col style={{ paddingBottom: '8px' }}>
+          <Col>
             {/* Should be just wide enough that no ellipsis appears */}
             <Row>
               <Col style={{ paddingBottom: '8px', paddingRight: '8px' }}>
@@ -720,51 +720,58 @@ const DataProcessingPage = ({ experimentId }) => {
   };
 
   return (
-    <>
-      <Space direction='vertical' style={{ width: '100%', padding: '0 10px' }}>
-        {runQCModalVisible && (
-          runQCAuthorized === null ? <ClipLoader />
-            : (qcVersionIsOld || !runQCAuthorized) ? (
-              <QCRerunDisabledModal
-                experimentId={experimentId}
-                onFinish={() => setRunQCModalVisible(false)}
-                runQCAuthorized={runQCAuthorized}
-              />
-            ) : (
-              <Modal
-                title='Run data processing with the changed settings'
-                open
-                onCancel={() => setRunQCModalVisible(false)}
-                footer={
-                  [
-                    <Button type='primary' onClick={() => onPipelineRun()}>Start</Button>,
-                    <Button onClick={() => setRunQCModalVisible(false)}>Cancel</Button>,
-                  ]
-                }
-              >
-                <p>
-                  This might take several minutes.
-                  Your navigation within Trailmaker will be restricted during this time.
-                  Do you want to start?
-                </p>
-                {
-                  !(changedQCFilters.size === 1 && changedConfigureEmbeddingKeys.has('embeddingSettings')) && (
-                    <Alert
-                      message='Note that you will lose your previous Louvain or Leiden clusters.'
-                      type='warning'
-                    />
-                  )
-                }
-              </Modal>
-            )
-        )}
-        <Card
-          title={renderTitle()}
-        >
-          {renderContent()}
-        </Card>
-      </Space>
-    </>
+    <Space
+      direction='vertical'
+      style={{ width: '100%' }}
+    >
+      {runQCModalVisible && (
+        runQCAuthorized === null ? <ClipLoader />
+          : (qcVersionIsOld || !runQCAuthorized) ? (
+            <QCRerunDisabledModal
+              experimentId={experimentId}
+              onFinish={() => setRunQCModalVisible(false)}
+              runQCAuthorized={runQCAuthorized}
+            />
+          ) : (
+            <Modal
+              title='Run data processing with the changed settings'
+              open
+              onCancel={() => setRunQCModalVisible(false)}
+              footer={
+                [
+                  <Button type='primary' onClick={() => onPipelineRun()}>Start</Button>,
+                  <Button onClick={() => setRunQCModalVisible(false)}>Cancel</Button>,
+                ]
+              }
+            >
+              <p>
+                This might take several minutes.
+                Your navigation within Trailmaker will be restricted during this time.
+                Do you want to start?
+              </p>
+              {
+                !(changedQCFilters.size === 1 && changedConfigureEmbeddingKeys.has('embeddingSettings')) && (
+                  <Alert
+                    message='Note that you will lose your previous Louvain or Leiden clusters.'
+                    type='warning'
+                  />
+                )
+              }
+            </Modal>
+          )
+      )}
+      <div
+        style={{
+          backgroundColor: 'white',
+          padding: '10px 10px 0px 10px',
+          height: '100%',
+        }}
+      >
+        {renderTitle()}
+        <Divider />
+        {renderContent()}
+      </div>
+    </Space>
   );
 };
 

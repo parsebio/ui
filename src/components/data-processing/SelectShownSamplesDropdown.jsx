@@ -21,8 +21,7 @@ const SelectShownSamplesDropdown = (props) => {
   const treeData = [
     {
       value: 'samples',
-      title: 'Samples',
-      disabled: true,
+      title: 'Samples - select all',
       children: sampleIdsOrdered.map((key) => {
         const entry = samplesWithoutMeta[key];
         return {
@@ -78,7 +77,11 @@ const SelectShownSamplesDropdown = (props) => {
       const addedKeys = _.difference(selectedKeys, [...shownMetadata, ...shownSampleIds]);
       const addedMetada = addedKeys.filter((key) => metadataKeyToSampleIds(key))[0];
 
-      if (addedMetada) {
+      // select all samples
+      if (addedKeys[0] === 'samples') {
+        setShownSampleIds(sampleIdsOrdered);
+        setShownMetadata([]);
+      } else if (addedMetada) {
         setShownSampleIds(metadataKeyToSampleIds(addedMetada));
         setShownMetadata([addedMetada]);
       } else {
@@ -97,7 +100,6 @@ const SelectShownSamplesDropdown = (props) => {
       maxTagPlaceholder={() => `${shownSampleIds.length} samples selected`}
       placeholder='Select samples'
       allowClear
-      // showSearch={false}
       multiple
       popupMatchSelectWidth={false}
       treeDefaultExpandAll
@@ -112,4 +114,5 @@ SelectShownSamplesDropdown.propTypes = {
   setShownSampleIds: PropTypes.func.isRequired,
   experimentId: PropTypes.string.isRequired,
 };
+
 export default SelectShownSamplesDropdown;
