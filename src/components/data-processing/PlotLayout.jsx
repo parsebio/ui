@@ -139,7 +139,14 @@ const PlotLayout = ({
     return null;
   };
   return (
-    <div style={{ height: selectedConfig?.dimensions?.height + 270 }}>
+    <div
+      style={{
+        height:
+          window.innerWidth <= 1090
+            ? selectedConfig?.dimensions?.height + 1000
+            : selectedConfig?.dimensions?.height + 270,
+      }}
+    >
       <Row gutter={16}>
         <Col span={18}>
           <Row>
