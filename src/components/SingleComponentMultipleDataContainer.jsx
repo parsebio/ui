@@ -76,9 +76,8 @@ const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRendere
     <div ref={containerRef}>
       <Virtuoso
         data={inputsList}
-        overscan={1000}
         itemKey={(index) => inputsList[index].key}
-        increaseViewportBy={{ top: 2000, bottom: 2000 }}
+        increaseViewportBy={2000}
         itemContent={(index, { key, headerName, params }) => (
           <VirtualizedPanel
             headerName={headerName}

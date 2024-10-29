@@ -139,7 +139,7 @@ const PlotLayout = ({
     return null;
   };
   return (
-    <>
+    <div style={{ height: selectedConfig?.dimensions?.height + 270 }}>
       <Row gutter={16}>
         <Col span={18}>
           <Row>
@@ -184,7 +184,7 @@ const PlotLayout = ({
           </Collapse>
         </Col>
       </Row>
-    </>
+    </div>
   );
 };
 PlotLayout.propTypes = {
