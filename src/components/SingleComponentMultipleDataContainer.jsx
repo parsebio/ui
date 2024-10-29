@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Empty } from 'antd';
@@ -76,10 +75,11 @@ const SingleComponentMultipleDataContainer = ({ inputsList, baseComponentRendere
     <div ref={containerRef}>
       <Virtuoso
         data={inputsList}
+        overscan={1000}
+        itemKey={(index) => inputsList[index].key}
+        increaseViewportBy={{ top: 2000, bottom: 2000 }}
         itemContent={(index, { key, headerName, params }) => (
           <VirtualizedPanel
-            key={key}
-            increaseViewportBy={2000}
             headerName={headerName}
             isActive={closedPanels[key] !== true}
             onToggle={() => togglePanel(key)}
