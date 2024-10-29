@@ -37,6 +37,14 @@ jest.mock('redux/actions/experiments', () => ({
   loadExperiments: jest.fn(() => () => { }),
 }));
 
+jest.mock('react-virtuoso', () => ({
+  Virtuoso: ({ data, itemContent, style }) => (
+    <div style={style}>
+      {data.map((item, index) => itemContent(index, item))}
+    </div>
+  ),
+}));
+
 // Mock all filter components
 jest.mock('components/data-processing/CellSizeDistribution/CellSizeDistribution', () => () => <></>);
 jest.mock('components/data-processing/MitochondrialContent/MitochondrialContent', () => () => <></>);
