@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Empty } from 'antd';
