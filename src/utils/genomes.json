@@ -96,6 +96,10 @@
     "species": "Oncorhynchus mykiss (Rainbow trout)"
   },
   {
+    "name": "Candida Albicans",
+    "species": "Candida Albicans"
+  },
+  {
     "name": "ARS-UCD1.2_Oar_v3.1",
     "species": "Mixed cow and sheep"
   },
@@ -190,9 +194,5 @@
   {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
-  },
-  {
-    "name": "Candida Albicans",
-    "species": "Candida Albicans"
   }
 ]
