@@ -267,6 +267,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               <Text type='secondary' style={{ marginTop: '8px' }}>
                 For help addressing your pipeline failure, visit our article
                 {' '}
+                {' '}
                 <a href='https://support.parsebiosciences.com/hc/en-us/articles/31579430276372-How-to-troubleshoot-Pipeline-failures-in-Trailmaker' target='_blank' rel='noopener noreferrer'>
                   How to troubleshoot pipeline failures in Trailmaker
                 </a>
@@ -275,6 +276,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
               <Text type='secondary' style={{ marginTop: '8px' }}>
                 If your error message is not covered in the article or you need further support,
+                {' '}
                 {' '}
                 contact us at
                 {' '}
