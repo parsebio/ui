@@ -255,7 +255,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       failed: (
         <Card>
           <div style={{ display: 'block', justifyContent: 'center' }}>
-
             <Space direction='vertical'>
               <Title level={3}>
                 Your pipeline run failed.
@@ -264,6 +263,20 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
                 The error logs can be accessed by downloading the pipeline output files.
               </Text>
               {renderDownloadLogsButton()}
+              <br />
+              <Text type='secondary'>
+                For help addressing your pipeline failure, visit our article
+                {' '}
+                <a href='https://support.parsebiosciences.com/hc/en-us/articles/31579430276372-How-to-troubleshoot-Pipeline-failures-in-Trailmaker' target='_blank' rel='noopener noreferrer'>
+                  How to troubleshoot pipeline failures in Trailmaker
+                </a>
+              </Text>
+              <br />
+              <Text type='secondary'>
+                If your error message is not covered in the article or you need further support,
+                contact us at support@parsebiosciences.com.
+              </Text>
+              <br />
             </Space>
             <div>
               <PipelineLogsViewer secondaryAnalysisId={secondaryAnalysisId} />
