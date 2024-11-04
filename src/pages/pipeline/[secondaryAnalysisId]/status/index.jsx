@@ -264,29 +264,31 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               </Text>
               {renderDownloadLogsButton()}
               <br />
-              <Text type='secondary' style={{ marginTop: '8px' }}>
-                For help addressing your pipeline failure, visit our article
-                {' '}
-                <br />
-                <a href='https://support.parsebiosciences.com/hc/en-us/articles/31579430276372-How-to-troubleshoot-Pipeline-failures-in-Trailmaker' target='_blank' rel='noopener noreferrer'>
-                  How to troubleshoot pipeline failures in Trailmaker
-                </a>
-                .
-              </Text>
-              <Text type='secondary' style={{ marginTop: '8px' }}>
-                To access the article, make sure you are logged into the support suite
-                <br />
-                using your Parse Biosciences account.
-              </Text>
+              <div style={{ textAlign: 'left' }}>
+                <Text type='secondary' style={{ marginTop: '8px' }}>
+                  For help addressing your pipeline failure, visit our article
+                  {' '}
+                  <br />
+                  <a href='https://support.parsebiosciences.com/hc/en-us/articles/31579430276372-How-to-troubleshoot-Pipeline-failures-in-Trailmaker' target='_blank' rel='noopener noreferrer'>
+                    How to troubleshoot pipeline failures in Trailmaker
+                  </a>
+                  .
+                </Text>
+                <Text type='secondary' style={{ marginTop: '8px' }}>
+                  To access the article, make sure you are logged into the support suite
+                  <br />
+                  using your Parse Biosciences account.
+                </Text>
 
-              <Text type='secondary' style={{ marginTop: '8px' }}>
-                If your error message is not covered in the article or you need further support,
-                <br />
-                contact us at
-                {' '}
-                <a href='mailto:support@parsebiosciences.com'>support@parsebiosciences.com</a>
-                .
-              </Text>
+                <Text type='secondary' style={{ marginTop: '8px' }}>
+                  If your error message is not covered in the article or you need further support,
+                  <br />
+                  contact us at
+                  {' '}
+                  <a href='mailto:support@parsebiosciences.com'>support@parsebiosciences.com</a>
+                  .
+                </Text>
+              </div>
             </Space>
             <div>
               <PipelineLogsViewer secondaryAnalysisId={secondaryAnalysisId} />
