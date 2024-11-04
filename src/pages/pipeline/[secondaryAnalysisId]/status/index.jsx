@@ -269,7 +269,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
                 <a href='https://support.parsebiosciences.com/hc/en-us/articles/31579430276372-How-to-troubleshoot-Pipeline-failures-in-Trailmaker' target='_blank' rel='noopener noreferrer'>
                   How to troubleshoot pipeline failures in Trailmaker
                 </a>
-                . To access the article, make sure you are logged into the support suite using your Parse Biosciences account.
+                . To access the article, make sure you are logged into the
+                support suite using your Parse Biosciences account.
               </Text>
 
               <Text type='secondary' style={{ marginTop: '8px' }}>
