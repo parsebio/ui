@@ -274,12 +274,15 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
                   </a>
                   .
                 </Text>
+              </div>
+              <div style={{ textAlign: 'left' }}>
                 <Text type='secondary' style={{ marginTop: '8px' }}>
                   To access the article, make sure you are logged into the support suite
                   <br />
                   using your Parse Biosciences account.
                 </Text>
-
+              </div>
+              <div style={{ textAlign: 'left' }}>
                 <Text type='secondary' style={{ marginTop: '8px' }}>
                   If your error message is not covered in the article or you need further support,
                   <br />
