@@ -38,8 +38,11 @@ const UnauthorizedPage = ({ title, subTitle, hint }) => (
     )}
     extra={(
       <>
-        <Button type='primary' onClick={() => signIn()}>
-          Log in
+        <Button type='primary' onClick={() => signIn(true)}>
+          Log in as Parse customer
+        </Button>
+        <Button type='primary' onClick={() => signIn(false)}>
+          Log in as non-Parse customer
         </Button>
         <FeedbackButton />
       </>

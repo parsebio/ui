@@ -25,6 +25,9 @@ import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
 import { brandColors, notAgreedToTermsStatus, cookiesAgreedCognitoKey } from 'utils/constants';
+import { Button } from 'antd';
+import signIn from 'utils/signIn';
+import { Hub } from 'aws-amplify';
 
 import 'antd/dist/antd.variable.min.css';
 import { loadUser } from 'redux/actions/user';
@@ -71,12 +74,20 @@ const addDashesToExperimentId = (experimentId) => experimentId.replace(/(.{8})(.
 
 const WrappedApp = ({ Component, pageProps }) => {
   const { httpError, amplifyConfig, errorOrigin } = pageProps;
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+  console.log("******* isAuthenticated", isAuthenticated);
+  console.log("******* httpError", httpError);
+  console.log("******* amplifyConfig", amplifyConfig);
+  console.log("******* errorOrigin", errorOrigin);
+
 
   const dispatch = useDispatch();
 
   setUpDispatch(dispatch);
 
   const router = useRouter();
+
   const { experimentId: urlExperimentId, secondaryAnalysisId } = router.query;
 
   // If the experimentId exists (we are not is data management) and
@@ -110,11 +121,29 @@ const WrappedApp = ({ Component, pageProps }) => {
       setAmplifyConfigured(true);
     }
   }, [amplifyConfig]);
+
+  useEffect(() => {
+    dispatch(loadUser());
+
+  }, [dispatch, router]);
+
   if (!amplifyConfigured) {
     return <></>;
   }
 
   const mainContent = () => {
+    if (!isAuthenticated) {
+      return (<>
+        <Button type='primary' onClick={() => signIn(true)}>
+          Log in as Parse customer
+        </Button>
+        <Button type='primary' onClick={() => signIn(false)}>
+          Log in as non-Parse customer
+        </Button>
+      </>);
+    }
+    console.log("in __app.jsx and not loading authentication");
+
     // If this is a not found error, show it without the navigation bar.
     if (Component === NotFoundPage) {
       return <Component {...pageProps} />;
