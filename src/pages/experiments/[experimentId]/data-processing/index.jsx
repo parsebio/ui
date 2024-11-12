@@ -692,7 +692,8 @@ const DataProcessingPage = ({ experimentId }) => {
             <Alert
               message={(
                 <>
-                  There was an error while running Data Processing. Check prior steps for warnings. Further support is available in our
+                  There was an error while running Data Processing. Check prior steps for warnings.
+                  Further support is available in our
                   <a href='https://support.parsebiosciences.com/hc/en-us/articles/31741233000468-How-to-adjust-data-processing-settings-to-fit-your-dataset-and-troubleshoot-data-processing-failures' target='_blank' rel='noopener noreferrer'>
                     Data Processing troubleshooting article
                   </a>
