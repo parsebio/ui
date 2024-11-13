@@ -255,7 +255,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       failed: (
         <Card>
           <div style={{ display: 'block', justifyContent: 'center' }}>
-
             <Space direction='vertical'>
               <Title level={3}>
                 Your pipeline run failed.
@@ -264,6 +263,35 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
                 The error logs can be accessed by downloading the pipeline output files.
               </Text>
               {renderDownloadLogsButton()}
+              <br />
+              <div style={{ textAlign: 'left' }}>
+                <Text type='secondary' style={{ marginTop: '8px' }}>
+                  For help addressing your pipeline failure, visit our article
+                  {' '}
+                  <br />
+                  <a href='https://support.parsebiosciences.com/hc/en-us/articles/31579430276372-How-to-troubleshoot-Pipeline-failures-in-Trailmaker' target='_blank' rel='noopener noreferrer'>
+                    How to troubleshoot pipeline failures in Trailmaker
+                  </a>
+                  .
+                </Text>
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <Text type='secondary' style={{ marginTop: '8px' }}>
+                  To access the article, make sure you are logged into the support suite
+                  <br />
+                  using your Parse Biosciences account.
+                </Text>
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <Text type='secondary' style={{ marginTop: '8px' }}>
+                  If your error message is not covered in the article or you need further support,
+                  <br />
+                  contact us at
+                  {' '}
+                  <a href='mailto:support@parsebiosciences.com'>support@parsebiosciences.com</a>
+                  .
+                </Text>
+              </div>
             </Space>
             <div>
               <PipelineLogsViewer secondaryAnalysisId={secondaryAnalysisId} />
