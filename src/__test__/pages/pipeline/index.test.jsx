@@ -22,6 +22,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import userEvent from '@testing-library/user-event';
 import endUserMessages from 'utils/endUserMessages';
+import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
 
 const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
 const mockNavigateTo = jest.fn();
@@ -307,6 +308,37 @@ describe('Pipeline Page', () => {
       expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(
         mockAnalysisIds.emptyAnalysis, message.file,
       );
+    });
+  });
+
+  it('Searches genomes correctly in SelectReferenceGenome component', async () => {
+    const mockOnDetailsChanged = jest.fn();
+
+    render(
+      <SelectReferenceGenome
+        previousGenome=''
+        onDetailsChanged={mockOnDetailsChanged}
+      />,
+    );
+
+    const searchInput = screen.getByPlaceholderText('Select the reference genome');
+
+    // Search by genome name
+    userEvent.type(searchInput, 'GRCh38');
+    await waitFor(() => {
+      expect(screen.getByText('GRCh38: Homo sapiens (Human)')).toBeInTheDocument();
+    });
+
+    // Clear search
+    userEvent.clear(searchInput);
+    await waitFor(() => {
+      expect(screen.getByText('GRCm39: Mus musculus (Mouse)')).toBeInTheDocument();
+    });
+
+    // Search by species
+    userEvent.type(searchInput, 'Mouse');
+    await waitFor(() => {
+      expect(screen.getByText('GRCm39: Mus musculus (Mouse)')).toBeInTheDocument();
     });
   });
 
