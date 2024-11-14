@@ -24,6 +24,14 @@
     "species": "Bos taurus (Cow)"
   },
   {
+    "name": "C_Albicans-Sc5314-2",
+    "species": "Candida Albicans"
+  },
+  {
+    "name": "bColLiv1",
+    "species": "Columba livia (rock pigeon)"
+  },
+  {
     "name": "ASM2113471v1",
     "species": "Daphnia pulex (Common Water Flea)"
   },
@@ -34,6 +42,10 @@
   {
     "name": "BDGP6.46",
     "species": "Drosophila melanogaster (Fruit fly)"
+  },
+  {
+    "name": "E.scolopes-V2.2",
+    "species": "Euprymna scolopes (Hawaiian Bobtail Squid)"
   },
   {
     "name": "Felis_catus_9.0",
@@ -48,12 +60,20 @@
     "species": "Macaca mulatta (Rhesus monkey)"
   },
   {
-    "name": "mRatBN7.2",
-    "species": "Rattus norvegicus (Rat)"
+    "name": "MustPutFur",
+    "species": "Mustela furo (Ferret)"
+  },
+  {
+    "name": "OmykA_1.1",
+    "species": "Oncorhynchus mykiss (Rainbow trout)"
   },
   {
     "name": "OryCun2",
     "species": "Oryctolagus cuniculus (Rabbit)"
+  },
+  {
+    "name": "ASM223467v1",
+    "species": "Oryzias latipes (Medaka)"
   },
   {
     "name": "Oar_v3.1",
@@ -68,48 +88,28 @@
     "species": "Ovis aries (sheep), Breed: Rambouillet, Ensembl: GCA_016772045.1"
   },
   {
-    "name": "MustPutFur",
-    "species": "Mustela furo (Ferret)"
+    "name": "PFal3D7",
+    "species": "Plasmodium falciparum 3D7"
+  },
+  {
+    "name": "mRatBN7.2",
+    "species": "Rattus norvegicus (Rat)"
   },
   {
     "name": "Ssal_v3.1",
     "species": "Salmo salar (Atlantic Salmon)"
   },
   {
-    "name": "Sscrofa11",
-    "species": "Sus scrofa (Pig)"
-  },
-  {
     "name": "sScyCan1-1",
     "species": "Scyliorhinus canicula (smaller spotted catshark)"
   },
   {
-    "name": "ASM223467v1",
-    "species": "Oryzias latipes (Medaka)"
-  },
-  {
-    "name": "PFal3D7",
-    "species": "Plasmodium falciparum 3D7"
-  },
-  {
-    "name": "E.scolopes-V2.2",
-    "species": "Euprymna scolopes (Hawaiian Bobtail Squid)"
+    "name": "Sscrofa11",
+    "species": "Sus scrofa (Pig)"
   },
   {
     "name": "xenLae10",
     "species": "Xenopus laevis v10.1 (African clawed frog)"
-  },
-  {
-    "name": "bColLiv1",
-    "species": "Columba livia (rock pigeon)"
-  },
-  {
-    "name": "OmykA_1.1",
-    "species": "Oncorhynchus mykiss (Rainbow trout)"
-  },
-  {
-    "name": "C_Albicans-Sc5314-2",
-    "species": "Candida Albicans"
   },
   {
     "name": "ARS-UCD1.2_Oar_v3.1",
