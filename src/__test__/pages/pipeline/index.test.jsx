@@ -340,6 +340,12 @@ describe('Pipeline Page', () => {
     await waitFor(() => {
       expect(screen.getByText('GRCm39: Mus musculus (Mouse)')).toBeInTheDocument();
     });
+
+    // Search with no matching results
+    userEvent.type(searchInput, 'thisIsNotAGenome');
+    await waitFor(() => {
+      expect(screen.queryByText('thisIsNotAGenome')).not.toBeInTheDocument();
+    });
   });
 
   describe.only('Upload fastq tests', () => {
