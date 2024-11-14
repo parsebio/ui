@@ -323,27 +323,28 @@ describe('Pipeline Page', () => {
 
     const searchInput = screen.getByPlaceholderText('Select the reference genome');
 
-    // Search by genome name
+    // filter by genome name
     userEvent.type(searchInput, 'GRCh38');
     await waitFor(() => {
       expect(screen.getByText('GRCh38: Homo sapiens (Human)')).toBeInTheDocument();
     });
 
-    // Clear search
+    // delete previous text (GRCh38) and check that other genomes appear
     userEvent.clear(searchInput);
     await waitFor(() => {
       expect(screen.getByText('GRCm39: Mus musculus (Mouse)')).toBeInTheDocument();
     });
 
-    // Search by species
-    userEvent.type(searchInput, 'Mouse');
+    // search by species
+    userEvent.type(searchInput, 'mouse');
     await waitFor(() => {
       expect(screen.getByText('GRCm39: Mus musculus (Mouse)')).toBeInTheDocument();
     });
 
-    // Search with no matching results
+    // without matching results
     userEvent.type(searchInput, 'thisIsNotAGenome');
     await waitFor(() => {
+      expect(screen.queryByText('GRCh38: Homo sapiens (Human)')).not.toBeInTheDocument();
       expect(screen.queryByText('thisIsNotAGenome')).not.toBeInTheDocument();
     });
   });
