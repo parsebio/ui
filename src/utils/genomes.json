@@ -8,8 +8,16 @@
     "species": "Mus musculus (Mouse)"
   },
   {
+    "name": "mAcoDim1_REL_1905",
+    "species": "Acomys dimidiatus (Eastern spiny mouse)"
+  },
+  {
     "name": "fAnaAna1.pri",
     "species": "Anableps anableps (Largescale foureyes)"
+  },
+  {
+    "name": "TAIR10",
+    "species": "Arabidopsis thaliana (Thale cress)"
   },
   {
     "name": "ARS-UCD1.3",
@@ -32,8 +40,8 @@
     "species": "Felis catus (Cat)"
   },
   {
-    "name": "mAcoDim1_REL_1905",
-    "species": "Acomys dimidiatus (Eastern spiny mouse)"
+    "name": "GRCg7b",
+    "species": "Gallus gallus (Chicken)"
   },
   {
     "name": "Mmul10",
@@ -54,6 +62,10 @@
   {
     "name": "ARS-UI_Ramb_v2",
     "species": "Ovis aries (sheep), Breed: Rambouillet"
+  },
+  {
+    "name": "ARS-UI_Ramb_v2-alt",
+    "species": "Ovis aries (sheep), Breed: Rambouillet, Ensembl: GCA_016772045.1"
   },
   {
     "name": "MustPutFur",
