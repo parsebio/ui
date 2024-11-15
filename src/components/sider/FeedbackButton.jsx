@@ -109,7 +109,7 @@ const FeedbackButton = (props) => {
   const menuItems = [
     {
       label: (
-        <Card size='small' style={{ padding: '0.5em', width: '400px' }}>
+        <Card size='small' style={{ padding: '0.5em', width: '410px' }}>
           For help using the platform, check out:
           <div style={{ margin: '1em' }}>
             <a href='https://www.parsebiosciences.com/data-analysis' target='_blank' rel='noreferrer'>
@@ -123,6 +123,13 @@ const FeedbackButton = (props) => {
               <InfoCircleFilled />
               {' '}
               User guide
+            </a>
+            {' '}
+            <br />
+            <a href='https://support.parsebiosciences.com/hc/en-us/categories/360004765711-Computational-Support' target='_blank' rel='noreferrer'>
+              <InfoCircleFilled />
+              {' '}
+              Support suite including troubleshooting guides
             </a>
             {' '}
             <br />
