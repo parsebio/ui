@@ -10,11 +10,12 @@ import genomes from 'utils/genomes.json';
 
 const { Text } = Typography;
 
-const genomeOptions = genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name }));
+const options = genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name }));
 
 const SelectReferenceGenome = (props) => {
   const { previousGenome, onDetailsChanged } = props;
   const [refGenome, setRefGenome] = useState();
+
   useEffect(() => {
     setRefGenome(previousGenome);
   }, []);
@@ -39,11 +40,13 @@ const SelectReferenceGenome = (props) => {
         </div>
         <br />
         <Select
+          showSearch
           style={{ width: '90%' }}
           value={refGenome}
           placeholder='Select the reference genome'
           onChange={changeRefGenome}
-          options={genomeOptions}
+          options={options}
+          filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
         />
         <div style={{ marginTop: 'auto', marginBottom: '0.1em' }}>
           <Text type='secondary'>

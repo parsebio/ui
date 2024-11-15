@@ -8,8 +8,16 @@
     "species": "Mus musculus (Mouse)"
   },
   {
+    "name": "mAcoDim1_REL_1905",
+    "species": "Acomys dimidiatus (Eastern spiny mouse)"
+  },
+  {
     "name": "fAnaAna1.pri",
     "species": "Anableps anableps (Largescale foureyes)"
+  },
+  {
+    "name": "TAIR10",
+    "species": "Arabidopsis thaliana (Thale cress)"
   },
   {
     "name": "ARS-UCD1.3",
@@ -18,6 +26,14 @@
   {
     "name": "c_elegans.PRJEB28388.WS293",
     "species": "Caenorhabditis elegans (Roundworm)"
+  },
+  {
+    "name": "C_Albicans-Sc5314-2",
+    "species": "Candida Albicans"
+  },
+  {
+    "name": "bColLiv1",
+    "species": "Columba livia (rock pigeon)"
   },
   {
     "name": "ASM2113471v1",
@@ -32,28 +48,40 @@
     "species": "Drosophila melanogaster (Fruit fly)"
   },
   {
+    "name": "E.scolopes-V2.2",
+    "species": "Euprymna scolopes (Hawaiian Bobtail Squid)"
+  },
+  {
     "name": "Felis_catus_9.0",
     "species": "Felis catus (Cat)"
+  },
+  {
+    "name": "GRCg7b",
+    "species": "Gallus gallus (Chicken)"
   },
   {
     "name": "haemonchus_contortus.PRJEB506.WBPS19",
     "species": "Haemonchus contortus (Barber's pole worm)"
   },
   {
-    "name": "mAcoDim1_REL_1905",
-    "species": "Acomys dimidiatus (Eastern spiny mouse)"
-  },
-  {
     "name": "Mmul10",
     "species": "Macaca mulatta (Rhesus monkey)"
   },
   {
-    "name": "mRatBN7.2",
-    "species": "Rattus norvegicus (Rat)"
+    "name": "MustPutFur",
+    "species": "Mustela furo (Ferret)"
+  },
+  {
+    "name": "OmykA_1.1",
+    "species": "Oncorhynchus mykiss (Rainbow trout)"
   },
   {
     "name": "OryCun2",
     "species": "Oryctolagus cuniculus (Rabbit)"
+  },
+  {
+    "name": "ASM223467v1",
+    "species": "Oryzias latipes (Medaka)"
   },
   {
     "name": "Oar_v3.1",
@@ -64,52 +92,36 @@
     "species": "Ovis aries (sheep), Breed: Rambouillet"
   },
   {
-    "name": "MustPutFur",
-    "species": "Mustela furo (Ferret)"
-  },
-  {
-    "name": "Ssal_v3.1",
-    "species": "Salmo salar (Atlantic Salmon)"
-  },
-  {
-    "name": "Sscrofa11",
-    "species": "Sus scrofa (Pig)"
-  },
-  {
-    "name": "sScyCan1-1",
-    "species": "Scyliorhinus canicula (smaller spotted catshark)"
-  },
-  {
-    "name": "trichuris_muris.PRJEB126.WBPS19",
-    "species": "Trichuris muris"
-  },
-  {
-    "name": "ASM223467v1",
-    "species": "Oryzias latipes (Medaka)"
+    "name": "ARS-UI_Ramb_v2-alt",
+    "species": "Ovis aries (sheep), Breed: Rambouillet, Ensembl: GCA_016772045.1"
   },
   {
     "name": "PFal3D7",
     "species": "Plasmodium falciparum 3D7"
   },
   {
-    "name": "E.scolopes-V2.2",
-    "species": "Euprymna scolopes (Hawaiian Bobtail Squid)"
+    "name": "mRatBN7.2",
+    "species": "Rattus norvegicus (Rat)"
+  },
+  {
+    "name": "Ssal_v3.1",
+    "species": "Salmo salar (Atlantic Salmon)"
+  },
+  {
+    "name": "sScyCan1-1",
+    "species": "Scyliorhinus canicula (smaller spotted catshark)"
+  },
+  {
+    "name": "Sscrofa11",
+    "species": "Sus scrofa (Pig)"
+  },
+  {
+    "name": "trichuris_muris.PRJEB126.WBPS19",
+    "species": "Trichuris muris"
   },
   {
     "name": "xenLae10",
     "species": "Xenopus laevis v10.1 (African clawed frog)"
-  },
-  {
-    "name": "bColLiv1",
-    "species": "Columba livia (rock pigeon)"
-  },
-  {
-    "name": "OmykA_1.1",
-    "species": "Oncorhynchus mykiss (Rainbow trout)"
-  },
-  {
-    "name": "C_Albicans-Sc5314-2",
-    "species": "Candida Albicans"
   },
   {
     "name": "ARS-UCD1.2_Oar_v3.1",
