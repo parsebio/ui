@@ -83,7 +83,9 @@ const onQCUpdate = (update, dispatch, experimentId) => {
 };
 
 const onGEM2SUpdate = (update, dispatch, experimentId) => {
-  const processingConfig = update?.output?.item?.processingConfig;
+  const processingConfig = update?.output?.processingConfig
+    ?? update?.output?.item?.processingConfig;
+
   if (processingConfig) {
     dispatch(loadedProcessingConfig(experimentId, processingConfig, true));
   }

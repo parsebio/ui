@@ -16,6 +16,10 @@
     "species": "Bos taurus (Cow)"
   },
   {
+    "name": "c_elegans.PRJEB28388.WS293",
+    "species": "Caenorhabditis elegans (Roundworm)"
+  },
+  {
     "name": "ASM2113471v1",
     "species": "Daphnia pulex (Common Water Flea)"
   },
@@ -30,6 +34,10 @@
   {
     "name": "Felis_catus_9.0",
     "species": "Felis catus (Cat)"
+  },
+  {
+    "name": "haemonchus_contortus.PRJEB506.WBPS19",
+    "species": "Haemonchus contortus (Barber's pole worm)"
   },
   {
     "name": "mAcoDim1_REL_1905",
@@ -70,6 +78,10 @@
   {
     "name": "sScyCan1-1",
     "species": "Scyliorhinus canicula (smaller spotted catshark)"
+  },
+  {
+    "name": "trichuris_muris.PRJEB126.WBPS19",
+    "species": "Trichuris muris"
   },
   {
     "name": "ASM223467v1",
