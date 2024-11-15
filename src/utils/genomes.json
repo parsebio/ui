@@ -24,6 +24,10 @@
     "species": "Bos taurus (Cow)"
   },
   {
+    "name": "c_elegans.PRJEB28388.WS293",
+    "species": "Caenorhabditis elegans (Roundworm)"
+  },
+  {
     "name": "C_Albicans-Sc5314-2",
     "species": "Candida Albicans"
   },
@@ -54,6 +58,10 @@
   {
     "name": "GRCg7b",
     "species": "Gallus gallus (Chicken)"
+  },
+  {
+    "name": "haemonchus_contortus.PRJEB506.WBPS19",
+    "species": "Haemonchus contortus (Barber's pole worm)"
   },
   {
     "name": "Mmul10",
@@ -106,6 +114,10 @@
   {
     "name": "Sscrofa11",
     "species": "Sus scrofa (Pig)"
+  },
+  {
+    "name": "trichuris_muris.PRJEB126.WBPS19",
+    "species": "Trichuris muris"
   },
   {
     "name": "xenLae10",
