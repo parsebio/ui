@@ -10,10 +10,11 @@ import genomes from 'utils/genomes.json';
 
 const { Text } = Typography;
 
+const options = genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name }));
+
 const SelectReferenceGenome = (props) => {
   const { previousGenome, onDetailsChanged } = props;
   const [refGenome, setRefGenome] = useState();
-  const [options] = useState(genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name })));
 
   useEffect(() => {
     setRefGenome(previousGenome);
