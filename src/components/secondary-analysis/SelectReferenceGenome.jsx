@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Select,
   Typography,
 } from 'antd';
 import propTypes from 'prop-types';
-import _ from 'lodash';
 
 import genomes from 'utils/genomes.json';
 
@@ -14,7 +13,7 @@ const { Text } = Typography;
 const SelectReferenceGenome = (props) => {
   const { previousGenome, onDetailsChanged } = props;
   const [refGenome, setRefGenome] = useState();
-  const [options, setOptions] = useState(genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name })));
+  const [options] = useState(genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name })));
 
   useEffect(() => {
     setRefGenome(previousGenome);
@@ -27,25 +26,6 @@ const SelectReferenceGenome = (props) => {
     }
     onDetailsChanged(newDiff);
     setRefGenome(value);
-  };
-
-  const debouncedSetOptions = useCallback(
-    _.debounce((value) => {
-      if (!value) {
-        setOptions(genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name })));
-      } else {
-        const searchRegex = new RegExp(value, 'i');
-        const filteredGenomes = genomes.filter(
-          (genome) => searchRegex.test(genome.name) || searchRegex.test(genome.species),
-        );
-        setOptions(filteredGenomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name })));
-      }
-    }, 400),
-    [],
-  );
-
-  const handleSearch = (value) => {
-    debouncedSetOptions(value);
   };
 
   return (
@@ -64,9 +44,8 @@ const SelectReferenceGenome = (props) => {
           value={refGenome}
           placeholder='Select the reference genome'
           onChange={changeRefGenome}
-          onSearch={handleSearch}
           options={options}
-          filterOption={false}
+          filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
         />
         <div style={{ marginTop: 'auto', marginBottom: '0.1em' }}>
           <Text type='secondary'>
