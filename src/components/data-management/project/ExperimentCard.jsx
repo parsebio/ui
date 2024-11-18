@@ -118,13 +118,6 @@ const ExperimentCard = (props) => {
             <PrettyTime isoTime={experiment.createdAt} />
 
           </Item>
-          <Item
-            labelStyle={itemTextStyle}
-            label='Modified'
-          >
-            <PrettyTime isoTime={experiment.updatedAt} />
-
-          </Item>
         </Descriptions>
       </Card>
     </>
