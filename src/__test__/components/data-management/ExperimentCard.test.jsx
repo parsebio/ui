@@ -18,7 +18,6 @@ const experimentId = 'experimentId1';
 const experimentName = 'Test Experiment';
 const samplesIdsArray = new Array(13).fill(null).map((_, i) => (`sample-${i}`));
 const createdAt = dayjs().subtract(30, 'days').format();
-const updatedAt = dayjs().subtract(30, 'minutes').format();
 
 const experimentState = {
   experiments: {
@@ -29,7 +28,6 @@ const experimentState = {
       name: experimentName,
       sampleIds: samplesIdsArray,
       createdAt,
-      updatedAt,
     },
   },
 };
@@ -58,9 +56,6 @@ describe('ExperimentCard', () => {
 
     // Created date is shown
     expect(screen.getByText(dayjs(createdAt).fromNow())).toBeInTheDocument();
-
-    // Last modified is shown
-    expect(screen.getByText(dayjs(updatedAt).fromNow())).toBeInTheDocument();
   });
 
   it('Displays the delete project modal when delete experiment is clicked', async () => {
