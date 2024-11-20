@@ -8,6 +8,10 @@
     "species": "Mus musculus (Mouse)"
   },
   {
+    "name": "GRCm39.113",
+    "species": "Mus musculus (Mouse) - Release 113"
+  },
+  {
     "name": "mAcoDim1_REL_1905",
     "species": "Acomys dimidiatus (Eastern spiny mouse)"
   },
@@ -102,6 +106,10 @@
   {
     "name": "mRatBN7.2",
     "species": "Rattus norvegicus (Rat)"
+  },
+  {
+    "name": "mRatBN7.2.113",
+    "species": "Rattus norvegicus (Rat) - Release 113"
   },
   {
     "name": "Ssal_v3.1",
