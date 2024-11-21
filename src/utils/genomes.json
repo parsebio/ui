@@ -176,6 +176,14 @@
     "species": "Custom Homo sapiens (Human) with H3N2"
   },
   {
+    "name": "GRCh38_sp",
+    "species": "Custom Homo sapiens (human)"
+  },
+  {
+    "name": "Mmul_10_MeV_GFP",
+    "species": "Custom Macaca mulatta (Rhesus Monkey) with MeV and GFP"
+  },
+  {
     "name": "mTSC-custom",
     "species": "Custom Mus musculus (mouse) Trophoblast Stem Cells"
   },
