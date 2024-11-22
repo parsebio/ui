@@ -238,5 +238,9 @@
   {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
+  },
+  {
+    "name": "Panubis1.0_genomic_SIVmac251",
+    "species": "Custom Papio anubis (Olive baboon) with SIV"
   }
 ]
