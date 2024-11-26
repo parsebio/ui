@@ -156,6 +156,10 @@
     "species": "Mixed mouse and Hepatitis A virus"
   },
   {
+    "name": "GRCh38_mRatBN7_2",
+    "species": "Mixed human and rat"
+  },
+  {
     "name": "GRCh38-custom-1",
     "species": "Custom Homo sapiens (human)"
   },
