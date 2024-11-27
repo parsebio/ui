@@ -56,6 +56,10 @@
     "species": "Drosophila ananassae (Fruit fly)"
   },
   {
+    "name": "EquCab3.0",
+    "species": "Equus caballus (horse)"
+  },
+  {
     "name": "E.scolopes-V2.2",
     "species": "Euprymna scolopes (Hawaiian Bobtail Squid)"
   },
