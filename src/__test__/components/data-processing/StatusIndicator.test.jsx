@@ -13,13 +13,13 @@ import pipelineStatus from 'utils/pipelineStatusValues';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
 
 const steps = [
-  'ClassifierFilter',
-  'CellSizeDistributionFilter',
-  'MitochondrialContentFilter',
-  'NumGenesVsNumUmisFilter',
-  'DoubletScoresFilter',
-  'DataIntegration',
-  'ConfigureEmbedding',
+  'classifier',
+  'cellSizeDistribution',
+  'mitochondrialContent',
+  'numGenesVsNumUmis',
+  'doubletScores',
+  'dataIntegration',
+  'configureEmbedding',
 ];
 
 const mockStore = configureMockStore([thunk]);

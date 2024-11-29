@@ -61,7 +61,7 @@ const customAPIResponses = {
   [`/plots/${frequencyPlotUuid}$`]: () => statusResponse(404, 'Not Found'),
   [`experiments/${fake.EXPERIMENT_ID}/backendStatus$`]: () => promiseResponse(
     JSON.stringify({
-      pipeline: { status: 'SUCCEEDED', completedSteps: ['ConfigureEmbedding'] },
+      pipeline: { status: 'SUCCEEDED', completedSteps: ['configureEmbedding'] },
       worker: { status: 'Running', started: true, ready: true },
     }),
   ),
@@ -71,7 +71,7 @@ const mockApiResponses = _.merge(
   generateDefaultMockAPIResponses(fake.EXPERIMENT_ID), customAPIResponses,
 );
 
-describe('DataIntegration', () => {
+describe('dataIntegration', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     fetchMock.resetMocks();

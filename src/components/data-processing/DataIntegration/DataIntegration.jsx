@@ -238,7 +238,9 @@ const DataIntegration = (props) => {
 
   const configureEmbeddingFinished = useRef(null);
   useEffect(() => {
-    configureEmbeddingFinished.current = completedSteps?.includes('ConfigureEmbedding');
+    // TODO Remove previous check of 'ConfigureEmbedding',
+    // with nextflow only configureEmbedding is necessary
+    configureEmbeddingFinished.current = completedSteps?.includes('configureEmbedding') || completedSteps?.includes('ConfigureEmbedding');
   }, [completedSteps]);
 
   useEffect(() => {
