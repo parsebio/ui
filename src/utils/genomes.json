@@ -56,6 +56,10 @@
     "species": "Drosophila ananassae (Fruit fly)"
   },
   {
+    "name": "EquCab3.0",
+    "species": "Equus caballus (horse)"
+  },
+  {
     "name": "E.scolopes-V2.2",
     "species": "Euprymna scolopes (Hawaiian Bobtail Squid)"
   },
@@ -108,6 +112,10 @@
     "species": "Plasmodium falciparum 3D7"
   },
   {
+    "name": "ASM1683550v1",
+    "species": "Polypterus senegalus (gray bichir)"
+  },
+  {
     "name": "mRatBN7.2",
     "species": "Rattus norvegicus (Rat)"
   },
@@ -150,6 +158,10 @@
   {
     "name": "GRCm38_HM175",
     "species": "Mixed mouse and Hepatitis A virus"
+  },
+  {
+    "name": "GRCh38_mRatBN7_2",
+    "species": "Mixed human and rat"
   },
   {
     "name": "GRCh38-custom-1",
@@ -238,5 +250,9 @@
   {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
+  },
+  {
+    "name": "Panubis1.0_genomic_SIVmac251",
+    "species": "Custom Papio anubis (Olive baboon) with SIV"
   }
 ]
