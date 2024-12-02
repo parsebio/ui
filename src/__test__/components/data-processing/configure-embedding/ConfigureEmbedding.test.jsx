@@ -68,7 +68,7 @@ const customAPIResponses = {
   [`/plots/${embeddingPreviewNumOfUmisPlotUuid}$`]: () => statusResponse(404, 'Not Found'),
   [`experiments/${fake.EXPERIMENT_ID}/backendStatus$`]: () => promiseResponse(
     JSON.stringify({
-      pipeline: { status: 'SUCCEEDED', completedSteps: ['ConfigureEmbedding'] },
+      pipeline: { status: 'SUCCEEDED', completedSteps: ['configureEmbedding'] },
       worker: { status: 'Running', started: true, ready: true },
     }),
   ),

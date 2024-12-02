@@ -82,11 +82,11 @@ getBackendStatus.mockImplementation(() => () => ({
     pipeline: {
       status: 'SUCCEEDED',
       completedSteps: [
-        'CellSizeDistributionFilter',
-        'MitochondrialContentFilter',
-        'ClassifierFilter',
-        'NumGenesVsNumUmisFilter',
-        'DoubletScoresFilter',
+        'cellSizeDistribution',
+        'mitochondrialContent',
+        'classifier',
+        'numGenesVsNumUmis',
+        'doubletScores',
       ],
     },
   },
