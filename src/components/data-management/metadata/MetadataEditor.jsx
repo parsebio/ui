@@ -21,7 +21,7 @@ const MetadataEditor = (props) => {
   const [selectedSamples, setSelectedSamples] = useState([]);
 
   const onChange = (e) => {
-    setValue(e?.target?.value || e);
+    setValue(e?.target?.value);
   };
 
   const onSampleSelectChange = (selectedValues) => {
