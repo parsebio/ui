@@ -28,6 +28,11 @@ const MetadataEditor = (props) => {
     setSelectedSamples(selectedValues);
   };
 
+  const resetFields = () => {
+    setValue('');
+    setSelectedSamples([]);
+  };
+
   const getContent = () => (
     <Space direction='vertical'>
       {React.cloneElement(children, {
@@ -35,24 +40,27 @@ const MetadataEditor = (props) => {
         value,
       })}
 
-      <Select
-        mode='multiple'
-        showSearch
-        allowClear
-        placeholder='Select samples (leave empty to apply to all)'
-        onChange={onSampleSelectChange}
-        style={{ width: '100%' }}
-        maxTagCount={2}
-        optionFilterProp='children'
-        filterOption={(input, option) => option
-          .children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-      >
-        {samplesList.map((sample) => (
-          <Select.Option key={sample.sampleUuid} value={sample.sampleUuid}>
-            {sample.name}
-          </Select.Option>
-        ))}
-      </Select>
+      <Tooltip title='Select samples (leave empty to apply to all)' placement='left'>
+        <Select
+          mode='multiple'
+          showSearch
+          allowClear
+          placeholder='Select samples (leave empty to apply to all)'
+          onChange={onSampleSelectChange}
+          value={selectedSamples}
+          style={{ width: '100%' }}
+          maxTagCount={2}
+          optionFilterProp='children'
+          filterOption={(input, option) => option
+            .children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+        >
+          {samplesList.map((sample) => (
+            <Select.Option key={sample.sampleUuid} value={sample.sampleUuid}>
+              {sample.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Tooltip>
 
       <Divider style={{ margin: '4px 0' }} />
 
@@ -62,12 +70,32 @@ const MetadataEditor = (props) => {
             <Button
               type='primary'
               size='small'
-              onClick={() => onReplaceEmpty(value, selectedSamples)}
+              onClick={() => {
+                onReplaceEmpty(value, selectedSamples);
+                resetFields();
+              }}
             >
-              Fill all missing
+              Fill missing
             </Button>
-            <Button size='small' onClick={() => onReplaceAll(value, selectedSamples)}>Replace all</Button>
-            <Button type='warning' size='small' onClick={() => onClearAll(selectedSamples)}>Clear all</Button>
+            <Button
+              size='small'
+              onClick={() => {
+                onReplaceAll(value, selectedSamples);
+                resetFields();
+              }}
+            >
+              Replace
+            </Button>
+            <Button
+              type='warning'
+              size='small'
+              onClick={() => {
+                onClearAll(selectedSamples);
+                resetFields();
+              }}
+            >
+              Clear
+            </Button>
           </Space>
         )
         : (
