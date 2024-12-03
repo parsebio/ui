@@ -44,7 +44,8 @@ const MetadataEditor = (props) => {
         style={{ width: '100%' }}
         maxTagCount={2}
         optionFilterProp='children'
-        filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+        filterOption={(input, option) => option
+          .children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
       >
         {samplesList.map((sample) => (
           <Select.Option key={sample.sampleUuid} value={sample.sampleUuid}>

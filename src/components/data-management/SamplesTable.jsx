@@ -155,7 +155,8 @@ const SamplesTable = forwardRef((props, ref) => {
           setCells={setMetadataCells}
           deleteMetadataColumn={deleteMetadataColumn}
           activeExperimentId={activeExperimentId}
-          samplesList={fullTableData.map(({ uuid, name }) => ({ sampleUuid: uuid, name }))}
+          samplesList={fullTableData
+            .map(({ uuid, name: metadataName }) => ({ sampleUuid: uuid, name: metadataName }))}
         />
       ),
       width: 200,
