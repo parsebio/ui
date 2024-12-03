@@ -25,7 +25,7 @@ import { UploadCell, SampleNameCell, EditableFieldCell } from 'components/data-m
 import {
   deleteMetadataTrack,
   createMetadataTrack,
-  updateValueInMetadataTrack,
+  updateValuesInMetadataTrack,
   reorderSamples,
 } from 'redux/actions/experiments';
 import { loadSamples } from 'redux/actions/samples';
@@ -152,9 +152,10 @@ const SamplesTable = forwardRef((props, ref) => {
         <MetadataColumnTitle
           name={name}
           sampleNames={sampleNames}
-          setCells={setCells}
+          setCells={setMetadataCells}
           deleteMetadataColumn={deleteMetadataColumn}
           activeExperimentId={activeExperimentId}
+          samplesList={fullTableData.map(({ uuid, name }) => ({ sampleUuid: uuid, name }))}
         />
       ),
       width: 200,
@@ -165,7 +166,7 @@ const SamplesTable = forwardRef((props, ref) => {
           dataIndex={key}
           rowIdx={rowIdx}
           onAfterSubmit={(newValue) => {
-            dispatch(updateValueInMetadataTrack(activeExperimentId, record.uuid, key, newValue));
+            dispatch(updateValuesInMetadataTrack(activeExperimentId, [record.uuid], key, newValue));
           }}
         />
       ),
@@ -212,8 +213,12 @@ const SamplesTable = forwardRef((props, ref) => {
     'CLEAR_ALL',
   ];
 
-  const setCells = (value, metadataKey, actionType) => {
+  const setMetadataCells = (value, metadataKey, actionType, selectedSamples) => {
     if (!MASS_EDIT_ACTIONS.includes(actionType)) return;
+
+    const samplesToUpdate = selectedSamples && selectedSamples.length > 0
+      ? selectedSamples
+      : activeExperiment.sampleIds;
 
     const canUpdateCell = (sampleUuid, action) => {
       if (action !== 'REPLACE_EMPTY') return true;
@@ -226,13 +231,12 @@ const SamplesTable = forwardRef((props, ref) => {
       return isMetadataEmpty(sampleUuid);
     };
 
-    activeExperiment.sampleIds.forEach(
-      (sampleUuid) => {
-        if (canUpdateCell(sampleUuid, actionType)) {
-          dispatch(updateValueInMetadataTrack(activeExperimentId, sampleUuid, metadataKey, value));
-        }
-      },
-    );
+    const filteredSamplesToUpdate = samplesToUpdate
+      .filter((sampleUuid) => canUpdateCell(sampleUuid, actionType));
+
+    dispatch(updateValuesInMetadataTrack(
+      activeExperimentId, filteredSamplesToUpdate, metadataKey, value,
+    ));
   };
 
   const generateDataForItem = useCallback((sampleUuid) => {

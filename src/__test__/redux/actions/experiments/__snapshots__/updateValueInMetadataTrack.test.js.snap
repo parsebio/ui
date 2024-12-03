@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`updateValueInMetadataTrack action Dispatches error when theres an error updating 1`] = `
+exports[`updateValuesInMetadataTrack action Dispatches error when theres an error updating 1`] = `
 [
   {
     "message": "Saving sample...",
@@ -11,7 +11,7 @@ exports[`updateValueInMetadataTrack action Dispatches error when theres an error
 ]
 `;
 
-exports[`updateValueInMetadataTrack action Works correctly 1`] = `
+exports[`updateValuesInMetadataTrack action Works correctly 1`] = `
 [
   {
     "message": "Saving sample...",

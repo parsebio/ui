@@ -9,7 +9,7 @@ import reorderSamples from './reorderSamples';
 import createMetadataTrack from './createMetadataTrack';
 import renameMetadataTrack from './renameMetadataTrack';
 import deleteMetadataTrack from './deleteMetadataTrack';
-import updateValueInMetadataTrack from './updateValueInMetadataTrack';
+import updateValuesInMetadataTrack from './updateValuesInMetadataTrack';
 import cloneExperiment from './cloneExperiment';
 import reloadExperimentInfo from './reloadExperimentInfo';
 import updateCellLevelMetadataFileUpload from './updateCellLevelMetadataFileUpload';
@@ -28,7 +28,7 @@ export {
   createMetadataTrack,
   renameMetadataTrack,
   deleteMetadataTrack,
-  updateValueInMetadataTrack,
+  updateValuesInMetadataTrack,
   cloneExperiment,
   reloadExperimentInfo,
   updateCellLevelMetadataFileUpload,

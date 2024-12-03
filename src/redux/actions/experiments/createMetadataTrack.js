@@ -29,7 +29,7 @@ const createMetadataTrack = (
     await fetchAPI(
       `/v2/experiments/${experimentId}/metadataTracks/${metadataKey}`,
       {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },

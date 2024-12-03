@@ -13,7 +13,7 @@ import MetadataEditor from './MetadataEditor';
 
 const MetadataColumnTitle = (props) => {
   const {
-    name, sampleNames, activeExperimentId, deleteMetadataColumn, setCells,
+    name, sampleNames, activeExperimentId, deleteMetadataColumn, setCells, samplesList,
   } = props;
 
   const validationParams = {
@@ -31,6 +31,7 @@ const MetadataColumnTitle = (props) => {
       setCells={setCells}
       deleteMetadataColumn={deleteMetadataColumn}
       activeExperimentId={activeExperimentId}
+      samplesList={samplesList}
     />
   );
 };
@@ -41,12 +42,16 @@ MetadataColumnTitle.propTypes = {
   setCells: PropTypes.func.isRequired,
   deleteMetadataColumn: PropTypes.func.isRequired,
   activeExperimentId: PropTypes.string.isRequired,
+  samplesList: PropTypes.arrayOf(PropTypes.shape({
+    sampleUuid: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  })).isRequired,
 };
 
 const MetadataTitle = (props) => {
   const dispatch = useDispatch();
   const {
-    name, validateInput, setCells, deleteMetadataColumn, activeExperimentId,
+    name, validateInput, setCells, deleteMetadataColumn, activeExperimentId, samplesList,
   } = props;
   const metaKey = metadataNameToKey(name);
 
@@ -71,10 +76,11 @@ const MetadataTitle = (props) => {
         formatter={(value) => value.trim()}
       />
       <MetadataEditor
-        onReplaceEmpty={(value) => setCells(value, metaKey, 'REPLACE_EMPTY')}
-        onReplaceAll={(value) => setCells(value, metaKey, 'REPLACE_ALL')}
-        onClearAll={() => setCells(METADATA_DEFAULT_VALUE, metaKey, 'CLEAR_ALL')}
+        onReplaceEmpty={(value, selectedSamples) => setCells(value, metaKey, 'REPLACE_EMPTY', selectedSamples)}
+        onReplaceAll={(value, selectedSamples) => setCells(value, metaKey, 'REPLACE_ALL', selectedSamples)}
+        onClearAll={(selectedSamples) => setCells(METADATA_DEFAULT_VALUE, metaKey, 'CLEAR_ALL', selectedSamples)}
         massEdit
+        samplesList={samplesList}
       >
         <Input />
       </MetadataEditor>
@@ -87,5 +93,9 @@ MetadataTitle.propTypes = {
   setCells: PropTypes.func.isRequired,
   deleteMetadataColumn: PropTypes.func.isRequired,
   activeExperimentId: PropTypes.string.isRequired,
+  samplesList: PropTypes.arrayOf(PropTypes.shape({
+    sampleUuid: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  })).isRequired,
 };
 export default MetadataColumnTitle;
