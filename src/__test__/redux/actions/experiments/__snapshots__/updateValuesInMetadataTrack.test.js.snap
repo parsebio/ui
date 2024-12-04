@@ -18,7 +18,9 @@ exports[`updateValuesInMetadataTrack action Works correctly 1`] = `
   },
   {
     "key": "Track_1",
-    "sampleUuid": "mockSampleId",
+    "sampleUuids": [
+      "mockSampleId",
+    ],
     "value": "mockNewValue",
   },
   {

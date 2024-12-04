@@ -81,7 +81,7 @@ describe('createMetadataTrack action', () => {
       `http://localhost:3000/v2/experiments/${experiment1.id}/metadataTracks/${trackKeyRCompatible}`,
       {
         headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
+        method: 'PUT',
       },
     );
   });
