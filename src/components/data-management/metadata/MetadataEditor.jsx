@@ -6,6 +6,8 @@ import {
 } from 'antd';
 import { FormatPainterOutlined } from '@ant-design/icons';
 
+const { Option } = Select;
+
 const MetadataEditor = (props) => {
   const {
     onReplaceEmpty,
@@ -24,8 +26,14 @@ const MetadataEditor = (props) => {
     setValue(e?.target?.value);
   };
 
-  const onSampleSelectChange = (selectedValues) => {
-    setSelectedSamples(selectedValues);
+  const handleSampleChange = (metadataValue) => {
+    if (metadataValue.includes('select-all')) {
+      // When 'Select All Samples' is chosen, select all sample UUIDs
+      const allSampleUuids = samplesList.map((sample) => sample.sampleUuid);
+      setSelectedSamples(allSampleUuids);
+    } else {
+      setSelectedSamples(metadataValue);
+    }
   };
 
   const resetFields = () => {
@@ -40,27 +48,35 @@ const MetadataEditor = (props) => {
         value,
       })}
 
-      <Tooltip title='Select samples (leave empty to apply to all)' placement='left'>
-        <Select
-          mode='multiple'
-          showSearch
-          allowClear
-          placeholder='Select samples (leave empty to apply to all)'
-          onChange={onSampleSelectChange}
-          value={selectedSamples}
-          style={{ width: '100%' }}
-          maxTagCount={2}
-          optionFilterProp='children'
-          filterOption={(input, option) => option
-            .children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+      <Select
+        mode='multiple'
+        value={selectedSamples}
+        onChange={handleSampleChange}
+        allowClear
+        showSearch
+        maxTagCount={2}
+        style={{ width: '20vw' }}
+        filterOption={(input, option) => option
+          .children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+        placeholder='Select samples'
+      >
+        <Option
+          key='select-all'
+          value='select-all'
+          style={{
+            fontWeight: 'bold',
+            backgroundColor: '#fafafa',
+            borderBottom: '1px solid #e8e8e8',
+          }}
         >
-          {samplesList.map((sample) => (
-            <Select.Option key={sample.sampleUuid} value={sample.sampleUuid}>
-              {sample.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Tooltip>
+          Select All Samples
+        </Option>
+        {samplesList.map((sample) => (
+          <Option key={sample.sampleUuid} value={sample.sampleUuid}>
+            {sample.name}
+          </Option>
+        ))}
+      </Select>
 
       <Divider style={{ margin: '4px 0' }} />
 

@@ -215,11 +215,7 @@ const SamplesTable = forwardRef((props, ref) => {
   ];
 
   const setMetadataCells = (value, metadataKey, actionType, selectedSamples) => {
-    if (!MASS_EDIT_ACTIONS.includes(actionType)) return;
-
-    const samplesToUpdate = selectedSamples && selectedSamples.length > 0
-      ? selectedSamples
-      : activeExperiment.sampleIds;
+    if (!MASS_EDIT_ACTIONS.includes(actionType) || !value) return;
 
     const canUpdateCell = (sampleUuid, action) => {
       if (action !== 'REPLACE_EMPTY') return true;
@@ -232,7 +228,7 @@ const SamplesTable = forwardRef((props, ref) => {
       return isMetadataEmpty(sampleUuid);
     };
 
-    const filteredSamplesToUpdate = samplesToUpdate
+    const filteredSamplesToUpdate = selectedSamples
       .filter((sampleUuid) => canUpdateCell(sampleUuid, actionType));
 
     dispatch(updateValuesInMetadataTrack(
