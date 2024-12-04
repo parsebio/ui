@@ -28,9 +28,14 @@ const MetadataEditor = (props) => {
 
   const handleSampleChange = (metadataValue) => {
     if (metadataValue.includes('select-all')) {
-      // When 'Select All Samples' is chosen, select all sample UUIDs
-      const allSampleUuids = samplesList.map((sample) => sample.sampleUuid);
-      setSelectedSamples(allSampleUuids);
+      if (selectedSamples.length === samplesList.length) {
+        // If all samples are already selected, unselect all
+        setSelectedSamples([]);
+      } else {
+        // When 'Select All Samples' is chosen, select all sample UUIDs
+        const allSampleUuids = samplesList.map((sample) => sample.sampleUuid);
+        setSelectedSamples(allSampleUuids);
+      }
     } else {
       setSelectedSamples(metadataValue);
     }
