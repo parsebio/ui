@@ -80,6 +80,10 @@
     "species": "Macaca mulatta (Rhesus monkey)"
   },
   {
+    "name": "MacFas_6",
+    "species": "Macaca fascicularis (Crab-eating macaque)"
+  },
+  {
     "name": "MustPutFur",
     "species": "Mustela furo (Ferret)"
   },
@@ -254,5 +258,9 @@
   {
     "name": "Panubis1.0_genomic_SIVmac251",
     "species": "Custom Papio anubis (Olive baboon) with SIV"
+  },
+  {
+    "name": "custom1",
+    "species": "Custom geonome"
   }
 ]
