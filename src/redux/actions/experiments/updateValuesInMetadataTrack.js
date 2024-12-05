@@ -10,18 +10,19 @@ import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 import { loadBackendStatus } from '../backendStatus';
 
-const updateValueInMetadataTrack = (
-  experimentId, sampleId, metadataTrackKey, value,
+const updateValuesInMetadataTrack = (
+  experimentId, sampleIds, metadataTrackKey, value,
 ) => async (dispatch) => {
+  if (sampleIds.length === 0) return;
   dispatch({ type: SAMPLES_SAVING, payload: { message: endUserMessages.SAVING_SAMPLE } });
 
   try {
-    const body = { value };
+    const body = { value, sampleIds };
 
     await fetchAPI(
-      `/v2/experiments/${experimentId}/samples/${sampleId}/metadataTracks/${metadataTrackKey}`,
+      `/v2/experiments/${experimentId}/metadataTracks/${metadataTrackKey}`,
       {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -32,7 +33,7 @@ const updateValueInMetadataTrack = (
     dispatch({
       type: SAMPLES_VALUE_IN_METADATA_TRACK_UPDATED,
       payload: {
-        sampleUuid: sampleId,
+        sampleUuids: sampleIds,
         key: metadataTrackKey,
         value,
       },
@@ -51,4 +52,4 @@ const updateValueInMetadataTrack = (
   }
 };
 
-export default updateValueInMetadataTrack;
+export default updateValuesInMetadataTrack;

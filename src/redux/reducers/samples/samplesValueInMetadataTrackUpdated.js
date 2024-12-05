@@ -2,9 +2,11 @@
 import produce from 'immer';
 
 const samplesValueInMetadataTrackUpdated = produce((draft, action) => {
-  const { sampleUuid, key, value } = action.payload;
+  const { sampleUuids, key, value } = action.payload;
 
-  draft[sampleUuid].metadata[key] = value;
+  sampleUuids.forEach((sampleUuid) => {
+    draft[sampleUuid].metadata[key] = value;
+  });
   draft.meta.saving = false;
   draft.meta.error = false;
 });

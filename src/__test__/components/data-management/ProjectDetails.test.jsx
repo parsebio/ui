@@ -15,7 +15,7 @@ import {
 } from '@testing-library/react';
 
 import mockedCreateMetadataTrack from 'redux/actions/experiments/createMetadataTrack';
-import mockedUpdateValueInMetadataTrack from 'redux/actions/experiments/updateValueInMetadataTrack';
+import mockedupdateValuesInMetadataTrack from 'redux/actions/experiments/updateValuesInMetadataTrack';
 import mockedCloneExperiment from 'redux/actions/experiments/cloneExperiment';
 import mockedLoadExperiments from 'redux/actions/experiments/loadExperiments';
 import mockedSetActiveExperiment from 'redux/actions/experiments/setActiveExperiment';
@@ -42,7 +42,7 @@ jest.mock('utils/AppRouteProvider', () => ({
 }));
 
 jest.mock('redux/actions/experiments/createMetadataTrack', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
-jest.mock('redux/actions/experiments/updateValueInMetadataTrack', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
+jest.mock('redux/actions/experiments/updateValuesInMetadataTrack', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
 jest.mock('redux/actions/experiments/cloneExperiment', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
 jest.mock('redux/actions/experiments/loadExperiments', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
 jest.mock('redux/actions/experiments/setActiveExperiment', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
@@ -400,8 +400,8 @@ describe('ProjectDetails', () => {
 
     act(() => userEvent.click(screen.getByRole('button', { name: 'Save' })));
 
-    expect(mockedUpdateValueInMetadataTrack).toHaveBeenCalledTimes(1);
-    expect(mockedUpdateValueInMetadataTrack).toHaveBeenCalledWith('experiment-1', 'sample-1', 'metadata-1', 'myBrandNewMetadataWithWhitespaces');
+    expect(mockedupdateValuesInMetadataTrack).toHaveBeenCalledTimes(1);
+    expect(mockedupdateValuesInMetadataTrack).toHaveBeenCalledWith('experiment-1', ['sample-1'], 'metadata-1', 'myBrandNewMetadataWithWhitespaces');
   });
 
   it('Download dropdown is disabled if there are no samples', () => {

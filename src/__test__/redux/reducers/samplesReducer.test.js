@@ -276,7 +276,7 @@ describe('samplesReducer', () => {
     const newState = samplesReducer(sampleWithMetadata, {
       type: SAMPLES_VALUE_IN_METADATA_TRACK_UPDATED,
       payload: {
-        sampleUuid: mockUuid1,
+        sampleUuids: [mockUuid1],
         key: metadataKey,
         value: metadataNewValue,
       },

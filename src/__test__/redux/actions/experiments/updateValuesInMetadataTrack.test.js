@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import { updateValueInMetadataTrack } from 'redux/actions/experiments';
+import { updateValuesInMetadataTrack } from 'redux/actions/experiments';
 
 import '__test__/test-utils/setupTests';
 
@@ -15,9 +15,9 @@ import { BACKEND_STATUS_LOADED, BACKEND_STATUS_LOADING } from 'redux/actionTypes
 
 const mockStore = configureStore([thunk]);
 
-describe('updateValueInMetadataTrack action', () => {
+describe('updateValuesInMetadataTrack action', () => {
   const experimentId = 'mockExperimentId';
-  const sampleId = 'mockSampleId';
+  const sampleIds = ['mockSampleId'];
   const metadataTrackKeyRCompatible = 'Track_1';
   const value = 'mockNewValue';
 
@@ -34,7 +34,7 @@ describe('updateValueInMetadataTrack action', () => {
     fetchMock.mockIf(/.*/, () => promiseResponse(JSON.stringify({})));
 
     await store.dispatch(
-      updateValueInMetadataTrack(experimentId, sampleId, metadataTrackKeyRCompatible, value),
+      updateValuesInMetadataTrack(experimentId, sampleIds, metadataTrackKeyRCompatible, value),
     );
 
     const actions = store.getActions();
@@ -47,11 +47,11 @@ describe('updateValueInMetadataTrack action', () => {
     expect(_.map(actions, 'payload')).toMatchSnapshot();
 
     expect(fetchMock).toHaveBeenCalledWith(
-      `http://localhost:3000/v2/experiments/${experimentId}/samples/${sampleId}/metadataTracks/${metadataTrackKeyRCompatible}`,
+      `http://localhost:3000/v2/experiments/${experimentId}/metadataTracks/${metadataTrackKeyRCompatible}`,
       {
-        body: JSON.stringify({ value }),
+        body: JSON.stringify({ value, sampleIds }),
         headers: { 'Content-Type': 'application/json' },
-        method: 'PATCH',
+        method: 'POST',
       },
     );
   });
@@ -62,7 +62,7 @@ describe('updateValueInMetadataTrack action', () => {
     fetchMock.mockRejectOnce(() => Promise.reject(new Error('Some error')));
 
     await store.dispatch(
-      updateValueInMetadataTrack(experimentId, sampleId, metadataTrackKeyRCompatible, value),
+      updateValuesInMetadataTrack(experimentId, sampleIds, metadataTrackKeyRCompatible, value),
     );
 
     const actions = store.getActions();
