@@ -11,6 +11,7 @@ import {
   SAMPLES_OPTIONS_UPDATE,
   SAMPLES_ERROR, SAMPLES_SAVING,
 } from 'redux/actionTypes/samples';
+import { BACKEND_STATUS_LOADED, BACKEND_STATUS_LOADING } from 'redux/actionTypes/backendStatus';
 
 const mockStore = configureStore([thunk]);
 
@@ -24,7 +25,7 @@ const mockSamples = mockSampleIds.reduce((acc, sampleId, idx) => {
     uuid: `sampleId-${idx}`,
   };
   return acc;
-}, { });
+}, {});
 
 const mockState = {
   experiments: {
@@ -58,7 +59,9 @@ describe('updateSamplesOptions action', () => {
   });
 
   it('Works correctly', async () => {
-    fetchMock.mockResponseOnce(() => Promise.resolve(JSON.stringify({})));
+    fetchMock
+      .mockResponseOnce(() => Promise.resolve(JSON.stringify({})))
+      .mockResponseOnce(() => Promise.resolve(JSON.stringify({})));
 
     const sampleDiff = {
       includeAbSeq: false,
@@ -69,7 +72,7 @@ describe('updateSamplesOptions action', () => {
     await store.dispatch(updateSamplesOptions(mockExperimentId, sampleDiff));
 
     const actions = store.getActions();
-    expect(_.map(actions, 'type')).toEqual([SAMPLES_SAVING, SAMPLES_OPTIONS_UPDATE]);
+    expect(_.map(actions, 'type')).toEqual([SAMPLES_SAVING, SAMPLES_OPTIONS_UPDATE, BACKEND_STATUS_LOADING, BACKEND_STATUS_LOADED]);
     expect(_.map(actions, 'payload')).toMatchSnapshot();
 
     expect(fetchMock).toHaveBeenCalledWith(
