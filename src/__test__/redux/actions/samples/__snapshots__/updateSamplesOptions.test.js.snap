@@ -25,5 +25,12 @@ exports[`updateSamplesOptions action Works correctly 1`] = `
       "sample-2",
     ],
   },
+  {
+    "experimentId": "experiment-1",
+  },
+  {
+    "experimentId": "experiment-1",
+    "status": {},
+  },
 ]
 `;
