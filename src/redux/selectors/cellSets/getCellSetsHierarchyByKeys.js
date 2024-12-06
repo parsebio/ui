@@ -3,7 +3,7 @@ import _ from 'lodash';
 import getCellSetsHierarchy from './getCellSetsHierarchy';
 
 const getCellSetsHierarchyByKeys = (keys) => (hierarchy) => {
-  if (hierarchy.length === 0 || _.isNil(keys)) return [];
+  if (hierarchy.length === 0 || !_.isArray(keys)) return [];
 
   return (
     keys.map((key) => hierarchy.find((child) => child.key === key))
