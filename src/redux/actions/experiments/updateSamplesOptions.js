@@ -7,6 +7,7 @@ import {
 
 import handleError from 'utils/http/handleError';
 import fetchAPI from 'utils/http/fetchAPI';
+import { loadBackendStatus } from '../backendStatus';
 
 const updateSamplesOptions = (experimentId, diff) => async (dispatch, getState) => {
   const url = `/v2/experiments/${experimentId}/samples/options`;
@@ -44,6 +45,8 @@ const updateSamplesOptions = (experimentId, diff) => async (dispatch, getState) 
         diff,
       },
     });
+
+    await dispatch(loadBackendStatus(experimentId));
   } catch (e) {
     const errorMessage = handleError(e, endUserMessages.ERROR_SAVING);
 
