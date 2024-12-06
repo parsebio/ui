@@ -3,7 +3,7 @@ import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
 import getCellSetsHierarchy from './getCellSetsHierarchy';
 
 const getCellSetsHierarchyByKeys = (keys) => (hierarchy) => {
-  if (hierarchy.length === 0 || keys?.length === 0) return [];
+  if (hierarchy.length === 0 || !keys?.length > 0) return [];
 
   return (
     keys.map((key) => hierarchy.find((child) => child.key === key))
