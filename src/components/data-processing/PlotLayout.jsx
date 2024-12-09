@@ -141,7 +141,7 @@ const PlotLayout = ({
   return (
     <div
       style={{
-        height:
+        minHeight:
           window.innerWidth <= 1090
             ? selectedConfig?.dimensions?.height + 1000
             : selectedConfig?.dimensions?.height + 270,
