@@ -86,6 +86,7 @@ const runQC = (experimentId) => async (dispatch, getState) => {
   }
 
   // TODO REMOVE HERE
+  // eslint-disable-next-line no-alert
   alert('We are performing changes on this feature that require us to disable it for a few minutes. We apologize for the inconvenience.');
 
   // const processingConfigDiff = {};
