@@ -85,6 +85,10 @@ const runQC = (experimentId) => async (dispatch, getState) => {
     return;
   }
 
+  // TODO REMOVE HERE
+  alert('We are performing changes on this feature that require us to disable it for a few minutes. We apologize for the inconvenience.');
+  return;
+
   const processingConfigDiff = {};
   Array.from(changedQCFilters).forEach((stepKey) => {
     const stepConfig = processing[stepKey];
