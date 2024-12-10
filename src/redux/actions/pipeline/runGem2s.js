@@ -8,6 +8,7 @@ import {
 import loadBackendStatus from 'redux/actions/backendStatus/loadBackendStatus';
 
 const runGem2s = (experimentId) => async (dispatch) => {
+  // TODO REMOVE HERE
   alert('We are performing changes on this feature that require us to disable it for a few minutes. We apologize for the inconvenience.');
   return;
 
