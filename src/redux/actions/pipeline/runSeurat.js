@@ -1,13 +1,9 @@
-/* eslint-disable no-unreachable */
 import fetchAPI from 'utils/http/fetchAPI';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 import loadBackendStatus from 'redux/actions/backendStatus/loadBackendStatus';
 
 const runSeurat = (experimentId) => async (dispatch) => {
-  // eslint-disable-next-line no-alert
-  alert('We are performing changes on this feature that require us to disable it for a few minutes. We apologize for the inconvenience.');
-  return;
   try {
     await fetchAPI(
       `/v2/experiments/${experimentId}/seurat`,

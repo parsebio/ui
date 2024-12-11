@@ -1,4 +1,3 @@
-/* eslint-disable no-unreachable */
 import {
   Button,
   Card,
@@ -27,9 +26,6 @@ const RepositoryTable = (props) => {
   const [experimentCloning, setExperimentCloning] = useState(false);
 
   const cloneExperiment = async (exampleExperimentId) => {
-    // eslint-disable-next-line no-alert
-    alert('We are performing changes on this feature that require us to disable it for a few minutes. We apologize for the inconvenience.');
-    return;
     setExperimentCloning(true);
     const url = `/v2/experiments/${exampleExperimentId}/clone`;
 
