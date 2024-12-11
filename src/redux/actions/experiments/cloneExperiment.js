@@ -1,4 +1,3 @@
-/* eslint-disable no-unreachable */
 /* eslint-disable no-param-reassign */
 import fetchAPI from 'utils/http/fetchAPI';
 
@@ -16,9 +15,6 @@ import httpStatusCodes from 'utils/http/httpStatusCodes';
 const cloneExperiment = (
   originalId, name = null,
 ) => async (dispatch) => {
-  // eslint-disable-next-line no-alert
-  alert('We are performing changes on this feature that require us to disable it for a few minutes. We apologize for the inconvenience.');
-  return;
   dispatch({
     type: EXPERIMENTS_SAVING,
   });
