@@ -76,6 +76,10 @@
     "species": "Haemonchus contortus (Barber's pole worm)"
   },
   {
+    "name": "H_glaber_male",
+    "species": "Heterocephalus glaber male (Naked Mole Rat)"
+  },
+  {
     "name": "Mmul10",
     "species": "Macaca mulatta (Rhesus monkey)"
   },
@@ -198,6 +202,10 @@
   {
     "name": "Mmul_10_MeV_GFP",
     "species": "Custom Macaca mulatta (Rhesus Monkey) with MeV and GFP"
+  },
+  {
+    "name": "Mmul_10_MeV_GFP-2",
+    "species": "Custom Macaca mulatta (Rhesus Monkey) with MeV and GFP version 2"
   },
   {
     "name": "mTSC-custom",
