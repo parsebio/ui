@@ -19,13 +19,24 @@ const createPropertiesFromTree = (data) => {
     if (nodes) {
       nodes.forEach((node) => {
         const {
-          key, name, color, cellIds, rootNode, type,
+          key, name, color, cellIds, cellSetKeys, rootNode, type,
         } = node;
+
+        // we either have the cellids or cellSetKeys when its a metadata cluster
+        const cellIdsOrCellSetKeys = cellIds ? { cellIds: new Set(cellIds) } : { cellSetKeys };
+
+        const getCellIds = () => {
+          if (cellIds) {
+            return new Set(cellIds);
+          }
+          return new Set(cellSetKeys.flatMap((sampleId) => properties[sampleId].cellIds));
+        };
 
         properties[key] = {
           name,
           color,
-          cellIds: new Set(cellIds),
+          ...cellIdsOrCellSetKeys,
+          getCellIds,
           rootNode,
           type,
         };

@@ -8,7 +8,7 @@ const getNumberOfCellsInGrouping = (rootNodeKey, state) => {
   if (!rootNode) return null;
 
   const cellSetsLengths = rootNode?.children.map(
-    ({ key: cellSetKey }) => properties[cellSetKey].cellIds.size,
+    ({ key: cellSetKey }) => properties[cellSetKey].getCellIds().size,
   );
 
   return _.sum(cellSetsLengths);
