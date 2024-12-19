@@ -77,7 +77,8 @@ const complement = (listOfSets, properties, hierarchy) => {
 
 const getFilteredCells = (cellSets) => {
   const louvainClusters = cellSets.hierarchy.find(({ key }) => key === 'louvain').children;
-  const louvainClustersCellIds = louvainClusters.map(({ key }) => cellSets.properties[key].getCellIds());
+  const louvainClustersCellIds = louvainClusters
+    .map(({ key }) => cellSets.properties[key].getCellIds());
 
   const filteredInCellIds = louvainClustersCellIds.reduce(
     (filteredInCellIdsAcum, cellIds) => setOperations.union(filteredInCellIdsAcum, cellIds),
