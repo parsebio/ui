@@ -24,6 +24,10 @@
     "species": "Arabidopsis thaliana (Thale cress)"
   },
   {
+    "name": "AstCal1-3",
+    "species": "Astatotilapia calliptera (Eastern happy)"
+  },
+  {
     "name": "ARS-UCD1.3",
     "species": "Bos taurus (Cow)"
   },
@@ -108,12 +112,16 @@
     "species": "Ovis aries (Sheep)"
   },
   {
-    "name": "ARS-UI_Ramb_v2",
+    "name": "ARS-UI_Ramb_v2-ncbi",
     "species": "Ovis aries (sheep), Breed: Rambouillet"
   },
   {
-    "name": "ARS-UI_Ramb_v2-alt",
+    "name": "ARS-UI_Ramb_v2",
     "species": "Ovis aries (sheep), Breed: Rambouillet, Ensembl: GCA_016772045.1"
+  },
+  {
+    "name": "ARS-UI_Ramb_v3",
+    "species": "Ovis aries (sheep), Breed: Rambouillet, Ensembl: GCA_016772045.2"
   },
   {
     "name": "PFal3D7",
@@ -198,6 +206,10 @@
   {
     "name": "GRCh38_sp",
     "species": "Custom Homo sapiens (human)"
+  },
+  {
+    "name": "GRCh38_SARS",
+    "species": "Homo sapiens (Human) with SARS-CoV-2"
   },
   {
     "name": "Mmul_10_MeV_GFP",
