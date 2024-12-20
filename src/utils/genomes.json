@@ -104,6 +104,10 @@
     "species": "Oryctolagus cuniculus (Rabbit)"
   },
   {
+    "name": "Odam1-1",
+    "species": "Oryx dammah (scimitar-horned oryx)"
+  },
+  {
     "name": "ASM223467v1",
     "species": "Oryzias latipes (Medaka)"
   },
@@ -209,7 +213,7 @@
   },
   {
     "name": "GRCh38_SARS",
-    "species": "Homo sapiens (Human) with SARS-CoV-2"
+    "species": "Custom Homo sapiens (Human) with SARS-CoV-2"
   },
   {
     "name": "Mmul_10_MeV_GFP",
@@ -278,6 +282,10 @@
   {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
+  },
+  {
+    "name": "GRCm39-tdTom_TBrucei",
+    "species": "Custom Mixed Mus musculus (mouse) with Trypanosoma brucei and tdTomato"
   },
   {
     "name": "Panubis1.0_genomic_SIVmac251",
