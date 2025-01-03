@@ -24,6 +24,10 @@
     "species": "Arabidopsis thaliana (Thale cress)"
   },
   {
+    "name": "AstCal1-3",
+    "species": "Astatotilapia calliptera (Eastern happy)"
+  },
+  {
     "name": "ARS-UCD1.3",
     "species": "Bos taurus (Cow)"
   },
@@ -76,6 +80,10 @@
     "species": "Haemonchus contortus (Barber's pole worm)"
   },
   {
+    "name": "H_glaber_male",
+    "species": "Heterocephalus glaber male (Naked Mole Rat)"
+  },
+  {
     "name": "Mmul10",
     "species": "Macaca mulatta (Rhesus monkey)"
   },
@@ -96,6 +104,10 @@
     "species": "Oryctolagus cuniculus (Rabbit)"
   },
   {
+    "name": "Odam1-1",
+    "species": "Oryx dammah (scimitar-horned oryx)"
+  },
+  {
     "name": "ASM223467v1",
     "species": "Oryzias latipes (Medaka)"
   },
@@ -104,12 +116,16 @@
     "species": "Ovis aries (Sheep)"
   },
   {
-    "name": "ARS-UI_Ramb_v2",
+    "name": "ARS-UI_Ramb_v2-ncbi",
     "species": "Ovis aries (sheep), Breed: Rambouillet"
   },
   {
-    "name": "ARS-UI_Ramb_v2-alt",
+    "name": "ARS-UI_Ramb_v2",
     "species": "Ovis aries (sheep), Breed: Rambouillet, Ensembl: GCA_016772045.1"
+  },
+  {
+    "name": "ARS-UI_Ramb_v3",
+    "species": "Ovis aries (sheep), Breed: Rambouillet, Ensembl: GCA_016772045.2"
   },
   {
     "name": "PFal3D7",
@@ -196,8 +212,16 @@
     "species": "Custom Homo sapiens (human)"
   },
   {
+    "name": "GRCh38_SARS",
+    "species": "Custom Homo sapiens (Human) with SARS-CoV-2"
+  },
+  {
     "name": "Mmul_10_MeV_GFP",
     "species": "Custom Macaca mulatta (Rhesus Monkey) with MeV and GFP"
+  },
+  {
+    "name": "Mmul_10_MeV_GFP-2",
+    "species": "Custom Macaca mulatta (Rhesus Monkey) with MeV and GFP version 2"
   },
   {
     "name": "mTSC-custom",
@@ -258,6 +282,10 @@
   {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
+  },
+  {
+    "name": "GRCm39-tdTom_TBrucei",
+    "species": "Custom Mixed Mus musculus (mouse) with Trypanosoma brucei and tdTomato"
   },
   {
     "name": "Panubis1.0_genomic_SIVmac251",
