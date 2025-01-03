@@ -290,7 +290,7 @@ const filterCells = (cellSets, sampleKey, groupBy) => {
   filteredCells = filteredCells.reduce((acc, cell) => {
     if (!cell) return acc;
 
-    const inCellSet = colorToCellIdsMap.find((map) => map.getCellIds().has(cell.cellId));
+    const inCellSet = colorToCellIdsMap.find((map) => map.cellIds.has(cell.cellId));
 
     // If cell is not in the cell set, then return
     if (!inCellSet) return acc;
