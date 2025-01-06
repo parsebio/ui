@@ -67,7 +67,7 @@ const checkCanRunDiffExpr = (
 
     compareWithCellIds = otherGroupKeys.reduce(
       (cumulativeGroupKeys, child) => cumulativeGroupKeys.concat(
-        Array.from(properties[child.key].cellIds),
+        Array.from(properties[child.key].getCellIds()),
       ), [],
     );
   } else {
