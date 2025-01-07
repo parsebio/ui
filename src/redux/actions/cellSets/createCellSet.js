@@ -46,6 +46,7 @@ const createCellSet = (experimentId, name, color, cellIdsSet) => async (dispatch
   const dataForRedux = {
     ...data,
     cellIds: cellIdsSet,
+    getCellIds: () => cellIdsSet,
   };
 
   // cellIds are stored as an array in S3
