@@ -1,4 +1,4 @@
-import _, { get } from 'lodash';
+import _ from 'lodash';
 
 const createHierarchyFromTree = (data) => data && data.map((rootNode) => {
   const rootNodeObject = {
