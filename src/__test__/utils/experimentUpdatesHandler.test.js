@@ -71,10 +71,8 @@ const mockQcUpdate = {
 const mockGem2sUpdate = {
   type: updateTypes.GEM2S,
   output: {
-    item: {
-      processingConfig: {
-        mockProcessingConfig: 'mockProcessingConfig',
-      },
+    processingConfig: {
+      mockProcessingConfig: 'mockProcessingConfig',
     },
   },
   status: {
@@ -98,10 +96,8 @@ const mockWorkResponseUpdate = {
 
 const mockSeuratUpdate = {
   type: updateTypes.SEURAT,
-  item: {
-    processingConfig: {
-      mockProcessingConfig: 'mockProcessingConfig',
-    },
+  processingConfig: {
+    mockProcessingConfig: 'mockProcessingConfig',
   },
   status: {
     seurat: {
