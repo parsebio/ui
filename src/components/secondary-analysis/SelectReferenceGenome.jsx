@@ -63,7 +63,7 @@ const SelectReferenceGenome = (props) => {
   );
 };
 SelectReferenceGenome.defaultProps = {
-  previousGenome: '',
+  previousGenome: undefined,
 };
 SelectReferenceGenome.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
