@@ -11,6 +11,7 @@ import {
   Checkbox,
   Tooltip,
   Alert,
+  Radio,
 } from 'antd';
 
 import {
@@ -18,7 +19,7 @@ import {
 } from '@ant-design/icons';
 
 import _ from 'lodash';
-import { downsamplingMethods } from 'utils/constants';
+import { analysisTools, downsamplingMethods } from 'utils/constants';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import { updateFilterSettings } from 'redux/actions/experimentSettings';
@@ -44,9 +45,15 @@ const CalculationConfig = (props) => {
   } = props;
   const FILTER_UUID = 'dataIntegration';
   const dispatch = useDispatch();
+
   const { dataIntegration, dimensionalityReduction } = useSelector(
     (state) => state.experimentSettings.processing.dataIntegration,
   );
+
+  const analysisTool = useSelector(
+    (state) => state.experimentSettings.info.analysisTool,
+  );
+
   const elbowPlotUuid = generateDataProcessingPlotUuid(null, FILTER_UUID, 1);
   const data = useSelector((state) => state.componentConfig[elbowPlotUuid]?.plotData);
   const downsampling = getDownsampling(
@@ -189,6 +196,17 @@ const CalculationConfig = (props) => {
               </Form.Item>
             )
           }
+
+          <div style={{ paddingLeft: '1rem' }}>
+            <Form.Item
+              label='Toolkit type:'
+            >
+              <Radio.Group value={analysisTool}>
+                <Radio value={analysisTools.SEURAT}>Seurat</Radio>
+                <Radio value={analysisTools.SCANPY}>Scanpy</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </div>
 
           <div style={{ paddingLeft: '1rem' }}>
             <Form.Item
