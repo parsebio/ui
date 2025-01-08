@@ -5,11 +5,12 @@ import {
 } from 'redux/actionTypes/cellSets';
 import endUserMessages from 'utils/endUserMessages';
 import downloadFromS3 from 'utils/work/downloadFromS3';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const loadCellSets = (experimentId, forceReload = false) => async (dispatch, getState) => {
   const {
     loading, error, updatingClustering, initialLoadPending,
-  } = getState().cellSets;
+  } = getCellSets()(getState().cellSets);
 
   const loadingBlocked = loading || updatingClustering;
   const requiresLoading = initialLoadPending || error;

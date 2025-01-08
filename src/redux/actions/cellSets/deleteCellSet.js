@@ -3,6 +3,7 @@ import { CELL_SETS_DELETE } from 'redux/actionTypes/cellSets';
 import endUserMessages from 'utils/endUserMessages';
 import fetchAPI from 'utils/http/fetchAPI';
 import handleError from 'utils/http/handleError';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const deleteCellSetJsonMerger = (cellSetKey, cellClasskey) => (
   [{
@@ -27,7 +28,7 @@ const deleteCellSetJsonMerger = (cellSetKey, cellClasskey) => (
 const deleteCellSet = (experimentId, key) => async (dispatch, getState) => {
   const {
     loading, error,
-  } = getState().cellSets;
+  } = getCellSets()(getState().cellSets);
 
   if (loading || error) {
     return null;

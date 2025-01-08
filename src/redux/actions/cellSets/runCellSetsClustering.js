@@ -4,11 +4,12 @@ import {
 
 import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
 import fetchWork from 'utils/work/fetchWork';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const runCellSetsClustering = (experimentId, resolution) => async (dispatch, getState) => {
   const {
     error, updatingClustering, loading,
-  } = getState().cellSets;
+  } = getCellSets()(getState().cellSets);
 
   const { experimentSettings: { processing } } = getState();
 

@@ -44,18 +44,6 @@ const createPropertiesFromTree = (data) => {
   });
 
   traverseProperties(data, null);
-  // add getCellIds getter to each property
-  Object.entries(properties).forEach(([key, value]) => {
-    properties[key].getCellIds = () => {
-      if (value.rootNode) return new Set();
-      const { cellIds, cellSetKeys } = value;
-
-      if (cellIds) {
-        return new Set(cellIds);
-      }
-      return new Set(cellSetKeys.map((sampleId) => properties[sampleId].cellIds).flat()[0]);
-    };
-  });
   return properties;
 };
 

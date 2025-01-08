@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-const getNumberOfCellsInGrouping = (rootNodeKey, state) => {
-  const { hierarchy, properties } = state.cellSets;
+const getNumberOfCellsInGrouping = (rootNodeKey, cellSets) => {
+  const { hierarchy, properties } = cellSets;
 
   const rootNode = hierarchy.find(({ key }) => key === rootNodeKey);
 

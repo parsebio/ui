@@ -1,11 +1,14 @@
 import getNumberOfCellsInGrouping from 'redux/selectors/getNumberOfCellsInGrouping';
 import { getCellSetsHierarchyByKeys } from 'redux/selectors';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 // Timeouts calculated in https://docs.google.com/document/d/1vim9t9lWMLW8wALeJvDeYnofQa9tj9zPU3i1SOfMilM/edit
 const getTimeoutForWorkerTask = (state, taskName) => {
   // Get filtered nCells for more accurate timeout//
   // if louvain is not calculated (unlikely) get all nCells
-  const nCells = getNumberOfCellsInGrouping('louvain', state) ?? getNumberOfCellsInGrouping('sample', state);
+  const cellSets = getCellSets()(state.cellSets);
+
+  const nCells = getNumberOfCellsInGrouping('louvain', cellSets) ?? getNumberOfCellsInGrouping('sample', cellSets);
   const nClusters = getCellSetsHierarchyByKeys(['louvain'])(state)[0]?.children.length ?? 1;
 
   const baseTimeout = 180; // some big datasets take up to 2-3 minutes to be downloaded & loaded

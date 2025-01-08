@@ -5,6 +5,7 @@ import { CELL_SETS_UPDATE_PROPERTY } from 'redux/actionTypes/cellSets';
 import fetchAPI from 'utils/http/fetchAPI';
 import endUserMessages from 'utils/endUserMessages';
 import handleError from 'utils/http/handleError';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const updateCellSetPropertyJsonMerger = (cellSetKey, dataUpdated, cellClassKey) => (
   [{
@@ -47,7 +48,7 @@ const updatesAreAllowed = (dataUpdated, rootNode) => {
 const updateCellSetProperty = (
   experimentId, key, dataUpdated,
 ) => async (dispatch, getState) => {
-  const { loading, error, properties } = getState().cellSets;
+  const { loading, error, properties } = getCellSets()(getState().cellSets);
 
   if (loading || error) {
     return null;

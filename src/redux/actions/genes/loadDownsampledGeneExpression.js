@@ -9,6 +9,7 @@ import {
 import fetchWork from 'utils/work/fetchWork';
 import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
 import getCellSetsThatAffectDownsampling from 'utils/work/getCellSetsThatAffectDownsampling';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 // Debounce so that we only fetch once the settings are done being set up
 const loadDownsampledGeneExpression = (
@@ -37,7 +38,7 @@ const loadDownsampledGeneExpression = (
     selectedPoints,
   } = state.componentConfig[componentUuid]?.config;
 
-  const hiddenCellSets = withHiddenCellSets ? Array.from(state.cellSets.hidden) : [];
+  const hiddenCellSets = withHiddenCellSets ? Array.from(getCellSets()(state.cellSets).hidden) : [];
 
   const cellSets = await getCellSetsThatAffectDownsampling(
     experimentId, selectedCellSetKey, groupedTracks, dispatch, getState,
