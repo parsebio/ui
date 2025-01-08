@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { mockCellSets } from '__test__/test-utils/cellSets.mock';
-import { downsamplingMethods } from 'utils/constants';
+import { analysisTools, downsamplingMethods } from 'utils/constants';
 import _ from 'lodash';
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
 import { initialEmbeddingState } from 'redux/reducers/embeddings/initialState';
@@ -12,10 +12,11 @@ import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import generateExperimentSettingsMock from '__test__/test-utils/experimentSettings.mock';
 import '__test__/test-utils/setupTests';
 
-import { screen, render } from '@testing-library/react';
+import { screen, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CalculationConfig from 'components/data-processing/DataIntegration/CalculationConfig';
 import fake from '__test__/test-utils/constants';
+import { EXPERIMENT_SETTINGS_NON_SAMPLE_FILTER_UPDATE } from 'redux/actionTypes/experimentSettings';
 
 jest.mock('redux/selectors');
 
@@ -71,20 +72,22 @@ const initialState = {
 
 const explanationText = 'SeuratV4 is a computationally expensive method. It is highly likely that the integration will fail as it requires more resources than are currently available. We recommended you to evaluate other methods before using SeuratV4.';
 
-const renderCalculationConfig = async (storeState) => {
-  const mockedStore = mockStore(storeState);
-  return await render(
-    <Provider store={mockedStore}>
-      <CalculationConfig
-        experimentId={fake.EXPERIMENT_ID}
-        changedFilters={{ current: new Set() }}
-        onConfigChange={jest.fn()}
-      />
-    </Provider>,
-  );
-};
-
 describe('DataIntegration.CalculationConfig', () => {
+  let mockedStore;
+
+  const renderCalculationConfig = async (storeState) => {
+    mockedStore = mockStore(storeState);
+    return await render(
+      <Provider store={mockedStore}>
+        <CalculationConfig
+          experimentId={fake.EXPERIMENT_ID}
+          changedFilters={{ current: new Set() }}
+          onConfigChange={jest.fn()}
+        />
+      </Provider>,
+    );
+  };
+
   it('renders correctly when data is in the store', async () => {
     await renderCalculationConfig(initialState);
 
@@ -174,5 +177,67 @@ describe('DataIntegration.CalculationConfig', () => {
     await renderCalculationConfig(seuratV4State);
 
     expect(screen.getByText(explanationText)).toBeInTheDocument();
+  });
+
+  it('Works for analysis tool scanpy', async () => {
+    const scanpyState = _.merge(initialState, {
+      experimentSettings: {
+        processing: {
+          dataIntegration: {
+            analysisTool: analysisTools.SCANPY,
+          },
+        },
+      },
+    });
+
+    await renderCalculationConfig(scanpyState);
+
+    expect(screen.getByText('Data Integration')).toBeDefined();
+    expect(screen.getByText('Downsampling Options')).toBeDefined();
+
+    // Displays things correctly
+    userEvent.click(screen.getByText('Downsampling Options'));
+
+    expect(screen.getByText('Geometric Sketching')).toBeDefined();
+    const input = screen.getByLabelText('% of cells to keep');
+    expect(input.value).toEqual('12');
+
+    userEvent.type(input, '{backspace}{backspace}3');
+    expect(input.value).toEqual('3');
+  });
+
+  it('Switch dispatches action', async () => {
+    const seuratV4State = _.merge(initialState, {
+      experimentSettings: {
+        processing: {
+          dataIntegration: {
+            analysisTool: analysisTools.SEURAT,
+            dataIntegration: {
+              method: 'seuratv4',
+            },
+          },
+        },
+      },
+    });
+
+    await renderCalculationConfig(seuratV4State);
+
+    // Seurat v4 is selected
+    expect(screen.queryByText('Harmony')).not.toBeInTheDocument();
+    expect(screen.getByText('Seurat v4')).toBeInTheDocument();
+
+    const scanpyRadioButton = screen.getByRole('radio', { name: /Scanpy/i });
+    userEvent.click(scanpyRadioButton);
+
+    expect(mockedStore.getActions()).toHaveLength(1);
+    const action = mockedStore.getActions()[0];
+
+    expect(action).toEqual({
+      payload: expect.objectContaining({
+        configChange: { analysisTool: analysisTools.SCANPY },
+        step: 'dataIntegration',
+      }),
+      type: EXPERIMENT_SETTINGS_NON_SAMPLE_FILTER_UPDATE,
+    });
   });
 });
