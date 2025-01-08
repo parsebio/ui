@@ -199,7 +199,7 @@ const CalculationConfig = (props) => {
 
           <div style={{ paddingLeft: '1rem' }}>
             <Form.Item
-              label='Toolkit type:'
+              label='Analysis tool:'
             >
               <Radio.Group value={analysisTool}>
                 <Radio value={analysisTools.SEURAT}>Seurat</Radio>
