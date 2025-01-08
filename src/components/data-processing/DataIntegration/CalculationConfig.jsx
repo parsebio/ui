@@ -23,40 +23,14 @@ import { analysisTools, downsamplingMethods } from 'utils/constants';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import { updateFilterSettings } from 'redux/actions/experimentSettings';
+import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import NormalisationOptions from './NormalisationOptions';
 
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const getDownsampling = (downsamplingConfig = {}) => {
-  const { method = downsamplingMethods.NONE, methodSettings = {} } = downsamplingConfig;
-
-  if (method === downsamplingMethods.NONE || !(method in methodSettings)) {
-    return { method };
-  }
-
-  // only return percentage to keep if not NONE
-  return { method, percentageToKeep: methodSettings[method].percentageToKeep };
-};
-
-const CalculationConfig = (props) => {
-  const {
-    onConfigChange, disabled, disableDataIntegration,
-  } = props;
-  const FILTER_UUID = 'dataIntegration';
-  const dispatch = useDispatch();
-
-  const { dataIntegration, dimensionalityReduction, analysisTool } = useSelector(
-    (state) => state.experimentSettings.processing.dataIntegration,
-  );
-
-  const elbowPlotUuid = generateDataProcessingPlotUuid(null, FILTER_UUID, 1);
-  const data = useSelector((state) => state.componentConfig[elbowPlotUuid]?.plotData);
-  const downsampling = getDownsampling(
-    useSelector((state) => state.experimentSettings.processing.dataIntegration.downsampling),
-  );
-
-  const methods = [
+const integrationMethodsByAnalysisTool = {
+  [analysisTools.SEURAT]: [
     {
       value: 'harmony',
       text: 'Harmony',
@@ -92,9 +66,51 @@ const CalculationConfig = (props) => {
       text: 'Liger',
       disabled: true,
     },
-  ];
+  ],
+  [analysisTools.SCANPY]: [
+    {
+      value: 'harmony',
+      text: 'Harmony',
+      disabled: false,
+    },
+  ],
+};
+
+const getDownsampling = (downsamplingConfig = {}) => {
+  const { method = downsamplingMethods.NONE, methodSettings = {} } = downsamplingConfig;
+
+  if (method === downsamplingMethods.NONE || !(method in methodSettings)) {
+    return { method };
+  }
+
+  // only return percentage to keep if not NONE
+  return { method, percentageToKeep: methodSettings[method].percentageToKeep };
+};
+
+const CalculationConfig = (props) => {
+  const {
+    onConfigChange, disabled, disableDataIntegration,
+  } = props;
+  const FILTER_UUID = 'dataIntegration';
+  const dispatch = useDispatch();
+
+  const { dataIntegration, dimensionalityReduction, analysisTool } = useSelector(
+    (state) => state.experimentSettings.processing.dataIntegration,
+  );
+
+  const elbowPlotUuid = generateDataProcessingPlotUuid(null, FILTER_UUID, 1);
+  const data = useSelector((state) => state.componentConfig[elbowPlotUuid]?.plotData);
+  const downsampling = getDownsampling(
+    useSelector((state) => state.experimentSettings.processing.dataIntegration.downsampling),
+  );
 
   const [numPCs, setNumPCs] = useState(dimensionalityReduction.numPCs);
+
+  useConditionalEffect(() => {
+    const firstMethod = integrationMethodsByAnalysisTool[analysisTool][0].value;
+
+    updateSettings({ dataIntegration: { method: firstMethod } });
+  }, [analysisTool], { lazy: true });
 
   const updateSettings = (diff) => {
     onConfigChange();
@@ -217,7 +233,7 @@ const CalculationConfig = (props) => {
                 disabled={disableDataIntegration || disabled}
               >
                 {
-                  methods.map((el) => (
+                  integrationMethodsByAnalysisTool[analysisTool].map((el) => (
                     <Option key={el.text} value={el.value} disabled={el.disabled}>
                       {
                         el.disabled ? (
