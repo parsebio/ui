@@ -46,12 +46,8 @@ const CalculationConfig = (props) => {
   const FILTER_UUID = 'dataIntegration';
   const dispatch = useDispatch();
 
-  const { dataIntegration, dimensionalityReduction } = useSelector(
+  const { dataIntegration, dimensionalityReduction, analysisTool } = useSelector(
     (state) => state.experimentSettings.processing.dataIntegration,
-  );
-
-  const analysisTool = useSelector(
-    (state) => state.experimentSettings.info.analysisTool,
   );
 
   const elbowPlotUuid = generateDataProcessingPlotUuid(null, FILTER_UUID, 1);
@@ -201,7 +197,10 @@ const CalculationConfig = (props) => {
             <Form.Item
               label='Analysis tool:'
             >
-              <Radio.Group value={analysisTool}>
+              <Radio.Group
+                onChange={(e) => updateSettings({ analysisTool: e.target.value })}
+                value={analysisTool}
+              >
                 <Radio value={analysisTools.SEURAT}>Seurat</Radio>
                 <Radio value={analysisTools.SCANPY}>Scanpy</Radio>
               </Radio.Group>
