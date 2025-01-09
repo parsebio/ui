@@ -234,7 +234,12 @@ describe('DataIntegration.CalculationConfig', () => {
 
     expect(action).toEqual({
       payload: expect.objectContaining({
-        configChange: { analysisTool: analysisTools.SCANPY },
+        configChange: {
+          analysisTool: analysisTools.SCANPY,
+          dataIntegration: {
+            method: 'harmony',
+          },
+        },
         step: 'dataIntegration',
       }),
       type: EXPERIMENT_SETTINGS_NON_SAMPLE_FILTER_UPDATE,
