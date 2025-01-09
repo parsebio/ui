@@ -23,7 +23,7 @@ import { analysisTools, downsamplingMethods } from 'utils/constants';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import { updateFilterSettings } from 'redux/actions/experimentSettings';
-import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
+
 import NormalisationOptions from './NormalisationOptions';
 
 const { Option } = Select;
@@ -105,12 +105,6 @@ const CalculationConfig = (props) => {
   );
 
   const [numPCs, setNumPCs] = useState(dimensionalityReduction.numPCs);
-
-  useConditionalEffect(() => {
-    const firstMethod = integrationMethodsByAnalysisTool[analysisTool][0].value;
-
-    updateSettings({ dataIntegration: { method: firstMethod } });
-  }, [analysisTool], { lazy: true });
 
   const updateSettings = (diff) => {
     onConfigChange();
@@ -214,7 +208,25 @@ const CalculationConfig = (props) => {
               label='Analysis tool:'
             >
               <Radio.Group
-                onChange={(e) => updateSettings({ analysisTool: e.target.value })}
+                onChange={(e) => {
+                  const newAnalysisTool = e.target.value;
+                  const methods = integrationMethodsByAnalysisTool[newAnalysisTool];
+
+                  let newMethod = dataIntegration.method;
+
+                  // If the integration method is not available, set to the
+                  // first available method in the new analysis tool
+                  if (!_.find(methods, { value: dataIntegration.method })) {
+                    newMethod = methods[0].value;
+                  }
+
+                  if (dataIntegration.method) {
+                    return updateSettings({
+                      analysisTool: e.target.value,
+                      dataIntegration: { method: newMethod },
+                    });
+                  }
+                }}
                 value={analysisTool}
               >
                 <Radio value={analysisTools.SEURAT}>Seurat</Radio>
