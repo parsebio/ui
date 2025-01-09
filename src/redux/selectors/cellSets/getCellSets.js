@@ -14,16 +14,22 @@ const getCellSets = () => (state) => {
   const propertiesWithExtraKeys = {};
   if (!_.isEmpty(properties)) {
     Object.entries(properties).forEach(([key, value]) => {
+      const { cellIds, cellSetKeys, rootNode } = value;
+      let getCellIds;
+
+      if (rootNode) {
+        getCellIds = () => new Set();
+      } else if (cellIds) {
+        getCellIds = () => new Set(cellIds);
+      } else {
+        getCellIds = () => new Set(
+          cellSetKeys.map((sampleId) => properties[sampleId].cellIds).flat()[0],
+        );
+      }
+
       propertiesWithExtraKeys[key] = {
         ...value,
-        getCellIds: () => {
-          const { cellIds, cellSetKeys } = value;
-          if (value.rootNode) return new Set();
-          if (cellIds) {
-            return new Set(cellIds);
-          }
-          return new Set(cellSetKeys.map((sampleId) => properties[sampleId].cellIds).flat()[0]);
-        },
+        getCellIds,
       };
     });
   }
