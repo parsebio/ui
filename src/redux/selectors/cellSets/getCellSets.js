@@ -3,7 +3,7 @@ import _ from 'lodash';
 import initialState from '../../reducers/cellSets/initialState';
 
 const getCellSets = () => (state) => {
-  const stateToReturn = (Object.keys(state).length ? state : initialState);
+  const stateToReturn = (state && Object.keys(state).length ? state : initialState);
 
   const accessible = !stateToReturn.loading
     && !stateToReturn.initialLoadPending

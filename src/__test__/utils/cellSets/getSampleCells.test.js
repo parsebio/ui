@@ -4,13 +4,14 @@ import {
 } from 'redux/reducers/cellSets/helpers';
 
 import { getSampleCells } from 'utils/cellSets';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const mockCellSet = require('__test__/data/cell_sets.json');
 
-const cellSets = {
+const cellSets = getCellSets()({
   properties: createPropertiesFromTree(mockCellSet.cellSets),
   hierarchy: createHierarchyFromTree(mockCellSet.cellSets),
-};
+});
 
 const sampleKey = 'louvain-0';
 const numCells = cellSets.properties[sampleKey].cellIds.size;
