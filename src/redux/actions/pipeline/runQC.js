@@ -11,6 +11,7 @@ import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { loadEmbedding } from 'redux/actions/embedding';
 import { runCellSetsClustering } from 'redux/actions/cellSets';
 import { getBackendStatus, getFilterChanges } from 'redux/selectors';
+import { analysisTools } from 'utils/constants';
 
 const runOnlyConfigureEmbedding = async (experimentId, embeddingMethod, dispatch) => {
   await dispatch(saveProcessingSettings(experimentId, 'configureEmbedding'));
@@ -60,11 +61,16 @@ const runQC = (experimentId) => async (dispatch, getState) => {
   const qcFailed = getBackendStatus(experimentId)(getState()).status.pipeline.error;
 
   const { changedQCFilters } = processing.meta;
+  const { analysisTool } = processing.dataIntegration;
 
   const onlyConfigureEmbeddingChanged = changedQCFilters.has('configureEmbedding') && changedQCFilters.size === 1;
 
   // if only embedding changed and the qc didn't fail
-  if (onlyConfigureEmbeddingChanged && !qcFailed) {
+  if (
+    analysisTool === analysisTools.SEURAT
+    && onlyConfigureEmbeddingChanged
+    && !qcFailed
+  ) {
     const changedKeys = getFilterChanges('configureEmbedding')(getState());
 
     if (changedKeys.has('embeddingSettings')) {
