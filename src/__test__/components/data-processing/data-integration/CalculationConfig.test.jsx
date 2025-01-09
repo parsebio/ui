@@ -12,7 +12,7 @@ import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import generateExperimentSettingsMock from '__test__/test-utils/experimentSettings.mock';
 import '__test__/test-utils/setupTests';
 
-import { screen, render, waitFor } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CalculationConfig from 'components/data-processing/DataIntegration/CalculationConfig';
 import fake from '__test__/test-utils/constants';
