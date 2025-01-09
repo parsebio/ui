@@ -1,0 +1,154 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Get cell sets selector test should return default cell sets if unavailable 1`] = `
+{
+  "accessible": false,
+  "error": false,
+  "hidden": Set {},
+  "hierarchy": [],
+  "initialLoadPending": true,
+  "loading": false,
+  "properties": {},
+  "selected": [],
+  "updatingClustering": false,
+}
+`;
+
+exports[`Get cell sets selector test should return store cellsets if available 1`] = `
+{
+  "accessible": true,
+  "error": false,
+  "hierarchy": [
+    {
+      "cellIds": Set {},
+      "children": [
+        {
+          "key": "cluster-a",
+        },
+        {
+          "key": "cluster-b",
+        },
+        {
+          "key": "cluster-c",
+        },
+      ],
+      "key": "louvain",
+    },
+    {
+      "cellIds": Set {},
+      "children": [
+        {
+          "key": "sample-1",
+        },
+        {
+          "key": "sample-2",
+        },
+      ],
+      "key": "sample",
+    },
+    {
+      "cellIds": Set {},
+      "children": [
+        {
+          "key": "scratchpad-a",
+        },
+      ],
+      "key": "scratchpad",
+    },
+  ],
+  "initialLoadPending": false,
+  "loading": false,
+  "properties": {
+    "cluster-a": {
+      "cellIds": Set {
+        0,
+        1,
+        6,
+      },
+      "color": "#01FFFF",
+      "getCellIds": [Function],
+      "key": "cluster-a",
+      "name": "cluster a",
+    },
+    "cluster-b": {
+      "cellIds": Set {
+        2,
+        3,
+      },
+      "color": "#23FFFF",
+      "getCellIds": [Function],
+      "key": "cluster-b",
+      "name": "cluster b",
+    },
+    "cluster-c": {
+      "cellIds": Set {
+        4,
+        5,
+      },
+      "color": "#45FFFF",
+      "getCellIds": [Function],
+      "key": "cluster-c",
+      "name": "cluster c",
+    },
+    "louvain": {
+      "cellIds": Set {},
+      "getCellIds": [Function],
+      "key": "louvain",
+      "name": "Louvain clusters",
+      "rootNode": true,
+      "type": "cellSets",
+    },
+    "sample": {
+      "cellIds": Set {
+        6,
+        7,
+        8,
+      },
+      "getCellIds": [Function],
+      "key": "sample",
+      "name": "Samples",
+      "rootNode": true,
+      "type": "metadataCategorical",
+    },
+    "sample-1": {
+      "cellIds": Set {
+        0,
+        1,
+        2,
+      },
+      "color": "#012FFF",
+      "getCellIds": [Function],
+      "key": "sample-1",
+      "name": "Sample 1",
+    },
+    "sample-2": {
+      "cellIds": Set {
+        3,
+        4,
+        5,
+      },
+      "color": "#345FFF",
+      "getCellIds": [Function],
+      "key": "sample-2",
+      "name": "Sample 2",
+    },
+    "scratchpad": {
+      "cellIds": Set {},
+      "getCellIds": [Function],
+      "key": "scratchpad",
+      "name": "Scratchpad",
+      "rootNode": true,
+      "type": "cellSets",
+    },
+    "scratchpad-a": {
+      "cellIds": Set {
+        "5",
+      },
+      "color": "#5FFFFF",
+      "getCellIds": [Function],
+      "key": "scratchpad-a",
+      "name": "New Cluster",
+    },
+  },
+}
+`;
