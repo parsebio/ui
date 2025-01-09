@@ -57,9 +57,7 @@ const FastqFilesTable = (props) => {
       dataIndex: 'createdAt',
       render: (createdAt) => (
         <div style={{ maxHeight: '10%' }}>
-          {' '}
           <PrettyTime isoTime={createdAt} />
-          {' '}
         </div>
       ),
       width: '20%',
