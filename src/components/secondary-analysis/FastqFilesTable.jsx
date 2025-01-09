@@ -7,6 +7,7 @@ import bytesToSize from 'utils/styling/bytesToSize';
 import { DeleteOutlined } from '@ant-design/icons';
 import UploadStatusView from 'components/UploadStatusView';
 import UploadStatus from 'utils/upload/UploadStatus';
+import PrettyTime from 'components/PrettyTime';
 
 const FastqFilesTable = (props) => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const FastqFilesTable = (props) => {
     name: file.name,
     size: bytesToSize(file.size),
     status: file.upload.status,
+    createdAt: file.createdAt,
     progress: file.upload.percentProgress,
   }));
 
@@ -48,6 +50,14 @@ const FastqFilesTable = (props) => {
     }, {
       title: 'Size',
       dataIndex: 'size',
+      width: '20%',
+    },
+    {
+      title: 'Date Uploaded',
+      dataIndex: 'createdAt',
+      render: (createdAt) => (
+        <PrettyTime isoTime={createdAt} />
+      ),
       width: '20%',
     },
     {
