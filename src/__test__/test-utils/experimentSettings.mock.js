@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import initialState from 'redux/reducers/experimentSettings/initialState';
+import { analysisTools } from 'utils/constants';
 
 const sampleifiedConfig = (sampleIds, configToReplicate) => {
   const result = sampleIds.reduce(
@@ -77,6 +78,7 @@ const generateProcessingConfigMock = (sampleIds) => ({
   },
   dataIntegration: {
     enabled: true,
+    analysisTool: analysisTools.SEURAT,
     dataIntegration: {
       method: 'harmony',
       methodSettings: {

@@ -95,6 +95,11 @@ const cognitoMFA = {
   disabled: 'NOMFA',
 };
 
+const analysisTools = {
+  SEURAT: 'seurat',
+  SCANPY: 'scanpy',
+};
+
 const cookiesAgreedCognitoKey = 'custom:agreed_cookies_v1';
 const termsOfUseCognitoKey = 'custom:agreed_terms_v2';
 const institutionCognitoKey = 'custom:institution';
@@ -115,6 +120,7 @@ export {
   termsOfUseCognitoKey,
   institutionCognitoKey,
   notAgreedToTermsStatus,
+  analysisTools,
   cookiesAgreedCognitoKey,
   cognitoMFA,
 };

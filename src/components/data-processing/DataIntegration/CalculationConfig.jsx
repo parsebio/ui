@@ -11,6 +11,7 @@ import {
   Checkbox,
   Tooltip,
   Alert,
+  Radio,
 } from 'antd';
 
 import {
@@ -18,42 +19,18 @@ import {
 } from '@ant-design/icons';
 
 import _ from 'lodash';
-import { downsamplingMethods } from 'utils/constants';
+import { analysisTools, downsamplingMethods } from 'utils/constants';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import { updateFilterSettings } from 'redux/actions/experimentSettings';
+
 import NormalisationOptions from './NormalisationOptions';
 
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const getDownsampling = (downsamplingConfig = {}) => {
-  const { method = downsamplingMethods.NONE, methodSettings = {} } = downsamplingConfig;
-
-  if (method === downsamplingMethods.NONE || !(method in methodSettings)) {
-    return { method };
-  }
-
-  // only return percentage to keep if not NONE
-  return { method, percentageToKeep: methodSettings[method].percentageToKeep };
-};
-
-const CalculationConfig = (props) => {
-  const {
-    onConfigChange, disabled, disableDataIntegration,
-  } = props;
-  const FILTER_UUID = 'dataIntegration';
-  const dispatch = useDispatch();
-  const { dataIntegration, dimensionalityReduction } = useSelector(
-    (state) => state.experimentSettings.processing.dataIntegration,
-  );
-  const elbowPlotUuid = generateDataProcessingPlotUuid(null, FILTER_UUID, 1);
-  const data = useSelector((state) => state.componentConfig[elbowPlotUuid]?.plotData);
-  const downsampling = getDownsampling(
-    useSelector((state) => state.experimentSettings.processing.dataIntegration.downsampling),
-  );
-
-  const methods = [
+const integrationMethodsByAnalysisTool = {
+  [analysisTools.SEURAT]: [
     {
       value: 'harmony',
       text: 'Harmony',
@@ -89,7 +66,43 @@ const CalculationConfig = (props) => {
       text: 'Liger',
       disabled: true,
     },
-  ];
+  ],
+  [analysisTools.SCANPY]: [
+    {
+      value: 'harmony',
+      text: 'Harmony',
+      disabled: false,
+    },
+  ],
+};
+
+const getDownsampling = (downsamplingConfig = {}) => {
+  const { method = downsamplingMethods.NONE, methodSettings = {} } = downsamplingConfig;
+
+  if (method === downsamplingMethods.NONE || !(method in methodSettings)) {
+    return { method };
+  }
+
+  // only return percentage to keep if not NONE
+  return { method, percentageToKeep: methodSettings[method].percentageToKeep };
+};
+
+const CalculationConfig = (props) => {
+  const {
+    onConfigChange, disabled, disableDataIntegration,
+  } = props;
+  const FILTER_UUID = 'dataIntegration';
+  const dispatch = useDispatch();
+
+  const { dataIntegration, dimensionalityReduction, analysisTool } = useSelector(
+    (state) => state.experimentSettings.processing.dataIntegration,
+  );
+
+  const elbowPlotUuid = generateDataProcessingPlotUuid(null, FILTER_UUID, 1);
+  const data = useSelector((state) => state.componentConfig[elbowPlotUuid]?.plotData);
+  const downsampling = getDownsampling(
+    useSelector((state) => state.experimentSettings.processing.dataIntegration.downsampling),
+  );
 
   const [numPCs, setNumPCs] = useState(dimensionalityReduction.numPCs);
 
@@ -192,6 +205,38 @@ const CalculationConfig = (props) => {
 
           <div style={{ paddingLeft: '1rem' }}>
             <Form.Item
+              label='Analysis tool:'
+            >
+              <Radio.Group
+                onChange={(e) => {
+                  const newAnalysisTool = e.target.value;
+                  const methods = integrationMethodsByAnalysisTool[newAnalysisTool];
+
+                  let newMethod = dataIntegration.method;
+
+                  // If the integration method is not available, set to the
+                  // first available method in the new analysis tool
+                  if (!_.find(methods, { value: dataIntegration.method })) {
+                    newMethod = methods[0].value;
+                  }
+
+                  if (dataIntegration.method) {
+                    return updateSettings({
+                      analysisTool: e.target.value,
+                      dataIntegration: { method: newMethod },
+                    });
+                  }
+                }}
+                value={analysisTool}
+              >
+                <Radio value={analysisTools.SEURAT}>Seurat</Radio>
+                <Radio disabled value={analysisTools.SCANPY}>Scanpy</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </div>
+
+          <div style={{ paddingLeft: '1rem' }}>
+            <Form.Item
               label='Method:'
             >
               <Select
@@ -200,7 +245,7 @@ const CalculationConfig = (props) => {
                 disabled={disableDataIntegration || disabled}
               >
                 {
-                  methods.map((el) => (
+                  integrationMethodsByAnalysisTool[analysisTool].map((el) => (
                     <Option key={el.text} value={el.value} disabled={el.disabled}>
                       {
                         el.disabled ? (

@@ -316,15 +316,16 @@ describe('Pipeline Page', () => {
 
     render(
       <SelectReferenceGenome
-        previousGenome=''
+        previousGenome={undefined}
         onDetailsChanged={mockOnDetailsChanged}
       />,
     );
 
-    const searchInput = screen.getByPlaceholderText('Select the reference genome');
+    const searchInput = document.querySelector('.ant-select-selection-search input');
 
     // filter by genome name
     userEvent.type(searchInput, 'GRCh38');
+
     await waitFor(() => {
       expect(screen.getByText('GRCh38: Homo sapiens (Human)')).toBeInTheDocument();
     });
@@ -349,7 +350,7 @@ describe('Pipeline Page', () => {
     });
   });
 
-  describe.only('Upload fastq tests', () => {
+  describe('Upload fastq tests', () => {
     const originalGetElementById = document.getElementById;
 
     let onDropCallback;

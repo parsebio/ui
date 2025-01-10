@@ -123,6 +123,7 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
       "enabled": true,
     },
     "dataIntegration": {
+      "analysisTool": "seurat",
       "dataIntegration": {
         "method": "harmony",
         "methodSettings": {
@@ -244,6 +245,7 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
       "enabled": true,
     },
     "dataIntegration": {
+      "analysisTool": "seurat",
       "dataIntegration": {
         "method": "harmony",
         "methodSettings": {
@@ -378,6 +380,7 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
       "enabled": true,
     },
     "dataIntegration": {
+      "analysisTool": "seurat",
       "dataIntegration": {
         "method": "harmony",
         "methodSettings": {
@@ -499,6 +502,7 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
       "enabled": true,
     },
     "dataIntegration": {
+      "analysisTool": "seurat",
       "dataIntegration": {
         "method": "harmony",
         "methodSettings": {
@@ -662,6 +666,7 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
       "enabled": true,
     },
     "dataIntegration": {
+      "analysisTool": "seurat",
       "dataIntegration": {
         "method": "harmony",
         "methodSettings": {
@@ -783,6 +788,7 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
       "enabled": true,
     },
     "dataIntegration": {
+      "analysisTool": "seurat",
       "dataIntegration": {
         "method": "harmony",
         "methodSettings": {
