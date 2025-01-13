@@ -8,7 +8,7 @@ const getAllCells = (cellSets, groupBy = 'sample') => {
   const sampleKeys = sampleHierarchy.map((sample) => sample.key);
 
   const allCells = sampleKeys.reduce((acc, sampleKey) => {
-    const cellIdsArr = Array.from(cellSets.properties[sampleKey].cellIds);
+    const cellIdsArr = Array.from(cellSets.properties[sampleKey].getCellIds());
     const sampleCellId = cellIdsArr.map((cellId) => ({
       cellId,
       cellSetKey: sampleKey,

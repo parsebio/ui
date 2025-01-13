@@ -7,9 +7,10 @@ import { Vega } from 'react-vega';
 
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
 import { generateSpec, generateData } from 'utils/plotSpecs/generateEmbeddingContinuousSpec';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const mockStore = configureMockStore([thunk]);
-const cellSets = {
+const cellSets = getCellSets()({
   properties: {
     'cluster-a': {
       name: 'cluster a',
@@ -71,7 +72,7 @@ const cellSets = {
       children: [],
     },
   ],
-};
+});
 const embeddingData = [
   [-1.2343500852584839, -0.6240003705024719],
   [18.337648391723633, -4.259221076965332],

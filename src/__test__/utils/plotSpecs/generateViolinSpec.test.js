@@ -1,8 +1,9 @@
 import _ from 'lodash';
 
 import { generateData, generateSpec } from 'utils/plotSpecs/generateViolinSpec';
-import { mockCellSets as cellSets } from '__test__/test-utils/cellSets.mock';
+import { mockCellSets as cellSetsRaw } from '__test__/test-utils/cellSets.mock';
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 describe('generateData', () => {
   const MOCK_RANDOM = 0.1;
@@ -14,6 +15,7 @@ describe('generateData', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+  const cellSets = getCellSets()(cellSetsRaw);
   it('generates data when grouping by lovain clusters', () => {
     const groupingId = 'louvain';
     const plotData = generateData(cellSets, mockGeneExpression, groupingId, 'All');

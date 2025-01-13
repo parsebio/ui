@@ -66,9 +66,9 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
   const [tissue, setTissue] = useState(null);
   const [species, setSpecies] = useState(null);
 
-  const { cellSets } = useSelector(getCellSets());
+  const cellSets = useSelector(getCellSets());
 
-  const allClustersValid = useMemo(() => Object.entries(cellSets.properties).every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
+  const allClustersValid = useMemo(() => Object.entries(cellSets.properties).every(([, value]) => value.parentNodeKey !== 'louvain' || value.getCellIds().size > 1), [cellSets]);
 
   return (
     <Space direction='vertical'>

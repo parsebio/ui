@@ -1,9 +1,10 @@
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 import { CELL_SETS_SET_SELECTED } from '../../actionTypes/cellSets';
 
 const updateCellSetSelected = (keys) => async (dispatch, getState) => {
   const {
     loading, error,
-  } = getState().cellSets;
+  } = getCellSets()(getState().cellSets);
 
   if (loading || error) {
     return null;

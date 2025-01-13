@@ -7,9 +7,10 @@ import fetchWork from 'utils/work/fetchWork';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 import updateCellSetsClustering from 'redux/actions/cellSets/updateCellSetsClustering';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const runCellSetsAnnotation = (experimentId, species, tissue) => async (dispatch, getState) => {
-  const { error, updatingClustering, loading } = getState().cellSets;
+  const { error, updatingClustering, loading } = getCellSets()(getState().cellSets);
 
   if ((loading && updatingClustering) || error) return;
 

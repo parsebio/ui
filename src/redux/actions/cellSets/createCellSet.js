@@ -7,6 +7,7 @@ import { CELL_SETS_CREATE } from 'redux/actionTypes/cellSets';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const createCellSetJsonMerger = (newCellSet, cellClassKey) => (
   [{
@@ -29,7 +30,7 @@ const createCellSetJsonMerger = (newCellSet, cellClassKey) => (
 const createCellSet = (experimentId, name, color, cellIdsSet) => async (dispatch, getState) => {
   const {
     loading, error,
-  } = getState().cellSets;
+  } = getCellSets()(getState().cellSets);
 
   if (loading || error) {
     return null;
@@ -46,6 +47,7 @@ const createCellSet = (experimentId, name, color, cellIdsSet) => async (dispatch
   const dataForRedux = {
     ...data,
     cellIds: cellIdsSet,
+    getCellIds: () => cellIdsSet,
   };
 
   // cellIds are stored as an array in S3

@@ -4,14 +4,15 @@ import { PLOT_DATA_LOADED, PLOT_DATA_LOADING, PLOT_DATA_ERROR } from 'redux/acti
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 import fetchWork from 'utils/work/fetchWork';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
-const getClusterNames = (state) => {
-  const clusterIds = state.cellSets.hierarchy.reduce(
+const getClusterNames = (cellSets) => {
+  const clusterIds = cellSets.hierarchy.reduce(
     (acc, cellSet) => [...acc, ...cellSet.children.map((entry) => entry.key)],
     [],
   );
 
-  const clusterNames = clusterIds?.map((clusterId) => state.cellSets.properties[clusterId].name);
+  const clusterNames = clusterIds?.map((clusterId) => cellSets.properties[clusterId].name);
   return clusterNames;
 };
 
@@ -50,7 +51,8 @@ const getDotPlot = (
   plotUuid,
   config,
 ) => async (dispatch, getState) => {
-  const clusterNames = getClusterNames(getState());
+  const cellSets = getCellSets()(getState().cellSets);
+  const clusterNames = getClusterNames(cellSets);
   const timeout = getTimeoutForWorkerTask(getState(), 'PlotData');
 
   const [filterGroup, filterKey] = config.selectedPoints.split('/');
@@ -80,7 +82,7 @@ const getDotPlot = (
     );
 
     const plotData = transformToPlotData(data);
-    orderCellSets(plotData, getState().cellSets, config);
+    orderCellSets(plotData, cellSets, config);
 
     dispatch({
       type: PLOT_DATA_LOADED,

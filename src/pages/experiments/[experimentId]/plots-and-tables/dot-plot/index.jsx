@@ -128,11 +128,11 @@ const DotPlotPage = (props) => {
     // Ensure that filterKey exists in cellSetProperties
     if (filterKey && !cellSets.properties[filterKey]) return false;
 
-    const filterClusterCellIds = Array.from(cellSets.properties[filterKey].cellIds);
+    const filterClusterCellIds = Array.from(cellSets.properties[filterKey].getCellIds());
 
     const baseClusterParent = cellSets.hierarchy.find((cellSet) => cellSet.key === baseCluster);
     const baseClusterKeys = baseClusterParent.children.map((child) => child.key);
-    const baseClusterCellIds = baseClusterKeys.map((key) => cellSets.properties[key].cellIds);
+    const baseClusterCellIds = baseClusterKeys.map((key) => cellSets.properties[key].getCellIds());
 
     // Check if there is at least 2 baseClusters with elements common to filterCluster
     let numIntersections = 0;

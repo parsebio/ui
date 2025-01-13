@@ -9,6 +9,7 @@ exports[`createCellSet action Dispatches an action to create cell set to the red
       3,
     },
     "color": "#ff0000",
+    "getCellIds": [Function],
     "key": "a key",
     "name": "one",
     "type": "cellSets",
