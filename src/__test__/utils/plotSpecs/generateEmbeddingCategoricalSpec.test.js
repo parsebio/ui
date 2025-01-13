@@ -6,6 +6,7 @@ import {
   createHierarchyFromTree,
   createPropertiesFromTree,
 } from 'redux/reducers/cellSets/helpers';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const { cellSets: mockCellSets } = require('__test__/data/cell_sets.json');
 
@@ -13,10 +14,10 @@ describe('filterCells', () => {
   let mockCellSetsReduxObject;
 
   beforeEach(() => {
-    mockCellSetsReduxObject = {
+    mockCellSetsReduxObject = getCellSets()({
       properties: createPropertiesFromTree(mockCellSets),
       hierarchy: createHierarchyFromTree(mockCellSets),
-    };
+    });
   });
 
   it('generates correct louvain clusters data with one sample in particular', () => {
@@ -63,10 +64,10 @@ describe('filterCells', () => {
     louvainCellSets[2].name = 'repeatedName';
     louvainCellSets[6].name = 'repeatedName';
 
-    mockCellSetsReduxObject = {
+    mockCellSetsReduxObject = getCellSets()({
       properties: createPropertiesFromTree(mockCellSetsWithRepeatedClusterNames),
       hierarchy: createHierarchyFromTree(mockCellSetsWithRepeatedClusterNames),
-    };
+    });
 
     const result = filterCells(mockCellSetsReduxObject, 'All', 'louvain');
 
@@ -87,10 +88,10 @@ describe('generateData', () => {
   let mockEmbeddingData;
 
   beforeEach(() => {
-    mockCellSetsReduxObject = {
+    mockCellSetsReduxObject = getCellSets()({
       properties: createPropertiesFromTree(mockCellSets),
       hierarchy: createHierarchyFromTree(mockCellSets),
-    };
+    });
 
     mockEmbeddingData = _.range(30).map(() => [1, 2]);
   });

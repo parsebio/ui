@@ -83,14 +83,14 @@ exports[`cellSetsReducer Selected cells are maintained 2`] = `
 exports[`cellSetsReducer Sets up store properly for loaded cell sets. 1`] = `
 {
   "1": {
-    "cellIds": Set {},
+    "cellSetKeys": undefined,
     "color": undefined,
     "name": "parent 1",
     "rootNode": true,
     "type": undefined,
   },
   "1a": {
-    "cellIds": Set {},
+    "cellSetKeys": undefined,
     "color": "#00FF00",
     "name": "first child",
     "parentNodeKey": "1",
@@ -98,7 +98,7 @@ exports[`cellSetsReducer Sets up store properly for loaded cell sets. 1`] = `
     "type": undefined,
   },
   "2": {
-    "cellIds": Set {},
+    "cellSetKeys": undefined,
     "color": undefined,
     "name": "parent 2",
     "rootNode": true,

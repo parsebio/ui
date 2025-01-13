@@ -10,7 +10,7 @@ const mapCellIdToSample = _.memoize(
   (sampleKeys, properties) => {
     const mapping = [];
     sampleKeys.forEach((key, idx) => {
-      const { cellIds } = properties[key];
+      const cellIds = properties[key].getCellIds();
       cellIds.forEach((cellId) => { mapping[cellId] = idx; });
     });
 
@@ -50,15 +50,15 @@ const checkCanRunDiffExpr = (
   let basisCellIds = [];
   if (basis === 'all') {
     const allCellIds = sampleKeys.reduce((cumulativeCellIds, key) => {
-      const { cellIds } = properties[key];
+      const cellIds = properties[key].getCellIds();
       return cumulativeCellIds.concat(Array.from(cellIds));
     }, []);
     basisCellIds = new Set(allCellIds);
   } else {
-    basisCellIds = properties[basis].cellIds;
+    basisCellIds = properties[basis].getCellIds();
   }
 
-  const cellSetCellIds = Array.from(properties[cellSet].cellIds);
+  const cellSetCellIds = Array.from(properties[cellSet].getCellIds());
 
   let compareWithCellIds = [];
   if (['rest', 'background'].includes(compareWith)) {
@@ -67,11 +67,11 @@ const checkCanRunDiffExpr = (
 
     compareWithCellIds = otherGroupKeys.reduce(
       (cumulativeGroupKeys, child) => cumulativeGroupKeys.concat(
-        Array.from(properties[child.key].cellIds),
+        Array.from(properties[child.key].getCellIds()),
       ), [],
     );
   } else {
-    compareWithCellIds = Array.from(properties[compareWith].cellIds);
+    compareWithCellIds = Array.from(properties[compareWith].getCellIds());
   }
 
   // Intersect the basis cell set with each group cell set

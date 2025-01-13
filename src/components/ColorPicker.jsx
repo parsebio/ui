@@ -25,6 +25,7 @@ const ColorPicker = (props) => {
       color={colorPicked}
       onChange={onTemporaryColorChange}
       onChangeComplete={onFinalColorChange}
+      disableAlpha
     />
   );
 

@@ -4,13 +4,14 @@ import {
   createHierarchyFromTree,
   createPropertiesFromTree,
 } from 'redux/reducers/cellSets/helpers';
+import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const mockCellSet = require('__test__/data/cell_sets.json');
 
-const cellSets = {
+const cellSets = getCellSets()({
   properties: createPropertiesFromTree(mockCellSet.cellSets),
   hierarchy: createHierarchyFromTree(mockCellSet.cellSets),
-};
+});
 
 const sampleCellClass = mockCellSet.cellSets.find(
   ({ key }) => key === 'sample',

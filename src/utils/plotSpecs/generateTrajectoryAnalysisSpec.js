@@ -694,7 +694,7 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
 
     cellSetsPlotData.push(({ key, name, color }));
 
-    cellSet.cellIds.forEach((cellId) => {
+    cellSet.getCellIds().forEach((cellId) => {
       if (!embedding[cellId]) return;
 
       plotData.push({

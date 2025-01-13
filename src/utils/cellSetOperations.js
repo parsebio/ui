@@ -20,7 +20,7 @@ const union = (listOfSets, properties) => {
     return new Set();
   }
 
-  const sets = listOfSets.map((key) => properties[key]?.cellIds || []);
+  const sets = listOfSets.map((key) => properties[key]?.getCellIds() || []);
   // flatten and transform list of Sets to list of lists
   const unionSet = new Set(
     sets.flatMap((set) => [...set]),
@@ -35,7 +35,7 @@ const intersection = (listOfSets, properties) => {
   }
 
   const sets = listOfSets.map(
-    (key) => properties[key]?.cellIds || null,
+    (key) => properties[key]?.getCellIds() || null,
   ).filter(
     (set) => set && set.size > 0,
   );
@@ -57,7 +57,7 @@ const complement = (listOfSets, properties, hierarchy) => {
   }
   // get the ids of all selected cells
   const selectedCells = listOfSets.map(
-    (key) => properties[key]?.cellIds || null,
+    (key) => properties[key]?.getCellIds() || null,
   ).filter(
     (set) => set && set.size > 0,
   ).reduce(
@@ -77,7 +77,8 @@ const complement = (listOfSets, properties, hierarchy) => {
 
 const getFilteredCells = (cellSets) => {
   const louvainClusters = cellSets.hierarchy.find(({ key }) => key === 'louvain').children;
-  const louvainClustersCellIds = louvainClusters.map(({ key }) => cellSets.properties[key].cellIds);
+  const louvainClustersCellIds = louvainClusters
+    .map(({ key }) => cellSets.properties[key].getCellIds());
 
   const filteredInCellIds = louvainClustersCellIds.reduce(
     (filteredInCellIdsAcum, cellIds) => setOperations.union(filteredInCellIdsAcum, cellIds),

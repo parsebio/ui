@@ -40,7 +40,8 @@ const renderCellSetColors = (rootKey, cellSetHierarchy, cellSetProperties) => {
       return {};
     }
 
-    const { color: stringColor, cellIds } = cellSetProperties[key];
+    const { color: stringColor, getCellIds } = cellSetProperties[key];
+    const cellIds = getCellIds();
     const color = hexToRgb(stringColor);
 
     if (color && cellIds) {
