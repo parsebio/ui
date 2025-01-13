@@ -206,7 +206,8 @@ describe('DataIntegration.CalculationConfig', () => {
     expect(input.value).toEqual('3');
   });
 
-  it('Switch dispatches action', async () => {
+  // TODO enable when scanpy is released
+  it.skip('Switch dispatches action', async () => {
     const seuratV4State = _.merge(initialState, {
       experimentSettings: {
         processing: {
