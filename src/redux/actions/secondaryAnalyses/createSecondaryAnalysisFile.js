@@ -46,7 +46,8 @@ const createSecondaryAnalysisFile = (
       };
 
       // saving file to cache for 1 week to be able to retrieve it later for resume upload
-      // if you update this expiration time you need to also update the AbortIncompleteMultipartUploads policy in secondary-pipeline bucket in IAC
+      // if you update this expiration time you need to also update the
+      // AbortIncompleteMultipartUploads policy in secondary-pipeline bucket in IAC
       await cache.set(uploadUrlParams.fileId, fileRecordCache, 168 * 3600);
     }
 
