@@ -46,7 +46,7 @@ const createSecondaryAnalysisFile = (
       };
 
       // saving file to cache for 1 week to be able to retrieve it later for resume upload
-      // this is tied to the multipart upload expiration in S3 which is 7 days too
+      // if you update this expiration time you need to also update the AbortIncompleteMultipartUploads policy in secondary-pipeline bucket in IAC
       await cache.set(uploadUrlParams.fileId, fileRecordCache, 168 * 3600);
     }
 
