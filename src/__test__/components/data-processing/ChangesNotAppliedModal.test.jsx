@@ -63,6 +63,9 @@ const noChangesState = {
     },
     processing: {
       ...experimentSettingsInitialState.processing,
+      dataIntegration: {
+        analysisTool: 'seurat',
+      },
       meta: {
         ...metaInitialState,
       },
@@ -219,7 +222,7 @@ describe('ChangesNotAppliedModal', () => {
   });
 
   it('Shows the QCRerunDisabledModal if the pipelineVersion is too old', async () => {
-    fetchMock.mockIf(/.*/, mockAPI({
+    fetchMock.mockReset().mockIf(/.*/, mockAPI({
       ...mockAPIResponses,
       [urlMatcher]: () => Promise.resolve(JSON.stringify(true)),
     }));
@@ -235,7 +238,9 @@ describe('ChangesNotAppliedModal', () => {
       </Provider>,
     );
 
-    userEvent.click(screen.getByText('Run'));
+    act(() => {
+      userEvent.click(screen.getByText('Run'));
+    });
 
     expect(mockRunQC).not.toHaveBeenCalled();
 
@@ -271,7 +276,9 @@ describe('ChangesNotAppliedModal', () => {
       </Provider>,
     );
 
-    userEvent.click(screen.getByText('Run'));
+    act(() => {
+      userEvent.click(screen.getByText('Run'));
+    });
 
     expect(mockRunQC).not.toHaveBeenCalled();
 
