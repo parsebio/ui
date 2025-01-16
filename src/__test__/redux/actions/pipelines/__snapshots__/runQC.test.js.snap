@@ -51,6 +51,50 @@ exports[`runQC action Runs only the embedding if only changed filter was embeddi
 ]
 `;
 
+exports[`runQC action Scanpy runs qc even if only changed filter was clusteringSettings 1`] = `
+[
+  {
+    "payload": {},
+    "type": "experimentSettings/startQC",
+  },
+]
+`;
+
+exports[`runQC action Scanpy runs qc even if only changed filter was clusteringSettings 2`] = `
+[
+  "http://localhost:3000/v2/experiments/experiment-id/qc",
+  {
+    "body": "{"processingConfigDiff":{"configureEmbedding":{"enabled":true,"embeddingSettings":{"method":"umap","useSaved":false,"methodSettings":{"umap":{"minimumDistance":0.1,"distanceMetric":"euclidean"},"tsne":{"perplexity":30,"learningRate":200}}},"clusteringSettings":{"method":"leiden","methodSettings":{"louvain":{"resolution":0.5}}}}}}",
+    "headers": {
+      "Content-Type": "application/json",
+    },
+    "method": "POST",
+  },
+]
+`;
+
+exports[`runQC action Scanpy runs qc even if only changed filter was embeddingSettings 1`] = `
+[
+  {
+    "payload": {},
+    "type": "experimentSettings/startQC",
+  },
+]
+`;
+
+exports[`runQC action Scanpy runs qc even if only changed filter was embeddingSettings 2`] = `
+[
+  "http://localhost:3000/v2/experiments/experiment-id/qc",
+  {
+    "body": "{"processingConfigDiff":{"configureEmbedding":{"enabled":true,"embeddingSettings":{"method":"tsne","useSaved":false,"methodSettings":{"umap":{"minimumDistance":0.1,"distanceMetric":"euclidean"},"tsne":{"perplexity":30,"learningRate":200}}},"clusteringSettings":{"method":"louvain","methodSettings":{"louvain":{"resolution":0.5}}}}}}",
+    "headers": {
+      "Content-Type": "application/json",
+    },
+    "method": "POST",
+  },
+]
+`;
+
 exports[`runQC action Triggers qc correctly when an error happened and running with changes in a filter step 1`] = `
 [
   {

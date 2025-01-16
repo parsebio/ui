@@ -21,6 +21,7 @@ import { runQC } from 'redux/actions/pipeline';
 
 import generateExperimentSettingsMock from '__test__/test-utils/experimentSettings.mock';
 import '__test__/test-utils/setupTests';
+import { analysisTools } from 'utils/constants';
 
 jest.mock('utils/getTimeoutForWorkerTask', () => () => 1);
 
@@ -133,6 +134,36 @@ describe('runQC action', () => {
     expect(actions).toMatchSnapshot();
   });
 
+  it('Scanpy runs qc even if only changed filter was embeddingSettings', async () => {
+    saveProcessingSettings.mockImplementation(() => () => Promise.resolve());
+
+    const onlyEmbeddingSettingsChangedState = _.cloneDeep(initialState);
+    onlyEmbeddingSettingsChangedState.experimentSettings.processing.meta.changedQCFilters = new Set(['configureEmbedding']);
+
+    // Make sure the methods differ
+    onlyEmbeddingSettingsChangedState.experimentSettings.processing.configureEmbedding.embeddingSettings.method = 'tsne';
+    onlyEmbeddingSettingsChangedState.experimentSettings.originalProcessing.configureEmbedding.embeddingSettings.method = 'umap';
+
+    // Make it scanpy
+    onlyEmbeddingSettingsChangedState.experimentSettings.processing.dataIntegration
+      .analysisTool = analysisTools.SCANPY;
+
+    const store = mockStore(onlyEmbeddingSettingsChangedState);
+    await store.dispatch(runQC(experimentId));
+
+    await waitForActions(
+      store,
+      [EXPERIMENT_SETTINGS_QC_START],
+    );
+
+    const actions = store.getActions();
+    expect(_.map(actions, 'type')).toEqual([EXPERIMENT_SETTINGS_QC_START]);
+
+    expect(actions).toMatchSnapshot();
+
+    expect(fetchMock.mock.calls[0]).toMatchSnapshot();
+  });
+
   it('Runs only clustering if only changed filter was clusteringSettings', async () => {
     fetchMock.resetMocks();
 
@@ -159,6 +190,36 @@ describe('runQC action', () => {
     expect(actions[1].type).toEqual(CELL_SETS_CLUSTERING_UPDATING);
 
     expect(actions).toMatchSnapshot();
+  });
+
+  it('Scanpy runs qc even if only changed filter was clusteringSettings', async () => {
+    saveProcessingSettings.mockImplementation(() => () => Promise.resolve());
+
+    const onlyClusteringSettingsChangedState = _.cloneDeep(initialState);
+    onlyClusteringSettingsChangedState.experimentSettings.processing.meta.changedQCFilters = new Set(['configureEmbedding']);
+
+    // Make sure the methods differ
+    onlyClusteringSettingsChangedState.experimentSettings.processing.configureEmbedding.clusteringSettings.method = 'leiden';
+    onlyClusteringSettingsChangedState.experimentSettings.originalProcessing.configureEmbedding.clusteringSettings.method = 'louvain';
+
+    // Make it scanpy
+    onlyClusteringSettingsChangedState.experimentSettings.processing.dataIntegration
+      .analysisTool = analysisTools.SCANPY;
+
+    const store = mockStore(onlyClusteringSettingsChangedState);
+    await store.dispatch(runQC(experimentId));
+
+    await waitForActions(
+      store,
+      [EXPERIMENT_SETTINGS_QC_START],
+    );
+
+    const actions = store.getActions();
+    expect(_.map(actions, 'type')).toEqual([EXPERIMENT_SETTINGS_QC_START]);
+
+    expect(actions).toMatchSnapshot();
+
+    expect(fetchMock.mock.calls[0]).toMatchSnapshot();
   });
 
   it('Triggers qc correctly when previous qc failed', async () => {
