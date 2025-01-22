@@ -263,45 +263,44 @@ const UploadFastqForm = (props) => {
             name='projectName'
           >
             <div>
-              Upload your Fastq files that are output from bcl2fastq.
-              For each sublibrary, you must have a pair of Fastq files, R1 and R2.
+              <b>You must upload exactly one pair of FASTQ files (R1 and R2) per sublibrary.</b>
               <br />
               <br />
-              Note that:
-              {' '}
-              <br />
-              <ul>
-                <li>
-                  FASTQ files from the same Parse experiment that have different Illumina indexes
-                  should not be concatenated. These files are separate sublibraries.
-                </li>
-                <li>
-                  FASTQ files from the same Parse experiment that share identical
-                  Illumina indexes must be concatenated. These files belong to the same sublibrary.
-                </li>
-                <li>
-                  Uploading large FASTQ files can take multiple hours or even days.
-                  You must keep your computer running and
-                  your browser tab open for the duration of the upload.
-                </li>
-                <li>
-                  If your internet connection fails, file
-                  upload will resume from the last checkpoint.
-                  Checkpoints are created every 128 MB.
-                </li>
-              </ul>
-              <InfoCircleOutlined />
-              {' '}
-              FASTQ files are deleted from Trailmaker 30 days after upload. After this time,
-              your Pipeline Run Details and any Outputs will continue
-              to be available but the FASTQ files will be marked as &apos;Expired&apos;.
-              {' '}
-              <br />
-              <br />
-              Further details on Fastq file format can be found
-              {' '}
-              <a href='https://support.parsebiosciences.com/hc/en-us/articles/20926505533332-Fundamentals-of-Working-with-Parse-Data' target='_blank' rel='noreferrer'>here</a>
 
+              If you have more FASTQ file pairs than sublibraries,
+              it is likely that some sublibraries were split over multiple sequencing lanes.
+              Those FASTQ files will share identical Illumina indexes must
+              be concatenated
+              {' '}
+              <b>before</b>
+              {' '}
+              uploading to Trailmaker.
+              Guidance on how to concatenate your files is in
+              {' '}
+              <a
+                target='_blank'
+                href='https://support.parsebiosciences.com/hc/en-us/articles/33176662802708-How-to-handle-multiple-pairs-of-FASTQ-files-per-sublibrary'
+                rel='noreferrer'
+              >
+                this support article
+              </a>
+              .
+              <br />
+              <br />
+
+              Uploading large FASTQ files can take multiple hours or even days.
+              You must keep your computer running and your browser tab open for the duration
+              of the upload.
+              If your internet connection fails, file upload will resume from the last checkpoint.
+              <br />
+              <br />
+
+              Note that FASTQ files are deleted from Trailmaker 30 days after upload.
+              After this time, your Pipeline Run Details and any Outputs will continue to
+              be available but the FASTQ files will be marked as &apos;Expired&apos;.
+
+              <br />
+              <br />
             </div>
             {warning && (
               <div>
