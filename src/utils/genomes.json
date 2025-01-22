@@ -272,6 +272,10 @@
     "species": "Custom Mus musculus (mouse) with Usutu virus"
   },
   {
+    "name": "GRCm39_SARS_MHV",
+    "species": "Custom Mus musculus (mouse) SARS MHV"
+  },
+  {
     "name": "mm39-custom-3",
     "species": "Custom Mus musculus (mouse) with Puromycin, Neomycin, tdTom and CreERT2"
   },
