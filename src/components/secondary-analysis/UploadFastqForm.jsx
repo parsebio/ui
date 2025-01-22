@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
-  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined, InfoCircleOutlined,
+  CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, WarningOutlined,
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import UploadStatus from 'utils/upload/UploadStatus';
