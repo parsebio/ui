@@ -387,7 +387,7 @@ describe('Pipeline Page', () => {
       });
 
       // Check it opened fastq files modal
-      screen.getByText('Upload your Fastq files:');
+      screen.getByText('Upload your FASTQ files:');
 
       // Assigned a callback for adding files
       expect(onDropCallback).toBeDefined();
