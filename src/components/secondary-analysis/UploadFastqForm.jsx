@@ -441,7 +441,7 @@ const UploadFastqForm = (props) => {
             Step-by-step instructions for console upload are
             available to Parse Biosciences customers via our
             {' '}
-            <a href='https://support.parsebiosciences.com/hc/en-us/articles/27909567279508-How-to-upload-FASTQ-files-to-Trailmaker-using-command-line'>support suite</a>
+            <a target='_blank' href='https://support.parsebiosciences.com/hc/en-us/articles/27909567279508-How-to-upload-FASTQ-files-to-Trailmaker-using-command-line' rel='noreferrer'>support suite</a>
             .
             {' '}
           </Text>
