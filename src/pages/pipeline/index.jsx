@@ -340,7 +340,7 @@ const Pipeline = () => {
       renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
     },
     {
-      title: 'Upload your Fastq files:',
+      title: 'Upload your FASTQ files:',
       key: 'Fastq files',
       render: () => (
         <UploadFastqForm
