@@ -3,21 +3,21 @@ import React, {
   useState, useEffect, useRef, useMemo, useCallback,
 } from 'react';
 
+import _ from 'lodash';
+
 import dynamic from 'next/dynamic';
 import {
   useSelector, useDispatch,
 } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as vega from 'vega';
-import ClusterPopover from 'components/data-exploration/embedding/ClusterPopover';
-import CrossHair from 'components/data-exploration/embedding/CrossHair';
-import CellInfo from 'components/data-exploration/CellInfo';
+
 import PlatformError from 'components/PlatformError';
 import Loader from 'components/Loader';
 
-import { loadEmbedding } from 'redux/actions/embedding';
 import { getCellSetsHierarchyByType, getCellSets } from 'redux/selectors';
-import { createCellSet } from 'redux/actions/cellSets';
+
+import { loadEmbedding } from 'redux/actions/embedding';
 import { loadGeneExpression } from 'redux/actions/genes';
 import { updateCellInfo } from 'redux/actions/cellInfo';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
@@ -29,11 +29,14 @@ import {
   colorInterpolator,
 } from 'utils/plotUtils';
 import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
+import EmbeddingTooltip from './EmbeddingTooltip';
 
 const Scatterplot = dynamic(
   () => import('../DynamicVitessceWrappers').then((mod) => mod.Scatterplot),
   { ssr: false },
 );
+
+// const dispatch = () => { };
 
 const INITIAL_ZOOM = 4.00;
 const cellRadiusFromZoom = (zoom) => zoom ** 3 / 50;
@@ -149,10 +152,12 @@ const Embedding = (props) => {
   }, [data, cellSetHidden, cellSetProperties]);
 
   useEffect(() => {
+    // Move this into the cell info tooltip component
     if (selectedCell) {
       let expressionToDispatch;
       let geneName;
 
+      console.log('HOALHOLA');
       if (expressionMatrix.geneIsLoaded(focusData.key)) {
         geneName = focusData.key;
 
@@ -232,18 +237,6 @@ const Embedding = (props) => {
   const getExpressionValue = useCallback(() => { }, []);
   const getCellIsSelected = useCallback(() => { }, []);
 
-  const onCreateCluster = (clusterName, clusterColor) => {
-    setCreateClusterPopover(false);
-    dispatch(
-      createCellSet(
-        experimentId,
-        clusterName,
-        clusterColor,
-        selectedIds,
-      ),
-    );
-  };
-
   // The embedding couldn't load. Display an error condition.
   if (error) {
     return (
@@ -314,54 +307,37 @@ const Embedding = (props) => {
       >
         {renderExpressionView()}
         {
-          data ? (
-            <Scatterplot
-              cellColorEncoding='cellSetSelection'
-              cellOpacity={0.8}
-              cellRadius={cellRadius}
-              setCellHighlight={setCellHighlight}
-              theme='light'
-              uuid={embeddingType}
-              viewState={view}
-              setViewState={setViewState}
-              originalViewState={originalView}
-              updateViewInfo={updateViewInfo}
-              obsEmbedding={convertedCellsData?.obsEmbedding}
-              obsEmbeddingIndex={convertedCellsData?.obsEmbeddingIndex}
-              cellColors={cellColorsForVitessce}
-              setCellSelection={setCellsSelection}
-              getExpressionValue={getExpressionValue}
-              getCellIsSelected={getCellIsSelected}
-            />
-          ) : ''
+          <Scatterplot
+            cellColorEncoding='cellSetSelection'
+            cellOpacity={0.8}
+            cellRadius={cellRadius}
+            setCellHighlight={setCellHighlight}
+            theme='light'
+            uuid={embeddingType}
+            viewState={view}
+            setViewState={setViewState}
+            originalViewState={originalView}
+            updateViewInfo={updateViewInfo}
+            obsEmbedding={convertedCellsData?.obsEmbedding}
+            obsEmbeddingIndex={convertedCellsData?.obsEmbeddingIndex}
+            cellColors={cellColorsForVitessce}
+            setCellSelection={setCellsSelection}
+            getExpressionValue={getExpressionValue}
+            getCellIsSelected={getCellIsSelected}
+          />
         }
-        {
-          createClusterPopover
-            ? (
-              <ClusterPopover
-                visible
-                popoverPosition={cellCoordinatesRef}
-                onCreate={onCreateCluster}
-                onCancel={() => setCreateClusterPopover(false)}
-              />
-            ) : (
-              (cellInfoVisible && cellInfoTooltip) ? (
-                <div>
-                  <CellInfo
-                    containerWidth={width}
-                    containerHeight={height}
-                    componentType={embeddingType}
-                    coordinates={cellCoordinatesRef.current}
-                    cellInfo={cellInfoTooltip}
-                  />
-                  <CrossHair
-                    componentType={embeddingType}
-                    coordinates={cellCoordinatesRef}
-                  />
-                </div>
-              ) : <></>
-            )
-        }
+        <EmbeddingTooltip
+          experimentId={experimentId}
+          cellCoordinatesRef={cellCoordinatesRef}
+          selectedIds={selectedIds}
+          width={width}
+          height={height}
+          cellInfoVisible={cellInfoVisible}
+          cellInfoTooltip={cellInfoTooltip}
+          embeddingType={embeddingType}
+          createClusterPopover={createClusterPopover}
+          setCreateClusterPopover={setCreateClusterPopover}
+        />
       </div>
     </>
   );
