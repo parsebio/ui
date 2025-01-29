@@ -18,7 +18,17 @@ class LazySet {
     return this.sets.some((set) => set.has(value));
   }
 
-  addSet(set) {
+  addSet(set, assumeNewSetIsDisjoint) {
+    if (assumeNewSetIsDisjoint === undefined) {
+      // This is a reliability measure to make sure we
+      // don't begin using LazySet in ways that will break it
+      //
+      // You can use sets that share items no problem, but that will mean that calculating the size
+      // won't be supported for the reasons explained in its getter's error message
+      throw new Error('You need to explicitly aknowledge you know that the sets are disjoint or that they aren\'t');
+    }
+
+    this.assumeSetsAreDisjoint = this.assumeSetsAreDisjoint && assumeNewSetIsDisjoint;
     this.sets.push(set);
   }
 
@@ -34,6 +44,7 @@ class LazySet {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   clear() {
     throw new Error('This is a lazy set, it cannot be cleared');
   }

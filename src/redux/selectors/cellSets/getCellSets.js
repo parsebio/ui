@@ -26,7 +26,7 @@ const getCellSets = () => (state) => {
         cellIdsToReturn = new LazySet();
 
         cellSetKeys.forEach((sampleId) => {
-          cellIdsToReturn.addSet(properties[sampleId].cellIds);
+          cellIdsToReturn.addSet(properties[sampleId].cellIds, true);
         });
       } else {
         cellIdsToReturn = new LazySet();
