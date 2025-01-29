@@ -8,9 +8,9 @@ const generateVitessceData = (
   const trackColorData = generateVitessceHeatmapTracksData(
     selectedTracks, cellSets, cellOrder,
   );
-
+  const cellIdsOrder = cellOrder.map(({ id }) => id);
   const vitessceMatrix = generateVitessceHeatmapExpressionsMatrix(
-    cellOrder,
+    cellIdsOrder,
     selectedGenes,
     expressionMatrix,
   );
@@ -21,7 +21,7 @@ const generateVitessceData = (
   return {
     expressionMatrix: {
       cols: selectedGenes,
-      rows: cellOrder.map((x) => `${x}`),
+      rows: cellIdsOrder.map((x) => `${x}`),
       matrix: Uint8Array.from(vitessceMatrix),
     },
     metadataTracks: {

@@ -19,9 +19,12 @@ const getCellSets = () => (state) => {
       if (cellIds) {
         getCellIds = () => new Set(cellIds);
       } else if (cellSetKeys) {
-        getCellIds = () => cellSetKeys.reduce((acc, sampleId) => new Set(
-          [...acc, ...properties[sampleId].cellIds],
-        ), new Set());
+        getCellIds = () => {
+          const sets = cellSetKeys.reduce((acc, sampleId) => new Set(
+            [...acc, ...properties[sampleId].cellIds],
+          ), new Set());
+          return sets;
+        };
       }
       propertiesWithExtraKeys[key] = {
         ...value,

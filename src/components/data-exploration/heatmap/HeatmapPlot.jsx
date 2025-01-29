@@ -95,8 +95,6 @@ const HeatmapPlot = (props) => {
     return groupedCellClasses.map((cellClass) => cellClass.children).flat();
   }, _.isEqual);
 
-  const expressionMatrix = useSelector((state) => state.genes.expression.downsampled.matrix);
-
   const viewError = useSelector((state) => state.genes.expression.views[COMPONENT_TYPE]?.error);
 
   const updateCellCoordinates = (newView) => {
@@ -366,7 +364,7 @@ const HeatmapPlot = (props) => {
               cellId={cellHighlight}
               geneName={geneHighlight}
               geneExpression={
-                expressionMatrix.getRawExpression(geneHighlight, [parseInt(cellHighlight, 10)])
+                matrix.getRawExpression(geneHighlight, [parseInt(cellHighlight, 10)])
               }
               coordinates={cellCoordinatesRef.current}
             />
