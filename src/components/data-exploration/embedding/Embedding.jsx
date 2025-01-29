@@ -63,7 +63,6 @@ const Embedding = (props) => {
     hidden: cellSetHidden,
   } = cellSets;
 
-  // const selectedCell = useSelector((state) => state.cellInfo.cellId);
   const expressionLoading = useSelector((state) => state.genes.expression.full.loading);
   const expressionMatrix = useSelector((state) => state.genes.expression.full.matrix);
 
@@ -92,7 +91,6 @@ const Embedding = (props) => {
 
   // Then, try to load the embedding with the appropriate data.
   useEffect(() => {
-    console.log('HOLAHOLA3');
     if (embeddingSettings && !data) {
       dispatch(loadEmbedding(experimentId, embeddingType));
     }
@@ -101,7 +99,6 @@ const Embedding = (props) => {
   // Handle focus change (e.g. a cell set or gene or metadata got selected).
   // Also handle here when the cell set properties or hierarchy change.
   useEffect(() => {
-    console.log('HOLAHOLA2');
     const { store, key } = focusData;
 
     switch (store) {
@@ -135,8 +132,6 @@ const Embedding = (props) => {
       return;
     }
 
-    console.log('HOLAHOLA1');
-
     const truncatedExpression = expressionMatrix.getTruncatedExpression(focusData.key);
     const { truncatedMin, truncatedMax } = expressionMatrix.getStats(focusData.key);
 
@@ -148,7 +143,6 @@ const Embedding = (props) => {
   useEffect(() => {
     if (!data || !cellSetHidden || !cellSetProperties) return;
 
-    console.log('HOLAHOLA4');
     setConvertedCellsData(convertCellsData(data, cellSetHidden, cellSetProperties));
   }, [data, cellSetHidden, cellSetProperties]);
 
@@ -156,19 +150,15 @@ const Embedding = (props) => {
     // Keep last shown tooltip
     if (!cell) return;
 
-    console.log('HOLAHOLA5');
-
     dispatch(updateCellInfo({ cellId: cell }));
   }, []);
 
   const clearCellHighlight = useCallback(() => {
-    console.log('HOLAHOLA6');
     dispatch(updateCellInfo({ cellId: null }));
   }, []);
 
   const updateViewInfo = useCallback((viewInfo) => {
     if (selectedCell && viewInfo.projectFromId) {
-      console.log('HOLAHOLA7');
       const [x, y] = viewInfo.projectFromId(selectedCell);
       cellCoordinatesRef.current = {
         x,
@@ -180,7 +170,6 @@ const Embedding = (props) => {
   }, [selectedCell]);
 
   const setCellsSelection = useCallback((selection) => {
-    console.log('HOLAHOLA8');
     if (Array.from(selection).length > 0) {
       setCreateClusterPopover(true);
       const selectedIdsToInt = new Set(Array.from(selection).map((id) => parseInt(id, 10)));
@@ -191,7 +180,6 @@ const Embedding = (props) => {
   const cellColorsForVitessce = useMemo(() => new Map(Object.entries(cellColors)), [cellColors]);
 
   const setViewState = useCallback(({ zoom, target }) => {
-    console.log('HOLAHOLA9');
     setCellRadius(cellRadiusFromZoom(zoom));
 
     setView({ zoom, target });
