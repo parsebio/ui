@@ -17,12 +17,14 @@ import {
   NodeExpandOutlined,
   FileDoneOutlined,
   DotChartOutlined,
+  ExperimentOutlined,
 } from '@ant-design/icons';
 import {
   Layout,
   Menu,
   Typography,
   Divider,
+  Button,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
@@ -551,8 +553,19 @@ const ContentWrapper = (props) => {
             collapsed={collapsed}
             onCollapse={(collapse) => setCollapsed(collapse)}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <div style={{
+              display: 'flex', flexDirection: 'column', height: '100%', textAlign: 'center',
+            }}
+            >
               {collapsed ? <SmallLogo /> : <BigLogo />}
+              <span style={{ fontSize: '1.2em', color: 'hsla(0, 0%, 100%, 0.65)', marginBottom: '10px' }}>
+                by
+                {' '}
+                <a href='https://parsebiosciences.com/' style={{ color: 'inherit', textDecoration: 'none' }}>
+                  Parse
+                  {collapsed ? '' : ' Biosciences'}
+                </a>
+              </span>
               <Menu
                 style={{ background: brandColors.BLACK_INDIGO }}
                 data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
@@ -567,6 +580,15 @@ const ContentWrapper = (props) => {
                 {menuItems}
               </Menu>
               <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: collapsed ? 'center' : 'left' }}>
+                <Button
+                  type='text'
+                  icon={<ExperimentOutlined />}
+                  style={{ color: 'hsla(0, 0%, 100%, .65)' }}
+                  href='https://parsebiosciences.com/'
+                  target='_blank'
+                >
+                  {!collapsed && 'View Parse Products'}
+                </Button>
                 <FeedbackButton buttonType='text' collapsed={collapsed} />
                 <ReferralButton collapsed={collapsed} />
                 <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
