@@ -1,10 +1,10 @@
 // WARNING if you add any set to the LazySet, any
 // deletion operation will affect the set you added too
 class LazySet {
-  constructor(modifiesExternalSets = false) {
+  constructor(startingSet = new Set(), modifiesExternalSets = false) {
     // Begins with an empty set which works as an "inner set"
     // where addition operations are performed
-    this.sets = [new Set()];
+    this.sets = [startingSet];
 
     this.modifiesExternalSets = modifiesExternalSets;
   }
