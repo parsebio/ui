@@ -17,7 +17,7 @@ const getCellSets = () => (state) => {
       const { cellIds, cellSetKeys } = value;
       let getCellIds = () => new Set();
       if (cellIds) {
-        getCellIds = () => new Set(cellIds);
+        getCellIds = () => cellIds;
       } else if (cellSetKeys) {
         getCellIds = () => new Set(
           cellSetKeys.map((sampleId) => properties[sampleId].cellIds).flat()[0],
