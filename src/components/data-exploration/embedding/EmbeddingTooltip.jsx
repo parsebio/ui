@@ -95,7 +95,7 @@ const EmbeddingTooltip = (props) => {
         loadingDetails: false,
       });
     }
-  }, 50), [selectedCell]);
+  }, 200), [selectedCell]);
 
   const onCreateCluster = (clusterName, clusterColor) => {
     setCreateClusterPopover(false);

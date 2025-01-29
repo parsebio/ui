@@ -3,6 +3,8 @@ import React, {
   useState, useEffect, useRef, useMemo, useCallback,
 } from 'react';
 
+import _ from 'lodash';
+
 import {
   useSelector, useDispatch,
 } from 'react-redux';
@@ -31,6 +33,7 @@ import EmbeddingTooltip from './EmbeddingTooltip';
 
 const INITIAL_ZOOM = 4.00;
 const cellRadiusFromZoom = (zoom) => zoom ** 3 / 50;
+const originalView = { target: [4, -4, 0], zoom: INITIAL_ZOOM };
 
 const Scatterplot = dynamic(
   () => import('../DynamicVitessceWrappers').then((mod) => mod.Scatterplot),
@@ -48,13 +51,14 @@ const Embedding = (props) => {
 
   const embeddingSettings = useSelector(
     (state) => state.experimentSettings?.originalProcessing?.configureEmbedding?.embeddingSettings,
+    _.isEqual,
   );
   const selectedCell = useSelector((state) => state.cellInfo.cellId);
   const embeddingType = embeddingSettings?.method;
 
   const { data, loading, error } = useSelector((state) => state.embeddings[embeddingType]) || {};
 
-  const focusData = useSelector((state) => state.cellInfo.focus);
+  const focusData = useSelector((state) => state.cellInfo.focus, _.isEqual);
 
   const cellSets = useSelector(getCellSets());
   const {
@@ -72,7 +76,7 @@ const Embedding = (props) => {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [cellColors, setCellColors] = useState({});
   const [cellInfoVisible, setCellInfoVisible] = useState(true);
-  const originalView = { target: [4, -4, 0], zoom: INITIAL_ZOOM };
+
   const [view, setView] = useState(originalView);
 
   const showLoader = useMemo(() => {
