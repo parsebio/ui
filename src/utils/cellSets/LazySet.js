@@ -1,12 +1,17 @@
-// WARNING if you add any set to the LazySet, any
-// deletion operation will affect the set you added too
+/* eslint-disable no-underscore-dangle */
+// Each of the sets added needs to be unique
 class LazySet {
-  constructor(startingSet = new Set(), modifiesExternalSets = false) {
-    // Begins with an empty set which works as an "inner set"
+  constructor(startingSet = new Set(), assumeSetsAreDisjoint = true) {
+    // Begins with a starting set which works as an "inner set"
     // where addition operations are performed
     this.sets = [startingSet];
 
-    this.modifiesExternalSets = modifiesExternalSets;
+    // If true, the set will assume any added sets don't share any values
+    // This is useful for performance reasons
+    // If set to false, the "size" operation will be fairly slow the first time it's called
+    this.assumeSetsAreDisjoint = assumeSetsAreDisjoint;
+
+    this._size = null;
   }
 
   has(value) {
@@ -30,10 +35,7 @@ class LazySet {
   }
 
   clear() {
-    if (this.modifiesExternalSets) {
-      return this.sets.forEach((set) => set.clear());
-    }
-    throw new Error('Attempt to modify external sets in LazySet');
+    throw new Error('This is a lazy set, it cannot be cleared');
   }
 
   forEach(callback) {
@@ -48,6 +50,21 @@ class LazySet {
     for (const set of this.sets) {
       yield* set;
     }
+  }
+
+  get size() {
+    if (!this.assumeSetsAreDisjoint) {
+      throw new Error(`Size operation is not supported when sets are not disjoint
+        because it is very expensive and to discourage introducing performance issues unknowingly.
+        Instead of using size, create a Set from the LazySet and use the size property of the Set
+        `);
+    }
+
+    if (this._size === null) {
+      this._size = this.sets.reduce((acc, set) => acc + set.size, 0);
+    }
+
+    return this._size;
   }
 
   // These were recently added and we haven't used them, so I am skipping on implementing them

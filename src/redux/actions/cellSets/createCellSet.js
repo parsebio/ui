@@ -47,7 +47,7 @@ const createCellSet = (experimentId, name, color, cellIdsSet) => async (dispatch
   // cellIds are stored as an integer set in redux, so we need to convert it
   const dataForRedux = {
     ...data,
-    cellIds: new LazySet(cellIdsSet),
+    cellIds: new Set(cellIdsSet),
   };
 
   // cellIds are stored as an array in S3

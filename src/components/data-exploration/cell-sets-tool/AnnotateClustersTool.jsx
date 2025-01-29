@@ -8,7 +8,7 @@ import {
 } from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
-import getCellSets from 'redux/selectors/cellSets/getCellSets';
+import { getCellSets } from 'redux/selectors';
 
 const tissueOptions = [
   'Immune system',
