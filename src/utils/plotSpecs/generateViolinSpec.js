@@ -454,7 +454,7 @@ const generateData = (
 ) => {
   const shouldBeDisplayed = (
     (cellId) => (
-      cellSets.properties[cellSetToDisplayId]?.getCellIds().has(cellId))
+      cellSets.properties[cellSetToDisplayId]?.cellIds.has(cellId))
       || cellSetToDisplayId === 'All'
   );
 
@@ -494,7 +494,7 @@ const generateData = (
   }
 
   cellSetsIds.forEach((cellSetId) => {
-    const currentCellIds = Array.from(properties[cellSetId].getCellIds());
+    const currentCellIds = Array.from(properties[cellSetId].cellIds);
     currentCellIds
       .filter(shouldBeDisplayed)
       .forEach((cellId) => {

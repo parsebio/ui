@@ -8,6 +8,7 @@ import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import getCellSets from 'redux/selectors/cellSets/getCellSets';
+import LazySet from 'utils/cellSets/LazySet';
 
 const createCellSetJsonMerger = (newCellSet, cellClassKey) => (
   [{
@@ -46,8 +47,7 @@ const createCellSet = (experimentId, name, color, cellIdsSet) => async (dispatch
   // cellIds are stored as an integer set in redux, so we need to convert it
   const dataForRedux = {
     ...data,
-    cellIds: cellIdsSet,
-    getCellIds: () => cellIdsSet,
+    cellIds: new LazySet(cellIdsSet),
   };
 
   // cellIds are stored as an array in S3

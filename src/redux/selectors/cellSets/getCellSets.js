@@ -1,5 +1,6 @@
 import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
 import _ from 'lodash';
+import LazySet from 'utils/cellSets/LazySet';
 import initialState from '../../reducers/cellSets/initialState';
 
 const getCellSets = () => (state) => {
@@ -12,21 +13,28 @@ const getCellSets = () => (state) => {
 
   const { properties } = stateToReturn;
   const propertiesWithExtraKeys = {};
+
+  let cellIdsToReturn;
+
   if (!_.isEmpty(properties)) {
     Object.entries(properties).forEach(([key, value]) => {
       const { cellIds, cellSetKeys } = value;
-      let getCellIds = () => new Set();
+
       if (cellIds) {
-        getCellIds = () => cellIds;
+        cellIdsToReturn = new LazySet(cellIds);
       } else if (cellSetKeys) {
-        getCellIds = () => new Set(
-          cellSetKeys.map((sampleId) => properties[sampleId].cellIds).flat()[0],
-        );
+        cellIdsToReturn = new LazySet();
+
+        cellSetKeys.forEach((sampleId) => {
+          cellIdsToReturn.addSet(properties[sampleId].cellIds);
+        });
+      } else {
+        cellIdsToReturn = new LazySet();
       }
 
       propertiesWithExtraKeys[key] = {
         ...value,
-        getCellIds,
+        cellIds: cellIdsToReturn,
       };
     });
   }

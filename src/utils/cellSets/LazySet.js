@@ -1,10 +1,10 @@
 // WARNING if you add any set to the LazySet, any
 // deletion operation will affect the set you added too
 class LazySet {
-  constructor(modifiesExternalSets = false, startingSets = []) {
+  constructor(modifiesExternalSets = false) {
     // Begins with an empty set which works as an "inner set"
     // where addition operations are performed
-    this.sets = [new Set(), ...startingSets];
+    this.sets = [new Set()];
 
     this.modifiesExternalSets = modifiesExternalSets;
   }
@@ -50,12 +50,12 @@ class LazySet {
     }
   }
 
-  // These can be easily implemented but I didn't because we don't need them anywhere right now
+  // These were recently added and we haven't used them, so I am skipping on implementing them
   //
-  // If you need one, check on the implemented ones that they are correct before uncommenting them
+  // However, they can be easily implemented if you want
+  // If you need one that is already implemented, make sure that it s correct before uncommenting it
   // About union, difference, etc. They could be implemented to return Sets or LazySets,
   // I didn't know what would be better so that's why I left them like this
-  //
   //
   // isDisjointFrom(otherSet) {
   //   return !this.some((value) => otherSet.has(value));

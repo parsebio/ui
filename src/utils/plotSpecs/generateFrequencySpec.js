@@ -264,10 +264,10 @@ const generateData = (hierarchy, properties, config) => {
     // Get the total number of cells in each cell set.
     cellSets.x.forEach((xCellSet, indx) => {
       let total = 0;
-      const xCellSetIds = Array.from(properties[xCellSet.key].getCellIds());
+      const xCellSetIds = Array.from(properties[xCellSet.key].cellIds);
 
       cellSets.y.forEach((yCellSet) => {
-        const yCellSetIds = properties[yCellSet.key].getCellIds();
+        const yCellSetIds = properties[yCellSet.key].cellIds;
         total += xCellSetIds.filter((id) => yCellSetIds.has(id)).length;
       });
 
