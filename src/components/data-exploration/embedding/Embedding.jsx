@@ -3,9 +3,6 @@ import React, {
   useState, useEffect, useRef, useMemo, useCallback,
 } from 'react';
 
-import _ from 'lodash';
-
-import dynamic from 'next/dynamic';
 import {
   useSelector, useDispatch,
 } from 'react-redux';
@@ -15,7 +12,7 @@ import * as vega from 'vega';
 import PlatformError from 'components/PlatformError';
 import Loader from 'components/Loader';
 
-import { getCellSetsHierarchyByType, getCellSets } from 'redux/selectors';
+import { getCellSets } from 'redux/selectors';
 
 import { loadEmbedding } from 'redux/actions/embedding';
 import { loadGeneExpression } from 'redux/actions/genes';
@@ -28,15 +25,9 @@ import {
   colorByGeneExpression,
   colorInterpolator,
 } from 'utils/plotUtils';
-import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
+
 import EmbeddingTooltip from './EmbeddingTooltip';
-
-const Scatterplot = dynamic(
-  () => import('../DynamicVitessceWrappers').then((mod) => mod.Scatterplot),
-  { ssr: false },
-);
-
-// const dispatch = () => { };
+import MemoizedScatterPlot from './MemoizedScatterplot';
 
 const INITIAL_ZOOM = 4.00;
 const cellRadiusFromZoom = (zoom) => zoom ** 3 / 50;
@@ -49,11 +40,11 @@ const Embedding = (props) => {
   const dispatch = useDispatch();
 
   const [cellRadius, setCellRadius] = useState(cellRadiusFromZoom(INITIAL_ZOOM));
-  const rootClusterNodes = useSelector(getCellSetsHierarchyByType('cellSets')).map(({ key }) => key);
 
   const embeddingSettings = useSelector(
     (state) => state.experimentSettings?.originalProcessing?.configureEmbedding?.embeddingSettings,
   );
+  const selectedCell = useSelector((state) => state.cellInfo.cellId);
   const embeddingType = embeddingSettings?.method;
 
   const { data, loading, error } = useSelector((state) => state.embeddings[embeddingType]) || {};
@@ -67,12 +58,12 @@ const Embedding = (props) => {
     hidden: cellSetHidden,
   } = cellSets;
 
-  const selectedCell = useSelector((state) => state.cellInfo.cellId);
+  // const selectedCell = useSelector((state) => state.cellInfo.cellId);
   const expressionLoading = useSelector((state) => state.genes.expression.full.loading);
   const expressionMatrix = useSelector((state) => state.genes.expression.full.matrix);
 
   const cellCoordinatesRef = useRef({ x: 200, y: 300 });
-  const [cellInfoTooltip, setCellInfoTooltip] = useState();
+
   const [createClusterPopover, setCreateClusterPopover] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [cellColors, setCellColors] = useState({});
@@ -96,6 +87,7 @@ const Embedding = (props) => {
 
   // Then, try to load the embedding with the appropriate data.
   useEffect(() => {
+    console.log('HOLAHOLA3');
     if (embeddingSettings && !data) {
       dispatch(loadEmbedding(experimentId, embeddingType));
     }
@@ -104,6 +96,7 @@ const Embedding = (props) => {
   // Handle focus change (e.g. a cell set or gene or metadata got selected).
   // Also handle here when the cell set properties or hierarchy change.
   useEffect(() => {
+    console.log('HOLAHOLA2');
     const { store, key } = focusData;
 
     switch (store) {
@@ -137,6 +130,8 @@ const Embedding = (props) => {
       return;
     }
 
+    console.log('HOLAHOLA1');
+
     const truncatedExpression = expressionMatrix.getTruncatedExpression(focusData.key);
     const { truncatedMin, truncatedMax } = expressionMatrix.getStats(focusData.key);
 
@@ -148,66 +143,27 @@ const Embedding = (props) => {
   useEffect(() => {
     if (!data || !cellSetHidden || !cellSetProperties) return;
 
+    console.log('HOLAHOLA4');
     setConvertedCellsData(convertCellsData(data, cellSetHidden, cellSetProperties));
   }, [data, cellSetHidden, cellSetProperties]);
-
-  useEffect(() => {
-    // Move this into the cell info tooltip component
-    if (selectedCell) {
-      let expressionToDispatch;
-      let geneName;
-
-      console.log('HOALHOLA');
-      if (expressionMatrix.geneIsLoaded(focusData.key)) {
-        geneName = focusData.key;
-
-        const [expression] = expressionMatrix.getRawExpression(
-          focusData.key,
-          [parseInt(selectedCell, 10)],
-        );
-
-        expressionToDispatch = expression;
-      }
-
-      // getting the cluster properties for every cluster that has the cellId
-      const cellProperties = getContainingCellSetsProperties(
-        Number.parseInt(selectedCell, 10),
-        rootClusterNodes,
-        cellSets,
-      );
-
-      const prefixedCellSetNames = [];
-      Object.values(cellProperties).forEach((clusterProperties) => {
-        clusterProperties.forEach(({ name, parentNodeKey }) => {
-          prefixedCellSetNames.push(`${cellSetProperties[parentNodeKey].name} : ${name}`);
-        });
-      });
-
-      setCellInfoTooltip({
-        cellSets: prefixedCellSetNames,
-        cellId: selectedCell,
-        componentType: embeddingType,
-        expression: expressionToDispatch,
-        geneName,
-      });
-    } else {
-      setCellInfoTooltip(null);
-    }
-  }, [selectedCell]);
 
   const setCellHighlight = useCallback((cell) => {
     // Keep last shown tooltip
     if (!cell) return;
 
+    console.log('HOLAHOLA5');
+
     dispatch(updateCellInfo({ cellId: cell }));
   }, []);
 
   const clearCellHighlight = useCallback(() => {
+    console.log('HOLAHOLA6');
     dispatch(updateCellInfo({ cellId: null }));
   }, []);
 
   const updateViewInfo = useCallback((viewInfo) => {
     if (selectedCell && viewInfo.projectFromId) {
+      console.log('HOLAHOLA7');
       const [x, y] = viewInfo.projectFromId(selectedCell);
       cellCoordinatesRef.current = {
         x,
@@ -218,7 +174,12 @@ const Embedding = (props) => {
     }
   }, [selectedCell]);
 
+  // const actuallyUpdateViewInfo = useCallback((viewInfo) => {
+  //   updateViewInfo(viewInfo);
+  // }, []);
+
   const setCellsSelection = useCallback((selection) => {
+    console.log('HOLAHOLA8');
     if (Array.from(selection).length > 0) {
       setCreateClusterPopover(true);
       const selectedIdsToInt = new Set(Array.from(selection).map((id) => parseInt(id, 10)));
@@ -229,6 +190,7 @@ const Embedding = (props) => {
   const cellColorsForVitessce = useMemo(() => new Map(Object.entries(cellColors)), [cellColors]);
 
   const setViewState = useCallback(({ zoom, target }) => {
+    console.log('HOLAHOLA9');
     setCellRadius(cellRadiusFromZoom(zoom));
 
     setView({ zoom, target });
@@ -307,7 +269,7 @@ const Embedding = (props) => {
       >
         {renderExpressionView()}
         {
-          <Scatterplot
+          <MemoizedScatterPlot
             cellColorEncoding='cellSetSelection'
             cellOpacity={0.8}
             cellRadius={cellRadius}
@@ -333,7 +295,6 @@ const Embedding = (props) => {
           width={width}
           height={height}
           cellInfoVisible={cellInfoVisible}
-          cellInfoTooltip={cellInfoTooltip}
           embeddingType={embeddingType}
           createClusterPopover={createClusterPopover}
           setCreateClusterPopover={setCreateClusterPopover}
