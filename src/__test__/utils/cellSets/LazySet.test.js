@@ -11,46 +11,46 @@ describe('LazySet', () => {
     lazySet = new LazySet(set1);
   });
 
-  test('should initialize with a starting set', () => {
+  it('should initialize with a starting set', () => {
     expect(lazySet.has(1)).toBe(true);
     expect(lazySet.has(4)).toBe(false);
   });
 
-  test('should add a new set', () => {
+  it('should add a new set', () => {
     lazySet.addSet(set2, true);
     expect(lazySet.has(4)).toBe(true);
   });
 
-  test('should add a value to the starting set', () => {
+  it('should add a value to the starting set', () => {
     lazySet.add(7);
     expect(lazySet.has(7)).toBe(true);
   });
 
-  test('should throw an error when deleting a value if modifiesExternalSets is false', () => {
+  it('should throw an error when deleting a value if modifiesExternalSets is false', () => {
     expect(() => lazySet.delete(1)).toThrow('Attempt to modify external sets in LazySet');
   });
 
-  test('should throw an error when clearing the set', () => {
+  it('should throw an error when clearing the set', () => {
     expect(() => lazySet.clear()).toThrow('This is a lazy set, it cannot be cleared');
   });
 
-  test('should iterate over all values', () => {
+  it('should iterate over all values', () => {
     lazySet.addSet(set2, true);
     const values = [...lazySet];
     expect(values).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
-  test('should calculate size when sets are disjoint', () => {
+  it('should calculate size when sets are disjoint', () => {
     lazySet.addSet(set2, true);
     expect(lazySet.size).toBe(6);
   });
 
-  test('should throw an error when calculating size if sets are not disjoint', () => {
+  it('should throw an error when calculating size if sets are not disjoint', () => {
     lazySet.addSet(new Set([1, 2, 3, 4, 5]), false);
     expect(() => lazySet.size).toThrow('Size operation is not supported when sets are not disjoint');
   });
 
-  test('should call a callback for each value when using forEach', () => {
+  it('should call a callback for each value when using forEach', () => {
     const callback = jest.fn();
     lazySet.forEach(callback);
     expect(callback).toHaveBeenCalledTimes(3);
