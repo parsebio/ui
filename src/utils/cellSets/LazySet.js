@@ -51,7 +51,7 @@ class LazySet {
 
   forEach(callback) {
     this.sets.forEach((set) => {
-      set.forEach(callback);
+      set.forEach((item) => callback(item));
     });
   }
 
