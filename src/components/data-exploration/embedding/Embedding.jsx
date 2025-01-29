@@ -26,11 +26,16 @@ import {
   colorInterpolator,
 } from 'utils/plotUtils';
 
+import dynamic from 'next/dynamic';
 import EmbeddingTooltip from './EmbeddingTooltip';
-import MemoizedScatterPlot from './MemoizedScatterplot';
 
 const INITIAL_ZOOM = 4.00;
 const cellRadiusFromZoom = (zoom) => zoom ** 3 / 50;
+
+const Scatterplot = dynamic(
+  () => import('../DynamicVitessceWrappers').then((mod) => mod.Scatterplot),
+  { ssr: false },
+);
 
 const Embedding = (props) => {
   const {
@@ -174,10 +179,6 @@ const Embedding = (props) => {
     }
   }, [selectedCell]);
 
-  // const actuallyUpdateViewInfo = useCallback((viewInfo) => {
-  //   updateViewInfo(viewInfo);
-  // }, []);
-
   const setCellsSelection = useCallback((selection) => {
     console.log('HOLAHOLA8');
     if (Array.from(selection).length > 0) {
@@ -269,7 +270,7 @@ const Embedding = (props) => {
       >
         {renderExpressionView()}
         {
-          <MemoizedScatterPlot
+          <Scatterplot
             cellColorEncoding='cellSetSelection'
             cellOpacity={0.8}
             cellRadius={cellRadius}

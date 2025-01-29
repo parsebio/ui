@@ -3,6 +3,8 @@ import { Card } from 'antd';
 import PropTypes from 'prop-types';
 import getCellInfoCoordinates from 'utils/data-exploration/getCellInfoCoordinates';
 
+import { ClipLoader } from 'react-spinners';
+
 const cellInfoStyle = { fontSize: '0.75rem' };
 
 const CellInfo = (props) => {
@@ -46,6 +48,11 @@ const CellInfo = (props) => {
         <div style={cellInfoStyle}>
           {`Cell id: ${cellInfo.cellId}`}
         </div>
+        {cellInfo.loadingDetails ? (
+          <center>
+            <ClipLoader size={15} />
+          </center>
+        ) : null}
         {cellInfo.geneName ? (
           <div style={cellInfoStyle}>
             {`Gene name: ${cellInfo.geneName}`}

@@ -12,6 +12,7 @@ import { createCellSet } from 'redux/actions/cellSets';
 
 import ClusterPopover from 'components/data-exploration/embedding/ClusterPopover';
 import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
+import _ from 'lodash';
 import CellInfo from '../CellInfo';
 import CrossHair from './CrossHair';
 
@@ -41,18 +42,31 @@ const EmbeddingTooltip = (props) => {
   const { properties: cellSetProperties } = cellSets;
 
   useEffect(() => {
-    // Move this into the cell info tooltip component
     if (selectedCell) {
+      setCellInfoTooltip({
+        cellSets: [],
+        cellId: selectedCell,
+        componentType: embeddingType,
+        loadingDetails: true,
+      });
+
+      setSelectedCellDetails(selectedCell);
+    } else {
+      setCellInfoTooltip(null);
+    }
+  }, [selectedCell]);
+
+  const setSelectedCellDetails = useCallback(_.debounce((selectedCellParam) => {
+    if (selectedCellParam) {
       let expressionToDispatch;
       let geneName;
 
-      console.log('HOALHOLA');
       if (expressionMatrix.geneIsLoaded(focusData.key)) {
         geneName = focusData.key;
 
         const [expression] = expressionMatrix.getRawExpression(
           focusData.key,
-          [parseInt(selectedCell, 10)],
+          [parseInt(selectedCellParam, 10)],
         );
 
         expressionToDispatch = expression;
@@ -60,7 +74,7 @@ const EmbeddingTooltip = (props) => {
 
       // getting the cluster properties for every cluster that has the cellId
       const cellProperties = getContainingCellSetsProperties(
-        Number.parseInt(selectedCell, 10),
+        Number.parseInt(selectedCellParam, 10),
         rootClusterNodes,
         cellSets,
       );
@@ -74,15 +88,14 @@ const EmbeddingTooltip = (props) => {
 
       setCellInfoTooltip({
         cellSets: prefixedCellSetNames,
-        cellId: selectedCell,
+        cellId: selectedCellParam,
         componentType: embeddingType,
         expression: expressionToDispatch,
         geneName,
+        loadingDetails: false,
       });
-    } else {
-      setCellInfoTooltip(null);
     }
-  }, [selectedCell]);
+  }, 50), []);
 
   const onCreateCluster = (clusterName, clusterColor) => {
     setCreateClusterPopover(false);
