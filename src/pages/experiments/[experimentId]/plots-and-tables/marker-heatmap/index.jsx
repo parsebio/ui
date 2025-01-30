@@ -197,7 +197,7 @@ const MarkerHeatmap = ({ experimentId }) => {
       return;
     }
 
-    const data = generateVegaData(cellOrder, matrix, config, cellSets);
+    const data = generateVegaData(cellOrder.map(({ id }) => id), matrix, config, cellSets);
     const spec = generateSpec(config, 'Cluster ID', data, config.showGeneLabels);
 
     spec.description = 'Marker heatmap';
