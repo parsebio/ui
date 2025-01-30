@@ -63,6 +63,9 @@ class LazySet {
     }
   }
 
+  // The only cell class that can have intersecting sets (not disjoint) is
+  // scratchpad, which is not going to have more than one set in this.sets
+  // so that case is safe
   get size() {
     if (!this.assumeSetsAreDisjoint && this.sets.length > 1) {
       throw new Error(`Size operation is not supported when inner sets are not disjoint and more than one
