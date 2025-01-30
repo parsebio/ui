@@ -8,7 +8,7 @@ import {
 } from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
-import getCellSets from 'redux/selectors/cellSets/getCellSets';
+import { getCellSets } from 'redux/selectors';
 
 const tissueOptions = [
   'Immune system',
@@ -68,7 +68,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
 
   const cellSets = useSelector(getCellSets());
 
-  const allClustersValid = useMemo(() => Object.entries(cellSets.properties).every(([, value]) => value.parentNodeKey !== 'louvain' || value.getCellIds().size > 1), [cellSets]);
+  const allClustersValid = useMemo(() => Object.entries(cellSets.properties).every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
 
   return (
     <Space direction='vertical'>

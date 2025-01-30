@@ -179,22 +179,22 @@ describe('dataIntegration', () => {
       key: `sample-${clusterIdx}`,
       name: `Sample ${clusterIdx}`,
       color: '#000000',
-      cellIds: [clusterIdx],
+      cellIds: new Set([clusterIdx]),
     });
 
     const manySamples = [...Array(MAX_LEGEND_ITEMS + 1)].map((c, idx) => sampleTemplate(idx));
 
     // Add to samples
-    cellSetsData.cellSets[2].children = manySamples;
+    cellSetsData.cellSets[2].children = [...cellSetsData.cellSets[2].children, ...manySamples];
 
     const manySamplesResponse = {
       ...generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
       ...customAPIResponses,
     };
 
-    storeState.dispatch(loadCellSets(fake.EXPERIMENT_ID, true));
-
     fetchMock.mockIf(/.*/, mockAPI(manySamplesResponse));
+
+    storeState.dispatch(loadCellSets(fake.EXPERIMENT_ID, true));
 
     await renderDataIntegration(storeState);
 
@@ -211,7 +211,12 @@ describe('dataIntegration', () => {
     // Remove all sample other than the first one.
     // This way, getIsUnisample() will detect the exp as unisample
     const unisampleCellSetsData = _.cloneDeep(cellSetsData);
+
     _.find(unisampleCellSetsData.cellSets, { key: 'sample' }).children.splice(1);
+
+    // Clean up metadata tracks so that they don't refernce non-existing samples
+    // That we removed in .splice
+    _.find(unisampleCellSetsData.cellSets, { key: 'Track_1' }).children = [];
 
     const mockSingleSampleApiResponses = {
       ...generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
