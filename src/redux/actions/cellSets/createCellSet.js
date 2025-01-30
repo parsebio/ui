@@ -8,7 +8,6 @@ import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import getCellSets from 'redux/selectors/cellSets/getCellSets';
-import LazySet from 'utils/cellSets/LazySet';
 
 const createCellSetJsonMerger = (newCellSet, cellClassKey) => (
   [{
