@@ -5,7 +5,7 @@ const generateVitessceHeatmapTracksData = (trackOrder, cellSets, cells) => {
 
   cells.forEach((cell) => {
     const allColorsForCell = trackOrder.map((cellClassKey) => {
-      const cluster = cell.presentInClusters[cellClassKey][0];
+      const cluster = cell.presentInCellClass[cellClassKey][0];
       const { color } = cellSets.properties[cluster];
       return hexToRgb(color) ?? hexToRgb('#f5f8fa');
     });
