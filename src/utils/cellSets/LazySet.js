@@ -69,9 +69,9 @@ class LazySet {
   get size() {
     if (!this.assumeSetsAreDisjoint && this.sets.length > 1) {
       throw new Error(`Size operation is not supported when inner sets are not disjoint and more than one
-        because it is very expensive and to discourage introducing performance issues unknowingly.
-        Instead of using size, create a Set from the LazySet and use the size property of the Set
-        `);
+because it is very expensive and to discourage introducing performance issues unknowingly.
+Instead of using size, create a Set from the LazySet and use the size property of the Set
+`);
     }
 
     if (this._size === null) {

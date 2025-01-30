@@ -47,7 +47,10 @@ describe('LazySet', () => {
 
   it('should throw an error when calculating size if sets are not disjoint', () => {
     lazySet.addSet(new Set([1, 2, 3, 4, 5]), false);
-    expect(() => lazySet.size).toThrow('Size operation is not supported when sets are not disjoint');
+    expect(() => lazySet.size).toThrow(`Size operation is not supported when inner sets are not disjoint and more than one
+because it is very expensive and to discourage introducing performance issues unknowingly.
+Instead of using size, create a Set from the LazySet and use the size property of the Set
+`);
   });
 
   it('should call a callback for each value when using forEach', () => {
