@@ -61,4 +61,39 @@ Instead of using size, create a Set from the LazySet and use the size property o
     expect(callback).toHaveBeenCalledWith(2);
     expect(callback).toHaveBeenCalledWith(3);
   });
+
+  it('should throw an error if addSet is called without assumeNewSetIsDisjoint', () => {
+    expect(() => lazySet.addSet(set2)).toThrow('You need to explicitly aknowledge you know that the sets are disjoint or that they aren\'t');
+  });
+
+  it('should update assumeSetsAreDisjoint correctly', () => {
+    lazySet.addSet(set2, true);
+    expect(lazySet.assumeSetsAreDisjoint).toBe(true);
+    lazySet.addSet(new Set([7, 8, 9]), false);
+    expect(lazySet.assumeSetsAreDisjoint).toBe(false);
+  });
+
+  it('should keep assumeSetsAreDisjoint false if it already lost the disjointness', () => {
+    lazySet.addSet(set2, true);
+    expect(lazySet.assumeSetsAreDisjoint).toBe(true);
+    lazySet.addSet(new Set([7, 8, 9]), false);
+    expect(lazySet.assumeSetsAreDisjoint).toBe(false);
+    lazySet.addSet(new Set([10, 11]), true);
+    expect(lazySet.assumeSetsAreDisjoint).toBe(false);
+  });
+
+  it('should handle empty starting set', () => {
+    const emptyLazySet = new LazySet();
+    expect(emptyLazySet.has(1)).toBe(false);
+    emptyLazySet.add(1);
+    expect(emptyLazySet.has(1)).toBe(true);
+  });
+
+  it('should handle multiple sets correctly', () => {
+    const set3 = new Set([7, 8, 9]);
+    lazySet.addSet(set2, true);
+    lazySet.addSet(set3, true);
+    const values = [...lazySet];
+    expect(values).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  });
 });
