@@ -3,7 +3,7 @@ const getSampleCells = (cellSets, sampleKey) => {
     return [];
   }
 
-  const cellIds = Array.from(cellSets.properties[sampleKey].getCellIds());
+  const cellIds = Array.from(cellSets.properties[sampleKey].cellIds);
 
   return cellIds.map((cellId) => ({
     cellId,

@@ -18,7 +18,7 @@ const getContainingCellSetsProperties = (cellId, cellSetClassKeys, cellSets) => 
     const childrenCellSets = hierarchy.filter(({ key }) => rootNode === key)[0]?.children || [];
 
     childrenCellSets.forEach(({ key }) => {
-      if (properties[key].getCellIds().has(cellId)) {
+      if (properties[key].cellIds.has(cellId)) {
         cellClassProperties[rootNode].push(properties[key]);
       }
     });

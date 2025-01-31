@@ -275,7 +275,7 @@ const filterCells = (cellSets, sampleKey, groupBy) => {
 
   const colorToCellIdsMap = cellSetKeys.reduce((acc, key) => {
     acc.push({
-      cellIds: cellSets.properties[key].getCellIds(),
+      cellIds: cellSets.properties[key].cellIds,
       key,
       name: cellSets.properties[key].name,
       color: cellSets.properties[key].color,
