@@ -4,6 +4,10 @@
     "species": "Homo sapiens (Human)"
   },
   {
+    "name": "GRCm38",
+    "species": "Mus musculus (mouse) - Release 102"
+  },
+  {
     "name": "GRCm39",
     "species": "Mus musculus (Mouse)"
   },
@@ -72,6 +76,10 @@
     "species": "Felis catus (Cat)"
   },
   {
+    "name": "GAculeatus_v5",
+    "species": "Gasterosteus aculeatus aculeatus (Three-spined stickleback)"
+  },
+  {
     "name": "GRCg7b",
     "species": "Gallus gallus (Chicken)"
   },
@@ -98,6 +106,10 @@
   {
     "name": "MacFas_6",
     "species": "Macaca fascicularis (Crab-eating macaque)"
+  },
+  {
+    "name": "Meug_1.1",
+    "species": "Macropus eugenii (Tammar Wallaby)"
   },
   {
     "name": "MustPutFur",
@@ -192,6 +204,10 @@
     "species": "Mixed human and rat"
   },
   {
+    "name": "GRCh38_ctrD_rRNAs",
+    "species": "Custom Homo sapiens (human)"
+  },
+  {
     "name": "GRCh38-custom-1",
     "species": "Custom Homo sapiens (human)"
   },
@@ -248,6 +264,10 @@
     "species": "Custom Mus musculus (mouse)"
   },
   {
+    "name": "GRCm39_BCs1259DJ",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
     "name": "GRCm39-GFPh",
     "species": "Custom Mus musculus (mouse) with  GFPh"
   },
@@ -266,6 +286,10 @@
   {
     "name": "GRCm39_eGFP",
     "species": "Custom Mus musculus (mouse) with eGFP"
+  },
+  {
+    "name": "GRCm39_mCherry_iRFP",
+    "species": "Custom Mus musculus (mouse)"
   },
   {
     "name": "GRCm38_Usutu",
