@@ -5,8 +5,6 @@ import { animateScroll, Element } from 'react-scroll';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import _ from 'lodash';
-
 import {
   Alert, Button, Skeleton, Space, Tabs, Typography,
 } from 'antd';
