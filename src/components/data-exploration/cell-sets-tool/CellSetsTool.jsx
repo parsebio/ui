@@ -72,10 +72,9 @@ const CellSetsTool = (props) => {
   const [treeData, setTreeData] = useState(null);
 
   useEffect(() => {
-    console.time('composeTreeTime');
-    setTreeData(composeTree(hierarchy, properties));
-    console.timeEnd('composeTreeTime');
-    console.timeEnd('fullCellSetsToolDisplay');
+    const composedTree = composeTree(hierarchy, properties);
+
+    setTreeData(composedTree);
   }, [hierarchy]);
 
   const [selectedCellsCount, setSelectedCellsCount] = useState(0);
