@@ -63,14 +63,18 @@ const CellSetsTool = (props) => {
   const FOCUS_TYPE = 'cellSets';
 
   useEffect(() => {
+    console.timeEnd('fullCellSetsToolDisplay');
     dispatch(loadCellSets(experimentId));
   }, []);
 
   const [treeData, setTreeData] = useState(null);
 
   useEffect(() => {
+    console.time('composeTreeTime');
     setTreeData(composeTree(hierarchy, properties));
-  }, [hierarchy, properties]);
+    console.timeEnd('composeTreeTime');
+    console.timeEnd('fullCellSetsToolDisplay');
+  }, [hierarchy]);
 
   const [selectedCellsCount, setSelectedCellsCount] = useState(0);
 
@@ -176,6 +180,9 @@ const CellSetsTool = (props) => {
       );
     }
 
+    console.log('treeDataDebug');
+    console.log(treeData);
+
     const tabItems = [
       {
         key: 'cellSets',
@@ -192,7 +199,6 @@ const CellSetsTool = (props) => {
               onNodeDelete={onNodeDelete}
               onCellSetReorder={onCellSetReorder}
               showHideButton
-              checkedKeys={selectedCellSetKeys}
             />
           </>
         ),
