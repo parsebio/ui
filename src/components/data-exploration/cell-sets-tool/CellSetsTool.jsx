@@ -5,6 +5,8 @@ import { animateScroll, Element } from 'react-scroll';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import _ from 'lodash';
+
 import {
   Alert, Button, Skeleton, Space, Tabs, Typography,
 } from 'antd';
@@ -93,16 +95,31 @@ const CellSetsTool = (props) => {
   }, [hierarchy]);
 
   useEffect(() => {
-    const selectedCells = union(selectedCellSetKeys, properties);
+    console.time('CalculateSelectedCellsCount');
 
-    const numSelectedFiltered = new Set([...selectedCells]
-      .filter((cellIndex) => filteredCellIds.current.has(cellIndex)));
+    const selectedCellSets = selectedCellSetKeys.map((key) => properties[key].cellIds);
 
-    setSelectedCellsCount(numSelectedFiltered.size);
+    const selectedCells = new Set();
+
+    selectedCellSets.forEach((cellSet) => {
+      cellSet.forEach((cellId) => {
+        if (filteredCellIds.current.has(cellId)) {
+          selectedCells.add(cellId);
+        }
+      });
+    });
+
+    console.timeEnd('CalculateSelectedCellsCount');
+
+    console.time('setSelectedCellsCount');
+    setSelectedCellsCount(selectedCells.size);
+    console.timeEnd('setSelectedCellsCount');
   }, [selectedCellSetKeys, properties]);
 
   const onNodeUpdate = useCallback((key, data) => {
+    console.time('HERE?');
     dispatch(updateCellSetProperty(experimentId, key, data));
+    console.timeEnd('HERE?');
   }, [experimentId]);
 
   const onNodeDelete = useCallback((key, isCellClass) => {
@@ -122,9 +139,9 @@ const CellSetsTool = (props) => {
   }, [experimentId]);
 
   /**
-   * Renders the content inside the tool. Can be a skeleton during loading
-   * or a hierarchical tree listing all cell sets.
-   */
+ * Renders the content inside the tool. Can be a skeleton during loading
+ * or a hierarchical tree listing all cell sets.
+ */
   const renderContent = () => {
     let operations = null;
 
