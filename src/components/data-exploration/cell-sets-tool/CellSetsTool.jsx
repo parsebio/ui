@@ -95,8 +95,6 @@ const CellSetsTool = (props) => {
   }, [hierarchy]);
 
   useEffect(() => {
-    console.time('CalculateSelectedCellsCount');
-
     const selectedCellSets = selectedCellSetKeys.map((key) => properties[key].cellIds);
 
     const selectedCells = new Set();
@@ -109,17 +107,11 @@ const CellSetsTool = (props) => {
       });
     });
 
-    console.timeEnd('CalculateSelectedCellsCount');
-
-    console.time('setSelectedCellsCount');
     setSelectedCellsCount(selectedCells.size);
-    console.timeEnd('setSelectedCellsCount');
   }, [selectedCellSetKeys, properties]);
 
   const onNodeUpdate = useCallback((key, data) => {
-    console.time('HERE?');
     dispatch(updateCellSetProperty(experimentId, key, data));
-    console.timeEnd('HERE?');
   }, [experimentId]);
 
   const onNodeDelete = useCallback((key, isCellClass) => {
