@@ -232,6 +232,10 @@
     "species": "Custom Homo sapiens (Human) with H3N2"
   },
   {
+    "name": "GRCh38_HBX2",
+    "species": "Custom Homo sapiens (human)"
+  },
+  {
     "name": "GRCh38_sp",
     "species": "Custom Homo sapiens (human)"
   },
