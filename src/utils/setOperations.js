@@ -32,12 +32,12 @@ const intersection = (set1, set2) => {
   return resultSet;
 };
 
-const countCells = (selectedCellSetKeys, filteredCellIds, properties) => {
-  const selectedCellSets = selectedCellSetKeys.map((key) => properties[key].cellIds);
+const countCells = (cellSetKeys, filteredCellIds, properties) => {
+  const cellSetsArr = cellSetKeys.map((key) => properties[key].cellIds);
 
   const selectedCells = new Set();
 
-  selectedCellSets.forEach((cellSet) => {
+  cellSetsArr.forEach((cellSet) => {
     cellSet.forEach((cellId) => {
       if (filteredCellIds.current.has(cellId)) {
         selectedCells.add(cellId);
