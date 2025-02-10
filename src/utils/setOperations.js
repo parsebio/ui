@@ -55,7 +55,6 @@ const countCells = (cellSetKeys, filteredCellIds, properties) => {
   // If all the cell sets are disjoint and filtered, then we don't need to do an expensive count,
   // Just return the sum of each individual set's size
   if (allDisjoint(cellSetsArr) && allFiltered(cellSetsArr, properties)) {
-    console.log('droihrtoij');
     return _.sumBy(cellSetsArr, 'cellIds.size');
   }
 
