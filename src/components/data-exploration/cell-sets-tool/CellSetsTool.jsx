@@ -160,21 +160,18 @@ const CellSetsTool = (props) => {
 
   const showCellSetOperations = selectedCellSetKeys.length > 0;
 
-  const hierarchicalTreeComp = useMemo(() => {
-    console.log('OIENGORINGIO');
-    return (
-      <HierarchicalTree
-        experimentId={experimentId}
-        treeData={treeData}
-        store={FOCUS_TYPE}
-        onCheck={onCheck}
-        onNodeUpdate={onNodeUpdate}
-        onNodeDelete={onNodeDelete}
-        onCellSetReorder={onCellSetReorder}
-        showHideButton
-      />
-    );
-  }, [experimentId, treeData, onNodeUpdate, onNodeDelete, onCellSetReorder, onCheck]);
+  const hierarchicalTreeComp = useMemo(() => (
+    <HierarchicalTree
+      experimentId={experimentId}
+      treeData={treeData}
+      store={FOCUS_TYPE}
+      onCheck={onCheck}
+      onNodeUpdate={onNodeUpdate}
+      onNodeDelete={onNodeDelete}
+      onCellSetReorder={onCellSetReorder}
+      showHideButton
+    />
+  ), [experimentId, treeData, onNodeUpdate, onNodeDelete, onCellSetReorder, onCheck]);
 
   /**
  * Renders the content inside the tool. Can be a skeleton during loading
@@ -184,7 +181,6 @@ const CellSetsTool = (props) => {
     let operations = null;
 
     if (showCellSetOperations) {
-      console.time('showCellSetOperationsDebug');
       operations = (
         <Space style={{ marginBottom: '10px' }}>
           <SubsetCellSetsOperation onCreate={subsetOnCreateHandler} />
@@ -211,8 +207,6 @@ const CellSetsTool = (props) => {
           </Text>
         </Space>
       );
-
-      console.timeEnd('showCellSetOperationsDebug');
     }
 
     const tabItems = [
