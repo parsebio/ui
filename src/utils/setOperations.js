@@ -32,6 +32,22 @@ const intersection = (set1, set2) => {
   return resultSet;
 };
 
+const countCells = (selectedCellSetKeys, filteredCellIds, properties) => {
+  const selectedCellSets = selectedCellSetKeys.map((key) => properties[key].cellIds);
+
+  const selectedCells = new Set();
+
+  selectedCellSets.forEach((cellSet) => {
+    cellSet.forEach((cellId) => {
+      if (filteredCellIds.current.has(cellId)) {
+        selectedCells.add(cellId);
+      }
+    });
+  });
+
+  return selectedCells.size;
+};
+
 export {
-  difference, union, contains, intersection,
+  difference, union, contains, intersection, countCells,
 };

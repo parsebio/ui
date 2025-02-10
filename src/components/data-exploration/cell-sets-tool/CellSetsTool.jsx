@@ -36,6 +36,7 @@ import { composeTree } from 'utils/cellSets';
 import {
   complement, intersection, union, unionByCellClass,
 } from 'utils/cellSetOperations';
+import { countCells } from 'utils/setOperations';
 
 const { Text } = Typography;
 const FOCUS_TYPE = 'cellSets';
@@ -93,19 +94,9 @@ const CellSetsTool = (props) => {
   }, [hierarchy]);
 
   useEffect(() => {
-    const selectedCellSets = selectedCellSetKeys.map((key) => properties[key].cellIds);
+    const cellsCount = countCells(selectedCellSetKeys, filteredCellIds, properties);
 
-    const selectedCells = new Set();
-
-    selectedCellSets.forEach((cellSet) => {
-      cellSet.forEach((cellId) => {
-        if (filteredCellIds.current.has(cellId)) {
-          selectedCells.add(cellId);
-        }
-      });
-    });
-
-    setSelectedCellsCount(selectedCells.size);
+    setSelectedCellsCount(cellsCount);
   }, [selectedCellSetKeys, properties]);
 
   const onNodeUpdate = useCallback((key, data) => {
