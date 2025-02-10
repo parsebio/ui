@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 const difference = (filteredSet, filteringSet) => {
   const result = new Set(
     [...filteredSet].filter((x) => !filteringSet.has(x)),
@@ -34,43 +32,6 @@ const intersection = (set1, set2) => {
   return resultSet;
 };
 
-const allDisjoint = (cellSetsArr) => {
-  const firstParentNodeKey = cellSetsArr[0]?.parentNodeKey ?? null;
-  const sameClass = cellSetsArr.every(({ parentNodeKey }) => parentNodeKey === firstParentNodeKey);
-
-  return sameClass && firstParentNodeKey !== 'scratchpad';
-};
-
-const allFiltered = (cellSetsArr, properties) => (
-  cellSetsArr.every(({ parentNodeKey }) => (
-    properties[parentNodeKey].type !== 'metadataCategorical'
-  ))
-);
-
-const countCells = (cellSetKeys, filteredCellIds, properties) => {
-  const cellSetsArr = cellSetKeys
-    .map((key) => properties[key])
-    .filter(({ rootNode }) => !rootNode);
-
-  // If all the cell sets are disjoint and filtered, then we don't need to do an expensive count,
-  // Just return the sum of each individual set's size
-  if (allDisjoint(cellSetsArr) && allFiltered(cellSetsArr, properties)) {
-    return _.sumBy(cellSetsArr, 'cellIds.size');
-  }
-
-  const selectedCells = new Set();
-
-  cellSetsArr.forEach((cellSet) => {
-    cellSet.cellIds.forEach((cellId) => {
-      if (filteredCellIds.current.has(cellId)) {
-        selectedCells.add(cellId);
-      }
-    });
-  });
-
-  return selectedCells.size;
-};
-
 export {
-  difference, union, contains, intersection, countCells,
+  difference, union, contains, intersection,
 };
