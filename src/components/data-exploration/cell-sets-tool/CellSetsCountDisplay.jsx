@@ -23,7 +23,6 @@ const CellsCountDisplay = (props) => {
 
   useEffect(() => {
     if (accessible && filteredCellIds.current.size === 0) {
-      console.log('OINOEIJ');
       filteredCellIds.current = unionByCellClass('louvain', hierarchy, properties);
     }
   }, [accessible, hierarchy]);
