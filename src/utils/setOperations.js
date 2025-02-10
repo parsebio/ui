@@ -48,7 +48,9 @@ const allFiltered = (cellSetsArr, properties) => (
 );
 
 const countCells = (cellSetKeys, filteredCellIds, properties) => {
-  const cellSetsArr = cellSetKeys.map((key) => properties[key]);
+  const cellSetsArr = cellSetKeys
+    .map((key) => properties[key])
+    .filter(({ rootNode }) => !rootNode);
 
   // If all the cell sets are disjoint and filtered, then we don't need to do an expensive count,
   // Just return the sum of each individual set's size
