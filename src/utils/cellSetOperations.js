@@ -96,28 +96,16 @@ const withoutFilteredOutCells = (cellSets, originalCellIds) => {
   return setOperations.intersection(filteredInCellIds, originalCellIds);
 };
 
-const allDisjoint = (cellSetsArr) => {
-  const firstParentNodeKey = cellSetsArr[0]?.parentNodeKey ?? null;
-  const sameClass = cellSetsArr.every(({ parentNodeKey }) => parentNodeKey === firstParentNodeKey);
-
-  return sameClass && firstParentNodeKey !== 'scratchpad';
-};
-
-const allFiltered = (cellSetsArr, properties) => (
-  cellSetsArr.every(({ parentNodeKey }) => (
-    properties[parentNodeKey].type !== 'metadataCategorical'
-  ))
-);
+const allLouvain = (cellSetsArr) => cellSetsArr.every(({ parentNodeKey }) => (parentNodeKey === 'louvain'));
 
 const countCells = (cellSetKeys, filteredCellIds, properties) => {
   const cellSetsArr = cellSetKeys
     .map((key) => properties[key])
     .filter(({ rootNode }) => !rootNode);
 
-  // If all the cell sets are disjoint and filtered, then we don't need to do an expensive count,
-  // Just return the sum of each individual set's size
-  if (allDisjoint(cellSetsArr) && allFiltered(cellSetsArr, properties)) {
-    console.log('eorignerioun');
+  // If all the cell sets are louvain (always disjoint and filtered), then we don't need to
+  // do an expensive count, just return the sum of each individual set's size
+  if (allLouvain(cellSetsArr)) {
     return _.sumBy(cellSetsArr, 'cellIds.size');
   }
 
