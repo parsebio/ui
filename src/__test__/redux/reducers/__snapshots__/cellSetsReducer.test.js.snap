@@ -165,7 +165,6 @@ exports[`cellSetsReducer reorders correctly 1`] = `
       "rootNode": true,
     },
   },
-  "selected": [],
   "updatingClustering": false,
 }
 `;
