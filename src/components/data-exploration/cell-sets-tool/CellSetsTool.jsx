@@ -155,7 +155,7 @@ const CellSetsTool = (props) => {
     let operations = null;
 
     // Use display style so that components keep around their calculated values
-    // They don't need to re-render from scratch
+    // If they re-render from scratch, we will see some freezing and have to recalculate stuff
     const displayStyle = showCellSetOperations ? {} : { display: 'none' };
 
     operations = (
