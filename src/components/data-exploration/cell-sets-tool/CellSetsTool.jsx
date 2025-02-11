@@ -152,13 +152,11 @@ const CellSetsTool = (props) => {
  * or a hierarchical tree listing all cell sets.
  */
   const renderContent = () => {
-    let operations = null;
-
     // Use display style so that components keep around their calculated values
     // If they re-render from scratch, we will see some freezing and have to recalculate stuff
     const displayStyle = showCellSetOperations ? {} : { display: 'none' };
 
-    operations = (
+    const operations = (
       <Space data-testid='cell-sets-tool-operations' style={{ marginBottom: '10px', ...displayStyle }}>
         <SubsetCellSetsOperation onCreate={subsetOnCreateHandler} />
         <CellSetOperation
