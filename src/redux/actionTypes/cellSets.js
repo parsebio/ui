@@ -27,11 +27,6 @@ const CELL_SETS_UPDATE_PROPERTY = `${CELL_SETS}/updateProperty`;
 const CELL_SETS_REORDER = `${CELL_SETS}/reorder`;
 
 /**
- * Updates the list of selected cell sets.
- */
-const CELL_SETS_SET_SELECTED = `${CELL_SETS}/setSelected`;
-
-/**
  * Deletes a cell set.
  */
 const CELL_SETS_DELETE = `${CELL_SETS}/delete`;
@@ -79,7 +74,7 @@ const CELL_SETS_ERROR = `${CELL_SETS}/error`;
 export {
   CELL_SETS_LOADING, CELL_SETS_LOADED,
   CELL_SETS_CREATE,
-  CELL_SETS_UPDATE_PROPERTY, CELL_SETS_REORDER, CELL_SETS_SET_SELECTED,
+  CELL_SETS_UPDATE_PROPERTY, CELL_SETS_REORDER,
   CELL_SETS_DELETE,
   CELL_CLASS_DELETE,
   CELL_SETS_SAVE,

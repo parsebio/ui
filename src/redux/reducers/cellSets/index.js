@@ -1,7 +1,7 @@
 import {
   CELL_SETS_LOADING, CELL_SETS_LOADED,
   CELL_SETS_CREATE,
-  CELL_SETS_UPDATE_PROPERTY, CELL_SETS_SET_SELECTED,
+  CELL_SETS_UPDATE_PROPERTY,
   CELL_SETS_DELETE, CELL_CLASS_DELETE,
   CELL_SETS_HIDE, CELL_SETS_UNHIDE, CELL_SETS_UNHIDE_ALL,
   CELL_SETS_ERROR,
@@ -46,9 +46,6 @@ const cellSetsReducer = (state = initialState, action) => {
     }
     case CELL_SETS_CREATE: {
       return cellSetsCreate(state, action);
-    }
-    case CELL_SETS_SET_SELECTED: {
-      return cellSetsSetSelected(state, action);
     }
     case CELL_SETS_HIDE: {
       return cellSetsHide(state, action);

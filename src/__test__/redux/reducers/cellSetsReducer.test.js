@@ -5,7 +5,7 @@ import initialState from 'redux/reducers/cellSets/initialState';
 import {
   CELL_SETS_LOADING, CELL_SETS_LOADED,
   CELL_SETS_CREATE,
-  CELL_SETS_UPDATE_PROPERTY, CELL_SETS_SET_SELECTED,
+  CELL_SETS_UPDATE_PROPERTY,
   CELL_SETS_DELETE,
   CELL_SETS_ERROR,
   CELL_SETS_HIDE, CELL_SETS_UNHIDE_ALL, CELL_SETS_UNHIDE, CELL_SETS_REORDER,
@@ -116,28 +116,6 @@ describe('cellSetsReducer', () => {
     });
 
     expect(newState.properties['1a']).toMatchSnapshot();
-  });
-
-  it('Selected cells are maintained', () => {
-    let newState = cellSetsReducer(initialState, {
-      type: CELL_SETS_SET_SELECTED,
-      payload: {
-        keys: ['a', 'b', 'c'],
-        tab: 'fakeTab',
-      },
-    });
-
-    expect(newState.selected).toMatchSnapshot();
-
-    newState = cellSetsReducer(initialState, {
-      type: CELL_SETS_SET_SELECTED,
-      payload: {
-        keys: [1, 2, 'c', 3],
-        tab: 'fakeTab',
-      },
-    });
-
-    expect(newState.selected).toMatchSnapshot();
   });
 
   it('Removes child correctly', () => {
