@@ -159,7 +159,7 @@ const CellSetsTool = (props) => {
     const displayStyle = showCellSetOperations ? {} : { display: 'none' };
 
     operations = (
-      <Space style={{ marginBottom: '10px', ...displayStyle }}>
+      <Space data-testid='cell-sets-tool-operations' style={{ marginBottom: '10px', ...displayStyle }}>
         <SubsetCellSetsOperation onCreate={subsetOnCreateHandler} />
         <CellSetOperation
           icon={<MergeCellsOutlined />}
