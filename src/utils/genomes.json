@@ -88,6 +88,10 @@
     "species": "Gallus gallus (paternal White leghorn layer)"
   },
   {
+    "name": "galGal6",
+    "species": "Gallus gallus (Red Junglefowl)"
+  },
+  {
     "name": "haemonchus_contortus.PRJEB506.WBPS19",
     "species": "Haemonchus contortus (Barber's pole worm)"
   },
@@ -294,6 +298,10 @@
   {
     "name": "GRCm39_mCherry_iRFP",
     "species": "Custom Mus musculus (mouse)"
+  },
+  {
+    "name": "GRCm39_EYFP",
+    "species": "Custom Mus musculus (mouse) with EYFP"
   },
   {
     "name": "GRCm38_Usutu",
