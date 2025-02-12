@@ -1,10 +1,24 @@
 import { decompress } from 'fflate';
+import WorkerPool from 'webworkers/WorkerPool';
 
 const unpackResult = async (storageResp, taskName = null) => {
   // SeuratObject can fail to download when loaded into memory
   if (taskName === 'DownloadAnnotSeuratObject' || taskName === 'GetNormalizedExpression') {
     const blob = await storageResp.blob();
     return (blob);
+  }
+
+  if (taskName === 'CellSets') {
+    const arrayBuffer = await storageResp.arrayBuffer();
+
+    const uint8Arr = new Uint8Array(arrayBuffer);
+
+    WorkerPool.getInstance().cellSetsWorker.storeCellSets(arrayBuffer);
+
+    // cell sets dont come compressed
+    if (taskName === 'CellSets') {
+      return uint8Arr;
+    }
   }
 
   const arrayBuf = new Uint8Array(await storageResp.arrayBuffer());

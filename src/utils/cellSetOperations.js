@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import * as setOperations from 'utils/setOperations';
+import WorkerPool from 'webworkers/WorkerPool';
 
 /**
  *
@@ -98,44 +99,20 @@ const withoutFilteredOutCells = (cellSets, originalCellIds) => {
 
 const allLouvain = (cellSetsArr) => cellSetsArr.every(({ parentNodeKey }) => (parentNodeKey === 'louvain'));
 
-const countCells = async (cellSetKeys, filteredCellIds, properties) => {
-  // Import the worker script
-  const selectedCellsCounterWorker = new Worker(
-    new URL('../webworkers/selectedCellsCounter.js',
-      import.meta.url),
-  );
+const countCells = async (cellSetKeys, properties) => {
+  const cellSetsArr = cellSetKeys
+    .map((key) => properties[key])
+    .filter(({ rootNode }) => !rootNode);
 
-  return new Promise((resolve, reject) => {
-    const cellSetsArr = cellSetKeys
-      .map((key) => properties[key])
-      .filter(({ rootNode }) => !rootNode);
+  // If all the cell sets are louvain (always disjoint and filtered), then we don't need to
+  // do an expensive count, just return the sum of each individual set's size
+  if (allLouvain(cellSetsArr)) {
+    return _.sumBy(cellSetsArr, 'cellIds.size');
+  }
 
-    // If all the cell sets are louvain (always disjoint and filtered), then we don't need to
-    // do an expensive count, just return the sum of each individual set's size
-    if (allLouvain(cellSetsArr)) {
-      resolve(_.sumBy(cellSetsArr, 'cellIds.size'));
-    }
+  const count = await WorkerPool.getInstance().cellSetsWorker.countCells(cellSetKeys);
 
-    selectedCellsCounterWorker.onmessage = (e) => {
-      console.timeEnd('countCellsTotal');
-      const selectedCellsCount = e.data;
-      resolve(selectedCellsCount);
-    };
-
-    selectedCellsCounterWorker.onerror = (error) => {
-      reject(error);
-    };
-
-    console.time('countCellsTotal');
-    console.time('countCellsEncode');
-    const selectedCellSetsIdsArr = cellSetsArr.map(({ cellIds }) => Array.from(cellIds));
-    const filteredCellIdsArr = Array.from(filteredCellIds.current);
-    console.timeEnd('countCellsEncode');
-
-    selectedCellsCounterWorker.postMessage({
-      selectedCellSetsIdsArr, filteredCellIdsArr,
-    });
-  });
+  return count;
 };
 
 export {
