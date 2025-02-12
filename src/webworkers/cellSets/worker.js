@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-restricted-globals */
 
 // eslint-disable-next-line camelcase
@@ -9,16 +10,26 @@ import addLazySets from 'utils/addLazySets';
 self.properties = null;
 self.filteredCellIds = null;
 
-self.onmessage = (e) => {
+self.activeIdByTask = {
+  countCells: null,
+};
+
+self.onmessage = async (e) => {
+  const { task, id, payload } = e.data;
+
   if (e.data.task === 'loadCellSets') {
-    loadCellSets(e.data.payload);
+    loadCellSets(payload);
 
     // Notify finished loading cell sets
     self.postMessage({ task: 'loadCellSets' });
-  } else if (e.data.task === 'countCells') {
-    const count = countCells(e.data.payload);
+  } else if (task === 'countCells') {
+    self.activeIdByTask[task] = id;
 
-    self.postMessage({ id: e.data.id, task: 'countCells', payload: count });
+    const count = await countCells(payload, id);
+
+    if (self.activeIdByTask.countCells !== id) { return; }
+
+    self.postMessage({ id, task: 'countCells', payload: count });
   }
 };
 
@@ -46,12 +57,9 @@ const loadCellSets = async (payload) => {
   self.filteredCellIds = louvainCellIds;
 };
 
-const countCells = (payload) => {
+function* countCellsGenerator(payload, id) {
   console.time('countingCells');
   const { cellSetKeys } = payload;
-
-  console.log('cellSetKeysDebug');
-  console.log(cellSetKeys);
 
   const cellSetsArr = cellSetKeys
     .map((key) => self.properties[key])
@@ -59,13 +67,20 @@ const countCells = (payload) => {
 
   const cellsToCount = new Set();
 
-  cellSetsArr.forEach(({ cellIds }) => {
-    cellIds.forEach((cellId) => {
+  for (const { cellIds } of cellSetsArr) {
+    if (self.activeIdByTask.countCells !== id) {
+      return;
+    }
+
+    for (const cellId of cellIds) {
       if (self.filteredCellIds.has(cellId)) {
         cellsToCount.add(cellId);
       }
-    });
-  });
+    }
+
+    // Yield control back to the event loop
+    yield;
+  }
 
   console.log('cellsToCountsizeDebug');
   console.log(cellsToCount.size);
@@ -73,4 +88,23 @@ const countCells = (payload) => {
   console.timeEnd('countingCells');
 
   return cellsToCount.size;
-};
+}
+
+const countCells = async (payload, id) => (
+  new Promise((resolve) => {
+    const generator = countCellsGenerator(payload, id);
+
+    function step() {
+      const result = generator.next();
+
+      if (result.done) {
+        resolve(result.value);
+      } else {
+        // Schedule the next step to run in the next event loop iteration
+        setTimeout(step, 0);
+      }
+    }
+
+    step();
+  })
+);
