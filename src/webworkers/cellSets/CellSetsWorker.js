@@ -23,7 +23,7 @@ class CellSetsWorker {
 
     this.worker.onerror = (error) => {
       // const { id, payload } = e.data;
-      // this.taskSubscriber.reject(error);
+      // this.taskSubscriber[id].reject(error);
     };
   }
 
