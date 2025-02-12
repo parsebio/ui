@@ -39,6 +39,8 @@ const RepositoryTable = (props) => {
           role: 'explorer',
         },
       );
+      await dispatch(loadExperiments());
+      await dispatch(setActiveExperiment(exampleExperimentId));
       navigateTo(modules.DATA_EXPLORATION, { experimentId: exampleExperimentId });
       return;
     }
