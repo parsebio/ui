@@ -29,7 +29,7 @@ const RepositoryTable = (props) => {
   const userEmail = useSelector((state) => state.user.current.attributes.email);
 
   const cloneExperiment = async (exampleExperimentId) => {
-    if (exampleExperimentId === '2b55b7d5-5e2d-8cab-c706-2e1c073c30ed') {
+    if (exampleExperimentId === 'c26b1fc8-e207-4a45-90ae-51b730617bee') {
       // for this specific experiment, just share it as explorer and go to data exploration
       await sendInvites(
         [userEmail],

@@ -48,7 +48,7 @@ const ExperimentMenu = () => {
         <DownloadDataButton />
         <Button
           onClick={() => setShareExperimentModalVisible(!shareExperimentModalVisible)}
-          disabled={activeExperimentId === '2b55b7d5-5e2d-8cab-c706-2e1c073c30ed'}
+          disabled={activeExperimentId === 'c26b1fc8-e207-4a45-90ae-51b730617bee'}
         >
           Share
         </Button>
