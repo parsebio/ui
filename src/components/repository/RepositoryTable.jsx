@@ -38,6 +38,7 @@ const RepositoryTable = (props) => {
           name: 'Valentine day challenge',
           role: 'explorer',
         },
+        true,
       );
       await dispatch(loadExperiments());
       await dispatch(setActiveExperiment(exampleExperimentId));
