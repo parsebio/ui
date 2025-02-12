@@ -26,7 +26,10 @@ const sendInvites = async (addedUsers, projectInfo, silentError = false) => {
           }),
         },
       );
-      pushNotificationMessage('success', `User ${user} has been successfully invited to view ${name}.`);
+
+      if (!silentError) {
+        pushNotificationMessage('success', `User ${user} has been successfully invited to view ${name}.`);
+      }
     } catch (e) {
       if (!silentError) {
         const messageToDisplay = e?.userMessage === 'NotificationFailure'
