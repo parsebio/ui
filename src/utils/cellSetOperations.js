@@ -110,9 +110,7 @@ const countCells = async (cellSetKeys, properties) => {
     return _.sumBy(cellSetsArr, 'cellIds.size');
   }
 
-  const count = await WorkerPool.getInstance().cellSetsWorker.countCells(cellSetKeys);
-
-  return count;
+  return await WorkerPool.getInstance().cellSetsWorker.countCells(cellSetKeys);
 };
 
 export {
