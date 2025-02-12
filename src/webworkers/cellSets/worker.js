@@ -47,19 +47,12 @@ const loadCellSets = async (payload) => {
 };
 
 const countCells = (payload) => {
+  console.time('countingCells');
   const { cellSetKeys } = payload;
 
-  console.log('payloadDebug');
-  console.log(payload);
-
-  console.log('selfpropertiesDebug');
-  console.log(self.properties);
   const cellSetsArr = cellSetKeys
     .map((key) => self.properties[key])
     .filter(({ rootNode }) => !rootNode);
-
-  console.log('cellSetsArrDebug');
-  console.log(cellSetsArr);
 
   const cellsToCount = new Set();
 
@@ -70,6 +63,8 @@ const countCells = (payload) => {
       }
     });
   });
+
+  console.timeEnd('countingCells');
 
   return cellsToCount.size;
 };
