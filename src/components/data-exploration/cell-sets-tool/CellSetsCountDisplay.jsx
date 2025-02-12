@@ -5,6 +5,7 @@ import { countCells, unionByCellClass } from 'utils/cellSetOperations';
 import { getCellSets } from 'redux/selectors';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import Loader from 'react-spinners/BarLoader';
 
 const { Text } = Typography;
 
@@ -28,13 +29,18 @@ const CellsCountDisplay = (props) => {
   }, [accessible, hierarchy]);
 
   useEffect(() => {
+    setSelectedCellsCount(null);
     countCells(selectedCellSetKeys, filteredCellIds, properties)
       .then(setSelectedCellsCount);
   }, [selectedCellSetKeys, properties]);
 
   return (
     <Text type='primary' id='selectedCellSets'>
-      {`${selectedCellsCount} cell${selectedCellsCount === 1 ? '' : 's'} selected`}
+
+      {selectedCellsCount === null
+        ? 'Counting cells...'
+        : `${selectedCellsCount} cell${selectedCellsCount === 1 ? '' : 's'} selected`}
+
     </Text>
   );
 };

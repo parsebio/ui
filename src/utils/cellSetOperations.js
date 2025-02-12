@@ -115,10 +115,11 @@ const countCells = async (cellSetKeys, filteredCellIds, properties) => {
     // If all the cell sets are louvain (always disjoint and filtered), then we don't need to
     // do an expensive count, just return the sum of each individual set's size
     if (allLouvain(cellSetsArr)) {
-      return _.sumBy(cellSetsArr, 'cellIds.size');
+      resolve(_.sumBy(cellSetsArr, 'cellIds.size'));
     }
 
     selectedCellsCounterWorker.onmessage = (e) => {
+      console.timeEnd('countCellsTotal');
       const selectedCellsCount = e.data;
       resolve(selectedCellsCount);
     };
@@ -127,6 +128,7 @@ const countCells = async (cellSetKeys, filteredCellIds, properties) => {
       reject(error);
     };
 
+    console.time('countCellsTotal');
     console.time('countCellsEncode');
     const selectedCellSetsIdsArr = cellSetsArr.map(({ cellIds }) => Array.from(cellIds));
     const filteredCellIdsArr = Array.from(filteredCellIds.current);
