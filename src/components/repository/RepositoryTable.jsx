@@ -35,7 +35,7 @@ const RepositoryTable = (props) => {
         [userEmail],
         {
           id: exampleExperimentId,
-          name: 'Valentine day special',
+          name: 'Valentine day challenge',
           role: 'explorer',
         },
       );
