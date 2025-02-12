@@ -1,5 +1,5 @@
 import { decompress } from 'fflate';
-import WorkerPool from 'webworkers/WorkerPool';
+import CellSetsWorker from 'webworkers/cellSets/CellSetsWorker';
 
 const unpackResult = async (storageResp, taskName = null) => {
   // SeuratObject can fail to download when loaded into memory
@@ -13,7 +13,7 @@ const unpackResult = async (storageResp, taskName = null) => {
 
     const uint8Arr = new Uint8Array(arrayBuffer);
 
-    WorkerPool.getInstance().cellSetsWorker.storeCellSets(arrayBuffer);
+    CellSetsWorker.getInstance().storeCellSets(arrayBuffer);
 
     // cell sets dont come compressed
     if (taskName === 'CellSets') {

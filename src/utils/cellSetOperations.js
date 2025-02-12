@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import * as setOperations from 'utils/setOperations';
-import WorkerPool from 'webworkers/WorkerPool';
+import CellSetsWorker from 'webworkers/cellSets/CellSetsWorker';
 
 /**
  *
@@ -110,7 +110,7 @@ const countCells = async (cellSetKeys, properties) => {
     return _.sumBy(cellSetsArr, 'cellIds.size');
   }
 
-  return await WorkerPool.getInstance().cellSetsWorker.countCells(cellSetKeys);
+  return await CellSetsWorker.getInstance().countCells(cellSetKeys);
 };
 
 export {

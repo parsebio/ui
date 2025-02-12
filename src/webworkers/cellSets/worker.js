@@ -18,7 +18,7 @@ self.onmessage = (e) => {
   } else if (e.data.task === 'countCells') {
     const count = countCells(e.data.payload);
 
-    self.postMessage({ task: 'countCells', payload: count });
+    self.postMessage({ id: e.data.id, task: 'countCells', payload: count });
   }
 };
 
@@ -50,6 +50,9 @@ const countCells = (payload) => {
   console.time('countingCells');
   const { cellSetKeys } = payload;
 
+  console.log('cellSetKeysDebug');
+  console.log(cellSetKeys);
+
   const cellSetsArr = cellSetKeys
     .map((key) => self.properties[key])
     .filter(({ rootNode }) => !rootNode);
@@ -63,6 +66,9 @@ const countCells = (payload) => {
       }
     });
   });
+
+  console.log('cellsToCountsizeDebug');
+  console.log(cellsToCount.size);
 
   console.timeEnd('countingCells');
 

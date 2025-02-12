@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 class CellSetsWorker {
   constructor() {
     this.worker = new Worker(
@@ -8,19 +10,29 @@ class CellSetsWorker {
 
     // TODO expand this to support subscribers to different tasks
     // once we have more tasks
-    this.cellsCountSubscriber = null;
+    this.taskSubscriber = {};
 
     this.worker.onmessage = (e) => {
       if (e.data.task === 'loadCellSets') {
         this.cellSetsStored = true;
       } else if (e.data.task === 'countCells') {
-        this.cellsCountSubscriber.resolve(e.data.payload);
+        const { id, payload } = e.data;
+        this.taskSubscriber[id].resolve(payload);
       }
     };
 
     this.worker.onerror = (error) => {
-      this.cellsCountSubscriber.reject(error);
+      // const { id, payload } = e.data;
+      // this.taskSubscriber.reject(error);
     };
+  }
+
+  static getInstance() {
+    if (!CellSetsWorker.instance) {
+      CellSetsWorker.instance = new CellSetsWorker();
+    }
+
+    return CellSetsWorker.instance;
   }
 
   storeCellSets(arrayBuffer) {
@@ -36,10 +48,12 @@ class CellSetsWorker {
     return new Promise((resolve, reject) => {
       // TODO Check that the cellSets are stored before sending count request
 
-      this.cellsCountSubscriber = { resolve, reject };
+      const id = uuidv4();
+      this.taskSubscriber[id] = { resolve, reject };
 
       this.worker.postMessage({
         task: 'countCells',
+        id,
         payload: {
           cellSetKeys,
         },
