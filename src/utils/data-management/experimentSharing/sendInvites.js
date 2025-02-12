@@ -3,7 +3,7 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 
-const sendInvites = async (addedUsers, projectInfo, silentError = false) => {
+const sendInvites = async (addedUsers, projectInfo, silent = false) => {
   const {
     id, name, role,
   } = projectInfo;
@@ -27,11 +27,11 @@ const sendInvites = async (addedUsers, projectInfo, silentError = false) => {
         },
       );
 
-      if (!silentError) {
+      if (!silent) {
         pushNotificationMessage('success', `User ${user} has been successfully invited to view ${name}.`);
       }
     } catch (e) {
-      if (!silentError) {
+      if (!silent) {
         const messageToDisplay = e?.userMessage === 'NotificationFailure'
           ? endUserMessages.SHARE_SUCESS_NOTIFICATION_FAILURE
           : endUserMessages.SHARE_FAILURE;
