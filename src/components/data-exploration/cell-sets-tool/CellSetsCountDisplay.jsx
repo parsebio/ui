@@ -5,7 +5,6 @@ import { countCells, unionByCellClass } from 'utils/cellSetOperations';
 import { getCellSets } from 'redux/selectors';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import Loader from 'react-spinners/BarLoader';
 
 const { Text } = Typography;
 

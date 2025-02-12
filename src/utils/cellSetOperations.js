@@ -99,8 +99,6 @@ const withoutFilteredOutCells = (cellSets, originalCellIds) => {
 const allLouvain = (cellSetsArr) => cellSetsArr.every(({ parentNodeKey }) => (parentNodeKey === 'louvain'));
 
 const countCells = async (cellSetKeys, filteredCellIds, properties) => {
-  const a = 1;
-
   // Import the worker script
   const selectedCellsCounterWorker = new Worker(
     new URL('../webworkers/selectedCellsCounter.js',
