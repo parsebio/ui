@@ -32,7 +32,11 @@ const createCellSet = (experimentId, name, color, cellIdsSet) => async (dispatch
     loading, error,
   } = getCellSets()(getState().cellSets);
 
-  if (loading || error || experimentId === '2b55b7d5-5e2d-8cab-c706-2e1c073c30ed') {
+  if (experimentId === '2b55b7d5-5e2d-8cab-c706-2e1c073c30ed') {
+    pushNotificationMessage('warning', 'As an Explorer of this project, you do not have permissions to create custom cell sets.');
+    return null;
+  }
+  if (loading || error) {
     return null;
   }
 
