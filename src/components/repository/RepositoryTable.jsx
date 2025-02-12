@@ -13,19 +13,39 @@ import {
 import { loadExperiments, setActiveExperiment } from 'redux/actions/experiments';
 
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import React, { useState } from 'react';
 import fetchAPI from 'utils/http/fetchAPI';
 import { modules } from 'utils/constants';
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { useDispatch } from 'react-redux';
 import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
+import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 
 const { Paragraph } = Typography;
 
 const RepositoryTable = (props) => {
   const [experimentCloning, setExperimentCloning] = useState(false);
 
+  const userEmail = useSelector((state) => state.user.current.attributes.email);
+
   const cloneExperiment = async (exampleExperimentId) => {
+    if (exampleExperimentId === 'c26b1fc8-e207-4a45-90ae-51b730617bee') {
+      // for this specific experiment, just share it as explorer and go to data exploration
+      await sendInvites(
+        [userEmail],
+        {
+          id: exampleExperimentId,
+          name: 'Valentine day challenge',
+          role: 'explorer',
+        },
+        true,
+      );
+      await dispatch(loadExperiments());
+      await dispatch(setActiveExperiment(exampleExperimentId));
+      navigateTo(modules.DATA_EXPLORATION, { experimentId: exampleExperimentId });
+      return;
+    }
+
     setExperimentCloning(true);
     const url = `/v2/experiments/${exampleExperimentId}/clone`;
 
