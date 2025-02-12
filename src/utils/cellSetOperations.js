@@ -98,28 +98,42 @@ const withoutFilteredOutCells = (cellSets, originalCellIds) => {
 
 const allLouvain = (cellSetsArr) => cellSetsArr.every(({ parentNodeKey }) => (parentNodeKey === 'louvain'));
 
-const countCells = (cellSetKeys, filteredCellIds, properties) => {
-  const cellSetsArr = cellSetKeys
-    .map((key) => properties[key])
-    .filter(({ rootNode }) => !rootNode);
+const countCells = async (cellSetKeys, filteredCellIds, properties) => {
+  const a = 1;
 
-  // If all the cell sets are louvain (always disjoint and filtered), then we don't need to
-  // do an expensive count, just return the sum of each individual set's size
-  if (allLouvain(cellSetsArr)) {
-    return _.sumBy(cellSetsArr, 'cellIds.size');
-  }
+  // Import the worker script
+  const selectedCellsCounterWorker = new Worker(
+    new URL('../webworkers/selectedCellsCounter.js',
+      import.meta.url),
+  );
 
-  const selectedCells = new Set();
+  return new Promise((resolve, reject) => {
+    const cellSetsArr = cellSetKeys
+      .map((key) => properties[key])
+      .filter(({ rootNode }) => !rootNode);
 
-  cellSetsArr.forEach((cellSet) => {
-    cellSet.cellIds.forEach((cellId) => {
-      if (filteredCellIds.current.has(cellId)) {
-        selectedCells.add(cellId);
-      }
+    // If all the cell sets are louvain (always disjoint and filtered), then we don't need to
+    // do an expensive count, just return the sum of each individual set's size
+    if (allLouvain(cellSetsArr)) {
+      return _.sumBy(cellSetsArr, 'cellIds.size');
+    }
+
+    selectedCellsCounterWorker.onmessage = (e) => {
+      const selectedCellsCount = e.data;
+      resolve(selectedCellsCount);
+    };
+
+    selectedCellsCounterWorker.onerror = (error) => {
+      reject(error);
+    };
+
+    const selectedCellSetsIdsArr = cellSetsArr.map(({ cellIds }) => Array.from(cellIds));
+    const filteredCellIdsArr = Array.from(filteredCellIds.current);
+
+    selectedCellsCounterWorker.postMessage({
+      selectedCellSetsIdsArr, filteredCellIdsArr,
     });
   });
-
-  return selectedCells.size;
 };
 
 export {
