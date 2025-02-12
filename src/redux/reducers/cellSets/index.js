@@ -18,7 +18,6 @@ import cellSetsDelete from 'redux/reducers/cellSets/cellSetsDelete';
 import cellClassDelete from 'redux/reducers/cellSets/cellClassDelete';
 import cellSetsReorder from 'redux/reducers/cellSets/cellSetsReorder';
 import cellSetsCreate from 'redux/reducers/cellSets/cellSetsCreate';
-import cellSetsSetSelected from 'redux/reducers/cellSets/cellSetsSetSelected';
 import cellSetsError from 'redux/reducers/cellSets/cellSetsError';
 import { cellSetsHide, cellSetsUnhide, cellSetsUnhideAll } from 'redux/reducers/cellSets/cellSetsHideUnhide';
 import cellSetsClusteringUpdating from 'redux/reducers/cellSets/cellSetsClusteringUpdating';
