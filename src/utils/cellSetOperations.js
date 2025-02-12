@@ -127,8 +127,10 @@ const countCells = async (cellSetKeys, filteredCellIds, properties) => {
       reject(error);
     };
 
+    console.time('countCellsEncode');
     const selectedCellSetsIdsArr = cellSetsArr.map(({ cellIds }) => Array.from(cellIds));
     const filteredCellIdsArr = Array.from(filteredCellIds.current);
+    console.timeEnd('countCellsEncode');
 
     selectedCellsCounterWorker.postMessage({
       selectedCellSetsIdsArr, filteredCellIdsArr,
