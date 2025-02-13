@@ -21,7 +21,8 @@ class CellSetsWorker {
       }
     };
 
-    this.worker.onerror = (error) => {
+    this.worker.onerror = () => {
+      // this.worker.onerror = (error) => {
       // const { id, payload } = e.data;
       // this.taskSubscriber[id].reject(error);
     };
