@@ -64,7 +64,7 @@ const CellSetsTool = (props) => {
     const composedTree = composeTree(hierarchy, properties);
 
     setTreeData(composedTree);
-  }, [hierarchy]);
+  }, [hierarchy, properties]);
 
   const [selectedCellSetKeys, setSelectedCellSetKeys] = useState([]);
 
