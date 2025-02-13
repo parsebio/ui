@@ -67,19 +67,26 @@ function* countCellsGenerator(payload, id) {
 
   const cellsToCount = new Set();
 
-  for (const { cellIds } of cellSetsArr) {
-    if (self.activeIdByTask.countCells !== id) {
-      return;
-    }
+  let itsPerYield = 0;
 
+  for (const { cellIds } of cellSetsArr) {
     for (const cellId of cellIds) {
       if (self.filteredCellIds.has(cellId)) {
         cellsToCount.add(cellId);
+
+        itsPerYield += 1;
+        if (itsPerYield > 100000) {
+          console.log('Yielding');
+          itsPerYield = 0;
+
+          yield;
+
+          if (self.activeIdByTask.countCells !== id) {
+            return;
+          }
+        }
       }
     }
-
-    // Yield control back to the event loop
-    yield;
   }
 
   console.log('cellsToCountsizeDebug');
@@ -87,11 +94,19 @@ function* countCellsGenerator(payload, id) {
 
   console.timeEnd('countingCells');
 
+  if (self.activeIdByTask.countCells !== id) {
+    return;
+  }
+
   return cellsToCount.size;
 }
 
 const countCells = async (payload, id) => (
   new Promise((resolve) => {
+    if (self.activeIdByTask.countCells !== id) {
+      return;
+    }
+
     const generator = countCellsGenerator(payload, id);
 
     function step() {
