@@ -58,7 +58,6 @@ const loadCellSets = async (payload) => {
 };
 
 function* countCellsGenerator(payload, id) {
-  console.time('countingCells');
   const { cellSetKeys } = payload;
 
   const cellSetsArr = cellSetKeys
@@ -88,11 +87,6 @@ function* countCellsGenerator(payload, id) {
       }
     }
   }
-
-  console.log('cellsToCountsizeDebug');
-  console.log(cellsToCount.size);
-
-  console.timeEnd('countingCells');
 
   if (self.activeIdByTask.countCells !== id) {
     return;
