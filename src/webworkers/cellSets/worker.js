@@ -77,7 +77,6 @@ function* countCellsGenerator(payload, id) {
 
         itsPerYield += 1;
         if (itsPerYield > 100000) {
-          console.log('Yielding');
           itsPerYield = 0;
 
           yield;
