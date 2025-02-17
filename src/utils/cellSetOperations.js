@@ -97,7 +97,7 @@ const withoutFilteredOutCells = (cellSets, originalCellIds) => {
   return setOperations.intersection(filteredInCellIds, originalCellIds);
 };
 
-const allLouvain = (cellSetsArr) => cellSetsArr.every(({ parentNodeKey }) => (parentNodeKey === 'louvain'));
+const allAreClusters = (cellSetsArr) => cellSetsArr.every(({ parentNodeKey }) => (parentNodeKey === 'louvain'));
 
 const countCells = async (cellSetKeys, properties) => {
   const cellSetsArr = cellSetKeys
@@ -106,7 +106,7 @@ const countCells = async (cellSetKeys, properties) => {
 
   // If all the cell sets are louvain (always disjoint and filtered), then we don't need to
   // do an expensive count, just return the sum of each individual set's size
-  if (allLouvain(cellSetsArr)) {
+  if (allAreClusters(cellSetsArr)) {
     return _.sumBy(cellSetsArr, 'cellIds.size');
   }
 

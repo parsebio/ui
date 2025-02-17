@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 const { Text } = Typography;
 
-const CellsCountDisplay = (props) => {
+const CellSetsCountDisplay = (props) => {
   const { selectedCellSetKeys } = props;
 
   const { properties } = useSelector(getCellSets());
@@ -31,10 +31,10 @@ const CellsCountDisplay = (props) => {
   );
 };
 
-CellsCountDisplay.defaultProps = {};
+CellSetsCountDisplay.defaultProps = {};
 
-CellsCountDisplay.propTypes = {
+CellSetsCountDisplay.propTypes = {
   selectedCellSetKeys: PropTypes.array.isRequired,
 };
 
-export default CellsCountDisplay;
+export default CellSetsCountDisplay;
