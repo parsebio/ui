@@ -22,6 +22,10 @@ self.onmessage = async (e) => {
 
     // Notify finished loading cell sets
     self.postMessage({ task: 'loadCellSets' });
+  } else if (task === 'cellSetCreated') {
+    await cellSetCreated(payload);
+
+    self.postMessage({ id, task: 'cellSetCreated' });
   } else if (task === 'countCells') {
     self.activeIdByTask[task] = id;
 
@@ -95,6 +99,18 @@ function* countCellsGenerator(payload, id) {
 
   return cellsToCount.size;
 }
+
+const cellSetCreated = async (payload) => {
+  const {
+    cellSet: {
+      key, name, color, cellIds, type,
+    },
+  } = payload;
+
+  self.properties[key] = {
+    key, name, color, cellIds: new Set(cellIds), type, parentNodeKey: 'scratchpad',
+  };
+};
 
 const countCells = async (payload, id) => (
   new Promise((resolve) => {

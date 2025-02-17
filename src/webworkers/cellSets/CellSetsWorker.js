@@ -19,6 +19,10 @@ class CellSetsWorker {
     this.worker.onmessage = (e) => {
       if (e.data.task === 'loadCellSets') {
         this.cellSetsStored = true;
+      } else if (e.data.task === 'cellSetCreated') {
+        const { id } = e.data;
+
+        this.taskSubscriber[id].resolve();
       } else if (e.data.task === 'countCells') {
         const { id, payload } = e.data;
 
@@ -43,8 +47,26 @@ class CellSetsWorker {
     return CellSetsWorker.instance;
   }
 
+  cellSetCreated(cellSet) {
+    return new Promise((resolve, reject) => {
+      const id = uuidv4();
+      this.taskSubscriber[id] = { resolve, reject };
+
+      this.worker.postMessage({
+        id,
+        task: 'cellSetCreated',
+        payload: {
+          cellSet,
+        },
+      });
+    });
+  }
+
   storeCellSets(arrayBuffer) {
+    const id = uuidv4();
+
     this.worker.postMessage({
+      id,
       task: 'loadCellSets',
       payload: {
         cellSetsData: arrayBuffer,
@@ -60,8 +82,8 @@ class CellSetsWorker {
       this.activeIdByTask.countCells = id;
 
       this.worker.postMessage({
-        task: 'countCells',
         id,
+        task: 'countCells',
         payload: {
           cellSetKeys,
         },
