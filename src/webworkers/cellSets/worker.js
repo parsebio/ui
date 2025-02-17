@@ -68,7 +68,9 @@ function* countCellsGenerator(payload, id) {
 
   let itsPerYield = 0;
 
+  // eslint-disable-next-line no-unused-vars
   for (const { cellIds } of cellSetsArr) {
+    // eslint-disable-next-line no-unused-vars
     for (const cellId of cellIds) {
       if (self.filteredCellIds.has(cellId)) {
         cellsToCount.add(cellId);
