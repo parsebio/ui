@@ -230,7 +230,7 @@ const CalculationConfig = (props) => {
                 value={analysisTool}
               >
                 <Radio value={analysisTools.SEURAT}>Seurat</Radio>
-                <Radio disabled value={analysisTools.SCANPY}>Scanpy</Radio>
+                <Radio value={analysisTools.SCANPY}>Scanpy</Radio>
               </Radio.Group>
             </Form.Item>
           </div>
