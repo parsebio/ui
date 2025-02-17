@@ -304,6 +304,10 @@
     "species": "Custom Mus musculus (mouse) with EYFP"
   },
   {
+    "name": "GRCm39_mRNA_BC_MR",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
     "name": "GRCm38_Usutu",
     "species": "Custom Mus musculus (mouse) with Usutu virus"
   },
