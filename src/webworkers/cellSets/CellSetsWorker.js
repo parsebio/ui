@@ -54,8 +54,6 @@ class CellSetsWorker {
 
   async countCells(cellSetKeys) {
     return new Promise((resolve, reject) => {
-      // TODO Check that the cellSets are stored before sending count request
-
       const id = uuidv4();
       this.taskSubscriber[id] = { resolve, reject };
 
