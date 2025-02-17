@@ -164,7 +164,7 @@ describe('CellSetsTool', () => {
     expect(deleteButtons.length).toEqual(1);
   });
 
-  it('cell set operations should not render when no cell sets are selected', async () => {
+  it('cell set operations should be hidden when no cell sets are selected', async () => {
     await act(async () => {
       render(
         <Provider store={storeState}>
@@ -173,10 +173,9 @@ describe('CellSetsTool', () => {
       );
     });
 
-    const cellSetOperations = screen.queryByLabelText(/of selected$/i);
+    const cellSetOperations = screen.getByTestId('cell-sets-tool-operations');
 
-    // There should be no operations rendered
-    expect(cellSetOperations).toEqual(null);
+    expect(cellSetOperations).toHaveStyle('display: none');
   });
 
   it('cell set operations should render when cell sets are selected', async () => {

@@ -1,12 +1,13 @@
 import React, {
-  useEffect, useRef, useState, useCallback,
+  useEffect, useState, useCallback,
+  useMemo,
 } from 'react';
 import { animateScroll, Element } from 'react-scroll';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {
-  Alert, Button, Skeleton, Space, Tabs, Typography,
+  Alert, Button, Skeleton, Space, Tabs,
 } from 'antd';
 import {
   BlockOutlined, MergeCellsOutlined, SplitCellsOutlined,
@@ -17,6 +18,7 @@ import CellSetOperation from 'components/data-exploration/cell-sets-tool/CellSet
 import PlatformError from 'components/PlatformError';
 import HierarchicalTree from 'components/data-exploration/hierarchical-tree/HierarchicalTree';
 import AnnotateClustersTool from 'components/data-exploration/cell-sets-tool/AnnotateClustersTool';
+import CellSetsCountDisplay from 'components/data-exploration/cell-sets-tool/CellSetsCountDisplay';
 
 import {
   createCellSet,
@@ -26,7 +28,6 @@ import {
   unhideAllCellSets,
   reorderCellSet,
   updateCellSetProperty,
-  updateCellSetSelected,
 } from 'redux/actions/cellSets';
 import { runSubsetExperiment } from 'redux/actions/pipeline';
 import { getCellSets } from 'redux/selectors';
@@ -34,33 +35,24 @@ import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules } from 'utils/constants';
 import { composeTree } from 'utils/cellSets';
 import {
-  complement, intersection, union, unionByCellClass,
+  complement, intersection, union,
 } from 'utils/cellSetOperations';
 
-const { Text } = Typography;
+const FOCUS_TYPE = 'cellSets';
 
 const CellSetsTool = (props) => {
   const { experimentId, width, height } = props;
 
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
+
   const cellSets = useSelector(getCellSets());
 
   const {
-    accessible, error, hierarchy, properties, hidden, selected: selectedCellSetKeys,
+    accessible, error, hierarchy, properties, hidden,
   } = cellSets;
 
-  const filteredCellIds = useRef(new Set());
-
   const [activeTab, setActiveTab] = useState('cellSets');
-
-  useEffect(() => {
-    if (accessible && filteredCellIds.current.size === 0) {
-      filteredCellIds.current = unionByCellClass('louvain', hierarchy, properties);
-    }
-  }, [accessible, hierarchy]);
-
-  const FOCUS_TYPE = 'cellSets';
 
   useEffect(() => {
     dispatch(loadCellSets(experimentId));
@@ -69,10 +61,12 @@ const CellSetsTool = (props) => {
   const [treeData, setTreeData] = useState(null);
 
   useEffect(() => {
-    setTreeData(composeTree(hierarchy, properties));
+    const composedTree = composeTree(hierarchy, properties);
+
+    setTreeData(composedTree);
   }, [hierarchy, properties]);
 
-  const [selectedCellsCount, setSelectedCellsCount] = useState(0);
+  const [selectedCellSetKeys, setSelectedCellSetKeys] = useState([]);
 
   useEffect(() => {
     const louvainClusters = hierarchy.find(({ key }) => key === 'louvain')?.children;
@@ -87,15 +81,6 @@ const CellSetsTool = (props) => {
       animateScroll.scrollTo(newHeight, { containerId: 'cell-set-tool-container' });
     }
   }, [hierarchy]);
-
-  useEffect(() => {
-    const selectedCells = union(selectedCellSetKeys, properties);
-
-    const numSelectedFiltered = new Set([...selectedCells]
-      .filter((cellIndex) => filteredCellIds.current.has(cellIndex)));
-
-    setSelectedCellsCount(numSelectedFiltered.size);
-  }, [selectedCellSetKeys, properties]);
 
   const onNodeUpdate = useCallback((key, data) => {
     dispatch(updateCellSetProperty(experimentId, key, data));
@@ -114,67 +99,87 @@ const CellSetsTool = (props) => {
   }, [experimentId]);
 
   const onCheck = useCallback((keys) => {
-    dispatch(updateCellSetSelected(keys));
+    setSelectedCellSetKeys(keys);
   }, [experimentId]);
 
-  /**
-   * Renders the content inside the tool. Can be a skeleton during loading
-   * or a hierarchical tree listing all cell sets.
-   */
-  const renderContent = () => {
-    let operations = null;
+  const subsetOnCreateHandler = useCallback(async (name) => {
+    const newExperimentId = await dispatch(
+      runSubsetExperiment(experimentId, name, selectedCellSetKeys),
+    );
 
-    if (selectedCellSetKeys.length > 0) {
-      operations = (
-        <Space style={{ marginBottom: '10px' }}>
-          <SubsetCellSetsOperation
-            onCreate={async (name) => {
-              const newExperimentId = await dispatch(
-                runSubsetExperiment(experimentId, name, selectedCellSetKeys),
-              );
-              navigateTo(modules.DATA_PROCESSING, { experimentId: newExperimentId }, false, true);
-            }}
-          />
-          <CellSetOperation
-            icon={<MergeCellsOutlined />}
-            onCreate={(name, color) => {
-              dispatch(
-                createCellSet(
-                  experimentId, name, color, union(selectedCellSetKeys, properties),
-                ),
-              );
-            }}
-            ariaLabel='Union of selected'
-            helpTitle='Create new cell set by combining selected sets in the current tab.'
-          />
-          <CellSetOperation
-            icon={<BlockOutlined />}
-            onCreate={(name, color) => {
-              dispatch(
-                createCellSet(
-                  experimentId, name, color, intersection(selectedCellSetKeys, properties),
-                ),
-              );
-            }}
-            ariaLabel='Intersection of selected'
-            helpTitle='Create new cell set from intersection of selected sets in the current tab.'
-          />
-          <CellSetOperation
-            icon={<SplitCellsOutlined />}
-            onCreate={(name, color) => {
-              dispatch(createCellSet(
-                experimentId, name, color, complement(selectedCellSetKeys, properties, hierarchy),
-              ));
-            }}
-            ariaLabel='Complement of selected'
-            helpTitle='Create new cell set from the complement of the selected sets in the current tab.'
-          />
-          <Text type='primary' id='selectedCellSets'>
-            {`${selectedCellsCount} cell${selectedCellsCount === 1 ? '' : 's'} selected`}
-          </Text>
-        </Space>
-      );
-    }
+    navigateTo(modules.DATA_PROCESSING, { experimentId: newExperimentId }, false, true);
+  }, [selectedCellSetKeys]);
+
+  const cellSetUnionOnCreateHandler = useCallback((name, color) => {
+    dispatch(
+      createCellSet(
+        experimentId, name, color, union(selectedCellSetKeys, properties),
+      ),
+    );
+  }, [experimentId, selectedCellSetKeys, properties]);
+
+  const cellSetIntersectionOnCreateHandler = useCallback((name, color) => {
+    dispatch(
+      createCellSet(
+        experimentId, name, color, intersection(selectedCellSetKeys, properties),
+      ),
+    );
+  }, [experimentId, selectedCellSetKeys, properties]);
+
+  const cellSetComplementOnCreateHandler = useCallback((name, color) => {
+    dispatch(createCellSet(
+      experimentId, name, color, complement(selectedCellSetKeys, properties, hierarchy),
+    ));
+  }, [experimentId, selectedCellSetKeys, properties, hierarchy]);
+
+  const showCellSetOperations = selectedCellSetKeys.length > 0;
+
+  const hierarchicalTreeComp = useMemo(() => (
+    <HierarchicalTree
+      experimentId={experimentId}
+      treeData={treeData}
+      store={FOCUS_TYPE}
+      onCheck={onCheck}
+      onNodeUpdate={onNodeUpdate}
+      onNodeDelete={onNodeDelete}
+      onCellSetReorder={onCellSetReorder}
+      showHideButton
+    />
+  ), [experimentId, treeData, onNodeUpdate, onNodeDelete, onCellSetReorder, onCheck]);
+
+  /**
+ * Renders the content inside the tool. Can be a skeleton during loading
+ * or a hierarchical tree listing all cell sets.
+ */
+  const renderContent = () => {
+    // Use display style so that components keep around their calculated values
+    // If they re-render from scratch, we will see some freezing and have to recalculate stuff
+    const displayStyle = showCellSetOperations ? {} : { display: 'none' };
+
+    const operations = (
+      <Space data-testid='cell-sets-tool-operations' style={{ marginBottom: '10px', ...displayStyle }}>
+        <SubsetCellSetsOperation onCreate={subsetOnCreateHandler} />
+        <CellSetOperation
+          icon={<MergeCellsOutlined />}
+          onCreate={cellSetUnionOnCreateHandler}
+          ariaLabel='Union of selected'
+          helpTitle='Create new cell set by combining selected sets in the current tab.'
+        />
+        <CellSetOperation
+          icon={<BlockOutlined />}
+          onCreate={cellSetIntersectionOnCreateHandler}
+          ariaLabel='Intersection of selected'
+          helpTitle='Create new cell set from intersection of selected sets in the current tab.'
+        />
+        <CellSetOperation
+          icon={<SplitCellsOutlined />}
+          onCreate={cellSetComplementOnCreateHandler}
+          ariaLabel='Complement of selected'
+          helpTitle='Create new cell set from the complement of the selected sets in the current tab.'
+        />
+        <CellSetsCountDisplay selectedCellSetKeys={selectedCellSetKeys} />
+      </Space>
+    );
 
     const tabItems = [
       {
@@ -183,17 +188,7 @@ const CellSetsTool = (props) => {
         children: (
           <>
             {operations}
-            <HierarchicalTree
-              experimentId={experimentId}
-              treeData={treeData}
-              store={FOCUS_TYPE}
-              onCheck={onCheck}
-              onNodeUpdate={onNodeUpdate}
-              onNodeDelete={onNodeDelete}
-              onCellSetReorder={onCellSetReorder}
-              showHideButton
-              checkedKeys={selectedCellSetKeys}
-            />
+            {hierarchicalTreeComp}
           </>
         ),
       },
