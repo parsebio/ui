@@ -118,6 +118,9 @@ const countCells = async (payload, id) => (
       return;
     }
 
+    // Cells counting is set up with pauses
+    // to allow for an operation to be cancelled when a new counting is requested
+    // at the point we receive a new request, we want to drop the current count
     const generator = countCellsGenerator(payload, id);
 
     function step() {
