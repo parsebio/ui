@@ -17,7 +17,7 @@ class CellSetsWorker {
     };
 
     this.worker.onmessage = (e) => {
-      if (e.data.task === 'loadCellSets') {
+      if (e.data.task === 'storeCellSets') {
         this.cellSetsStored = true;
       } else if (e.data.task === 'cellSetCreated') {
         const { id } = e.data;
@@ -69,7 +69,7 @@ class CellSetsWorker {
 
     this.worker.postMessage({
       id,
-      task: 'loadCellSets',
+      task: 'storeCellSets',
       payload: {
         cellSetsData: arrayBuffer,
       },

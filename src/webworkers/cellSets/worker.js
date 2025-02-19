@@ -17,11 +17,11 @@ self.activeIdByTask = {
 self.onmessage = async (e) => {
   const { task, id, payload } = e.data;
 
-  if (e.data.task === 'loadCellSets') {
+  if (e.data.task === 'storeCellSets') {
     loadCellSets(payload);
 
     // Notify finished loading cell sets
-    self.postMessage({ task: 'loadCellSets' });
+    self.postMessage({ task: 'storeCellSets' });
   } else if (task === 'cellSetCreated') {
     await cellSetCreated(payload);
 
