@@ -26,9 +26,11 @@ class CellSetsWorker {
       } else if (e.data.task === 'countCells') {
         const { id, payload } = e.data;
 
-        if (this.activeIdByTask.countCells !== id) { return; }
+        if (this.activeIdByTask.countCells === id) {
+          this.taskSubscriber[id].resolve(payload);
+        }
 
-        this.taskSubscriber[id].resolve(payload);
+        delete this.taskSubscriber[id];
       }
     };
 

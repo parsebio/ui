@@ -115,7 +115,7 @@ const cellSetCreated = async (payload) => {
 const countCells = async (payload, id) => (
   new Promise((resolve) => {
     if (self.activeIdByTask.countCells !== id) {
-      return;
+      resolve(undefined);
     }
 
     // Cells counting is set up with pauses
