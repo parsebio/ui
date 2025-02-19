@@ -1,5 +1,4 @@
 import { decompress } from 'fflate';
-import CellSetsWorker from 'webworkers/cellSets/CellSetsWorker';
 
 const unpackResult = async (storageResp, taskName = null) => {
   // SeuratObject can fail to download when loaded into memory
@@ -8,25 +7,7 @@ const unpackResult = async (storageResp, taskName = null) => {
     return (blob);
   }
 
-  if (taskName === 'CellSets') {
-    const arrayBuffer = await storageResp.arrayBuffer();
-
-    const uint8Arr = new Uint8Array(arrayBuffer);
-
-    CellSetsWorker.getInstance().storeCellSets(arrayBuffer);
-
-    // cell sets dont come compressed
-    if (taskName === 'CellSets') {
-      return uint8Arr;
-    }
-  }
-
   const arrayBuf = new Uint8Array(await storageResp.arrayBuffer());
-
-  // cell sets dont come compressed
-  if (taskName === 'CellSets') {
-    return arrayBuf;
-  }
 
   return decompressUint8Array(arrayBuf);
 };

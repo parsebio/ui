@@ -1,11 +1,29 @@
+// eslint-disable-next-line camelcase
+import { JSON_parse } from 'uint8array-json-parser';
+
 import fetchAPI from 'utils/http/fetchAPI';
 import handleError from 'utils/http/handleError';
 import {
   CELL_SETS_LOADED, CELL_SETS_LOADING, CELL_SETS_ERROR,
 } from 'redux/actionTypes/cellSets';
 import endUserMessages from 'utils/endUserMessages';
-import downloadFromS3AndParse from 'utils/work/downloadFromS3AndParse';
+import { downloadFromS3 } from 'utils/work/downloadFromS3AndParse';
 import getCellSets from 'redux/selectors/cellSets/getCellSets';
+
+import CellSetsWorker from 'webworkers/cellSets/CellSetsWorker';
+
+const downloadAndParse = async (signedUrl) => {
+  const storageResp = await downloadFromS3(signedUrl);
+
+  const arrayBuffer = await storageResp.arrayBuffer();
+
+  // cell sets dont come compressed
+  const { cellSets } = JSON_parse(new Uint8Array(arrayBuffer));
+
+  CellSetsWorker.getInstance().storeCellSets(arrayBuffer);
+
+  return cellSets;
+};
 
 const loadCellSets = (experimentId, forceReload = false) => async (dispatch, getState) => {
   const {
@@ -28,13 +46,13 @@ const loadCellSets = (experimentId, forceReload = false) => async (dispatch, get
   try {
     const signedUrl = await fetchAPI(`/v2/experiments/${experimentId}/cellSets`);
 
-    const cellSetsData = await downloadFromS3AndParse('CellSets', signedUrl);
+    const cellSets = await downloadAndParse(signedUrl);
 
     dispatch({
       type: CELL_SETS_LOADED,
       payload: {
         experimentId,
-        data: cellSetsData.cellSets,
+        data: cellSets,
       },
     });
   } catch (e) {
