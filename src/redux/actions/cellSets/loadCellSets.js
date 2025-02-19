@@ -17,6 +17,9 @@ const downloadAndParse = async (signedUrl) => {
 
   const arrayBuffer = await storageResp.arrayBuffer();
 
+  // We need to parse before sending the arrayBuffer to the webworker
+  // Because when transferring it to the webworker
+  // Main thread will lose access to it
   const { cellSets } = JSON_parse(new Uint8Array(arrayBuffer));
 
   CellSetsWorker.getInstance().storeCellSets(arrayBuffer);
