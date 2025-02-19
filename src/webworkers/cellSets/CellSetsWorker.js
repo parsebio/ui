@@ -71,7 +71,7 @@ class CellSetsWorker {
       payload: {
         cellSetsData: arrayBuffer,
       },
-    });
+    }, [arrayBuffer]);
   }
 
   async countCells(cellSetKeys) {

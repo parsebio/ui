@@ -17,7 +17,6 @@ const downloadAndParse = async (signedUrl) => {
 
   const arrayBuffer = await storageResp.arrayBuffer();
 
-  // cell sets dont come compressed
   const { cellSets } = JSON_parse(new Uint8Array(arrayBuffer));
 
   CellSetsWorker.getInstance().storeCellSets(arrayBuffer);
