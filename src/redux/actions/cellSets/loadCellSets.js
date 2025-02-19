@@ -4,7 +4,7 @@ import {
   CELL_SETS_LOADED, CELL_SETS_LOADING, CELL_SETS_ERROR,
 } from 'redux/actionTypes/cellSets';
 import endUserMessages from 'utils/endUserMessages';
-import downloadFromS3 from 'utils/work/downloadFromS3';
+import downloadFromS3AndParse from 'utils/work/downloadFromS3AndParse';
 import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
 const loadCellSets = (experimentId, forceReload = false) => async (dispatch, getState) => {
@@ -28,7 +28,7 @@ const loadCellSets = (experimentId, forceReload = false) => async (dispatch, get
   try {
     const signedUrl = await fetchAPI(`/v2/experiments/${experimentId}/cellSets`);
 
-    const cellSetsData = await downloadFromS3('CellSets', signedUrl);
+    const cellSetsData = await downloadFromS3AndParse('CellSets', signedUrl);
 
     dispatch({
       type: CELL_SETS_LOADED,

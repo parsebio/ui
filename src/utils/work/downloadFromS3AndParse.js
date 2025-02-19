@@ -2,7 +2,7 @@ import unpackResult from 'utils/work/unpackResult';
 import httpStatusCodes from 'utils/http/httpStatusCodes';
 import parseResult from 'utils/work/parseResult';
 
-const downloadFromS3 = async (taskName, signedUrl) => {
+const downloadFromS3 = async (signedUrl) => {
   const response = await fetch(signedUrl);
 
   // some WorkRequests like scType and runClustering do not upload data to S3
@@ -20,10 +20,21 @@ const downloadFromS3 = async (taskName, signedUrl) => {
     throw new Error(`Error ${response.status}: ${response.text}`, { cause: response });
   }
 
+  return response;
+};
+
+const downloadFromS3AndParse = async (taskName, signedUrl) => {
+  const response = await downloadFromS3(signedUrl);
+
+  if (response === null) {
+    return null;
+  }
+
   const unpackedResult = await unpackResult(response, taskName);
   const parsedResult = parseResult(unpackedResult, taskName);
 
   return parsedResult;
 };
 
-export default downloadFromS3;
+export { downloadFromS3 };
+export default downloadFromS3AndParse;
