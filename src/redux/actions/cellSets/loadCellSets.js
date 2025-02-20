@@ -22,9 +22,9 @@ const downloadAndParse = async (signedUrl) => {
   // Main thread will lose access to it
   const { cellSets } = JSON_parse(new Uint8Array(arrayBuffer));
 
-  CellSetsWorker.getInstance().storeCellSets(arrayBuffer);
+  const webWorkerPromise = CellSetsWorker.getInstance().storeCellSets(arrayBuffer);
 
-  return cellSets;
+  return { cellSets, webWorkerPromise };
 };
 
 const loadCellSets = (experimentId, forceReload = false) => async (dispatch, getState) => {
@@ -48,7 +48,7 @@ const loadCellSets = (experimentId, forceReload = false) => async (dispatch, get
   try {
     const signedUrl = await fetchAPI(`/v2/experiments/${experimentId}/cellSets`);
 
-    const cellSets = await downloadAndParse(signedUrl);
+    const { cellSets, webWorkerPromise } = await downloadAndParse(signedUrl);
 
     dispatch({
       type: CELL_SETS_LOADED,
@@ -57,6 +57,8 @@ const loadCellSets = (experimentId, forceReload = false) => async (dispatch, get
         data: cellSets,
       },
     });
+
+    await webWorkerPromise;
   } catch (e) {
     const errorMessage = handleError(e, endUserMessages.ERROR_FETCHING_CELL_SETS);
     console.error(e);

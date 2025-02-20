@@ -6,8 +6,6 @@ class CellSetsWorker {
       new URL('./worker.js', import.meta.url),
     );
 
-    this.cellSetsStored = false;
-
     // TODO expand this to support subscribers to different tasks
     // once we have more tasks
     this.taskSubscriber = {};
@@ -17,27 +15,27 @@ class CellSetsWorker {
     };
 
     this.worker.onmessage = (e) => {
-      if (e.data.task === 'storeCellSets') {
-        this.cellSetsStored = true;
-      } else if (e.data.task === 'cellSetCreated') {
-        const { id } = e.data;
+      const {
+        id, task, payload, error,
+      } = e.data;
 
-        this.taskSubscriber[id].resolve();
-      } else if (e.data.task === 'countCells') {
-        const { id, payload } = e.data;
-
-        if (this.activeIdByTask.countCells === id) {
-          this.taskSubscriber[id].resolve(payload);
-        }
-
-        delete this.taskSubscriber[id];
+      if (error) {
+        this.taskSubscriber[id].reject(error);
       }
+
+      if (this.activeIdByTask[task] === id) {
+        this.taskSubscriber[id].resolve(payload);
+      }
+
+      delete this.taskSubscriber[id];
     };
 
-    this.worker.onerror = () => {
-      // this.worker.onerror = (error) => {
-      // const { id, payload } = e.data;
-      // this.taskSubscriber[id].reject(error);
+    this.worker.onerror = (error) => {
+      // An unhandled error took place, reject everything because we don't know what failed
+      Object.keys(this.taskSubscriber).forEach((id) => {
+        this.taskSubscriber[id].reject(error);
+        delete this.taskSubscriber[id];
+      });
     };
   }
 
@@ -49,9 +47,11 @@ class CellSetsWorker {
     return CellSetsWorker.instance;
   }
 
-  cellSetCreated(cellSet) {
+  async cellSetCreated(cellSet) {
     return new Promise((resolve, reject) => {
       const id = uuidv4();
+
+      this.activeIdByTask.cellSetCreated = id;
       this.taskSubscriber[id] = { resolve, reject };
 
       this.worker.postMessage({
@@ -64,24 +64,29 @@ class CellSetsWorker {
     });
   }
 
-  storeCellSets(arrayBuffer) {
-    const id = uuidv4();
+  async storeCellSets(arrayBuffer) {
+    return new Promise((resolve, reject) => {
+      const id = uuidv4();
 
-    this.worker.postMessage({
-      id,
-      task: 'storeCellSets',
-      payload: {
-        cellSetsData: arrayBuffer,
-      },
-    }, [arrayBuffer]);
+      this.activeIdByTask.storeCellSets = id;
+      this.taskSubscriber[id] = { resolve, reject };
+
+      this.worker.postMessage({
+        id,
+        task: 'storeCellSets',
+        payload: {
+          cellSetsData: arrayBuffer,
+        },
+      }, [arrayBuffer]);
+    });
   }
 
   async countCells(cellSetKeys) {
     return new Promise((resolve, reject) => {
       const id = uuidv4();
-      this.taskSubscriber[id] = { resolve, reject };
 
       this.activeIdByTask.countCells = id;
+      this.taskSubscriber[id] = { resolve, reject };
 
       this.worker.postMessage({
         id,

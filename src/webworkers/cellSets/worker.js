@@ -17,8 +17,18 @@ self.activeIdByTask = {
 self.onmessage = async (e) => {
   const { task, id, payload } = e.data;
 
-  if (e.data.task === 'storeCellSets') {
-    loadCellSets(payload);
+  try {
+    await handleTask(task, id, payload);
+  } catch (error) {
+    self.postMessage({
+      id, task, payload: null, error,
+    });
+  }
+};
+
+const handleTask = async (task, id, payload) => {
+  if (task === 'storeCellSets') {
+    await storeCellSets(payload);
 
     // Notify finished loading cell sets
     self.postMessage({ task: 'storeCellSets' });
@@ -37,7 +47,7 @@ self.onmessage = async (e) => {
   }
 };
 
-const loadCellSets = async (payload) => {
+const storeCellSets = async (payload) => {
   const { cellSetsData } = payload;
 
   const { cellSets } = JSON_parse(new Uint8Array(cellSetsData));
