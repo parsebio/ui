@@ -8,7 +8,6 @@ exports[`cellSetsClusteringUpdated Sets loading and error indicators appropriate
   "initialLoadPending": true,
   "loading": true,
   "properties": {},
-  "selected": [],
   "updatingClustering": false,
 }
 `;

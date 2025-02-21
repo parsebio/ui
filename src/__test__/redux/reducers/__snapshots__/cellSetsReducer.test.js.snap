@@ -63,23 +63,6 @@ exports[`cellSetsReducer Removes child correctly 1`] = `
 ]
 `;
 
-exports[`cellSetsReducer Selected cells are maintained 1`] = `
-[
-  "a",
-  "b",
-  "c",
-]
-`;
-
-exports[`cellSetsReducer Selected cells are maintained 2`] = `
-[
-  1,
-  2,
-  "c",
-  3,
-]
-`;
-
 exports[`cellSetsReducer Sets up store properly for loaded cell sets. 1`] = `
 {
   "1": {
@@ -165,7 +148,6 @@ exports[`cellSetsReducer reorders correctly 1`] = `
       "rootNode": true,
     },
   },
-  "selected": [],
   "updatingClustering": false,
 }
 `;

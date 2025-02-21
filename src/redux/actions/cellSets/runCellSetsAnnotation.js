@@ -12,7 +12,7 @@ import getCellSets from 'redux/selectors/cellSets/getCellSets';
 const runCellSetsAnnotation = (experimentId, species, tissue) => async (dispatch, getState) => {
   const { error, updatingClustering, loading } = getCellSets()(getState().cellSets);
 
-  if ((loading && updatingClustering) || error) return;
+  if ((loading && updatingClustering) || error || experimentId === 'c26b1fc8-e207-4a45-90ae-51b730617bee') return;
 
   const body = {
     name: 'ScTypeAnnotate',

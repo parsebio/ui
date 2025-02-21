@@ -15,13 +15,16 @@ const composeTree = (hierarchy, properties, filterTypes = null) => {
       (root) => (!types || types.includes(properties[root.key].type)),
     ).map(
       (node) => {
-        // eslint-disable-next-line no-unused-vars
-        const { parentNodeKey, ...restOfProperties } = properties[node.key];
+        const {
+          color, name, rootNode, type,
+        } = properties[node.key];
 
         return ({
           ...node,
-          ...restOfProperties,
-          cellIds: [...properties[node.key]?.cellIds || []],
+          color,
+          name,
+          rootNode,
+          type,
           children: node.children ? composeTreeRecursive(node.children, null) : undefined,
         });
       },

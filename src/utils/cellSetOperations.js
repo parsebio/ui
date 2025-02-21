@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import * as setOperations from 'utils/setOperations';
 
 /**
@@ -94,6 +96,32 @@ const withoutFilteredOutCells = (cellSets, originalCellIds) => {
   return setOperations.intersection(filteredInCellIds, originalCellIds);
 };
 
+const allAreClusters = (cellSetsArr) => cellSetsArr.every(({ parentNodeKey }) => (parentNodeKey === 'louvain'));
+
+const countCells = (cellSetKeys, filteredCellIds, properties) => {
+  const cellSetsArr = cellSetKeys
+    .map((key) => properties[key])
+    .filter(({ rootNode }) => !rootNode);
+
+  // If all the cell sets are louvain (always disjoint and filtered), then we don't need to
+  // do an expensive count, just return the sum of each individual set's size
+  if (allAreClusters(cellSetsArr)) {
+    return _.sumBy(cellSetsArr, 'cellIds.size');
+  }
+
+  const selectedCells = new Set();
+
+  cellSetsArr.forEach((cellSet) => {
+    cellSet.cellIds.forEach((cellId) => {
+      if (filteredCellIds.current.has(cellId)) {
+        selectedCells.add(cellId);
+      }
+    });
+  });
+
+  return selectedCells.size;
+};
+
 export {
   union,
   intersection,
@@ -101,4 +129,5 @@ export {
   unionByCellClass,
   getFilteredCells,
   withoutFilteredOutCells,
+  countCells,
 };
