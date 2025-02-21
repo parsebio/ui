@@ -50,7 +50,9 @@ import SingleComponentMultipleDataContainer from 'components/SingleComponentMult
 import SelectShownSamplesDropdown from 'components/data-processing/SelectShownSamplesDropdown';
 import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
-import { getBackendStatus, getFilterChanges, getSamples } from 'redux/selectors';
+import {
+  getBackendStatus, getFilterChanges, getSamples, getCellSets,
+} from 'redux/selectors';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 
@@ -119,6 +121,14 @@ const DataProcessingPage = ({ experimentId }) => {
   const [inputsList, setInputsList] = useState([]);
   const [shownSampleIds, setShownSampleIds] = useState(sampleKeys);
   const sampleTechnology = samples[sampleKeys[0]]?.type;
+  const cellSets = useSelector(getCellSets());
+
+  // cell sets get created after the filter doublets step
+  useEffect(() => {
+    if (completedSteps.length > 4 && _.isEmpty(cellSets.properties)) {
+      dispatch(loadCellSets(experimentId));
+    }
+  }, [completedSteps]);
 
   useEffect(() => {
     // If processingConfig is not loaded then reload
@@ -127,7 +137,6 @@ const DataProcessingPage = ({ experimentId }) => {
     }
 
     dispatch(loadSamples(experimentId));
-    dispatch(loadCellSets(experimentId));
 
     isUserAuthorized(experimentId, getURL(experimentId), 'POST').then(setRunQCAuthorized);
   }, []);
