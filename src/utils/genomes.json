@@ -44,6 +44,10 @@
     "species": "Candida Albicans"
   },
   {
+    "name": "C_sabeus",
+    "species": "Chlorocebus sabaeus (green monkey)"
+  },
+  {
     "name": "bColLiv1",
     "species": "Columba livia (rock pigeon)"
   },
@@ -290,6 +294,10 @@
   {
     "name": "GRCm39_CRE",
     "species": "Custom Mus musculus (mouse) with CRE"
+  },
+  {
+    "name": "GRCm39_td_cre_wpre_2",
+    "species": "Custom Mus musculus (mouse) with tdTomato, CRE and WPRE"
   },
   {
     "name": "GRCm39_eGFP",
