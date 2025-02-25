@@ -108,12 +108,12 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               onClick: () => downloadOutput(option.key),
             },
             {
-              label: 'Copy download command',
+              label: 'Copy resumable download command',
               key: `${option.key}-copy`,
               onClick: async () => {
                 const signedUrl = await getSignedUrl(option.key);
-                navigator.clipboard.writeText(`curl -o ${secondaryAnalysisId}_${option.key} "${signedUrl}"`);
-                pushNotificationMessage('success', 'Download command copied.');
+                navigator.clipboard.writeText(`curl -C - -o ${secondaryAnalysisId}_${option.key} "${signedUrl}"`);
+                pushNotificationMessage('success', 'Resumable download command copied.');
               },
             },
           ],
