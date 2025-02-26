@@ -46,7 +46,7 @@ module.exports = {
     '^react-native$': 'react-native-web',
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     uuid: require.resolve('uuid'), // https://stackoverflow.com/a/73203803
-    '.*webworkerFactory': '<rootDir>/src/webworkers/__mocks__/webWorkerFactory.js',
+    '.*webWorkerFactory': '<rootDir>/src/webWorkers/__mocks__/webWorkerFactory.js',
   },
   moduleFileExtensions: [
     'web.js',

@@ -10,7 +10,7 @@ import endUserMessages from 'utils/endUserMessages';
 import { downloadFromS3 } from 'utils/work/downloadFromS3AndParse';
 import getCellSets from 'redux/selectors/cellSets/getCellSets';
 
-import CellSetsWorker from 'webworkers/cellSets/CellSetsWorker';
+import CellSetsWorker from 'webWorkers/cellSets/CellSetsWorker';
 
 const downloadAndParse = async (signedUrl) => {
   const storageResp = await downloadFromS3(signedUrl);

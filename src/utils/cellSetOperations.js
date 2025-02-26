@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import * as setOperations from 'utils/setOperations';
-import CellSetsWorker from 'webworkers/cellSets/CellSetsWorker';
+import CellSetsWorker from 'webWorkers/cellSets/CellSetsWorker';
 
 /**
  *
