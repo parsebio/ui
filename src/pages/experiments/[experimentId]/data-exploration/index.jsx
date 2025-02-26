@@ -40,7 +40,7 @@ const ExplorationViewPage = ({ experimentId }) => {
 
   useEffect(() => {
     if (!Object.keys(geneData)) return;
-    const genesToLoad = getHighestDispersionGenes(geneData, 50);
+    const genesToLoad = getHighestDispersionGenes(geneData, 1);
     dispatch(loadGeneExpression(experimentId, genesToLoad, 'embedding'));
   }, [geneData]);
 
