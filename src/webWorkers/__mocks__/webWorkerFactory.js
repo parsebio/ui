@@ -20,12 +20,7 @@ class MockedWorker {
       console.error('erroDebug');
       console.error(e);
     }
-    console.log('thiswebWorkerDebug');
-    console.log(this.webWorker);
 
-    console.log('selfpostMessageDebug');
-    // eslint-disable-next-line no-restricted-globals
-    console.log(self.postMessage);
     this.webWorker.postMessage = (data) => {
       this.onmessageHandler({ data });
     };
