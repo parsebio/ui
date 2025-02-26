@@ -4,6 +4,7 @@ import _ from 'lodash';
 import {
   render, screen, fireEvent, waitFor, within,
 } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
 import { act } from 'react-dom/test-utils';
@@ -539,7 +540,9 @@ describe('CellSetsTool', () => {
 
     // select a sample cluster
     const wt1Cluster = screen.getByText('WT1');
-    userEvent.click(wt1Cluster);
+    await act(async () => {
+      userEvent.click(wt1Cluster);
+    });
 
     // Cells in wt1 minus all the ones that are not in louvain (they were filtered out)
     screen.getByText('28 cells selected');

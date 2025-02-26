@@ -15,7 +15,6 @@ self.activeIdByTask = {
 };
 
 self.onmessage = async (e) => {
-  console.log('SUPIMHERE');
   const { task, id, payload } = e.data;
 
   try {

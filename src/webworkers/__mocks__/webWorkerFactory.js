@@ -8,37 +8,25 @@ class MockedWorker {
 
       this.webWorker = {
         onmessage: self.onmessage,
-        postMessage: self.postMessage,
       };
 
-      delete self.onmessage;
-      delete self.postMessage;
+      self.postMessage = (data) => {
+        this.onmessage({ data });
+      };
 
-      this.onmessageHandler = () => { };
-      this.onerrorHandler = () => { };
+      this.onmessage = null;
+      this.onerror = null;
     } catch (e) {
       console.error('erroDebug');
       console.error(e);
     }
-
-    this.webWorker.postMessage = (data) => {
-      this.onmessageHandler({ data });
-    };
-  }
-
-  onmessage = (cb) => {
-    this.onmessageHandler = cb;
-  }
-
-  onerror = (cb) => {
-    this.onerrorHandler = cb;
   }
 
   postMessage = async (data) => {
     try {
       await this.webWorker.onmessage({ data });
     } catch (e) {
-      this.onerrorHandler(e);
+      this.onerror(e);
     }
   }
 }
