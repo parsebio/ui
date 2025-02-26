@@ -22,6 +22,9 @@ const downloadAndParse = async (signedUrl) => {
   // Main thread will lose access to it
   const { cellSets } = JSON_parse(new Uint8Array(arrayBuffer));
 
+  console.log('cellSetsDebug');
+  console.log(cellSets);
+
   const webWorkerPromise = CellSetsWorker.getInstance().storeCellSets(arrayBuffer);
 
   return { cellSets, webWorkerPromise };

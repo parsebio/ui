@@ -44,6 +44,7 @@ const HeatmapPlot = (props) => {
   } = props;
 
   const debouncedLoadDownsampledGeneExpression = _.debounce((...params) => {
+    console.log('HOLAOHLA');
     dispatch(loadDownsampledGeneExpression(...params));
   }, 1000);
 

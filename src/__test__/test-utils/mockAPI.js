@@ -6,7 +6,7 @@ import { mockSecondaryAnalyses } from '__test__/data/secondaryAnalyses/secondary
 import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/secondary_analysis_status_default.json';
 import fake from '__test__/test-utils/constants';
 import mockAnalysisFiles from '__test__/data/secondaryAnalyses/secondary_analysis_files';
-import downloadFromS3AndParse from 'utils/work/downloadFromS3AndParse';
+import { downloadFromS3 } from 'utils/work/downloadFromS3AndParse';
 
 import {
   responseData,
@@ -15,10 +15,11 @@ import {
 const cellSetsData = require('__test__/data/cell_sets.json');
 
 const setupDownloadCellSetsFromS3Mock = (customCellSets = cellSetsData) => {
-  downloadFromS3AndParse.mockImplementation((resource, signedUrl) => {
+  downloadFromS3.mockImplementation((signedUrl) => {
     // eslint-disable-next-line global-require
     if (signedUrl === 'mock-cellsets-signed-url') {
-      return Promise.resolve(customCellSets);
+      const arrayBuffer = new TextEncoder().encode(JSON.stringify(customCellSets)).buffer;
+      return Promise.resolve({ arrayBuffer: async () => Promise.resolve(arrayBuffer) });
     }
     return Promise.reject(new Error('Invalid signed URL'));
   });
