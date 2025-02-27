@@ -1,5 +1,8 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
+
+import { CELL_SETS } from 'webWorkers/webWorkerFactory';
+
 /* eslint-disable no-restricted-globals */
 class MockedWorker {
   constructor(path) {
@@ -31,6 +34,10 @@ class MockedWorker {
   }
 }
 
-const webWorkerFactory = (workerPath) => new MockedWorker(workerPath);
+const workerPaths = {
+  [CELL_SETS]: 'webWorkers/cellSets/worker.js',
+};
+
+const webWorkerFactory = (workerKey) => new MockedWorker(workerPaths[workerKey]);
 
 export default webWorkerFactory;

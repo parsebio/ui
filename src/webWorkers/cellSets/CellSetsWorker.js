@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import hash from 'object-hash';
-import webWorkerFactory from 'webWorkers/webWorkerFactory';
+import webWorkerFactory, { CELL_SETS } from 'webWorkers/webWorkerFactory';
 
 class CellSetsWorker {
   constructor() {
-    this.worker = webWorkerFactory('webWorkers/cellSets/worker.js');
+    this.worker = webWorkerFactory(CELL_SETS);
 
     this.cellSetsStored = false;
 
