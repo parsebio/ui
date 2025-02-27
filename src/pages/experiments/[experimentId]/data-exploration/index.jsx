@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
-import { loadProcessingSettings } from 'redux/actions/experimentSettings';
+import _ from 'lodash';
 
 import CellSetsTool from 'components/data-exploration/cell-sets-tool/CellSetsTool';
 import GeneListTool from 'components/data-exploration/gene-list-tool/GeneListTool';
@@ -11,7 +11,9 @@ import Embedding from 'components/data-exploration/embedding/Embedding';
 import HeatmapPlot, { COMPONENT_TYPE } from 'components/data-exploration/heatmap/HeatmapPlot';
 import HeatmapSettings from 'components/data-exploration/heatmap/HeatmapSettings';
 import MosaicCloseButton from 'components/MosaicCloseButton';
+
 import { updateLayout } from 'redux/actions/layout/index';
+import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
 import 'react-mosaic-component/react-mosaic-component.css';
 import MultiTileContainer from 'components/MultiTileContainer';
@@ -45,9 +47,11 @@ const ExplorationViewPage = ({ experimentId }) => {
   }, []);
 
   useEffect(() => {
-    if (analysisTool === 'scanpy' || !Object.keys(geneData)) return;
+    if (!Object.keys(geneData) || _.isNil(analysisTool)) return;
 
-    const genesToLoad = getHighestDispersionGenes(geneData, 50);
+    const nGenesToLoad = analysisTool === 'scanpy' ? 3 : 50;
+
+    const genesToLoad = getHighestDispersionGenes(geneData, nGenesToLoad);
 
     dispatch(loadGeneExpression(experimentId, genesToLoad, 'embedding'));
   }, [geneData, analysisTool]);
