@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import {
   Collapse,
   Skeleton,
@@ -64,6 +66,8 @@ const MarkerHeatmap = ({ experimentId }) => {
     getCellSetsHierarchyByKeys([config?.selectedCellSet]),
   )[0]?.children?.length;
 
+  const triggerMarkersLoading = useRef(false);
+
   const { data: loadedGenes = [], markers: loadedGenesAreMarkers = false } = useSelector(
     (state) => state.genes.expression.views[plotUuid],
   ) || {};
@@ -105,14 +109,15 @@ const MarkerHeatmap = ({ experimentId }) => {
 
     dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
 
-    if (updatesToDispatch.nMarkerGenes) {
+    if (updatesToDispatch.selectedCellSet || updatesToDispatch.nMarkerGenes) {
+      triggerMarkersLoading.current = true;
       dispatch(loadMarkerGenes(
         experimentId,
         plotUuid,
         {
-          numGenes: updatesToDispatch.nMarkerGenes,
-          groupedTracks: config.groupedTracks,
-          selectedCellSet: config.selectedCellSet,
+          numGenes: updatesToDispatch.nMarkerGenes ?? config.nMarkerGenes,
+          groupedTracks: updatesToDispatch.groupedTracks ?? config.groupedTracks,
+          selectedCellSet: updatesToDispatch.selectedCellSet ?? config.selectedCellSet,
           selectedPoints: config.selectedPoints,
         },
       ));
@@ -161,6 +166,11 @@ const MarkerHeatmap = ({ experimentId }) => {
       && !markerGenesLoading
     );
     if (!expectedConditions) return;
+
+    if (triggerMarkersLoading.current) {
+      triggerMarkersLoading.current = false;
+      return;
+    }
 
     dispatch(loadDownsampledGeneExpression(experimentId, config?.selectedGenes, plotUuid));
   }, [
