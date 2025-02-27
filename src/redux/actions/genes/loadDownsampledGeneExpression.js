@@ -92,12 +92,6 @@ const loadDownsampledGeneExpression = (
       },
     );
 
-    console.log('requestETagDebug');
-    console.log(requestETag);
-
-    console.log('bodyDebug');
-    console.log(body);
-
     // If the ETag is different, that means that a new request was sent in between
     // So we don't need to handle this outdated result
     if (getState().genes.expression.downsampled.ETag !== requestETag) {

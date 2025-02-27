@@ -6,23 +6,18 @@ import { CELL_SETS } from 'webWorkers/webWorkerFactory';
 /* eslint-disable no-restricted-globals */
 class MockedWorker {
   constructor(path) {
-    try {
-      require(path);
+    require(path);
 
-      this.webWorker = {
-        onmessage: self.onmessage,
-      };
+    this.webWorker = {
+      onmessage: self.onmessage,
+    };
 
-      self.postMessage = (data) => {
-        this.onmessage({ data });
-      };
+    self.postMessage = (data) => {
+      this.onmessage({ data });
+    };
 
-      this.onmessage = null;
-      this.onerror = null;
-    } catch (e) {
-      console.error('erroDebug');
-      console.error(e);
-    }
+    this.onmessage = null;
+    this.onerror = null;
   }
 
   postMessage = async (data) => {
