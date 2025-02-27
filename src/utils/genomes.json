@@ -348,6 +348,14 @@
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
   },
   {
+    "name": "Mmul_eGFP_mCherry",
+    "species": "Custom Macaca mulatta"
+  },
+  {
+    "name": "Mmul_SIVmacL28_C1",
+    "species": "Custom Macaca mulatta"
+  },
+  {
     "name": "GRCm39-tdTom_TBrucei",
     "species": "Custom Mixed Mus musculus (mouse) with Trypanosoma brucei and tdTomato"
   },
