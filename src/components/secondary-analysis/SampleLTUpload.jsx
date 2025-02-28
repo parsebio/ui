@@ -9,6 +9,7 @@ import {
   Space,
   Divider,
   List,
+  Modal,
 } from 'antd';
 import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
@@ -29,6 +30,9 @@ const SampleLTUpload = (props) => {
   const [file, setFile] = useState(false);
   const [invalidInputWarnings, setInvalidInputWarnings] = useState([]);
   const [sampleNames, setSampleNames] = useState([]);
+  // New state for pending file when duplicates exist and for showing review modal
+  const [pendingFile, setPendingFile] = useState(null);
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
 
   const getSampleNamesFromExcel = async (excelFile) => {
     const sheets = await readExcelFile(excelFile, { getSheets: true });
@@ -94,7 +98,10 @@ const SampleLTUpload = (props) => {
           if (sampleNamesAreUnique) {
             setFile(selectedFile);
           } else {
-            warnings.push(`Error with ${selectedFile.name}: Sample names are not unique. Make sure all samples have unique names and reupload.`);
+            warnings.push(`Your sample loading table includes ${names.length} samples in total,
+              with ${names.length - new Set(names).size} duplicate names found. Duplicates will
+              be treated as a single sample, merging the cells in the corresponding wells. Please review and confirm to proceed.`);
+            setPendingFile(selectedFile);
             setFile(false);
           }
         }
@@ -127,6 +134,7 @@ const SampleLTUpload = (props) => {
   };
 
   const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';
+  const buttonText = pendingFile && !file ? 'Review' : uploadButtonText;
 
   return (
     <>
@@ -223,19 +231,79 @@ const SampleLTUpload = (props) => {
               type='primary'
               key='create'
               style={{ width: '30%' }}
-              disabled={!file}
+              disabled={!(file || pendingFile)}
               onClick={() => {
-                beginUpload();
-                setFile(null);
+                if (pendingFile && !file) {
+                  setReviewModalVisible(true);
+                } else {
+                  beginUpload();
+                  setFile(null);
+                }
               }}
             >
-              {uploadButtonText}
+              {buttonText}
             </Button>
           </center>
           {uploadedFileId && (<Divider orientation='center'>Previously uploaded file</Divider>)}
           {renderUploadedFileDetails()}
         </Form.Item>
       </Form>
+      <Modal
+        title='Review Duplicate Sample Names'
+        open={reviewModalVisible}
+        onCancel={() => {
+          setReviewModalVisible(false);
+          setSampleNames([]);
+        }}
+        footer={[
+          <Button
+            key='cancel'
+            onClick={() => {
+              setReviewModalVisible(false);
+              setPendingFile(null);
+              setSampleNames([]);
+              setInvalidInputWarnings([]);
+            }}
+          >
+            Cancel
+          </Button>,
+          <Button
+            key='confirm'
+            type='primary'
+            onClick={() => {
+              setFile(pendingFile);
+              setPendingFile(null);
+              setReviewModalVisible(false);
+              setInvalidInputWarnings([]);
+            }}
+          >
+            Confirm
+          </Button>,
+        ]}
+      >
+        <p>
+          Duplicate sample names were detected. Duplicate entries will be merged.
+          Please review the sample names below and click Confirm to proceed.
+        </p>
+        <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+          <List
+            dataSource={sampleNames}
+            renderItem={(item) => {
+              const duplicateCount = sampleNames.filter((name) => name === item).length;
+              const isDuplicate = duplicateCount > 1;
+              return (
+                <List.Item key={item}>
+                  <Text style={isDuplicate ? { color: 'red', fontWeight: 'bold' } : {}}>
+                    {item}
+                    {' '}
+                    {isDuplicate && <WarningOutlined style={{ color: 'red' }} />}
+                  </Text>
+                </List.Item>
+              );
+            }}
+          />
+        </div>
+      </Modal>
     </>
   );
 };
