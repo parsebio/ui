@@ -27,12 +27,12 @@ const SampleLTUpload = (props) => {
     secondaryAnalysisId, renderUploadedFileDetails,
     uploadedFileId, setFilesNotUploaded,
   } = props;
-  const [file, setFile] = useState(false);
+  const [file, setFile] = useState(null);
   const [invalidInputWarnings, setInvalidInputWarnings] = useState([]);
   const [sampleNames, setSampleNames] = useState([]);
   // New state for pending file when duplicates exist and for showing review modal
   const [pendingFile, setPendingFile] = useState(null);
-  const [reviewModalVisible, setReviewModalVisible] = useState(false);
+  const [duplicatesModalVisible, setDuplicatesModalVisible] = useState(false);
 
   const getSampleNamesFromExcel = async (excelFile) => {
     const sheets = await readExcelFile(excelFile, { getSheets: true });
@@ -73,6 +73,7 @@ const SampleLTUpload = (props) => {
   };
 
   const onDrop = async (droppedFiles) => {
+    setPendingFile(false);
     const warnings = [];
 
     const validFiles = droppedFiles.filter((f) => f.name.endsWith('.xlsm'));
@@ -91,7 +92,7 @@ const SampleLTUpload = (props) => {
         const names = await getSampleNamesFromExcel(selectedFile);
         if (names.length === 0) {
           warnings.push(`${selectedFile.name}: No sample names extracted from the file. Ensure the file is correctly formatted.`);
-          setFile(false);
+          setFile(null);
         } else {
           setSampleNames(names);
           const sampleNamesAreUnique = new Set(names).size === names.length;
@@ -102,15 +103,15 @@ const SampleLTUpload = (props) => {
               with ${names.length - new Set(names).size} duplicate names found. Duplicates will
               be treated as a single sample, merging the cells in the corresponding wells. Please review and confirm to proceed.`);
             setPendingFile(selectedFile);
-            setFile(false);
+            setFile(null);
           }
         }
       } catch (error) {
         warnings.push(`${selectedFile.name}: ${error.message}`);
-        setFile(false);
+        setFile(null);
       }
     } else {
-      setFile(false);
+      setFile(null);
     }
 
     setInvalidInputWarnings(warnings);
@@ -234,7 +235,7 @@ const SampleLTUpload = (props) => {
               disabled={!(file || pendingFile)}
               onClick={() => {
                 if (pendingFile && !file) {
-                  setReviewModalVisible(true);
+                  setDuplicatesModalVisible(true);
                 } else {
                   beginUpload();
                   setFile(null);
@@ -250,16 +251,15 @@ const SampleLTUpload = (props) => {
       </Form>
       <Modal
         title='Review Duplicate Sample Names'
-        open={reviewModalVisible}
+        open={duplicatesModalVisible}
         onCancel={() => {
-          setReviewModalVisible(false);
-          setSampleNames([]);
+          setDuplicatesModalVisible(false);
         }}
         footer={[
           <Button
             key='cancel'
             onClick={() => {
-              setReviewModalVisible(false);
+              setDuplicatesModalVisible(false);
               setPendingFile(null);
               setSampleNames([]);
               setInvalidInputWarnings([]);
@@ -273,7 +273,7 @@ const SampleLTUpload = (props) => {
             onClick={() => {
               setFile(pendingFile);
               setPendingFile(null);
-              setReviewModalVisible(false);
+              setDuplicatesModalVisible(false);
               setInvalidInputWarnings([]);
             }}
           >
@@ -282,8 +282,9 @@ const SampleLTUpload = (props) => {
         ]}
       >
         <p>
-          Duplicate sample names were detected. Duplicate entries will be merged.
-          Please review the sample names below and click Confirm to proceed.
+          Duplicate sample names were detected. Duplicate entries will be merged to a single
+          sample during thepipeline run. To proceed, click Confirm.
+          To upload a different sample loading table file, click Cancel.
         </p>
         <div style={{ maxHeight: 200, overflowY: 'auto' }}>
           <List
