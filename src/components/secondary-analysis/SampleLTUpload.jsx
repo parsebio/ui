@@ -72,7 +72,7 @@ const SampleLTUpload = (props) => {
   };
 
   const onDrop = async (droppedFiles) => {
-    setPendingFile(false);
+    setPendingFile(null);
     const warnings = [];
 
     const validFiles = droppedFiles.filter((f) => f.name.endsWith('.xlsm'));
