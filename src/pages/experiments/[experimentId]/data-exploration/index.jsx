@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tabs } from 'antd';
 import PropTypes from 'prop-types';
-import { loadProcessingSettings } from 'redux/actions/experimentSettings';
+import _ from 'lodash';
 
 import CellSetsTool from 'components/data-exploration/cell-sets-tool/CellSetsTool';
 import GeneListTool from 'components/data-exploration/gene-list-tool/GeneListTool';
@@ -11,12 +11,14 @@ import Embedding from 'components/data-exploration/embedding/Embedding';
 import HeatmapPlot, { COMPONENT_TYPE } from 'components/data-exploration/heatmap/HeatmapPlot';
 import HeatmapSettings from 'components/data-exploration/heatmap/HeatmapSettings';
 import MosaicCloseButton from 'components/MosaicCloseButton';
+
 import { updateLayout } from 'redux/actions/layout/index';
+import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
 import 'react-mosaic-component/react-mosaic-component.css';
 import MultiTileContainer from 'components/MultiTileContainer';
-import { loadGeneExpression } from 'redux/actions/genes';
 import getHighestDispersionGenes from 'utils/getHighestDispersionGenes';
+import { loadGeneExpression } from 'redux/actions/genes';
 
 const ExplorationViewPage = ({ experimentId }) => {
   const dispatch = useDispatch();
@@ -24,10 +26,16 @@ const ExplorationViewPage = ({ experimentId }) => {
   const { windows, panel } = layout;
   const [selectedTab, setSelectedTab] = useState(panel);
 
+  const geneData = useSelector((state) => state.genes.properties.data);
+
   const { method } = useSelector((state) => (
     state.experimentSettings.processing?.configureEmbedding?.embeddingSettings
   )) || false;
-  const geneData = useSelector((state) => state.genes.properties.data);
+
+  const analysisTool = useSelector((state) => (
+    state.experimentSettings.processing?.dataIntegration?.analysisTool
+  ));
+
   useEffect(() => {
     setSelectedTab(panel);
   }, [panel]);
@@ -39,10 +47,14 @@ const ExplorationViewPage = ({ experimentId }) => {
   }, []);
 
   useEffect(() => {
-    if (!Object.keys(geneData)) return;
-    const genesToLoad = getHighestDispersionGenes(geneData, 50);
+    if (!Object.keys(geneData) || _.isNil(analysisTool)) return;
+
+    const nGenesToLoad = analysisTool === 'scanpy' ? 3 : 50;
+
+    const genesToLoad = getHighestDispersionGenes(geneData, nGenesToLoad);
+
     dispatch(loadGeneExpression(experimentId, genesToLoad, 'embedding'));
-  }, [geneData]);
+  }, [geneData, analysisTool]);
 
   const methodUppercase = method ? method.toUpperCase() : ' ';
 

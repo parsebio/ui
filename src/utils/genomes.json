@@ -44,6 +44,10 @@
     "species": "Candida Albicans"
   },
   {
+    "name": "C_sabeus",
+    "species": "Chlorocebus sabaeus (green monkey)"
+  },
+  {
     "name": "bColLiv1",
     "species": "Columba livia (rock pigeon)"
   },
@@ -288,12 +292,20 @@
     "species": "Custom Mus musculus (mouse) with tdTomato, CRE and WPRE"
   },
   {
+    "name": "GRCm39_td_cre_wpre_2",
+    "species": "Custom Mus musculus (mouse) with tdTomato, CRE and WPRE"
+  },
+  {
     "name": "GRCm39_CRE",
     "species": "Custom Mus musculus (mouse) with CRE"
   },
   {
     "name": "GRCm39_eGFP",
     "species": "Custom Mus musculus (mouse) with eGFP"
+  },
+  {
+    "name": "GRCm39_eGFP_mCherry",
+    "species": "Custom Mus musculus (mouse) with eGFP and mCherry"
   },
   {
     "name": "GRCm39_mCherry_iRFP",
@@ -338,6 +350,10 @@
   {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
+  },
+  {
+    "name": "Mmul_SIVmacL28_C1",
+    "species": "Custom Macaca mulatta"
   },
   {
     "name": "GRCm39-tdTom_TBrucei",
