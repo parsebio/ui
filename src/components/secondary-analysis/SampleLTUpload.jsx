@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, {
-  useState, useEffect,
+  useState, useEffect, useMemo,
 } from 'react';
 import readExcelFile from 'read-excel-file';
 import {
@@ -30,13 +30,12 @@ const SampleLTUpload = (props) => {
   const [file, setFile] = useState(null);
   const [invalidInputWarnings, setInvalidInputWarnings] = useState([]);
   const [sampleNames, setSampleNames] = useState([]);
-  // New state for pending file when duplicates exist and for showing review modal
+
   const [pendingFile, setPendingFile] = useState(null);
   const [duplicatesModalVisible, setDuplicatesModalVisible] = useState(false);
 
   const getSampleNamesFromExcel = async (excelFile) => {
     const sheets = await readExcelFile(excelFile, { getSheets: true });
-
     const rows = await readExcelFile(excelFile, { sheet: sheets[0].name });
 
     if (sheets.length !== 3
@@ -124,7 +123,7 @@ const SampleLTUpload = (props) => {
   const beginUpload = async () => {
     try {
       if (uploadedFileId) {
-      // Important to wait before creating the new file, otherwise we break a unique constraint
+        // Important to wait before creating the new file, otherwise we break a unique constraint
         await dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
       }
       await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, [file], [], 'samplelt', dispatch);
@@ -137,6 +136,15 @@ const SampleLTUpload = (props) => {
   const uploadButtonText = uploadedFileId ? 'Replace' : 'Upload';
   const buttonText = pendingFile && !file ? 'Review' : uploadButtonText;
 
+  // Memoize duplicate entries calculation to avoid recalculations on every render
+  const duplicateEntries = useMemo(() => {
+    const frequencyMap = sampleNames.reduce((acc, name) => {
+      acc[name] = (acc[name] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.entries(frequencyMap).filter(([, count]) => count > 1);
+  }, [sampleNames]);
+
   return (
     <>
       <Form
@@ -144,9 +152,7 @@ const SampleLTUpload = (props) => {
         size='middle'
         style={{ width: '100%', margin: '0 auto' }}
       >
-        <Form.Item
-          name='projectName'
-        >
+        <Form.Item name='projectName'>
           <Text>
             Upload your sample loading table in the .xlsm format.
             <br />
@@ -181,17 +187,14 @@ const SampleLTUpload = (props) => {
 
           {(file || invalidInputWarnings.length > 0) && (<><Divider orientation='center'>To upload</Divider></>)}
 
-          {(invalidInputWarnings.length > 0) && (
+          {invalidInputWarnings.length > 0 && (
             <div>
               {invalidInputWarnings.map((warning) => (
-                <center style={{ cursor: 'pointer' }}>
+                <center style={{ cursor: 'pointer' }} key={warning}>
                   <Text type='danger'>
-                    {' '}
                     <WarningOutlined />
-                    {' '}
                   </Text>
                   <Text>
-                    {' '}
                     {warning}
                     <br />
                   </Text>
@@ -202,21 +205,11 @@ const SampleLTUpload = (props) => {
           )}
           {file && (
             <center>
-              <List
-                size='small'
-                itemLayout='horizontal'
-                grid='{column: 4}'
-              >
-                <List.Item
-                  key={file.name}
-                  style={{ width: '100%' }}
-                >
+              <List size='small' itemLayout='horizontal' grid='{column: 4}'>
+                <List.Item key={file.name} style={{ width: '100%' }}>
                   <Space>
                     <CheckCircleTwoTone twoToneColor='#52c41a' />
-                    <Text
-                      ellipsis={{ tooltip: file.name }}
-                      style={{ width: '200px' }}
-                    >
+                    <Text ellipsis={{ tooltip: file.name }} style={{ width: '200px' }}>
                       {file.name}
                     </Text>
                     <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { setFile(false); }} />
@@ -283,34 +276,39 @@ const SampleLTUpload = (props) => {
       >
         <p>
           Duplicate sample names were detected. Duplicate entries will be merged to a single
-          sample during thepipeline run. To proceed, click Confirm.
+          sample during the pipeline run. To proceed, click Confirm.
           To upload a different sample loading table file, click Cancel.
         </p>
         <div style={{ maxHeight: 200, overflowY: 'auto' }}>
           <List
-            dataSource={sampleNames}
-            renderItem={(item) => {
-              const duplicateCount = sampleNames.filter((name) => name === item).length;
-              const isDuplicate = duplicateCount > 1;
-              return (
-                <List.Item key={item}>
-                  <Text style={isDuplicate ? { color: 'red', fontWeight: 'bold' } : {}}>
-                    {item}
-                    {' '}
-                    {isDuplicate && <WarningOutlined style={{ color: 'red' }} />}
-                  </Text>
-                </List.Item>
-              );
-            }}
+            dataSource={duplicateEntries}
+            renderItem={([name, count]) => (
+              <List.Item key={name}>
+                <Text style={{ color: 'black', fontWeight: 'bold' }}>
+                  <WarningOutlined style={{ color: 'red' }} />
+                  {' '}
+                  {name}
+                  {' '}
+                  -
+                  {' '}
+                  {count - 1}
+                  {' '}
+                  duplicate
+                  {count - 1 > 1 ? 's' : ''}
+                </Text>
+              </List.Item>
+            )}
           />
         </div>
       </Modal>
     </>
   );
 };
+
 SampleLTUpload.defaultProps = {
   uploadedFileId: null,
 };
+
 SampleLTUpload.propTypes = {
   secondaryAnalysisId: PropTypes.string.isRequired,
   renderUploadedFileDetails: PropTypes.func.isRequired,
@@ -318,4 +316,5 @@ SampleLTUpload.propTypes = {
   setFilesNotUploaded: PropTypes.func.isRequired,
   onDetailsChanged: PropTypes.func.isRequired,
 };
+
 export default SampleLTUpload;
