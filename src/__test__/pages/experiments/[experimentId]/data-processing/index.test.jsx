@@ -16,7 +16,7 @@ import initialCellSetsState from 'redux/reducers/cellSets/initialState';
 import initialSamplesState, { sampleTemplate } from 'redux/reducers/samples/initialState';
 
 import {
-  getBackendStatus, getFilterChanges, getSamples,
+  getBackendStatus, getFilterChanges, getSamples, getCellSets,
 } from 'redux/selectors';
 import '__test__/test-utils/setupTests';
 
@@ -75,6 +75,12 @@ const sampleIds = ['sample-1'];
 
 const initialExperimentState = generateExperimentSettingsMock(sampleIds);
 
+getCellSets.mockImplementation(() => () => ({
+  loading: false,
+  error: false,
+  hierarchy: {},
+  properties: { asd: 'asd' },
+}));
 getBackendStatus.mockImplementation(() => () => ({
   loading: false,
   error: false,
