@@ -125,7 +125,7 @@ const DataProcessingPage = ({ experimentId }) => {
 
   // cell sets get created after the filter doublets step
   useEffect(() => {
-    if (completedSteps.length > 4 && _.isEmpty(cellSets.properties)) {
+    if (completedSteps.includes('doubletScores') && _.isEmpty(cellSets.properties)) {
       dispatch(loadCellSets(experimentId));
     }
   }, [completedSteps]);
