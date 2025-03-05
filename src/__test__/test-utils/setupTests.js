@@ -15,7 +15,7 @@ jest.mock('components/data-exploration/DynamicVitessceWrappers', () => ({
   Heatmap: () => 'Mocked Heatmap',
 }));
 
-jest.mock('utils/work/downloadFromS3');
+jest.mock('utils/work/downloadFromS3AndParse');
 
 beforeAll(async () => {
   // Add stuff that needs to run once, before all tests

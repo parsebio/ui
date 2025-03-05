@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import * as setOperations from 'utils/setOperations';
+import CellSetsWorker from 'webWorkers/cellSets/CellSetsWorker';
 
 /**
  *
@@ -98,7 +99,7 @@ const withoutFilteredOutCells = (cellSets, originalCellIds) => {
 
 const allAreClusters = (cellSetsArr) => cellSetsArr.every(({ parentNodeKey }) => (parentNodeKey === 'louvain'));
 
-const countCells = (cellSetKeys, filteredCellIds, properties) => {
+const countCells = async (cellSetKeys, properties) => {
   const cellSetsArr = cellSetKeys
     .map((key) => properties[key])
     .filter(({ rootNode }) => !rootNode);
@@ -109,17 +110,7 @@ const countCells = (cellSetKeys, filteredCellIds, properties) => {
     return _.sumBy(cellSetsArr, 'cellIds.size');
   }
 
-  const selectedCells = new Set();
-
-  cellSetsArr.forEach((cellSet) => {
-    cellSet.cellIds.forEach((cellId) => {
-      if (filteredCellIds.current.has(cellId)) {
-        selectedCells.add(cellId);
-      }
-    });
-  });
-
-  return selectedCells.size;
+  return await CellSetsWorker.getInstance().countCells(cellSetKeys);
 };
 
 export {

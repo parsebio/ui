@@ -6,7 +6,7 @@ import fake from '__test__/test-utils/constants';
 import fetchWork from 'utils/work/fetchWork';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { makeStore } from 'redux/store';
-import downloadFromS3 from 'utils/work/downloadFromS3';
+import downloadFromS3AndParse from 'utils/work/downloadFromS3AndParse';
 import waitForWorkRequest from 'utils/work/waitForWorkRequest';
 import dispatchWorkRequest from 'utils/work/dispatchWorkRequest';
 
@@ -27,7 +27,7 @@ jest.mock('utils/work/dispatchWorkRequest', () => jest.fn().mockReturnValue({
   request: null,
 }));
 
-jest.mock('utils/work/downloadFromS3');
+jest.mock('utils/work/downloadFromS3AndParse');
 jest.mock('utils/work/waitForWorkRequest');
 
 const timeout = 10;
@@ -71,13 +71,13 @@ describe('fetchWork', () => {
     );
 
     expect(mockCacheGet).toHaveBeenCalledWith(ETag);
-    expect(downloadFromS3).not.toHaveBeenCalled();
+    expect(downloadFromS3AndParse).not.toHaveBeenCalled();
     expect(waitForWorkRequest).not.toHaveBeenCalled();
     expect(res).toMatchSnapshot();
   });
 
   it('returns data from S3 directly if available', async () => {
-    downloadFromS3.mockReturnValueOnce({
+    downloadFromS3AndParse.mockReturnValueOnce({
       S3Data: true,
     });
 
@@ -90,7 +90,7 @@ describe('fetchWork', () => {
     );
 
     expect(mockCacheGet).toHaveBeenCalledWith(ETag);
-    expect(downloadFromS3.mock.calls).toMatchSnapshot();
+    expect(downloadFromS3AndParse.mock.calls).toMatchSnapshot();
     expect(waitForWorkRequest).not.toHaveBeenCalled();
     expect(res).toMatchSnapshot();
   });
@@ -116,13 +116,13 @@ describe('fetchWork', () => {
     );
 
     expect(mockCacheGet).toHaveBeenCalledWith(ETag);
-    expect(downloadFromS3.mock.calls).toMatchSnapshot();
+    expect(downloadFromS3AndParse.mock.calls).toMatchSnapshot();
     expect(waitForWorkRequest.mock.calls).toMatchSnapshot();
     expect(res).toMatchSnapshot();
   });
 
   it('does not use cache for gene expression request', async () => {
-    downloadFromS3.mockReturnValueOnce({
+    downloadFromS3AndParse.mockReturnValueOnce({
       S3Data: true,
     });
 
@@ -136,7 +136,7 @@ describe('fetchWork', () => {
 
     expect(mockCacheGet).not.toHaveBeenCalled();
     expect(mockCacheSet).not.toHaveBeenCalled();
-    expect(downloadFromS3.calls).toMatchSnapshot();
+    expect(downloadFromS3AndParse.calls).toMatchSnapshot();
     expect(waitForWorkRequest).not.toHaveBeenCalled();
     expect(res).toMatchSnapshot();
   });

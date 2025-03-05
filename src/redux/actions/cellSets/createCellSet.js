@@ -8,6 +8,7 @@ import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import getCellSets from 'redux/selectors/cellSets/getCellSets';
+import CellSetsWorker from 'webWorkers/cellSets/CellSetsWorker';
 
 const createCellSetJsonMerger = (newCellSet, cellClassKey) => (
   [{
@@ -69,6 +70,8 @@ const createCellSet = (experimentId, name, color, cellIdsSet) => async (dispatch
     payload: dataForRedux,
   });
 
+  const cellSetsWorkerPromise = CellSetsWorker.getInstance().cellSetCreated(dataForRedux);
+
   try {
     await fetchAPI(
       `/v2/experiments/${experimentId}/cellSets`,
@@ -82,6 +85,8 @@ const createCellSet = (experimentId, name, color, cellIdsSet) => async (dispatch
         ),
       },
     );
+
+    await cellSetsWorkerPromise;
 
     pushNotificationMessage('info', endUserMessages.SUCCESS_NEW_CLUSTER_CREATED);
   } catch (e) {

@@ -2,7 +2,7 @@ import { isBrowser } from 'utils/deploymentInfo';
 
 import cache from 'utils/cache';
 import dispatchWorkRequest from 'utils/work/dispatchWorkRequest';
-import downloadFromS3 from 'utils/work/downloadFromS3';
+import downloadFromS3AndParse from 'utils/work/downloadFromS3AndParse';
 import waitForWorkRequest from 'utils/work/waitForWorkRequest';
 
 // retrieveData will try to get the data for the given experimentId and ETag from
@@ -28,7 +28,7 @@ const retrieveData = async (experimentId,
 
   // 2. Check if data is cached in S3 so we can download from the signed URL (no worker)
   if (signedUrl) {
-    return await downloadFromS3(body.name, signedUrl);
+    return await downloadFromS3AndParse(body.name, signedUrl);
   }
 
   // 3. If we don't have signedURL, wait for the worker to send us the data via
@@ -47,7 +47,7 @@ const retrieveData = async (experimentId,
     return data;
   }
   // 3.2. The worker send a signedUrl to download the data
-  return await downloadFromS3(body.name, workerSignedUrl);
+  return await downloadFromS3AndParse(body.name, workerSignedUrl);
 };
 
 const fetchWork = async (
