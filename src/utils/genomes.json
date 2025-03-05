@@ -304,6 +304,10 @@
     "species": "Custom Mus musculus (mouse) with eGFP"
   },
   {
+    "name": "GRCm39_eGFP_mCherry",
+    "species": "Custom Mus musculus (mouse) with eGFP and mCherry"
+  },
+  {
     "name": "GRCm39_mCherry_iRFP",
     "species": "Custom Mus musculus (mouse)"
   },
@@ -346,6 +350,10 @@
   {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
+  },
+  {
+    "name": "Mmul_SIVmacL28_C1",
+    "species": "Custom Macaca mulatta"
   },
   {
     "name": "GRCm39-tdTom_TBrucei",
