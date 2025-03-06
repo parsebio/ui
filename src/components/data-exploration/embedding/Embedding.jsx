@@ -322,8 +322,6 @@ const Embedding = (props) => {
         onClick={clearCellHighlight}
         onKeyPress={clearCellHighlight}
       >
-        <div>PLACEHOLDER</div>
-        {/* // Disable 1 */}
         {renderExpressionView()}
         {
           data ? (
