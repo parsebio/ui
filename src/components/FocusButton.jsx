@@ -25,8 +25,6 @@ const FocusButton = (props) => {
     // Lose focus so the button changes color from blue to black when you click on it.
     buttonRef.current.blur();
 
-    // dispatch(loadGeneExpression(experimentId, [lookupKey], 'embedding'));
-
     dispatch(setCellInfoFocus(experimentId, store, lookupKey));
   };
 
