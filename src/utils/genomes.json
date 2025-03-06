@@ -180,6 +180,10 @@
     "species": "Scyliorhinus canicula (smaller spotted catshark)"
   },
   {
+    "name": "fSpaAur1-1",
+    "species": "Sparus aurata (gilthead seabream fish)"
+  },
+  {
     "name": "Sscrofa11",
     "species": "Sus scrofa (Pig)"
   },
@@ -237,7 +241,11 @@
   },
   {
     "name": "GRCh38_H3N2",
-    "species": "Custom Homo sapiens (Human) with H3N2"
+    "species": "Custom Homo sapiens (human) with H3N2"
+  },
+  {
+    "name": "GRCh38_HIV",
+    "species": "Custom Homo sapiens (human) with HIV"
   },
   {
     "name": "GRCh38_HBX2",
@@ -249,7 +257,7 @@
   },
   {
     "name": "GRCh38_SARS",
-    "species": "Custom Homo sapiens (Human) with SARS-CoV-2"
+    "species": "Custom Homo sapiens (human) with SARS-CoV-2"
   },
   {
     "name": "GRCH38_KHSV_GFP_HIV",
