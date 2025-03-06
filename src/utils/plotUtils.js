@@ -53,17 +53,17 @@ const renderCellSetColors = (rootKey, cellSetHierarchy, cellSetProperties) => {
   return colors;
 };
 
-const colorByGeneExpression = (truncatedExpression, min, max = 4) => {
+const scaleByGeneExpression = (truncatedExpression, min, max = 4) => {
   // eslint-disable-next-line no-param-reassign
   if (max === 0) max = 4;
 
   const scaleFunction = vega.scale('sequential')()
     .domain([min, max])
     .interpolator(colorInterpolator);
-  return Object.fromEntries(truncatedExpression.map(
-    (expressionValue, cellId) => [cellId, cssRgbToRgb(scaleFunction(expressionValue))]
-    ,
-  ));
+
+  truncatedExpression.applyModifier((value) => cssRgbToRgb(scaleFunction(value)));
+
+  return truncatedExpression;
 };
 
 const convertCellsData = (results, hidden, properties) => {
@@ -105,7 +105,7 @@ export {
   convertCellsData,
   updateStatus,
   clearPleaseWait,
-  colorByGeneExpression,
+  scaleByGeneExpression,
   colorInterpolator,
   hexToRgb,
   convertRange,

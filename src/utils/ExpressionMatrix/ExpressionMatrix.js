@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { SparseMatrix } from 'mathjs';
 
 import { appendColumns, getColumn } from 'utils/ExpressionMatrix/sparseMatrixOperations';
+import SparseMap from 'utils/SparseMap';
 
 class ExpressionMatrix {
   constructor() {
@@ -20,15 +21,19 @@ class ExpressionMatrix {
   }
 
   getRawExpression(geneSymbol, cellIndexes = undefined) {
-    return this.#getExpression(geneSymbol, cellIndexes, this.rawGeneExpressions);
+    return this.#getDensifiedExpression(geneSymbol, cellIndexes, this.rawGeneExpressions);
   }
 
   getTruncatedExpression(geneSymbol, cellIndexes = undefined) {
-    return this.#getExpression(geneSymbol, cellIndexes, this.truncatedGeneExpressions);
+    return this.#getDensifiedExpression(geneSymbol, cellIndexes, this.truncatedGeneExpressions);
   }
 
   getZScore(geneSymbol, cellIndexes = undefined) {
-    return this.#getExpression(geneSymbol, cellIndexes, this.zScore);
+    return this.#getDensifiedExpression(geneSymbol, cellIndexes, this.zScore);
+  }
+
+  getTruncatedExpressionSparse(geneSymbol) {
+    return this.#getExpressionSparse(geneSymbol, undefined, this.truncatedGeneExpressions);
   }
 
   getStats(geneSymbol) {
@@ -159,10 +164,28 @@ class ExpressionMatrix {
 
     const result = getColumn(geneIndex, matrix, cellIndexes);
 
+    return result;
+  }
+
+  #getDensifiedExpression = (geneSymbol, cellIndexes, matrix) => {
+    const result = this.#getExpression(geneSymbol, cellIndexes, matrix);
+
     // If it's a single number wrap in an array
     if (typeof result === 'number') return [result];
+
+    console.log('resultDEbug');
+    console.log(result);
     // If its a matrix transform it to an array
     return result.valueOf().flat();
+  }
+
+  #getExpressionSparse = (geneSymbol, cellIndexes, matrix) => {
+    const result = this.#getExpression(geneSymbol, cellIndexes, matrix);
+
+    // If it's a single number just return a simple Map
+    if (typeof result === 'number') return new SparseMap([[cellIndexes[0], result]]);
+
+    return new SparseMap(result);
   }
 }
 

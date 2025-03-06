@@ -25,7 +25,7 @@ import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 import {
   convertCellsData,
   renderCellSetColors,
-  colorByGeneExpression,
+  scaleByGeneExpression,
   colorInterpolator,
 } from 'utils/plotUtils';
 import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
@@ -114,7 +114,9 @@ const Embedding = (props) => {
 
       // Cell sets are easy, just return the appropriate color and set them up.
       case 'cellSets': {
-        setCellColors(renderCellSetColors(key, cellSetHierarchy, cellSetProperties));
+        const cellSetColors = renderCellSetColors(key, cellSetHierarchy, cellSetProperties);
+
+        setCellColors(new Map(Object.entries(cellSetColors)));
         setCellInfoVisible(false);
         return;
       }
@@ -134,10 +136,17 @@ const Embedding = (props) => {
       return;
     }
 
-    const truncatedExpression = expressionMatrix.getTruncatedExpression(focusData.key);
+    const truncatedExpression = expressionMatrix.getTruncatedExpressionSparse(focusData.key);
     const { truncatedMin, truncatedMax } = expressionMatrix.getStats(focusData.key);
 
-    setCellColors(colorByGeneExpression(truncatedExpression, truncatedMin, truncatedMax));
+    const cellExpressionColors = scaleByGeneExpression(
+      truncatedExpression, truncatedMin, truncatedMax,
+    );
+
+    console.log('cellExpressionColorsDebug');
+    console.log(cellExpressionColors);
+
+    setCellColors(cellExpressionColors);
   }, [focusData.key, expressionLoading]);
 
   const [convertedCellsData, setConvertedCellsData] = useState();
@@ -221,8 +230,6 @@ const Embedding = (props) => {
     }
   }, []);
 
-  const cellColorsForVitessce = useMemo(() => new Map(Object.entries(cellColors)), [cellColors]);
-
   const setViewState = useCallback(({ zoom, target }) => {
     setCellRadius(cellRadiusFromZoom(zoom));
 
@@ -258,6 +265,9 @@ const Embedding = (props) => {
     if (focusData.store === 'genes') {
       const colorScale = vega.scale('sequential')()
         .interpolator(colorInterpolator);
+
+      console.log('colorScaleDebug');
+      console.log(colorScale);
 
       return (
         <div>
@@ -312,6 +322,8 @@ const Embedding = (props) => {
         onClick={clearCellHighlight}
         onKeyPress={clearCellHighlight}
       >
+        <div>PLACEHOLDER</div>
+        {/* // Disable 1 */}
         {renderExpressionView()}
         {
           data ? (
@@ -328,7 +340,7 @@ const Embedding = (props) => {
               updateViewInfo={updateViewInfo}
               obsEmbedding={convertedCellsData?.obsEmbedding}
               obsEmbeddingIndex={convertedCellsData?.obsEmbeddingIndex}
-              cellColors={cellColorsForVitessce}
+              cellColors={cellColors}
               setCellSelection={setCellsSelection}
               getExpressionValue={getExpressionValue}
               getCellIsSelected={getCellIsSelected}

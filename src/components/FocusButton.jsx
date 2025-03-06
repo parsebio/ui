@@ -9,6 +9,7 @@ import {
 
 import { setCellInfoFocus } from 'redux/actions/cellInfo';
 import { brandColors } from 'utils/constants';
+import { loadGeneExpression } from 'redux/actions/genes';
 
 const FocusButton = (props) => {
   const { store, lookupKey, experimentId } = props;
@@ -24,6 +25,8 @@ const FocusButton = (props) => {
 
     // Lose focus so the button changes color from blue to black when you click on it.
     buttonRef.current.blur();
+
+    // dispatch(loadGeneExpression(experimentId, [lookupKey], 'embedding'));
 
     dispatch(setCellInfoFocus(experimentId, store, lookupKey));
   };
