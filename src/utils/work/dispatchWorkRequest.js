@@ -8,7 +8,6 @@ const DISABLE_UNIQUE_KEYS = [
 ];
 
 const getCacheUniquenessKey = (taskName, environment) => {
-  return null;
   // Disable cache in development or if localStorage says so
   // Do not disable for embeddings requests because download seurat & trajectory depend on that ETag
   if (
