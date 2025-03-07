@@ -17,8 +17,8 @@ class SparseMap extends Map {
     this.#sparsifiedValue = sparsifiedValue;
 
     this.#keys = keyAsString
-      ? new Set(Array.from(definedKeys).map((key) => key.toString()))
-      : definedKeys;
+      ? new Set(definedKeys.map((key) => key.toString()))
+      : new Set(definedKeys);
 
     // sparseRow can come in format for a Map constructor, in that case just store inside the map
     if (Array.isArray(sparseRow)) {
