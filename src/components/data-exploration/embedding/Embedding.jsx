@@ -29,6 +29,7 @@ import {
   colorInterpolator,
 } from 'utils/plotUtils';
 import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
+import { unionByCellClass } from 'utils/cellSetOperations';
 
 const Scatterplot = dynamic(
   () => import('../DynamicVitessceWrappers').then((mod) => mod.Scatterplot),
@@ -84,6 +85,14 @@ const Embedding = (props) => {
     return dataIsLoaded || geneLoadedIfNecessary;
   });
 
+  const filteredCellIdsRef = useRef(new Set());
+
+  useEffect(() => {
+    if (cellSets.accessible && filteredCellIdsRef.current.size === 0) {
+      filteredCellIdsRef.current = unionByCellClass('louvain', cellSetHierarchy, cellSetProperties);
+    }
+  }, [cellSets.accessible, cellSets.hierarchy]);
+
   // Load embedding settings if they aren't already.
   useEffect(() => {
     if (!embeddingSettings) {
@@ -136,7 +145,9 @@ const Embedding = (props) => {
       return;
     }
 
-    const truncatedExpression = expressionMatrix.getTruncatedExpressionSparse(focusData.key);
+    const truncatedExpression = expressionMatrix.getTruncatedExpressionSparse(
+      focusData.key, filteredCellIdsRef.current,
+    );
     const { truncatedMin, truncatedMax } = expressionMatrix.getStats(focusData.key);
 
     const cellExpressionColors = scaleByGeneExpression(
@@ -299,6 +310,9 @@ const Embedding = (props) => {
 
     return <div />;
   };
+
+  console.log('cellColorsDebug');
+  console.log(cellColors);
 
   return (
     <>

@@ -32,8 +32,8 @@ class ExpressionMatrix {
     return this.#getDensifiedExpression(geneSymbol, cellIndexes, this.zScore);
   }
 
-  getTruncatedExpressionSparse(geneSymbol) {
-    return this.#getExpressionSparse(geneSymbol, undefined, this.truncatedGeneExpressions);
+  getTruncatedExpressionSparse(geneSymbol, cellIndexesSet, keyAsString = false) {
+    return this.#getExpressionSparse(geneSymbol, cellIndexesSet, this.truncatedGeneExpressions, keyAsString);
   }
 
   getStats(geneSymbol) {
@@ -173,19 +173,23 @@ class ExpressionMatrix {
     // If it's a single number wrap in an array
     if (typeof result === 'number') return [result];
 
-    console.log('resultDEbug');
-    console.log(result);
     // If its a matrix transform it to an array
     return result.valueOf().flat();
   }
 
-  #getExpressionSparse = (geneSymbol, cellIndexes, matrix) => {
-    const result = this.#getExpression(geneSymbol, cellIndexes, matrix);
+  #getExpressionSparse = (geneSymbol, cellIndexesSet, matrix, keyAsString) => {
+    const result = this.#getExpression(geneSymbol, Array.from(cellIndexesSet), matrix);
+
+    console.log('resultDebug');
+    console.log(result);
 
     // If it's a single number just return a simple Map
-    if (typeof result === 'number') return new SparseMap([[cellIndexes[0], result]]);
+    if (typeof result === 'number') return new SparseMap([[Array.from(cellIndexesSet)[0], result]]);
 
-    return new SparseMap(result);
+    console.log('resultDebug');
+    console.log(result);
+
+    return new SparseMap(result, cellIndexesSet, keyAsString);
   }
 }
 

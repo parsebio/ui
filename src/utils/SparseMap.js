@@ -4,41 +4,81 @@
 // Important, the "has" method shouldn't be used, it always returns true.
 // This is to have a smaller footprint in memory
 // because otherwise we'd need to store a set of which keys it does have
-class SparseMap {
-  constructor(sparseRow, sparsifiedValue = 0) {
-    this.sparsifiedValue = sparsifiedValue;
+class SparseMap extends Map {
+  #keys
+
+  #sparsifiedValue
+
+  #map
+
+  constructor(sparseRow, definedKeys, keyAsString, sparsifiedValue = 0) {
+    super();
+
+    this.#sparsifiedValue = sparsifiedValue;
+
+    this.#keys = keyAsString
+      ? new Set(Array.from(definedKeys).map((key) => key.toString()))
+      : definedKeys;
 
     // sparseRow can come in format for a Map constructor, in that case just store inside the map
     if (Array.isArray(sparseRow)) {
-      this.map = new Map(sparseRow);
+      this.#map = new Map(sparseRow);
       return;
     }
 
     // Assume sparseRow's format is a compressed column matrix of one column
-    this.map = new Map();
+    this.#map = new Map();
 
     sparseRow._index.forEach((key, i) => {
       const value = sparseRow._values[i];
-      this.map.set(key, value);
+
+      const keyToSet = keyAsString ? key.toString() : key;
+      this.#map.set(keyToSet, value);
     });
   }
 
-  // eslint-disable-next-line no-unused-vars, class-methods-use-this
-  has(_) {
-    console.warn("This method shouldn't be used");
-    return true;
+  get size() {
+    return this.#keys.size;
+  }
+
+  has(key) {
+    return this.#keys.has(key);
   }
 
   get(key) {
-    return this.map.get(key) ?? this.sparsifiedValue;
+    return this.#map.get(key) ?? this.#sparsifiedValue;
   }
 
   applyModifier(modifier) {
-    this.map.forEach((value, key) => {
-      this.map.set(key, modifier(value));
+    this.#map.forEach((value, key) => {
+      this.#map.set(key, modifier(value));
     });
 
-    this.sparsifiedValue = modifier(this.sparsifiedValue);
+    this.#sparsifiedValue = modifier(this.#sparsifiedValue);
+  }
+
+  forEach(callbackfn) {
+    this.get().forEach((key) => {
+      callbackfn(this.get(key), key, this);
+    });
+  }
+
+  keys() {
+    return this.#keys;
+  }
+
+  // Implement the iterable protocol
+  [Symbol.iterator]() {
+    const iterator = this.#keys.values();
+    return {
+      next: () => {
+        const { value, done } = iterator.next();
+        if (done) {
+          return { value: undefined, done: true };
+        }
+        return { value: [value, this.get(value)], done: false };
+      },
+    };
   }
 }
 
