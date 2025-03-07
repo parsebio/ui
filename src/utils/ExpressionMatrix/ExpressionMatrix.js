@@ -178,16 +178,12 @@ class ExpressionMatrix {
   }
 
   #getExpressionSparse = (geneSymbol, cellIndexesSet, matrix, keyAsString) => {
-    const result = this.#getExpression(geneSymbol, Array.from(cellIndexesSet), matrix);
+    const cellIndexes = Array.from(cellIndexesSet);
 
-    console.log('resultDebug');
-    console.log(result);
+    const result = this.#getExpression(geneSymbol, cellIndexes, matrix);
 
     // If it's a single number just return a simple Map
-    if (typeof result === 'number') return new SparseMap([[Array.from(cellIndexesSet)[0], result]]);
-
-    console.log('resultDebug');
-    console.log(result);
+    if (typeof result === 'number') return new SparseMap([[cellIndexes[0], result]]);
 
     return new SparseMap(result, cellIndexesSet, keyAsString);
   }

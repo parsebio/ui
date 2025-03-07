@@ -146,18 +146,16 @@ const Embedding = (props) => {
     }
 
     const truncatedExpression = expressionMatrix.getTruncatedExpressionSparse(
-      focusData.key, filteredCellIdsRef.current,
+      focusData.key, Array.from(filteredCellIdsRef.current).sort((a, b) => a - b),
     );
+
     const { truncatedMin, truncatedMax } = expressionMatrix.getStats(focusData.key);
 
     const cellExpressionColors = scaleByGeneExpression(
       truncatedExpression, truncatedMin, truncatedMax,
     );
 
-    console.log('cellExpressionColorsDebug');
-    console.log(cellExpressionColors);
-
-    setCellColors(cellExpressionColors);
+    setCellColors(cellExpressionColors.densify());
   }, [focusData.key, expressionLoading]);
 
   const [convertedCellsData, setConvertedCellsData] = useState();
@@ -277,9 +275,6 @@ const Embedding = (props) => {
       const colorScale = vega.scale('sequential')()
         .interpolator(colorInterpolator);
 
-      console.log('colorScaleDebug');
-      console.log(colorScale);
-
       return (
         <div>
           <label htmlFor='continuous data name'>
@@ -310,9 +305,6 @@ const Embedding = (props) => {
 
     return <div />;
   };
-
-  console.log('cellColorsDebug');
-  console.log(cellColors);
 
   return (
     <>

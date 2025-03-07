@@ -30,9 +30,10 @@ class SparseMap extends Map {
     this.#map = new Map();
 
     sparseRow._index.forEach((key, i) => {
+      const definedKey = definedKeys[key];
       const value = sparseRow._values[i];
 
-      const keyToSet = keyAsString ? key.toString() : key;
+      const keyToSet = keyAsString ? definedKey.toString() : definedKey;
       this.#map.set(keyToSet, value);
     });
   }
@@ -79,6 +80,16 @@ class SparseMap extends Map {
         return { value: [value, this.get(value)], done: false };
       },
     };
+  }
+
+  densify() {
+    const denseMap = new Map();
+
+    this.#keys.sort((a, b) => a - b).forEach((key) => {
+      denseMap.set(key.toString(), this.get(key));
+    });
+
+    return denseMap;
   }
 }
 
