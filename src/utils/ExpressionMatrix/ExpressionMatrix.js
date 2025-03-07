@@ -33,7 +33,12 @@ class ExpressionMatrix {
   }
 
   getTruncatedExpressionSparse(geneSymbol, cellIndexesSet, keyAsString = false) {
-    return this.#getExpressionSparse(geneSymbol, cellIndexesSet, this.truncatedGeneExpressions, keyAsString);
+    return this.#getExpressionSparse(
+      geneSymbol,
+      cellIndexesSet,
+      this.truncatedGeneExpressions,
+      keyAsString,
+    );
   }
 
   getStats(geneSymbol) {
