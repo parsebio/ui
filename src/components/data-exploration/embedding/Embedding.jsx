@@ -146,7 +146,7 @@ const Embedding = (props) => {
     }
 
     const truncatedExpression = expressionMatrix.getTruncatedExpressionSparse(
-      focusData.key, Array.from(filteredCellIdsRef.current).sort((a, b) => a - b),
+      focusData.key, Array.from(filteredCellIdsRef.current).sort((a, b) => a - b), true,
     );
 
     const { truncatedMin, truncatedMax } = expressionMatrix.getStats(focusData.key);
@@ -155,7 +155,7 @@ const Embedding = (props) => {
       truncatedExpression, truncatedMin, truncatedMax,
     );
 
-    setCellColors(cellExpressionColors.densify());
+    setCellColors(cellExpressionColors);
   }, [focusData.key, expressionLoading]);
 
   const [convertedCellsData, setConvertedCellsData] = useState();
