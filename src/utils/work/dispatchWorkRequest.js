@@ -52,6 +52,8 @@ const dispatchWorkRequest = async (
   // this should be removed if we make each request run in a different worker
   const workerTimeoutDate = getWorkerTimeout(taskName, timeout);
 
+  const requestTime = dayjs().toISOString();
+
   const { environment } = getState().networkResources;
   const cacheUniquenessKey = getCacheUniquenessKey(taskName, environment);
 
@@ -61,9 +63,9 @@ const dispatchWorkRequest = async (
   const request = {
     experimentId,
     timeout: workerTimeoutDate,
+    requestTime,
     body,
     requestProps,
-
   };
 
   const { data: { ETag, signedUrl } } = await fetchAPI(
