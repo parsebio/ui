@@ -175,6 +175,8 @@ class ExpressionMatrix {
   #getDensifiedExpression = (geneSymbol, cellIndexes, matrix) => {
     const result = this.#getExpression(geneSymbol, cellIndexes, matrix);
 
+    if (_.isNil(result) || _.isEmpty(result)) return result;
+
     // If it's a single number wrap in an array
     if (typeof result === 'number') return [result];
 
@@ -184,6 +186,8 @@ class ExpressionMatrix {
 
   #getExpressionSparse = (geneSymbol, cellIndexes, matrix, keyAsString) => {
     const result = this.#getExpression(geneSymbol, cellIndexes, matrix);
+
+    if (_.isNil(result) || _.isEmpty(result)) return new SparseMap([]);
 
     // If it's a single number just return a simple Map
     if (typeof result === 'number') return new SparseMap([[cellIndexes[0], result]]);
