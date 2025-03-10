@@ -59,7 +59,7 @@ class SparseMap extends Map {
   }
 
   forEach(callbackfn) {
-    this.get().forEach((key) => {
+    this.#keys.forEach((key) => {
       callbackfn(this.get(key), key, this);
     });
   }
@@ -80,16 +80,6 @@ class SparseMap extends Map {
         return { value: [value, this.get(value)], done: false };
       },
     };
-  }
-
-  densify() {
-    const denseMap = new Map();
-
-    this.#keys.sort((a, b) => a - b).forEach((key) => {
-      denseMap.set(key.toString(), this.get(key));
-    });
-
-    return denseMap;
   }
 }
 
