@@ -175,10 +175,10 @@ class ExpressionMatrix {
   #getDensifiedExpression = (geneSymbol, cellIndexes, matrix) => {
     const result = this.#getExpression(geneSymbol, cellIndexes, matrix);
 
-    if (_.isNil(result) || _.isEmpty(result)) return result;
-
     // If it's a single number wrap in an array
     if (typeof result === 'number') return [result];
+
+    if (_.isNil(result) || _.isEmpty(result)) return result;
 
     // If its a matrix transform it to an array
     return result.valueOf().flat();
