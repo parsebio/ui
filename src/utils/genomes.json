@@ -240,6 +240,10 @@
     "species": "Custom Homo sapiens (human) with EBV"
   },
   {
+    "name": "GRCh38_Emory",
+    "species": "Custom Homo sapiens"
+  },
+  {
     "name": "GRCh38_H3N2",
     "species": "Custom Homo sapiens (human) with H3N2"
   },
@@ -290,6 +294,10 @@
   {
     "name": "GRCm39-GFPh",
     "species": "Custom Mus musculus (mouse) with  GFPh"
+  },
+  {
+    "name": "GRCm39_MCLab",
+    "species": "Custom Mus musculus (mouse)"
   },
   {
     "name": "mm39-tdTom",
