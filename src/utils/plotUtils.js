@@ -53,7 +53,7 @@ const renderCellSetColors = (rootKey, cellSetHierarchy, cellSetProperties) => {
   return colors;
 };
 
-const scaleByGeneExpression = (truncatedExpression, min, max = 4) => {
+const colorByGeneExpression = (truncatedExpression, min, max = 4) => {
   // eslint-disable-next-line no-param-reassign
   if (max === 0) max = 4;
 
@@ -105,7 +105,7 @@ export {
   convertCellsData,
   updateStatus,
   clearPleaseWait,
-  scaleByGeneExpression,
+  colorByGeneExpression,
   colorInterpolator,
   hexToRgb,
   convertRange,

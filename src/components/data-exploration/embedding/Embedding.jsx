@@ -25,7 +25,7 @@ import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 import {
   convertCellsData,
   renderCellSetColors,
-  scaleByGeneExpression,
+  colorByGeneExpression,
   colorInterpolator,
 } from 'utils/plotUtils';
 import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
@@ -153,7 +153,7 @@ const Embedding = (props) => {
 
     const { truncatedMin, truncatedMax } = expressionMatrix.getStats(focusData.key);
 
-    const cellExpressionColors = scaleByGeneExpression(
+    const cellExpressionColors = colorByGeneExpression(
       truncatedExpression, truncatedMin, truncatedMax,
     );
 
