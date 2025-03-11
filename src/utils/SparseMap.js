@@ -65,7 +65,6 @@ class SparseMap extends Map {
     return this.#keys;
   }
 
-  // Implement the iterable protocol
   [Symbol.iterator]() {
     const iterator = this.#keys.values();
     return {
