@@ -51,7 +51,7 @@ describe('Embedding', () => {
         },
         cluster1: {
           color: '#ff0000',
-          cellIds: new Set([2, 3]),
+          cellIds: new Set([1, 2]),
         },
       },
       hierarchy: [
@@ -110,8 +110,8 @@ describe('Embedding', () => {
       new Map(
         Object.entries({
           // cell #2 and #3 are in louvain which is currently in focus. They should be red.
+          1: [255, 0, 0],
           2: [255, 0, 0],
-          3: [255, 0, 0],
         }),
       ),
 

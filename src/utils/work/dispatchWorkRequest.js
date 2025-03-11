@@ -12,7 +12,7 @@ const getCacheUniquenessKey = (taskName, environment) => {
   // Do not disable for embeddings requests because download seurat & trajectory depend on that ETag
   if (
     environment !== Environment.PRODUCTION
-    && (localStorage.getItem('disableCache') === 'true' || environment === Environment.DEVELOPMENT)
+    && (localStorage.getItem('disableCache') === 'true')
     && !DISABLE_UNIQUE_KEYS.includes(taskName)
   ) {
     return Math.random();
@@ -52,6 +52,8 @@ const dispatchWorkRequest = async (
   // this should be removed if we make each request run in a different worker
   const workerTimeoutDate = getWorkerTimeout(taskName, timeout);
 
+  const requestTime = dayjs().toISOString();
+
   const { environment } = getState().networkResources;
   const cacheUniquenessKey = getCacheUniquenessKey(taskName, environment);
 
@@ -61,9 +63,9 @@ const dispatchWorkRequest = async (
   const request = {
     experimentId,
     timeout: workerTimeoutDate,
+    requestTime,
     body,
     requestProps,
-
   };
 
   const { data: { ETag, signedUrl } } = await fetchAPI(
