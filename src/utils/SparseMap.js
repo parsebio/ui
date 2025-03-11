@@ -1,9 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
-// This implements a very basic and sparse version of the Map
-// Important, the "has" method shouldn't be used, it always returns true.
-// This is to have a smaller footprint in memory
-// because otherwise we'd need to store a set of which keys it does have
+// This implements a sparse version of the Map
 class SparseMap extends Map {
   #keys
 
