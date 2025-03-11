@@ -12,7 +12,7 @@ const getCacheUniquenessKey = (taskName, environment) => {
   // Do not disable for embeddings requests because download seurat & trajectory depend on that ETag
   if (
     environment !== Environment.PRODUCTION
-    && (localStorage.getItem('disableCache') === 'true' || environment === Environment.DEVELOPMENT)
+    && (localStorage.getItem('disableCache') === 'true')
     && !DISABLE_UNIQUE_KEYS.includes(taskName)
   ) {
     return Math.random();
