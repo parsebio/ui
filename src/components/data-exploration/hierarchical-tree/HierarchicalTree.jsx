@@ -112,6 +112,7 @@ const HierarchicalTree = (props) => {
         onNodeUpdate(modified.key, { name: e });
       }}
       onDelete={() => {
+        onCheck(checkedKeys);
         onNodeDelete(modified.key, modified.rootNode);
       }}
       value={modified.name}
