@@ -18,6 +18,12 @@ import Loader from 'components/Loader';
 import { getBackendStatus } from 'redux/selectors';
 import handleError from 'utils/http/handleError';
 import downloadProcessedMatrix from 'utils/extraActionCreators/downloadProcessedMatrix';
+import { analysisTools } from 'utils/constants';
+
+const processedMatrixTextByTool = {
+  [analysisTools.SEURAT]: 'Processed Seurat object (.rds)',
+  [analysisTools.SCANPY]: 'Processed Anndata object (.h5ad)',
+};
 
 const DownloadDataButton = () => {
   const dispatch = useDispatch();
@@ -79,6 +85,8 @@ const DownloadDataButton = () => {
     }
   };
 
+  const { analysisTool } = experimentSettings.processing.dataIntegration ?? {};
+
   const menuItems = [
     {
       key: 'download-processed-seurat',
@@ -105,7 +113,7 @@ const DownloadDataButton = () => {
           placement='left'
         >
           <Space>
-            Processed Seurat object (.rds)
+            {processedMatrixTextByTool[analysisTool]}
             {downloadingProcessedSeurat && <ClipLoader size={20} color='#8f0b10' />}
           </Space>
         </Tooltip>
