@@ -28,7 +28,8 @@ const CellSetsCountDisplay = (props) => {
   }, [accessible, hierarchy]);
 
   useEffect(() => {
-    const cellsCount = countCells(selectedCellSetKeys, filteredCellIds, properties);
+    const validKeys = selectedCellSetKeys.filter((key) => properties[key]); // Remove deleted keys
+    const cellsCount = countCells(validKeys, filteredCellIds, properties);
 
     setSelectedCellsCount(cellsCount);
   }, [selectedCellSetKeys, properties]);
