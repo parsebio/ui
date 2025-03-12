@@ -80,13 +80,6 @@ const CellSetsTool = (props) => {
       const newHeight = (louvainClusters.length + customClusters.length) * 30 + 200;
       animateScroll.scrollTo(newHeight, { containerId: 'cell-set-tool-container' });
     }
-
-    if (selectedCellSetKeys.length > 0) {
-      // Filter out keys that no longer exist (case where they were deleted)
-      const validKeys = selectedCellSetKeys.filter((key) => properties[key]);
-
-      setSelectedCellSetKeys(validKeys);
-    }
   }, [hierarchy]);
 
   const onNodeUpdate = useCallback((key, data) => {
