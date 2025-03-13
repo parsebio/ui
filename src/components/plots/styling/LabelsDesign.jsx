@@ -40,6 +40,34 @@ const LabelsDesign = (props) => {
           marks={{ 0: minLabelSize, 50: maxLabelSize }}
         />
       </Form.Item>
+      <p><strong>Overlap</strong></p>
+      <Form.Item
+        label=''
+      >
+        <Radio.Group
+          onChange={(e) => onUpdate({ labels: { overlapAvoid: { enabled: e.target.value } } })}
+          value={config.labels.overlapAvoid?.enabled ?? false}
+        >
+          <Radio value>Avoid</Radio>
+          <Radio value={false}>Ignore</Radio>
+        </Radio.Group>
+        <Form.Item
+          label='Strength'
+          style={{ marginTop: '10px' }}
+        >
+          <Slider
+            value={newConfig.labels.overlapAvoid.strength}
+            min={0.1}
+            max={5.0}
+            step={0.1}
+            disabled={!config.labels.overlapAvoid.enabled}
+            onChange={(value) => {
+              handleChange({ labels: { overlapAvoid: { strength: value } } });
+            }}
+            marks={{ 0: 0.1, 50: 5 }}
+          />
+        </Form.Item>
+      </Form.Item>
     </Form>
   );
 };
