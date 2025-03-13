@@ -41,6 +41,10 @@ exports[`ViolinIndex Adds a new plot to multi view: new-config 1`] = `
     ],
     "labels": {
       "enabled": true,
+      "overlapAvoid": {
+        "enabled": false,
+        "strength": 1,
+      },
       "size": 18,
     },
     "legend": {

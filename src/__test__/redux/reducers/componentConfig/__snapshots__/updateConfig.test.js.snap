@@ -44,6 +44,10 @@ exports[`updateConfig Checking if empty update doesnt change anything 1`] = `
       },
       "labels": {
         "enabled": false,
+        "overlapAvoid": {
+          "enabled": false,
+          "strength": 1,
+        },
         "size": 18,
       },
       "legend": {
@@ -121,6 +125,10 @@ exports[`updateConfig Checking if fields changed 1`] = `
       "height": 2000,
       "labels": {
         "enabled": true,
+        "overlapAvoid": {
+          "enabled": false,
+          "strength": 1,
+        },
         "size": 18,
       },
       "legend": {

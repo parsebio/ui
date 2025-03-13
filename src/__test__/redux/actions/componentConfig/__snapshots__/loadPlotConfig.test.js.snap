@@ -39,6 +39,10 @@ exports[`loadPlotConfig Loads config properly 1`] = `
     },
     "labels": {
       "enabled": true,
+      "overlapAvoid": {
+        "enabled": false,
+        "strength": 1,
+      },
       "size": 18,
     },
     "legend": {
@@ -115,6 +119,10 @@ exports[`loadPlotConfig Loads default initial config for plots if plot config is
     },
     "labels": {
       "enabled": true,
+      "overlapAvoid": {
+        "enabled": false,
+        "strength": 1,
+      },
       "size": 18,
     },
     "legend": {
