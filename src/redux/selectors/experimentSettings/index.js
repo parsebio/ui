@@ -1,4 +1,4 @@
 import getFilterChanges from './getFilterChanges';
+import getAnalysisTool from './getAnalysisTool';
 
-/* eslint-disable-next-line import/prefer-default-export */
-export { getFilterChanges };
+export { getFilterChanges, getAnalysisTool };

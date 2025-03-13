@@ -2,12 +2,14 @@ import React, {
   useEffect, useState, useCallback,
   useMemo,
 } from 'react';
+import _ from 'lodash';
 import { animateScroll, Element } from 'react-scroll';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {
   Alert, Button, Skeleton, Space, Tabs,
+  Tooltip,
 } from 'antd';
 import {
   BlockOutlined, MergeCellsOutlined, SplitCellsOutlined,
@@ -30,9 +32,9 @@ import {
   updateCellSetProperty,
 } from 'redux/actions/cellSets';
 import { runSubsetExperiment } from 'redux/actions/pipeline';
-import { getCellSets } from 'redux/selectors';
+import { getCellSets, getAnalysisTool } from 'redux/selectors';
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { analysisTools, modules } from 'utils/constants';
 import { composeTree } from 'utils/cellSets';
 import {
   complement, intersection, union,
@@ -47,6 +49,7 @@ const CellSetsTool = (props) => {
   const { navigateTo } = useAppRouter();
 
   const cellSets = useSelector(getCellSets());
+  const analysisTool = useSelector(getAnalysisTool());
 
   const {
     accessible, error, hierarchy, properties, hidden,
@@ -181,6 +184,11 @@ const CellSetsTool = (props) => {
       </Space>
     );
 
+    const labelAnnotate = _.isEqual(analysisTool, analysisTools.SCANPY) ? <Tooltip title='Coming soon!'>Annotate clusters</Tooltip> : 'Annotate clusters';
+
+    console.log('analysisToolDEbug');
+    console.log(analysisTool);
+
     const tabItems = [
       {
         key: 'cellSets',
@@ -194,7 +202,8 @@ const CellSetsTool = (props) => {
       },
       {
         key: 'annotateClusters',
-        label: 'Annotate clusters',
+        label: labelAnnotate,
+        disabled: _.isEqual(analysisTool, analysisTools.SCANPY),
         children: (
           <AnnotateClustersTool
             experimentId={experimentId}
