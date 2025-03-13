@@ -57,6 +57,14 @@ const generateSpec = (config, method, plotData, cellSetsPlotData) => {
             font: { value: config?.fontStyle.font },
           },
         },
+        transform: [
+          {
+            type: 'force',
+            forces: [
+              { force: 'collide', radius: { expr: 'datum.fontSize' } },
+            ],
+          },
+        ],
       },
     );
   }
