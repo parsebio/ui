@@ -41,8 +41,8 @@ const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => 
     );
 
     const fileName = processing.dataIntegration.analysisTool === analysisTools.SCANPY
-      ? `${experimentId}_processed_matrix.rds`
-      : `${experimentId}_processed_matrix.h5ad`;
+      ? `${experimentId}_processed_matrix.h5ad`
+      : `${experimentId}_processed_matrix.rds`;
 
     downloadFromUrl(writeToFileURL(data), { fileName });
   } catch (e) {
