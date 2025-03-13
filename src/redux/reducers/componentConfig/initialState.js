@@ -41,10 +41,6 @@ const embeddingCategoricalInitialConfig = {
   labels: {
     ...labelBaseState,
     enabled: false,
-    overlapAvoid: {
-      enabled: false,
-      strength: 1.0,
-    },
   },
   selectedCellSet: 'louvain',
   selectedSample: 'All',

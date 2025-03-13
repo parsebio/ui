@@ -47,6 +47,7 @@ const LabelsDesign = (props) => {
         <Radio.Group
           onChange={(e) => onUpdate({ labels: { overlapAvoid: { enabled: e.target.value } } })}
           value={config.labels.overlapAvoid?.enabled ?? false}
+          disabled={!config.labels.enabled}
         >
           <Radio value>Avoid</Radio>
           <Radio value={false}>Ignore</Radio>
@@ -60,7 +61,7 @@ const LabelsDesign = (props) => {
             min={0.1}
             max={5.0}
             step={0.1}
-            disabled={!config.labels.overlapAvoid.enabled}
+            disabled={!config.labels.enabled || !config.labels.overlapAvoid.enabled}
             onChange={(value) => {
               handleChange({ labels: { overlapAvoid: { strength: value } } });
             }}
