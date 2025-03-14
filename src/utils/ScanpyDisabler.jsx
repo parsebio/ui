@@ -2,20 +2,24 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAnalysisTool } from 'redux/selectors';
 import { Tooltip } from 'antd';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
+
 import { analysisTools } from './constants';
 
 const ScanpyDisabler = ({ children }) => {
+  const dispatch = useDispatch();
+
   const analysisTool = useSelector(getAnalysisTool());
-  const experimentId = useSelector((state) => state.experimentSettings.info.experimentId,
-    _.isEqual);
+  const experimentId = useSelector((state) => (
+    state.experimentSettings.info.experimentId
+  ), _.isEqual);
 
   useEffect(() => {
     if (_.isNil(analysisTool)) {
-      loadProcessingSettings(experimentId);
+      dispatch(loadProcessingSettings(experimentId));
     }
   }, [analysisTool, experimentId]);
 
