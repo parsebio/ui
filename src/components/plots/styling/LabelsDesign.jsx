@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Radio, Form, Slider,
+  Tooltip,
 } from 'antd';
 import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
@@ -39,8 +40,9 @@ const LabelsDesign = (props) => {
           marks={{ 0: minLabelSize, 50: maxLabelSize }}
         />
       </Form.Item>
+
       <Form.Item
-        label='Repel'
+        label={<Tooltip title='To avoid labels overlapping'>Repel</Tooltip>}
         style={{ marginTop: '10px' }}
       >
         <Slider
