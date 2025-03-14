@@ -197,7 +197,7 @@ const CellSetsTool = (props) => {
       },
       {
         key: 'annotateClusters',
-        label: <ScanpyDisabler>Coming soon!</ScanpyDisabler>,
+        label: <ScanpyDisabler>Annotate clusters</ScanpyDisabler>,
         disabled: _.isEqual(analysisTool, analysisTools.SCANPY),
         children: (
           <AnnotateClustersTool
