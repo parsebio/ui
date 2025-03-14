@@ -199,10 +199,7 @@ exports[`configsReplaced Replaces existing state 1`] = `
       ],
       "labels": {
         "enabled": true,
-        "overlapAvoid": {
-          "enabled": false,
-          "strength": 1,
-        },
+        "overlapRepel": 0,
         "size": 18,
       },
       "legend": {
@@ -278,10 +275,7 @@ exports[`configsReplaced Replaces existing state 1`] = `
       ],
       "labels": {
         "enabled": true,
-        "overlapAvoid": {
-          "enabled": false,
-          "strength": 1,
-        },
+        "overlapRepel": 0,
         "size": 18,
       },
       "legend": {
@@ -359,10 +353,7 @@ exports[`configsReplaced Replaces existing state 1`] = `
       },
       "labels": {
         "enabled": false,
-        "overlapAvoid": {
-          "enabled": false,
-          "strength": 1,
-        },
+        "overlapRepel": 0,
         "size": 18,
       },
       "legend": {
@@ -432,10 +423,7 @@ exports[`configsReplaced Replaces existing state 1`] = `
       "geneexpLegendloc": "",
       "labels": {
         "enabled": true,
-        "overlapAvoid": {
-          "enabled": false,
-          "strength": 1,
-        },
+        "overlapRepel": 0,
         "size": 18,
       },
       "legend": {
@@ -527,10 +515,7 @@ exports[`configsReplaced Replaces existing state 1`] = `
       },
       "labels": {
         "enabled": false,
-        "overlapAvoid": {
-          "enabled": false,
-          "strength": 1,
-        },
+        "overlapRepel": 0,
         "size": 18,
       },
       "legend": {
