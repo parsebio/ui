@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 
 import {
   Alert, Button, Skeleton, Space, Tabs,
-  Tooltip,
 } from 'antd';
 import {
   BlockOutlined, MergeCellsOutlined, SplitCellsOutlined,
@@ -39,6 +38,7 @@ import { composeTree } from 'utils/cellSets';
 import {
   complement, intersection, union,
 } from 'utils/cellSetOperations';
+import ScanpyDisabler from 'utils/ScanpyDisabler';
 
 const FOCUS_TYPE = 'cellSets';
 
@@ -184,11 +184,6 @@ const CellSetsTool = (props) => {
       </Space>
     );
 
-    const labelAnnotate = _.isEqual(analysisTool, analysisTools.SCANPY) ? <Tooltip title='Coming soon!'>Annotate clusters</Tooltip> : 'Annotate clusters';
-
-    console.log('analysisToolDEbug');
-    console.log(analysisTool);
-
     const tabItems = [
       {
         key: 'cellSets',
@@ -202,7 +197,7 @@ const CellSetsTool = (props) => {
       },
       {
         key: 'annotateClusters',
-        label: labelAnnotate,
+        label: <ScanpyDisabler>Coming soon!</ScanpyDisabler>,
         disabled: _.isEqual(analysisTool, analysisTools.SCANPY),
         children: (
           <AnnotateClustersTool
