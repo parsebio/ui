@@ -47,7 +47,7 @@ const LabelsDesign = (props) => {
           value={newConfig.labels.overlapRepel}
           min={0.0}
           max={5.0}
-          step={0.1}
+          step={0.01}
           disabled={!config.labels.enabled}
           onChange={(value) => {
             handleChange({ labels: { overlapRepel: value } });
