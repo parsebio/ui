@@ -14,7 +14,7 @@ const LabelsDesign = (props) => {
   return (
     <Form>
 
-      <p><strong>Toggle Labels</strong></p>
+      <p><strong>Label options</strong></p>
       <Form.Item>
         <Radio.Group
           onChange={(e) => onUpdate({ labels: { enabled: e.target.value } })}
@@ -25,7 +25,6 @@ const LabelsDesign = (props) => {
         </Radio.Group>
       </Form.Item>
 
-      <p><strong>Label Options</strong></p>
       <Form.Item
         label='Size'
       >
@@ -40,34 +39,21 @@ const LabelsDesign = (props) => {
           marks={{ 0: minLabelSize, 50: maxLabelSize }}
         />
       </Form.Item>
-      <p><strong>Overlap</strong></p>
       <Form.Item
-        label=''
+        label='Repel'
+        style={{ marginTop: '10px' }}
       >
-        <Radio.Group
-          onChange={(e) => onUpdate({ labels: { overlapAvoid: { enabled: e.target.value } } })}
-          value={config.labels.overlapAvoid?.enabled ?? false}
+        <Slider
+          value={newConfig.labels.overlapRepel}
+          min={0.0}
+          max={5.0}
+          step={0.1}
           disabled={!config.labels.enabled}
-        >
-          <Radio value>Avoid</Radio>
-          <Radio value={false}>Ignore</Radio>
-        </Radio.Group>
-        <Form.Item
-          label='Strength'
-          style={{ marginTop: '10px' }}
-        >
-          <Slider
-            value={newConfig.labels.overlapAvoid.strength}
-            min={0.1}
-            max={5.0}
-            step={0.1}
-            disabled={!config.labels.enabled || !config.labels.overlapAvoid.enabled}
-            onChange={(value) => {
-              handleChange({ labels: { overlapAvoid: { strength: value } } });
-            }}
-            marks={{ 0: 0.1, 50: 5 }}
-          />
-        </Form.Item>
+          onChange={(value) => {
+            handleChange({ labels: { overlapRepel: value } });
+          }}
+          marks={{ 0: 0.0, 50: 5 }}
+        />
       </Form.Item>
     </Form>
   );

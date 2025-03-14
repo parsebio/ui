@@ -58,15 +58,13 @@ const generateSpec = (config, method, plotData, cellSetsPlotData) => {
       },
     };
 
-    if (config?.labels.overlapAvoid?.enabled) {
-      console.log('configlabelsoverlapAvoidenabledDebug');
-      console.log(config?.labels.overlapAvoid?.enabled);
-      const strength = config?.labels.overlapAvoid.strength;
+    if (config?.labels.overlapRepel > 0.0) {
+      const repel = config?.labels.overlapRepel;
       labelsConfig.transform = [
         {
           type: 'force',
           forces: [
-            { force: 'collide', radius: { expr: `datum.fontSize * ${strength}` } },
+            { force: 'collide', radius: { expr: `datum.fontSize / 1.5 * ${repel}` } },
           ],
         },
       ];
