@@ -147,25 +147,7 @@ const PlotsTablesContainer = (props) => {
               </Divider>
             </Col>
             {section.plots.map((item) => {
-              if (disabledByScanpy.includes(item.key)) {
-                return (
-                  <ScanpyDisabler>
-                    <Col className='plot-card' key={item.key}>
-                      <Card
-                        size='small'
-                        hoverable
-                        title={item.name}
-                        bodyStyle={{ padding: '0' }}
-                        style={CARD_STYLE}
-                      >
-                        <CardItem item={item} experimentId={experimentId} />
-                      </Card>
-                    </Col>
-                  </ScanpyDisabler>
-                );
-              }
-
-              return (
+              const card = (
                 <Col className='plot-card' key={item.key}>
                   <Card
                     size='small'
@@ -178,6 +160,16 @@ const PlotsTablesContainer = (props) => {
                   </Card>
                 </Col>
               );
+
+              if (disabledByScanpy.includes(item.key)) {
+                return (
+                  <ScanpyDisabler>
+                    {card}
+                  </ScanpyDisabler>
+                );
+              }
+
+              return card;
             })}
           </Row>
         ))}
