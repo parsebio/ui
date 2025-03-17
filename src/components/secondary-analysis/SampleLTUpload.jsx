@@ -37,7 +37,7 @@ const SampleLTUpload = (props) => {
   const getSampleNamesFromExcel = async (excelFile) => {
     const sheets = await readExcelFile(excelFile, { getSheets: true });
     const rows = await readExcelFile(excelFile, { sheet: sheets[0].name });
-    console.log('sheets length', sheets.length);
+
     if (sheets.length < 3
         || !rows.some((row) => row.some((cell) => typeof cell === 'string'
             && (cell.includes('Evercode WT') || cell.includes('Parse Biosciences'))))) {
@@ -67,8 +67,6 @@ const SampleLTUpload = (props) => {
       .map((row) => row[sampleNameColumnIndex])
       .slice(0, numberOfSamples)
       .filter((name) => name !== null);
-
-    console.log('extracted sample names ', extractedSampleNames, ' number of samples ', numberOfSamples);
 
     return extractedSampleNames;
   };
