@@ -40,25 +40,37 @@ const generateSpec = (config, method, plotData, cellSetsPlotData) => {
   ];
 
   if (config?.labels.enabled) {
-    marks.push(
-      {
-        type: 'text',
-        clip: true,
-        from: { data: 'labels' },
-        encode: {
-          enter: {
-            x: { scale: 'x', field: 'meanX' },
-            y: { scale: 'y', field: 'meanY' },
-            text: { field: 'cellSetName' },
-            fontSize: { value: config?.labels.size },
-            strokeWidth: { value: 1.2 },
-            fill: { value: config?.colour.masterColour },
-            fillOpacity: { value: config?.labels.enabled },
-            font: { value: config?.fontStyle.font },
-          },
+    const labelsConfig = {
+      type: 'text',
+      clip: true,
+      from: { data: 'labels' },
+      encode: {
+        enter: {
+          x: { scale: 'x', field: 'meanX' },
+          y: { scale: 'y', field: 'meanY' },
+          text: { field: 'cellSetName' },
+          fontSize: { value: config?.labels.size },
+          strokeWidth: { value: 1.2 },
+          fill: { value: config?.colour.masterColour },
+          fillOpacity: { value: config?.labels.enabled },
+          font: { value: config?.fontStyle.font },
         },
       },
-    );
+    };
+
+    if (config?.labels.overlapRepel > 0.0) {
+      const repel = config?.labels.overlapRepel;
+      labelsConfig.transform = [
+        {
+          type: 'force',
+          forces: [
+            { force: 'collide', radius: { expr: `datum.fontSize / 1.5 * ${repel}` } },
+          ],
+        },
+      ];
+    }
+
+    marks.push(labelsConfig);
   }
 
   // removing empty/unused entries from the data. This was causing issues with the legend
