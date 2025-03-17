@@ -37,7 +37,7 @@ const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => 
       experimentId, body, getState, dispatch, { timeout },
     );
 
-    downloadFromUrl(writeToFileURL(data), { fileName: `${experimentId}_processed_matrix.h5ad` });
+    downloadFromUrl(writeToFileURL(data), { fileName: `${experimentId}_processed_matrix.rds` });
   } catch (e) {
     handleError(e, endUserMessages.ERROR_DOWNLOADING_SEURAT_OBJECT);
   }
