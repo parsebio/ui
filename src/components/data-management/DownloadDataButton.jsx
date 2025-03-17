@@ -113,7 +113,7 @@ const DownloadDataButton = () => {
           placement='left'
         >
           <Space>
-            {processedMatrixTextByTool[analysisTool]}
+            {processedMatrixTextByTool[analysisTool] ?? 'Processed data'}
             {downloadingProcessedSeurat && <ClipLoader size={20} color='#8f0b10' />}
           </Space>
         </Tooltip>
