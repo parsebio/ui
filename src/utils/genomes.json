@@ -340,6 +340,10 @@
     "species": "Custom Mus musculus (mouse)"
   },
   {
+    "name": "GRCm39_RI250310",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
     "name": "GRCm38_Usutu",
     "species": "Custom Mus musculus (mouse) with Usutu virus"
   },
