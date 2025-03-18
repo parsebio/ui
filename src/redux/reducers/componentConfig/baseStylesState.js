@@ -61,6 +61,7 @@ const markerBaseState = {
 const labelBaseState = {
   enabled: true,
   size: 18,
+  overlapRepel: 0.0,
 };
 
 export {

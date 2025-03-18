@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Radio, Form, Slider,
+  Tooltip,
 } from 'antd';
 import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
 
@@ -14,7 +15,7 @@ const LabelsDesign = (props) => {
   return (
     <Form>
 
-      <p><strong>Toggle Labels</strong></p>
+      <p><strong>Label options</strong></p>
       <Form.Item>
         <Radio.Group
           onChange={(e) => onUpdate({ labels: { enabled: e.target.value } })}
@@ -25,7 +26,6 @@ const LabelsDesign = (props) => {
         </Radio.Group>
       </Form.Item>
 
-      <p><strong>Label Options</strong></p>
       <Form.Item
         label='Size'
       >
@@ -38,6 +38,23 @@ const LabelsDesign = (props) => {
             handleChange({ labels: { size: value } });
           }}
           marks={{ 0: minLabelSize, 50: maxLabelSize }}
+        />
+      </Form.Item>
+
+      <Form.Item
+        label={<Tooltip title='To avoid labels overlapping'>Repel</Tooltip>}
+        style={{ marginTop: '10px' }}
+      >
+        <Slider
+          value={newConfig.labels.overlapRepel}
+          min={0.0}
+          max={5.0}
+          step={0.01}
+          disabled={!config.labels.enabled}
+          onChange={(value) => {
+            handleChange({ labels: { overlapRepel: value } });
+          }}
+          marks={{ 0: 0.0, 50: 5 }}
         />
       </Form.Item>
     </Form>

@@ -112,6 +112,7 @@ const HierarchicalTree = (props) => {
         onNodeUpdate(modified.key, { name: e });
       }}
       onDelete={() => {
+        onCheck(_.without(checkedKeys, modified.key));
         onNodeDelete(modified.key, modified.rootNode);
       }}
       value={modified.name}
@@ -178,7 +179,6 @@ const HierarchicalTree = (props) => {
     return toRender;
   };
 
-  const [renderedTreeData, setRenderedTreeData] = useState([]);
   useEffect(() => {
     if (!treeData) {
       return;
@@ -187,8 +187,6 @@ const HierarchicalTree = (props) => {
     if (shouldExpandKeys) {
       setExpandedKeys(treeData.map((n) => n.key));
     }
-
-    setRenderedTreeData(renderTitlesRecursive(treeData));
   }, [treeData]);
 
   if (!treeData) return <Skeleton active />;
@@ -202,7 +200,7 @@ const HierarchicalTree = (props) => {
       }}
       expandedKeys={expandedKeys}
       onCheck={onCheck}
-      treeData={renderedTreeData}
+      treeData={renderTitlesRecursive(treeData)}
       checkedKeys={checkedKeys}
       onDrop={onDrop}
       switcherIcon={<DownOutlined />}
