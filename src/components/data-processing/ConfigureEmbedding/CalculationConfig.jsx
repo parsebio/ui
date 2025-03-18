@@ -238,14 +238,15 @@ const CalculationConfig = (props) => {
                 <Tooltip overlay={(
                   <span>
                     {EMBEDD_METHOD_TEXT}
-                    More information on embedding methods
+                    Further information
                     <a
                       href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQ9191TKVTHY8XKJS6J'
                       target='_blank'
                       rel='noreferrer'
                     >
                       {' '}
-                      <code>here.</code>
+                      <code>here</code>
+                      .
                       {' '}
                     </a>
                   </span>
@@ -288,15 +289,16 @@ const CalculationConfig = (props) => {
                   reported to have outperformed other clustering methods in many situations.
                   They are also more efficient than other clustering methods, which
                   is crucial in large scRNA-seq datasets.
-                  Using the Leiden method is recommended. More information
+                  Using the Leiden method is recommended. Further information
                   <a
                     href='https://www.sc-best-practices.org/cellular_structure/clustering.html'
                     target='_blank'
                     rel='noreferrer'
                   >
                     {' '}
-                    <code>here.</code>
+                    <code>here</code>
                   </a>
+                  .
                 </span>
               )}
               >

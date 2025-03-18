@@ -59,7 +59,7 @@ const NormalisationOptions = (props) => {
             Integration as well as PCA is based on a sensible selection of HVGs.
             This number selects the top variable genes based on the &quot;vst&quot; method.
             The default 2000 has been found to be a sensible for most cases.
-            Further info can be found
+            Further information can be found
             <a
               href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQ93DGH9VHTT2HRMX7W'
               target='_blank'
@@ -67,6 +67,7 @@ const NormalisationOptions = (props) => {
             >
               {' '}
               <code>here</code>
+              .
             </a>
           </span>
         )}
@@ -87,7 +88,7 @@ const NormalisationOptions = (props) => {
                 biological distinction compared to log-normalization.
                 SCTransform can only be applied when the integration method is set to Seurat v4.
                 Normalization is applied to each sample before integration.
-                Further info can be found
+                Further information can be found
                 <a
                   href='https://satijalab.org/seurat/articles/sctransform_vignette.html'
                   target='_blank'
@@ -95,6 +96,7 @@ const NormalisationOptions = (props) => {
                 >
                   {' '}
                   <code>here</code>
+                  .
                 </a>
               </span>
             )}

@@ -20,6 +20,10 @@ import AdvancedFilteringModal from 'components/data-exploration/differential-exp
 import LaunchPathwayAnalysisModal from 'components/data-exploration/differential-expression-tool/LaunchPathwayAnalysisModal';
 import { setGeneOrdering } from 'redux/actions/differentialExpression';
 
+import {
+  loadProcessingSettings,
+} from 'redux/actions/experimentSettings';
+
 const DiffExprResults = (props) => {
   const {
     experimentId, onGoBack, width, height,
@@ -43,6 +47,11 @@ const DiffExprResults = (props) => {
   const [pathwayAnalysisModalVisible, setPathwayAnalysisModalVisible] = useState(false);
   const [columns, setColumns] = useState([]);
   const geneTableState = useRef({});
+
+  const processingConfig = useSelector((state) => state.experimentSettings.processing);
+  if (Object.keys(processingConfig).length <= 1) {
+    dispatch(loadProcessingSettings(experimentId));
+  }
 
   const buildColumns = (rowData) => {
     const rowDataKeys = Object.keys(rowData[0]);
@@ -176,6 +185,9 @@ const DiffExprResults = (props) => {
             {renderOptionName(basis)}
           </div>
         ) : <div />}
+      {' '}
+      <Alert message='Only the 5000 most variable genes are shown.' type='info' showIcon />
+      {' '}
       <GeneTable
         experimentId={experimentId}
         initialTableState={{

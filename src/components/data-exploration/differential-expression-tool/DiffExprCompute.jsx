@@ -165,7 +165,7 @@ const DiffExprCompute = (props) => {
               <span>
                 For finding marker genes that distinguish one cluster from another.
                 The calculation uses the Wilcoxon
-                rank sum test and auROC analysis. More information
+                rank sum test and auROC analysis. Further information
                 {' '}
                 <a
                   href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQA91315X7ZBPT0FZAJ'
@@ -208,7 +208,7 @@ const DiffExprCompute = (props) => {
                 <span>
                   For finding genes that are differentially expressed
                   between two experimental groups.
-                  This analysis uses a pseudobulk workflow. More information
+                  This analysis uses a pseudobulk workflow. Further information
                   {' '}
                   <a
                     href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQAPB7E8EC3YY15K66G'
