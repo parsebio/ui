@@ -61,7 +61,7 @@ const baseProcessingConfig = {
   },
 };
 
-const generateMockProcessingConfig = (numSamples = 3) => {
+const generateMockProcessingConfig = (analysisTool, numSamples = 3) => {
   const processingConfig = _.cloneDeep(baseProcessingConfig);
 
   _.times(numSamples, (idx) => {
@@ -145,6 +145,8 @@ const generateMockProcessingConfig = (numSamples = 3) => {
       enabled: true,
     };
   });
+
+  processingConfig.dataIntegration.analysisTool = analysisTool;
 
   return processingConfig;
 };
