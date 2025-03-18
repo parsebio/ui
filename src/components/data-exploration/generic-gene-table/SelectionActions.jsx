@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Button, Typography, Row, Divider,
-  Tooltip,
 } from 'antd';
 
 import PropTypes from 'prop-types';
@@ -15,8 +14,6 @@ import ComponentActions from 'components/data-exploration/generic-gene-table/Com
 
 import { COMPONENT_TYPE } from 'components/data-exploration/heatmap/HeatmapPlot';
 import ExpresssionCellSetModal from 'components/data-exploration/generic-gene-table/ExpressionCellSetModal';
-import { getAnalysisTool } from 'redux/selectors';
-import { analysisTools } from 'utils/constants';
 import ScanpyDisabler from 'utils/ScanpyDisabler';
 
 const { Text } = Typography;
@@ -29,7 +26,6 @@ const SelectionActions = (props) => {
   const dispatch = useDispatch();
 
   const selectedGenes = useSelector((state) => state.genes.selected);
-  const analysisTool = useSelector(getAnalysisTool());
 
   const [copied, setCopied] = useState(false);
   const [listed, setListed] = useState(false);
