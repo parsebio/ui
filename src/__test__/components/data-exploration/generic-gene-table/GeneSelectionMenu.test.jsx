@@ -9,6 +9,7 @@ import { act } from 'react-dom/test-utils';
 import GeneSelectionMenu from 'components/data-exploration/generic-gene-table/GeneSelectionMenu';
 import SelectionActions from 'components/data-exploration/generic-gene-table/SelectionActions';
 import '__test__/test-utils/setupTests';
+import { analysisTools } from 'utils/constants';
 
 const mockStore = configureMockStore([thunk]);
 
@@ -17,6 +18,14 @@ const experimentId = '1234';
 const initialState = {
   genes: {
     selected: ['A', 'B', 'C'],
+  },
+  experimentSettings: {
+    info: { experimentId },
+    processing: {
+      dataIntegration: {
+        analysisTool: analysisTools.SEURAT,
+      },
+    },
   },
 };
 
