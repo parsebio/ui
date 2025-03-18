@@ -21,6 +21,8 @@ import fetchWork from 'utils/work/fetchWork';
 
 import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloadCellSetsFromS3Mock } from '__test__/test-utils/mockAPI';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
+import { analysisTools } from 'utils/constants';
+import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
 enableFetchMocks();
 
@@ -775,7 +777,9 @@ describe('AnnotateClustersTool', () => {
 
     storeState = makeStore();
     await storeState.dispatch(loadBackendStatus(experimentId));
+  });
 
+  it('Renders correctly', async () => {
     await act(async () => {
       render(
         <Provider store={storeState}>
@@ -789,9 +793,7 @@ describe('AnnotateClustersTool', () => {
 
     // Switch to tab
     userEvent.click(annotateClustersTabTitle);
-  });
 
-  it('Renders correctly', async () => {
     // Check displays correct text
     screen.getByText(/ScType/);
     screen.getByText(/Tissue Type/);
@@ -807,6 +809,20 @@ describe('AnnotateClustersTool', () => {
   });
 
   it('Can dispatch work request', async () => {
+    await act(async () => {
+      render(
+        <Provider store={storeState}>
+          {cellSetsToolFactory()}
+        </Provider>,
+      );
+    });
+
+    // Switch to tab
+    const annotateClustersTabTitle = screen.getByText('Annotate clusters');
+
+    // Switch to tab
+    userEvent.click(annotateClustersTabTitle);
+
     const tissueSelector = screen.getAllByRole('combobox')[0];
     const speciesSelector = screen.getAllByRole('combobox')[1];
 
@@ -831,5 +847,26 @@ describe('AnnotateClustersTool', () => {
     await waitFor(() => {
       expect(fetchWork).toMatchSnapshot();
     });
+  });
+
+  it('Is disabled for scanpy', async () => {
+    fetchMock.resetMocks();
+    fetchMock.mockIf(/.*/, mockAPI(generateDefaultMockAPIResponses(experimentId, analysisTools.SCANPY)));
+
+    storeState = makeStore();
+    await storeState.dispatch(loadBackendStatus(experimentId));
+    await storeState.dispatch(loadProcessingSettings(experimentId));
+
+    await act(async () => {
+      render(
+        <Provider store={storeState}>
+          {cellSetsToolFactory()}
+        </Provider>,
+      );
+    });
+
+    // Check that the tab is disabled for scanpy
+    const annotateClustersTabTitle = screen.getByText('Annotate clusters');
+    expect(annotateClustersTabTitle.parentElement.parentElement).toHaveAttribute('aria-disabled', 'true');
   });
 });
