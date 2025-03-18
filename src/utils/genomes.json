@@ -220,6 +220,10 @@
     "species": "Custom Homo sapiens (human)"
   },
   {
+    "name": "GRCh38_CtrD_modified",
+    "species": "Custom Homo sapiens (human)"
+  },
+  {
     "name": "GRCh38-custom-1",
     "species": "Custom Homo sapiens (human)"
   },
@@ -354,6 +358,10 @@
   {
     "name": "mm39-custom-3",
     "species": "Custom Mus musculus (mouse) with Puromycin, Neomycin, tdTom and CreERT2"
+  },
+  {
+    "name": "mm10_rfp_srk",
+    "species": "Custom Mus musculus (mouse)"
   },
   {
     "name": "Gmax_v2",
