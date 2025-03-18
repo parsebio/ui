@@ -40,7 +40,7 @@ const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => 
       experimentId, body, getState, dispatch, { timeout },
     );
 
-    const processedMatrix = `${experimentId}_processed_matrix`
+    const processedMatrix = `${experimentId}_processed_matrix`;
     const fileName = processing.dataIntegration.analysisTool === analysisTools.SCANPY
       ? `${processedMatrix}.h5ad`
       : `${processedMatrix}.rds`;
