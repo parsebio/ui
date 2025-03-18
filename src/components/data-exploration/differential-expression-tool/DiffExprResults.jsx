@@ -186,7 +186,9 @@ const DiffExprResults = (props) => {
           </div>
         ) : <div />}
       {' '}
-      <Alert message='Only the 5000 most variable genes are shown.' type='info' showIcon />
+      {processingConfig.dataIntegration.analysisTool === 'scanpy' && (
+        <Alert message='Only the 5000 most highly variable genes are shown.' type='info' showIcon />
+      )}
       {' '}
       <GeneTable
         experimentId={experimentId}
