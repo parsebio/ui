@@ -44,11 +44,6 @@ const DiffExprResults = (props) => {
   const [columns, setColumns] = useState([]);
   const geneTableState = useRef({});
 
-  const processingConfig = useSelector((state) => state.experimentSettings.processing);
-  if (Object.keys(processingConfig).length <= 1) {
-    dispatch(loadProcessingSettings(experimentId));
-  }
-
   const buildColumns = (rowData) => {
     const rowDataKeys = Object.keys(rowData[0]);
     return columnDefinitions.filter(({ key }) => rowDataKeys.includes(key));
