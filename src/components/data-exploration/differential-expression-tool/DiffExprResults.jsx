@@ -20,10 +20,6 @@ import AdvancedFilteringModal from 'components/data-exploration/differential-exp
 import LaunchPathwayAnalysisModal from 'components/data-exploration/differential-expression-tool/LaunchPathwayAnalysisModal';
 import { setGeneOrdering } from 'redux/actions/differentialExpression';
 
-import {
-  loadProcessingSettings,
-} from 'redux/actions/experimentSettings';
-
 const DiffExprResults = (props) => {
   const {
     experimentId, onGoBack, width, height,
