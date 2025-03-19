@@ -49,7 +49,7 @@ const ExplorationViewPage = ({ experimentId }) => {
   useEffect(() => {
     if (!Object.keys(geneData) || _.isNil(analysisTool)) return;
 
-    const nGenesToLoad = analysisTool === 'scanpy' ? 3 : 50;
+    const nGenesToLoad = analysisTool === 'scanpy' ? 1 : 50;
 
     const genesToLoad = getHighestDispersionGenes(geneData, nGenesToLoad);
 
