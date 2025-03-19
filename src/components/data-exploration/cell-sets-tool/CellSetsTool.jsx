@@ -2,7 +2,6 @@ import React, {
   useEffect, useState, useCallback,
   useMemo,
 } from 'react';
-import _ from 'lodash';
 import { animateScroll, Element } from 'react-scroll';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -31,13 +30,12 @@ import {
   updateCellSetProperty,
 } from 'redux/actions/cellSets';
 import { runSubsetExperiment } from 'redux/actions/pipeline';
-import { getCellSets, getAnalysisTool } from 'redux/selectors';
+import { getCellSets, getIsScanpy } from 'redux/selectors';
+
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { analysisTools, modules } from 'utils/constants';
+import { modules } from 'utils/constants';
 import { composeTree } from 'utils/cellSets';
-import {
-  complement, intersection, union,
-} from 'utils/cellSetOperations';
+import { complement, intersection, union } from 'utils/cellSetOperations';
 import ScanpyDisabler from 'utils/ScanpyDisabler';
 
 const FOCUS_TYPE = 'cellSets';
@@ -49,7 +47,7 @@ const CellSetsTool = (props) => {
   const { navigateTo } = useAppRouter();
 
   const cellSets = useSelector(getCellSets());
-  const analysisTool = useSelector(getAnalysisTool());
+  const isScanpy = useSelector(getIsScanpy());
 
   const {
     accessible, error, hierarchy, properties, hidden,
@@ -198,7 +196,7 @@ const CellSetsTool = (props) => {
       {
         key: 'annotateClusters',
         label: <ScanpyDisabler>Annotate clusters</ScanpyDisabler>,
-        disabled: _.isEqual(analysisTool, analysisTools.SCANPY),
+        disabled: isScanpy,
         children: (
           <AnnotateClustersTool
             experimentId={experimentId}

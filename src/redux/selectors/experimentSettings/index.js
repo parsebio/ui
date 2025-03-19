@@ -1,5 +1,5 @@
 import getFilterChanges from './getFilterChanges';
 import getAnalysisTool from './getAnalysisTool';
-import isScanpy from './isScanpy';
+import getIsScanpy from './getIsScanpy';
 
-export { getFilterChanges, getAnalysisTool, isScanpy };
+export { getFilterChanges, getAnalysisTool, getIsScanpy };

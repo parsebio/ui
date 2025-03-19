@@ -51,8 +51,8 @@ const getAnalysisTool = (...params) => (state) => (
   experimentSettingsSelectors.getAnalysisTool(...params)(state.experimentSettings)
 );
 
-const isScanpy = (...params) => (state) => {
-  experimentSettingsSelectors.isScanpy(...params)(state.experimentSettings);
+const getIsScanpy = (...params) => (state) => {
+  experimentSettingsSelectors.getIsScanpy(...params)(state.experimentSettings);
 };
 
 const getMetadataToSampleIds = (...params) => (state) => (
@@ -76,7 +76,7 @@ export {
   getSelectedMetadataTracks,
   getFilterChanges,
   getAnalysisTool,
-  isScanpy,
+  getIsScanpy,
   getMetadataToSampleIds,
   getSamples,
 };
