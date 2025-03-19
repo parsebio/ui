@@ -15,7 +15,7 @@ import { exportQCParameters, filterQCParameters } from 'utils/data-management/ex
 
 import { loadBackendStatus } from 'redux/actions/backendStatus/index';
 import Loader from 'components/Loader';
-import { getAnalysisTool, getBackendStatus } from 'redux/selectors';
+import { getAnalysisTool, getBackendStatus, getIsScanpy } from 'redux/selectors';
 import handleError from 'utils/http/handleError';
 import downloadProcessedMatrix from 'utils/extraActionCreators/downloadProcessedMatrix';
 import { analysisTools } from 'utils/constants';
@@ -36,7 +36,9 @@ const DownloadDataButton = () => {
     status: backendStatuses, loading: backendLoading,
   } = useSelector(getBackendStatus(activeExperimentId));
   const samples = useSelector((state) => state.samples);
+
   const analysisTool = useSelector(getAnalysisTool());
+  const isScanpy = useSelector(getIsScanpy());
 
   const [pipelineHasRun, setPipelineHasRun] = useState(false);
   const [allSamplesAnalysed, setAllSamplesAnalysed] = useState(false);
@@ -86,12 +88,10 @@ const DownloadDataButton = () => {
     }
   };
 
-  const disabledByScanpy = _.isEqual(analysisTool, analysisTools.SCANPY);
-
   const menuItems = [
     {
       key: 'download-processed-seurat',
-      disabled: !pipelineHasRun || backendLoading || downloadingProcessedSeurat || disabledByScanpy,
+      disabled: !pipelineHasRun || backendLoading || downloadingProcessedSeurat || isScanpy,
       onClick: (e) => {
         e.domEvent.stopPropagation();
         downloadExperimentData('processed-matrix');
@@ -100,7 +100,7 @@ const DownloadDataButton = () => {
         <Tooltip
           color={downloadingProcessedSeurat ? 'white' : ''}
           title={
-            disabledByScanpy ? 'Coming soon!' : (
+            isScanpy ? 'Coming soon!' : (
               downloadingProcessedSeurat
                 ? (
                   <center>

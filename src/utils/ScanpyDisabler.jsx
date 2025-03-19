@@ -3,29 +3,25 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getAnalysisTool } from 'redux/selectors';
+import { getIsScanpy } from 'redux/selectors';
 import { Tooltip } from 'antd';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
-
-import { analysisTools } from './constants';
 
 const ScanpyDisabler = ({ children }) => {
   const dispatch = useDispatch();
 
-  const analysisTool = useSelector(getAnalysisTool());
+  const isScanpy = useSelector(getIsScanpy());
   const experimentId = useSelector((state) => (
     state.experimentSettings.info.experimentId
   ), _.isEqual);
 
   useEffect(() => {
-    if (_.isNil(analysisTool)) {
+    if (_.isNil(isScanpy)) {
       dispatch(loadProcessingSettings(experimentId));
     }
-  }, [analysisTool, experimentId]);
+  }, [isScanpy, experimentId]);
 
-  const disabled = _.isEqual(analysisTool, analysisTools.SCANPY);
-
-  if (!disabled) { return children; }
+  if (!isScanpy) { return children; }
 
   // First div is to trigger hover events
   // Second div is to disable everything under the tooltip without having to clone the children

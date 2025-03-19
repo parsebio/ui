@@ -4,9 +4,11 @@ import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
 import getAnalysisTool from 'redux/selectors/experimentSettings/getAnalysisTool';
 import { analysisTools } from 'utils/constants';
 
-const getIsScanpy = () => (analysisTool) => (
-  _.isEqual(analysisTool, analysisTools.SCANPY)
-);
+const getIsScanpy = () => (analysisTool) => {
+  if (_.isNil(analysisTool)) return null;
+
+  return _.isEqual(analysisTool, analysisTools.SCANPY);
+};
 
 export default createMemoizedSelector(
   getIsScanpy,
