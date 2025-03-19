@@ -106,6 +106,6 @@ describe('Data exploration index page', () => {
     expect(geneExpressionCall).toBeDefined();
     const genesRequested = JSON.parse(geneExpressionCall[1].body).body.genes;
     expect(genesRequested.length).toBe(1);
-    expect(genesRequested).toEqual(['gene1', 'gene2', 'gene3']);
+    expect(genesRequested).toEqual(['gene1']);
   });
 });
