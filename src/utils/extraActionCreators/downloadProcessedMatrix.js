@@ -7,16 +7,19 @@ import writeToFileURL from 'utils/upload/writeToFileURL';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
+import { analysisTools } from 'utils/constants';
 
 const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => {
   try {
     await dispatch(loadProcessingSettings(experimentId));
 
+    const { processing } = getState().experimentSettings;
+
     const {
       method: embeddingMethod,
       // embedding is saved in R object if downloading from project created by Seurat object upload
       useSaved,
-    } = getState().experimentSettings.processing.configureEmbedding.embeddingSettings;
+    } = processing.configureEmbedding.embeddingSettings;
 
     await dispatch(loadEmbedding(experimentId, embeddingMethod, true));
 
@@ -37,7 +40,12 @@ const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => 
       experimentId, body, getState, dispatch, { timeout },
     );
 
-    downloadFromUrl(writeToFileURL(data), { fileName: `${experimentId}_processed_matrix.rds` });
+    const processedMatrix = `${experimentId}_processed_matrix`;
+    const fileName = processing.dataIntegration.analysisTool === analysisTools.SCANPY
+      ? `${processedMatrix}.h5ad`
+      : `${processedMatrix}.rds`;
+
+    downloadFromUrl(writeToFileURL(data), { fileName });
   } catch (e) {
     handleError(e, endUserMessages.ERROR_DOWNLOADING_SEURAT_OBJECT);
   }

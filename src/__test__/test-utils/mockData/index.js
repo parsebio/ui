@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { analysisTools } from 'utils/constants';
 import generateMockSamples from './generateMockSamples';
 import generateMockExperiments from './generateMockExperiments';
 import generateMockProcessingConfig from './generateMockProcessingConfig';
@@ -16,18 +17,20 @@ responseData.samples = [generateMockSamples(
   3,
 )];
 
-responseData.processingConfig = generateMockProcessingConfig(3);
+responseData.processingConfigSeurat = generateMockProcessingConfig(analysisTools.SEURAT, 3);
+responseData.processingConfigScanpy = generateMockProcessingConfig(analysisTools.SCANPY, 3);
 
 // Add samples to first experiment
 const samples = responseData.samples[0];
 const sampleIds = _.map(samples, 'id');
 responseData.experiments[0].samplesOrder = sampleIds;
 
-const { experiments, processingConfig } = responseData;
+const { experiments, processingConfigSeurat, processingConfigScanpy } = responseData;
 
 export {
   experiments,
   samples,
-  processingConfig,
+  processingConfigSeurat,
+  processingConfigScanpy,
   responseData,
 };

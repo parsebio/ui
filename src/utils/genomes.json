@@ -220,6 +220,10 @@
     "species": "Custom Homo sapiens (human)"
   },
   {
+    "name": "GRCh38_CtrD_modified",
+    "species": "Custom Homo sapiens (human)"
+  },
+  {
     "name": "GRCh38-custom-1",
     "species": "Custom Homo sapiens (human)"
   },
@@ -238,6 +242,10 @@
   {
     "name": "GRCh37_EBV",
     "species": "Custom Homo sapiens (human) with EBV"
+  },
+  {
+    "name": "GRCh38_Emory",
+    "species": "Custom Homo sapiens"
   },
   {
     "name": "GRCh38_H3N2",
@@ -262,6 +270,10 @@
   {
     "name": "GRCH38_KHSV_GFP_HIV",
     "species": "Custom Homo sapiens (human)"
+  },
+  {
+    "name": "GRCh38_RFP_SRK",
+    "species": "Custom Homo sapiens (Human) with RFP and SRK"
   },
   {
     "name": "Mmul_10_MeV_GFP",
@@ -290,6 +302,10 @@
   {
     "name": "GRCm39-GFPh",
     "species": "Custom Mus musculus (mouse) with  GFPh"
+  },
+  {
+    "name": "GRCm39_MCLab",
+    "species": "Custom Mus musculus (mouse)"
   },
   {
     "name": "mm39-tdTom",
@@ -328,6 +344,10 @@
     "species": "Custom Mus musculus (mouse)"
   },
   {
+    "name": "GRCm39_RI250310",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
     "name": "GRCm38_Usutu",
     "species": "Custom Mus musculus (mouse) with Usutu virus"
   },
@@ -338,6 +358,10 @@
   {
     "name": "mm39-custom-3",
     "species": "Custom Mus musculus (mouse) with Puromycin, Neomycin, tdTom and CreERT2"
+  },
+  {
+    "name": "mm10_rfp_srk",
+    "species": "Custom Mus musculus (mouse)"
   },
   {
     "name": "Gmax_v2",
