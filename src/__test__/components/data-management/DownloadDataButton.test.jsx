@@ -14,7 +14,7 @@ import DownloadDataButton from 'components/data-management/DownloadDataButton';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
 
-import { processingConfig } from '__test__/test-utils/mockData';
+import { processingConfigSeurat, processingConfigScanpy } from '__test__/test-utils/mockData';
 import backendStatusData from '__test__/data/backend_status.json';
 
 import fetchWork from 'utils/work/fetchWork';
@@ -45,7 +45,7 @@ const mockAPIResponse = _.merge(
   generateDefaultMockAPIResponses(experimentId),
   {
     [`experiments/${experimentId}/processingConfig$`]: () => promiseResponse(
-      JSON.stringify({ processingConfig }),
+      JSON.stringify({ processingConfig: processingConfigSeurat }),
     ),
   },
 );
@@ -130,7 +130,7 @@ describe('DownloadDataButton', () => {
   });
 
   it('Data procesing settings option is disabled if a step misses a sample', async () => {
-    const processingConfigMissingSample = _.cloneDeep(processingConfig);
+    const processingConfigMissingSample = _.cloneDeep(processingConfigSeurat);
     // Remove settings for one sample
     delete processingConfigMissingSample.cellSizeDistribution[`${fake.SAMPLE_ID}-0`];
 
@@ -170,7 +170,7 @@ describe('DownloadDataButton', () => {
     expect(saveAs).toHaveBeenCalled();
   });
 
-  it('Downloads processed matrix properly', async () => {
+  it('Downloads processed matrix properly for seurat experiments', async () => {
     fetchMock.mockIf(/.*/, mockAPI(mockAPIResponse));
 
     const mockResult = '--ImAMock--';
@@ -203,6 +203,50 @@ describe('DownloadDataButton', () => {
 
     expect(writeToFileURL).toHaveBeenCalledWith(mockResult);
     expect(downloadFromUrl).toHaveBeenCalledWith(mockFileUrl, { fileName: `${experimentId}_processed_matrix.rds` });
+  });
+
+  it('Downloads processed matrix properly for scanpy experiments', async () => {
+    const mockAPIResponseScanpy = _.merge(
+      generateDefaultMockAPIResponses(experimentId),
+      {
+        [`experiments/${experimentId}/processingConfig$`]: () => promiseResponse(
+          JSON.stringify({ processingConfig: processingConfigScanpy }),
+        ),
+      },
+    );
+
+    fetchMock.mockIf(/.*/, mockAPI(mockAPIResponseScanpy));
+
+    const mockResult = '--ImAMock--';
+    const mockFileUrl = '--fileUrl--';
+
+    fetchWork.mockImplementation((expId, body) => {
+      if (body.name === 'GetEmbedding') {
+        return Promise.resolve();
+      }
+      if (body.name === 'DownloadAnnotSeuratObject') {
+        return Promise.resolve(mockResult);
+      }
+    });
+
+    writeToFileURL.mockImplementationOnce(() => mockFileUrl);
+
+    await renderDownloadDataButton();
+
+    // Open the Download dropdown
+    userEvent.click(screen.getByText(/Download/i));
+
+    const downloadButton = screen.getByText(/Processed Anndata object/i);
+
+    await act(async () => {
+      fireEvent.click(downloadButton);
+    });
+
+    expect(fetchWork).toHaveBeenCalledTimes(2);
+    expect(fetchWork.mock.calls).toMatchSnapshot();
+
+    expect(writeToFileURL).toHaveBeenCalledWith(mockResult);
+    expect(downloadFromUrl).toHaveBeenCalledWith(mockFileUrl, { fileName: `${experimentId}_processed_matrix.h5ad` });
   });
 
   it('Shows an error if there is an error downloading data', async () => {
