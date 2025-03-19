@@ -38,7 +38,7 @@ const SampleLTUpload = (props) => {
     const sheets = await readExcelFile(excelFile, { getSheets: true });
     const rows = await readExcelFile(excelFile, { sheet: sheets[0].name });
 
-    if (sheets.length !== 3
+    if (sheets.length < 3
         || !rows.some((row) => row.some((cell) => typeof cell === 'string'
             && (cell.includes('Evercode WT') || cell.includes('Parse Biosciences'))))) {
       throw new Error('Not a valid Parse Biosciences sample loading table.');
