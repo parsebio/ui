@@ -579,7 +579,7 @@ const ContentWrapper = (props) => {
                     {' '}
                     <a href='https://parsebiosciences.com/' style={{ color: 'inherit', textDecoration: 'none' }}>Parse Biosciences</a>
                     {' '}
-                    2024.
+                    2020-2025.
                     <br />
                     All rights reserved.
                   </span>
