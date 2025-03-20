@@ -26,7 +26,11 @@ const getCellSets = () => (state) => {
         cellIdsToReturn = new LazySet();
 
         cellSetKeys.forEach((sampleId) => {
-          cellIdsToReturn.addSet(properties[sampleId].cellIds, true);
+          // a sample under that id might not exist, but still have the sampleuuid
+          // in the cellsetkeys (e.g. the experiment was subsetted)
+          if (properties[sampleId]?.cellIds) {
+            cellIdsToReturn.addSet(properties[sampleId].cellIds, true);
+          }
         });
       } else {
         cellIdsToReturn = new LazySet();

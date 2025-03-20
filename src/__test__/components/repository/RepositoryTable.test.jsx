@@ -37,6 +37,13 @@ const experiment1 = {
 };
 
 const emptyStore = mockStore({
+  user: {
+    current: {
+      attributes: {
+        email: 'asd@asd.asd',
+      },
+    },
+  },
   experiments: {
     ...initialState,
     ids: [],

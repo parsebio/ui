@@ -44,6 +44,10 @@
     "species": "Candida Albicans"
   },
   {
+    "name": "C_sabeus",
+    "species": "Chlorocebus sabaeus (green monkey)"
+  },
+  {
     "name": "bColLiv1",
     "species": "Columba livia (rock pigeon)"
   },
@@ -86,6 +90,10 @@
   {
     "name": "bGalGal1",
     "species": "Gallus gallus (paternal White leghorn layer)"
+  },
+  {
+    "name": "galGal6",
+    "species": "Gallus gallus (Red Junglefowl)"
   },
   {
     "name": "haemonchus_contortus.PRJEB506.WBPS19",
@@ -172,6 +180,10 @@
     "species": "Scyliorhinus canicula (smaller spotted catshark)"
   },
   {
+    "name": "fSpaAur1-1",
+    "species": "Sparus aurata (gilthead seabream fish)"
+  },
+  {
     "name": "Sscrofa11",
     "species": "Sus scrofa (Pig)"
   },
@@ -208,6 +220,10 @@
     "species": "Custom Homo sapiens (human)"
   },
   {
+    "name": "GRCh38_CtrD_modified",
+    "species": "Custom Homo sapiens (human)"
+  },
+  {
     "name": "GRCh38-custom-1",
     "species": "Custom Homo sapiens (human)"
   },
@@ -228,8 +244,20 @@
     "species": "Custom Homo sapiens (human) with EBV"
   },
   {
+    "name": "GRCh38_Emory",
+    "species": "Custom Homo sapiens"
+  },
+  {
     "name": "GRCh38_H3N2",
-    "species": "Custom Homo sapiens (Human) with H3N2"
+    "species": "Custom Homo sapiens (human) with H3N2"
+  },
+  {
+    "name": "GRCh38_HIV",
+    "species": "Custom Homo sapiens (human) with HIV"
+  },
+  {
+    "name": "GRCh38_HBX2",
+    "species": "Custom Homo sapiens (human)"
   },
   {
     "name": "GRCh38_sp",
@@ -237,11 +265,15 @@
   },
   {
     "name": "GRCh38_SARS",
-    "species": "Custom Homo sapiens (Human) with SARS-CoV-2"
+    "species": "Custom Homo sapiens (human) with SARS-CoV-2"
   },
   {
     "name": "GRCH38_KHSV_GFP_HIV",
     "species": "Custom Homo sapiens (human)"
+  },
+  {
+    "name": "GRCh38_RFP_SRK",
+    "species": "Custom Homo sapiens (Human) with RFP and SRK"
   },
   {
     "name": "Mmul_10_MeV_GFP",
@@ -272,11 +304,19 @@
     "species": "Custom Mus musculus (mouse) with  GFPh"
   },
   {
+    "name": "GRCm39_MCLab",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
     "name": "mm39-tdTom",
     "species": "Custom Mus musculus (mouse) with tdTomato"
   },
   {
     "name": "GRCm39_td_cre_wpre",
+    "species": "Custom Mus musculus (mouse) with tdTomato, CRE and WPRE"
+  },
+  {
+    "name": "GRCm39_td_cre_wpre_2",
     "species": "Custom Mus musculus (mouse) with tdTomato, CRE and WPRE"
   },
   {
@@ -288,7 +328,23 @@
     "species": "Custom Mus musculus (mouse) with eGFP"
   },
   {
+    "name": "GRCm39_eGFP_mCherry",
+    "species": "Custom Mus musculus (mouse) with eGFP and mCherry"
+  },
+  {
     "name": "GRCm39_mCherry_iRFP",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
+    "name": "GRCm39_EYFP",
+    "species": "Custom Mus musculus (mouse) with EYFP"
+  },
+  {
+    "name": "GRCm39_mRNA_BC_MR",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
+    "name": "GRCm39_RI250310",
     "species": "Custom Mus musculus (mouse)"
   },
   {
@@ -302,6 +358,10 @@
   {
     "name": "mm39-custom-3",
     "species": "Custom Mus musculus (mouse) with Puromycin, Neomycin, tdTom and CreERT2"
+  },
+  {
+    "name": "mm10_rfp_srk",
+    "species": "Custom Mus musculus (mouse)"
   },
   {
     "name": "Gmax_v2",
@@ -322,6 +382,10 @@
   {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
+  },
+  {
+    "name": "Mmul_SIVmacL28_C1",
+    "species": "Custom Macaca mulatta"
   },
   {
     "name": "GRCm39-tdTom_TBrucei",

@@ -26,6 +26,7 @@ const tissueOptions = [
   'Spleen',
   'Stomach',
   'Thymus',
+  'Hippocampus',
 ];
 
 const speciesOptions = [

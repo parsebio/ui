@@ -29,6 +29,8 @@ import {
 } from 'utils/plotUtils';
 
 import dynamic from 'next/dynamic';
+
+import { unionByCellClass } from 'utils/cellSetOperations';
 import EmbeddingTooltip from './EmbeddingTooltip';
 
 const INITIAL_ZOOM = 4.00;
@@ -86,6 +88,14 @@ const Embedding = (props) => {
     return dataIsLoaded || geneLoadedIfNecessary;
   });
 
+  const filteredCellIdsRef = useRef(new Set());
+
+  useEffect(() => {
+    if (cellSets.accessible && filteredCellIdsRef.current.size === 0) {
+      filteredCellIdsRef.current = unionByCellClass('louvain', cellSetHierarchy, cellSetProperties);
+    }
+  }, [cellSets.accessible, cellSets.hierarchy]);
+
   // Load embedding settings if they aren't already.
   useEffect(() => {
     if (!embeddingSettings) {
@@ -116,7 +126,9 @@ const Embedding = (props) => {
 
       // Cell sets are easy, just return the appropriate color and set them up.
       case 'cellSets': {
-        setCellColors(renderCellSetColors(key, cellSetHierarchy, cellSetProperties));
+        const cellSetColors = renderCellSetColors(key, cellSetHierarchy, cellSetProperties);
+
+        setCellColors(new Map(Object.entries(cellSetColors)));
         setCellInfoVisible(false);
         return;
       }
@@ -136,10 +148,19 @@ const Embedding = (props) => {
       return;
     }
 
-    const truncatedExpression = expressionMatrix.getTruncatedExpression(focusData.key);
+    const truncatedExpression = expressionMatrix.getTruncatedExpressionSparse(
+      focusData.key,
+      Array.from(filteredCellIdsRef.current).sort((a, b) => a - b),
+      true,
+    );
+
     const { truncatedMin, truncatedMax } = expressionMatrix.getStats(focusData.key);
 
-    setCellColors(colorByGeneExpression(truncatedExpression, truncatedMin, truncatedMax));
+    const cellExpressionColors = colorByGeneExpression(
+      truncatedExpression, truncatedMin, truncatedMax,
+    );
+
+    setCellColors(cellExpressionColors);
   }, [focusData.key, expressionLoading]);
 
   const [convertedCellsData, setConvertedCellsData] = useState();
@@ -180,8 +201,6 @@ const Embedding = (props) => {
       setSelectedIds(selectedIdsToInt);
     }
   }, []);
-
-  const cellColorsForVitessce = useMemo(() => new Map(Object.entries(cellColors)), [cellColors]);
 
   const setViewState = useCallback(({ zoom, target }) => {
     setCellRadius(cellRadiusFromZoom(zoom));
@@ -275,7 +294,7 @@ const Embedding = (props) => {
             updateViewInfo={updateViewInfo}
             obsEmbedding={convertedCellsData?.obsEmbedding}
             obsEmbeddingIndex={convertedCellsData?.obsEmbeddingIndex}
-            cellColors={cellColorsForVitessce}
+            cellColors={cellColors}
             setCellSelection={setCellsSelection}
             getExpressionValue={getExpressionValue}
             getCellIsSelected={getCellIsSelected}

@@ -9,7 +9,6 @@ exports[`Get cell sets selector test should return default cell sets if unavaila
   "initialLoadPending": true,
   "loading": false,
   "properties": {},
-  "selected": [],
   "updatingClustering": false,
 }
 `;
