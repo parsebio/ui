@@ -23,10 +23,10 @@ describe('SelectShownSamplesDropdown', () => {
     storeState = makeStore();
 
     await storeState.dispatch(updateExperimentInfo({ sampleIds: [`${fake.SAMPLE_ID}-0`, `${fake.SAMPLE_ID}-1`, `${fake.SAMPLE_ID}-2`] }));
-    await storeState.dispatch(loadSamples(fake.EXPERIMENT_ID));
   });
 
-  it('renders correctly', () => {
+  it('renders correctly', async () => {
+    await storeState.dispatch(loadSamples(fake.EXPERIMENT_ID));
     const { getByText } = render(
       <Provider store={storeState}>
         <SelectShownSamplesDropdown
@@ -39,7 +39,9 @@ describe('SelectShownSamplesDropdown', () => {
     expect(getByText('Select samples')).toBeInTheDocument();
   });
 
-  it('updates shownSampleIds and shownMetadata on selection change', () => {
+  it('updates shownSampleIds and shownMetadata on selection change', async () => {
+    await storeState.dispatch(loadSamples(fake.EXPERIMENT_ID));
+
     const setShownSampleIds = jest.fn();
     const { getByText, getByTitle } = render(
       <Provider store={storeState}>
@@ -60,7 +62,9 @@ describe('SelectShownSamplesDropdown', () => {
     expect(setShownSampleIds).toHaveBeenCalledWith([`${fake.SAMPLE_ID}-0`]);
   });
 
-  it('selecting metadata track selects its corresponding samples', () => {
+  it('selecting metadata track selects its corresponding samples', async () => {
+    await storeState.dispatch(loadSamples(fake.EXPERIMENT_ID));
+
     const setShownSampleIds = jest.fn();
     const { getByText, getAllByTitle } = render(
       <Provider store={storeState}>
@@ -79,5 +83,20 @@ describe('SelectShownSamplesDropdown', () => {
     fireEvent.click(metadataOption);
 
     expect(setShownSampleIds).toHaveBeenCalledWith([`${fake.SAMPLE_ID}-0`, `${fake.SAMPLE_ID}-1`, `${fake.SAMPLE_ID}-2`]);
+  });
+
+  it('does not crash if there are no samples loaded', () => {
+    const setShownSampleIds = jest.fn();
+    const { getByText } = render(
+      <Provider store={storeState}>
+        <SelectShownSamplesDropdown
+          shownSampleIds={[]}
+          setShownSampleIds={setShownSampleIds}
+          experimentId={fake.EXPERIMENT_ID}
+        />
+      </Provider>,
+    );
+
+    expect(getByText('Select samples')).toBeInTheDocument();
   });
 });

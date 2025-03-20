@@ -18,33 +18,36 @@ const SelectShownSamplesDropdown = (props) => {
 
   const samplesWithoutMeta = _.omit(samples, ['meta']);
 
-  const treeData = [
-    {
-      value: 'samples',
-      title: 'Samples - select all',
-      children: sampleIdsOrdered.map((key) => {
-        const entry = samplesWithoutMeta[key];
-        return {
-          value: key,
-          title: entry.name,
-        };
-      }),
-    },
-    ...(Object.keys(metadataInfo).length > 0 ? [{
-      value: 'metadata',
-      disabled: true,
-      title: 'Metadata tracks',
-      children: Object.entries(metadataInfo).map(([metadataTrackKey, entry]) => ({
-        value: metadataTrackKey,
+  let treeData = [];
+  if (Object.keys(samplesWithoutMeta).length !== 0) {
+    treeData = [
+      {
+        value: 'samples',
+        title: 'Samples - select all',
+        children: sampleIdsOrdered.map((key) => {
+          const entry = samplesWithoutMeta[key];
+          return {
+            value: key,
+            title: entry.name,
+          };
+        }),
+      },
+      ...(Object.keys(metadataInfo).length > 0 ? [{
+        value: 'metadata',
         disabled: true,
-        title: metadataTrackKey,
-        children: Object.entries(entry).map(([metadataKey]) => ({
-          value: `metadataCategorical-${metadataTrackKey}-${metadataKey}`,
-          title: metadataKey,
+        title: 'Metadata tracks',
+        children: Object.entries(metadataInfo).map(([metadataTrackKey, entry]) => ({
+          value: metadataTrackKey,
+          disabled: true,
+          title: metadataTrackKey,
+          children: Object.entries(entry).map(([metadataKey]) => ({
+            value: `metadataCategorical-${metadataTrackKey}-${metadataKey}`,
+            title: metadataKey,
+          })),
         })),
-      })),
-    }] : []),
-  ];
+      }] : []),
+    ];
+  }
 
   // returns the associated sample ids if the key is metadata
   const metadataKeyToSampleIds = (key) => {
