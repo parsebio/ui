@@ -164,15 +164,15 @@ const DiffExprCompute = (props) => {
             <Tooltip overlay={(
               <span>
                 For finding marker genes that distinguish one cluster from another.
-                The calculation uses the presto implementation of the Wilcoxon
-                rank sum test and auROC analysis. For more information see the
+                The calculation uses the Wilcoxon
+                rank sum test and auROC analysis. Further information
                 {' '}
                 <a
-                  href='https://rdrr.io/github/immunogenomics/presto/f/vignettes/getting-started.Rmd'
+                  href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQA91315X7ZBPT0FZAJ'
                   target='_blank'
                   rel='noreferrer'
                 >
-                  presto vignette
+                  here
                 </a>
                 .
               </span>
@@ -207,14 +207,15 @@ const DiffExprCompute = (props) => {
               <>
                 <span>
                   For finding genes that are differentially expressed
-                  between two experimental groups. This analysis uses a
+                  between two experimental groups.
+                  This analysis uses a pseudobulk workflow. Further information
                   {' '}
                   <a
-                    href='http://bioconductor.org/books/3.14/OSCA.workflows/segerstolpe-human-pancreas-smart-seq2.html#segerstolpe-comparison'
+                    href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQAPB7E8EC3YY15K66G'
                     target='_blank'
                     rel='noreferrer'
                   >
-                    pseudobulk limma-voom workflow
+                    here
                   </a>
                   .
                 </span>
