@@ -29,7 +29,6 @@ const DiffExprCompute = (props) => {
   } = props;
 
   const dispatch = useDispatch();
-  const { properties, hierarchy } = cellSets;
 
   const cellSets = useSelector(getCellSets());
   const comparisonGroup = useSelector((state) => state.differentialExpression.comparison.group);
@@ -39,6 +38,7 @@ const DiffExprCompute = (props) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [numSamples, setNumSamples] = useState(0);
 
+  const { properties, hierarchy } = cellSets;
   const { basis, cellSet, compareWith } = comparisonGroup?.[selectedComparison] || {};
 
   /**
