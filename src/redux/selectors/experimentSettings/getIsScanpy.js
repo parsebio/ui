@@ -12,5 +12,5 @@ const getIsScanpy = () => (analysisTool) => {
 
 export default createMemoizedSelector(
   getIsScanpy,
-  { inputSelectors: getAnalysisTool },
+  { inputSelectors: getAnalysisTool() },
 );

@@ -51,9 +51,9 @@ const getAnalysisTool = (...params) => (state) => (
   experimentSettingsSelectors.getAnalysisTool(...params)(state.experimentSettings)
 );
 
-const getIsScanpy = (...params) => (state) => {
-  experimentSettingsSelectors.getIsScanpy(...params)(state.experimentSettings);
-};
+const getIsScanpy = (...params) => (state) => (
+  experimentSettingsSelectors.getIsScanpy(...params)(state.experimentSettings)
+);
 
 const getMetadataToSampleIds = (...params) => (state) => (
   samplesSelectors.getMetadataToSampleIds(...params)(state.samples)
