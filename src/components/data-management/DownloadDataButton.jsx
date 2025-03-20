@@ -19,6 +19,7 @@ import { getAnalysisTool, getBackendStatus, getIsScanpy } from 'redux/selectors'
 import handleError from 'utils/http/handleError';
 import downloadProcessedMatrix from 'utils/extraActionCreators/downloadProcessedMatrix';
 import { analysisTools } from 'utils/constants';
+import { scanpyDisableMessage } from 'utils/ScanpyDisabler';
 
 const processedMatrixTextByTool = {
   [analysisTools.SEURAT]: 'Processed Seurat object (.rds)',
@@ -100,7 +101,7 @@ const DownloadDataButton = () => {
         <Tooltip
           color={downloadingProcessedSeurat ? 'white' : ''}
           title={
-            isScanpy ? 'Coming soon!' : (
+            isScanpy ? scanpyDisableMessage : (
               downloadingProcessedSeurat
                 ? (
                   <center>

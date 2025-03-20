@@ -7,6 +7,8 @@ import { getIsScanpy } from 'redux/selectors';
 import { Tooltip } from 'antd';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
+const scanpyDisableMessage = 'This feature is available for Seurat projects but is not yet implemented in Scanpy beta mode - it\'s coming soon!';
+
 const ScanpyDisabler = ({ children }) => {
   const dispatch = useDispatch();
 
@@ -26,7 +28,7 @@ const ScanpyDisabler = ({ children }) => {
   // First div is to trigger hover events
   // Second div is to disable everything under the tooltip without having to clone the children
   return (
-    <Tooltip title='Coming soon!'>
+    <Tooltip title={scanpyDisableMessage}>
       <div>
         <div disabled style={{ pointerEvents: 'none', opacity: 0.5 }}>
           {children}
@@ -43,3 +45,5 @@ ScanpyDisabler.propTypes = {
 };
 
 export default ScanpyDisabler;
+
+export { scanpyDisableMessage };
