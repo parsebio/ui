@@ -1,15 +1,16 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
+
+import '@testing-library/jest-dom';
+import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
+
+import { loadProcessingSettings } from 'redux/actions/experimentSettings';
+import { makeStore } from 'redux/store';
 import ScanpyDisabler from 'utils/ScanpyDisabler';
 import { analysisTools } from 'utils/constants';
-import '@testing-library/jest-dom';
-import userEvent from '@testing-library/user-event';
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
+
 import mockAPI, { generateDefaultMockAPIResponses } from '__test__/test-utils/mockAPI';
-import { makeStore } from 'redux/store';
-import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
 enableFetchMocks();
 
