@@ -108,16 +108,16 @@ const MarkerHeatmap = ({ experimentId }) => {
   }, [loadedGenes, loadedGenesAreMarkers]);
 
   const userUpdatedPlotWithChanges = (userUpdatedField) => {
-    const updatesToDispatch = userUpdatedField;
+    let updatesToDispatch = userUpdatedField;
 
-    // if (updatesToDispatch.selectedCellSet) {
-    //   // grouping and metadata tracks should change when selectedCellSet is changed
-    //   updatesToDispatch = {
-    //     ...updatesToDispatch,
-    //     selectedTracks: [updatesToDispatch.selectedCellSet],
-    //     groupedTracks: [updatesToDispatch.selectedCellSet],
-    //   };
-    // }
+    if (updatesToDispatch.selectedCellSet) {
+      // grouping and metadata tracks should change when selectedCellSet is changed
+      updatesToDispatch = {
+        ...updatesToDispatch,
+        selectedTracks: [updatesToDispatch.selectedCellSet],
+        groupedTracks: [updatesToDispatch.selectedCellSet],
+      };
+    }
 
     dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
 
@@ -132,6 +132,12 @@ const MarkerHeatmap = ({ experimentId }) => {
           selectedCellSet: updatesToDispatch.selectedCellSet ?? config.selectedCellSet,
           selectedPoints: config.selectedPoints,
         },
+      ));
+    } else if (updatesToDispatch.selectedPoints) {
+      dispatch(loadDownsampledGeneExpression(
+        experimentId,
+        config.selectedGenes,
+        plotUuid,
       ));
     }
   };
