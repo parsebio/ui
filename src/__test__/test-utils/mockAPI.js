@@ -11,6 +11,7 @@ import downloadFromS3 from 'utils/work/downloadFromS3';
 import {
   responseData,
 } from '__test__/test-utils/mockData';
+import { analysisTools } from 'utils/constants';
 
 const cellSetsData = require('__test__/data/cell_sets.json');
 
@@ -49,13 +50,18 @@ const fetchWorkMock = (mockedResults) => ((experimentId, body) => {
   return workerDataResult(mockedResults[experimentId]);
 });
 
-const generateDefaultMockAPIResponses = (projectId) => ({
+const generateDefaultMockAPIResponses = (projectId, analysisTool = analysisTools.SEURAT) => ({
   [`experiments/${projectId}$`]: () => promiseResponse(
     JSON.stringify(responseData.experiments.find(({ id }) => id === projectId)),
   ),
-  [`experiments/${projectId}/processingConfig$`]: () => promiseResponse(
-    JSON.stringify(processingConfigData),
-  ),
+  [`experiments/${projectId}/processingConfig$`]: () => {
+    const processingConfigDataClone = _.cloneDeep(processingConfigData);
+    processingConfigDataClone.processingConfig.dataIntegration.analysisTool = analysisTool;
+
+    return promiseResponse(
+      JSON.stringify(processingConfigDataClone),
+    );
+  },
   [`experiments/${projectId}/cellSets$`]: () => {
     setupDownloadCellSetsFromS3Mock();
     return promiseResponse(

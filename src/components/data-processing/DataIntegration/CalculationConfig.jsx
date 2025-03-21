@@ -24,6 +24,7 @@ import { analysisTools, downsamplingMethods } from 'utils/constants';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import { updateFilterSettings } from 'redux/actions/experimentSettings';
 
+import ScanpyDisabler from 'utils/ScanpyDisabler';
 import NormalisationOptions from './NormalisationOptions';
 
 const { Option } = Select;
@@ -230,7 +231,7 @@ const CalculationConfig = (props) => {
                 value={analysisTool}
               >
                 <Radio value={analysisTools.SEURAT}>Seurat</Radio>
-                <Radio disabled value={analysisTools.SCANPY}>Scanpy</Radio>
+                <Radio disabled value={analysisTools.SCANPY}>Scanpy (beta)</Radio>
               </Radio.Group>
             </Form.Item>
           </div>
@@ -328,28 +329,30 @@ const CalculationConfig = (props) => {
                   :
                 </span>
 
-                <Checkbox.Group
-                  onChange={(val) => updateSettings(
-                    { dimensionalityReduction: { excludeGeneCategories: val } },
-                  )}
-                  value={dimensionalityReduction.excludeGeneCategories}
-                >
-                  <Space direction='vertical'>
-                    <Checkbox value='ribosomal'>Ribosomal</Checkbox>
-                    <Checkbox value='mitochondrial'>Mitochondrial</Checkbox>
-                    <Checkbox value='cellCycle'>
-                      <span>
-                        Cell cycle genes
-                        {' '}
-                        <Tooltip
-                          title='Currently only available for human and mice species. Do not check this box if your cells are from a different species.'
-                        >
-                          <QuestionCircleOutlined />
-                        </Tooltip>
-                      </span>
-                    </Checkbox>
-                  </Space>
-                </Checkbox.Group>
+                <ScanpyDisabler>
+                  <Checkbox.Group
+                    onChange={(val) => updateSettings(
+                      { dimensionalityReduction: { excludeGeneCategories: val } },
+                    )}
+                    value={dimensionalityReduction.excludeGeneCategories}
+                  >
+                    <Space direction='vertical'>
+                      <Checkbox value='ribosomal'>Ribosomal</Checkbox>
+                      <Checkbox value='mitochondrial'>Mitochondrial</Checkbox>
+                      <Checkbox value='cellCycle'>
+                        <span>
+                          Cell cycle genes
+                          {' '}
+                          <Tooltip
+                            title='Currently only available for human and mice species. Do not check this box if your cells are from a different species.'
+                          >
+                            <QuestionCircleOutlined />
+                          </Tooltip>
+                        </span>
+                      </Checkbox>
+                    </Space>
+                  </Checkbox.Group>
+                </ScanpyDisabler>
               </Space>
             </Form.Item>
 

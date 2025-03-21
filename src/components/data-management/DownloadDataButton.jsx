@@ -15,10 +15,11 @@ import { exportQCParameters, filterQCParameters } from 'utils/data-management/ex
 
 import { loadBackendStatus } from 'redux/actions/backendStatus/index';
 import Loader from 'components/Loader';
-import { getBackendStatus } from 'redux/selectors';
+import { getAnalysisTool, getBackendStatus, getIsScanpy } from 'redux/selectors';
 import handleError from 'utils/http/handleError';
 import downloadProcessedMatrix from 'utils/extraActionCreators/downloadProcessedMatrix';
 import { analysisTools } from 'utils/constants';
+import { scanpyDisableMessage } from 'utils/ScanpyDisabler';
 
 const processedMatrixTextByTool = {
   [analysisTools.SEURAT]: 'Processed Seurat object (.rds)',
@@ -35,8 +36,11 @@ const DownloadDataButton = () => {
   const {
     status: backendStatuses, loading: backendLoading,
   } = useSelector(getBackendStatus(activeExperimentId));
-
   const samples = useSelector((state) => state.samples);
+
+  const analysisTool = useSelector(getAnalysisTool());
+  const isScanpy = useSelector(getIsScanpy());
+
   const [pipelineHasRun, setPipelineHasRun] = useState(false);
   const [allSamplesAnalysed, setAllSamplesAnalysed] = useState(false);
   const [downloadingProcessedSeurat, setDownloadingProcessedSeurat] = useState(false);
@@ -85,12 +89,10 @@ const DownloadDataButton = () => {
     }
   };
 
-  const { analysisTool } = experimentSettings.processing.dataIntegration ?? {};
-
   const menuItems = [
     {
       key: 'download-processed-seurat',
-      disabled: !pipelineHasRun || backendLoading || downloadingProcessedSeurat,
+      disabled: !pipelineHasRun || backendLoading || downloadingProcessedSeurat || isScanpy,
       onClick: (e) => {
         e.domEvent.stopPropagation();
         downloadExperimentData('processed-matrix');
@@ -99,16 +101,18 @@ const DownloadDataButton = () => {
         <Tooltip
           color={downloadingProcessedSeurat ? 'white' : ''}
           title={
-            downloadingProcessedSeurat
-              ? (
-                <center>
-                  <Loader experimentId={activeExperimentId} />
-                  <p style={{ color: 'black' }}>Do not leave this page</p>
-                </center>
-              )
-              : pipelineHasRun
-                ? 'With Data Processing filters and settings applied'
-                : 'Launch analysis to process data'
+            isScanpy ? scanpyDisableMessage : (
+              downloadingProcessedSeurat
+                ? (
+                  <center>
+                    <Loader experimentId={activeExperimentId} />
+                    <p style={{ color: 'black' }}>Do not leave this page</p>
+                  </center>
+                )
+                : pipelineHasRun
+                  ? 'With Data Processing filters and settings applied'
+                  : 'Launch analysis to process data'
+            )
           }
           placement='left'
         >

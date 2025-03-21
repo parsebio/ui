@@ -16,6 +16,7 @@ import { mockCellSets } from '__test__/test-utils/cellSets.mock';
 
 import Loader from 'components/Loader';
 import fetchWork from 'utils/work/fetchWork';
+import { analysisTools } from 'utils/constants';
 
 jest.mock('utils/getTimeoutForWorkerTask', () => ({
   __esModule: true, // this property makes it work
@@ -101,6 +102,14 @@ const resultState = {
     },
   },
   backendStatus,
+  experimentSettings: {
+    processing: {
+      dataIntegration: {
+        analysisTool: analysisTools.SEURAT,
+      },
+    },
+    info: { experimentId },
+  },
 };
 
 // State with less gene expression fields

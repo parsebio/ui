@@ -6,6 +6,7 @@ import {
 import Link from 'next/link';
 
 import { plotNames, layout } from 'utils/constants';
+import ScanpyDisabler from 'utils/ScanpyDisabler';
 
 const CARD_STYLE = { marginBottom: '1em' };
 const CardItem = (({
@@ -117,6 +118,13 @@ const plots = [
   },
 ];
 
+const disabledByScanpy = [
+  'dot-key',
+  'normalized-matrix-key',
+  'trajectory-analysis-key',
+  'batch-differential-expression-key',
+];
+
 const PlotsTablesContainer = (props) => {
   const { width, height, experimentId } = props;
 
@@ -139,19 +147,31 @@ const PlotsTablesContainer = (props) => {
                 <strong>{section.title}</strong>
               </Divider>
             </Col>
-            {section.plots.map((item) => (
-              <Col className='plot-card' key={item.key}>
-                <Card
-                  size='small'
-                  hoverable
-                  title={item.name}
-                  bodyStyle={{ padding: '0' }}
-                  style={CARD_STYLE}
-                >
-                  <CardItem item={item} experimentId={experimentId} />
-                </Card>
-              </Col>
-            ))}
+            {section.plots.map((item) => {
+              const card = (
+                <Col className='plot-card' key={item.key}>
+                  <Card
+                    size='small'
+                    hoverable
+                    title={item.name}
+                    bodyStyle={{ padding: '0' }}
+                    style={CARD_STYLE}
+                  >
+                    <CardItem item={item} experimentId={experimentId} />
+                  </Card>
+                </Col>
+              );
+
+              if (disabledByScanpy.includes(item.key)) {
+                return (
+                  <ScanpyDisabler>
+                    {card}
+                  </ScanpyDisabler>
+                );
+              }
+
+              return card;
+            })}
           </Row>
         ))}
       </Space>
