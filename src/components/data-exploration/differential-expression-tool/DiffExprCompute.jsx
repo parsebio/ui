@@ -3,6 +3,8 @@ import {
   useSelector, useDispatch,
 } from 'react-redux';
 
+import _ from 'lodash';
+
 import {
   Button, Form, Radio, Tooltip, Space, Alert,
 } from 'antd';
@@ -11,12 +13,15 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import Loader from 'components/Loader';
 import PropTypes from 'prop-types';
 import { loadCellSets } from 'redux/actions/cellSets';
-import { getCellSets } from 'redux/selectors';
+import { getCellSets, getIsScanpy } from 'redux/selectors';
 import { setComparisonGroup, setComparisonType } from 'redux/actions/differentialExpression';
 import checkCanRunDiffExpr, { canRunDiffExprResults } from 'utils/extraActionCreators/differentialExpression/checkCanRunDiffExpr';
 import DiffExprSelect from 'components/data-exploration/differential-expression-tool/DiffExprSelect';
+import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
 const ComparisonType = Object.freeze({ BETWEEN: 'between', WITHIN: 'within' });
+
+const scanpyExtraMsg = 'In order for the analysis to run faster, only the top 5000 highly variable genes are tested. As a consequence, the results table will display fewer genes than the total number of genes detected in the experiment.';
 
 const DiffExprCompute = (props) => {
   const {
@@ -24,12 +29,16 @@ const DiffExprCompute = (props) => {
   } = props;
 
   const dispatch = useDispatch();
+
   const cellSets = useSelector(getCellSets());
-  const { properties, hierarchy } = cellSets;
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [numSamples, setNumSamples] = useState(0);
   const comparisonGroup = useSelector((state) => state.differentialExpression.comparison.group);
   const selectedComparison = useSelector((state) => state.differentialExpression.comparison.type);
+  const isScanpy = useSelector(getIsScanpy());
+
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [numSamples, setNumSamples] = useState(0);
+
+  const { properties, hierarchy } = cellSets;
   const { basis, cellSet, compareWith } = comparisonGroup?.[selectedComparison] || {};
 
   /**
@@ -37,6 +46,12 @@ const DiffExprCompute = (props) => {
    */
   useEffect(() => {
     dispatch(loadCellSets(experimentId));
+  }, []);
+
+  useEffect(() => {
+    if (_.isNil(isScanpy)) {
+      dispatch(loadProcessingSettings(experimentId));
+    }
   }, []);
 
   useEffect(() => {
@@ -175,6 +190,7 @@ const DiffExprCompute = (props) => {
                   here
                 </a>
                 .
+                {isScanpy && scanpyExtraMsg}
               </span>
             )}
             >
