@@ -28,7 +28,6 @@ const PlotContainer = (props) => {
     extraToolbarControls, extraControlPanels, customControlPanel, controlsOnly,
     showResetButton, onPlotReset,
     children,
-    onUpdate,
     saveDebounceTime,
   } = props;
 
@@ -37,14 +36,24 @@ const PlotContainer = (props) => {
   const [isResetDisabled, setIsResetDisabled] = useState(true);
   const [tileDirection, setTileDirection] = useState(DEFAULT_ORIENTATION);
 
-  const { config } = useSelector((state) => state.componentConfig[plotUuid] || {});
-  const debounceSave = useCallback(
-    _.debounce(() => dispatch(savePlotConfig(experimentId, plotUuid)), saveDebounceTime),
-    [plotUuid],
-  );
+  const defaultOnSave = useCallback(() => {
+    dispatch(savePlotConfig(experimentId, plotUuid));
+  }, [experimentId, plotUuid]);
+
   const defaultOnUpdate = (obj) => {
     dispatch(updatePlotConfig(plotUuid, obj));
   };
+
+  const {
+    onSave = defaultOnSave,
+    onUpdate = defaultOnUpdate,
+  } = props;
+
+  const { config } = useSelector((state) => state.componentConfig[plotUuid] || {});
+  const debounceSave = useCallback(
+    _.debounce(onSave, saveDebounceTime),
+    [plotUuid],
+  );
 
   const isConfigEqual = (currentConfig, initialConfig) => {
     const isEqual = Object.keys(initialConfig).every((key) => {
@@ -190,11 +199,11 @@ PlotContainer.propTypes = {
   customControlPanel: PropTypes.node,
   controlsOnly: PropTypes.bool,
   children: PropTypes.node,
-  onUpdate: PropTypes.func,
   showResetButton: PropTypes.bool,
   onPlotReset: PropTypes.func,
   saveDebounceTime: PropTypes.number,
-
+  onUpdate: PropTypes.func,
+  onSave: PropTypes.func,
 };
 
 PlotContainer.defaultProps = {
@@ -205,10 +214,11 @@ PlotContainer.defaultProps = {
   customControlPanel: null,
   controlsOnly: false,
   children: null,
-  onUpdate: undefined,
   showResetButton: true,
   onPlotReset: () => { },
   saveDebounceTime: 2000,
+  onUpdate: undefined,
+  onSave: undefined,
 };
 
 export default PlotContainer;
