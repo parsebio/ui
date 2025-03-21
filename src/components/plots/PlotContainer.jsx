@@ -91,9 +91,9 @@ const PlotContainer = (props) => {
     );
   }, [config]);
 
-  const onClickReset = () => {
-    dispatch(resetPlotConfig(experimentId, plotUuid, plotType));
-    onPlotReset();
+  const onClickReset = async () => {
+    const newConfig = await dispatch(resetPlotConfig(experimentId, plotUuid, plotType));
+    onPlotReset(newConfig);
     setIsResetDisabled(true);
   };
 

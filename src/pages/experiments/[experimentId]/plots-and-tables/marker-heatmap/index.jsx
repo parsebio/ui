@@ -121,9 +121,6 @@ const MarkerHeatmap = ({ experimentId }) => {
 
     dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
 
-    console.log('updatesToDispatchDebug');
-    console.log(updatesToDispatch);
-
     if (updatesToDispatch.selectedCellSet || updatesToDispatch.nMarkerGenes) {
       triggerMarkersLoading.current = true;
       dispatch(loadMarkerGenes(
@@ -306,15 +303,17 @@ const MarkerHeatmap = ({ experimentId }) => {
     dispatch(loadDownsampledGeneExpression(experimentId, allGenes, plotUuid));
   }, [experimentId, config, plotUuid]);
 
-  const onReset = () => {
+  const onReset = (newConfig) => {
+    const configToUse = newConfig ?? config;
+
     dispatch(loadMarkerGenes(
       experimentId,
       plotUuid,
       {
-        numGenes: config.nMarkerGenes,
-        groupedTracks: config.groupedTracks,
-        selectedCellSet: config.selectedCellSet,
-        selectedPoints: config.selectedPoints,
+        numGenes: configToUse.nMarkerGenes,
+        groupedTracks: configToUse.groupedTracks,
+        selectedCellSet: configToUse.selectedCellSet,
+        selectedPoints: configToUse.selectedPoints,
       },
     ));
   };
@@ -486,9 +485,9 @@ const MarkerHeatmap = ({ experimentId }) => {
         plotStylingConfig={plotStylingConfig}
         extraControlPanels={renderExtraPanels()}
         defaultActiveKey='gene-selection'
-        onUpdate={() => {
-
-        }}
+        onPlotReset={onReset}
+        // Disable onUpdate handling of the config
+        onUpdate={() => { }}
       >
         {renderPlot()}
       </PlotContainer>
