@@ -121,23 +121,19 @@ const MarkerHeatmap = ({ experimentId }) => {
 
     dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
 
-    // if (updatesToDispatch.selectedCellSet || updatesToDispatch.nMarkerGenes) {
-    //   triggerMarkersLoading.current = true;
-    //   dispatch(loadMarkerGenes(
-    //     experimentId,
-    //     plotUuid,
-    //     {
-    //       numGenes: updatesToDispatch.nMarkerGenes ?? config.nMarkerGenes,
-    //       groupedTracks: updatesToDispatch.groupedTracks ?? config.groupedTracks,
-    //       selectedCellSet: updatesToDispatch.selectedCellSet ?? config.selectedCellSet,
-    //       selectedPoints: config.selectedPoints,
-    //     },
-    //   ));
-    // } else if (updatesToDispatch.selectedGenes) {
-    //   dispatch(
-    //     loadDownsampledGeneExpression(experimentId, updatesToDispatch.selectedGenes, plotUuid),
-    //   );
-    // }
+    if (updatesToDispatch.selectedCellSet || updatesToDispatch.nMarkerGenes) {
+      triggerMarkersLoading.current = true;
+      dispatch(loadMarkerGenes(
+        experimentId,
+        plotUuid,
+        {
+          numGenes: updatesToDispatch.nMarkerGenes ?? config.nMarkerGenes,
+          groupedTracks: updatesToDispatch.groupedTracks ?? config.groupedTracks,
+          selectedCellSet: updatesToDispatch.selectedCellSet ?? config.selectedCellSet,
+          selectedPoints: config.selectedPoints,
+        },
+      ));
+    }
   };
 
   useEffect(() => {
