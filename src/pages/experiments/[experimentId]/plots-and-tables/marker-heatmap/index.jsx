@@ -373,7 +373,8 @@ const MarkerHeatmap = ({ experimentId }) => {
       <Panel header='Group by' key='group-by'>
         <HeatmapGroupBySettings
           componentType={plotUuid}
-          onChange={(cellSetKeys) => userUpdatedPlotWithChanges({ groupedTracks: cellSetKeys })}
+          managedConfig={false}
+          onUserChange={(cellSetKeys) => userUpdatedPlotWithChanges({ groupedTracks: cellSetKeys })}
         />
       </Panel>
     </>

@@ -24,7 +24,7 @@ import colors from 'utils/styling/colors';
 const HeatmapGroupBySettings = (props) => {
   const dispatch = useDispatch();
 
-  const { componentType, onChange = defaultOnChange } = props;
+  const { componentType, managedConfig = true, onUserChange = () => { } } = props;
 
   const groupedTracksKeys = useSelector(
     (state) => state.componentConfig[componentType].config.groupedTracks,
@@ -32,13 +32,11 @@ const HeatmapGroupBySettings = (props) => {
   const { accessible: cellSetsAccessible } = useSelector(getCellSets());
   const allCellSetsGroupBys = useSelector(getCellSetsHierarchy());
 
-  const defaultOnChange = useCallback((cellSetKeys) => {
-    dispatch(
-      updatePlotConfig(componentType, {
-        groupedTracks: cellSetKeys,
-      }),
-    );
-  }, [componentType]);
+  const userCausedChange = useCallback((cellSetsOrder) => {
+    const cellSetKeys = cellSetsOrder.map((cellSet) => cellSet.key);
+    onUserChange(cellSetKeys);
+    setCellSetsOrder(cellSetsOrder);
+  }, [onUserChange]);
 
   const getCellSetsOrder = () => {
     const groupedCellSets = [];
@@ -72,7 +70,14 @@ const HeatmapGroupBySettings = (props) => {
     }
 
     const cellSetKeys = cellSetsOrder.map((cellSet) => cellSet.key);
-    onChange(cellSetKeys);
+
+    if (managedConfig) {
+      dispatch(
+        updatePlotConfig(componentType, {
+          groupedTracks: cellSetKeys,
+        }),
+      );
+    }
   }, [cellSetsOrder]);
 
   useEffect(() => {
@@ -80,6 +85,8 @@ const HeatmapGroupBySettings = (props) => {
 
     if (!_.isEqual(previousGroupedKeys(), groupedTracksKeys)) {
       const newOrder = getCellSetsOrder();
+      // This change is not from this component, it's coming from redux,
+      // so we don't want to trigger the onUserChange callback
       setCellSetsOrder(newOrder);
     }
   }, [groupedTracksKeys, cellSetsAccessible]);
@@ -106,7 +113,8 @@ const HeatmapGroupBySettings = (props) => {
                 } else {
                   newCellSetsOrder.push(cellSet);
                 }
-                setCellSetsOrder(newCellSetsOrder);
+
+                userCausedChange(newCellSetsOrder);
               }}
             />
             {cellSet.name}
@@ -129,7 +137,7 @@ const HeatmapGroupBySettings = (props) => {
         {cellSetsAccessible
           ? (
             <ReorderableList
-              onChange={setCellSetsOrder}
+              onChange={userCausedChange}
               listData={cellSetsOrder}
               rightItem={(cellSet) => cellSet.name}
             />
@@ -140,12 +148,14 @@ const HeatmapGroupBySettings = (props) => {
 };
 
 HeatmapGroupBySettings.defaultProps = {
-  onChange: undefined,
+  managedConfig: undefined,
+  onUserChange: undefined,
 };
 
 HeatmapGroupBySettings.propTypes = {
   componentType: PropTypes.string.isRequired,
-  onChange: PropTypes.func,
+  managedConfig: PropTypes.bool,
+  onUserChange: PropTypes.func,
 };
 
 export default HeatmapGroupBySettings;
