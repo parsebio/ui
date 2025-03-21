@@ -97,6 +97,15 @@ const MarkerHeatmap = ({ experimentId }) => {
     if (!hierarchy?.length) dispatch(loadCellSets(experimentId));
   }, []);
 
+  // Update selectedGenes whenever a loadMarkerGenes call finishes
+  useConditionalEffect(() => {
+    if (!config || _.isEqual(loadedGenes, config.selectedGenes)) {
+      return;
+    }
+
+    dispatch(updatePlotConfig(plotUuid, { selectedGenes: loadedGenes }));
+  }, [loadedGenes, loadedGenesAreMarkers]);
+
   const userUpdatedPlotWithChanges = (userUpdatedField) => {
     // let updatesToDispatch = userUpdatedField;
 
@@ -195,17 +204,6 @@ const MarkerHeatmap = ({ experimentId }) => {
   //   louvainClustersResolution,
   //   groupedCellSets,
   // ]);
-
-  // // When marker genes have been loaded, update the config with those
-  // useConditionalEffect(() => {
-  //   if (!config || _.isEqual(loadedGenes, config.selectedGenes)) {
-  //     return;
-  //   }
-
-  //   // IMPORTANT This update is NOT performed by a user action, but by loadMarkerGenes work result
-  //   // So don't replace this with userUpdatedPlotWithChanges
-  //   dispatch(updatePlotConfig(plotUuid, { selectedGenes: loadedGenes }));
-  // }, [loadedGenes, loadedGenesAreMarkers]);
 
   useEffect(() => {
     if (
