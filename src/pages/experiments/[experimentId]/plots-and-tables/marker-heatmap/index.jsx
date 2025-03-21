@@ -302,13 +302,14 @@ const MarkerHeatmap = ({ experimentId }) => {
     dispatch(loadDownsampledGeneExpression(experimentId, newGenes, plotUuid));
   }, 1000), []);
 
-  const onGenesSelect = (genes) => {
-    const allGenes = _.uniq([...config?.selectedGenes, ...genes]);
+  const onGenesSelect = () => { };
+  // const onGenesSelect = (genes) => {
+  //   const allGenes = _.uniq([...config?.selectedGenes, ...genes]);
 
-    if (_.isEqual(allGenes, config?.selectedGenes)) return;
+  //   if (_.isEqual(allGenes, config?.selectedGenes)) return;
 
-    dispatch(loadDownsampledGeneExpression(experimentId, allGenes, plotUuid));
-  };
+  //   dispatch(loadDownsampledGeneExpression(experimentId, allGenes, plotUuid));
+  // };
 
   const onReset = () => {
     dispatch(loadMarkerGenes(
