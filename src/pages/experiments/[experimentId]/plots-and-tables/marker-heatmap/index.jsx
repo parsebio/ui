@@ -58,6 +58,8 @@ const MarkerHeatmap = ({ experimentId }) => {
   const cellSets = useSelector(getCellSets());
   const { hierarchy } = cellSets;
 
+  const isFirstLoadRef = useRef(true);
+
   const selectedCellSetClassAvailable = useSelector(
     getCellSetsHierarchyByKeys([config?.selectedCellSet]),
   ).length;
@@ -138,10 +140,25 @@ const MarkerHeatmap = ({ experimentId }) => {
     if (showAlert) userUpdatedPlotWithChanges({ legend: { showAlert, enabled: !showAlert } });
   }, [configIsLoaded, cellSets.accessible]);
 
-  // If the plot has never been loaded (so has no selectedGenes), then load the marker genes
+  // On open load gene expressions
   useEffect(() => {
+    if (!isFirstLoadRef.current) return;
+
+    isFirstLoadRef.current = false;
+
     if (config?.selectedGenes === null) {
       dispatch(loadMarkerGenes(
+        experimentId,
+        plotUuid,
+        {
+          numGenes: config.nMarkerGenes,
+          groupedTracks: config.groupedTracks,
+          selectedCellSet: config.selectedCellSet,
+          selectedPoints: config.selectedPoints,
+        },
+      ));
+    } else {
+      dispatch(loadDownsampledGeneExpression(
         experimentId,
         plotUuid,
         {
@@ -154,45 +171,45 @@ const MarkerHeatmap = ({ experimentId }) => {
     }
   }, [config]);
 
-  useConditionalEffect(() => {
-    const expectedConditions = (
-      louvainClustersResolution
-      && config?.groupedTracks
-      && config?.selectedCellSet
-      && config?.selectedPoints
-      && hierarchy?.length
-      && selectedCellSetClassAvailable
-      && config?.selectedGenes?.length > 0
-      && !markerGenesLoading
-    );
-    if (!expectedConditions) return;
+  // useConditionalEffect(() => {
+  //   const expectedConditions = (
+  //     louvainClustersResolution
+  //     && config?.groupedTracks
+  //     && config?.selectedCellSet
+  //     && config?.selectedPoints
+  //     && hierarchy?.length
+  //     && selectedCellSetClassAvailable
+  //     && config?.selectedGenes?.length > 0
+  //     && !markerGenesLoading
+  //   );
+  //   if (!expectedConditions) return;
 
-    if (triggerMarkersLoading.current) {
-      triggerMarkersLoading.current = false;
-      return;
-    }
+  //   if (triggerMarkersLoading.current) {
+  //     triggerMarkersLoading.current = false;
+  //     return;
+  //   }
 
-    dispatch(loadDownsampledGeneExpression(experimentId, config?.selectedGenes, plotUuid));
-  }, [
-    config?.groupedTracks,
-    config?.selectedCellSet,
-    config?.selectedPoints,
-    hierarchy,
-    cellSets.accessible,
-    louvainClustersResolution,
-    groupedCellSets,
-  ]);
+  //   dispatch(loadDownsampledGeneExpression(experimentId, config?.selectedGenes, plotUuid));
+  // }, [
+  //   config?.groupedTracks,
+  //   config?.selectedCellSet,
+  //   config?.selectedPoints,
+  //   hierarchy,
+  //   cellSets.accessible,
+  //   louvainClustersResolution,
+  //   groupedCellSets,
+  // ]);
 
-  // When marker genes have been loaded, update the config with those
-  useConditionalEffect(() => {
-    if (!config || _.isEqual(loadedGenes, config.selectedGenes)) {
-      return;
-    }
+  // // When marker genes have been loaded, update the config with those
+  // useConditionalEffect(() => {
+  //   if (!config || _.isEqual(loadedGenes, config.selectedGenes)) {
+  //     return;
+  //   }
 
-    // IMPORTANT This update is NOT performed by a user action, but by loadMarkerGenes work result
-    // So don't replace this with userUpdatedPlotWithChanges
-    dispatch(updatePlotConfig(plotUuid, { selectedGenes: loadedGenes }));
-  }, [loadedGenes, loadedGenesAreMarkers]);
+  //   // IMPORTANT This update is NOT performed by a user action, but by loadMarkerGenes work result
+  //   // So don't replace this with userUpdatedPlotWithChanges
+  //   dispatch(updatePlotConfig(plotUuid, { selectedGenes: loadedGenes }));
+  // }, [loadedGenes, loadedGenesAreMarkers]);
 
   useEffect(() => {
     if (
@@ -469,6 +486,9 @@ const MarkerHeatmap = ({ experimentId }) => {
         plotStylingConfig={plotStylingConfig}
         extraControlPanels={renderExtraPanels()}
         defaultActiveKey='gene-selection'
+        onUpdate={() => {
+
+        }}
       >
         {renderPlot()}
       </PlotContainer>
