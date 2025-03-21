@@ -108,7 +108,7 @@ const MarkerHeatmap = ({ experimentId }) => {
   }, [loadedGenes, loadedGenesAreMarkers]);
 
   const userUpdatedPlotWithChanges = (userUpdatedField) => {
-    // let updatesToDispatch = userUpdatedField;
+    const updatesToDispatch = userUpdatedField;
 
     // if (updatesToDispatch.selectedCellSet) {
     //   // grouping and metadata tracks should change when selectedCellSet is changed
@@ -119,7 +119,7 @@ const MarkerHeatmap = ({ experimentId }) => {
     //   };
     // }
 
-    // dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
+    dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
 
     // if (updatesToDispatch.selectedCellSet || updatesToDispatch.nMarkerGenes) {
     //   triggerMarkersLoading.current = true;
@@ -293,14 +293,13 @@ const MarkerHeatmap = ({ experimentId }) => {
     dispatch(loadDownsampledGeneExpression(experimentId, newGenes, plotUuid));
   }, 1000), []);
 
-  const onGenesSelect = () => { };
-  // const onGenesSelect = (genes) => {
-  //   const allGenes = _.uniq([...config?.selectedGenes, ...genes]);
+  const onGenesSelect = useCallback((genes) => {
+    const allGenes = _.uniq([...config?.selectedGenes, ...genes]);
 
-  //   if (_.isEqual(allGenes, config?.selectedGenes)) return;
+    if (_.isEqual(allGenes, config?.selectedGenes)) return;
 
-  //   dispatch(loadDownsampledGeneExpression(experimentId, allGenes, plotUuid));
-  // };
+    dispatch(loadDownsampledGeneExpression(experimentId, allGenes, plotUuid));
+  }, [experimentId, config, plotUuid]);
 
   const onReset = () => {
     dispatch(loadMarkerGenes(
