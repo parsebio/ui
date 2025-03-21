@@ -60,10 +60,6 @@ const MarkerHeatmap = ({ experimentId }) => {
 
   const isFirstLoadRef = useRef(true);
 
-  const selectedCellSetClassAvailable = useSelector(
-    getCellSetsHierarchyByKeys([config?.selectedCellSet]),
-  ).length;
-
   const numLegendItems = useSelector(
     getCellSetsHierarchyByKeys([config?.selectedCellSet]),
   )[0]?.children?.length;
@@ -83,13 +79,6 @@ const MarkerHeatmap = ({ experimentId }) => {
     (state) => state.experimentSettings.processing
       .configureEmbedding?.clusteringSettings.methodSettings.louvain.resolution,
   ) || false;
-
-  const groupedCellSets = useSelector((state) => {
-    if (!config?.groupedTracks) return undefined;
-
-    const groupedCellClasses = getCellSetsHierarchyByKeys(config.groupedTracks)(state);
-    return groupedCellClasses.map((cellClass) => cellClass.children).flat();
-  }, _.isEqual);
 
   useEffect(() => {
     dispatch(loadGeneList(experimentId));
@@ -178,35 +167,6 @@ const MarkerHeatmap = ({ experimentId }) => {
       ));
     }
   }, [config, hierarchy]);
-
-  // useConditionalEffect(() => {
-  //   const expectedConditions = (
-  //     louvainClustersResolution
-  //     && config?.groupedTracks
-  //     && config?.selectedCellSet
-  //     && config?.selectedPoints
-  //     && hierarchy?.length
-  //     && selectedCellSetClassAvailable
-  //     && config?.selectedGenes?.length > 0
-  //     && !markerGenesLoading
-  //   );
-  //   if (!expectedConditions) return;
-
-  //   if (triggerMarkersLoading.current) {
-  //     triggerMarkersLoading.current = false;
-  //     return;
-  //   }
-
-  //   dispatch(loadDownsampledGeneExpression(experimentId, config?.selectedGenes, plotUuid));
-  // }, [
-  //   config?.groupedTracks,
-  //   config?.selectedCellSet,
-  //   config?.selectedPoints,
-  //   hierarchy,
-  //   cellSets.accessible,
-  //   louvainClustersResolution,
-  //   groupedCellSets,
-  // ]);
 
   useEffect(() => {
     if (
