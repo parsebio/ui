@@ -98,36 +98,36 @@ const MarkerHeatmap = ({ experimentId }) => {
   }, []);
 
   const userUpdatedPlotWithChanges = (userUpdatedField) => {
-    let updatesToDispatch = userUpdatedField;
+    // let updatesToDispatch = userUpdatedField;
 
-    if (updatesToDispatch.selectedCellSet) {
-      // grouping and metadata tracks should change when selectedCellSet is changed
-      updatesToDispatch = {
-        ...updatesToDispatch,
-        selectedTracks: [updatesToDispatch.selectedCellSet],
-        groupedTracks: [updatesToDispatch.selectedCellSet],
-      };
-    }
+    // if (updatesToDispatch.selectedCellSet) {
+    //   // grouping and metadata tracks should change when selectedCellSet is changed
+    //   updatesToDispatch = {
+    //     ...updatesToDispatch,
+    //     selectedTracks: [updatesToDispatch.selectedCellSet],
+    //     groupedTracks: [updatesToDispatch.selectedCellSet],
+    //   };
+    // }
 
-    dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
+    // dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
 
-    if (updatesToDispatch.selectedCellSet || updatesToDispatch.nMarkerGenes) {
-      triggerMarkersLoading.current = true;
-      dispatch(loadMarkerGenes(
-        experimentId,
-        plotUuid,
-        {
-          numGenes: updatesToDispatch.nMarkerGenes ?? config.nMarkerGenes,
-          groupedTracks: updatesToDispatch.groupedTracks ?? config.groupedTracks,
-          selectedCellSet: updatesToDispatch.selectedCellSet ?? config.selectedCellSet,
-          selectedPoints: config.selectedPoints,
-        },
-      ));
-    } else if (updatesToDispatch.selectedGenes) {
-      dispatch(
-        loadDownsampledGeneExpression(experimentId, updatesToDispatch.selectedGenes, plotUuid),
-      );
-    }
+    // if (updatesToDispatch.selectedCellSet || updatesToDispatch.nMarkerGenes) {
+    //   triggerMarkersLoading.current = true;
+    //   dispatch(loadMarkerGenes(
+    //     experimentId,
+    //     plotUuid,
+    //     {
+    //       numGenes: updatesToDispatch.nMarkerGenes ?? config.nMarkerGenes,
+    //       groupedTracks: updatesToDispatch.groupedTracks ?? config.groupedTracks,
+    //       selectedCellSet: updatesToDispatch.selectedCellSet ?? config.selectedCellSet,
+    //       selectedPoints: config.selectedPoints,
+    //     },
+    //   ));
+    // } else if (updatesToDispatch.selectedGenes) {
+    //   dispatch(
+    //     loadDownsampledGeneExpression(experimentId, updatesToDispatch.selectedGenes, plotUuid),
+    //   );
+    // }
   };
 
   useEffect(() => {
@@ -142,6 +142,7 @@ const MarkerHeatmap = ({ experimentId }) => {
 
   // On open load gene expressions
   useEffect(() => {
+    if (_.isNil(config) || !hierarchy?.length) return;
     if (!isFirstLoadRef.current) return;
 
     isFirstLoadRef.current = false;
@@ -160,16 +161,11 @@ const MarkerHeatmap = ({ experimentId }) => {
     } else {
       dispatch(loadDownsampledGeneExpression(
         experimentId,
+        config.selectedGenes,
         plotUuid,
-        {
-          numGenes: config.nMarkerGenes,
-          groupedTracks: config.groupedTracks,
-          selectedCellSet: config.selectedCellSet,
-          selectedPoints: config.selectedPoints,
-        },
       ));
     }
-  }, [config]);
+  }, [config, hierarchy]);
 
   // useConditionalEffect(() => {
   //   const expectedConditions = (
