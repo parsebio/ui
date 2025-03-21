@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {
+  useEffect, useState, useRef, useCallback,
+} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   PlusOutlined,
@@ -22,13 +24,21 @@ import colors from 'utils/styling/colors';
 const HeatmapGroupBySettings = (props) => {
   const dispatch = useDispatch();
 
-  const { componentType } = props;
+  const { componentType, onChange = defaultOnChange } = props;
 
   const groupedTracksKeys = useSelector(
     (state) => state.componentConfig[componentType].config.groupedTracks,
   );
   const { accessible: cellSetsAccessible } = useSelector(getCellSets());
   const allCellSetsGroupBys = useSelector(getCellSetsHierarchy());
+
+  const defaultOnChange = useCallback((cellSetKeys) => {
+    dispatch(
+      updatePlotConfig(componentType, {
+        groupedTracks: cellSetKeys,
+      }),
+    );
+  }, [componentType]);
 
   const getCellSetsOrder = () => {
     const groupedCellSets = [];
@@ -61,11 +71,8 @@ const HeatmapGroupBySettings = (props) => {
       return;
     }
 
-    dispatch(
-      updatePlotConfig(componentType, {
-        groupedTracks: cellSetsOrder.map((cellSet) => cellSet.key),
-      }),
-    );
+    const cellSetKeys = cellSetsOrder.map((cellSet) => cellSet.key);
+    onChange(cellSetKeys);
   }, [cellSetsOrder]);
 
   useEffect(() => {
@@ -133,10 +140,12 @@ const HeatmapGroupBySettings = (props) => {
 };
 
 HeatmapGroupBySettings.defaultProps = {
+  onChange: undefined,
 };
 
 HeatmapGroupBySettings.propTypes = {
   componentType: PropTypes.string.isRequired,
+  onChange: PropTypes.func,
 };
 
 export default HeatmapGroupBySettings;

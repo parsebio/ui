@@ -121,6 +121,9 @@ const MarkerHeatmap = ({ experimentId }) => {
 
     dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
 
+    console.log('updatesToDispatchDebug');
+    console.log(updatesToDispatch);
+
     if (updatesToDispatch.selectedCellSet || updatesToDispatch.nMarkerGenes) {
       triggerMarkersLoading.current = true;
       dispatch(loadMarkerGenes(
@@ -133,7 +136,7 @@ const MarkerHeatmap = ({ experimentId }) => {
           selectedPoints: config.selectedPoints,
         },
       ));
-    } else if (updatesToDispatch.selectedPoints) {
+    } else if (updatesToDispatch.selectedPoints || updatesToDispatch.groupedTracks) {
       dispatch(loadDownsampledGeneExpression(
         experimentId,
         config.selectedGenes,
@@ -368,7 +371,10 @@ const MarkerHeatmap = ({ experimentId }) => {
         <HeatmapMetadataTracksSettings componentType={plotUuid} />
       </Panel>
       <Panel header='Group by' key='group-by'>
-        <HeatmapGroupBySettings componentType={plotUuid} />
+        <HeatmapGroupBySettings
+          componentType={plotUuid}
+          onChange={(cellSetKeys) => userUpdatedPlotWithChanges({ groupedTracks: cellSetKeys })}
+        />
       </Panel>
     </>
   );
