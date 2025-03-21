@@ -92,6 +92,7 @@ const MarkerHeatmap = ({ experimentId }) => {
   }, _.isEqual);
 
   useEffect(() => {
+    dispatch(loadGeneList(experimentId));
     if (!louvainClustersResolution) dispatch(loadProcessingSettings(experimentId));
     if (!config) dispatch(loadPlotConfig(experimentId, plotUuid, plotType));
     if (!hierarchy?.length) dispatch(loadCellSets(experimentId));
@@ -243,10 +244,6 @@ const MarkerHeatmap = ({ experimentId }) => {
 
     setVegaSpec(spec);
   }, [config, cellOrder]);
-
-  useEffect(() => {
-    dispatch(loadGeneList(experimentId));
-  }, []);
 
   const treeScrollable = document.getElementById('ScrollWrapper');
 
