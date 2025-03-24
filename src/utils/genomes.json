@@ -216,6 +216,10 @@
     "species": "Mixed human and rat"
   },
   {
+    "name": "GRCh38_mCherry",
+    "species": "Custom Homo sapiens (human)"
+  },
+  {
     "name": "GRCh38_ctrD_rRNAs",
     "species": "Custom Homo sapiens (human)"
   },
