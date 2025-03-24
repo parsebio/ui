@@ -27,6 +27,10 @@ const generateSpec = (config, plotData) => {
         name: 'bandwidth',
         value: config.kdeBandwidth,
       },
+      {
+        name: 'markerSize',
+        value: config.marker.size,
+      },
     ],
 
     data: [
@@ -234,6 +238,36 @@ const generateSpec = (config, plotData) => {
               {
                 type: 'filter',
                 expr: 'datum.group === parent.group && isDefined(datum.x)',
+              },
+              {
+                type: 'formula',
+                as: 'screenX',
+                expr: "scale('xrandom', datum.x) + (plotWidth / 2)",
+              },
+              {
+                type: 'formula',
+                as: 'screenY',
+                expr: "scale('yscale', datum.y)",
+              },
+              {
+                type: 'formula',
+                as: 'binX',
+                expr: 'floor(datum.screenX / sqrt(markerSize))',
+              },
+              {
+                type: 'formula',
+                as: 'binY',
+                expr: 'floor(datum.screenY / sqrt(markerSize))',
+              },
+              {
+                type: 'window',
+                groupby: ['binX', 'binY'],
+                ops: ['row_number'],
+                as: ['ptIndex'],
+              },
+              {
+                type: 'filter',
+                expr: 'datum.ptIndex <= 4',
               },
             ],
           },
@@ -505,6 +539,13 @@ const generateData = (
             y: selectedExpression[cellId],
           };
 
+          // Multiply the data by 10 times.
+          // for (let i = 0; i < 10; i++) {
+          //   const cellCopy = { ...cell };
+          //   cellCopy.x = 0.25 + Math.random() / 2;
+          //   if (cellCopy.y !== null) {
+          //     cells.push(cellCopy);
+          //   }
           cell.x = 0.25 + Math.random() / 2;
 
           if (cell.y !== null) {
