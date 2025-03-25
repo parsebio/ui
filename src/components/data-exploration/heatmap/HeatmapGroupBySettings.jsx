@@ -65,19 +65,17 @@ const HeatmapGroupBySettings = (props) => {
       return;
     }
 
-    if (cellSetsOrder.length === 0) {
+    if (!managedConfig || cellSetsOrder.length === 0) {
       return;
     }
 
     const cellSetKeys = cellSetsOrder.map((cellSet) => cellSet.key);
 
-    if (managedConfig) {
-      dispatch(
-        updatePlotConfig(componentType, {
-          groupedTracks: cellSetKeys,
-        }),
-      );
-    }
+    dispatch(
+      updatePlotConfig(componentType, {
+        groupedTracks: cellSetKeys,
+      }),
+    );
   }, [cellSetsOrder]);
 
   useEffect(() => {
