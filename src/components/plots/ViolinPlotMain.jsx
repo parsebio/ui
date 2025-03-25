@@ -96,7 +96,7 @@ const ViolinPlotMain = (props) => {
       );
     }
 
-    return <Vega spec={plotSpec} renderer='webgl' />;
+    // return <Vega spec={plotSpec} renderer='webgl' />;
   };
 
   return render();
