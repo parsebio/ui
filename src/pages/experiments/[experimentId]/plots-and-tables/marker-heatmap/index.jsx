@@ -140,7 +140,7 @@ const MarkerHeatmap = ({ experimentId }) => {
 
   // On open load gene expressions
   useEffect(() => {
-    if (_.isNil(config) || !hierarchy?.length) return;
+    if (_.isNil(config) || !cellSets.accessible) return;
     if (!isFirstLoadRef.current) return;
 
     isFirstLoadRef.current = false;
