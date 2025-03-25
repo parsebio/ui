@@ -64,8 +64,6 @@ const MarkerHeatmap = ({ experimentId }) => {
     getCellSetsHierarchyByKeys([config?.selectedCellSet]),
   )[0]?.children?.length;
 
-  const triggerMarkersLoading = useRef(false);
-
   const { data: loadedGenes = [], markers: loadedGenesAreMarkers = false } = useSelector(
     (state) => state.genes.expression.views[plotUuid],
   ) || {};
@@ -111,7 +109,6 @@ const MarkerHeatmap = ({ experimentId }) => {
     dispatch(updatePlotConfig(plotUuid, updatesToDispatch));
 
     if (updatesToDispatch.selectedCellSet || updatesToDispatch.nMarkerGenes) {
-      triggerMarkersLoading.current = true;
       dispatch(loadMarkerGenes(
         experimentId,
         plotUuid,
