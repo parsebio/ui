@@ -485,9 +485,12 @@ const generateData = (
   const cellSetsIds = cellSets.hierarchy.find(
     (hierarchy) => hierarchy.key === rootNodeKey,
   ).children.map((child) => child.key);
-
+  console.log('COMPUTED THIS ');
   const properties = _.pick(cellSets.properties, cellSetsIds);
+  console.log('COMPUTED THIS 2');
+
   const groups = _.mapValues(properties, (prop) => ({ name: prop.name, color: prop.color }));
+  console.log('COMPUTED THIS 3');
 
   const cells = [];
   const pointsAtCoordinate = {};
@@ -499,9 +502,12 @@ const generateData = (
   let cellsAfter = 0;
   cellSetsIds.forEach((cellSetId) => {
     const currentCellIds = Array.from(properties[cellSetId].cellIds);
+    console.log('COMPUTED THIS 4');
     currentCellIds
       .filter(shouldBeDisplayed)
-      .forEach((cellId) => {
+      .forEach((cellId, indx) => {
+        console.log('COMPUTED THIS 5 - ', indx);
+
         // ignore the cells which are unfiltered
         if (selectedExpression[cellId] || selectedExpression[cellId] === 0) {
           const cell = {
