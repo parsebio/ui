@@ -1,6 +1,16 @@
 import _ from 'lodash';
 
 /* eslint-disable no-param-reassign */
+const subsetCellsForDensity = (cells, maxCellsPerGroup = 5000) => {
+  // Group the cells by their 'group' property.
+  const cellsByGroup = _.groupBy(cells, 'group');
+  // For each group, randomly sample the cells (if the group is very large).
+  const sampledCells = _.flatMap(cellsByGroup, (groupCells) => (groupCells.length > maxCellsPerGroup
+    ? _.sampleSize(groupCells, maxCellsPerGroup)
+    : groupCells));
+  return sampledCells;
+};
+
 const generateSpec = (config, plotData) => {
   const numGroups = _.keys(plotData.groups).length;
   let plotWidth = Math.round(Math.min(100, 0.9 * (config.dimensions.width / numGroups)));
@@ -9,6 +19,8 @@ const generateSpec = (config, plotData) => {
   const yScaleDomain = config.axesRanges.yAxisAuto
     ? { data: 'cells', field: 'y' }
     : [config.axesRanges.yMin, config.axesRanges.yMax];
+  console.log('plotData.cells', plotData.cells);
+  plotData.cells = subsetCellsForDensity(plotData.cells);
 
   const spec = {
     $schema: 'https://vega.github.io/schema/vega/v5.json',
