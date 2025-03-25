@@ -519,6 +519,7 @@ const generateData = (
           //   }
 
           // dont render more points than 4 points for every distinguishablePointDistance step
+          cell.x = 0.25 + Math.random() / 2;
           const roundedXCoordinate = distinguishablePointDistance
             * Math.round(cell.x / distinguishablePointDistance);
 
@@ -529,7 +530,6 @@ const generateData = (
             pointsAtCoordinate[cell.y][roundedXCoordinate] = 0;
           }
 
-          cell.x = 0.25 + Math.random() / 2;
           if (cell.y !== null) {
             cellsBefore += 1;
           }
