@@ -18,8 +18,6 @@ const loadDownsampledGeneExpression = (
   componentUuid,
   withHiddenCellSets = false,
 ) => async (dispatch, getState) => {
-  console.log('DEBUGLOADOWNSAMPLEDEXPDEBUG');
-
   if (genes.length === 0) {
     dispatch({
       type: DOWNSAMPLED_GENES_EXPRESSION_LOADED,

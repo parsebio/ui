@@ -13,8 +13,6 @@ import endUserMessages from 'utils/endUserMessages';
 const loadMarkerGenes = (
   experimentId, plotUuid, options = {},
 ) => async (dispatch, getState) => {
-  console.log('DEBUGLOADMARKERGENES2DEBUG');
-
   const {
     numGenes = 5,
     groupedTracks = ['sample', 'louvain'],
