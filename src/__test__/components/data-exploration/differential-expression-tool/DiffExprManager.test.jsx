@@ -14,10 +14,13 @@ import getInitialState from 'redux/reducers/genes/getInitialState';
 import cellSetsInitialState from 'redux/reducers/cellSets/initialState';
 
 import { mockCellSets } from '__test__/test-utils/cellSets.mock';
+import { analysisTools } from 'utils/constants';
 
 jest.mock('components/Loader');
 
 const mockStore = configureMockStore([thunk]);
+
+const experimentId = '1234';
 
 const emptyState = {
   differentialExpression: { ...initialState },
@@ -30,9 +33,15 @@ const emptyState = {
     ...getInitialState(),
     focused: undefined,
   },
+  experimentSettings: {
+    info: { experimentId },
+    processing: {
+      dataIntegration: {
+        analysisTool: analysisTools.SEURAT,
+      },
+    },
+  },
 };
-
-const experimentId = '1234';
 
 const backendStatus = {
   [experimentId]: {
@@ -91,6 +100,14 @@ const filledState = {
     },
   },
   backendStatus,
+  experimentSettings: {
+    info: { experimentId },
+    processing: {
+      dataIntegration: {
+        analysisTool: analysisTools.SEURAT,
+      },
+    },
+  },
 };
 
 const emptyStore = mockStore(emptyState);
