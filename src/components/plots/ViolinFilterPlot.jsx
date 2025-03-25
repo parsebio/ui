@@ -24,6 +24,7 @@ const ViolinFilterPlot = (props) => {
         plotData,
         'sample',
         'All',
+        config.dimensions.width,
       );
       setPlotSpec(generateSpec(config, generatedPlotData));
     }

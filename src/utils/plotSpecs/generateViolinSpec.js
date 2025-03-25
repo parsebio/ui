@@ -27,10 +27,6 @@ const generateSpec = (config, plotData) => {
         name: 'bandwidth',
         value: config.kdeBandwidth,
       },
-      {
-        name: 'markerSize',
-        value: config.marker.size,
-      },
     ],
 
     data: [
@@ -238,36 +234,6 @@ const generateSpec = (config, plotData) => {
               {
                 type: 'filter',
                 expr: 'datum.group === parent.group && isDefined(datum.x)',
-              },
-              {
-                type: 'formula',
-                as: 'screenX',
-                expr: "scale('xrandom', datum.x) + (plotWidth / 2)",
-              },
-              {
-                type: 'formula',
-                as: 'screenY',
-                expr: "scale('yscale', datum.y)",
-              },
-              {
-                type: 'formula',
-                as: 'binX',
-                expr: 'floor(datum.screenX / sqrt(markerSize))',
-              },
-              {
-                type: 'formula',
-                as: 'binY',
-                expr: 'floor(datum.screenY / sqrt(markerSize))',
-              },
-              {
-                type: 'window',
-                groupby: ['binX', 'binY'],
-                ops: ['row_number'],
-                as: ['ptIndex'],
-              },
-              {
-                type: 'filter',
-                expr: 'datum.ptIndex <= 4',
               },
             ],
           },
@@ -485,6 +451,7 @@ const generateData = (
   selectedExpression,
   rootNodeKey,
   cellSetToDisplayId,
+  width,
 ) => {
   const shouldBeDisplayed = (
     (cellId) => (
@@ -522,11 +489,13 @@ const generateData = (
   const groups = _.mapValues(properties, (prop) => ({ name: prop.name, color: prop.color }));
 
   const cells = [];
+  const pointsAtCoordinate = {};
   if (cellSetToDisplayId && cellSetToDisplayId.includes('/')) {
     // eslint-disable-next-line prefer-destructuring
     cellSetToDisplayId = cellSetToDisplayId.split('/')[1];
   }
-
+  let cellsBefore = 0;
+  let cellsAfter = 0;
   cellSetsIds.forEach((cellSetId) => {
     const currentCellIds = Array.from(properties[cellSetId].cellIds);
     currentCellIds
@@ -540,19 +509,38 @@ const generateData = (
           };
 
           // Multiply the data by 10 times.
-          // for (let i = 0; i < 10; i++) {
+          const distinguishablePointDistance = (1 / width) * 30;
+
+          // for (let i = 0; i < 1; i += distinguishablePointDistance) {
           //   const cellCopy = { ...cell };
-          //   cellCopy.x = 0.25 + Math.random() / 2;
+          //   cellCopy.x = i;
           //   if (cellCopy.y !== null) {
           //     cells.push(cellCopy);
           //   }
-          cell.x = 0.25 + Math.random() / 2;
 
+          // dont render more points than 4 points for every distinguishablePointDistance step
+          const roundedXCoordinate = distinguishablePointDistance
+            * Math.round(cell.x / distinguishablePointDistance);
+
+          if (!pointsAtCoordinate[cell.y]) {
+            pointsAtCoordinate[cell.y] = {};
+          }
+          if (!pointsAtCoordinate[cell.y][roundedXCoordinate]) {
+            pointsAtCoordinate[cell.y][roundedXCoordinate] = 0;
+          }
+
+          cell.x = 0.25 + Math.random() / 2;
           if (cell.y !== null) {
+            cellsBefore += 1;
+          }
+          if (cell.y !== null && pointsAtCoordinate[cell.y][roundedXCoordinate] < 4) {
             cells.push(cell);
+            pointsAtCoordinate[cell.y][roundedXCoordinate] += 1;
+            cellsAfter += 1;
           }
         }
       });
+    console.log('PLOTTED CELLS BEFORE: ', cellsBefore, ' CELLS AFTER: ', cellsAfter);
   });
 
   const plotData = {

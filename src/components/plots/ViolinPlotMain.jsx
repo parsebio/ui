@@ -45,6 +45,7 @@ const ViolinPlotMain = (props) => {
           geneExpressionData,
           config?.selectedCellSet,
           config?.selectedPoints,
+          config.dimensions.width,
         );
         setPlotSpec(generateSpec(config, generatedPlotData));
       }
@@ -96,7 +97,7 @@ const ViolinPlotMain = (props) => {
       );
     }
 
-    // return <Vega spec={plotSpec} renderer='webgl' />;
+    return <Vega spec={plotSpec} renderer='webgl' />;
   };
 
   return render();
