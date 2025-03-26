@@ -12,6 +12,8 @@ const genesExpressionLoaded = (state, action) => {
     newGenes = undefined,
   } = action.payload;
 
+  console.log('genesExpressionLoadedDebug');
+
   // If there's any data to load, load it
   if (newGenes) {
     const {
@@ -21,6 +23,9 @@ const genesExpressionLoaded = (state, action) => {
       zScore,
       stats,
     } = newGenes;
+
+    console.log('orderedGeneNamesDebug');
+    console.log(orderedGeneNames);
 
     state.expression.full.matrix.pushGeneExpression(
       orderedGeneNames,

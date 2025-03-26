@@ -38,6 +38,7 @@ const loadGeneExpression = (
   const { genesToLoad, genesAlreadyLoaded } = findLoadedGenes(matrix, genes);
 
   if (genesToLoad.length === 0) {
+    console.log('HOLAHOLADebug1');
     // All genes are already loaded.
     return dispatch({
       type: GENES_EXPRESSION_LOADED,
@@ -59,9 +60,14 @@ const loadGeneExpression = (
     },
   });
 
+  // const body = {
+  //   name: 'GeneExpression',
+  //   genes,
+  //   downsampled: false,
+  // };
   const body = {
     name: 'GeneExpression',
-    genes: genesToLoad,
+    genes: ['Fn1', 'Col1a2', 'Sulf1'],
     downsampled: false,
   };
 
