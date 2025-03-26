@@ -100,7 +100,8 @@ const SecondaryAnalysisCard = (props) => {
           <Item contentStyle={{ fontWeight: 700, fontSize: 16 }}>
             <EditableField
               disabled={anyFileUploadingForAnyAnalysis}
-              message={anyFileUploadingForAnyAnalysis ? 'Project details can not be modified while files are uploading.' : undefined}
+              editMessage={anyFileUploadingForAnyAnalysis ? 'Project details can not be modified while files are uploading.' : 'Edit'}
+              deleteMessage={anyFileUploadingForAnyAnalysis ? 'Project details can not be modified while files are uploading.' : 'Delete'}
               value={secondaryAnalysis.name}
               onAfterSubmit={updateSecondaryAnalysisName}
               onDelete={() => setDeleteModalVisible(true)}
