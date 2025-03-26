@@ -26,7 +26,8 @@ const EditableField = (props) => {
     onEditing,
     formatter,
     disabled,
-    message,
+    editMessage,
+    deleteMessage,
     onDelete,
   } = props;
 
@@ -140,7 +141,7 @@ const EditableField = (props) => {
         {
           showEdit
             ? (
-              <Tooltip placement='top' title={message} mouseLeaveDelay={0} ref={editButton}>
+              <Tooltip placement='top' title={editMessage} mouseLeaveDelay={0} ref={editButton}>
                 <Button
                   disabled={disabled}
                   aria-label='Edit'
@@ -167,7 +168,7 @@ const EditableField = (props) => {
           {
             deleteEnabled
               ? (
-                <Tooltip placement='top' title={message} mouseLeaveDelay={0}>
+                <Tooltip placement='top' title={deleteMessage} mouseLeaveDelay={0}>
                   {confirmDelete ? (
                     <Popconfirm
                       title={confirmDelete}
@@ -227,7 +228,8 @@ EditableField.defaultProps = {
   confirmDelete: null,
   defaultEditing: false,
   disabled: false,
-  message: 'Edit',
+  editMessage: 'Edit',
+  deleteMessage: 'Delete',
   formatter: (value) => value,
 };
 
@@ -244,7 +246,8 @@ EditableField.propTypes = {
   renderBold: PropTypes.bool,
   defaultEditing: PropTypes.bool,
   disabled: PropTypes.bool,
-  message: PropTypes.string,
+  editMessage: PropTypes.string,
+  deleteMessage: PropTypes.string,
   formatter: PropTypes.func,
 };
 
