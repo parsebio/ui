@@ -62,7 +62,7 @@ const loadGeneExpression = (
 
   const body = {
     name: 'GeneExpression',
-    genes,
+    genes: genesToLoad,
     downsampled: false,
   };
 
