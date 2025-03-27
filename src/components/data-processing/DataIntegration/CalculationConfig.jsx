@@ -222,10 +222,19 @@ const CalculationConfig = (props) => {
                   }
 
                   if (dataIntegration.method) {
-                    return updateSettings({
-                      analysisTool: e.target.value,
+                    const settingsToUpdate = {
+                      analysisTool: newAnalysisTool,
                       dataIntegration: { method: newMethod },
-                    });
+                    };
+
+                    // If using scanpy, we don't allow excludeGeneCategories yet
+                    if (newAnalysisTool === analysisTools.SCANPY) {
+                      settingsToUpdate.dimensionalityReduction = {
+                        excludeGeneCategories: [],
+                      };
+                    }
+
+                    return updateSettings(settingsToUpdate);
                   }
                 }}
                 value={analysisTool}
