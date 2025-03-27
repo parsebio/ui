@@ -102,6 +102,7 @@ const MultiViewGrid = (props) => {
     // plotting one plot using the highest dispersion gene
 
     if ((multiViewConfig && highestDispersionGene && !multiViewPlotUuids?.length)) {
+      console.log('LOADGENEEXPRESSIONCALLED1');
       dispatch(loadGeneExpression(experimentId, [highestDispersionGene], firstPlotUuid));
 
       const customMultiPlotConfig = { plotUuids: [firstPlotUuid] };
@@ -123,6 +124,7 @@ const MultiViewGrid = (props) => {
       gene && !expression.matrix.geneIsLoaded(gene)
     ));
     if (genesToLoad.length > 0) {
+      console.log('LOADGENEEXPRESSIONCALLED2');
       dispatch(loadGeneExpression(experimentId, genesToLoad, plotUuid));
     }
   }, [shownGenes, expression]);

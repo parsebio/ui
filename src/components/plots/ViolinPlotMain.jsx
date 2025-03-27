@@ -33,6 +33,7 @@ const ViolinPlotMain = (props) => {
   const [plotSpec, setPlotSpec] = useState({});
 
   useEffect(() => {
+    console.log('thisWasTriggeredDebug');
     if (config
       && !expression.error
       && expression.matrix.geneIsLoaded(config.shownGene)

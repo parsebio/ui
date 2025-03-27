@@ -104,6 +104,7 @@ const ViolinIndex = ({ experimentId }) => {
 
   const changeSelectedPlotGene = (gene) => {
     const plotUuidToUpdate = updateAll ? multiViewPlotUuids[0] : selectedPlotUuid;
+    console.log('LOADGENEEXPRESSIONCALLED3');
     dispatch(loadGeneExpression(
       experimentId, [plotConfigs[plotUuidToUpdate]?.shownGene], gene,
     ));

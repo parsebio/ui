@@ -31,12 +31,20 @@ const loadGeneExpression = (
 ) => async (dispatch, getState) => {
   const { loading, matrix } = getState().genes.expression.full;
 
+  console.log('loadingDebug');
+  console.log(loading);
+
   // If other gene expression data is already being loaded, don't dispatch.
   if (loading.length > 0) {
     return null;
   }
   const { genesToLoad, genesAlreadyLoaded } = findLoadedGenes(matrix, genes);
 
+  console.log('genesToLoadDebug');
+  console.log(genesToLoad);
+
+  console.log('genesAlreadyLoadedDebug');
+  console.log(genesAlreadyLoaded);
   if (genesToLoad.length === 0) {
     // All genes are already loaded.
     return dispatch({
@@ -77,6 +85,8 @@ const loadGeneExpression = (
     } = await fetchWork(
       experimentId, body, getState, dispatch, { timeout },
     );
+
+    console.log('RECEIVED RESPONSE');
 
     const rawExpression = SparseMatrix.fromJSON(rawExpressionJson);
     const truncatedExpression = SparseMatrix.fromJSON(truncatedExpressionJson);
