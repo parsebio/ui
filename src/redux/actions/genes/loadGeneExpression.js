@@ -60,14 +60,9 @@ const loadGeneExpression = (
     },
   });
 
-  // const body = {
-  //   name: 'GeneExpression',
-  //   genes,
-  //   downsampled: false,
-  // };
   const body = {
     name: 'GeneExpression',
-    genes: ['Fn1', 'Col1a2', 'Sulf1'],
+    genes,
     downsampled: false,
   };
 
