@@ -33,13 +33,6 @@ const ViolinPlotMain = (props) => {
   const [plotSpec, setPlotSpec] = useState({});
 
   useEffect(() => {
-    if (config) {
-      console.log('allReadyDebug');
-      console.log(
-        expression.matrix.geneIsLoaded(config.shownGene),
-      );
-    }
-
     if (config
       && !expression.error
       && expression.matrix.geneIsLoaded(config.shownGene)
@@ -97,7 +90,6 @@ const ViolinPlotMain = (props) => {
           error={expression.error}
           reason={expression.error}
           onClick={() => {
-            console.log('HOLADEBUG1');
             dispatch(loadGeneExpression(
               experimentId, [config?.shownGene], plotUuid,
             ));

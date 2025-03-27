@@ -38,7 +38,6 @@ const loadGeneExpression = (
   const { genesToLoad, genesAlreadyLoaded } = findLoadedGenes(matrix, genes);
 
   if (genesToLoad.length === 0) {
-    console.log('HOLAHOLADebug1');
     // All genes are already loaded.
     return dispatch({
       type: GENES_EXPRESSION_LOADED,
