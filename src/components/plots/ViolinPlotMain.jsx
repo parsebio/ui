@@ -34,6 +34,22 @@ const ViolinPlotMain = (props) => {
 
   useEffect(() => {
     console.log('thisWasTriggeredDebug');
+
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>');
+    console.log('canSetPlotSpecDebug');
+    console.log(config
+      && !expression.error
+      && expression.matrix.geneIsLoaded(config.shownGene)
+      && cellSets.accessible);
+    console.log('configDebug');
+    console.log(config);
+    console.log('!expression.errorDebug');
+    console.log(!expression.error);
+    console.log('expression.matrix.geneIsLoaded(config.shownGene)Debug');
+    console.log(expression.matrix.geneIsLoaded(config.shownGene));
+    console.log('cellSets.accessibleDebug');
+    console.log(cellSets.accessible);
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<<');
     if (config
       && !expression.error
       && expression.matrix.geneIsLoaded(config.shownGene)
@@ -42,6 +58,9 @@ const ViolinPlotMain = (props) => {
         ? expression.matrix.getZScoreSparse(config.shownGene, filteredCellIds)
         : expression.matrix.getRawExpressionSparse(config.shownGene, filteredCellIds);
 
+      console.log('selectedCellSetClassAvailableDebug');
+      console.log(selectedCellSetClassAvailable);
+
       if (selectedCellSetClassAvailable) {
         const generatedPlotData = generateData(
           cellSets,
@@ -49,6 +68,8 @@ const ViolinPlotMain = (props) => {
           config?.selectedCellSet,
           config?.selectedPoints,
         );
+
+        console.log('setPlotSpecDebug');
         setPlotSpec(generateSpec(config, generatedPlotData));
       }
     }
