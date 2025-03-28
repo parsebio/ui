@@ -44,9 +44,9 @@ const ViolinPlotMain = (props) => {
     console.log('configDebug');
     console.log(config);
     console.log('!expression.errorDebug');
-    console.log(!expression.error);
+    console.log(!expression?.error);
     console.log('expression.matrix.geneIsLoaded(config.shownGene)Debug');
-    console.log(expression.matrix.geneIsLoaded(config.shownGene));
+    console.log(expression?.matrix?.geneIsLoaded(config?.shownGene));
     console.log('cellSets.accessibleDebug');
     console.log(cellSets.accessible);
     console.log('<<<<<<<<<<<<<<<<<<<<<<<<');
