@@ -13,6 +13,7 @@ import DiffExprResults from 'components/data-exploration/differential-expression
 import { mockCellSets } from '__test__/test-utils/cellSets.mock';
 
 import { DIFF_EXPR_LOADING, DIFF_EXPR_LOADED, DIFF_EXPR_ORDERING_SET } from 'redux/actionTypes/differentialExpression';
+import { analysisTools } from 'utils/constants';
 
 jest.mock('utils/work/fetchWork', () => (
   jest.fn(() => new Promise((resolve) => resolve({
@@ -46,6 +47,14 @@ const backendStatus = {
 };
 
 const storeState = {
+  experimentSettings: {
+    info: { experimentId },
+    processing: {
+      dataIntegration: {
+        analysisTool: analysisTools.SCANPY,
+      },
+    },
+  },
   genes: {
     selected: [],
   },

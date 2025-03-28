@@ -47,6 +47,14 @@ const getFilterChanges = (...params) => (state) => (
   experimentSettingsSelectors.getFilterChanges(...params)(state.experimentSettings)
 );
 
+const getAnalysisTool = (...params) => (state) => (
+  experimentSettingsSelectors.getAnalysisTool(...params)(state.experimentSettings)
+);
+
+const getIsScanpy = (...params) => (state) => (
+  experimentSettingsSelectors.getIsScanpy(...params)(state.experimentSettings)
+);
+
 const getMetadataToSampleIds = (...params) => (state) => (
   samplesSelectors.getMetadataToSampleIds(...params)(state.samples)
 );
@@ -67,6 +75,8 @@ export {
   getSampleLTFile,
   getSelectedMetadataTracks,
   getFilterChanges,
+  getAnalysisTool,
+  getIsScanpy,
   getMetadataToSampleIds,
   getSamples,
 };

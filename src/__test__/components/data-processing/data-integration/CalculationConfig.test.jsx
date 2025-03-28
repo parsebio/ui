@@ -17,6 +17,7 @@ import userEvent from '@testing-library/user-event';
 import CalculationConfig from 'components/data-processing/DataIntegration/CalculationConfig';
 import fake from '__test__/test-utils/constants';
 import { EXPERIMENT_SETTINGS_NON_SAMPLE_FILTER_UPDATE } from 'redux/actionTypes/experimentSettings';
+import { getIsScanpy } from 'redux/selectors';
 
 jest.mock('redux/selectors');
 
@@ -73,6 +74,9 @@ const initialState = {
 const explanationText = 'SeuratV4 is a computationally expensive method. It is highly likely that the integration will fail as it requires more resources than are currently available. We recommended you to evaluate other methods before using SeuratV4.';
 
 describe('DataIntegration.CalculationConfig', () => {
+  beforeEach(() => {
+    getIsScanpy.mockImplementation(() => () => false);
+  });
   let mockedStore;
 
   const renderCalculationConfig = async (storeState) => {
@@ -180,22 +184,34 @@ describe('DataIntegration.CalculationConfig', () => {
   });
 
   it('Works for analysis tool scanpy', async () => {
-    const scanpyState = _.merge(initialState, {
+    const scanpyState = _.merge({}, initialState, {
       experimentSettings: {
         processing: {
           dataIntegration: {
             analysisTool: analysisTools.SCANPY,
+            dataIntegration: {
+              method: 'seuratv4',
+            },
+            downsampling: {
+              method: downsamplingMethods.GEOSKETCH,
+              methodSettings: {
+                [downsamplingMethods.GEOSKETCH]: {
+                  percentageToKeep: 12,
+                },
+              },
+            },
           },
         },
       },
     });
+
+    getIsScanpy.mockReset().mockImplementation(() => () => true);
 
     await renderCalculationConfig(scanpyState);
 
     expect(screen.getByText('Data Integration')).toBeDefined();
     expect(screen.getByText('Downsampling Options')).toBeDefined();
 
-    // Displays things correctly
     userEvent.click(screen.getByText('Downsampling Options'));
 
     expect(screen.getByText('Geometric Sketching')).toBeDefined();
