@@ -16,17 +16,17 @@ const loadMarkerGenes = (
   const {
     numGenes = 5,
     groupedTracks = ['sample', 'louvain'],
-    selectedCellSetKey = 'louvain',
+    selectedCellSet = 'louvain',
     selectedPoints = 'All',
     hiddenCellSets = [],
   } = options;
 
   const cellSets = await getCellSetsThatAffectDownsampling(
-    experimentId, selectedCellSetKey, groupedTracks, dispatch, getState,
+    experimentId, selectedCellSet, groupedTracks, dispatch, getState,
   );
 
   const downsampleSettings = {
-    selectedCellSet: selectedCellSetKey,
+    selectedCellSet,
     groupedTracks,
     cellSets,
     selectedPoints,

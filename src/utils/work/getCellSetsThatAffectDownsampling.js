@@ -4,11 +4,11 @@ import { getCellSetsHierarchy, getCellSetsHierarchyByKeys } from 'redux/selector
 // Check that the cell sets within the selected selectedCellSet and grouped tracks didn't change
 // e.g., if cell set was deleted we can't use cache
 const getCellSetsThatAffectDownsampling = async (
-  experimentId, selectedCellSetKey, groupedTracks, dispatch, getState,
+  experimentId, selectedCellSet, groupedTracks, dispatch, getState,
 ) => {
   await dispatch(loadCellSets(experimentId));
 
-  const [{ children }] = getCellSetsHierarchyByKeys([selectedCellSetKey])(getState());
+  const [{ children }] = getCellSetsHierarchyByKeys([selectedCellSet])(getState());
 
   const selectedCellSetsKeys = children.map((cellSet) => cellSet.key);
 
