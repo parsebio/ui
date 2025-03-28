@@ -48,6 +48,7 @@ const genesExpressionLoaded = (state, action) => {
       full: {
         ...state.expression.full,
         loading: loadingStatus,
+        error: null,
       },
     },
   };
