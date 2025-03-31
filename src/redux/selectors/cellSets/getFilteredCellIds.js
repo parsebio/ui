@@ -3,12 +3,16 @@ import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
 import getCellSets from 'redux/selectors/cellSets/getCellSets';
 import { unionByCellClass } from 'utils/cellSetOperations';
 
-const getFilteredCellIds = () => (state) => {
+const getFilteredCellIds = (asSet = false) => (state) => {
   if (!state || !state.accessible) {
     return [];
   }
 
   const filteredCellIdsSet = unionByCellClass('louvain', state.hierarchy, state.properties);
+
+  if (asSet) {
+    return filteredCellIdsSet;
+  }
 
   return Array.from(filteredCellIdsSet).sort((a, b) => a - b);
 };
