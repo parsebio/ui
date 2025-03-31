@@ -38,13 +38,14 @@ const ViolinPlotMain = (props) => {
       const geneExpressionData = config.normalised === 'zScore'
         ? expression.matrix.getZScore(config.shownGene)
         : expression.matrix.getRawExpression(config.shownGene);
-
+      console.log('COMPUTED GENEEXPRESSION DATA ', config.normalised);
       if (selectedCellSetClassAvailable) {
         const generatedPlotData = generateData(
           cellSets,
           geneExpressionData,
           config?.selectedCellSet,
           config?.selectedPoints,
+          config.dimensions.width,
         );
         setPlotSpec(generateSpec(config, generatedPlotData));
       }

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 /* eslint-disable no-param-reassign */
+
 const generateSpec = (config, plotData) => {
   const numGroups = _.keys(plotData.groups).length;
   let plotWidth = Math.round(Math.min(100, 0.9 * (config.dimensions.width / numGroups)));
@@ -9,7 +10,7 @@ const generateSpec = (config, plotData) => {
   const yScaleDomain = config.axesRanges.yAxisAuto
     ? { data: 'cells', field: 'y' }
     : [config.axesRanges.yMin, config.axesRanges.yMax];
-
+  console.log('plotData.cells', plotData.cells);
   const spec = {
     $schema: 'https://vega.github.io/schema/vega/v5.json',
     description: 'Violin plot',
@@ -451,6 +452,7 @@ const generateData = (
   selectedExpression,
   rootNodeKey,
   cellSetToDisplayId,
+  width,
 ) => {
   const shouldBeDisplayed = (
     (cellId) => (
@@ -483,21 +485,29 @@ const generateData = (
   const cellSetsIds = cellSets.hierarchy.find(
     (hierarchy) => hierarchy.key === rootNodeKey,
   ).children.map((child) => child.key);
-
+  console.log('COMPUTED THIS ');
   const properties = _.pick(cellSets.properties, cellSetsIds);
+  console.log('COMPUTED THIS 2');
+
   const groups = _.mapValues(properties, (prop) => ({ name: prop.name, color: prop.color }));
+  console.log('COMPUTED THIS 3');
 
   const cells = [];
+  const pointsAtCoordinate = {};
   if (cellSetToDisplayId && cellSetToDisplayId.includes('/')) {
     // eslint-disable-next-line prefer-destructuring
     cellSetToDisplayId = cellSetToDisplayId.split('/')[1];
   }
-
+  let cellsBefore = 0;
+  let cellsAfter = 0;
   cellSetsIds.forEach((cellSetId) => {
     const currentCellIds = Array.from(properties[cellSetId].cellIds);
+    console.log('COMPUTED THIS 4');
     currentCellIds
       .filter(shouldBeDisplayed)
-      .forEach((cellId) => {
+      .forEach((cellId, indx) => {
+        console.log('COMPUTED THIS 5 - ', indx);
+
         // ignore the cells which are unfiltered
         if (selectedExpression[cellId] || selectedExpression[cellId] === 0) {
           const cell = {
@@ -505,13 +515,39 @@ const generateData = (
             y: selectedExpression[cellId],
           };
 
+          // Multiply the data by 10 times.
+          const distinguishablePointDistance = (1 / width) * 30;
+
+          // for (let i = 0; i < 1; i += distinguishablePointDistance) {
+          //   const cellCopy = { ...cell };
+          //   cellCopy.x = i;
+          //   if (cellCopy.y !== null) {
+          //     cells.push(cellCopy);
+          //   }
+
+          // dont render more points than 4 points for every distinguishablePointDistance step
           cell.x = 0.25 + Math.random() / 2;
+          const roundedXCoordinate = distinguishablePointDistance
+            * Math.round(cell.x / distinguishablePointDistance);
+
+          if (!pointsAtCoordinate[cell.y]) {
+            pointsAtCoordinate[cell.y] = {};
+          }
+          if (!pointsAtCoordinate[cell.y][roundedXCoordinate]) {
+            pointsAtCoordinate[cell.y][roundedXCoordinate] = 0;
+          }
 
           if (cell.y !== null) {
+            cellsBefore += 1;
+          }
+          if (cell.y !== null && pointsAtCoordinate[cell.y][roundedXCoordinate] < 4) {
             cells.push(cell);
+            pointsAtCoordinate[cell.y][roundedXCoordinate] += 1;
+            cellsAfter += 1;
           }
         }
       });
+    console.log('PLOTTED CELLS BEFORE: ', cellsBefore, ' CELLS AFTER: ', cellsAfter);
   });
 
   const plotData = {

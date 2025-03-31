@@ -87,6 +87,10 @@ class ExpressionMatrix {
     newZScore,
     newStats,
   ) {
+    console.log('newTruncatedGeneExpression', newTruncatedGeneExpression);
+    console.log('newRawGeneExpression', newRawGeneExpression);
+    console.log('newZScore', newZScore);
+    console.log('newstatus', newStats);
     const [, genesCount] = this.rawGeneExpressions.size();
 
     // If the matrix was empty previously we can just replace it with the ones that are being pushed
