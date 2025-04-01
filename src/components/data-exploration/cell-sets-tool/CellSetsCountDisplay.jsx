@@ -13,7 +13,7 @@ const CellSetsCountDisplay = (props) => {
 
   const { properties } = useSelector(getCellSets());
 
-  const filteredCellIds = useSelector(getFilteredCellIds({ asSet: true }));
+  const filteredCellIds = useSelector(getFilteredCellIds({ asSet: true, sorted: false }));
 
   const [selectedCellsCount, setSelectedCellsCount] = useState(0);
 
