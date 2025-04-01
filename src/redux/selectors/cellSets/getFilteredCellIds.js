@@ -3,7 +3,9 @@ import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
 import getCellSets from 'redux/selectors/cellSets/getCellSets';
 import { unionByCellClass } from 'utils/cellSetOperations';
 
-const getFilteredCellIds = (asSet = false) => (state) => {
+const getFilteredCellIds = (options = {}) => (state) => {
+  const { asSet = false, sorted = true } = options;
+
   if (!state || !state.accessible) {
     return [];
   }
@@ -14,7 +16,13 @@ const getFilteredCellIds = (asSet = false) => (state) => {
     return filteredCellIdsSet;
   }
 
-  return Array.from(filteredCellIdsSet).sort((a, b) => a - b);
+  const filteredCellIds = Array.from(filteredCellIdsSet);
+
+  if (!sorted) {
+    return filteredCellIds;
+  }
+
+  return filteredCellIds.sort((a, b) => a - b);
 };
 
 export default createMemoizedSelector(
