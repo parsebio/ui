@@ -13,7 +13,7 @@ const kitToMaxSublibrariesMap = {
   wt_mini: 2,
   wt: 8,
   wt_mega: 16,
-  WT_mega_384: 16,
+  wt_mega_384: 16,
 };
 
 const detailsToShow = ['numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
@@ -92,13 +92,13 @@ const SecondaryAnalysisSettings = (props) => {
             <Select
               placeholder='Select the chemistry version'
               onChange={(value) => handleValueChange('chemistryVersion', value)}
-              value={formValues.kit === 'WT_mega_384' ? '3' : formValues.chemistryVersion}
+              value={formValues.kit === 'wt_mega_384' ? '3' : formValues.chemistryVersion}
               options={[
                 { label: 'v1', value: '1' },
                 { label: 'v2', value: '2' },
                 { label: 'v3', value: '3' },
               ]}
-              disabled={formValues.kit === 'WT_mega_384'}
+              disabled={formValues.kit === 'wt_mega_384'}
             />
           </Space>
         </Form.Item>
