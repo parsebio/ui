@@ -6,6 +6,10 @@ import { unionByCellClass } from 'utils/cellSetOperations';
 const getFilteredCellIds = (options = {}) => (state) => {
   const { asSet = false, sorted = true } = options;
 
+  if (asSet && sorted) {
+    throw new Error('Cannot return a set as sorted');
+  }
+
   if (!state || !state.accessible) {
     return [];
   }
