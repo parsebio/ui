@@ -9,29 +9,30 @@ import {
 import { SAMPLES_DELETE } from 'redux/actionTypes/samples';
 
 const deleteExperiment = (
-  experimentId,
+  experimentId, deleteFromReduxOnly = false,
 ) => async (dispatch, getState) => {
   // Delete samples
   const { experiments } = getState();
   const { activeExperimentId } = experiments.meta;
 
-  dispatch({
-    type: EXPERIMENTS_SAVING,
-    payload: {
-      message: endUserMessages.DELETING_PROJECT,
-    },
-  });
-
   try {
-    await fetchAPI(
-      `/v2/experiments/${experimentId}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
+    if (!deleteFromReduxOnly) {
+      dispatch({
+        type: EXPERIMENTS_SAVING,
+        payload: {
+          message: endUserMessages.DELETING_PROJECT,
         },
-      },
-    );
+      });
+      await fetchAPI(
+        `/v2/experiments/${experimentId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+    }
 
     // If deleted project is the same as the active project, choose another project
     if (experimentId === activeExperimentId) {
