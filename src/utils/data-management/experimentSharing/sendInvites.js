@@ -28,7 +28,11 @@ const sendInvites = async (addedUsers, projectInfo, silent = false) => {
       );
 
       if (!silent) {
-        pushNotificationMessage('success', `User ${user} has been successfully invited to view ${name}.`);
+        if (role === 'explorer') {
+          pushNotificationMessage('success', `User ${user} has been successfully invited to view ${name}.`);
+        } else if (role === 'owner') {
+          pushNotificationMessage('success', `Project ${name} has been transferred to ${user}.`);
+        }
       }
     } catch (e) {
       if (!silent) {
