@@ -20,8 +20,6 @@ class SparseMap extends Map {
     // sparseRow can come in format for a Map constructor, in that case just store inside the map
     if (Array.isArray(sparseRow)) {
       this.#map = new Map(sparseRow);
-
-      this.#keys = this.#map.keys();
       return;
     }
 

@@ -113,7 +113,7 @@ const countCells = (cellSetKeys, filteredCellIds, properties) => {
 
   cellSetsArr.forEach((cellSet) => {
     cellSet.cellIds.forEach((cellId) => {
-      if (filteredCellIds.has(cellId)) {
+      if (filteredCellIds.current.has(cellId)) {
         selectedCells.add(cellId);
       }
     });
