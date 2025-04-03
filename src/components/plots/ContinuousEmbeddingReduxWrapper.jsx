@@ -15,6 +15,8 @@ const ContinuousEmbeddingReduxWrapper = (props) => {
   const config = useSelector((state) => state.componentConfig[plotUuid]?.config);
   const expressions = useSelector((state) => state.genes.expression.full);
 
+  if (!config) { return <></>; }
+
   const geneExpression = config.truncatedValues
     ? expressions.matrix.getTruncatedExpression(config?.shownGene)
     : expressions.matrix.getRawExpression(config?.shownGene);
