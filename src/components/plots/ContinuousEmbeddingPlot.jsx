@@ -15,7 +15,7 @@ import Loader from '../Loader';
 const ContinuousEmbeddingPlot = (props) => {
   const {
     experimentId, config, colouring,
-    geneExpression,
+    coloringByCell,
     actions, loading, error,
     reloadPlotData,
   } = props;
@@ -53,7 +53,7 @@ const ContinuousEmbeddingPlot = (props) => {
     if (!embeddingLoading
       && !embeddingError
       && config
-      && geneExpression?.length > 0
+      && coloringByCell?.length > 0
       && cellSets.accessible
       && embeddingData?.length) {
       setPlotSpec(
@@ -63,14 +63,14 @@ const ContinuousEmbeddingPlot = (props) => {
           generateData(
             cellSets,
             config.selectedSample,
-            geneExpression,
+            coloringByCell,
             embeddingData,
           ),
           colouring,
         ),
       );
     }
-  }, [config, geneExpression, embeddingData, cellSets, embeddingLoading]);
+  }, [config, coloringByCell, embeddingData, cellSets, embeddingLoading]);
 
   const render = () => {
     if (error) {
@@ -105,7 +105,7 @@ const ContinuousEmbeddingPlot = (props) => {
       || !cellSets.accessible
       || embeddingLoading
       || Object.keys(plotSpec).length === 0
-      || !geneExpression?.length) {
+      || !coloringByCell?.length) {
       return (
         <center>
           <Loader experimentId={experimentId} />
@@ -130,7 +130,7 @@ const ContinuousEmbeddingPlot = (props) => {
 ContinuousEmbeddingPlot.defaultProps = {
   reloadPlotData: () => { },
   config: null,
-  geneExpression: null,
+  coloringByCell: null,
   actions: true,
   colouring: '',
 };
@@ -138,7 +138,7 @@ ContinuousEmbeddingPlot.defaultProps = {
 ContinuousEmbeddingPlot.propTypes = {
   experimentId: PropTypes.string.isRequired,
   config: PropTypes.object,
-  geneExpression: PropTypes.array,
+  coloringByCell: PropTypes.array,
   actions: PropTypes.oneOfType([
     PropTypes.bool,
     PropTypes.object,

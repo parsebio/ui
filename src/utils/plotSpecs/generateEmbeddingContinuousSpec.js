@@ -182,7 +182,7 @@ const filterCells = (cellSets, selectedSample) => {
 const generateData = (
   cellSets,
   selectedSample,
-  geneExpression,
+  coloringByCell,
   embeddingData,
 ) => {
   const filteredCells = filterCells(cellSets, selectedSample, embeddingData);
@@ -197,7 +197,7 @@ const generateData = (
       return {
         x: coordinates[0],
         y: coordinates[1],
-        value: geneExpression[cellId],
+        value: coloringByCell[cellId],
       };
     });
 

@@ -23,7 +23,7 @@ const ContinuousEmbeddingReduxWrapper = (props) => {
     <ContinuousEmbeddingPlot
       experimentId={experimentId}
       config={config}
-      geneExpression={geneExpression}
+      coloringByCell={geneExpression}
       actions={actions}
       loading={expressions.loading.length > 0}
       error={expressions.error}
