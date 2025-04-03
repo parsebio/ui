@@ -13,20 +13,20 @@ const ContinuousEmbeddingReduxWrapper = (props) => {
   } = props;
   const dispatch = useDispatch();
   const config = useSelector((state) => state.componentConfig[plotUuid]?.config);
-  const geneExpression = useSelector((state) => state.genes.expression.full);
+  const expressions = useSelector((state) => state.genes.expression.full);
 
-  const plotData = config.truncatedValues
-    ? geneExpression.matrix.getTruncatedExpression(config?.shownGene)
-    : geneExpression.matrix.getRawExpression(config?.shownGene);
+  const geneExpression = config.truncatedValues
+    ? expressions.matrix.getTruncatedExpression(config?.shownGene)
+    : expressions.matrix.getRawExpression(config?.shownGene);
 
   return (
     <ContinuousEmbeddingPlot
       experimentId={experimentId}
       config={config}
-      plotData={plotData}
+      geneExpression={geneExpression}
       actions={actions}
-      loading={geneExpression.loading.length > 0}
-      error={geneExpression.error}
+      loading={expressions.loading.length > 0}
+      error={expressions.error}
       reloadPlotData={() => dispatch(loadGeneExpression(
         experimentId, [config?.shownGene], plotUuid,
       ))}

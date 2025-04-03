@@ -170,7 +170,7 @@ const ConfigureEmbedding = (props) => {
     return (
       <ContinuousEmbeddingPlot
         experimentId={experimentId}
-        plotData={plotData}
+        geneExpression={plotData}
         config={config}
         colouring={colouring}
         loading={loading}
