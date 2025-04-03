@@ -39,14 +39,13 @@ const defaultAPIResponse = generateDefaultMockAPIResponses(experimentId);
 
 const matrix = getExpressionMatrixFromWorkResult(mockGeneExpression);
 const truncatedPlotData = matrix.getTruncatedExpression('TestGene');
-const plotData = matrix.getRawExpression('TestGene');
+const coloringByCell = matrix.getRawExpression('TestGene');
 
 const defaultProps = {
   experimentId,
   config: initialPlotConfigStates.embeddingContinuous,
   actions: false,
-  plotData,
-  truncatedPlotData,
+  coloringByCell,
   loading: false,
   error: false,
   reloadPlotData: jest.fn(),
@@ -87,29 +86,6 @@ describe('Continuous embedding plot', () => {
     await renderContinuousEmbeddingPlot(storeState);
 
     expect(screen.getByRole('graphics-document', { name: 'Continuous embedding plot' })).toBeInTheDocument();
-  });
-
-  it('Calls generateData with truncatedPlotData when config.truncatedValues is true', async () => {
-    // Spy on the function
-    const generateDataSpy = jest.spyOn(PlotSpecGenerators, 'generateData');
-
-    await renderContinuousEmbeddingPlot(storeState, {
-      config: {
-        ...initialPlotConfigStates.embeddingContinuous,
-        truncatedValues: true,
-      },
-    });
-
-    // Check if generateData was called with truncatedPlotData
-    expect(generateDataSpy).toHaveBeenCalledWith(
-      expect.anything(), // cellSets
-      expect.anything(), // selectedSample
-      truncatedPlotData, // truncatedPlotData
-      expect.anything(), // embeddingData
-    );
-
-    // Cleanup
-    generateDataSpy.mockRestore();
   });
 
   it('Shows a loader if there is no config', async () => {
