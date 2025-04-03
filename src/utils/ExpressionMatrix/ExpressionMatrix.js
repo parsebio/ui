@@ -32,29 +32,11 @@ class ExpressionMatrix {
     return this.#getDensifiedExpression(geneSymbol, cellIndexes, this.zScore);
   }
 
-  getRawExpressionSparse(geneSymbol, cellIndexes, keyAsString = false) {
-    return this.#getExpressionSparse(
-      geneSymbol,
-      cellIndexes,
-      this.rawGeneExpressions,
-      keyAsString,
-    );
-  }
-
   getTruncatedExpressionSparse(geneSymbol, cellIndexes, keyAsString = false) {
     return this.#getExpressionSparse(
       geneSymbol,
       cellIndexes,
       this.truncatedGeneExpressions,
-      keyAsString,
-    );
-  }
-
-  getZScoreSparse(geneSymbol, cellIndexes, keyAsString = false) {
-    return this.#getExpressionSparse(
-      geneSymbol,
-      cellIndexes,
-      this.zScore,
       keyAsString,
     );
   }

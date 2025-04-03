@@ -18,7 +18,6 @@ import loadConditionalComponentConfig from 'redux/actions/componentConfig/loadCo
 import Loader from 'components/Loader';
 import { loadPaginatedGeneProperties, loadGeneExpression } from 'redux/actions/genes';
 import { plotTypes, plotUuids } from 'utils/constants';
-import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 
 const PROPERTIES = ['dispersions'];
 
@@ -116,7 +115,7 @@ const MultiViewGrid = (props) => {
     }
   }, [multiViewConfig, highestDispersionGene, plotConfigs]);
 
-  useConditionalEffect(() => {
+  useEffect(() => {
     if (!shownGenes?.length) return;
 
     const genesToLoad = shownGenes.filter((gene) => (
