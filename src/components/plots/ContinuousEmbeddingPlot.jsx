@@ -14,7 +14,7 @@ import Loader from '../Loader';
 
 const ContinuousEmbeddingPlot = (props) => {
   const {
-    experimentId, config, colouring,
+    experimentId, config, coloringType,
     coloringByCell,
     actions, loading, error,
     reloadPlotData,
@@ -66,7 +66,7 @@ const ContinuousEmbeddingPlot = (props) => {
             coloringByCell,
             embeddingData,
           ),
-          colouring,
+          coloringType,
         ),
       );
     }
@@ -132,7 +132,7 @@ ContinuousEmbeddingPlot.defaultProps = {
   config: null,
   coloringByCell: null,
   actions: true,
-  colouring: '',
+  coloringType: '',
 };
 
 ContinuousEmbeddingPlot.propTypes = {
@@ -146,7 +146,7 @@ ContinuousEmbeddingPlot.propTypes = {
   loading: PropTypes.bool.isRequired,
   error: PropTypes.bool.isRequired,
   reloadPlotData: PropTypes.func,
-  colouring: PropTypes.string,
+  coloringType: PropTypes.string,
 };
 
 export default ContinuousEmbeddingPlot;

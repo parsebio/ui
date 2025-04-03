@@ -131,8 +131,8 @@ const ConfigureEmbedding = (props) => {
 
   ];
 
-  const renderViolin = (colouring, config, actions) => {
-    const { loading, data: plotData, error } = cellMeta[colouring];
+  const renderViolin = (coloringType, config, actions) => {
+    const { loading, data: plotData, error } = cellMeta[coloringType];
 
     const yAxisLabels = {
       numOfGenes: 'Log10 (number of genes)',
@@ -141,7 +141,7 @@ const ConfigureEmbedding = (props) => {
       doubletScores: 'Doublet scores',
     };
 
-    const yAxisLabel = yAxisLabels[colouring] || plotColouring;
+    const yAxisLabel = yAxisLabels[coloringType] || plotColouring;
 
     const modifiedConfig = {
       ...config,
@@ -158,24 +158,24 @@ const ConfigureEmbedding = (props) => {
         loading={loading}
         error={error}
         actions={actions}
-        reloadPlotData={() => dispatch(loadCellMeta(experimentId, colouring))}
+        reloadPlotData={() => dispatch(loadCellMeta(experimentId, coloringType))}
         onUpdate={updatePlotWithChanges}
         cellSets={cellSets}
       />
     );
   };
 
-  const renderContinuousEmbedding = (colouring, config, actions) => {
-    const { loading, data: plotData, error } = cellMeta[colouring];
+  const renderContinuousEmbedding = (coloringType, config, actions) => {
+    const { loading, data: plotData, error } = cellMeta[coloringType];
     return (
       <ContinuousEmbeddingPlot
         experimentId={experimentId}
         coloringByCell={plotData}
         config={config}
-        colouring={colouring}
+        coloringType={coloringType}
         loading={loading}
         error={error}
-        reloadPlotData={() => dispatch(loadCellMeta(experimentId, colouring))}
+        reloadPlotData={() => dispatch(loadCellMeta(experimentId, coloringType))}
         actions={actions}
       />
     );
@@ -457,8 +457,8 @@ const ConfigureEmbedding = (props) => {
                 Plot type:
                 <Radio.Group
                   onChange={(e) => {
-                    // also reset the colouring to the initial for the plot type, because
-                    // some plot types do not have every colouring option
+                    // also reset the coloringType to the initial for the plot type, because
+                    // some plot types do not have every coloringType option
                     setPlotType(e.target.value);
                     setPlotColouring(initialPlotColouring[e.target.value]);
                   }}
