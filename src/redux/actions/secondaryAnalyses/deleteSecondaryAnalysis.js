@@ -8,30 +8,31 @@ import {
 } from 'redux/actionTypes/secondaryAnalyses';
 
 const deleteSecondaryAnalysis = (
-  secondaryAnalysisId,
+  secondaryAnalysisId, deleteFromReduxOnly = false,
 ) => async (dispatch, getState) => {
   // Delete samples
   const { secondaryAnalyses } = getState();
   const { activeSecondaryAnalysisId } = secondaryAnalyses.meta;
 
-  dispatch({
-    type: SECONDARY_ANALYSES_SAVING,
-    payload: {
-      message: endUserMessages.DELETING_PROJECT,
-    },
-  });
-
   try {
-    await fetchAPI(
-      `/v2/secondaryAnalysis/${secondaryAnalysisId}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
+    if (!deleteFromReduxOnly) {
+      dispatch({
+        type: SECONDARY_ANALYSES_SAVING,
+        payload: {
+          message: endUserMessages.DELETING_PROJECT,
         },
-      },
-    );
+      });
 
+      await fetchAPI(
+        `/v2/secondaryAnalysis/${secondaryAnalysisId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+    }
     // If deleted project is the same as the active project, choose another project
     if (secondaryAnalysisId === activeSecondaryAnalysisId) {
       const leftoverProjectIds = secondaryAnalyses.ids

@@ -7,6 +7,7 @@ import {
 } from 'antd';
 import { Auth } from '@aws-amplify/auth';
 import { deleteExperiment } from 'redux/actions/experiments';
+import { deleteSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
@@ -15,7 +16,7 @@ const { Text } = Typography;
 
 const ShareProjectModal = (props) => {
   const dispatch = useDispatch();
-  const { onCancel, project, explorerInfoText } = props;
+  const { onCancel, project, projectType } = props;
   const [usersWithAccess, setUsersWithAccess] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -76,11 +77,18 @@ const ShareProjectModal = (props) => {
       },
     );
     if (role === 'owner') {
-      dispatch(deleteExperiment(project.id, true));
+      if (projectType === 'experiment') {
+        dispatch(deleteExperiment(project.id, true));
+      } else {
+        dispatch(deleteSecondaryAnalysis(project.id, true));
+      }
     }
     onCancel();
   };
-
+  const explorerInfoText = projectType === 'experiment' ? `The user will be able to use Data Exploration and Plots and Tables modules,
+              but will not be able to make any changes to samples or metadata in Insights or re-run the pipeline in the Data Processing module.`
+    : `The user will be able to view the pipeline outputs, but not make any changes to the pipeline run.
+     Any linked downstream analyses (related project in the Insights module) to this pipeline run needs to be  shared separately.`;
   return (
     <Modal
       open
@@ -206,7 +214,7 @@ const ShareProjectModal = (props) => {
 ShareProjectModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
-  explorerInfoText: PropTypes.string.isRequired,
+  projectType: PropTypes.oneOf(['experiment', 'secondaryAnalysis']).isRequired,
 };
 
 export default ShareProjectModal;
