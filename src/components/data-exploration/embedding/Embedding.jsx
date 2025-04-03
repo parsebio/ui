@@ -16,7 +16,7 @@ import PlatformError from 'components/PlatformError';
 import Loader from 'components/Loader';
 
 import { loadEmbedding } from 'redux/actions/embedding';
-import { getCellSetsHierarchyByType, getCellSets } from 'redux/selectors';
+import { getCellSetsHierarchyByType, getCellSets, getFilteredCellIds } from 'redux/selectors';
 import { createCellSet } from 'redux/actions/cellSets';
 import { loadGeneExpression } from 'redux/actions/genes';
 import { updateCellInfo } from 'redux/actions/cellInfo';
@@ -29,7 +29,6 @@ import {
   colorInterpolator,
 } from 'utils/plotUtils';
 import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
-import { unionByCellClass } from 'utils/cellSetOperations';
 
 const Scatterplot = dynamic(
   () => import('../DynamicVitessceWrappers').then((mod) => mod.Scatterplot),
@@ -68,6 +67,7 @@ const Embedding = (props) => {
   const selectedCell = useSelector((state) => state.cellInfo.cellId);
   const expressionLoading = useSelector((state) => state.genes.expression.full.loading);
   const expressionMatrix = useSelector((state) => state.genes.expression.full.matrix);
+  const filteredCellIds = useSelector(getFilteredCellIds());
 
   const cellCoordinatesRef = useRef({ x: 200, y: 300 });
   const [cellInfoTooltip, setCellInfoTooltip] = useState();
@@ -84,14 +84,6 @@ const Embedding = (props) => {
 
     return dataIsLoaded || geneLoadedIfNecessary;
   });
-
-  const filteredCellIdsRef = useRef(new Set());
-
-  useEffect(() => {
-    if (cellSets.accessible && filteredCellIdsRef.current.size === 0) {
-      filteredCellIdsRef.current = unionByCellClass('louvain', cellSetHierarchy, cellSetProperties);
-    }
-  }, [cellSets.accessible, cellSets.hierarchy]);
 
   // Load embedding settings if they aren't already.
   useEffect(() => {
@@ -147,7 +139,7 @@ const Embedding = (props) => {
 
     const truncatedExpression = expressionMatrix.getTruncatedExpressionSparse(
       focusData.key,
-      Array.from(filteredCellIdsRef.current).sort((a, b) => a - b),
+      filteredCellIds,
       true,
     );
 

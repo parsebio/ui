@@ -448,7 +448,7 @@ const generateSpec = (config, plotData) => {
 
 const generateData = (
   cellSets,
-  selectedExpression,
+  expressionMap,
   rootNodeKey,
   cellSetToDisplayId,
 ) => {
@@ -499,10 +499,10 @@ const generateData = (
       .filter(shouldBeDisplayed)
       .forEach((cellId) => {
         // ignore the cells which are unfiltered
-        if (selectedExpression[cellId] || selectedExpression[cellId] === 0) {
+        if (expressionMap.get(cellId) || expressionMap.get(cellId) === 0) {
           const cell = {
             group: cellSetId,
-            y: selectedExpression[cellId],
+            y: expressionMap.get(cellId),
           };
 
           cell.x = 0.25 + Math.random() / 2;

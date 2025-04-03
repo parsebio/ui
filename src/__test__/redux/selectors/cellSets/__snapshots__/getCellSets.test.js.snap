@@ -185,7 +185,7 @@ exports[`Get cell sets selector test should return store cellsets if available 1
         "assumeSetsAreDisjoint": true,
         "sets": [
           Set {
-            "5",
+            5,
           },
         ],
       },
