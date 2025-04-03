@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Vega } from 'react-vega';
 import 'vega-webgl-renderer';
+import _ from 'lodash';
 
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadEmbedding } from 'redux/actions/embedding';
@@ -53,7 +54,7 @@ const ContinuousEmbeddingPlot = (props) => {
     if (!embeddingLoading
       && !embeddingError
       && config
-      && coloringByCell?.length > 0
+      && !_.isNil(coloringByCell)
       && cellSets.accessible
       && embeddingData?.length) {
       setPlotSpec(
@@ -105,7 +106,7 @@ const ContinuousEmbeddingPlot = (props) => {
       || !cellSets.accessible
       || embeddingLoading
       || Object.keys(plotSpec).length === 0
-      || !coloringByCell?.length) {
+      || _.isNil(coloringByCell)) {
       return (
         <center>
           <Loader experimentId={experimentId} />

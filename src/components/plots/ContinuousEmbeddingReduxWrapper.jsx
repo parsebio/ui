@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loadGeneExpression } from 'redux/actions/genes';
+import { getFilteredCellIds } from 'redux/selectors';
 import ContinuousEmbeddingPlot from './ContinuousEmbeddingPlot';
 
 // wrapper component used in plots and tables
@@ -14,12 +15,13 @@ const ContinuousEmbeddingReduxWrapper = (props) => {
   const dispatch = useDispatch();
   const config = useSelector((state) => state.componentConfig[plotUuid]?.config);
   const expressions = useSelector((state) => state.genes.expression.full);
+  const filteredCellIds = useSelector(getFilteredCellIds());
 
   if (!config) { return <></>; }
 
   const geneExpression = config.truncatedValues
-    ? expressions.matrix.getTruncatedExpression(config?.shownGene)
-    : expressions.matrix.getRawExpression(config?.shownGene);
+    ? expressions.matrix.getTruncatedExpressionSparse(config?.shownGene, filteredCellIds)
+    : expressions.matrix.getRawExpressionSparse(config?.shownGene, filteredCellIds);
 
   return (
     <ContinuousEmbeddingPlot

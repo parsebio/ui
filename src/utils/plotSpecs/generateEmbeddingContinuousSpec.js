@@ -185,6 +185,10 @@ const generateData = (
   coloringByCell,
   embeddingData,
 ) => {
+  const getExpression = Array.isArray(coloringByCell)
+    ? (cellId) => coloringByCell[cellId]
+    : (cellId) => coloringByCell.get(cellId);
+
   const filteredCells = filterCells(cellSets, selectedSample, embeddingData);
 
   const cells = embeddingData
@@ -197,7 +201,7 @@ const generateData = (
       return {
         x: coordinates[0],
         y: coordinates[1],
-        value: coloringByCell[cellId],
+        value: getExpression(cellId),
       };
     });
 
