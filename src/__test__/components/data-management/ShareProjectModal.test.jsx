@@ -3,6 +3,9 @@ import {
   screen, render, fireEvent, waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Provider } from 'react-redux';
+import { makeStore } from 'redux/store';
+
 import { act } from 'react-dom/test-utils';
 import fake from '__test__/test-utils/constants';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
@@ -10,6 +13,7 @@ import mockAPI, {
 } from '__test__/test-utils/mockAPI';
 
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
+import { deleteExperiment } from 'redux/actions/experiments';
 
 jest.mock('@aws-amplify/auth', () => ({
   Auth: {
@@ -21,6 +25,10 @@ jest.mock('@aws-amplify/auth', () => ({
       },
     })),
   },
+}));
+
+jest.mock('redux/actions/experiments', () => ({
+  deleteExperiment: jest.fn(() => ({ type: 'MOCK_ACTION' })),
 }));
 
 describe('Share project modal', () => {
@@ -49,14 +57,17 @@ describe('Share project modal', () => {
 
   const renderShareExperimentModal = async () => {
     await act(async () => render(
-      <ShareProjectModal
-        onCancel={onCancel}
-        project={{
-          id: fake.EXPERIMENT_ID,
-          name: fake.EXPERIMENT_NAME,
-        }}
-        explorerInfoText='custom explorer info text'
-      />,
+      <Provider store={makeStore()}>
+        <ShareProjectModal
+          onCancel={onCancel}
+          project={{
+            id: fake.EXPERIMENT_ID,
+            name: fake.EXPERIMENT_NAME,
+          }}
+          projectType='experiment'
+        />
+        ,
+      </Provider>,
     ));
   };
 
@@ -68,7 +79,6 @@ describe('Share project modal', () => {
     expect(screen.getAllByRole('combobox').length).toEqual(2);
     expect(screen.getByText('bob@bob.com')).toBeInTheDocument();
     expect(screen.getByText('Done')).toBeInTheDocument();
-    expect(screen.getByText('custom explorer info text')).toBeInTheDocument();
 
     const revokeButtons = screen.getAllByRole('button', { name: 'Revoke' });
     expect(revokeButtons.length).toEqual(2);
@@ -95,5 +105,34 @@ describe('Share project modal', () => {
     expect(screen.getByText('bob@bob.com')).toBeInTheDocument();
     await act(() => userEvent.click(revokeButton[0]));
     await waitFor(() => expect(onCancel).toHaveBeenCalled());
+  });
+
+  it('Transferring ownership works', async () => {
+    await renderShareExperimentModal();
+
+    // Change role from 'explorer' to 'owner'
+    const roleSelect = screen.getAllByRole('combobox')[1];
+    userEvent.click(roleSelect);
+    const ownerOption = await screen.findByText('Owner');
+    userEvent.click(ownerOption);
+
+    // Add a valid email for the new owner
+    const emailSelect = screen.getAllByRole('combobox')[0];
+    userEvent.type(emailSelect, 'newowner@owner.com{enter}');
+
+    // The OK button now shows "Add" because an email has been added,
+    // and since role is 'owner', it is wrapped inside a Popconfirm.
+    const transferButton = screen.getByRole('button', { name: 'Add' });
+    userEvent.click(transferButton);
+
+    // Wait for the Popconfirm to render and confirm the action.
+    const confirmButton = await screen.findByText('Yes');
+    userEvent.click(confirmButton);
+
+    await waitFor(() => {
+    // Expect that deleteExperiment is called (since projectType is 'experiment')
+      expect(deleteExperiment).toHaveBeenCalledWith(fake.EXPERIMENT_ID, true);
+      expect(fetchMock.mock.calls[1]).toMatchSnapshot();
+    });
   });
 });
