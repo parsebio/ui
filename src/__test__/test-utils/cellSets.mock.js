@@ -54,7 +54,7 @@ const mockCellSets = {
       color: '#345FFF',
     },
     'scratchpad-a': {
-      cellIds: new Set(['5']),
+      cellIds: new Set([5]),
       key: 'scratchpad-a',
       name: 'New Cluster',
       color: '#5FFFFF',
