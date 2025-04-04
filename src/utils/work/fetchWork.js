@@ -21,13 +21,6 @@ const getCachedResult = async (ETag, signedUrl, useBrowserCache) => {
   return null;
 };
 
-// retrieveData will try to get the data for the given experimentId and ETag from
-// the fastest source possible. It will try to get the data in order from:
-// 1. Browser cache
-// 2. S3 (cache) via signedURL
-// 3. Worker
-//   3.1. Via socket (small data)
-//   3.2. Via S3 (large data) via signedURL
 const getResult = async (
   experimentId,
   ETag,
