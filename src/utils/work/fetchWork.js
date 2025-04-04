@@ -81,7 +81,6 @@ const fetchWork = async (
     return result;
   }
 
-  // 1. Contact the API to get ETag and possible S3 signedURL
   const { request } = await dispatchWorkRequest(
     experimentId,
     body,
@@ -89,12 +88,10 @@ const fetchWork = async (
     ETag,
   );
 
-  // 2. Try to get the data from the fastest source possible
   const data = await getResult(
     experimentId, ETag, request, timeout, body, dispatch,
   );
 
-  // 3. Cache the data in the browser
   if (useBrowserCache) {
     await cache.set(ETag, data);
   }
