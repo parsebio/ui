@@ -31,24 +31,12 @@ const getCachedResult = async (ETag, signedUrl, useBrowserCache) => {
 const getResult = async (
   experimentId,
   ETag,
-  signedUrl,
   request,
   timeout,
   body,
   dispatch,
-  useBrowserCache,
 ) => {
-  // TODO check if this is still necessary, probably not
-  const cachedResult = await getCachedResult(ETag, signedUrl, useBrowserCache);
-
-  if (cachedResult) {
-    return cachedResult;
-  }
-
-  // 3. If we don't have signedURL, wait for the worker to send us the data via
-  // - the data via socket
-  // - the signedURL to download the data from S3
-  const { signedUrl: workerSignedUrl, data } = await waitForWorkRequest(
+  const { signedUrl, data } = await waitForWorkRequest(
     ETag,
     experimentId,
     request,
@@ -56,13 +44,11 @@ const getResult = async (
     dispatch,
   );
 
-  // 3.1. The worker send the data via socket because it's small enough
   if (data) {
     return data;
   }
 
-  // 3.2. The worker send a signedUrl to download the data
-  return await downloadFromS3(body.name, workerSignedUrl);
+  return await downloadFromS3(body.name, signedUrl);
 };
 
 const fetchWork = async (
@@ -112,7 +98,7 @@ const fetchWork = async (
 
   // 2. Try to get the data from the fastest source possible
   const data = await getResult(
-    experimentId, ETag, signedUrl, request, timeout, body, dispatch, useBrowserCache,
+    experimentId, ETag, request, timeout, body, dispatch,
   );
 
   // 3. Cache the data in the browser
