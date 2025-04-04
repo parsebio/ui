@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { isBrowser } from 'utils/deploymentInfo';
 
 import cache from 'utils/cache';
@@ -13,12 +15,17 @@ const getCachedResult = async (ETag, signedUrl, useBrowserCache) => {
     return cachedData;
   }
 
-  // Check if data is cached in S3 so we can download from the signed URL (no worker)
-  if (signedUrl) {
-    return await downloadFromS3(ETag, signedUrl);
+  if (_.isNil(signedUrl)) {
+    return null;
   }
 
-  return null;
+  const data = await downloadFromS3(ETag, signedUrl);
+
+  if (useBrowserCache) {
+    await cache.set(ETag, data);
+  }
+
+  return data;
 };
 
 const getResult = async (
@@ -76,9 +83,9 @@ const fetchWork = async (
 
   onETagGenerated(ETag);
 
-  const result = await getCachedResult(ETag, signedUrl, useBrowserCache);
-  if (result) {
-    return result;
+  const cachedResult = await getCachedResult(ETag, signedUrl, useBrowserCache);
+  if (cachedResult) {
+    return cachedResult;
   }
 
   const { request } = await dispatchWorkRequest(
