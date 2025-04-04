@@ -25,6 +25,9 @@ const getCellSetsHierarchyByType = (...params) => (state) => (
 const getCellSetsHierarchyByKeys = (...params) => (state) => (
   cellSetsSelectors.getCellSetsHierarchyByKeys(...params)(state.cellSets));
 
+const getFilteredCellIds = (...params) => (state) => (
+  cellSetsSelectors.getFilteredCellIds(...params)(state.cellSets));
+
 const getPlotConfigs = (...params) => (state) => (
   componentConfigSelectors.getPlotConfigs(...params)(state.componentConfig));
 
@@ -69,6 +72,7 @@ export {
   getCellSetsHierarchy,
   getCellSetsHierarchyByType,
   getCellSetsHierarchyByKeys,
+  getFilteredCellIds,
   getPlotConfigs,
   getGeneList,
   getFastqFiles,
