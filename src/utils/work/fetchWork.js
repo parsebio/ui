@@ -94,6 +94,7 @@ const fetchWork = async (
     body,
     timeout,
     ETag,
+    broadcast,
   );
 
   const data = await getResult(

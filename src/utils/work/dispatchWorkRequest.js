@@ -20,6 +20,7 @@ const dispatchWorkRequest = async (
   body,
   timeout,
   ETag,
+  broadcast,
 ) => {
   const { name: taskName } = body;
 
@@ -39,6 +40,9 @@ const dispatchWorkRequest = async (
     timeout: workerTimeoutDate,
     requestTime,
     body,
+    requestProps: {
+      broadcast,
+    },
   };
 
   await fetchAPI(
