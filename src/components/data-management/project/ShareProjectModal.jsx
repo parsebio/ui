@@ -92,8 +92,8 @@ const ShareProjectModal = (props) => {
      Any linked downstream analyses (related project in the Insights module) to this pipeline run needs to be  shared separately.`;
 
   const ownerInfoText = projectType === 'experiment' ? `There can be only one owner per project. The owner has full control over the project, data files,
-      samples and metadata, as well as running the Data Processing.`
-    : ' There can be only one owner per run. The owner has full control over the run, data files, as well as running the Pipeline';
+      samples and metadata, as well as running Data Processing.`
+    : 'There can be only one owner per run. The owner has full control over the run, data files, as well as running the Pipeline.';
 
   const infoText = role === 'explorer' ? explorerInfoText : ownerInfoText;
 
