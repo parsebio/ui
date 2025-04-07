@@ -40,6 +40,8 @@ const dispatchWorkRequest = async (
     timeout: workerTimeoutDate,
     requestTime,
     body,
+    // TODO, rather than doing this, see if we can get rid of requestProps
+    // in the workers and just send broadcast true or false
     requestProps: {
       broadcast,
     },
