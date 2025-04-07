@@ -67,15 +67,15 @@ const PlotLayout = ({
   };
 
   useEffect(() => {
+    if (!filterTableData) dispatch(loadPlotConfig(experimentId, filterTableUuid, 'filterTable'));
+  }, []);
+
+  useEffect(() => {
     Object.values(plots).forEach((obj) => {
       if (!selectedConfig) {
         dispatch(loadPlotConfig(experimentId, obj.plotUuid, obj.plotType));
       }
     });
-  }, []);
-
-  useEffect(() => {
-    if (!filterTableData) dispatch(loadPlotConfig(experimentId, filterTableUuid, 'filterTable'));
   }, []);
 
   useEffect(() => {
