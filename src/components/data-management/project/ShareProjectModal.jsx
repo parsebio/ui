@@ -45,6 +45,7 @@ const ShareProjectModal = (props) => {
 
   const changeSelectedUsers = (selectedUsers) => {
     const newUser = selectedUsers[selectedUsers.length - 1];
+
     // check if the entry is in a valid email address format
     const isEmailInvalid = newUser && !newUser?.toLowerCase()
       .match(
@@ -53,7 +54,7 @@ const ShareProjectModal = (props) => {
     if (!isEmailInvalid) {
       if (role === 'owner') {
         // Only allow one email when the owner role is selected
-        setAddedUsers([newUser]);
+        setAddedUsers(newUser ? [newUser] : []);
       } else {
         setAddedUsers(selectedUsers);
       }
@@ -89,6 +90,13 @@ const ShareProjectModal = (props) => {
               but will not be able to make any changes to samples or metadata in Insights or re-run the pipeline in the Data Processing module.`
     : `The user will be able to view the pipeline outputs, but not make any changes to the pipeline run.
      Any linked downstream analyses (related project in the Insights module) to this pipeline run needs to be  shared separately.`;
+
+  const ownerInfoText = projectType === 'experiment' ? `There can be only one owner per project. The owner has full control over the project, data files,
+      samples and metadata, as well as running the Data Processing.`
+    : ' There can be only one owner per run. The owner has full control over the run, data files, as well as running the Pipeline';
+
+  const infoText = role === 'explorer' ? explorerInfoText : ownerInfoText;
+
   return (
     <Modal
       open
@@ -102,16 +110,13 @@ const ShareProjectModal = (props) => {
             <Popconfirm
               title={() => (
                 <div>
-                  This action will transfer the ownership permissions to
+                  By assigning
                   {' '}
                   <b>{addedUsers[0]}</b>
-                  .
                   {' '}
+                  as owner, you will lose all access to this run/project.
                   <br />
-                  You will no longer have access to this project.
-                  {' '}
-                  <br />
-                  Are you sure you want to transfer owner permissions?
+                  Are you sure you want to continue with the transfer of ownership?
                 </div>
               )}
               onConfirm={inviteUsers}
@@ -201,8 +206,12 @@ const ShareProjectModal = (props) => {
               <Row gutter={10} />
             </Card>
             <Text>
-              <b>Explorer: </b>
-              {explorerInfoText}
+              <b>
+                {role[0].toUpperCase() + role.slice(1)}
+                :
+                {' '}
+              </b>
+              {infoText}
             </Text>
           </Space>
         </Row>
