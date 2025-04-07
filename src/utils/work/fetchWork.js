@@ -81,13 +81,23 @@ const fetchWork = async (
     getState,
   );
 
+  console.log('ETagDebug');
+  console.log(ETag);
   onETagGenerated(ETag);
 
   const cachedResult = await getCachedResult(ETag, signedUrl, useBrowserCache);
 
+  console.log('cachedResultDebug');
+  console.log(cachedResult);
+
   if (cachedResult) {
     return cachedResult;
   }
+
+  console.log('dispatchWorkRequestDebug');
+  console.log({
+    experimentId, timeout, ETag, broadcast,
+  });
 
   const request = await dispatchWorkRequest(
     experimentId,
@@ -97,9 +107,15 @@ const fetchWork = async (
     broadcast,
   );
 
+  console.log('requestDebug');
+  console.log(request);
+
   const data = await getResult(
     experimentId, ETag, request, timeout, body, dispatch,
   );
+
+  console.log('dataDebug');
+  console.log(data);
 
   if (useBrowserCache) {
     await cache.set(ETag, data);
