@@ -49,6 +49,8 @@ const dispatchWorkRequest = async (
       body: JSON.stringify(request),
     },
   );
+
+  return request;
 };
 
 export default dispatchWorkRequest;

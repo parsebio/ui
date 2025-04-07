@@ -84,11 +84,12 @@ const fetchWork = async (
   onETagGenerated(ETag);
 
   const cachedResult = await getCachedResult(ETag, signedUrl, useBrowserCache);
+
   if (cachedResult) {
     return cachedResult;
   }
 
-  const { request } = await dispatchWorkRequest(
+  const request = await dispatchWorkRequest(
     experimentId,
     body,
     timeout,
