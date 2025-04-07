@@ -66,12 +66,6 @@ const ViolinPlotMain = (props) => {
       );
     }
 
-    console.log('configDebug');
-    console.log(config);
-    console.log('expressionloadingDebug');
-    console.log(expression.loading);
-    console.log('cellSets.accessibleDebug');
-    console.log(cellSets.accessible);
     if (
       !config?.shownGene
       || expression.loading.includes(config?.shownGene)

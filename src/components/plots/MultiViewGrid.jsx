@@ -176,8 +176,6 @@ const MultiViewGrid = (props) => {
       );
     }
     if (!multiViewConfig) {
-      console.log('multiViewConfigDebug');
-      console.log(multiViewConfig);
       // Render loading state or handle error
       return (
         <center>
