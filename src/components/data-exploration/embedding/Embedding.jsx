@@ -332,6 +332,7 @@ const Embedding = (props) => {
               setCellHighlight={setCellHighlight}
               theme='light'
               uuid={embeddingType}
+              embeddingPointsVisible
               viewState={view}
               setViewState={setViewState}
               originalViewState={originalView}
