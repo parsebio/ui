@@ -6,8 +6,8 @@ import {
   Modal, Button, Space, Row, Col, Card, Avatar, Select, Typography, Popconfirm,
 } from 'antd';
 import { Auth } from '@aws-amplify/auth';
-import { deleteExperiment } from 'redux/actions/experiments';
-import { deleteSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+import { removeExperiment } from 'redux/actions/experiments';
+import { removeSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
@@ -84,11 +84,11 @@ const ShareProjectModal = (props) => {
       },
     );
 
-    if (role === 'owner' && response[0].code === 200) {
+    if (role === 'owner' && response[0]?.code === 200) {
       if (projectType === 'experiment') {
-        dispatch(deleteExperiment(project.id, true));
+        dispatch(removeExperiment(project.id));
       } else {
-        dispatch(deleteSecondaryAnalysis(project.id, true));
+        dispatch(removeSecondaryAnalysis(project.id));
       }
     }
     onCancel();
