@@ -43,6 +43,12 @@ const ShareProjectModal = (props) => {
     fetchRoles();
   }, []);
 
+  useEffect(() => {
+    if (role === 'owner') {
+      setAddedUsers([addedUsers[0]]);
+    }
+  }, [role]);
+
   const changeSelectedUsers = (selectedUsers) => {
     const newUser = selectedUsers[selectedUsers.length - 1];
 
