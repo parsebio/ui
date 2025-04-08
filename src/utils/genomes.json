@@ -388,6 +388,10 @@
     "species": "Custom Drosophila melanogaster (fruit fly) with RFP and FLP"
   },
   {
+    "name": "D_melanogaster_GFP_RFP",
+    "species": "Custom Drosophila melanogaster (fruit fly) with GFP and RFP"
+  },
+  {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
   },
