@@ -75,7 +75,7 @@ const ShareProjectModal = (props) => {
   const inviteUsers = async () => {
     if (!addedUsers.length) return;
 
-    await sendInvites(
+    const response = await sendInvites(
       addedUsers,
       {
         id: project.id,
@@ -83,7 +83,8 @@ const ShareProjectModal = (props) => {
         role,
       },
     );
-    if (role === 'owner') {
+
+    if (role === 'owner' && response[0].code === 200) {
       if (projectType === 'experiment') {
         dispatch(deleteExperiment(project.id, true));
       } else {

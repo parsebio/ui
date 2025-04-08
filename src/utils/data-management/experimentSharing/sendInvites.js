@@ -10,7 +10,7 @@ const sendInvites = async (addedUsers, projectInfo, silent = false) => {
 
   const requests = addedUsers.map(async (user) => {
     try {
-      await fetchAPI(
+      const response = await fetchAPI(
         `/v2/access/${id}`,
         {
           method: 'PUT',
@@ -34,6 +34,8 @@ const sendInvites = async (addedUsers, projectInfo, silent = false) => {
           pushNotificationMessage('success', `Project ${name} has been transferred to ${user}.`);
         }
       }
+
+      return response;
     } catch (e) {
       if (!silent) {
         const messageToDisplay = e?.userMessage === 'NotificationFailure'
