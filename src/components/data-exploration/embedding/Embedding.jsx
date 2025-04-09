@@ -16,7 +16,7 @@ import PlatformError from 'components/PlatformError';
 import Loader from 'components/Loader';
 
 import { loadEmbedding } from 'redux/actions/embedding';
-import { getCellSetsHierarchyByType, getCellSets, getFilteredCellIds } from 'redux/selectors';
+import { getCellSetsHierarchyByType, getCellSets } from 'redux/selectors';
 import { createCellSet } from 'redux/actions/cellSets';
 import { loadGeneExpression } from 'redux/actions/genes';
 import { updateCellInfo } from 'redux/actions/cellInfo';
