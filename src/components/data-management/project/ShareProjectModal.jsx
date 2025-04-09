@@ -84,8 +84,7 @@ const ShareProjectModal = (props) => {
         role,
       },
     );
-
-    if (role === 'owner' && response[0]?.code === 200) {
+    if (role === 'owner' && response[0]?.data.code === 200) {
       if (projectType === 'experiment') {
         dispatch(removeExperiment(project.id));
       } else {
