@@ -12,7 +12,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 
 const ExploreSelect = (props) => {
-  const { experimentId } = props;
+  const { experiment } = props;
 
   const { navigateTo } = useAppRouter();
   const dispatch = useDispatch();
@@ -21,26 +21,25 @@ const ExploreSelect = (props) => {
 
   const [experimentCloning, setExperimentCloning] = useState(false);
 
-  const cloneExperiment = useCallback(async () => {
-    if (experimentId === 'c26b1fc8-e207-4a45-90ae-51b730617bee') {
-      // for this specific experiment, just share it as explorer and go to data exploration
-      await sendInvites(
-        [userEmail],
-        {
-          id: experimentId,
-          name: 'Valentine day challenge',
-          role: 'explorer',
-        },
-        true,
-      );
-      await dispatch(loadExperiments());
-      await dispatch(setActiveExperiment(experimentId));
-      navigateTo(modules.DATA_EXPLORATION, { experimentId });
-      return;
-    }
+  const addAsViewer = useCallback(async () => {
+    // for this specific experiment, just share it as explorer and go to data exploration
+    await sendInvites(
+      [userEmail],
+      {
+        id: experiment.id,
+        name: experiment.name,
+        role: 'viewer',
+      },
+      true,
+    );
+    await dispatch(loadExperiments());
+    await dispatch(setActiveExperiment(experiment.id));
+    navigateTo(modules.DATA_EXPLORATION, { experimentId: experiment.id });
+  });
 
+  const cloneExperiment = useCallback(async () => {
     setExperimentCloning(true);
-    const url = `/v2/experiments/${experimentId}/clone`;
+    const url = `/v2/experiments/${experiment.id}/clone`;
 
     const newExperimentId = await fetchAPI(
       url,
@@ -54,9 +53,14 @@ const ExploreSelect = (props) => {
     await dispatch(setActiveExperiment(newExperimentId));
     setExperimentCloning(false);
     navigateTo(modules.DATA_MANAGEMENT, { experimentId: newExperimentId });
-  }, [experimentId]);
+  }, [experiment.id]);
 
   const menuItems = [
+    {
+      key: 'view',
+      onClick: addAsViewer,
+      label: <div aria-label='view'>View</div>,
+    },
     {
       key: 'explore',
       onClick: cloneExperiment,
@@ -78,7 +82,7 @@ const ExploreSelect = (props) => {
 };
 
 ExploreSelect.propTypes = {
-  experimentId: PropTypes.string.isRequired,
+  experiment: PropTypes.object.isRequired,
 };
 
 ExploreSelect.defaultProps = {};

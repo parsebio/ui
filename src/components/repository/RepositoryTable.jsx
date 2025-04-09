@@ -28,7 +28,7 @@ const RepositoryTable = (props) => {
     key: row.id,
     name: row.name,
     explore: (
-      <ExploreSelect experimentId={row.id} />
+      <ExploreSelect experiment={row} />
     ),
     publication: <a href={row.publicationUrl}>{row.publicationTitle}</a>,
     dataSource: <a href={row.dataSourceUrl}>{row.dataSourceTitle}</a>,
