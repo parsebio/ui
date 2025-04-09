@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { UserAddOutlined } from '@ant-design/icons';
 import {
@@ -38,7 +39,7 @@ const ShareProjectModal = (props) => {
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       );
     if (!isEmailInvalid) {
-      setAddedUsers(selectedUsers);
+      setAddedUsers(selectedUsers.map(_.toLower));
     }
   };
 
