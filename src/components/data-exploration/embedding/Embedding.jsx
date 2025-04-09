@@ -29,6 +29,7 @@ import {
   colorInterpolator,
 } from 'utils/plotUtils';
 import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
+import { unionByCellClass } from 'utils/cellSetOperations';
 
 const Scatterplot = dynamic(
   () => import('../DynamicVitessceWrappers').then((mod) => mod.Scatterplot),
@@ -67,7 +68,7 @@ const Embedding = (props) => {
   const selectedCell = useSelector((state) => state.cellInfo.cellId);
   const expressionLoading = useSelector((state) => state.genes.expression.full.loading);
   const expressionMatrix = useSelector((state) => state.genes.expression.full.matrix);
-  const filteredCellIds = useSelector(getFilteredCellIds());
+  // const filteredCellIds = useSelector(getFilteredCellIds());
 
   const cellCoordinatesRef = useRef({ x: 200, y: 300 });
   const [cellInfoTooltip, setCellInfoTooltip] = useState();
@@ -77,6 +78,14 @@ const Embedding = (props) => {
   const [cellInfoVisible, setCellInfoVisible] = useState(true);
   const originalView = { target: [4, -4, 0], zoom: INITIAL_ZOOM };
   const [view, setView] = useState(originalView);
+
+  const filteredCellIdsRef = useRef(new Set());
+
+  useEffect(() => {
+    if (cellSets.accessible && filteredCellIdsRef.current.size === 0) {
+      filteredCellIdsRef.current = unionByCellClass('louvain', cellSetHierarchy, cellSetProperties);
+    }
+  }, [cellSets.accessible, cellSets.hierarchy]);
 
   const showLoader = useMemo(() => {
     const dataIsLoaded = !data || loading;
@@ -139,7 +148,7 @@ const Embedding = (props) => {
 
     const truncatedExpression = expressionMatrix.getTruncatedExpressionSparse(
       focusData.key,
-      filteredCellIds,
+      Array.from(filteredCellIdsRef.current).sort((a, b) => a - b),
       true,
     );
 
