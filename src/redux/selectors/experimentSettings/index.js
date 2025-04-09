@@ -1,4 +1,5 @@
 import getFilterChanges from './getFilterChanges';
+import getAnalysisTool from './getAnalysisTool';
+import getIsScanpy from './getIsScanpy';
 
-/* eslint-disable-next-line import/prefer-default-export */
-export { getFilterChanges };
+export { getFilterChanges, getAnalysisTool, getIsScanpy };

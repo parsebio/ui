@@ -19,6 +19,7 @@ import GeneTable from 'components/data-exploration/generic-gene-table/GeneTable'
 import AdvancedFilteringModal from 'components/data-exploration/differential-expression-tool/AdvancedFilteringModal';
 import LaunchPathwayAnalysisModal from 'components/data-exploration/differential-expression-tool/LaunchPathwayAnalysisModal';
 import { setGeneOrdering } from 'redux/actions/differentialExpression';
+import ScanpyDisabler from 'utils/ScanpyDisabler';
 
 const DiffExprResults = (props) => {
   const {
@@ -195,7 +196,10 @@ const DiffExprResults = (props) => {
         extraOptions={(
           <>
             <Button type='link' size='small' onClick={() => setExportAlert(true)}>Export as CSV</Button>
-            <Button type='link' size='small' onClick={() => setPathwayAnalysisModalVisible(!pathwayAnalysisModalVisible)}>Pathway analysis</Button>
+
+            <ScanpyDisabler>
+              <Button type='link' size='small' onClick={() => setPathwayAnalysisModalVisible(!pathwayAnalysisModalVisible)}>Pathway analysis</Button>
+            </ScanpyDisabler>
           </>
         )}
         geneColumnTooltipText='All genes present in the dataset are shown in the differential expression results table. Note that a gene is typically considered ‘differentially expressed’ based on established thresholds on adjusted p-value and/or log fold change. You should apply your own criteria and thresholds to filter the resulting list of genes using the "Advanced filtering" button.'

@@ -24,6 +24,7 @@ import { analysisTools, downsamplingMethods } from 'utils/constants';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import { updateFilterSettings } from 'redux/actions/experimentSettings';
 
+import ScanpyDisabler from 'utils/ScanpyDisabler';
 import NormalisationOptions from './NormalisationOptions';
 
 const { Option } = Select;
@@ -221,16 +222,36 @@ const CalculationConfig = (props) => {
                   }
 
                   if (dataIntegration.method) {
-                    return updateSettings({
-                      analysisTool: e.target.value,
+                    const settingsToUpdate = {
+                      analysisTool: newAnalysisTool,
                       dataIntegration: { method: newMethod },
-                    });
+                    };
+
+                    // If using scanpy, we don't allow excludeGeneCategories yet
+                    if (newAnalysisTool === analysisTools.SCANPY) {
+                      settingsToUpdate.dimensionalityReduction = {
+                        excludeGeneCategories: [],
+                      };
+                    }
+
+                    return updateSettings(settingsToUpdate);
                   }
                 }}
                 value={analysisTool}
               >
                 <Radio value={analysisTools.SEURAT}>Seurat</Radio>
-                <Radio disabled value={analysisTools.SCANPY}>Scanpy</Radio>
+                <Radio value={analysisTools.SCANPY}>
+                  Scanpy (
+                  <a
+                    href='https://support.parsebiosciences.com/hc/en-us/articles/35875038451476-Trailmaker-new-feature-Scanpy-beta-mode'
+                    target='_blank'
+                    rel='noreferrer'
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    beta
+                  </a>
+                  )
+                </Radio>
               </Radio.Group>
             </Form.Item>
           </div>
@@ -328,28 +349,30 @@ const CalculationConfig = (props) => {
                   :
                 </span>
 
-                <Checkbox.Group
-                  onChange={(val) => updateSettings(
-                    { dimensionalityReduction: { excludeGeneCategories: val } },
-                  )}
-                  value={dimensionalityReduction.excludeGeneCategories}
-                >
-                  <Space direction='vertical'>
-                    <Checkbox value='ribosomal'>Ribosomal</Checkbox>
-                    <Checkbox value='mitochondrial'>Mitochondrial</Checkbox>
-                    <Checkbox value='cellCycle'>
-                      <span>
-                        Cell cycle genes
-                        {' '}
-                        <Tooltip
-                          title='Currently only available for human and mice species. Do not check this box if your cells are from a different species.'
-                        >
-                          <QuestionCircleOutlined />
-                        </Tooltip>
-                      </span>
-                    </Checkbox>
-                  </Space>
-                </Checkbox.Group>
+                <ScanpyDisabler>
+                  <Checkbox.Group
+                    onChange={(val) => updateSettings(
+                      { dimensionalityReduction: { excludeGeneCategories: val } },
+                    )}
+                    value={dimensionalityReduction.excludeGeneCategories}
+                  >
+                    <Space direction='vertical'>
+                      <Checkbox value='ribosomal'>Ribosomal</Checkbox>
+                      <Checkbox value='mitochondrial'>Mitochondrial</Checkbox>
+                      <Checkbox value='cellCycle'>
+                        <span>
+                          Cell cycle genes
+                          {' '}
+                          <Tooltip
+                            title='Currently only available for human and mice species. Do not check this box if your cells are from a different species.'
+                          >
+                            <QuestionCircleOutlined />
+                          </Tooltip>
+                        </span>
+                      </Checkbox>
+                    </Space>
+                  </Checkbox.Group>
+                </ScanpyDisabler>
               </Space>
             </Form.Item>
 

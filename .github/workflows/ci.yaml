@@ -29,7 +29,7 @@ jobs:
   uncheck-integration-test:
     permissions: read-all
     name: Mark integration test as not run
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     if: github.event_name == 'pull_request'
     steps:
       - id: get-pr-body
@@ -72,7 +72,7 @@ jobs:
     # They are needed because so that upload-coverage can upload the coverage report
     # and post comments.
     permissions: write-all
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     env:
       CI: true
     steps:
@@ -120,7 +120,7 @@ jobs:
 
   build-docker:
     name: Build Docker container
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     outputs:
       ref-id: ${{ steps.ref.outputs.ref-id }}
       image-tag: ${{ steps.ref.outputs.image-tag }}
@@ -243,7 +243,7 @@ jobs:
 
   deploy:
     name: Deploy to Kubernetes
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [build-docker]
     strategy:
       max-parallel: 1
@@ -412,7 +412,7 @@ jobs:
 
   ready-to-merge:
     name: Ready for merging
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [deploy, test]
     steps:
       - id: ready-to-merge
@@ -422,7 +422,7 @@ jobs:
 
   # report-if-failed:
   #   name: Report if workflow failed
-  #   runs-on: ubuntu-20.04
+  #   runs-on: ubuntu-24.04
   #   needs: [test, build-docker, deploy]
   #   if: failure() && github.ref == 'refs/heads/master'
   #   steps:

@@ -25,6 +25,9 @@ const getCellSetsHierarchyByType = (...params) => (state) => (
 const getCellSetsHierarchyByKeys = (...params) => (state) => (
   cellSetsSelectors.getCellSetsHierarchyByKeys(...params)(state.cellSets));
 
+const getFilteredCellIds = (...params) => (state) => (
+  cellSetsSelectors.getFilteredCellIds(...params)(state.cellSets));
+
 const getPlotConfigs = (...params) => (state) => (
   componentConfigSelectors.getPlotConfigs(...params)(state.componentConfig));
 
@@ -47,6 +50,14 @@ const getFilterChanges = (...params) => (state) => (
   experimentSettingsSelectors.getFilterChanges(...params)(state.experimentSettings)
 );
 
+const getAnalysisTool = (...params) => (state) => (
+  experimentSettingsSelectors.getAnalysisTool(...params)(state.experimentSettings)
+);
+
+const getIsScanpy = (...params) => (state) => (
+  experimentSettingsSelectors.getIsScanpy(...params)(state.experimentSettings)
+);
+
 const getMetadataToSampleIds = (...params) => (state) => (
   samplesSelectors.getMetadataToSampleIds(...params)(state.samples)
 );
@@ -61,12 +72,15 @@ export {
   getCellSetsHierarchy,
   getCellSetsHierarchyByType,
   getCellSetsHierarchyByKeys,
+  getFilteredCellIds,
   getPlotConfigs,
   getGeneList,
   getFastqFiles,
   getSampleLTFile,
   getSelectedMetadataTracks,
   getFilterChanges,
+  getAnalysisTool,
+  getIsScanpy,
   getMetadataToSampleIds,
   getSamples,
 };
