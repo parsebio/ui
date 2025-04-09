@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Vega } from 'react-vega';
 import 'vega-webgl-renderer';
 
-import { getCellSets, getCellSetsHierarchyByKeys } from 'redux/selectors';
+import { getCellSets, getCellSetsHierarchyByKeys, getFilteredCellIds } from 'redux/selectors';
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadGeneExpression } from 'redux/actions/genes';
 
@@ -24,6 +24,8 @@ const ViolinPlotMain = (props) => {
   const expression = useSelector((state) => state.genes.expression.full);
   const cellSets = useSelector(getCellSets());
 
+  const filteredCellIds = useSelector(getFilteredCellIds());
+
   const selectedCellSetClassAvailable = useSelector(
     getCellSetsHierarchyByKeys([config?.selectedCellSet]),
   ).length;
@@ -35,14 +37,14 @@ const ViolinPlotMain = (props) => {
       && !expression.error
       && expression.matrix.geneIsLoaded(config.shownGene)
       && cellSets.accessible) {
-      const geneExpressionData = config.normalised === 'zScore'
-        ? expression.matrix.getZScore(config.shownGene)
-        : expression.matrix.getRawExpression(config.shownGene);
+      const geneExpressionMap = config.normalised === 'zScore'
+        ? expression.matrix.getZScoreSparse(config.shownGene, filteredCellIds)
+        : expression.matrix.getRawExpressionSparse(config.shownGene, filteredCellIds);
 
       if (selectedCellSetClassAvailable) {
         const generatedPlotData = generateData(
           cellSets,
-          geneExpressionData,
+          geneExpressionMap,
           config?.selectedCellSet,
           config?.selectedPoints,
         );

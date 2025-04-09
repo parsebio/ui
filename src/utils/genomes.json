@@ -80,6 +80,10 @@
     "species": "Felis catus (Cat)"
   },
   {
+    "name": "Fca126",
+    "species": "Felis catus (domestic cat)"
+  },
+  {
     "name": "GAculeatus_v5",
     "species": "Gasterosteus aculeatus aculeatus (Three-spined stickleback)"
   },
@@ -164,6 +168,10 @@
     "species": "Polypterus senegalus (gray bichir)"
   },
   {
+    "name": "GRCr8",
+    "species": "Rattus norvegicus (Rat)"
+  },
+  {
     "name": "mRatBN7.2",
     "species": "Rattus norvegicus (Rat)"
   },
@@ -194,6 +202,10 @@
   {
     "name": "xenLae10",
     "species": "Xenopus laevis v10.1 (African clawed frog)"
+  },
+  {
+    "name": "XENTR_10",
+    "species": "Xenopus tropicalis (Western clawed frog)"
   },
   {
     "name": "ARS-UCD1.2_Oar_v3.1",
@@ -386,6 +398,10 @@
   {
     "name": "dm6_rfp_flp",
     "species": "Custom Drosophila melanogaster (fruit fly) with RFP and FLP"
+  },
+  {
+    "name": "D_melanogaster_GFP_RFP",
+    "species": "Custom Drosophila melanogaster (fruit fly) with GFP and RFP"
   },
   {
     "name": "Macaca_T-cruzi",
