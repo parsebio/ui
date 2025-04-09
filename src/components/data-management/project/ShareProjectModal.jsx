@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { UserAddOutlined } from '@ant-design/icons';
@@ -63,7 +64,7 @@ const ShareProjectModal = (props) => {
         // Only allow one email when the owner role is selected
         setAddedUsers(newUser ? [newUser] : []);
       } else {
-        setAddedUsers(selectedUsers);
+        setAddedUsers(selectedUsers.map(_.toLower));
       }
     }
   };
