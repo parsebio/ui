@@ -10,7 +10,7 @@ import removeExperiment from './removeExperiment';
 
 const deleteExperiment = (
   experimentId,
-) => async (dispatch, getState) => {
+) => async (dispatch) => {
   // Delete samples
   dispatch({
     type: EXPERIMENTS_SAVING,

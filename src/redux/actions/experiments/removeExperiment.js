@@ -3,7 +3,7 @@ import {
 } from 'redux/actionTypes/experiments';
 import { SAMPLES_DELETE } from 'redux/actionTypes/samples';
 
-const removeExperiment = (experimentId) => async (dispatch, getState) => {
+const removeExperiment = (experimentId) => (dispatch, getState) => {
   // If deleted project is the same as the active project, choose another project
   const { experiments } = getState();
   const { activeExperimentId } = experiments.meta;

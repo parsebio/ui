@@ -32,7 +32,8 @@ const ShareProjectModal = (props) => {
 
     // if the current user is not in the list of roles, it could mean that its an admin user
     // the actual admin user check is done in the backend
-    if (currentUserRole.role === 'owner' || getCurrentUser.attributes.email.includes('+admin@parsebiosciences.com')) {
+
+    if (currentUserRole?.role === 'owner' || getCurrentUser.attributes.email.includes('+admin@parsebiosciences.com')) {
       setCanTransferOwnership(true);
     }
 
@@ -45,7 +46,7 @@ const ShareProjectModal = (props) => {
 
   useEffect(() => {
     if (role === 'owner') {
-      setAddedUsers([addedUsers[0]]);
+      setAddedUsers(addedUsers[0] ? [addedUsers[0]] : []);
     }
   }, [role]);
 
@@ -129,7 +130,7 @@ const ShareProjectModal = (props) => {
               onConfirm={inviteUsers}
               okText='Yes'
               cancelText='No'
-              disabled={!addedUsers.length}
+              disabled={addedUsers.length === 0}
             >
               <Button type='primary'>{okButtonText}</Button>
             </Popconfirm>
