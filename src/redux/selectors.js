@@ -9,6 +9,7 @@ import * as componentConfigSelectors from './selectors/componentConfig';
 import * as secondaryAnalysesSelectors from './selectors/secondaryAnalyses';
 import * as experimentSettingsSelectors from './selectors/experimentSettings';
 import * as samplesSelectors from './selectors/samples';
+import * as selectors from './selectors';
 
 const getBackendStatus = (...params) => (state) => (
   backendSelectors.getBackendStatus(...params)(state.backendStatus));
@@ -66,6 +67,10 @@ const getSamples = (...params) => (state) => (
   samplesSelectors.getSamples(...params)(state.samples)
 );
 
+const getCanAccess = (...params) => (state) => (
+  selectors.getCanAccess(...params)(state)
+);
+
 export {
   getBackendStatus,
   getCellSets,
@@ -83,4 +88,5 @@ export {
   getIsScanpy,
   getMetadataToSampleIds,
   getSamples,
+  getCanAccess,
 };
