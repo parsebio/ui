@@ -11,9 +11,10 @@ import fake from '__test__/test-utils/constants';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import mockAPI, {
 } from '__test__/test-utils/mockAPI';
+import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
-import { deleteExperiment } from 'redux/actions/experiments';
+import { removeExperiment } from 'redux/actions/experiments';
 
 jest.mock('@aws-amplify/auth', () => ({
   Auth: {
@@ -28,9 +29,15 @@ jest.mock('@aws-amplify/auth', () => ({
 }));
 
 jest.mock('redux/actions/experiments', () => ({
-  deleteExperiment: jest.fn(() => ({ type: 'MOCK_ACTION' })),
+  removeExperiment: jest.fn(() => ({ type: 'MOCK_ACTION' })),
 }));
 
+jest.mock('utils/data-management/experimentSharing/sendInvites', () => jest.fn(() => Promise.resolve([{
+  data: { code: 200 },
+},
+{
+  data: { code: 200 },
+}])));
 describe('Share project modal', () => {
   const onCancel = jest.fn();
   enableFetchMocks();
@@ -95,7 +102,7 @@ describe('Share project modal', () => {
     await waitFor(() => expect(screen.getByText('Add')).toBeInTheDocument());
     const inviteButton = screen.getByText('Add');
     await act(() => fireEvent.click(inviteButton));
-    expect(fetchMock.mock.calls.length).toEqual(2);
+    expect(fetchMock.mock.calls.length).toEqual(1);
     expect(fetchMock.mock.calls[1]).toMatchSnapshot();
   });
 
@@ -130,9 +137,8 @@ describe('Share project modal', () => {
     userEvent.click(confirmButton);
 
     await waitFor(() => {
-    // Expect that deleteExperiment is called (since projectType is 'experiment')
-      expect(deleteExperiment).toHaveBeenCalledWith(fake.EXPERIMENT_ID, true);
-      expect(fetchMock.mock.calls[1]).toMatchSnapshot();
+      expect(removeExperiment).toHaveBeenCalledWith(fake.EXPERIMENT_ID);
+      expect(sendInvites).toHaveBeenCalledWith(['newowner@owner.com'], { id: 'testae48e318dab9a1bd0bexperiment', name: 'Test Experiment', role: 'owner' });
     });
   });
 });
