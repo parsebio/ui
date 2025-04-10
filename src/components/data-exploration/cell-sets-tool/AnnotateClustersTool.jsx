@@ -101,7 +101,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
       {!allClustersValid
         && (
           <Alert
-            message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
+            message='There are some clusters with too few cells to compute annotations. Try reducing the clustering resolution value.'
             type='info'
             showIcon
           />
