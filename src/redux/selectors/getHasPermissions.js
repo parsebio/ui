@@ -18,7 +18,7 @@ const permissionsByRole = {
   [accessRoles.ADMIN]: new Set([permissions.WRITE]),
 };
 
-const getIsAuthorized = (experimentId, category) => (state) => {
+const getHasPermissions = (experimentId, category) => (state) => {
   const role = experimentId
     ? state.experiments[experimentId].accessRole
     : state.experimentSettings.info.accessRole;
@@ -26,4 +26,4 @@ const getIsAuthorized = (experimentId, category) => (state) => {
   return permissionsByRole[role].has(category);
 };
 
-export default createMemoizedSelector(getIsAuthorized);
+export default createMemoizedSelector(getHasPermissions);

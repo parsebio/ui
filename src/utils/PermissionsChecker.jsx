@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
-import { getIsAuthorized } from 'redux/selectors';
+import { getHasPermissions } from 'redux/selectors';
 import { Tooltip } from 'antd';
 
 const scanpyDisableMessage = 'Your current role in this project does not allow you to perform this action.';
 
 const PermissionsChecker = ({ experimentId, category, children }) => {
-  const isAuthorized = useSelector(getIsAuthorized(experimentId, category));
+  const isAuthorized = useSelector(getHasPermissions(experimentId, category));
 
   if (isAuthorized) {
     return children;

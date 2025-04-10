@@ -1,4 +1,4 @@
-import getIsAuthorized from './getIsAuthorized';
+import getHasPermissions from './getHasPermissions';
 
 /* eslint-disable-next-line import/prefer-default-export */
-export { getIsAuthorized };
+export { getHasPermissions };
