@@ -37,6 +37,7 @@ import { modules } from 'utils/constants';
 import { composeTree } from 'utils/cellSets';
 import { complement, intersection, union } from 'utils/cellSetOperations';
 import ScanpyDisabler from 'utils/ScanpyDisabler';
+import PermissionsChecker from 'utils/PermissionsChecker';
 
 const FOCUS_TYPE = 'cellSets';
 
@@ -195,13 +196,15 @@ const CellSetsTool = (props) => {
       },
       {
         key: 'annotateClusters',
-        label: <ScanpyDisabler>Annotate clusters</ScanpyDisabler>,
+        label: (<ScanpyDisabler>Annotate clusters</ScanpyDisabler>),
         disabled: isScanpy,
         children: (
-          <AnnotateClustersTool
-            experimentId={experimentId}
-            onRunAnnotation={() => { setActiveTab('cellSets'); }}
-          />
+          <PermissionsChecker>
+            <AnnotateClustersTool
+              experimentId={experimentId}
+              onRunAnnotation={() => { setActiveTab('cellSets'); }}
+            />
+          </PermissionsChecker>
         ),
       },
     ];
