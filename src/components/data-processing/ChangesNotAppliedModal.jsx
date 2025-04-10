@@ -13,7 +13,7 @@ import { runQC } from 'redux/actions/pipeline';
 
 import QCRerunDisabledModal from 'components/modals/QCRerunDisabledModal';
 import { getUserFriendlyQCStepName } from 'utils/qcSteps';
-import isUserAuthorized from 'utils/isUserAuthorized';
+import isUserAuthorized from 'utils/access/isUserAuthorized';
 import { getURL } from 'redux/actions/pipeline/runQC';
 
 const { Text } = Typography;
