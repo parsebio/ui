@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { getHasPermissions } from 'redux/selectors';
 import { Tooltip } from 'antd';
 
-const scanpyDisableMessage = 'Your current role in this project does not allow you to perform this action.';
+const notAllowedMessage = 'Your current role in this project does not allow you to perform this action.';
 
 const PermissionsChecker = ({ experimentId, category, children }) => {
   const isAuthorized = useSelector(getHasPermissions(experimentId, category));
@@ -17,7 +17,7 @@ const PermissionsChecker = ({ experimentId, category, children }) => {
   // First div is to trigger hover events
   // Second div is to disable everything under the tooltip without having to clone the children
   return (
-    <Tooltip title={scanpyDisableMessage}>
+    <Tooltip title={notAllowedMessage}>
       <div>
         <div disabled style={{ pointerEvents: 'none', opacity: 0.5 }}>
           {children}
@@ -38,5 +38,3 @@ PermissionsChecker.propTypes = {
 };
 
 export default PermissionsChecker;
-
-export { scanpyDisableMessage };

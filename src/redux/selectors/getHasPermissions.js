@@ -1,14 +1,11 @@
 import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
+import { permissions } from 'utils/constants';
 
 const accessRoles = {
   OWNER: 'owner',
   EXPLORER: 'explorer',
   VIEWER: 'viewer',
   ADMIN: 'admin',
-};
-
-const permissions = {
-  WRITE: 'write',
 };
 
 const permissionsByRole = {
