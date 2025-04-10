@@ -14,6 +14,7 @@ import cancelSecondaryAnalysis from './cancelSecondaryAnalysis';
 import resumeUploads from './resumeUploads';
 import loadSecondaryAnalysisLogs from './loadSecondaryAnalysisLogs';
 import storeLoadedAnalysisFile from './storeLoadedAnalysisFile';
+import removeSecondaryAnalysis from './removeSecondaryAnalysis';
 
 export {
   loadSecondaryAnalyses,
@@ -32,4 +33,5 @@ export {
   resumeUploads,
   loadSecondaryAnalysisLogs,
   storeLoadedAnalysisFile,
+  removeSecondaryAnalysis,
 };
