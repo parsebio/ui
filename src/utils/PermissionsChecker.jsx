@@ -7,7 +7,9 @@ import { Tooltip } from 'antd';
 
 const notAllowedMessage = 'Your current role in this project does not allow you to perform this action.';
 
-const PermissionsChecker = ({ experimentId, category, children }) => {
+const PermissionsChecker = ({
+  experimentId, category, grayedOut, children,
+}) => {
   const isAuthorized = useSelector(getHasPermissions(experimentId, category));
 
   if (isAuthorized) {
@@ -17,9 +19,9 @@ const PermissionsChecker = ({ experimentId, category, children }) => {
   // First div is to trigger hover events
   // Second div is to disable everything under the tooltip without having to clone the children
   return (
-    <Tooltip title={notAllowedMessage}>
+    <Tooltip title={notAllowedMessage} mouseEnterDelay={1}>
       <div>
-        <div disabled style={{ pointerEvents: 'none', opacity: 0.5 }}>
+        <div disabled style={{ pointerEvents: 'none', opacity: grayedOut ? 0.5 : 1 }}>
           {children}
         </div>
       </div>
@@ -29,12 +31,14 @@ const PermissionsChecker = ({ experimentId, category, children }) => {
 
 PermissionsChecker.defaultProps = {
   experimentId: undefined,
+  grayedOut: true,
 };
 
 PermissionsChecker.propTypes = {
   children: PropTypes.node.isRequired,
   category: PropTypes.string.isRequired,
   experimentId: PropTypes.string,
+  grayedOut: PropTypes.bool,
 };
 
 export default PermissionsChecker;

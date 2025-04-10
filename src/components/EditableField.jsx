@@ -29,6 +29,7 @@ const EditableField = (props) => {
     editMessage,
     deleteMessage,
     onDelete,
+    permissionsCategory,
   } = props;
 
   const [editing, setEditing] = useState(defaultEditing);
@@ -231,6 +232,7 @@ EditableField.defaultProps = {
   editMessage: 'Edit',
   deleteMessage: 'Delete',
   formatter: (value) => value,
+  permissionsCategory: null,
 };
 
 EditableField.propTypes = {
@@ -249,6 +251,7 @@ EditableField.propTypes = {
   editMessage: PropTypes.string,
   deleteMessage: PropTypes.string,
   formatter: PropTypes.func,
+  permissionsCategory: PropTypes.string,
 };
 
 export default EditableField;
