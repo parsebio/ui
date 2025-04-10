@@ -20,8 +20,8 @@ const permissionsByRole = {
 
 const getIsAuthorized = (experimentId, category) => (state) => {
   const role = experimentId
-    ? state.experiments[experimentId]?.accessRole
-    : state.experimentSettings.info?.accessRole;
+    ? state.experiments[experimentId].accessRole
+    : state.experimentSettings.info.accessRole;
 
   return permissionsByRole[role].has(category);
 };
