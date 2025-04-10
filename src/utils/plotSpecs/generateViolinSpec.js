@@ -493,16 +493,20 @@ const generateData = (
     cellSetToDisplayId = cellSetToDisplayId.split('/')[1];
   }
 
+  const getExpression = Array.isArray(expressionMap)
+    ? (cellId) => expressionMap[cellId]
+    : (cellId) => expressionMap.get(cellId);
+
   cellSetsIds.forEach((cellSetId) => {
     const currentCellIds = Array.from(properties[cellSetId].cellIds);
     currentCellIds
       .filter(shouldBeDisplayed)
       .forEach((cellId) => {
         // ignore the cells which are unfiltered
-        if (expressionMap.get(cellId) || expressionMap.get(cellId) === 0) {
+        if (getExpression(cellId) || getExpression(cellId) === 0) {
           const cell = {
             group: cellSetId,
-            y: expressionMap.get(cellId),
+            y: getExpression(cellId),
           };
 
           cell.x = 0.25 + Math.random() / 2;
