@@ -1,4 +1,4 @@
-import getCanAccess from './getCanAccess';
+import getIsAuthorized from './getIsAuthorized';
 
 /* eslint-disable-next-line import/prefer-default-export */
-export { getCanAccess };
+export { getIsAuthorized };

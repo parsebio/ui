@@ -67,8 +67,8 @@ const getSamples = (...params) => (state) => (
   samplesSelectors.getSamples(...params)(state.samples)
 );
 
-const getCanAccess = (...params) => (state) => (
-  selectors.getCanAccess(...params)(state)
+const getIsAuthorized = (...params) => (state) => (
+  selectors.getIsAuthorized(...params)(state)
 );
 
 export {
@@ -88,5 +88,5 @@ export {
   getIsScanpy,
   getMetadataToSampleIds,
   getSamples,
-  getCanAccess,
+  getIsAuthorized,
 };
