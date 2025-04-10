@@ -10,7 +10,7 @@ const sendInvites = async (addedUsers, projectInfo, silent = false) => {
 
   const requests = addedUsers.map(async (user) => {
     try {
-      await fetchAPI(
+      const response = await fetchAPI(
         `/v2/access/${id}`,
         {
           method: 'PUT',
@@ -28,8 +28,14 @@ const sendInvites = async (addedUsers, projectInfo, silent = false) => {
       );
 
       if (!silent) {
-        pushNotificationMessage('success', `User ${user} has been successfully invited to view ${name}.`);
+        if (role === 'explorer') {
+          pushNotificationMessage('success', `User ${user} has been successfully invited to view ${name}.`);
+        } else if (role === 'owner') {
+          pushNotificationMessage('success', `Project ${name} has been transferred to ${user}.`);
+        }
       }
+
+      return response;
     } catch (e) {
       if (!silent) {
         const messageToDisplay = e?.userMessage === 'NotificationFailure'
