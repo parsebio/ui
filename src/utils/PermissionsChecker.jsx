@@ -7,7 +7,7 @@ import { Tooltip } from 'antd';
 
 const scanpyDisableMessage = 'Your current role in this project does not allow you to perform this action.';
 
-const AuthorizedDisabler = ({ experimentId, category, children }) => {
+const PermissionsChecker = ({ experimentId, category, children }) => {
   const isAuthorized = useSelector(getIsAuthorized(experimentId, category));
 
   if (isAuthorized) {
@@ -27,16 +27,16 @@ const AuthorizedDisabler = ({ experimentId, category, children }) => {
   );
 };
 
-AuthorizedDisabler.defaultProps = {
+PermissionsChecker.defaultProps = {
   experimentId: undefined,
 };
 
-AuthorizedDisabler.propTypes = {
+PermissionsChecker.propTypes = {
   children: PropTypes.node.isRequired,
   category: PropTypes.string.isRequired,
   experimentId: PropTypes.string,
 };
 
-export default AuthorizedDisabler;
+export default PermissionsChecker;
 
 export { scanpyDisableMessage };
