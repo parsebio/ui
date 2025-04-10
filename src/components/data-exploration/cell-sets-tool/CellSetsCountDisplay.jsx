@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Typography } from 'antd';
-import { countCells } from 'utils/cellSetOperations';
-import { getCellSets, getFilteredCellIds } from 'redux/selectors';
+import { countCells, unionByCellClass } from 'utils/cellSetOperations';
+import { getCellSets } from 'redux/selectors';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -11,14 +11,19 @@ const { Text } = Typography;
 const CellSetsCountDisplay = (props) => {
   const { selectedCellSetKeys } = props;
 
-  const { properties } = useSelector(getCellSets());
+  const { accessible, hierarchy, properties } = useSelector(getCellSets());
 
-  const filteredCellIds = useSelector(getFilteredCellIds({ asSet: true, sorted: false }));
+  const filteredCellIds = useRef(new Set());
+  useEffect(() => {
+    if (accessible && filteredCellIds.current.size === 0) {
+      filteredCellIds.current = unionByCellClass('louvain', hierarchy, properties);
+    }
+  }, [accessible, hierarchy]);
 
   const [selectedCellsCount, setSelectedCellsCount] = useState(0);
 
   useEffect(() => {
-    const cellsCount = countCells(selectedCellSetKeys, filteredCellIds, properties);
+    const cellsCount = countCells(selectedCellSetKeys, filteredCellIds.current, properties);
 
     setSelectedCellsCount(cellsCount);
   }, [selectedCellSetKeys, properties]);
