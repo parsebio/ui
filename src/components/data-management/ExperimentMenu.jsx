@@ -47,17 +47,12 @@ const ExperimentMenu = () => {
           Add data
         </Button>
         <DownloadDataButton />
-        <PermissionsChecker
-          experimentId={activeExperiment.id}
-          permissions={permissions.READ_USER_ACCESS}
+        <Button
+          onClick={() => setShareExperimentModalVisible(!shareExperimentModalVisible)}
+          disabled={activeExperimentId === 'c26b1fc8-e207-4a45-90ae-51b730617bee'}
         >
-          <Button
-            onClick={() => setShareExperimentModalVisible(!shareExperimentModalVisible)}
-            disabled={activeExperimentId === 'c26b1fc8-e207-4a45-90ae-51b730617bee'}
-          >
-            Share
-          </Button>
-        </PermissionsChecker>
+          Share
+        </Button>
         {linkedSecondaryAnalysisId && (
           <div>
             <Tooltip
