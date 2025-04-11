@@ -59,12 +59,65 @@ const ExploreSelect = (props) => {
     {
       key: 'view',
       onClick: addAsViewer,
-      label: <div aria-label='view'>View</div>,
+      label: (
+        <div
+          aria-label='view'
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            maxWidth: '300px',
+            whiteSpace: 'normal',
+            wordWrap: 'break-word',
+          }}
+        >
+          <span>View</span>
+          <span
+            style={{
+              marginLeft: '10px',
+              fontSize: '12px',
+              color: 'gray',
+            }}
+          >
+            Viewers can explore all aspects of the project
+            including data processing settings and plots,
+            clusters and UMAPs, differential expression and a variety of plot visualizations.
+            However, Viewers cannot change settings or clusters.
+          </span>
+        </div>
+      ),
     },
     {
       key: 'explore',
       onClick: cloneExperiment,
-      label: <div aria-label='clone'>Copy</div>,
+      label: (
+        <div
+          aria-label='clone'
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            maxWidth: '300px',
+            whiteSpace: 'normal',
+            wordWrap: 'break-word',
+          }}
+        >
+          <span>Copy</span>
+          <span
+            style={{
+              marginLeft: '10px',
+              fontSize: '12px',
+              color: 'gray',
+            }}
+          >
+            By creating a copy, you will become the project Owner.
+            Owners have full control over data processing settings,
+            clusters including the generation of custom clusters,
+            and all changes are saved.
+            Note that copying large projects can take some time.
+          </span>
+        </div>
+      ),
     },
   ];
 
