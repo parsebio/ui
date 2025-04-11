@@ -42,3 +42,5 @@ PermissionsChecker.propTypes = {
 };
 
 export default PermissionsChecker;
+
+export { notAllowedMessage };
