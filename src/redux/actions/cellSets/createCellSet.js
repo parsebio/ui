@@ -35,7 +35,7 @@ const createCellSet = (experimentId, name, color, cellIdsSet) => async (dispatch
     loading, error,
   } = getCellSets()(getState().cellSets);
 
-  if (!getHasPermissions(experimentId, permissions.WRITE)(getState())) {
+  if (!getHasPermissions(null, permissions.WRITE)(getState())) {
     pushNotificationMessage('error', notAllowedMessage);
     return null;
   }
