@@ -11,6 +11,32 @@ import { useAppRouter } from 'utils/AppRouteProvider';
 import fetchAPI from 'utils/http/fetchAPI';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 
+// eslint-disable-next-line react/prop-types
+const DropdownLabel = ({ title, description, key }) => (
+  <div
+    aria-label={key}
+    style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      maxWidth: '300px',
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    }}
+  >
+    <span>{title}</span>
+    <span
+      style={{
+        marginLeft: '10px',
+        fontSize: '12px',
+        color: 'gray',
+      }}
+    >
+      {description}
+    </span>
+  </div>
+);
+
 const ExploreSelect = (props) => {
   const { experiment } = props;
 
@@ -59,65 +85,12 @@ const ExploreSelect = (props) => {
     {
       key: 'view',
       onClick: addAsViewer,
-      label: (
-        <div
-          aria-label='view'
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            maxWidth: '300px',
-            whiteSpace: 'normal',
-            wordWrap: 'break-word',
-          }}
-        >
-          <span>View</span>
-          <span
-            style={{
-              marginLeft: '10px',
-              fontSize: '12px',
-              color: 'gray',
-            }}
-          >
-            Viewers can explore all aspects of the project
-            including data processing settings and plots,
-            clusters and UMAPs, differential expression and a variety of plot visualizations.
-            However, Viewers cannot change settings or clusters.
-          </span>
-        </div>
-      ),
+      label: <DropdownLabel key='view' title='View' description='Viewers can explore all aspects of the project including data processing settings and plots, clusters and UMAPs, differential expression and a variety of plot visualizations. However, Viewers cannot change settings or clusters.' />,
     },
     {
       key: 'explore',
       onClick: cloneExperiment,
-      label: (
-        <div
-          aria-label='clone'
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            maxWidth: '300px',
-            whiteSpace: 'normal',
-            wordWrap: 'break-word',
-          }}
-        >
-          <span>Copy</span>
-          <span
-            style={{
-              marginLeft: '10px',
-              fontSize: '12px',
-              color: 'gray',
-            }}
-          >
-            By creating a copy, you will become the project Owner.
-            Owners have full control over data processing settings,
-            clusters including the generation of custom clusters,
-            and all changes are saved.
-            Note that copying large projects can take some time.
-          </span>
-        </div>
-      ),
+      label: <DropdownLabel key='clone' title='Copy' description='By creating a copy, you will become the project Owner. Owners have full control over data processing settings, clusters including the generation of custom clusters, and all changes are saved. Note that copying large projects can take some time.' />,
     },
   ];
 
