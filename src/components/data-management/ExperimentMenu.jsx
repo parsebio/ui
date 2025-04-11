@@ -4,7 +4,7 @@ import {
   Space, Button, Tooltip,
 } from 'antd';
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { modules, permissions } from 'utils/constants';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import processSampleUpload from 'utils/upload/processSampleUpload';
@@ -12,6 +12,7 @@ import DownloadDataButton from 'components/data-management/DownloadDataButton';
 import LaunchAnalysisButton from 'components/data-management/LaunchAnalysisButton';
 import FileUploadModal from 'components/data-management/FileUploadModal';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
+import PermissionsChecker from 'utils/PermissionsChecker';
 
 const ExperimentMenu = () => {
   const dispatch = useDispatch();
@@ -46,12 +47,17 @@ const ExperimentMenu = () => {
           Add data
         </Button>
         <DownloadDataButton />
-        <Button
-          onClick={() => setShareExperimentModalVisible(!shareExperimentModalVisible)}
-          disabled={activeExperimentId === 'c26b1fc8-e207-4a45-90ae-51b730617bee'}
+        <PermissionsChecker
+          experimentId={activeExperiment.id}
+          permissions={permissions.READ_USER_ACCESS}
         >
-          Share
-        </Button>
+          <Button
+            onClick={() => setShareExperimentModalVisible(!shareExperimentModalVisible)}
+            disabled={activeExperimentId === 'c26b1fc8-e207-4a45-90ae-51b730617bee'}
+          >
+            Share
+          </Button>
+        </PermissionsChecker>
         {linkedSecondaryAnalysisId && (
           <div>
             <Tooltip

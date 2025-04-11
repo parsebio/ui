@@ -9,10 +9,10 @@ const accessRoles = {
 };
 
 const permissionsByRole = {
-  [accessRoles.OWNER]: new Set([permissions.WRITE]),
-  [accessRoles.EXPLORER]: new Set([permissions.WRITE]),
+  [accessRoles.OWNER]: new Set([permissions.WRITE, permissions.READ_USER_ACCESS]),
+  [accessRoles.EXPLORER]: new Set([permissions.WRITE, permissions.READ_USER_ACCESS]),
   [accessRoles.VIEWER]: new Set([]),
-  [accessRoles.ADMIN]: new Set([permissions.WRITE]),
+  [accessRoles.ADMIN]: new Set([permissions.WRITE, permissions.READ_USER_ACCESS]),
 };
 
 const getHasPermissions = (experimentId, permissionsToCheck) => (state) => {

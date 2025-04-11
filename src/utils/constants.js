@@ -108,6 +108,7 @@ const notAgreedToTermsStatus = 424;
 
 const permissions = {
   WRITE: 'write',
+  READ_USER_ACCESS: 'readUserAccess',
 };
 
 export {
