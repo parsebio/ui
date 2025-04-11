@@ -19,7 +19,7 @@ const DropdownLabel = ({ title, description, key }) => (
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
-      maxWidth: '300px',
+      maxWidth: '450px',
       whiteSpace: 'normal',
       wordWrap: 'break-word',
     }}
@@ -28,7 +28,6 @@ const DropdownLabel = ({ title, description, key }) => (
     <span
       style={{
         marginLeft: '10px',
-        fontSize: '12px',
         color: 'gray',
       }}
     >
