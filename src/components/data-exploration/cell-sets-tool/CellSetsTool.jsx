@@ -33,7 +33,7 @@ import { runSubsetExperiment } from 'redux/actions/pipeline';
 import { getCellSets, getIsScanpy } from 'redux/selectors';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { modules, permissions } from 'utils/constants';
 import { composeTree } from 'utils/cellSets';
 import { complement, intersection, union } from 'utils/cellSetOperations';
 import ScanpyDisabler from 'utils/ScanpyDisabler';
@@ -199,7 +199,7 @@ const CellSetsTool = (props) => {
         label: (<ScanpyDisabler>Annotate clusters</ScanpyDisabler>),
         disabled: isScanpy,
         children: (
-          <PermissionsChecker>
+          <PermissionsChecker permissions={permissions.WRITE}>
             <AnnotateClustersTool
               experimentId={experimentId}
               onRunAnnotation={() => { setActiveTab('cellSets'); }}

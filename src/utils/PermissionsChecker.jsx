@@ -8,9 +8,9 @@ import { Tooltip } from 'antd';
 const notAllowedMessage = 'Your current role in this project does not allow you to perform this action.';
 
 const PermissionsChecker = ({
-  experimentId, category, grayedOut, children,
+  experimentId, permissions, grayedOut, children,
 }) => {
-  const isAuthorized = useSelector(getHasPermissions(experimentId, category));
+  const isAuthorized = useSelector(getHasPermissions(experimentId, permissions));
 
   if (isAuthorized) {
     return children;
@@ -36,7 +36,7 @@ PermissionsChecker.defaultProps = {
 
 PermissionsChecker.propTypes = {
   children: PropTypes.node.isRequired,
-  category: PropTypes.string.isRequired,
+  permissions: PropTypes.string.isRequired,
   experimentId: PropTypes.string,
   grayedOut: PropTypes.bool,
 };
