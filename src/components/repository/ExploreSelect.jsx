@@ -85,12 +85,35 @@ const ExploreSelect = (props) => {
     {
       key: 'view',
       onClick: addAsViewer,
-      label: <DropdownLabel key='view' title='View' description='Viewers can explore all aspects of the project including data processing settings and plots, clusters and UMAPs, differential expression and a variety of plot visualizations. However, Viewers cannot change settings or clusters.' />,
+      label: (
+        <DropdownLabel
+          key='view'
+          title='View'
+          description={
+            'Viewers can explore all aspects of the project including '
+            + 'data processing settings and plots, clusters and UMAPs, '
+            + 'differential expression and a variety of plot visualizations. '
+            + 'However, Viewers cannot change settings or clusters.'
+          }
+        />
+      ),
     },
     {
       key: 'explore',
       onClick: cloneExperiment,
-      label: <DropdownLabel key='clone' title='Copy' description='By creating a copy, you will become the project Owner. Owners have full control over data processing settings, clusters including the generation of custom clusters, and all changes are saved. Note that copying large projects can take some time.' />,
+      label: (
+        <DropdownLabel
+          key='clone'
+          title='Copy'
+          description={
+            'By creating a copy, you will become the project Owner. '
+            + 'Owners have full control over data processing settings, '
+            + 'clusters including the generation of custom clusters, '
+            + 'and all changes are saved. Note that copying large projects '
+            + 'can take some time.'
+          }
+        />
+      ),
     },
   ];
 
