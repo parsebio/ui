@@ -6,9 +6,8 @@ import { permissions } from 'utils/constants';
 import { getHasPermissions } from 'redux/selectors';
 
 const savePlotConfig = (experimentId, plotUuid) => async (dispatch, getState) => {
-  const hasPermissions = getHasPermissions(null, permissions.WRITE)(getState());
-
-  if (!hasPermissions) {
+  // Skip saving if the user does not have write permissions.
+  if (!getHasPermissions(null, permissions.WRITE)(getState())) {
     return;
   }
 
