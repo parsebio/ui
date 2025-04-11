@@ -30,7 +30,7 @@ const PermissionsChecker = ({
 };
 
 PermissionsChecker.defaultProps = {
-  experimentId: undefined,
+  experimentId: null,
   grayedOut: true,
 };
 
