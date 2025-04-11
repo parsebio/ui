@@ -8,7 +8,6 @@ import { PieChartOutlined } from '@ant-design/icons';
 
 import SubsetCellSetsModal from 'components/data-exploration/cell-sets-tool/SubsetCellSetsModal';
 import { sampleTech } from 'utils/constants';
-import ScanpyDisabler from 'utils/ScanpyDisabler';
 
 const SubsetCellSetsOperation = (props) => {
   const { onCreate } = props;
@@ -21,18 +20,16 @@ const SubsetCellSetsOperation = (props) => {
 
   return (
     <>
-      <ScanpyDisabler>
-        <Tooltip placement='top' title='Subset selected cell sets to a new project.'>
-          <Button
-            type='dashed'
-            disabled={experimentType === sampleTech.SEURAT}
-            aria-label='Create new experiment from selected cellsets'
-            size='small'
-            icon={<PieChartOutlined />}
-            onClick={() => { setShowSubsetCellSets(true); }}
-          />
-        </Tooltip>
-      </ScanpyDisabler>
+      <Tooltip placement='top' title='Subset selected cell sets to a new project.'>
+        <Button
+          type='dashed'
+          disabled={experimentType === sampleTech.SEURAT}
+          aria-label='Create new experiment from selected cellsets'
+          size='small'
+          icon={<PieChartOutlined />}
+          onClick={() => { setShowSubsetCellSets(true); }}
+        />
+      </Tooltip>
 
       {
         showSubsetCellSets && (
