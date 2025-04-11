@@ -47,7 +47,6 @@ const ExploreSelect = (props) => {
   const [experimentCloning, setExperimentCloning] = useState(false);
 
   const addAsViewer = useCallback(async () => {
-    // for this specific experiment, just share it as explorer and go to data exploration
     await sendInvites(
       [userEmail],
       {
