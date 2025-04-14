@@ -20,6 +20,7 @@ const initialState = {
   experimentSettings: {
     info: {
       experimentId: fake.EXPERIMENT_ID,
+      accessRole: 'owner',
     },
   },
   genes: {
