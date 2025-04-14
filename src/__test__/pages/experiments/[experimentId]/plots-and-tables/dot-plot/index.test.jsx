@@ -423,14 +423,7 @@ describe('Drag and drop enzyme tests', () => {
     storeState = makeStore();
 
     await storeState.dispatch(loadBackendStatus(experimentId));
-
-    storeState.dispatch({
-      type: EXPERIMENT_SETTINGS_INFO_UPDATE,
-      payload: {
-        experimentId: fake.EXPERIMENT_ID,
-        experimentName: fake.EXPERIMENT_NAME,
-      },
-    });
+    await setMockedExperimentInfo(experimentId, storeState);
 
     component = await renderDotPlotForEnzyme(storeState);
 
