@@ -27,6 +27,7 @@ import fake from '__test__/test-utils/constants';
 import fetchWork from 'utils/work/fetchWork';
 
 import { plotNames } from 'utils/constants';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 enableFetchMocks();
 
@@ -109,6 +110,7 @@ describe('Volcano plot page', () => {
 
     storeState = makeStore();
     await storeState.dispatch(loadBackendStatus(experimentId));
+    await setMockedExperimentInfo(experimentId, storeState);
   });
 
   it('Loads controls and elements', async () => {

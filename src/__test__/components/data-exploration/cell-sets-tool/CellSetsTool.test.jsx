@@ -23,6 +23,7 @@ import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloa
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { analysisTools } from 'utils/constants';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 enableFetchMocks();
 
@@ -123,6 +124,8 @@ describe('CellSetsTool', () => {
     fetchMock.mockIf(/.*/, mockAPI(mockAPIResponse));
 
     storeState = makeStore();
+
+    await setMockedExperimentInfo(experimentId, storeState);
   });
 
   it('renders correctly cell set tool with no clusters in custom cell sets', async () => {
@@ -777,6 +780,7 @@ describe('AnnotateClustersTool', () => {
 
     storeState = makeStore();
     await storeState.dispatch(loadBackendStatus(experimentId));
+    await setMockedExperimentInfo(experimentId, storeState);
   });
 
   it('Renders correctly', async () => {
@@ -856,6 +860,7 @@ describe('AnnotateClustersTool', () => {
     storeState = makeStore();
     await storeState.dispatch(loadBackendStatus(experimentId));
     await storeState.dispatch(loadProcessingSettings(experimentId));
+    await setMockedExperimentInfo(experimentId, storeState);
 
     await act(async () => {
       render(

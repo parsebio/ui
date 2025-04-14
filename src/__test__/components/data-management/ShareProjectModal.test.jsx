@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import {
   screen, render, fireEvent, waitFor,
 } from '@testing-library/react';
@@ -9,12 +10,12 @@ import { makeStore } from 'redux/store';
 import { act } from 'react-dom/test-utils';
 import fake from '__test__/test-utils/constants';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
-import mockAPI, {
-} from '__test__/test-utils/mockAPI';
+import mockAPI, { generateDefaultMockAPIResponses } from '__test__/test-utils/mockAPI';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
-import { removeExperiment } from 'redux/actions/experiments';
+import { loadExperiments, removeExperiment } from 'redux/actions/experiments';
+import { loadBackendStatus } from 'redux/actions/backendStatus';
 
 jest.mock('@aws-amplify/auth', () => ({
   Auth: {
@@ -29,6 +30,7 @@ jest.mock('@aws-amplify/auth', () => ({
 }));
 
 jest.mock('redux/actions/experiments', () => ({
+  ...jest.requireActual('redux/actions/experiments'),
   removeExperiment: jest.fn(() => ({ type: 'MOCK_ACTION' })),
 }));
 
@@ -38,12 +40,31 @@ jest.mock('utils/data-management/experimentSharing/sendInvites', () => jest.fn((
 {
   data: { code: 200 },
 }])));
+
+const onCancel = jest.fn();
+
+const experimentId = `${fake.EXPERIMENT_ID}-0`;
+const renderShareExperimentModal = async (storeState) => {
+  await act(async () => render(
+    <Provider store={storeState}>
+      <ShareProjectModal
+        onCancel={onCancel}
+        project={{
+          id: experimentId,
+          name: fake.EXPERIMENT_NAME,
+        }}
+        projectType='experiment'
+      />
+      ,
+    </Provider>,
+  ));
+};
+
 describe('Share project modal', () => {
-  const onCancel = jest.fn();
   enableFetchMocks();
 
-  const customAPIResponse = {
-    [`/access/${fake.EXPERIMENT_ID}$`]: () => Promise.resolve(new Response(JSON.stringify([{
+  const customAPIResponses = {
+    [`/access/${experimentId}$`]: () => Promise.resolve(new Response(JSON.stringify([{
       name: 'Bob',
       email: 'bob@bob.com',
       role: 'explorer',
@@ -55,31 +76,26 @@ describe('Share project modal', () => {
     }]))),
   };
 
-  beforeEach(() => {
+  const mockApiResponses = _.merge(
+    generateDefaultMockAPIResponses(experimentId), customAPIResponses,
+  );
+
+  let storeState = null;
+
+  beforeEach(async () => {
     jest.clearAllMocks();
     fetchMock.resetMocks();
     fetchMock.doMock();
-    fetchMock.mockIf(/.*/, mockAPI(customAPIResponse));
+    fetchMock.mockIf(/.*/, mockAPI(mockApiResponses));
+
+    storeState = makeStore();
+    storeState.dispatch(loadBackendStatus(experimentId));
+    storeState.dispatch(loadExperiments());
   });
 
-  const renderShareExperimentModal = async () => {
-    await act(async () => render(
-      <Provider store={makeStore()}>
-        <ShareProjectModal
-          onCancel={onCancel}
-          project={{
-            id: fake.EXPERIMENT_ID,
-            name: fake.EXPERIMENT_NAME,
-          }}
-          projectType='experiment'
-        />
-        ,
-      </Provider>,
-    ));
-  };
-
   it('Renders correctly', async () => {
-    await renderShareExperimentModal();
+    await renderShareExperimentModal(storeState);
+
     expect(screen.getByText('Share with collaborators')).toBeInTheDocument();
     expect(screen.getByText(fake.EXPERIMENT_NAME)).toBeInTheDocument();
     expect(screen.getByText('Input an email address. Add multiple addresses with enter.')).toBeInTheDocument();
@@ -95,19 +111,20 @@ describe('Share project modal', () => {
   });
 
   it('Inviting users works', async () => {
-    await renderShareExperimentModal();
+    await renderShareExperimentModal(storeState);
     const input = screen.getAllByRole('combobox');
     userEvent.type(input[0], 'asd@asd.com{enter}');
 
     await waitFor(() => expect(screen.getByText('Add')).toBeInTheDocument());
     const inviteButton = screen.getByText('Add');
     await act(() => fireEvent.click(inviteButton));
-    expect(fetchMock.mock.calls.length).toEqual(1);
-    expect(fetchMock.mock.calls[1]).toMatchSnapshot();
+
+    expect(fetchMock.mock.calls.length).toEqual(3);
+    expect(fetchMock.mock.calls[2]).toMatchSnapshot();
   });
 
   it('Revoke access works', async () => {
-    await renderShareExperimentModal();
+    await renderShareExperimentModal(storeState);
     const revokeButton = screen.getAllByText('Revoke');
     expect(screen.getByText('bob@bob.com')).toBeInTheDocument();
     await act(() => userEvent.click(revokeButton[0]));
@@ -115,7 +132,7 @@ describe('Share project modal', () => {
   });
 
   it('Transferring ownership works', async () => {
-    await renderShareExperimentModal();
+    await renderShareExperimentModal(storeState);
 
     // Change role from 'explorer' to 'owner'
     const roleSelect = screen.getAllByRole('combobox')[1];
@@ -137,8 +154,8 @@ describe('Share project modal', () => {
     userEvent.click(confirmButton);
 
     await waitFor(() => {
-      expect(removeExperiment).toHaveBeenCalledWith(fake.EXPERIMENT_ID);
-      expect(sendInvites).toHaveBeenCalledWith(['newowner@owner.com'], { id: 'testae48e318dab9a1bd0bexperiment', name: 'Test Experiment', role: 'owner' });
+      expect(removeExperiment).toHaveBeenCalledWith(experimentId);
+      expect(sendInvites).toHaveBeenCalledWith(['newowner@owner.com'], { id: experimentId, name: 'Test Experiment', role: 'owner' });
     });
   });
 });

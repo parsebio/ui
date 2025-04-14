@@ -23,6 +23,7 @@ import mockAPI, {
   statusResponse,
 } from '__test__/test-utils/mockAPI';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
@@ -90,7 +91,7 @@ describe('Continuous embedding plot', () => {
 
     storeState = makeStore();
 
-    // Set up state for backend status
+    await setMockedExperimentInfo(experimentId, storeState);
     await storeState.dispatch(loadBackendStatus(experimentId));
   });
 

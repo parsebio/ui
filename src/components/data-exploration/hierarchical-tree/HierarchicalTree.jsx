@@ -12,6 +12,8 @@ import EditableField from 'components/EditableField';
 import ColorPicker from 'components/ColorPicker';
 import FocusButton from 'components/FocusButton';
 import HideButton from 'components/data-exploration/cell-sets-tool/HideButton';
+import { permissions } from 'utils/constants';
+import PermissionsChecker from 'utils/PermissionsChecker';
 
 const HierarchicalTree = (props) => {
   const {
@@ -107,28 +109,30 @@ const HierarchicalTree = (props) => {
   };
 
   const renderEditableField = (modified, parentKey, parentType) => (
-    <EditableField
-      onAfterSubmit={(e) => {
-        onNodeUpdate(modified.key, { name: e });
-      }}
-      onDelete={() => {
-        onCheck(_.without(checkedKeys, modified.key));
-        onNodeDelete(modified.key, modified.rootNode);
-      }}
-      value={modified.name}
-      showEdit={modified.key !== 'scratchpad' && parentType !== 'metadataCategorical' && modified.type !== 'metadataCategorical'}
-      deleteEnabled={!(
+    <PermissionsChecker permissions={permissions.WRITE} grayedOut={false}>
+      <EditableField
+        onAfterSubmit={(e) => {
+          onNodeUpdate(modified.key, { name: e });
+        }}
+        onDelete={() => {
+          onCheck(_.without(checkedKeys, modified.key));
+          onNodeDelete(modified.key, modified.rootNode);
+        }}
+        value={modified.name}
+        showEdit={modified.key !== 'scratchpad' && parentType !== 'metadataCategorical' && modified.type !== 'metadataCategorical'}
+        deleteEnabled={!(
 
-        // Disable delete for root node if
-        modified.type === 'metadataCategorical'
-        || ['louvain', 'scratchpad', 'sample'].includes(modified.key)
+          // Disable delete for root node if
+          modified.type === 'metadataCategorical'
+          || ['louvain', 'scratchpad', 'sample'].includes(modified.key)
 
-        // Disable delete for child node if
-        || (parentType && parentType === 'metadataCategorical')
-        || (parentKey && parentKey !== 'scratchpad')
-      )}
-      renderBold={!!modified.rootNode}
-    />
+          // Disable delete for child node if
+          || (parentType && parentType === 'metadataCategorical')
+          || (parentKey && parentKey !== 'scratchpad')
+        )}
+        renderBold={!!modified.rootNode}
+      />
+    </PermissionsChecker>
   );
 
   const renderFocusButton = (modified) => {
