@@ -59,6 +59,10 @@ describe('HierarchicalTree', () => {
     useSelector.mockImplementation(() => true);
   });
 
+  afterAll(() => {
+    jest.resetAllMocks(); // Reset all mocks after each test
+  });
+
   it('Renders correctly', () => {
     const treeData = [{
       key: '1',
