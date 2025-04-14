@@ -25,6 +25,7 @@ import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { loadCellSets } from 'redux/actions/cellSets';
 
 import ConfigureEmbedding from 'components/data-processing/ConfigureEmbedding/ConfigureEmbedding';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 const filterName = 'configureEmbedding';
 
@@ -95,6 +96,7 @@ describe('Configure Embedding', () => {
     await storeState.dispatch(loadBackendStatus(fake.EXPERIMENT_ID));
     await storeState.dispatch(loadProcessingSettings(fake.EXPERIMENT_ID));
     await storeState.dispatch(loadCellSets(fake.EXPERIMENT_ID));
+    await setMockedExperimentInfo(fake.EXPERIMENT_ID, storeState);
   });
 
   it('renders correctly ', async () => {

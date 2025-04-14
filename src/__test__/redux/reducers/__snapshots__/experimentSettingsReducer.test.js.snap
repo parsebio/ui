@@ -73,7 +73,7 @@ exports[`experimentSettingsReducer Adds new value properly 1`] = `
 exports[`experimentSettingsReducer Changing filter enabled property updates sample filter enabled property as well 1`] = `
 {
   "info": {
-    "accessRole": null,
+    "accessRole": "owner",
     "experimentId": null,
     "experimentName": null,
     "pipelineVersion": 1,
@@ -331,7 +331,7 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
 exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
 {
   "info": {
-    "accessRole": null,
+    "accessRole": "owner",
     "experimentId": null,
     "experimentName": null,
     "pipelineVersion": 2,
@@ -619,7 +619,7 @@ exports[`experimentSettingsReducer Updates existing value properly 1`] = `
 exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
 {
   "info": {
-    "accessRole": null,
+    "accessRole": "owner",
     "experimentId": null,
     "experimentName": null,
     "pipelineVersion": 1,

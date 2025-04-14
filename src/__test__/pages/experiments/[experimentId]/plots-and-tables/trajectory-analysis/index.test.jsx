@@ -30,6 +30,7 @@ import mockAPI, {
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
 import userEvent from '@testing-library/user-event';
 import { updatePlotConfig } from 'redux/actions/componentConfig';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
@@ -143,6 +144,7 @@ describe('Trajectory analysis plot', () => {
 
     // Set up state for backend status
     await storeState.dispatch(loadBackendStatus(experimentId));
+    await setMockedExperimentInfo(experimentId, storeState);
   });
 
   it('Loads controls and elements', async () => {
