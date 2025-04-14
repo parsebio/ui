@@ -9,13 +9,15 @@ import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
 const scanpyDisableMessage = 'This feature is available for Seurat projects but is not yet implemented in Scanpy beta mode - it\'s coming soon!';
 
-const ScanpyDisabler = ({ children }) => {
+const ScanpyDisabler = ({ experimentId: customExperimentId, children }) => {
   const dispatch = useDispatch();
 
   const isScanpy = useSelector(getIsScanpy());
-  const experimentId = useSelector((state) => (
+  const openExperimentId = useSelector((state) => (
     state.experimentSettings.info.experimentId
   ), _.isEqual);
+
+  const experimentId = customExperimentId ?? openExperimentId;
 
   useEffect(() => {
     if (_.isNil(isScanpy)) {
@@ -38,10 +40,13 @@ const ScanpyDisabler = ({ children }) => {
   );
 };
 
-ScanpyDisabler.defaultProps = {};
+ScanpyDisabler.defaultProps = {
+  experimentId: undefined,
+};
 
 ScanpyDisabler.propTypes = {
   children: PropTypes.node.isRequired,
+  experimentId: PropTypes.string,
 };
 
 export default ScanpyDisabler;

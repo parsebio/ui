@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { UserAddOutlined } from '@ant-design/icons';
 import {
-  Modal, Button, Space, Row, Col, Card, Avatar, Select, Typography,
+  Modal, Button, Space, Row, Col, Card, Avatar, Select, Typography, Popconfirm,
 } from 'antd';
 import { Auth } from '@aws-amplify/auth';
+import { removeExperiment } from 'redux/actions/experiments';
+import { removeSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
@@ -12,17 +16,28 @@ import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
 const { Text } = Typography;
 
 const ShareProjectModal = (props) => {
-  const { onCancel, project, explorerInfoText } = props;
+  const dispatch = useDispatch();
+  const { onCancel, project, projectType } = props;
   const [usersWithAccess, setUsersWithAccess] = useState([]);
   const [addedUsers, setAddedUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [role, setRole] = useState('explorer');
+  const [canTransferOwnership, setCanTransferOwnership] = useState(false);
 
   const fetchRoles = async () => {
     const getCurrentUser = await Auth.currentAuthenticatedUser();
     setCurrentUser(getCurrentUser.attributes.email);
 
     const userRole = await loadRoles(project.id);
+    const currentUserRole = userRole.find((user) => user.email === getCurrentUser.attributes.email);
+
+    // if the current user is not in the list of roles, it could mean that its an admin user
+    // the actual admin user check is done in the backend
+
+    if (currentUserRole?.role === 'owner' || getCurrentUser.attributes.email.includes('+admin@parsebiosciences.com')) {
+      setCanTransferOwnership(true);
+    }
+
     setUsersWithAccess(userRole);
   };
 
@@ -30,26 +45,39 @@ const ShareProjectModal = (props) => {
     fetchRoles();
   }, []);
 
+  useEffect(() => {
+    if (role === 'owner') {
+      setAddedUsers(addedUsers[0] ? [addedUsers[0]] : []);
+    }
+  }, [role]);
+
   const changeSelectedUsers = (selectedUsers) => {
     const newUser = selectedUsers[selectedUsers.length - 1];
+
     // check if the entry is in a valid email address format
     const isEmailInvalid = newUser && !newUser?.toLowerCase()
       .match(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       );
     if (!isEmailInvalid) {
-      setAddedUsers(selectedUsers);
+      if (role === 'owner') {
+        // Only allow one email when the owner role is selected
+        setAddedUsers(newUser ? [newUser] : []);
+      } else {
+        setAddedUsers(selectedUsers.map(_.toLower));
+      }
     }
   };
 
   const okButtonText = addedUsers.length ? 'Add' : 'Done';
   const cancelButton = addedUsers.length ? (
-    <Button onClick={() => setAddedUsers([])}>Cancel</Button>) : null;
+    <Button onClick={() => setAddedUsers([])}>Cancel</Button>
+  ) : null;
 
   const inviteUsers = async () => {
     if (!addedUsers.length) return;
 
-    await sendInvites(
+    const response = await sendInvites(
       addedUsers,
       {
         id: project.id,
@@ -58,19 +86,58 @@ const ShareProjectModal = (props) => {
       },
     );
 
+    if (role === 'owner' && response[0]?.data?.code === 200) {
+      if (projectType === 'experiment') {
+        dispatch(removeExperiment(project.id));
+      } else {
+        dispatch(removeSecondaryAnalysis(project.id));
+      }
+    }
     onCancel();
   };
+  const explorerInfoText = projectType === 'experiment' ? `The user will be able to use Data Exploration and Plots and Tables modules,
+              but will not be able to make any changes to samples or metadata in Insights or re-run the pipeline in the Data Processing module.`
+    : `The user will be able to view the pipeline outputs, but not make any changes to the pipeline run.
+     Any linked downstream analyses (related project in the Insights module) to this pipeline run needs to be  shared separately.`;
+
+  const ownerInfoText = projectType === 'experiment' ? `There can be only one owner per project. The owner has full control over the project, data files,
+      samples and metadata, as well as running Data Processing.`
+    : 'There can be only one owner per run. The owner has full control over the run, data files, as well as running the Pipeline.';
+
+  const infoText = role === 'explorer' ? explorerInfoText : ownerInfoText;
 
   return (
     <Modal
       open
-      title={[<UserAddOutlined />, 'Share with collaborators']}
+      title={[<UserAddOutlined key='icon' />, 'Share with collaborators']}
       onCancel={onCancel}
       okButtonText='Done'
       footer={(
         <Space direction='horizontal'>
           {cancelButton}
-          <Button onClick={() => inviteUsers()} type='primary'>{okButtonText}</Button>
+          {role === 'owner' ? (
+            <Popconfirm
+              title={() => (
+                <div>
+                  By assigning
+                  {' '}
+                  <b>{addedUsers[0]}</b>
+                  {' '}
+                  as owner, you will lose all access to this run/project.
+                  <br />
+                  Are you sure you want to continue with the transfer of ownership?
+                </div>
+              )}
+              onConfirm={inviteUsers}
+              okText='Yes'
+              cancelText='No'
+              disabled={addedUsers.length === 0}
+            >
+              <Button type='primary'>{okButtonText}</Button>
+            </Popconfirm>
+          ) : (
+            <Button onClick={() => inviteUsers()} type='primary'>{okButtonText}</Button>
+          )}
         </Space>
       )}
       width='650px'
@@ -80,7 +147,6 @@ const ShareProjectModal = (props) => {
           {project.name}
         </Text>
         <Row gutter={10} style={{ width: '110%' }}>
-
           <Col span={18}>
             <Select
               value={addedUsers}
@@ -93,17 +159,17 @@ const ShareProjectModal = (props) => {
           <Col span={6}>
             <Select defaultValue='explorer' onChange={(val) => setRole(val)}>
               <Select.Option key='explorer' value='explorer'> Explorer </Select.Option>
+              <Select.Option key='owner' value='owner' disabled={!canTransferOwnership}> Owner </Select.Option>
             </Select>
           </Col>
         </Row>
 
         <Row>
           <Space direction='vertical' style={{ width: '100%' }} size='large'>
-
             <Card key='users' style={{ width: '100%', height: '20rem', overflowY: 'auto' }}>
               {
                 usersWithAccess.map((user) => (
-                  <Row gutter={10}>
+                  <Row gutter={10} key={user.email}>
                     <Col span={3}>
                       <Avatar
                         style={{
@@ -149,8 +215,12 @@ const ShareProjectModal = (props) => {
               <Row gutter={10} />
             </Card>
             <Text>
-              <b>Explorer: </b>
-              {explorerInfoText}
+              <b>
+                {role[0].toUpperCase() + role.slice(1)}
+                :
+                {' '}
+              </b>
+              {infoText}
             </Text>
           </Space>
         </Row>
@@ -162,7 +232,7 @@ const ShareProjectModal = (props) => {
 ShareProjectModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
-  explorerInfoText: PropTypes.string.isRequired,
+  projectType: PropTypes.oneOf(['experiment', 'secondaryAnalysis']).isRequired,
 };
 
 export default ShareProjectModal;
