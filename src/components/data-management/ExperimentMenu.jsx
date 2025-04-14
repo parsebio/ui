@@ -4,7 +4,7 @@ import {
   Space, Button, Tooltip,
 } from 'antd';
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules, permissions } from 'utils/constants';
+import { modules } from 'utils/constants';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import processSampleUpload from 'utils/upload/processSampleUpload';
@@ -12,7 +12,6 @@ import DownloadDataButton from 'components/data-management/DownloadDataButton';
 import LaunchAnalysisButton from 'components/data-management/LaunchAnalysisButton';
 import FileUploadModal from 'components/data-management/FileUploadModal';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
-import PermissionsChecker from 'utils/PermissionsChecker';
 
 const ExperimentMenu = () => {
   const dispatch = useDispatch();
