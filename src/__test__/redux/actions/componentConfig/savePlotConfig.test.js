@@ -12,7 +12,6 @@ import thunk from 'redux-thunk';
 import endUserMessages from 'utils/endUserMessages';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import fake from '__test__/test-utils/constants';
-import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 import { accessRoles } from 'redux/selectors/getHasPermissions';
 
 jest.mock('utils/pushNotificationMessage');
