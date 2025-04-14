@@ -1,5 +1,40 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`DownloadDataButton Doesnt download processed matrix for scanpy experiments 1`] = `
+[
+  [
+    "testae48e318dab9a1bd0bexperiment-0",
+    {
+      "config": {
+        "distanceMetric": "cosine",
+        "minimumDistance": 0.3,
+      },
+      "name": "GetEmbedding",
+      "type": "umap",
+      "useSaved": undefined,
+    },
+    [Function],
+    [Function],
+    {
+      "timeout": 900,
+    },
+  ],
+  [
+    "testae48e318dab9a1bd0bexperiment-0",
+    {
+      "embeddingMethod": "umap",
+      "isSeurat": false,
+      "name": "DownloadAnnotSeuratObject",
+    },
+    [Function],
+    [Function],
+    {
+      "timeout": 180,
+    },
+  ],
+]
+`;
+
 exports[`DownloadDataButton Downloads processed matrix properly for seurat experiments 1`] = `
 [
   [
