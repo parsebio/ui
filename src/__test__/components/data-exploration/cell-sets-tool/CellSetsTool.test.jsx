@@ -23,7 +23,6 @@ import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloa
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { analysisTools } from 'utils/constants';
 import { loadProcessingSettings, updateExperimentInfo } from 'redux/actions/experimentSettings';
-import getExperimentInfo from 'utils/ssr/getExperimentInfo';
 
 enableFetchMocks();
 
@@ -102,6 +101,18 @@ let storeState;
 
 const mockAPIResponse = generateDefaultMockAPIResponses(experimentId);
 
+const setMockedExperimentInfo = async (experimentIdInput, store) => {
+  await store.dispatch(
+    updateExperimentInfo({
+      experimentId: experimentIdInput,
+      experimentName: 'mockedName',
+      sampleIds: ['1', '2'],
+      pipelineVersion: 'v2',
+      accessRole: 'owner',
+    }),
+  );
+};
+
 // Mocking samples update / delete routes
 const customResponsesLarge = {
   [`experiments/${experimentId}/cellSets$`]: () => {
@@ -125,15 +136,7 @@ describe('CellSetsTool', () => {
 
     storeState = makeStore();
 
-    await storeState.dispatch(
-      updateExperimentInfo({
-        experimentId,
-        experimentName: 'mockedName',
-        sampleIds: ['1', '2'],
-        pipelineVersion: 'v2',
-        accessRole: 'owner',
-      }),
-    );
+    await setMockedExperimentInfo(experimentId, storeState);
   });
 
   it('renders correctly cell set tool with no clusters in custom cell sets', async () => {
@@ -788,6 +791,7 @@ describe('AnnotateClustersTool', () => {
 
     storeState = makeStore();
     await storeState.dispatch(loadBackendStatus(experimentId));
+    await setMockedExperimentInfo(experimentId, storeState);
   });
 
   it('Renders correctly', async () => {
@@ -867,6 +871,7 @@ describe('AnnotateClustersTool', () => {
     storeState = makeStore();
     await storeState.dispatch(loadBackendStatus(experimentId));
     await storeState.dispatch(loadProcessingSettings(experimentId));
+    await setMockedExperimentInfo(experimentId, storeState);
 
     await act(async () => {
       render(
