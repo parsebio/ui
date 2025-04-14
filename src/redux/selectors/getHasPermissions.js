@@ -24,3 +24,5 @@ const getHasPermissions = (experimentId, permissionsToCheck) => (state) => {
 };
 
 export default createMemoizedSelector(getHasPermissions);
+
+export { accessRoles };
