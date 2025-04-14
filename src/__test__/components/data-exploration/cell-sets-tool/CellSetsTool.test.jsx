@@ -22,7 +22,8 @@ import fetchWork from 'utils/work/fetchWork';
 import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloadCellSetsFromS3Mock } from '__test__/test-utils/mockAPI';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { analysisTools } from 'utils/constants';
-import { loadProcessingSettings } from 'redux/actions/experimentSettings';
+import { loadProcessingSettings, updateExperimentInfo } from 'redux/actions/experimentSettings';
+import getExperimentInfo from 'utils/ssr/getExperimentInfo';
 
 enableFetchMocks();
 
@@ -123,6 +124,16 @@ describe('CellSetsTool', () => {
     fetchMock.mockIf(/.*/, mockAPI(mockAPIResponse));
 
     storeState = makeStore();
+
+    await storeState.dispatch(
+      updateExperimentInfo({
+        experimentId,
+        experimentName: 'mockedName',
+        sampleIds: ['1', '2'],
+        pipelineVersion: 'v2',
+        accessRole: 'owner',
+      }),
+    );
   });
 
   it('renders correctly cell set tool with no clusters in custom cell sets', async () => {
