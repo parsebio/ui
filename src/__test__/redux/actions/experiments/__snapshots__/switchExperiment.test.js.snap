@@ -78,6 +78,7 @@ exports[`switch experiment  Then updates the experiment info 1`] = `
   "embeddings": {},
   "experimentSettings": {
     "info": {
+      "accessRole": "owner",
       "experimentId": "testae48e318dab9a1bd0bexperiment-0",
       "experimentName": "Test Experiment-0",
       "pipelineVersion": 1,
@@ -109,6 +110,7 @@ exports[`switch experiment  Then updates the experiment info 1`] = `
       "saving": false,
     },
     "testae48e318dab9a1bd0bexperiment-0": {
+      "accessRole": "owner",
       "createdAt": "0000-00-00T00:00:00.000Z",
       "description": "Mock experiment 0",
       "id": "testae48e318dab9a1bd0bexperiment-0",
@@ -141,6 +143,7 @@ exports[`switch experiment  Then updates the experiment info 1`] = `
       "updatedAt": "0000-00-00T00:00:00.000Z",
     },
     "testae48e318dab9a1bd0bexperiment-1": {
+      "accessRole": "owner",
       "createdAt": "0000-00-00T00:00:00.000Z",
       "description": "Mock experiment 1",
       "id": "testae48e318dab9a1bd0bexperiment-1",
@@ -521,6 +524,7 @@ exports[`switch experiment  switches the experiment to its initial values 1`] = 
   "embeddings": {},
   "experimentSettings": {
     "info": {
+      "accessRole": "owner",
       "experimentId": "testae48e318dab9a1bd0bexperiment-0",
       "experimentName": "Test Experiment-0",
       "pipelineVersion": 1,
@@ -552,6 +556,7 @@ exports[`switch experiment  switches the experiment to its initial values 1`] = 
       "saving": false,
     },
     "testae48e318dab9a1bd0bexperiment-0": {
+      "accessRole": "owner",
       "createdAt": "0000-00-00T00:00:00.000Z",
       "description": "Mock experiment 0",
       "id": "testae48e318dab9a1bd0bexperiment-0",
@@ -584,6 +589,7 @@ exports[`switch experiment  switches the experiment to its initial values 1`] = 
       "updatedAt": "0000-00-00T00:00:00.000Z",
     },
     "testae48e318dab9a1bd0bexperiment-1": {
+      "accessRole": "owner",
       "createdAt": "0000-00-00T00:00:00.000Z",
       "description": "Mock experiment 1",
       "id": "testae48e318dab9a1bd0bexperiment-1",

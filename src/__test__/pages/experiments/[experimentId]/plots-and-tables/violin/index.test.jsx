@@ -175,6 +175,7 @@ describe('ViolinIndex', () => {
     // New plot's config contains normalised set to raw too
     expect(storeState.getState().componentConfig['ViolinMain-0'].config.normalised).toEqual('raw');
   });
+
   it('Changes the shown gene', async () => {
     await renderViolinPage(storeState);
 
