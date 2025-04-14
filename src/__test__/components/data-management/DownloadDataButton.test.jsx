@@ -242,13 +242,13 @@ describe('DownloadDataButton', () => {
       fireEvent.click(downloadButton);
     });
 
-    expect(fetchWork).toHaveBeenCalledTimes(0);
+    expect(fetchWork).toHaveBeenCalledTimes(2);
     // Keeping old checks around for when the downloadButton is enabled
-    // expect(fetchWork.mock.calls).toMatchSnapshot();
+    expect(fetchWork.mock.calls).toMatchSnapshot();
 
-    // expect(writeToFileURL).toHaveBeenCalledWith(mockResult);
-    // expect(downloadFromUrl).toHaveBeenCalledWith(mockFileUrl,
-    //  { fileName: `${experimentId}_processed_matrix.h5ad` });
+    expect(writeToFileURL).toHaveBeenCalledWith(mockResult);
+    expect(downloadFromUrl).toHaveBeenCalledWith(mockFileUrl,
+      { fileName: `${experimentId}_processed_matrix.h5ad` });
   });
 
   it('Shows an error if there is an error downloading data', async () => {
