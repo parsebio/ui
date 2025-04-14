@@ -524,4 +524,31 @@ describe('HierarchicalTree', () => {
     // Verify that the edit icon is not shown because showEdit should be false
     expect(parentEditableField.find(EditOutlined)).toHaveLength(0);
   });
+
+  it('Disables interactions when use does not have write permissions', () => {
+    useSelector.mockImplementationOnce(() => false);
+
+    const treeData = [
+      {
+        key: '1',
+        name: 'parent 1',
+        rootNode: true,
+        children: [firstChild],
+      },
+    ];
+
+    const component = mount(
+      <HierarchicalTree
+        treeData={treeData}
+        experimentId={fake.EXPERIMENT_ID}
+      />,
+    );
+
+    const permissionsChecker = component.find('PermissionsChecker');
+    expect(permissionsChecker).toHaveLength(1);
+
+    const disabledChild = permissionsChecker.find('div[disabled]');
+    expect(disabledChild).toHaveLength(1);
+    expect(disabledChild.prop('style').pointerEvents).toEqual('none');
+  });
 });
