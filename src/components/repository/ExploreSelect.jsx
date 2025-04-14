@@ -97,7 +97,7 @@ const ExploreSelect = (props) => {
       ),
     },
     {
-      key: 'explore',
+      key: 'copy',
       onClick: cloneExperiment,
       label: (
         <DropdownLabel
@@ -120,6 +120,7 @@ const ExploreSelect = (props) => {
       menu={{
         items: menuItems,
       }}
+      trigger={['click']}
     >
       <Button type='primary' disabled={experimentCloning}>
         Explore
