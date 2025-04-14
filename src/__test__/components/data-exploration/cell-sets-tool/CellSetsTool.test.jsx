@@ -22,7 +22,8 @@ import fetchWork from 'utils/work/fetchWork';
 import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloadCellSetsFromS3Mock } from '__test__/test-utils/mockAPI';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { analysisTools } from 'utils/constants';
-import { loadProcessingSettings, updateExperimentInfo } from 'redux/actions/experimentSettings';
+import { loadProcessingSettings } from 'redux/actions/experimentSettings';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 enableFetchMocks();
 
@@ -100,18 +101,6 @@ const cellSetsToolFactory = createTestComponentFactory(CellSetsTool, defaultProp
 let storeState;
 
 const mockAPIResponse = generateDefaultMockAPIResponses(experimentId);
-
-const setMockedExperimentInfo = async (experimentIdInput, store) => {
-  await store.dispatch(
-    updateExperimentInfo({
-      experimentId: experimentIdInput,
-      experimentName: 'mockedName',
-      sampleIds: ['1', '2'],
-      pipelineVersion: 'v2',
-      accessRole: 'owner',
-    }),
-  );
-};
 
 // Mocking samples update / delete routes
 const customResponsesLarge = {
