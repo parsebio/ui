@@ -28,18 +28,25 @@ const ShareProjectModal = (props) => {
   const [canTransferOwnership, setCanTransferOwnership] = useState(false);
 
   const hasPermissions = useSelector(getHasPermissions(project.id, permissions.READ_USER_ACCESS));
+  const currentUserRole = useSelector((state) => state.experiments[project.id].accessRole);
 
   const fetchRoles = async () => {
     const getCurrentUser = await Auth.currentAuthenticatedUser();
-    setCurrentUser(getCurrentUser.attributes.email);
+    const { email, name } = getCurrentUser.attributes;
+
+    setCurrentUser(email);
+
+    if (!hasPermissions) {
+      setUsersWithAccess({ email, name, role: currentUserRole });
+      return;
+    }
 
     const userRole = await loadRoles(project.id);
-    const currentUserRole = userRole.find((user) => user.email === getCurrentUser.attributes.email);
 
     // if the current user is not in the list of roles, it could mean that its an admin user
     // the actual admin user check is done in the backend
 
-    if (currentUserRole?.role === 'owner' || getCurrentUser.attributes.email.includes('+admin@parsebiosciences.com')) {
+    if (currentUserRole?.role === 'owner' || email.includes('+admin@parsebiosciences.com')) {
       setCanTransferOwnership(true);
     }
 
@@ -47,8 +54,6 @@ const ShareProjectModal = (props) => {
   };
 
   useEffect(() => {
-    if (!hasPermissions) return;
-
     fetchRoles();
   }, [hasPermissions]);
 
