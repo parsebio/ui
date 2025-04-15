@@ -239,7 +239,7 @@ const ShareProjectModal = (props) => {
                         onClick={() => revokeAccess(user)}
                         disabled={user.email === currentUser && user.role === 'owner'}
                       >
-                        Revoke
+                        {user.email === currentUser ? 'Leave' : 'Revoke'}
                       </Button>
                     </Col>
                   </Row>
