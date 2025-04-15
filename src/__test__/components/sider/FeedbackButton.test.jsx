@@ -43,18 +43,18 @@ describe('FeedbackButton', () => {
     expect(screen.getByText(/Support/i)).toBeDefined();
   });
 
-  it('Shows a text area input with 2 buttons when opened', () => {
-    render(<FeedbackButton />);
+  it('Displays the help card when clicked', () => {
+    render(<FeedbackButton collapsed={false} />);
+    const button = screen.getByText(/Support/i);
+    fireEvent.click(button);
 
-    const feedbackButton = screen.getByText(/Support/i);
-    fireEvent.click(feedbackButton);
+    // Check if one of the help links is present
+    expect(
+      screen.getByText(/Our website/i),
+    ).toBeInTheDocument();
 
-    // There is a textarea
-    expect(screen.getByPlaceholderText(placeHolderTextRegex)).toBeDefined();
-
-    // With 2 buttons
-    expect(screen.getByText(/cancel/i)).toBeDefined();
-    expect(screen.getByText(/Send/i)).toBeDefined();
+    // Check that the email link is present
+    expect(screen.getByRole('link', { name: /support@parsebiosciences.com/i })).toBeInTheDocument();
   });
 
   it('It sends a POST request containing the feedback', async () => {
