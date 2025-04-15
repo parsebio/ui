@@ -139,28 +139,20 @@ const FeedbackButton = (props) => {
               Free single cell RNA-seq data analysis course
             </a>
           </div>
-          To report an issue or to receive 1-to-1 support from a member of our team:
+          To report an issue or to receive 1-to-1 support from a member of our team, write an email to
+          <a
+            href='mailto:support@parsebiosciences.com'
+            target='_blank'
+            rel='noreferrer'
+          >
+            {' '}
+            support@parsebiosciences.com
+          </a>
+          .
+          <br />
+          If your inquiry relates to a specific experiment, be sure to include the relevant Run ID or Project ID.
           <br />
           <br />
-          <Space direction='vertical' style={{ width: '100%' }}>
-            <TextArea
-              value={feedbackText}
-              onChange={(e) => {
-                setFeedbackText(e.target.value);
-              }}
-              rows={4}
-              placeholder='Please write your message here to provide feedback or report issues on Trailmaker. A member of our team will get back to you as soon as possible.'
-              bordered
-              ref={(ref) => { if (ref) { ref.focus(); } }}
-              style={{
-                resize: 'none', width: 300, outline: 'none',
-              }}
-            />
-            <Space>
-              <Button size='small' onClick={() => setVisible(false)}>Cancel</Button>
-              <Button size='small' type='primary' onClick={submitFeedback}>Send</Button>
-            </Space>
-          </Space>
         </Card>
       ),
       key: 'feedback-button-contents',
