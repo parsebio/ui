@@ -145,7 +145,6 @@ jobs:
           echo "Node version: $(node --version)"
           echo "NPM version: $(npm --version)"
 
-          git config --global url."https://".insteadOf ssh://
           npm ci
 
       - id: next-cache-seek
