@@ -2,109 +2,14 @@ import {
   Button,
   Card,
   Dropdown,
-  Input,
-  Space,
 } from 'antd';
 import { QuestionCircleOutlined, InfoCircleFilled } from '@ant-design/icons';
 import React, { useState } from 'react';
-import fetchAPI from 'utils/http/fetchAPI';
-import { Auth } from '@aws-amplify/auth';
-import endUserMessages from 'utils/endUserMessages';
-import pushNotificationMessage from 'utils/pushNotificationMessage';
-import handleError from 'utils/http/handleError';
 import PropTypes from 'prop-types';
-
-const { TextArea } = Input;
 
 const FeedbackButton = (props) => {
   const { collapsed, buttonType } = props;
   const [visible, setVisible] = useState(false);
-  const [feedbackText, setFeedbackText] = useState('');
-
-  const submitFeedback = async () => {
-    setVisible(false);
-    const pageContext = [
-      {
-        type: 'mrkdwn',
-        text: '*URL posted from:*',
-      },
-      {
-        type: 'mrkdwn',
-        text: window.location.href,
-      },
-    ];
-
-    let user;
-    try {
-      user = await Auth.currentAuthenticatedUser();
-    } catch (e) {
-      console.warn('User not authenticated');
-    }
-
-    const userContext = user ? [
-      {
-        type: 'mrkdwn',
-        text: '*User email:*',
-      },
-      {
-        type: 'mrkdwn',
-        text: user.attributes.email,
-      },
-
-      {
-        type: 'mrkdwn',
-        text: '*User name:*',
-      },
-      {
-        type: 'plain_text',
-        text: user.attributes.name,
-      },
-
-      {
-        type: 'mrkdwn',
-        text: '*User UUID:*',
-      },
-      {
-        type: 'plain_text',
-        text: user.username,
-      },
-    ] : [];
-
-    const feedbackData = {
-      channel: 'feedback',
-      blocks: [
-        {
-          type: 'section',
-          text: {
-            type: 'plain_text',
-            text: feedbackText,
-          },
-        },
-        {
-          type: 'context',
-          elements: [
-            ...pageContext,
-            ...userContext,
-          ],
-        },
-      ],
-    };
-
-    try {
-      await fetchAPI('/v2/sendSlackMessage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ data: feedbackData }),
-      });
-
-      setFeedbackText('');
-      pushNotificationMessage('success', endUserMessages.FEEDBACK_SUCCESSFUL);
-    } catch (e) {
-      handleError(e, endUserMessages.FEEDBACK_ERROR);
-    }
-  };
 
   const menuItems = [
     {
@@ -119,14 +24,22 @@ const FeedbackButton = (props) => {
             </a>
             {' '}
             <br />
-            <a href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide' target='_blank' rel='noreferrer'>
+            <a
+              href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide'
+              target='_blank'
+              rel='noreferrer'
+            >
               <InfoCircleFilled />
               {' '}
               User guide
             </a>
             {' '}
             <br />
-            <a href='https://support.parsebiosciences.com/hc/en-us/categories/360004765711-Computational-Support' target='_blank' rel='noreferrer'>
+            <a
+              href='https://support.parsebiosciences.com/hc/en-us/categories/360004765711-Computational-Support'
+              target='_blank'
+              rel='noreferrer'
+            >
               <InfoCircleFilled />
               {' '}
               Support suite including troubleshooting guides
