@@ -30,7 +30,7 @@ const ShareProjectModal = (props) => {
   const hasPermissions = useSelector(
     getHasPermissions(project.id, permissions.READ_USER_ACCESS, projectType),
   );
-  const currentUserRole = useSelector((state) => (
+  const storedCurrentUserRole = useSelector((state) => (
     projectType === 'experiment' ? state.experiments[project.id].accessRole : null
   ));
 
@@ -69,11 +69,12 @@ const ShareProjectModal = (props) => {
     setCurrentUser(email);
 
     if (projectType === 'experiment' && !hasPermissions) {
-      setUsersWithAccess([{ email, name, role: currentUserRole }]);
+      setUsersWithAccess([{ email, name, role: storedCurrentUserRole }]);
       return;
     }
 
     const userRole = await loadRoles(project.id);
+    const currentUserRole = userRole.find((user) => user.email === getCurrentUser.attributes.email);
 
     // if the current user is not in the list of roles, it could mean that its an admin user
     // the actual admin user check is done in the backend

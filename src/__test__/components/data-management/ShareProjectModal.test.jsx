@@ -55,7 +55,6 @@ const renderShareExperimentModal = async (storeState) => {
         }}
         projectType='experiment'
       />
-      ,
     </Provider>,
   ));
 };
