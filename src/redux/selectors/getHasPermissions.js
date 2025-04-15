@@ -25,8 +25,8 @@ const getHasPermissions = (
     return true;
   }
   const role = experimentId
-    ? state.experiments[experimentId]?.accessRole
-    : state.experimentSettings.info?.accessRole;
+    ? state.experiments[experimentId].accessRole
+    : state.experimentSettings.info.accessRole;
 
   return permissionsByRole[role].has(permissionsToCheck);
 };
