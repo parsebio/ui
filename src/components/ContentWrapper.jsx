@@ -23,6 +23,7 @@ import {
   Menu,
   Typography,
   Divider,
+  Tooltip,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
@@ -501,7 +502,7 @@ const ContentWrapper = (props) => {
               }}
               ellipsis
             >
-              {selectedProjectText}
+              <Tooltip title={selectedProjectText}>{selectedProjectText}</Tooltip>
             </Text>
           )}
         >
