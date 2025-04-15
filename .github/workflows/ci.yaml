@@ -146,8 +146,7 @@ jobs:
           echo "Node version: $(node --version)"
           echo "NPM version: $(npm --version)"
 
-          git config --global url."https://${{ secrets.GITHUB_TOKEN }}:@github.com/".insteadOf "https://github.com/"
-
+          git config --global url."https://${{ secrets.API_TOKEN_GITHUB }}:@github.com/".insteadOf "https://github.com/"
           npm ci
 
       - id: next-cache-seek
