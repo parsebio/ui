@@ -37,7 +37,7 @@ const ShareProjectModal = (props) => {
     setCurrentUser(email);
 
     if (!hasPermissions) {
-      setUsersWithAccess({ email, name, role: currentUserRole });
+      setUsersWithAccess([{ email, name, role: currentUserRole }]);
       return;
     }
 
@@ -221,7 +221,7 @@ const ShareProjectModal = (props) => {
 
                           onCancel();
                         }}
-                        disabled={user.email === currentUser}
+                        disabled={user.email === currentUser && role === 'owner'}
                       >
                         Revoke
                       </Button>
