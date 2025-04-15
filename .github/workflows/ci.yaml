@@ -95,6 +95,7 @@ jobs:
           echo "Running CI with "
           echo "Node version: $(node --version)"
           echo "NPM version: $(npm --version)"
+          echo "yes"
           git config --global url."https://${{ secrets.GITHUB_TOKEN }}:@github.com/".insteadOf "https://github.com/"
           git config --global url."https://".insteadOf ssh://
           npm ci
