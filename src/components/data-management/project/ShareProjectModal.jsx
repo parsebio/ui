@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +7,7 @@ import {
   Modal, Button, Space, Row, Col, Card, Avatar, Select, Typography, Popconfirm,
 } from 'antd';
 import { Auth } from '@aws-amplify/auth';
-import { removeExperiment } from 'redux/actions/experiments';
+import { loadExperiments, removeExperiment } from 'redux/actions/experiments';
 import { removeSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
@@ -29,29 +29,6 @@ const ShareProjectModal = (props) => {
 
   const hasPermissions = useSelector(getHasPermissions(project.id, permissions.READ_USER_ACCESS));
   const currentUserRole = useSelector((state) => state.experiments[project.id].accessRole);
-
-  const fetchRoles = async () => {
-    const getCurrentUser = await Auth.currentAuthenticatedUser();
-    const { email, name } = getCurrentUser.attributes;
-
-    setCurrentUser(email);
-
-    if (!hasPermissions) {
-      setUsersWithAccess([{ email, name, role: currentUserRole }]);
-      return;
-    }
-
-    const userRole = await loadRoles(project.id);
-
-    // if the current user is not in the list of roles, it could mean that its an admin user
-    // the actual admin user check is done in the backend
-
-    if (currentUserRole?.role === 'owner' || email.includes('+admin@parsebiosciences.com')) {
-      setCanTransferOwnership(true);
-    }
-
-    setUsersWithAccess(userRole);
-  };
 
   useEffect(() => {
     fetchRoles();
@@ -80,6 +57,46 @@ const ShareProjectModal = (props) => {
       }
     }
   };
+
+  const fetchRoles = async () => {
+    const getCurrentUser = await Auth.currentAuthenticatedUser();
+    const { email, name } = getCurrentUser.attributes;
+
+    setCurrentUser(email);
+
+    if (!hasPermissions) {
+      setUsersWithAccess([{ email, name, role: currentUserRole }]);
+      return;
+    }
+
+    const userRole = await loadRoles(project.id);
+
+    // if the current user is not in the list of roles, it could mean that its an admin user
+    // the actual admin user check is done in the backend
+
+    if (currentUserRole?.role === 'owner' || email.includes('+admin@parsebiosciences.com')) {
+      setCanTransferOwnership(true);
+    }
+
+    setUsersWithAccess(userRole);
+  };
+
+  const revokeAccess = useCallback(async (user) => {
+    await revokeRole(
+      user.email,
+      { id: project.id, name: project.name },
+    );
+
+    if (user.email === currentUser) {
+      if (projectType === 'experiment') {
+        dispatch(removeExperiment(project.id));
+      } else {
+        dispatch(removeSecondaryAnalysis(project.id));
+      }
+    }
+
+    onCancel();
+  }, [project, currentUser, projectType]);
 
   const okButtonText = addedUsers.length ? 'Add' : 'Done';
   const cancelButton = addedUsers.length ? (
@@ -213,14 +230,7 @@ const ShareProjectModal = (props) => {
                       <Button
                         type='primary'
                         danger
-                        onClick={() => {
-                          revokeRole(
-                            user.email,
-                            { id: project.id, name: project.name },
-                          );
-
-                          onCancel();
-                        }}
+                        onClick={() => revokeAccess(user)}
                         disabled={user.email === currentUser && role === 'owner'}
                       >
                         Revoke
