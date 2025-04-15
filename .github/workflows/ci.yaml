@@ -10,7 +10,6 @@ on:
     branches:
       - master
       - secondary-analysis-master
-      - use-vitessce-fork
     types:
       - labeled
       - unlabeled
