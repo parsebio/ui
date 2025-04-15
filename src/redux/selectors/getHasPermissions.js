@@ -15,7 +15,15 @@ const permissionsByRole = {
   [accessRoles.ADMIN]: new Set([permissions.WRITE, permissions.READ_USER_ACCESS]),
 };
 
-const getHasPermissions = (experimentId, permissionsToCheck) => (state) => {
+const getHasPermissions = (
+  experimentId,
+  permissionsToCheck,
+  projectType = 'experiment',
+) => (state) => {
+  // we don't have viewer role for secondary analysis yet
+  if (projectType === 'secondaryAnalysis') {
+    return true;
+  }
   const role = experimentId
     ? state.experiments[experimentId].accessRole
     : state.experimentSettings.info.accessRole;

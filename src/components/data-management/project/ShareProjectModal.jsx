@@ -7,7 +7,7 @@ import {
   Modal, Button, Space, Row, Col, Card, Avatar, Select, Typography, Popconfirm,
 } from 'antd';
 import { Auth } from '@aws-amplify/auth';
-import { loadExperiments, removeExperiment } from 'redux/actions/experiments';
+import { removeExperiment } from 'redux/actions/experiments';
 import { removeSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
@@ -27,8 +27,12 @@ const ShareProjectModal = (props) => {
   const [role, setRole] = useState('explorer');
   const [canTransferOwnership, setCanTransferOwnership] = useState(false);
 
-  const hasPermissions = useSelector(getHasPermissions(project.id, permissions.READ_USER_ACCESS));
-  const currentUserRole = useSelector((state) => state.experiments[project.id].accessRole);
+  const hasPermissions = useSelector(
+    getHasPermissions(project.id, permissions.READ_USER_ACCESS, projectType),
+  );
+  const currentUserRole = useSelector((state) => (
+    projectType === 'experiment' ? state.experiments[project.id].accessRole : null
+  ));
 
   useEffect(() => {
     fetchRoles();
@@ -64,7 +68,7 @@ const ShareProjectModal = (props) => {
 
     setCurrentUser(email);
 
-    if (!hasPermissions) {
+    if (projectType === 'experiment' && !hasPermissions) {
       setUsersWithAccess([{ email, name, role: currentUserRole }]);
       return;
     }
@@ -178,6 +182,7 @@ const ShareProjectModal = (props) => {
         <PermissionsChecker
           experimentId={project.id}
           permissions={permissions.READ_USER_ACCESS}
+          projectType={projectType}
         >
           <Row gutter={10} style={{ width: '110%' }}>
             <Col span={18}>
@@ -231,7 +236,7 @@ const ShareProjectModal = (props) => {
                         type='primary'
                         danger
                         onClick={() => revokeAccess(user)}
-                        disabled={user.email === currentUser && role === 'owner'}
+                        disabled={user.email === currentUser && user.role === 'owner'}
                       >
                         Revoke
                       </Button>
