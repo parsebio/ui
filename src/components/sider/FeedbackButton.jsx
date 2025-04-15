@@ -52,19 +52,24 @@ const FeedbackButton = (props) => {
               Free single cell RNA-seq data analysis course
             </a>
           </div>
-          To report an issue or to receive 1-to-1 support from a member of our team, write an email to
-          <a
-            href='mailto:support@parsebiosciences.com'
-            target='_blank'
-            rel='noreferrer'
-          >
-            {' '}
-            support@parsebiosciences.com
-          </a>
-          .
+          <>
+            To report an issue or to receive 1-to-1 support from a member of our team,
+            <br />
+            write an email to
+            <a
+              href='mailto:support@parsebiosciences.com'
+              target='_blank'
+              rel='noreferrer'
+            >
+              {' '}
+              support@parsebiosciences.com
+            </a>
+            .
+          </>
           <br />
-          If your inquiry relates to a specific experiment, be sure to include the relevant Run ID or Project ID.
+          If your inquiry relates to a specific experiment,
           <br />
+          be sure to include the relevant Run ID or Project ID.
           <br />
         </Card>
       ),
