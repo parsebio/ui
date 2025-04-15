@@ -460,8 +460,7 @@ const Pipeline = () => {
                     </Button>
                     {shareProjectModalVisible && (
                       <ShareProjectModal
-                        explorerInfoText='The user will be able to view the pipeline outputs, but not
-                         make any changes to the pipeline run. Any linked downstream analyses (related project in the Insights module) to this pipeline run needs to be  shared separately.'
+                        projectType='secondaryAnalysis'
                         onCancel={() => setShareProjectModalVisible(false)}
                         project={{ name: analysisName, id: activeSecondaryAnalysisId }}
                       />

@@ -20,6 +20,7 @@ import mockAPI, {
   statusResponse,
 } from '__test__/test-utils/mockAPI';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
@@ -86,6 +87,7 @@ describe('ViolinIndex', () => {
 
     // Set up state for backend status
     await storeState.dispatch(loadBackendStatus(experimentId));
+    await setMockedExperimentInfo(experimentId, storeState);
   });
 
   it('Loads controls and elements', async () => {
@@ -175,6 +177,7 @@ describe('ViolinIndex', () => {
     // New plot's config contains normalised set to raw too
     expect(storeState.getState().componentConfig['ViolinMain-0'].config.normalised).toEqual('raw');
   });
+
   it('Changes the shown gene', async () => {
     await renderViolinPage(storeState);
 

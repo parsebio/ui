@@ -444,7 +444,6 @@ const MarkerHeatmap = ({ experimentId }) => {
         defaultActiveKey='gene-selection'
         onPlotReset={onReset}
         // Disable onUpdate handling of the config
-        onUpdate={() => { }}
       >
         {renderPlot()}
       </PlotContainer>

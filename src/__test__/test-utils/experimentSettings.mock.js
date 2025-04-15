@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import initialState from 'redux/reducers/experimentSettings/initialState';
+import { accessRoles } from 'redux/selectors/getHasPermissions';
 import { analysisTools } from 'utils/constants';
 
 const sampleifiedConfig = (sampleIds, configToReplicate) => {
@@ -146,6 +147,7 @@ const generateExperimentSettingsMock = (sampleIds) => {
     info: {
       ...initialState.info,
       pipelineVersion: 1,
+      accessRole: accessRoles.OWNER,
     },
   };
 };

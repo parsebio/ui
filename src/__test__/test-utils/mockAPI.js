@@ -54,6 +54,9 @@ const generateDefaultMockAPIResponses = (projectId, analysisTool = analysisTools
   [`experiments/${projectId}$`]: () => promiseResponse(
     JSON.stringify(responseData.experiments.find(({ id }) => id === projectId)),
   ),
+  [`/v2/experiments/${projectId}$`]: () => promiseResponse(
+    JSON.stringify(responseData.experiments.find(({ id }) => id === projectId)),
+  ),
   [`experiments/${projectId}/processingConfig$`]: () => {
     const processingConfigDataClone = _.cloneDeep(processingConfigData);
     processingConfigDataClone.processingConfig.dataIntegration.analysisTool = analysisTool;
