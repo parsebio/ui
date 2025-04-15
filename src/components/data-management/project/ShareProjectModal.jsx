@@ -26,8 +26,10 @@ const ShareProjectModal = (props) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [role, setRole] = useState('explorer');
   const [canTransferOwnership, setCanTransferOwnership] = useState(false);
-
-  const hasPermissions = useSelector(getHasPermissions(project.id, permissions.READ_USER_ACCESS));
+  console.log(projectType === 'secondaryAnalysis');
+  const hasPermissions = useSelector(
+    getHasPermissions(project.id, permissions.READ_USER_ACCESS, projectType),
+  );
 
   const fetchRoles = async () => {
     const getCurrentUser = await Auth.currentAuthenticatedUser();
@@ -156,6 +158,7 @@ const ShareProjectModal = (props) => {
         <PermissionsChecker
           experimentId={project.id}
           permissions={permissions.READ_USER_ACCESS}
+          projectType={projectType}
         >
           <Row gutter={10} style={{ width: '110%' }}>
             <Col span={18}>
