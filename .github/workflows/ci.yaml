@@ -91,12 +91,14 @@ jobs:
 
       - id: install
         name: Install dependencies
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |-
           echo "Running CI with "
           echo "Node version: $(node --version)"
           echo "NPM version: $(npm --version)"
 
-          git config --global url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "git+ssh://git@github.com/"
+          git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "git+ssh://git@github.com/"
           npm ci
 
       - id: test
