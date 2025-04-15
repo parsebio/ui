@@ -26,7 +26,7 @@ const ShareProjectModal = (props) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [role, setRole] = useState('explorer');
   const [canTransferOwnership, setCanTransferOwnership] = useState(false);
-  console.log(projectType === 'secondaryAnalysis');
+
   const hasPermissions = useSelector(
     getHasPermissions(project.id, permissions.READ_USER_ACCESS, projectType),
   );
