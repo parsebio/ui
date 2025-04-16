@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { useSelector } from 'react-redux';
 
 import {
   EditOutlined, DeleteOutlined,
@@ -10,6 +11,12 @@ import HierarchicalTree from 'components/data-exploration/hierarchical-tree/Hier
 import waitForComponentToPaint from '__test__/test-utils/waitForComponentToPaint';
 
 import fake from '__test__/test-utils/constants';
+
+// Mock the useSelector hook
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useSelector: jest.fn(),
+}));
 
 const firstChild = {
   key: '1a',
@@ -47,6 +54,15 @@ const secondParent = {
 };
 
 describe('HierarchicalTree', () => {
+  beforeEach(() => {
+    // Mock getHasPermissions's useSelector call
+    useSelector.mockImplementation(() => true);
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks(); // Reset all mocks after each test
+  });
+
   it('Renders correctly', () => {
     const treeData = [{
       key: '1',
@@ -511,5 +527,32 @@ describe('HierarchicalTree', () => {
 
     // Verify that the edit icon is not shown because showEdit should be false
     expect(parentEditableField.find(EditOutlined)).toHaveLength(0);
+  });
+
+  it('Disables interactions when use does not have write permissions', () => {
+    useSelector.mockImplementationOnce(() => false);
+
+    const treeData = [
+      {
+        key: '1',
+        name: 'parent 1',
+        rootNode: true,
+        children: [firstChild],
+      },
+    ];
+
+    const component = mount(
+      <HierarchicalTree
+        treeData={treeData}
+        experimentId={fake.EXPERIMENT_ID}
+      />,
+    );
+
+    const permissionsChecker = component.find('PermissionsChecker');
+    expect(permissionsChecker).toHaveLength(1);
+
+    const disabledChild = permissionsChecker.find('div[disabled]');
+    expect(disabledChild).toHaveLength(1);
+    expect(disabledChild.prop('style').pointerEvents).toEqual('none');
   });
 });

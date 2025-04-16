@@ -455,7 +455,7 @@ exports[`Dot plot page Renders the plot page correctly 1`] = `
         "Gene": "Lyz2",
       },
     ],
-    "filename": "Test_Experiment-dot_plot-louvain-All",
+    "filename": "mockedName-dot_plot-louvain-All",
   },
   {},
 ]

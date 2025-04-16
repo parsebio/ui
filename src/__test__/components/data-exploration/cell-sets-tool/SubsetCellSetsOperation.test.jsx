@@ -10,6 +10,9 @@ import userEvent from '@testing-library/user-event';
 import SubsetCellSetsOperation from 'components/data-exploration/cell-sets-tool/SubsetCellSetsOperation';
 
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
+
+import fake from '__test__/test-utils/constants';
 
 const storeState = makeStore();
 
@@ -22,6 +25,8 @@ const SubsetCellSetsOperationFactory = createTestComponentFactory(
 describe('SubsetCellSetsOperation', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    setMockedExperimentInfo(fake.EXPERIMENT_ID, storeState);
   });
 
   it('Renders properly', async () => {

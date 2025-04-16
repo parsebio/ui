@@ -29,6 +29,7 @@ const experimentFromTemplate = (idx) => (
     pipelineVersion: 1,
     createdAt: fake.MOCK_DATETIME,
     updatedAt: fake.MOCK_DATETIME,
+    accessRole: 'owner',
   }
 );
 

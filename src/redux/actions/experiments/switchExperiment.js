@@ -5,7 +5,7 @@ import {
 
 const switchExperiment = (experimentId) => async (dispatch, getState) => {
   const {
-    name, sampleIds, pipelineVersion,
+    name, sampleIds, pipelineVersion, accessRole,
   } = getState().experiments[experimentId];
 
   dispatch({
@@ -19,6 +19,7 @@ const switchExperiment = (experimentId) => async (dispatch, getState) => {
       experimentName: name,
       sampleIds,
       pipelineVersion,
+      accessRole,
     },
   });
 };

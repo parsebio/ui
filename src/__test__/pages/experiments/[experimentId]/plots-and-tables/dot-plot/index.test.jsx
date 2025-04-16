@@ -40,6 +40,7 @@ import ExportAsCSV from 'components/plots/ExportAsCSV';
 
 import waitForComponentToPaint from '__test__/test-utils/waitForComponentToPaint';
 import { arrayMoveImmutable } from 'utils/arrayUtils';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 jest.mock('components/plots/ExportAsCSV', () => jest.fn(() => (<></>)));
 jest.mock('components/sider/UserButton', () => () => <></>);
@@ -141,6 +142,8 @@ describe('Dot plot page', () => {
         experimentName: fake.EXPERIMENT_NAME,
       },
     });
+
+    await setMockedExperimentInfo(experimentId, storeState);
   });
 
   it('Renders the plot page correctly', async () => {
@@ -420,14 +423,7 @@ describe('Drag and drop enzyme tests', () => {
     storeState = makeStore();
 
     await storeState.dispatch(loadBackendStatus(experimentId));
-
-    storeState.dispatch({
-      type: EXPERIMENT_SETTINGS_INFO_UPDATE,
-      payload: {
-        experimentId: fake.EXPERIMENT_ID,
-        experimentName: fake.EXPERIMENT_NAME,
-      },
-    });
+    await setMockedExperimentInfo(experimentId, storeState);
 
     component = await renderDotPlotForEnzyme(storeState);
 

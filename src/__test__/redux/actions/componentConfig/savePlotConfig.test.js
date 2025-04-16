@@ -12,6 +12,7 @@ import thunk from 'redux-thunk';
 import endUserMessages from 'utils/endUserMessages';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import fake from '__test__/test-utils/constants';
+import { accessRoles } from 'redux/selectors/getHasPermissions';
 
 jest.mock('utils/pushNotificationMessage');
 
@@ -28,6 +29,11 @@ const state = {
     [plotUuid]: {
       config: initialPlotConfigStates[plotType],
       plotData: [],
+    },
+  },
+  experimentSettings: {
+    info: {
+      accessRole: accessRoles.OWNER,
     },
   },
 };

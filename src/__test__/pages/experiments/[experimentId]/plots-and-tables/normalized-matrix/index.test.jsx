@@ -21,6 +21,7 @@ import cellSetsData from '__test__/data/cell_sets_with_clm.json';
 import fetchWork from 'utils/work/fetchWork';
 import writeToFileURL from 'utils/upload/writeToFileURL';
 import downloadFromUrl from 'utils/downloadFromUrl';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 jest.mock('utils/work/fetchWork');
 jest.mock('utils/upload/writeToFileURL');
@@ -59,6 +60,8 @@ describe('Normalized matrix index page', () => {
     fetchMock.doMock();
     fetchMock.mockIf(/.*/, mockAPI(mockApiResponses));
     storeState = makeStore();
+
+    await setMockedExperimentInfo(fake.EXPERIMENT_ID, storeState);
   });
 
   const renderNormalizedMatrixIndex = async () => {
