@@ -68,9 +68,9 @@ const FeedbackButton = (props) => {
             .
           </>
           <br />
-          If your inquiry relates directly to your analysis,
+          If your inquiry relates directly to your analysis, be sure
           <br />
-          be sure to include the relevant Run ID or Project ID.
+          to include the relevant Run ID or Project ID.
           <br />
         </Card>
       ),
