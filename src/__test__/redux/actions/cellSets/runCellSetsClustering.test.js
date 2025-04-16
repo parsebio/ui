@@ -3,14 +3,14 @@ import thunk from 'redux-thunk';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import runCellSetsClustering from 'redux/actions/cellSets/runCellSetsClustering';
-import dispatchWorkRequest from 'utils/work/dispatchWorkRequest';
 
 import initialState from 'redux/reducers/cellSets/initialState';
+import fetchWork from 'utils/work/fetchWork';
 
 enableFetchMocks();
 const mockStore = configureStore([thunk]);
 
-jest.mock('utils/work/dispatchWorkRequest');
+jest.mock('utils/work/fetchWork');
 
 jest.mock('utils/getTimeoutForWorkerTask', () => ({
   __esModule: true, // this property makes it work
@@ -34,7 +34,7 @@ describe('runCellSetsClustering action', () => {
     fetchMock.resetMocks();
     fetchMock.mockResolvedValueOnce(response);
 
-    dispatchWorkRequest.mockImplementation(() => Promise.resolve());
+    fetchWork.mockImplementation(() => Promise.resolve());
   });
 
   it('Does not dispatch on loading state if clustering is already recomputing', async () => {
@@ -61,7 +61,7 @@ describe('runCellSetsClustering action', () => {
     });
 
     await store.dispatch(runCellSetsClustering(experimentId));
-    expect(dispatchWorkRequest).toHaveBeenCalledTimes(1);
+    expect(fetchWork).toHaveBeenCalledTimes(1);
   });
 
   it('Does not dispatch on error state', async () => {
@@ -74,7 +74,7 @@ describe('runCellSetsClustering action', () => {
       },
     });
     await store.dispatch(runCellSetsClustering(experimentId));
-    expect(dispatchWorkRequest).not.toHaveBeenCalled();
+    expect(fetchWork).not.toHaveBeenCalled();
   });
 
   it('Dispatches all required actions to update cell sets clustering.', async () => {
@@ -103,11 +103,11 @@ describe('runCellSetsClustering action', () => {
 
     await store.dispatch(runCellSetsClustering(experimentId, 0.5));
 
-    expect(dispatchWorkRequest).toHaveBeenCalledTimes(1);
-    expect(dispatchWorkRequest.mock.calls).toMatchSnapshot();
+    expect(fetchWork).toHaveBeenCalledTimes(1);
+    expect(fetchWork.mock.calls).toMatchSnapshot();
   });
 
-  it('Dispatches error action when dispatchWorkRequest fails', async () => {
+  it('Dispatches error action when fetchWork fails', async () => {
     const store = mockStore({
       cellSets: { ...initialState, loading: false, error: false },
       experimentSettings: experimentSettingsStore,
@@ -117,11 +117,11 @@ describe('runCellSetsClustering action', () => {
       },
     });
 
-    dispatchWorkRequest.mockImplementation(() => Promise.reject());
+    fetchWork.mockImplementation(() => Promise.reject());
 
     await store.dispatch(runCellSetsClustering(experimentId, 0.5));
 
-    expect(dispatchWorkRequest).toHaveBeenCalledTimes(1);
-    expect(dispatchWorkRequest.mock.calls).toMatchSnapshot();
+    expect(fetchWork).toHaveBeenCalledTimes(1);
+    expect(fetchWork.mock.calls).toMatchSnapshot();
   });
 });
