@@ -33,3 +33,4 @@ describe('FeedbackButton', () => {
     // Check that the email link is present
     expect(screen.getByRole('link', { name: /support@parsebiosciences.com/i })).toBeInTheDocument();
   });
+});
