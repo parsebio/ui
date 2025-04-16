@@ -93,7 +93,7 @@ const ShareProjectModal = (props) => {
     );
 
     if (user.email === currentUser) {
-      dispatch(removeProject(project.id));
+      dispatch(removeProject(project.id, projectType));
     }
 
     onCancel();
@@ -117,7 +117,7 @@ const ShareProjectModal = (props) => {
     );
 
     if (role === 'owner' && response[0]?.data?.code === 200) {
-      dispatch(removeProject(project.id));
+      dispatch(removeProject(project.id, projectType));
     }
 
     onCancel();
