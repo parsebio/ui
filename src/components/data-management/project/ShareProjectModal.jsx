@@ -36,7 +36,7 @@ const ShareProjectModal = (props) => {
 
   useEffect(() => {
     fetchRoles();
-  }, [hasPermissions]);
+  }, []);
 
   useEffect(() => {
     if (role === 'owner') {
