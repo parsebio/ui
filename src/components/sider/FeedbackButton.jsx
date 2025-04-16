@@ -53,9 +53,8 @@ const FeedbackButton = (props) => {
             </a>
           </div>
           <>
-            To report an issue or to receive 1-to-1 support from a member of our team,
+            To report an issue or to receive 1-to-1 support from a member of our team, send an email to
             <br />
-            write an email to
             <a
               href='mailto:support@parsebiosciences.com'
               target='_blank'
@@ -67,7 +66,7 @@ const FeedbackButton = (props) => {
             .
           </>
           <br />
-          If your inquiry relates to a specific experiment,
+          If your inquiry relates directly to your analysis,
           <br />
           be sure to include the relevant Run ID or Project ID.
           <br />
