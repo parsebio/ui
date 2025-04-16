@@ -7,14 +7,14 @@ import {
   Modal, Button, Space, Row, Col, Card, Avatar, Select, Typography, Popconfirm,
 } from 'antd';
 import { Auth } from '@aws-amplify/auth';
-import { removeExperiment } from 'redux/actions/experiments';
-import { removeSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+
 import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
 import { getHasPermissions } from 'redux/selectors';
 import { permissions } from 'utils/constants';
 import PermissionsChecker from 'utils/PermissionsChecker';
+import { removeProject } from 'redux/actions/projects';
 
 const { Text } = Typography;
 
@@ -93,11 +93,7 @@ const ShareProjectModal = (props) => {
     );
 
     if (user.email === currentUser) {
-      if (projectType === 'experiment') {
-        dispatch(removeExperiment(project.id));
-      } else {
-        dispatch(removeSecondaryAnalysis(project.id));
-      }
+      dispatch(removeProject(project.id));
     }
 
     onCancel();
@@ -121,12 +117,9 @@ const ShareProjectModal = (props) => {
     );
 
     if (role === 'owner' && response[0]?.data?.code === 200) {
-      if (projectType === 'experiment') {
-        dispatch(removeExperiment(project.id));
-      } else {
-        dispatch(removeSecondaryAnalysis(project.id));
-      }
+      dispatch(removeProject(project.id));
     }
+
     onCancel();
   };
   const explorerInfoText = projectType === 'experiment' ? `The user will be able to use Data Exploration and Plots and Tables modules,
