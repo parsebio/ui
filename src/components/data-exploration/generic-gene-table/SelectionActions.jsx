@@ -109,17 +109,15 @@ const SelectionActions = (props) => {
             componentType={COMPONENT_TYPE}
             useDownsampledExpression
           />
-          <ScanpyDisabler>
-            <PermissionsChecker permissions={permissions.WRITE}>
-              <Button
-                type='link'
-                size='small'
-                onClick={() => setExpressionCellSetModalVisible(!expressionCellSetModalVisible)}
-              >
-                Cellset
-              </Button>
-            </PermissionsChecker>
-          </ScanpyDisabler>
+          <PermissionsChecker permissions={permissions.WRITE}>
+            <Button
+              type='link'
+              size='small'
+              onClick={() => setExpressionCellSetModalVisible(!expressionCellSetModalVisible)}
+            >
+              Cellset
+            </Button>
+          </PermissionsChecker>
           {
             expressionCellSetModalVisible && (
               <ExpresssionCellSetModal
