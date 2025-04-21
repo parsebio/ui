@@ -11,7 +11,7 @@ exports[`fetchWork does not use cache for gene expression request 2`] = `
 exports[`fetchWork returns data from S3 directly if available 1`] = `
 [
   [
-    "ListGenes",
+    "fakeETag",
     "fakeSignedUrl",
   ],
 ]
@@ -36,7 +36,9 @@ exports[`fetchWork waits and returns data from the worker 2`] = `
   [
     "fakeETag",
     "testae48e318dab9a1bd0bexperiment",
-    null,
+    {
+      "isRequest": true,
+    },
     10,
     [Function],
   ],

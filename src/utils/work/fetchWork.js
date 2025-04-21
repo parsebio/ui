@@ -1,40 +1,42 @@
+import _ from 'lodash';
+
 import { isBrowser } from 'utils/deploymentInfo';
 
 import cache from 'utils/cache';
 import dispatchWorkRequest from 'utils/work/dispatchWorkRequest';
 import downloadFromS3 from 'utils/work/downloadFromS3';
 import waitForWorkRequest from 'utils/work/waitForWorkRequest';
+import checkRequest from 'utils/work/checkRequest';
 
-// retrieveData will try to get the data for the given experimentId and ETag from
-// the fastest source possible. It will try to get the data in order from:
-// 1. Browser cache
-// 2. S3 (cache) via signedURL
-// 3. Worker
-//   3.1. Via socket (small data)
-//   3.2. Via S3 (large data) via signedURL
-const retrieveData = async (experimentId,
-  ETag,
-  signedUrl,
-  request,
-  timeout,
-  body,
-  dispatch,
-  useCache) => {
-  // 1. Check if we have the ETag in the browser cache (no worker)
-  const cachedData = useCache ? await cache.get(ETag) : null;
+const getCachedResult = async (ETag, signedUrl, useBrowserCache) => {
+  // Check if we have the ETag in the browser cache (no worker)
+  const cachedData = useBrowserCache ? await cache.get(ETag) : null;
   if (cachedData) {
     return cachedData;
   }
 
-  // 2. Check if data is cached in S3 so we can download from the signed URL (no worker)
-  if (signedUrl) {
-    return await downloadFromS3(body.name, signedUrl);
+  if (_.isNil(signedUrl)) {
+    return null;
   }
 
-  // 3. If we don't have signedURL, wait for the worker to send us the data via
-  // - the data via socket
-  // - the signedURL to download the data from S3
-  const { signedUrl: workerSignedUrl, data } = await waitForWorkRequest(
+  const data = await downloadFromS3(ETag, signedUrl);
+
+  if (useBrowserCache) {
+    await cache.set(ETag, data);
+  }
+
+  return data;
+};
+
+const getResult = async (
+  experimentId,
+  ETag,
+  request,
+  timeout,
+  body,
+  dispatch,
+) => {
+  const { signedUrl, data } = await waitForWorkRequest(
     ETag,
     experimentId,
     request,
@@ -42,12 +44,11 @@ const retrieveData = async (experimentId,
     dispatch,
   );
 
-  // 3.1. The worker send the data via socket because it's small enough
   if (data) {
     return data;
   }
-  // 3.2. The worker send a signedUrl to download the data
-  return await downloadFromS3(body.name, workerSignedUrl);
+
+  return await downloadFromS3(body.name, signedUrl);
 };
 
 const fetchWork = async (
@@ -68,11 +69,11 @@ const fetchWork = async (
     throw new Error('Disabling network interaction on server');
   }
 
-  // 1. Contact the API to get ETag and possible S3 signedURL
-  const { ETag, signedUrl, request } = await dispatchWorkRequest(
+  const useBrowserCache = body.name !== 'GeneExpression';
+
+  const { signedUrl, ETag } = await checkRequest(
     experimentId,
     body,
-    timeout,
     {
       broadcast,
       ...extras,
@@ -82,15 +83,25 @@ const fetchWork = async (
 
   onETagGenerated(ETag);
 
-  const useCache = body.name !== 'GeneExpression';
+  const cachedResult = await getCachedResult(ETag, signedUrl, useBrowserCache);
 
-  // 2. Try to get the data from the fastest source possible
-  const data = await retrieveData(
-    experimentId, ETag, signedUrl, request, timeout, body, dispatch, useCache,
+  if (cachedResult) {
+    return cachedResult;
+  }
+
+  const request = await dispatchWorkRequest(
+    experimentId,
+    body,
+    timeout,
+    ETag,
+    broadcast,
   );
 
-  // 3. Cache the data in the browser
-  if (useCache) {
+  const data = await getResult(
+    experimentId, ETag, request, timeout, body, dispatch,
+  );
+
+  if (useBrowserCache) {
     await cache.set(ETag, data);
   }
 
