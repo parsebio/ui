@@ -6,8 +6,6 @@ exports[`ComponentActions Dispatches loadGeneExpression action with the right li
     "componentUuid": "asd",
     "experimentId": "1234",
     "genes": [
-      "Gzma",
-      "Lyz2",
       "GeneA",
       "GeneB",
       "GeneC",
