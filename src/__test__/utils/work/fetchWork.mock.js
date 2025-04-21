@@ -70,7 +70,20 @@ const mockGenesListData = ['A', 'B', 'C', 'D'];
 
 const mockSeekFromS3 = jest.fn();
 
+const mockCacheGet = jest.fn();
+const mockCacheSet = jest.fn();
+const mockCacheRemove = jest.fn();
+const mockCacheModule = {
+  get: jest.fn((x) => mockCacheGet(x)),
+  set: jest.fn((key, val) => mockCacheSet(key, val)),
+  _remove: jest.fn((key) => mockCacheRemove(key)),
+};
+
 export {
   mockGenesListData,
   mockSeekFromS3,
+  mockCacheModule,
+  mockCacheGet,
+  mockCacheSet,
+  mockCacheRemove,
 };
