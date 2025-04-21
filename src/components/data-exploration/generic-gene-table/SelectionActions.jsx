@@ -14,7 +14,6 @@ import ComponentActions from 'components/data-exploration/generic-gene-table/Com
 
 import { COMPONENT_TYPE } from 'components/data-exploration/heatmap/HeatmapPlot';
 import ExpresssionCellSetModal from 'components/data-exploration/generic-gene-table/ExpressionCellSetModal';
-import ScanpyDisabler from 'utils/ScanpyDisabler';
 import PermissionsChecker from 'utils/PermissionsChecker';
 import { permissions } from 'utils/constants';
 
@@ -109,17 +108,15 @@ const SelectionActions = (props) => {
             componentType={COMPONENT_TYPE}
             useDownsampledExpression
           />
-          <ScanpyDisabler>
-            <PermissionsChecker permissions={permissions.WRITE}>
-              <Button
-                type='link'
-                size='small'
-                onClick={() => setExpressionCellSetModalVisible(!expressionCellSetModalVisible)}
-              >
-                Cellset
-              </Button>
-            </PermissionsChecker>
-          </ScanpyDisabler>
+          <PermissionsChecker permissions={permissions.WRITE}>
+            <Button
+              type='link'
+              size='small'
+              onClick={() => setExpressionCellSetModalVisible(!expressionCellSetModalVisible)}
+            >
+              Cellset
+            </Button>
+          </PermissionsChecker>
           {
             expressionCellSetModalVisible && (
               <ExpresssionCellSetModal
