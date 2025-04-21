@@ -7,7 +7,7 @@ import { useVT } from 'virtualizedtableforantd4';
 
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Table, Row, Typography, Space, Alert,
+  Table, Row, Typography, Space, Alert, Tabs,
 } from 'antd';
 import {
   MenuOutlined,
@@ -36,7 +36,7 @@ import DraggableBodyRow from 'components/data-management/DraggableBodyRow';
 import { metadataNameToKey, metadataKeyToName, temporaryMetadataKey } from 'utils/data-management/metadataUtils';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
-import fileUploadUtils from 'utils/upload/fileUploadUtils';
+import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import { sampleTech } from 'utils/constants';
 import { fileTypeToDisplay } from 'utils/sampleFileType';
 
@@ -46,6 +46,7 @@ const SamplesTable = forwardRef((props, ref) => {
   const dispatch = useDispatch();
 
   const [fullTableData, setFullTableData] = useState([]);
+  const [tableColumns, setTableColumns] = useState(initialTableColumns);
 
   const samples = useSelector((state) => state.samples);
 
@@ -66,10 +67,36 @@ const SamplesTable = forwardRef((props, ref) => {
     _.isEqual,
   );
 
+  const selectedTechs = Array.from(new Set(
+    activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type),
+  ));
+  console.log('SELECTED TECHS', selectedTechs, ' table columns ', tableColumns);
+
   const [sampleNames, setSampleNames] = useState(new Set());
   const DragHandle = sortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
 
   const [samplesLoaded, setSamplesLoaded] = useState(false);
+
+  const renderTechSpecificTable = (tech) => {
+
+  };
+  const renderAllTechTable = () => {
+
+  };
+
+  const technologyTabs = [{
+    key: 'All',
+    label: 'All',
+    children: () => renderAllTechTable(),
+  }];
+
+  selectedTechs.forEach((tech) => {
+    technologyTabs.push({
+      key: tech,
+      label: techNamesToDisplay[tech],
+      children: () => renderTechSpecificTable(tech),
+    });
+  });
 
   const initialTableColumns = useMemo(() => {
     const filesColumns = !_.isNil(selectedTech)
@@ -114,8 +141,6 @@ const SamplesTable = forwardRef((props, ref) => {
       ...filesColumns,
     ]);
   }, [selectedTech]);
-
-  const [tableColumns, setTableColumns] = useState(initialTableColumns);
 
   useEffect(() => {
     if (activeExperiment?.sampleIds.length > 0 && !samplesLoading) {
