@@ -80,6 +80,7 @@ describe('fetchWork', () => {
   });
 
   it('returns data from S3 directly if available', async () => {
+    checkRequest.mockImplementationOnce(() => ({ signedUrl: 'fakeSignedUrl', ETag: 'fakeETag' }));
     downloadFromS3.mockReturnValueOnce({
       S3Data: true,
     });
@@ -99,10 +100,9 @@ describe('fetchWork', () => {
   });
 
   it('waits and returns data from the worker', async () => {
+    checkRequest.mockImplementationOnce(() => ({ signedUrl: null, ETag: 'fakeETag' }));
     dispatchWorkRequest.mockReturnValueOnce({
-      ETag,
-      signedUrl: null,
-      request: null,
+      isRequest: true,
     });
 
     waitForWorkRequest.mockReturnValueOnce({
@@ -125,8 +125,16 @@ describe('fetchWork', () => {
   });
 
   it('does not use cache for gene expression request', async () => {
+    checkRequest.mockReset().mockImplementationOnce(() => ({ signedUrl: 'fakeSignedUrl', ETag: 'fakeETag' }));
+    dispatchWorkRequest.mockResolvedValueOnce({
+      isRequest: true,
+    });
     downloadFromS3.mockReturnValueOnce({
       S3Data: true,
+    });
+    waitForWorkRequest.mockReturnValueOnce({
+      workerSignedUrl: 'fakeWorkerSignedUrl',
+      data: true,
     });
 
     const res = await fetchWork(
