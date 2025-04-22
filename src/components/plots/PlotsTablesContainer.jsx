@@ -119,7 +119,6 @@ const plots = [
 ];
 
 const disabledByScanpy = [
-  'dot-key',
   'normalized-matrix-key',
   'trajectory-analysis-key',
   'batch-differential-expression-key',

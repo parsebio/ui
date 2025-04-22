@@ -15,6 +15,7 @@ import { loadPlotConfig, updatePlotConfig } from 'redux/actions/componentConfig'
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
 import { act } from 'react-dom/test-utils';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 enableFetchMocks();
 
@@ -59,6 +60,7 @@ describe('PlotContainer', () => {
 
     store = makeStore();
     await store.dispatch(loadPlotConfig(experimentId, plotUuid, plotType));
+    setMockedExperimentInfo(experimentId, store);
   });
 
   it('Renders itself and its children properly', () => {

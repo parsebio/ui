@@ -3,17 +3,14 @@ import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 
 import {
-  SECONDARY_ANALYSES_DELETED, SECONDARY_ANALYSES_ERROR,
-  SECONDARY_ANALYSES_SAVING, SECONDARY_ANALYSES_SET_ACTIVE,
+  SECONDARY_ANALYSES_ERROR,
+  SECONDARY_ANALYSES_SAVING,
 } from 'redux/actionTypes/secondaryAnalyses';
+import removeSecondaryAnalysis from './removeSecondaryAnalysis';
 
 const deleteSecondaryAnalysis = (
   secondaryAnalysisId,
-) => async (dispatch, getState) => {
-  // Delete samples
-  const { secondaryAnalyses } = getState();
-  const { activeSecondaryAnalysisId } = secondaryAnalyses.meta;
-
+) => async (dispatch) => {
   dispatch({
     type: SECONDARY_ANALYSES_SAVING,
     payload: {
@@ -31,24 +28,8 @@ const deleteSecondaryAnalysis = (
         },
       },
     );
-
     // If deleted project is the same as the active project, choose another project
-    if (secondaryAnalysisId === activeSecondaryAnalysisId) {
-      const leftoverProjectIds = secondaryAnalyses.ids
-        .filter((uuid) => uuid !== activeSecondaryAnalysisId);
-
-      dispatch({
-        type: SECONDARY_ANALYSES_SET_ACTIVE,
-        payload: { secondaryAnalysisId: leftoverProjectIds.length ? leftoverProjectIds[0] : null },
-      });
-    }
-
-    dispatch({
-      type: SECONDARY_ANALYSES_DELETED,
-      payload: {
-        secondaryAnalysisIds: [secondaryAnalysisId],
-      },
-    });
+    dispatch(removeSecondaryAnalysis(secondaryAnalysisId));
   } catch (e) {
     const errorMessage = handleError(e, endUserMessages.ERROR_DELETING_PROJECT);
 

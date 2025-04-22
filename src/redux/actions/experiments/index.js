@@ -15,6 +15,7 @@ import reloadExperimentInfo from './reloadExperimentInfo';
 import updateCellLevelMetadataFileUpload from './updateCellLevelMetadataFileUpload';
 import createCellLevelMetadata from './createCellLevelMetadata';
 import deleteCellLevelMetadata from './deleteCellLevelMetadata';
+import removeExperiment from './removeExperiment';
 
 export {
   createExperiment,
@@ -34,4 +35,5 @@ export {
   updateCellLevelMetadataFileUpload,
   createCellLevelMetadata,
   deleteCellLevelMetadata,
+  removeExperiment,
 };

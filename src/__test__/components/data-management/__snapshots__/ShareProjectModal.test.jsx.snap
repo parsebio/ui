@@ -2,13 +2,9 @@
 
 exports[`Share project modal Inviting users works 1`] = `
 [
-  "http://localhost:3000/v2/access/testae48e318dab9a1bd0bexperiment",
+  "http://localhost:3000/v2/access/testae48e318dab9a1bd0bexperiment-0",
   {
-    "body": "{"projectUuid":"testae48e318dab9a1bd0bexperiment","role":"explorer","userEmail":"asd@asd.com"}",
-    "headers": {
-      "Content-Type": "application/json",
-    },
-    "method": "PUT",
+    "headers": {},
   },
 ]
 `;

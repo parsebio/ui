@@ -63,6 +63,11 @@ const renderRepository = async (storeState, data) => {
 };
 
 describe('RepositoryTable', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    fetchAPI.mockClear();
+  });
+
   it('renders correctly without any experiments', async () => {
     await renderRepository(emptyStore);
 
@@ -87,9 +92,29 @@ describe('RepositoryTable', () => {
     await renderRepository(emptyStore, [experiment1]);
 
     await act(async () => {
-      userEvent.click(screen.getByRole('button', {
-        name: /clone/i,
-      }));
+      userEvent.click(screen.getByText('Explore'));
+    });
+
+    const options = await screen.getAllByRole('menuitem');
+
+    await act(async () => {
+      options[1].click();
+    });
+
+    expect(fetchAPI.mock.calls).toMatchSnapshot();
+  });
+
+  it('Viewing from example experiments works correctly', async () => {
+    await renderRepository(emptyStore, [experiment1]);
+
+    await act(async () => {
+      userEvent.click(screen.getByText('Explore'));
+    });
+
+    const options = await screen.getAllByRole('menuitem');
+
+    await act(async () => {
+      options[0].click();
     });
 
     expect(fetchAPI.mock.calls).toMatchSnapshot();

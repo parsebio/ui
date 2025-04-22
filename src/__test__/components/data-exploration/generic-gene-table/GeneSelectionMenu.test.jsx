@@ -10,6 +10,7 @@ import GeneSelectionMenu from 'components/data-exploration/generic-gene-table/Ge
 import SelectionActions from 'components/data-exploration/generic-gene-table/SelectionActions';
 import '__test__/test-utils/setupTests';
 import { analysisTools } from 'utils/constants';
+import { accessRoles } from 'redux/selectors/getHasPermissions';
 
 const mockStore = configureMockStore([thunk]);
 
@@ -20,7 +21,7 @@ const initialState = {
     selected: ['A', 'B', 'C'],
   },
   experimentSettings: {
-    info: { experimentId },
+    info: { experimentId, accessRole: accessRoles.OWNER },
     processing: {
       dataIntegration: {
         analysisTool: analysisTools.SEURAT,

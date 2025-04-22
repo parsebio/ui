@@ -5,7 +5,9 @@ import {
   Button, Tooltip,
 } from 'antd';
 
-import ClusterPopover from '../embedding/ClusterPopover';
+import { permissions } from 'utils/constants';
+import PermissionsChecker from 'utils/PermissionsChecker';
+import ClusterPopover from 'components/data-exploration/embedding/ClusterPopover';
 
 const CellSetOperation = (props) => {
   const {
@@ -18,24 +20,26 @@ const CellSetOperation = (props) => {
   const [popoverKey, setPopoverKey] = useState(Math.random());
 
   return (
-    <ClusterPopover
-      onCreate={(name, color) => {
-        onCreate(name, color);
-        setPopoverKey(Math.random());
-      }}
-      onCancel={() => {
-        onCancel();
-        setPopoverKey(Math.random());
-      }}
-      key={popoverKey}
-      message={helpTitle}
-      trigger='click'
+    <PermissionsChecker permissions={permissions.WRITE}>
+      <ClusterPopover
+        onCreate={(name, color) => {
+          onCreate(name, color);
+          setPopoverKey(Math.random());
+        }}
+        onCancel={() => {
+          onCancel();
+          setPopoverKey(Math.random());
+        }}
+        key={popoverKey}
+        message={helpTitle}
+        trigger='click'
 
-    >
-      <Tooltip title={helpTitle} trigger='click hover'>
-        <Button aria-label={ariaLabel} type='dashed' icon={icon} size='small' />
-      </Tooltip>
-    </ClusterPopover>
+      >
+        <Tooltip title={helpTitle} trigger='click hover'>
+          <Button aria-label={ariaLabel} type='dashed' icon={icon} size='small' />
+        </Tooltip>
+      </ClusterPopover>
+    </PermissionsChecker>
   );
 };
 

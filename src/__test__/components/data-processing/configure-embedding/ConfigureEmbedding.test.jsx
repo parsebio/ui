@@ -3,6 +3,8 @@ import { Provider } from 'react-redux';
 import '__test__/test-utils/setupTests';
 import userEvent from '@testing-library/user-event';
 import { screen, render, waitFor } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
+
 import _ from 'lodash';
 import fake from '__test__/test-utils/constants';
 import mockAPI, {
@@ -25,6 +27,7 @@ import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { loadCellSets } from 'redux/actions/cellSets';
 
 import ConfigureEmbedding from 'components/data-processing/ConfigureEmbedding/ConfigureEmbedding';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 const filterName = 'configureEmbedding';
 
@@ -74,13 +77,13 @@ const customAPIResponses = {
   ),
 };
 
-let storeState = null;
-
 const mockApiResponses = _.merge(
   generateDefaultMockAPIResponses(fake.EXPERIMENT_ID), customAPIResponses,
 );
 
 describe('Configure Embedding', () => {
+  let storeState = null;
+
   beforeEach(async () => {
     jest.clearAllMocks();
     fetchMock.resetMocks();
@@ -92,13 +95,16 @@ describe('Configure Embedding', () => {
 
     fetchMock.mockIf(/.*/, mockAPI(mockApiResponses));
     storeState = makeStore();
+    await setMockedExperimentInfo(fake.EXPERIMENT_ID, storeState);
     await storeState.dispatch(loadBackendStatus(fake.EXPERIMENT_ID));
     await storeState.dispatch(loadProcessingSettings(fake.EXPERIMENT_ID));
     await storeState.dispatch(loadCellSets(fake.EXPERIMENT_ID));
   });
 
   it('renders correctly ', async () => {
-    await renderConfigureEmbedding(storeState);
+    await act(async () => {
+      renderConfigureEmbedding(storeState);
+    });
 
     // one fullsize plot rendered
     await waitFor(() => {
