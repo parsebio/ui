@@ -45,6 +45,8 @@ const ExploreSelect = (props) => {
   const userEmail = useSelector((state) => state.user.current.attributes.email);
 
   const [experimentCloning, setExperimentCloning] = useState(false);
+  const disableCloneForExperiments = ['879080ff-e0a1-4dd4-9244-6b1bdc6e8514',
+    'ce0fa9ed-aed5-4f77-8d9d-3a108abc326f', '4810d1c9-c205-4711-acb3-294b229ddd42', 'cf3fe02e-1279-4176-84e4-a3611a602882'];
 
   const addAsViewer = useCallback(async () => {
     await sendInvites(
@@ -99,6 +101,7 @@ const ExploreSelect = (props) => {
     {
       key: 'copy',
       onClick: cloneExperiment,
+      disabled: disableCloneForExperiments.includes(experiment.id),
       label: (
         <DropdownLabel
           key='clone'
