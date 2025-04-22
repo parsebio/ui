@@ -82,6 +82,7 @@ exports[`ErrorPage Should post error to Slack if environment is production 1`] =
     "embeddings": {},
     "experimentSettings": {
       "info": {
+        "accessRole": null,
         "experimentId": null,
         "experimentName": null,
         "pipelineVersion": null,
@@ -361,6 +362,7 @@ exports[`ErrorPage Should post error to Slack if environment is staging 1`] = `
     "embeddings": {},
     "experimentSettings": {
       "info": {
+        "accessRole": null,
         "experimentId": null,
         "experimentName": null,
         "pipelineVersion": null,

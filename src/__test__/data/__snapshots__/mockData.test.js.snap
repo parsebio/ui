@@ -5,6 +5,7 @@ exports[`Mock data Describes samples 1`] = `
   {
     "createdAt": "2021-12-07 17:36:27.773+00",
     "experimentId": {
+      "accessRole": "owner",
       "createdAt": "0000-00-00T00:00:00.000Z",
       "description": "Mock experiment 0",
       "id": "testae48e318dab9a1bd0bexperiment-0",
@@ -70,6 +71,7 @@ exports[`Mock data Describes samples 1`] = `
   {
     "createdAt": "2021-12-07 17:36:27.773+00",
     "experimentId": {
+      "accessRole": "owner",
       "createdAt": "0000-00-00T00:00:00.000Z",
       "description": "Mock experiment 0",
       "id": "testae48e318dab9a1bd0bexperiment-0",
@@ -135,6 +137,7 @@ exports[`Mock data Describes samples 1`] = `
   {
     "createdAt": "2021-12-07 17:36:27.773+00",
     "experimentId": {
+      "accessRole": "owner",
       "createdAt": "0000-00-00T00:00:00.000Z",
       "description": "Mock experiment 0",
       "id": "testae48e318dab9a1bd0bexperiment-0",
@@ -203,6 +206,7 @@ exports[`Mock data Describes samples 1`] = `
 exports[`Mock response data Describes experiment response 1`] = `
 [
   {
+    "accessRole": "owner",
     "createdAt": "0000-00-00T00:00:00.000Z",
     "description": "Mock experiment 0",
     "id": "testae48e318dab9a1bd0bexperiment-0",
@@ -235,6 +239,7 @@ exports[`Mock response data Describes experiment response 1`] = `
     "updatedAt": "0000-00-00T00:00:00.000Z",
   },
   {
+    "accessRole": "owner",
     "createdAt": "0000-00-00T00:00:00.000Z",
     "description": "Mock experiment 1",
     "id": "testae48e318dab9a1bd0bexperiment-1",
@@ -271,6 +276,7 @@ exports[`Mock response data Describes samples response 1`] = `
     {
       "createdAt": "2021-12-07 17:36:27.773+00",
       "experimentId": {
+        "accessRole": "owner",
         "createdAt": "0000-00-00T00:00:00.000Z",
         "description": "Mock experiment 0",
         "id": "testae48e318dab9a1bd0bexperiment-0",
@@ -336,6 +342,7 @@ exports[`Mock response data Describes samples response 1`] = `
     {
       "createdAt": "2021-12-07 17:36:27.773+00",
       "experimentId": {
+        "accessRole": "owner",
         "createdAt": "0000-00-00T00:00:00.000Z",
         "description": "Mock experiment 0",
         "id": "testae48e318dab9a1bd0bexperiment-0",
@@ -401,6 +408,7 @@ exports[`Mock response data Describes samples response 1`] = `
     {
       "createdAt": "2021-12-07 17:36:27.773+00",
       "experimentId": {
+        "accessRole": "owner",
         "createdAt": "0000-00-00T00:00:00.000Z",
         "description": "Mock experiment 0",
         "id": "testae48e318dab9a1bd0bexperiment-0",

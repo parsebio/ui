@@ -13,7 +13,7 @@ const findLoadedGenes = (matrix, selectedGenes) => {
   // Check which of the genes we actually need to load. Only do this if
   // we are not forced to reload all of the data.
   const storedGenes = matrix.getStoredGenes();
-  const genesToLoad = [...selectedGenes].filter(
+  const genesNotLoaded = [...selectedGenes].filter(
     (gene) => !new Set(upperCaseArray(storedGenes)).has(gene.toUpperCase()),
   );
 
@@ -21,7 +21,7 @@ const findLoadedGenes = (matrix, selectedGenes) => {
     (gene) => upperCaseArray(selectedGenes).includes(gene.toUpperCase()),
   );
 
-  return { genesToLoad, genesAlreadyLoaded };
+  return { genesNotLoaded, genesAlreadyLoaded };
 };
 
 const loadGeneExpression = (
@@ -31,14 +31,17 @@ const loadGeneExpression = (
 ) => async (dispatch, getState) => {
   const { loading, matrix } = getState().genes.expression.full;
 
-  // If other gene expression data is already being loaded, don't dispatch.
-  if (loading.length > 0) {
+  // Remove the gene loads that are already being handled in a different request
+  let genesToLoad = _.difference(genes, loading);
+  if (genesToLoad.length === 0) {
     return null;
   }
-  const { genesToLoad, genesAlreadyLoaded } = findLoadedGenes(matrix, genes);
+
+  const { genesNotLoaded, genesAlreadyLoaded } = findLoadedGenes(matrix, genesToLoad);
+
+  genesToLoad = genesNotLoaded;
 
   if (genesToLoad.length === 0) {
-    // All genes are already loaded.
     return dispatch({
       type: GENES_EXPRESSION_LOADED,
       payload: {
@@ -49,13 +52,12 @@ const loadGeneExpression = (
     });
   }
 
-  // Dispatch loading state.
   dispatch({
     type: GENES_EXPRESSION_LOADING,
     payload: {
       experimentId,
       componentUuid,
-      genes,
+      genes: genesToLoad,
     },
   });
 
@@ -104,7 +106,7 @@ const loadGeneExpression = (
       payload: {
         experimentId,
         componentUuid,
-        genes,
+        genes: genesToLoad,
         error,
       },
     });

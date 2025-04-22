@@ -25,6 +25,7 @@ import createTestComponentFactory from '__test__/test-utils/testComponentFactory
 import waitForComponentToPaint from '__test__/test-utils/waitForComponentToPaint';
 import { arrayMoveImmutable } from 'utils/arrayUtils';
 import { loadCellSets } from 'redux/actions/cellSets';
+import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 jest.mock('components/sider/UserButton', () => () => <></>);
 jest.mock('react-resize-detector', () => (props) => {
@@ -116,6 +117,7 @@ describe('Drag and drop enzyme tests', () => {
     storeState = makeStore();
 
     // Set up state for backend status
+    await setMockedExperimentInfo(experimentId, storeState);
     await storeState.dispatch(loadBackendStatus(experimentId));
     await storeState.dispatch(loadCellSets(experimentId));
     component = renderHeatmapPageForEnzyme(storeState);

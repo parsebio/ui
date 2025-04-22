@@ -499,7 +499,7 @@ const ContentWrapper = (props) => {
                 width: '100%',
                 color: 'grey',
               }}
-              ellipsis
+              ellipsis={{ tooltip: true }}
             >
               {selectedProjectText}
             </Text>

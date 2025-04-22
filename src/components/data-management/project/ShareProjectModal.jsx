@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { UserAddOutlined } from '@ant-design/icons';
 import {
   Modal, Button, Space, Row, Col, Card, Avatar, Select, Typography, Popconfirm,
@@ -12,6 +12,9 @@ import { removeSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
+import { getHasPermissions } from 'redux/selectors';
+import { permissions } from 'utils/constants';
+import PermissionsChecker from 'utils/PermissionsChecker';
 
 const { Text } = Typography;
 
@@ -23,6 +26,10 @@ const ShareProjectModal = (props) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [role, setRole] = useState('explorer');
   const [canTransferOwnership, setCanTransferOwnership] = useState(false);
+
+  const hasPermissions = useSelector(
+    getHasPermissions(project.id, permissions.READ_USER_ACCESS, projectType),
+  );
 
   const fetchRoles = async () => {
     const getCurrentUser = await Auth.currentAuthenticatedUser();
@@ -42,8 +49,10 @@ const ShareProjectModal = (props) => {
   };
 
   useEffect(() => {
+    if (!hasPermissions) return;
+
     fetchRoles();
-  }, []);
+  }, [hasPermissions]);
 
   useEffect(() => {
     if (role === 'owner') {
@@ -146,23 +155,29 @@ const ShareProjectModal = (props) => {
         <Text strong>
           {project.name}
         </Text>
-        <Row gutter={10} style={{ width: '110%' }}>
-          <Col span={18}>
-            <Select
-              value={addedUsers}
-              style={{ width: '100%' }}
-              mode='tags'
-              placeholder='Input an email address. Add multiple addresses with enter.'
-              onChange={changeSelectedUsers}
-            />
-          </Col>
-          <Col span={6}>
-            <Select defaultValue='explorer' onChange={(val) => setRole(val)}>
-              <Select.Option key='explorer' value='explorer'> Explorer </Select.Option>
-              <Select.Option key='owner' value='owner' disabled={!canTransferOwnership}> Owner </Select.Option>
-            </Select>
-          </Col>
-        </Row>
+        <PermissionsChecker
+          experimentId={project.id}
+          permissions={permissions.READ_USER_ACCESS}
+          projectType={projectType}
+        >
+          <Row gutter={10} style={{ width: '110%' }}>
+            <Col span={18}>
+              <Select
+                value={addedUsers}
+                style={{ width: '100%' }}
+                mode='tags'
+                placeholder='Input an email address. Add multiple addresses with enter.'
+                onChange={changeSelectedUsers}
+              />
+            </Col>
+            <Col span={6}>
+              <Select defaultValue='explorer' onChange={(val) => setRole(val)}>
+                <Select.Option key='explorer' value='explorer'> Explorer </Select.Option>
+                <Select.Option key='owner' value='owner' disabled={!canTransferOwnership}> Owner </Select.Option>
+              </Select>
+            </Col>
+          </Row>
+        </PermissionsChecker>
 
         <Row>
           <Space direction='vertical' style={{ width: '100%' }} size='large'>
