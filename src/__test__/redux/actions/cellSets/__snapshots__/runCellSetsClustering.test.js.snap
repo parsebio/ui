@@ -13,16 +13,17 @@ exports[`runCellSetsClustering action Dispatches all required actions to update 
       "name": "ClusterCells",
       "type": "louvain",
     },
-    60,
+    [Function],
+    [Function],
     {
       "broadcast": true,
+      "timeout": 60,
     },
-    [Function],
   ],
 ]
 `;
 
-exports[`runCellSetsClustering action Dispatches error action when dispatchWorkRequest fails 1`] = `
+exports[`runCellSetsClustering action Dispatches error action when fetchWork fails 1`] = `
 [
   [
     "1234",
@@ -35,11 +36,12 @@ exports[`runCellSetsClustering action Dispatches error action when dispatchWorkR
       "name": "ClusterCells",
       "type": "louvain",
     },
-    60,
+    [Function],
+    [Function],
     {
       "broadcast": true,
+      "timeout": 60,
     },
-    [Function],
   ],
 ]
 `;

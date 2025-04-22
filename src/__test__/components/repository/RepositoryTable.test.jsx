@@ -96,7 +96,6 @@ describe('RepositoryTable', () => {
     });
 
     const options = await screen.getAllByRole('menuitem');
-    console.log('optionsDebug', options);
 
     await act(async () => {
       options[1].click();
