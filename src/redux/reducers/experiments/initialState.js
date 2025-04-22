@@ -10,6 +10,7 @@ const experimentTemplate = {
   pipelineVersion: 1,
   parentExperimentId: null,
   cellLevelMetadata: null,
+  accessRole: null,
   isSubsetted: false,
 };
 
