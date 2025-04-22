@@ -1,9 +1,12 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+
+import Loader from 'components/Loader';
+import ContinuousEmbeddingPlot from 'components/plots/ContinuousEmbeddingPlot';
+
 import { loadGeneExpression } from 'redux/actions/genes';
 import { getFilteredCellIds } from 'redux/selectors';
-import ContinuousEmbeddingPlot from './ContinuousEmbeddingPlot';
 
 // wrapper component used in plots and tables
 // where the data for the embedding needs to be derived from redux
@@ -17,7 +20,7 @@ const ContinuousEmbeddingReduxWrapper = (props) => {
   const expressions = useSelector((state) => state.genes.expression.full);
   const filteredCellIds = useSelector(getFilteredCellIds());
 
-  if (!config) { return <></>; }
+  if (!config) return <Loader experimentId={experimentId} />;
 
   const geneExpression = config.truncatedValues
     ? expressions.matrix.getTruncatedExpressionSparse(config?.shownGene, filteredCellIds)

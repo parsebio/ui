@@ -4,7 +4,6 @@ import { screen, render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { makeStore } from 'redux/store';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
-import * as PlotSpecGenerators from 'utils/plotSpecs/generateEmbeddingContinuousSpec';
 
 import fetchWork from 'utils/work/fetchWork';
 
@@ -38,7 +37,6 @@ const mockWorkerResponses = {
 const defaultAPIResponse = generateDefaultMockAPIResponses(experimentId);
 
 const matrix = getExpressionMatrixFromWorkResult(mockGeneExpression);
-const truncatedPlotData = matrix.getTruncatedExpression('TestGene');
 const coloringByCell = matrix.getRawExpression('TestGene');
 
 const defaultProps = {
