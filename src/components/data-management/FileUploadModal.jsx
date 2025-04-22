@@ -197,7 +197,7 @@ const FileUploadModal = (props) => {
                   aria-label='sampleTechnologySelect'
                   data-testid='uploadTechSelect'
                   defaultValue={selectedTech}
-                  disabled={currentSelectedTech}
+                  // disabled={currentSelectedTech}
                   onChange={(value) => setSelectedTech(value)}
                   // Fix the width so that the dropdown doesn't change size when the value changes
                   style={{ width: 180 }}

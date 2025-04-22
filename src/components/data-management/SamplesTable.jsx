@@ -32,7 +32,7 @@ import { loadSamples } from 'redux/actions/samples';
 import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState';
 
 import DraggableBodyRow from 'components/data-management/DraggableBodyRow';
-
+import UploadStatusView from 'components/UploadStatusView';
 import { metadataNameToKey, metadataKeyToName, temporaryMetadataKey } from 'utils/data-management/metadataUtils';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
@@ -45,6 +45,7 @@ const { Text } = Typography;
 const SamplesTable = forwardRef((props, ref) => {
   const dispatch = useDispatch();
 
+  const [selectedTable, setSelectedTable] = useState('All');
   const [fullTableData, setFullTableData] = useState([]);
   const [tableColumns, setTableColumns] = useState(initialTableColumns);
 
@@ -62,85 +63,142 @@ const SamplesTable = forwardRef((props, ref) => {
     (state) => state.experiments[activeExperiment?.parentExperimentId]?.name,
   );
 
-  const selectedTech = useSelector(
-    (state) => state.samples[activeExperiment?.sampleIds[0]]?.type,
-    _.isEqual,
-  );
+  // const selectedTech = useSelector(
+  //   (state) => state.samples[activeExperiment?.sampleIds[0]]?.type,
+  //   _.isEqual,
+  // );
 
   const selectedTechs = Array.from(new Set(
-    activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type),
+    activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type).filter((type) => type),
   ));
-  console.log('SELECTED TECHS', selectedTechs, ' table columns ', tableColumns);
+  console.log('SELECTED TECHS', selectedTechs, ' table columns ', tableColumns, ' TABLE DATA', fullTableData, ' selected table ', selectedTable);
 
   const [sampleNames, setSampleNames] = useState(new Set());
   const DragHandle = sortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
 
   const [samplesLoaded, setSamplesLoaded] = useState(false);
 
-  const renderTechSpecificTable = (tech) => {
+  const renderTechSpecificTable = () => {
+    console.log('RENDERING THIS TABLE ', tableColumns, ' selected ta ble columns ', selectedTable);
 
+    const selectedTableColumns = [
+      ...tableColumns.tables[selectedTable], ...tableColumns.commonColumns,
+    ].sort((a, b) => a.index - b.index);
+
+    const selectedTechSampleIds = activeExperiment.sampleIds
+      .filter((sampleId) => samples[sampleId]?.type === selectedTable);
+    const selectedTableData = fullTableData
+      .filter((item) => selectedTechSampleIds.includes(item.key));
+
+    // const techTableData = fullTableData.map((item) => {
+    return (
+      <ReactResizeDetector
+        handleHeight
+        refreshMode='throttle'
+        refreshRate={500}
+        onResize={(height) => { setSize({ height }); }}
+      >
+        <Table
+          scroll={{ y: size.height, x: 'max-content' }}
+          components={VT}
+          columns={selectedTableColumns}
+          dataSource={selectedTableData}
+          locale={locale}
+          showHeader={activeExperiment?.sampleIds.length > 0}
+          pagination={false}
+          onRow={(record, index) => ({
+            index,
+            moveRow,
+          })}
+          sticky
+          bordered
+        />
+      </ReactResizeDetector>
+    );
   };
+
   const renderAllTechTable = () => {
+    const selectedTableColumns = [
+      ...tableColumns.commonColumns,
+      {
+          className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
+          index: 1,
+          key: 'sample',
+          title: tech === sampleTech.SEURAT ? 'File' : 'Sample',
+          dataIndex: 'name',
+          fixed: 'left',
+          render: (text, record, indx) => (
+            <SampleNameCell cellInfo={{ text, record, indx }} />
+          ),
+        }
+      {
+        index: 2,
+        key: 'uploadStatus',
+        title: 'Upload Status',
+        dataIndex: 'uploadStatus',
+        render: (text, record) => (
+          <UploadStatusView
 
+          />
+        ),
+      }
+      ]
   };
 
-  const technologyTabs = [{
-    key: 'All',
-    label: 'All',
-    children: () => renderAllTechTable(),
-  }];
-
-  selectedTechs.forEach((tech) => {
-    technologyTabs.push({
-      key: tech,
-      label: techNamesToDisplay[tech],
-      children: () => renderTechSpecificTable(tech),
-    });
-  });
+  const renderSelectedTable = () => {
+    if (selectedTable === 'All') {
+      return renderAllTechTable();
+    }
+    return renderTechSpecificTable();
+  };
 
   const initialTableColumns = useMemo(() => {
-    const filesColumns = !_.isNil(selectedTech)
-      ? fileUploadUtils[selectedTech].requiredFiles.map(
-        (requiredFile, indx) => ({
-          index: 2 + indx,
-          title: <center>{fileTypeToDisplay[requiredFile]}</center>,
-          key: requiredFile,
-          dataIndex: requiredFile,
-          width: 170,
-          onCell: () => ({ style: { margin: '0px', padding: '0px' } }),
-          render: (tableCellData) => tableCellData && (
-            <UploadCell
-              columnId={requiredFile}
-              sampleUuid={tableCellData.sampleUuid}
-            />
-          ),
-        }),
-      )
-      : [];
-
-    return ([
-      {
+    const columns = {
+      tables: [],
+      commonColumns: [{
         fixed: 'left',
         index: 0,
         key: 'sort',
         dataIndex: 'sort',
         width: 50,
         render: () => <DragHandle />,
-      },
-      {
-        className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
-        index: 1,
-        key: 'sample',
-        title: selectedTech === sampleTech.SEURAT ? 'File' : 'Sample',
-        dataIndex: 'name',
-        fixed: 'left',
-        render: (text, record, indx) => (
-          <SampleNameCell cellInfo={{ text, record, indx }} />
-        ),
-      },
-      ...filesColumns,
-    ]);
-  }, [selectedTech]);
+      }],
+    };
+
+    if (selectedTechs.length > 0) {
+      selectedTechs.forEach((tech) => {
+        columns.tables[tech] = [{
+          className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
+          index: 1,
+          key: 'sample',
+          title: tech === sampleTech.SEURAT ? 'File' : 'Sample',
+          dataIndex: 'name',
+          fixed: 'left',
+          render: (text, record, indx) => (
+            <SampleNameCell cellInfo={{ text, record, indx }} />
+          ),
+        }];
+        fileUploadUtils[tech].requiredFiles.forEach(
+          (requiredFile, indx) => columns.tables[tech].push({
+            index: 2 + indx,
+            title: <center>{fileTypeToDisplay[requiredFile]}</center>,
+            key: requiredFile,
+            dataIndex: requiredFile,
+            width: 170,
+            onCell: () => ({ style: { margin: '0px', padding: '0px' } }),
+            render: (tableCellData) => tableCellData && (
+              <UploadCell
+                columnId={requiredFile}
+                sampleUuid={tableCellData.sampleUuid}
+              />
+            ),
+          }),
+        );
+      });
+    }
+    console.log('TABLES ARE ', columns);
+    return columns;
+  }, [selectedTechs]);
 
   useEffect(() => {
     if (activeExperiment?.sampleIds.length > 0 && !samplesLoading) {
@@ -154,7 +212,10 @@ const SamplesTable = forwardRef((props, ref) => {
         (metadataKey) => createInitializedMetadataColumn(metadataKeyToName(metadataKey)),
       ) || [];
 
-      setTableColumns([...initialTableColumns, ...metadataColumns]);
+      setTableColumns({
+        ...initialTableColumns,
+        commonColumns: [...initialTableColumns.commonColumns, ...metadataColumns],
+      });
     }
   }, [samples, activeExperiment?.sampleIds, samplesLoading]);
 
@@ -205,8 +266,10 @@ const SamplesTable = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     createMetadataColumn() {
-      const key = temporaryMetadataKey(tableColumns);
+      // change to current table columns
+      const key = `metadata_${tableColumns.length}`;
       const previousTableColumns = tableColumns;
+
       const metadataCreateColumn = {
         key,
         fixed: 'right',
@@ -229,7 +292,10 @@ const SamplesTable = forwardRef((props, ref) => {
         ),
         width: 200,
       };
-      setTableColumns([...tableColumns, metadataCreateColumn]);
+      setTableColumns({
+        ...tableColumns.tables,
+        commonColumns: [metadataCreateColumn, ...tableColumns.commonColumns],
+      });
     },
   }));
 
@@ -262,7 +328,8 @@ const SamplesTable = forwardRef((props, ref) => {
   };
 
   const generateDataForItem = useCallback((sampleUuid) => {
-    const sampleFileTypes = fileUploadUtils[selectedTech]?.requiredFiles
+    const tech = samples[sampleUuid].type;
+    const sampleFileTypes = fileUploadUtils[tech]?.requiredFiles
       .map((requiredFile) => ([requiredFile, { sampleUuid }]));
 
     return {
@@ -271,7 +338,7 @@ const SamplesTable = forwardRef((props, ref) => {
       uuid: sampleUuid,
       ...Object.fromEntries(sampleFileTypes),
     };
-  }, [activeExperiment?.sampleIds, selectedTech, samples]);
+  }, [activeExperiment?.sampleIds, selectedTechs, samples]);
 
   const renderLoader = () => (
     <>
@@ -348,32 +415,22 @@ const SamplesTable = forwardRef((props, ref) => {
     await dispatch(reorderSamples(activeExperimentId, fromIndex, toIndex));
   };
 
-  const renderSamplesTable = () => (
-    <ReactResizeDetector
-      handleHeight
-      refreshMode='throttle'
-      refreshRate={500}
-      onResize={(height) => { setSize({ height }); }}
-    >
-      {() => (
-        <Table
-          scroll={{ y: size.height, x: 'max-content' }}
-          components={VT}
-          columns={tableColumns}
-          dataSource={fullTableData}
-          locale={locale}
-          showHeader={activeExperiment?.sampleIds.length > 0}
-          pagination={false}
-          onRow={(record, index) => ({
-            index,
-            moveRow,
-          })}
-          sticky
-          bordered
-        />
-      )}
-    </ReactResizeDetector>
-  );
+  const renderSamplesTable = () => {
+    const technologyTabs = [{
+      key: 'All',
+      label: 'All',
+      children: renderSelectedTable(),
+    }];
+
+    selectedTechs.forEach((tech) => {
+      technologyTabs.push({
+        key: tech,
+        label: techNamesToDisplay[tech],
+        children: renderSelectedTable(),
+      });
+    });
+    return <Tabs defaultActiveKey='All' items={technologyTabs} onChange={(key) => setSelectedTable(key)} />;
+  };
 
   return (
     <>
@@ -397,7 +454,7 @@ const SamplesTable = forwardRef((props, ref) => {
             />
           </center>
         )
-          : !samplesLoaded || samplesLoading || samplesValidating
+          : !samplesLoaded || samplesLoading || samplesValidating || !tableColumns
             ? renderLoader()
             : renderSamplesTable()
       }
