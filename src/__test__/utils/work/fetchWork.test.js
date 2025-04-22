@@ -9,6 +9,7 @@ import { makeStore } from 'redux/store';
 import downloadFromS3 from 'utils/work/downloadFromS3';
 import waitForWorkRequest from 'utils/work/waitForWorkRequest';
 import dispatchWorkRequest from 'utils/work/dispatchWorkRequest';
+import checkRequest from 'utils/work/checkRequest';
 
 const {
   mockCacheGet,
@@ -29,6 +30,7 @@ jest.mock('utils/work/dispatchWorkRequest', () => jest.fn().mockReturnValue({
 
 jest.mock('utils/work/downloadFromS3');
 jest.mock('utils/work/waitForWorkRequest');
+jest.mock('utils/work/checkRequest');
 
 const timeout = 10;
 const ETag = 'fakeETag';
@@ -61,6 +63,7 @@ describe('fetchWork', () => {
 
   it('returns data from cache if available', async () => {
     mockCacheGet.mockImplementationOnce(() => ({ cacheData: true }));
+    checkRequest.mockImplementationOnce(() => ({ signedUrl: null, ETag: 'fakeETag' }));
 
     const res = await fetchWork(
       fake.EXPERIMENT_ID,
@@ -77,6 +80,7 @@ describe('fetchWork', () => {
   });
 
   it('returns data from S3 directly if available', async () => {
+    checkRequest.mockImplementationOnce(() => ({ signedUrl: 'fakeSignedUrl', ETag: 'fakeETag' }));
     downloadFromS3.mockReturnValueOnce({
       S3Data: true,
     });
@@ -96,10 +100,9 @@ describe('fetchWork', () => {
   });
 
   it('waits and returns data from the worker', async () => {
+    checkRequest.mockImplementationOnce(() => ({ signedUrl: null, ETag: 'fakeETag' }));
     dispatchWorkRequest.mockReturnValueOnce({
-      ETag,
-      signedUrl: null,
-      request: null,
+      isRequest: true,
     });
 
     waitForWorkRequest.mockReturnValueOnce({
@@ -122,8 +125,16 @@ describe('fetchWork', () => {
   });
 
   it('does not use cache for gene expression request', async () => {
+    checkRequest.mockReset().mockImplementationOnce(() => ({ signedUrl: 'fakeSignedUrl', ETag: 'fakeETag' }));
+    dispatchWorkRequest.mockResolvedValueOnce({
+      isRequest: true,
+    });
     downloadFromS3.mockReturnValueOnce({
       S3Data: true,
+    });
+    waitForWorkRequest.mockReturnValueOnce({
+      workerSignedUrl: 'fakeWorkerSignedUrl',
+      data: true,
     });
 
     const res = await fetchWork(
