@@ -33,12 +33,13 @@ import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState'
 
 import DraggableBodyRow from 'components/data-management/DraggableBodyRow';
 import UploadStatusView from 'components/UploadStatusView';
-import { metadataNameToKey, metadataKeyToName, temporaryMetadataKey } from 'utils/data-management/metadataUtils';
+import { metadataNameToKey, metadataKeyToName } from 'utils/data-management/metadataUtils';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import { sampleTech } from 'utils/constants';
 import { fileTypeToDisplay } from 'utils/sampleFileType';
+import UploadStatus from 'utils/upload/UploadStatus';
 
 const { Text } = Typography;
 
@@ -78,9 +79,71 @@ const SamplesTable = forwardRef((props, ref) => {
 
   const [samplesLoaded, setSamplesLoaded] = useState(false);
 
-  const renderTechSpecificTable = () => {
-    console.log('RENDERING THIS TABLE ', tableColumns, ' selected ta ble columns ', selectedTable);
+  useEffect(() => {
+    if (!activeExperiment?.sampleIds.length) {
+      setFullTableData([]);
+      return;
+    }
 
+    const alreadyInTable = () => _.isEqual(
+      fullTableData.map(({ key }) => key),
+      activeExperiment.sampleIds,
+    );
+
+    const anyNotLoadedYet = () => activeExperiment.sampleIds.some((sampleId) => !samples[sampleId]);
+
+    if (alreadyInTable() || anyNotLoadedYet()) return;
+
+    const newData = activeExperiment.sampleIds.map((sampleUuid) => generateDataForItem(sampleUuid));
+
+    setFullTableData(newData);
+  }, [activeExperiment?.sampleIds, samples]);
+
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const newSamplesLoaded = activeExperiment?.sampleIds.every((sampleId) => samples[sampleId]);
+
+    if (newSamplesLoaded === true && samplesLoaded === false) {
+      setSamplesLoaded(true);
+    }
+  }, [activeExperiment, samples]);
+
+  const [VT, setVT] = useVT(
+    () => ({
+      scroll: { y: size.height },
+    }),
+    [size.height, selectedTable],
+  );
+
+  useMemo(() => setVT({ body: { row: DraggableBodyRow } }), [selectedTable]);
+
+  useEffect(() => {
+    if (activeExperiment?.sampleIds.length > 0 && !samplesLoading) {
+      // if there are samples - build the table columns
+      const sanitizedSampleNames = new Set(
+        activeExperiment.sampleIds.map((id) => samples[id]?.name.trim()),
+      );
+
+      setSampleNames(sanitizedSampleNames);
+      const metadataColumns = activeExperiment.metadataKeys.map(
+        (metadataKey) => createInitializedMetadataColumn(metadataKeyToName(metadataKey)),
+      ) || [];
+
+      setTableColumns({
+        ...initialTableColumns,
+        commonColumns: [...initialTableColumns.commonColumns, ...metadataColumns],
+      });
+    }
+  }, [samples, activeExperiment?.sampleIds, samplesLoading]);
+
+  useConditionalEffect(() => {
+    setSamplesLoaded(false);
+
+    dispatch(loadSamples(activeExperimentId));
+  }, [activeExperimentId]);
+
+  const getTechSpecificTable = () => {
     const selectedTableColumns = [
       ...tableColumns.tables[selectedTable], ...tableColumns.commonColumns,
     ].sort((a, b) => a.index - b.index);
@@ -90,19 +153,83 @@ const SamplesTable = forwardRef((props, ref) => {
     const selectedTableData = fullTableData
       .filter((item) => selectedTechSampleIds.includes(item.key));
 
-    // const techTableData = fullTableData.map((item) => {
+    return { data: selectedTableData, columns: selectedTableColumns };
+  };
+
+  const getAllTechTable = () => {
+    const selectedTableData = [];
+    fullTableData.forEach((item) => {
+      if (!samples[item.uuid]) return;
+      const allUploaded = Object?.entries(samples[item.uuid].files)?.every(([key, value]) => {
+        const isFileRequired = fileUploadUtils[samples[item.uuid].type].requiredFiles.includes(key);
+        return !isFileRequired || value.upload.status === UploadStatus.UPLOADED;
+      });
+      const status = allUploaded ? UploadStatus.UPLOADED : UploadStatus.UPLOAD_ERROR;
+      selectedTableData.push({
+        ...item,
+        uploadStatus: status,
+        technology: samples[item.uuid].type,
+      });
+    });
+
+    const selectedTableColumns = [
+      {
+        className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
+        index: 1,
+        key: 'sample',
+        title: 'Sample',
+        dataIndex: 'name',
+        fixed: 'left',
+        render: (text, record, indx) => (
+          <SampleNameCell cellInfo={{ text, record, indx }} />
+        ),
+      },
+      {
+        index: 2,
+        key: 'uploadStatus',
+        title: 'Upload Status',
+        dataIndex: 'uploadStatus',
+        render: (status) => (
+          <UploadStatusView
+            status={status}
+          />
+        ),
+      },
+      {
+        index: 4,
+        key: 'technology',
+        title: 'Technology',
+        dataIndex: 'technology',
+        render: (text) => (
+          <Text>{techNamesToDisplay[text]}</Text>
+        ),
+      },
+      ...tableColumns.commonColumns,
+    ].sort((a, b) => a.index - b.index);
+    return { data: selectedTableData, columns: selectedTableColumns };
+  };
+
+  const renderSelectedTable = () => {
+    let table = {};
+
+    if (selectedTable === 'All') {
+      table = getAllTechTable();
+    } else {
+      table = getTechSpecificTable();
+    }
+    console.log('SIIZE IS ', size, VT);
     return (
       <ReactResizeDetector
         handleHeight
         refreshMode='throttle'
         refreshRate={500}
-        onResize={(height) => { setSize({ height }); }}
+        onResize={(height) => { console.log('SETTING SIZE ', height); setSize({ height }); }}
       >
         <Table
           scroll={{ y: size.height, x: 'max-content' }}
           components={VT}
-          columns={selectedTableColumns}
-          dataSource={selectedTableData}
+          columns={table.columns}
+          dataSource={table.data}
           locale={locale}
           showHeader={activeExperiment?.sampleIds.length > 0}
           pagination={false}
@@ -115,41 +242,6 @@ const SamplesTable = forwardRef((props, ref) => {
         />
       </ReactResizeDetector>
     );
-  };
-
-  const renderAllTechTable = () => {
-    const selectedTableColumns = [
-      ...tableColumns.commonColumns,
-      {
-          className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
-          index: 1,
-          key: 'sample',
-          title: tech === sampleTech.SEURAT ? 'File' : 'Sample',
-          dataIndex: 'name',
-          fixed: 'left',
-          render: (text, record, indx) => (
-            <SampleNameCell cellInfo={{ text, record, indx }} />
-          ),
-        }
-      {
-        index: 2,
-        key: 'uploadStatus',
-        title: 'Upload Status',
-        dataIndex: 'uploadStatus',
-        render: (text, record) => (
-          <UploadStatusView
-
-          />
-        ),
-      }
-      ]
-  };
-
-  const renderSelectedTable = () => {
-    if (selectedTable === 'All') {
-      return renderAllTechTable();
-    }
-    return renderTechSpecificTable();
   };
 
   const initialTableColumns = useMemo(() => {
@@ -196,34 +288,8 @@ const SamplesTable = forwardRef((props, ref) => {
         );
       });
     }
-    console.log('TABLES ARE ', columns);
     return columns;
   }, [selectedTechs]);
-
-  useEffect(() => {
-    if (activeExperiment?.sampleIds.length > 0 && !samplesLoading) {
-      // if there are samples - build the table columns
-      const sanitizedSampleNames = new Set(
-        activeExperiment.sampleIds.map((id) => samples[id]?.name.trim()),
-      );
-
-      setSampleNames(sanitizedSampleNames);
-      const metadataColumns = activeExperiment.metadataKeys.map(
-        (metadataKey) => createInitializedMetadataColumn(metadataKeyToName(metadataKey)),
-      ) || [];
-
-      setTableColumns({
-        ...initialTableColumns,
-        commonColumns: [...initialTableColumns.commonColumns, ...metadataColumns],
-      });
-    }
-  }, [samples, activeExperiment?.sampleIds, samplesLoading]);
-
-  useConditionalEffect(() => {
-    setSamplesLoaded(false);
-
-    dispatch(loadSamples(activeExperimentId));
-  }, [activeExperimentId]);
 
   const deleteMetadataColumn = (name) => {
     dispatch(deleteMetadataTrack(name, activeExperimentId));
@@ -293,8 +359,8 @@ const SamplesTable = forwardRef((props, ref) => {
         width: 200,
       };
       setTableColumns({
-        ...tableColumns.tables,
-        commonColumns: [metadataCreateColumn, ...tableColumns.commonColumns],
+        ...previousTableColumns,
+        commonColumns: [...tableColumns.commonColumns, metadataCreateColumn],
       });
     },
   }));
@@ -360,45 +426,6 @@ const SamplesTable = forwardRef((props, ref) => {
       </Row>
     </>
   );
-
-  useEffect(() => {
-    if (!activeExperiment?.sampleIds.length) {
-      setFullTableData([]);
-      return;
-    }
-
-    const alreadyInTable = () => _.isEqual(
-      fullTableData.map(({ key }) => key),
-      activeExperiment.sampleIds,
-    );
-
-    const anyNotLoadedYet = () => activeExperiment.sampleIds.some((sampleId) => !samples[sampleId]);
-
-    if (alreadyInTable() || anyNotLoadedYet()) return;
-
-    const newData = activeExperiment.sampleIds.map((sampleUuid) => generateDataForItem(sampleUuid));
-
-    setFullTableData(newData);
-  }, [activeExperiment?.sampleIds, samples]);
-
-  const [size, setSize] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    const newSamplesLoaded = activeExperiment?.sampleIds.every((sampleId) => samples[sampleId]);
-
-    if (newSamplesLoaded === true && samplesLoaded === false) {
-      setSamplesLoaded(true);
-    }
-  }, [activeExperiment, samples]);
-
-  const [VT, setVT] = useVT(
-    () => ({
-      scroll: { y: size.height },
-    }),
-    [size.height],
-  );
-
-  useMemo(() => setVT({ body: { row: DraggableBodyRow } }), []);
 
   const locale = {
     emptyText: (
