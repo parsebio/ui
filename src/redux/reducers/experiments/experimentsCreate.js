@@ -1,4 +1,5 @@
 import { experimentTemplate } from 'redux/reducers/experiments/initialState';
+import { accessRoles } from 'redux/selectors/getHasPermissions';
 
 const experimentCreate = (state, action) => {
   const {
@@ -13,6 +14,7 @@ const experimentCreate = (state, action) => {
     name,
     description,
     createdAt,
+    accessRole: accessRoles.OWNER,
   };
 
   return {
