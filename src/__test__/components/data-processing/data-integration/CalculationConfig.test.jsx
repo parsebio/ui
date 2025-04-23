@@ -222,8 +222,7 @@ describe('DataIntegration.CalculationConfig', () => {
     expect(input.value).toEqual('3');
   });
 
-  // TODO enable when scanpy is released
-  it.skip('Switch dispatches action', async () => {
+  it('Switch dispatches action', async () => {
     const seuratV4State = _.merge(initialState, {
       experimentSettings: {
         processing: {
@@ -255,6 +254,9 @@ describe('DataIntegration.CalculationConfig', () => {
           analysisTool: analysisTools.SCANPY,
           dataIntegration: {
             method: 'harmony',
+          },
+          dimensionalityReduction: {
+            excludeGeneCategories: [],
           },
         },
         step: 'dataIntegration',

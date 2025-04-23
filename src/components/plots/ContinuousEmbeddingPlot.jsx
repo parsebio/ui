@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Vega } from 'react-vega';
 import 'vega-webgl-renderer';
+import _ from 'lodash';
 
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadEmbedding } from 'redux/actions/embedding';
@@ -14,8 +15,8 @@ import Loader from '../Loader';
 
 const ContinuousEmbeddingPlot = (props) => {
   const {
-    experimentId, config, colouring,
-    plotData, truncatedPlotData,
+    experimentId, config, coloringType,
+    coloringByCell,
     actions, loading, error,
     reloadPlotData,
   } = props;
@@ -53,7 +54,7 @@ const ContinuousEmbeddingPlot = (props) => {
     if (!embeddingLoading
       && !embeddingError
       && config
-      && plotData?.length > 0
+      && !_.isNil(coloringByCell)
       && cellSets.accessible
       && embeddingData?.length) {
       setPlotSpec(
@@ -63,14 +64,14 @@ const ContinuousEmbeddingPlot = (props) => {
           generateData(
             cellSets,
             config.selectedSample,
-            config.truncatedValues ? truncatedPlotData : plotData,
+            coloringByCell,
             embeddingData,
           ),
-          colouring,
+          coloringType,
         ),
       );
     }
-  }, [config, plotData, embeddingData, cellSets, embeddingLoading]);
+  }, [config, coloringByCell, embeddingData, cellSets, embeddingLoading]);
 
   const render = () => {
     if (error) {
@@ -105,7 +106,7 @@ const ContinuousEmbeddingPlot = (props) => {
       || !cellSets.accessible
       || embeddingLoading
       || Object.keys(plotSpec).length === 0
-      || !plotData?.length) {
+      || _.isNil(coloringByCell)) {
       return (
         <center>
           <Loader experimentId={experimentId} />
@@ -130,17 +131,15 @@ const ContinuousEmbeddingPlot = (props) => {
 ContinuousEmbeddingPlot.defaultProps = {
   reloadPlotData: () => { },
   config: null,
-  plotData: null,
-  truncatedPlotData: null,
+  coloringByCell: null,
   actions: true,
-  colouring: '',
+  coloringType: '',
 };
 
 ContinuousEmbeddingPlot.propTypes = {
   experimentId: PropTypes.string.isRequired,
   config: PropTypes.object,
-  plotData: PropTypes.array,
-  truncatedPlotData: PropTypes.array,
+  coloringByCell: PropTypes.array,
   actions: PropTypes.oneOfType([
     PropTypes.bool,
     PropTypes.object,
@@ -148,7 +147,7 @@ ContinuousEmbeddingPlot.propTypes = {
   loading: PropTypes.bool.isRequired,
   error: PropTypes.bool.isRequired,
   reloadPlotData: PropTypes.func,
-  colouring: PropTypes.string,
+  coloringType: PropTypes.string,
 };
 
 export default ContinuousEmbeddingPlot;
