@@ -160,7 +160,7 @@ const SamplesTable = forwardRef((props, ref) => {
       const filesInSample = Object?.entries(samples[item.uuid].files);
 
       const allUploaded = filesInSample
-        .every(([fileKey, value]) => value.upload.status === UPLOADED);
+        .every(([, value]) => value.upload.status === UPLOADED);
 
       const allFilesPresent = fileUploadUtils[samples[item.uuid].type]?.requiredFiles
         .every((fileType) => filesInSample.map(([fileKey]) => fileKey).includes(fileType));
