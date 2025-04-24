@@ -18,6 +18,7 @@ import {
 
 import { SAMPLES_CREATED, SAMPLES_DELETE } from 'redux/actionTypes/samples';
 import { EXPERIMENT_SETTINGS_PIPELINE_VERSION_UPDATED } from 'redux/actionTypes/experimentSettings';
+import { accessRoles } from 'redux/selectors/getHasPermissions';
 
 describe('experimentsReducer', () => {
   const experimentId1 = 'experiment-1';
@@ -187,6 +188,7 @@ describe('experimentsReducer', () => {
       name: experiment1.name,
       description: experiment1.description,
       createdAt: experiment1.createdAt,
+      accessRole: accessRoles.OWNER,
     };
 
     const newState = experimentsReducer(initialState, {
