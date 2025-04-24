@@ -15,7 +15,7 @@ import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 
 import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
-import { layout } from 'utils/constants';
+import { layout, sampleTech } from 'utils/constants';
 
 import SamplesTable from 'components/data-management/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
@@ -35,7 +35,13 @@ const ProjectDetails = ({ width, height }) => {
 
   const { activeExperimentId } = useSelector((state) => state.experiments.meta);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
-  const { kit, type } = useSelector((state) => _.pick(state.samples[activeExperiment.sampleIds[0]], ['kit', 'type']));
+  const samples = useSelector((state) => state.samples);
+
+  const parseTechSample = activeExperiment.sampleIds.filter(
+    (sampleId) => samples[sampleId]?.type === sampleTech.PARSE,
+  );
+
+  const { kit } = samples[parseTechSample[0]] || {};
 
   const samplesTableRef = useRef();
 
@@ -76,7 +82,7 @@ const ProjectDetails = ({ width, height }) => {
           </div>
 
         </div>
-        {type === 'parse' && (
+        {parseTechSample && (
           <div>
             <Text strong>
               Parse Kit Type:

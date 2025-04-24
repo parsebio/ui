@@ -149,6 +149,17 @@ const UploadStatusView = ({
       </div>
     );
   }
+  if (
+    [
+      UploadStatus.INCOMPLETE,
+    ].includes(status)
+  ) {
+    return (
+      <div style={uploadDivStyle}>
+        <Text type='warning'>{messageForStatus(status)}</Text>
+      </div>
+    );
+  }
 };
 
 UploadStatusView.defaultProps = {

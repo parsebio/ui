@@ -11,6 +11,7 @@ const UploadStatus = {
   DROP_AGAIN: 'dropAgain',
   PAUSED: 'paused',
   EXPIRED: 'expired',
+  INCOMPLETE: 'incomplete',
 };
 
 const message = {
@@ -26,6 +27,7 @@ const message = {
   [UploadStatus.DROP_AGAIN]: 'Drop file again',
   [UploadStatus.PAUSED]: 'Upload paused',
   [UploadStatus.EXPIRED]: 'File expired',
+  [UploadStatus.INCOMPLETE]: 'Files incomplete',
 };
 
 const messageForStatus = (uploadStatus) => message[uploadStatus];

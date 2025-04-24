@@ -7,7 +7,7 @@ import { useVT } from 'virtualizedtableforantd4';
 
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Table, Row, Typography, Space, Alert, Tabs,
+  Table, Row, Typography, Space, Alert, Tabs, Tooltip,
 } from 'antd';
 import {
   MenuOutlined,
@@ -41,6 +41,7 @@ import { sampleTech } from 'utils/constants';
 import { fileTypeToDisplay } from 'utils/sampleFileType';
 import UploadStatus from 'utils/upload/UploadStatus';
 
+const { UPLOADED, INCOMPLETE } = UploadStatus;
 const { Text } = Typography;
 
 const SamplesTable = forwardRef((props, ref) => {
@@ -64,14 +65,9 @@ const SamplesTable = forwardRef((props, ref) => {
     (state) => state.experiments[activeExperiment?.parentExperimentId]?.name,
   );
 
-  // const selectedTech = useSelector(
-  //   (state) => state.samples[activeExperiment?.sampleIds[0]]?.type,
-  //   _.isEqual,
-  // );
-
   const selectedTechs = Array.from(new Set(
     activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type).filter((type) => type),
-  ));
+  )).sort();
   console.log('SELECTED TECHS', selectedTechs, ' table columns ', tableColumns, ' TABLE DATA', fullTableData, ' selected table ', selectedTable);
 
   const [sampleNames, setSampleNames] = useState(new Set());
@@ -113,7 +109,7 @@ const SamplesTable = forwardRef((props, ref) => {
     () => ({
       scroll: { y: size.height },
     }),
-    [size.height, selectedTable],
+    [size.height],
   );
 
   useMemo(() => setVT({ body: { row: DraggableBodyRow } }), [selectedTable]);
@@ -160,11 +156,18 @@ const SamplesTable = forwardRef((props, ref) => {
     const selectedTableData = [];
     fullTableData.forEach((item) => {
       if (!samples[item.uuid]) return;
-      const allUploaded = Object?.entries(samples[item.uuid].files)?.every(([key, value]) => {
-        const isFileRequired = fileUploadUtils[samples[item.uuid].type].requiredFiles.includes(key);
-        return !isFileRequired || value.upload.status === UploadStatus.UPLOADED;
-      });
-      const status = allUploaded ? UploadStatus.UPLOADED : UploadStatus.UPLOAD_ERROR;
+
+      const filesInSample = Object?.entries(samples[item.uuid].files);
+
+      const allUploaded = filesInSample
+        .every(([fileKey, value]) => value.upload.status === UPLOADED);
+
+      const allFilesPresent = fileUploadUtils[samples[item.uuid].type]?.requiredFiles
+        .every((fileType) => filesInSample.map(([fileKey]) => fileKey).includes(fileType));
+
+      const status = (allUploaded && allFilesPresent)
+        ? UPLOADED : INCOMPLETE;
+
       selectedTableData.push({
         ...item,
         uploadStatus: status,
@@ -189,10 +192,16 @@ const SamplesTable = forwardRef((props, ref) => {
         key: 'uploadStatus',
         title: 'Upload Status',
         dataIndex: 'uploadStatus',
-        render: (status) => (
-          <UploadStatusView
-            status={status}
-          />
+        render: (uploadStatus, record) => (
+          uploadStatus === UPLOADED ? (
+            <UploadStatusView status={uploadStatus} />
+          ) : (
+            <Tooltip title={`Not all files for this sample are uploaded, go to the ${techNamesToDisplay[record.technology]} tab`}>
+              <div>
+                <UploadStatusView status={uploadStatus} />
+              </div>
+            </Tooltip>
+          )
         ),
       },
       {
@@ -217,30 +226,24 @@ const SamplesTable = forwardRef((props, ref) => {
     } else {
       table = getTechSpecificTable();
     }
-    console.log('SIIZE IS ', size, VT);
+
     return (
-      <ReactResizeDetector
-        handleHeight
-        refreshMode='throttle'
-        refreshRate={500}
-        onResize={(height) => { console.log('SETTING SIZE ', height); setSize({ height }); }}
-      >
-        <Table
-          scroll={{ y: size.height, x: 'max-content' }}
-          components={VT}
-          columns={table.columns}
-          dataSource={table.data}
-          locale={locale}
-          showHeader={activeExperiment?.sampleIds.length > 0}
-          pagination={false}
-          onRow={(record, index) => ({
-            index,
-            moveRow,
-          })}
-          sticky
-          bordered
-        />
-      </ReactResizeDetector>
+
+      <Table
+        scroll={{ y: size.height, x: 'max-content' }}
+        components={VT}
+        columns={table.columns}
+        dataSource={table.data}
+        locale={locale}
+        showHeader={activeExperiment?.sampleIds.length > 0}
+        pagination={false}
+        onRow={(record, index) => ({
+          index,
+          moveRow,
+        })}
+        sticky
+        bordered
+      />
     );
   };
 
@@ -438,7 +441,6 @@ const SamplesTable = forwardRef((props, ref) => {
 
   const moveRow = async (fromIndex, toIndex) => {
     if (fromIndex === toIndex) return;
-
     await dispatch(reorderSamples(activeExperimentId, fromIndex, toIndex));
   };
 
@@ -446,17 +448,25 @@ const SamplesTable = forwardRef((props, ref) => {
     const technologyTabs = [{
       key: 'All',
       label: 'All',
-      children: renderSelectedTable(),
     }];
 
     selectedTechs.forEach((tech) => {
       technologyTabs.push({
         key: tech,
         label: techNamesToDisplay[tech],
-        children: renderSelectedTable(),
       });
     });
-    return <Tabs defaultActiveKey='All' items={technologyTabs} onChange={(key) => setSelectedTable(key)} />;
+    return (
+      <ReactResizeDetector
+        handleHeight
+        refreshMode='throttle'
+        refreshRate={500}
+        onResize={(height) => { setSize({ height }); }}
+      >
+        <Tabs defaultActiveKey='All' items={technologyTabs} onChange={(key) => setSelectedTable(key)} />
+        {renderSelectedTable()}
+      </ReactResizeDetector>
+    );
   };
 
   return (
