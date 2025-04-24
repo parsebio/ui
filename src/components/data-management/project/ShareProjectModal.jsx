@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,14 +7,14 @@ import {
   Modal, Button, Space, Row, Col, Card, Avatar, Select, Typography, Popconfirm,
 } from 'antd';
 import { Auth } from '@aws-amplify/auth';
-import { removeExperiment } from 'redux/actions/experiments';
-import { removeSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
+
 import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
 import { getHasPermissions } from 'redux/selectors';
 import { permissions } from 'utils/constants';
 import PermissionsChecker from 'utils/PermissionsChecker';
+import { removeProject } from 'redux/actions/projects';
 
 const { Text } = Typography;
 
@@ -30,29 +30,13 @@ const ShareProjectModal = (props) => {
   const hasPermissions = useSelector(
     getHasPermissions(project.id, permissions.READ_USER_ACCESS, projectType),
   );
-
-  const fetchRoles = async () => {
-    const getCurrentUser = await Auth.currentAuthenticatedUser();
-    setCurrentUser(getCurrentUser.attributes.email);
-
-    const userRole = await loadRoles(project.id);
-    const currentUserRole = userRole.find((user) => user.email === getCurrentUser.attributes.email);
-
-    // if the current user is not in the list of roles, it could mean that its an admin user
-    // the actual admin user check is done in the backend
-
-    if (currentUserRole?.role === 'owner' || getCurrentUser.attributes.email.includes('+admin@parsebiosciences.com')) {
-      setCanTransferOwnership(true);
-    }
-
-    setUsersWithAccess(userRole);
-  };
+  const storedCurrentUserRole = useSelector((state) => (
+    projectType === 'experiment' ? state.experiments[project.id].accessRole : null
+  ));
 
   useEffect(() => {
-    if (!hasPermissions) return;
-
     fetchRoles();
-  }, [hasPermissions]);
+  }, []);
 
   useEffect(() => {
     if (role === 'owner') {
@@ -78,6 +62,43 @@ const ShareProjectModal = (props) => {
     }
   };
 
+  const fetchRoles = async () => {
+    const getCurrentUser = await Auth.currentAuthenticatedUser();
+    const { email, name } = getCurrentUser.attributes;
+
+    setCurrentUser(email);
+
+    if (projectType === 'experiment' && !hasPermissions) {
+      setUsersWithAccess([{ email, name, role: storedCurrentUserRole }]);
+      return;
+    }
+
+    const userRole = await loadRoles(project.id);
+    const currentUserRole = userRole.find((user) => user.email === getCurrentUser.attributes.email);
+
+    // if the current user is not in the list of roles, it could mean that its an admin user
+    // the actual admin user check is done in the backend
+
+    if (currentUserRole?.role === 'owner' || email.includes('+admin@parsebiosciences.com')) {
+      setCanTransferOwnership(true);
+    }
+
+    setUsersWithAccess(userRole);
+  };
+
+  const revokeAccess = useCallback(async (user) => {
+    await revokeRole(
+      user.email,
+      { id: project.id, name: project.name },
+    );
+
+    if (user.email === currentUser) {
+      dispatch(removeProject(project.id, projectType));
+    }
+
+    onCancel();
+  }, [project, currentUser, projectType]);
+
   const okButtonText = addedUsers.length ? 'Add' : 'Done';
   const cancelButton = addedUsers.length ? (
     <Button onClick={() => setAddedUsers([])}>Cancel</Button>
@@ -96,12 +117,9 @@ const ShareProjectModal = (props) => {
     );
 
     if (role === 'owner' && response[0]?.data?.code === 200) {
-      if (projectType === 'experiment') {
-        dispatch(removeExperiment(project.id));
-      } else {
-        dispatch(removeSecondaryAnalysis(project.id));
-      }
+      dispatch(removeProject(project.id, projectType));
     }
+
     onCancel();
   };
   const explorerInfoText = projectType === 'experiment' ? `The user will be able to use Data Exploration and Plots and Tables modules,
@@ -211,17 +229,10 @@ const ShareProjectModal = (props) => {
                       <Button
                         type='primary'
                         danger
-                        onClick={() => {
-                          revokeRole(
-                            user.email,
-                            { id: project.id, name: project.name },
-                          );
-
-                          onCancel();
-                        }}
-                        disabled={user.email === currentUser}
+                        onClick={() => revokeAccess(user)}
+                        disabled={user.email === currentUser && user.role === 'owner'}
                       >
-                        Revoke
+                        {user.email === currentUser ? 'Leave' : 'Revoke'}
                       </Button>
                     </Col>
                   </Row>
