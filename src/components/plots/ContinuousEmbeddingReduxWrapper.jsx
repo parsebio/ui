@@ -1,8 +1,12 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+
+import Loader from 'components/Loader';
+import ContinuousEmbeddingPlot from 'components/plots/ContinuousEmbeddingPlot';
+
 import { loadGeneExpression } from 'redux/actions/genes';
-import ContinuousEmbeddingPlot from './ContinuousEmbeddingPlot';
+import { getFilteredCellIds } from 'redux/selectors';
 
 // wrapper component used in plots and tables
 // where the data for the embedding needs to be derived from redux
@@ -13,17 +17,23 @@ const ContinuousEmbeddingReduxWrapper = (props) => {
   } = props;
   const dispatch = useDispatch();
   const config = useSelector((state) => state.componentConfig[plotUuid]?.config);
-  const geneExpression = useSelector((state) => state.genes.expression.full);
+  const expressions = useSelector((state) => state.genes.expression.full);
+  const filteredCellIds = useSelector(getFilteredCellIds());
+
+  if (!config) return <Loader experimentId={experimentId} />;
+
+  const geneExpression = config.truncatedValues
+    ? expressions.matrix.getTruncatedExpressionSparse(config?.shownGene, filteredCellIds)
+    : expressions.matrix.getRawExpressionSparse(config?.shownGene, filteredCellIds);
 
   return (
     <ContinuousEmbeddingPlot
       experimentId={experimentId}
       config={config}
-      plotData={geneExpression.matrix.getRawExpression(config?.shownGene)}
-      truncatedPlotData={geneExpression.matrix.getTruncatedExpression(config?.shownGene)}
+      coloringByCell={geneExpression}
       actions={actions}
-      loading={geneExpression.loading.length > 0}
-      error={geneExpression.error}
+      loading={expressions.loading.length > 0}
+      error={expressions.error}
       reloadPlotData={() => dispatch(loadGeneExpression(
         experimentId, [config?.shownGene], plotUuid,
       ))}

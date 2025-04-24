@@ -92,7 +92,6 @@ const ContinuousEmbeddingPage = ({ experimentId }) => {
     <ContinuousEmbeddingReduxWrapper
       experimentId={experimentId}
       plotUuid={plotUuidToRender}
-
     />
   );
 
