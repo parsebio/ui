@@ -103,10 +103,13 @@ describe('Share project modal', () => {
     expect(screen.getByText('Done')).toBeInTheDocument();
 
     const revokeButtons = screen.getAllByRole('button', { name: 'Revoke' });
-    expect(revokeButtons.length).toEqual(2);
+    expect(revokeButtons.length).toEqual(1);
+
+    const leaveButtons = screen.getAllByRole('button', { name: 'Leave' });
+    expect(leaveButtons.length).toEqual(1);
 
     // revoke button for the user viewing is disabled
-    expect(revokeButtons[1]).toHaveAttribute('disabled');
+    expect(leaveButtons[0]).toHaveAttribute('disabled');
   });
 
   it('Inviting users works', async () => {
