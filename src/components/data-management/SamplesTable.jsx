@@ -49,7 +49,6 @@ const SamplesTable = forwardRef((props, ref) => {
 
   const [selectedTable, setSelectedTable] = useState('All');
   const [fullTableData, setFullTableData] = useState([]);
-  const [tableColumns, setTableColumns] = useState(initialTableColumns);
 
   const samples = useSelector((state) => state.samples);
 
@@ -73,6 +72,55 @@ const SamplesTable = forwardRef((props, ref) => {
   const DragHandle = sortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
 
   const [samplesLoaded, setSamplesLoaded] = useState(false);
+
+  const initialTableColumns = useMemo(() => {
+    const columns = {
+      tables: [],
+      commonColumns: [{
+        fixed: 'left',
+        index: 0,
+        key: 'sort',
+        dataIndex: 'sort',
+        width: 50,
+        render: () => <DragHandle />,
+      }],
+    };
+
+    if (selectedTechs.length > 0) {
+      selectedTechs.forEach((tech) => {
+        columns.tables[tech] = [{
+          className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
+          index: 1,
+          key: 'sample',
+          title: tech === sampleTech.SEURAT ? 'File' : 'Sample',
+          dataIndex: 'name',
+          fixed: 'left',
+          render: (text, record, indx) => (
+            <SampleNameCell cellInfo={{ text, record, indx }} />
+          ),
+        }];
+        fileUploadUtils[tech].requiredFiles.forEach(
+          (requiredFile, indx) => columns.tables[tech].push({
+            index: 2 + indx,
+            title: <center>{fileTypeToDisplay[requiredFile]}</center>,
+            key: requiredFile,
+            dataIndex: requiredFile,
+            width: 170,
+            onCell: () => ({ style: { margin: '0px', padding: '0px' } }),
+            render: (tableCellData) => tableCellData && (
+              <UploadCell
+                columnId={requiredFile}
+                sampleUuid={tableCellData.sampleUuid}
+              />
+            ),
+          }),
+        );
+      });
+    }
+    return columns;
+  }, [selectedTechs]);
+
+  const [tableColumns, setTableColumns] = useState(initialTableColumns);
 
   useEffect(() => {
     if (!activeExperiment?.sampleIds.length) {
@@ -246,53 +294,6 @@ const SamplesTable = forwardRef((props, ref) => {
       />
     );
   };
-
-  const initialTableColumns = useMemo(() => {
-    const columns = {
-      tables: [],
-      commonColumns: [{
-        fixed: 'left',
-        index: 0,
-        key: 'sort',
-        dataIndex: 'sort',
-        width: 50,
-        render: () => <DragHandle />,
-      }],
-    };
-
-    if (selectedTechs.length > 0) {
-      selectedTechs.forEach((tech) => {
-        columns.tables[tech] = [{
-          className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
-          index: 1,
-          key: 'sample',
-          title: tech === sampleTech.SEURAT ? 'File' : 'Sample',
-          dataIndex: 'name',
-          fixed: 'left',
-          render: (text, record, indx) => (
-            <SampleNameCell cellInfo={{ text, record, indx }} />
-          ),
-        }];
-        fileUploadUtils[tech].requiredFiles.forEach(
-          (requiredFile, indx) => columns.tables[tech].push({
-            index: 2 + indx,
-            title: <center>{fileTypeToDisplay[requiredFile]}</center>,
-            key: requiredFile,
-            dataIndex: requiredFile,
-            width: 170,
-            onCell: () => ({ style: { margin: '0px', padding: '0px' } }),
-            render: (tableCellData) => tableCellData && (
-              <UploadCell
-                columnId={requiredFile}
-                sampleUuid={tableCellData.sampleUuid}
-              />
-            ),
-          }),
-        );
-      });
-    }
-    return columns;
-  }, [selectedTechs]);
 
   const deleteMetadataColumn = (name) => {
     dispatch(deleteMetadataTrack(name, activeExperimentId));
