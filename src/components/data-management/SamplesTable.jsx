@@ -68,7 +68,6 @@ const SamplesTable = forwardRef((props, ref) => {
   const selectedTechs = Array.from(new Set(
     activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type).filter((type) => type),
   )).sort();
-  console.log('SELECTED TECHS', selectedTechs, ' table columns ', tableColumns, ' TABLE DATA', fullTableData, ' selected table ', selectedTable);
 
   const [sampleNames, setSampleNames] = useState(new Set());
   const DragHandle = sortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
@@ -219,14 +218,15 @@ const SamplesTable = forwardRef((props, ref) => {
   };
 
   const renderSelectedTable = () => {
-    let table = {};
+    let table = { };
 
-    if (selectedTable === 'All') {
-      table = getAllTechTable();
-    } else {
-      table = getTechSpecificTable();
+    if (tableColumns) {
+      if (selectedTable === 'All') {
+        table = getAllTechTable();
+      } else {
+        table = getTechSpecificTable();
+      }
     }
-
     return (
 
       <Table
@@ -491,7 +491,7 @@ const SamplesTable = forwardRef((props, ref) => {
             />
           </center>
         )
-          : !samplesLoaded || samplesLoading || samplesValidating || !tableColumns
+          : !samplesLoaded || samplesLoading || samplesValidating
             ? renderLoader()
             : renderSamplesTable()
       }

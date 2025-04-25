@@ -189,8 +189,8 @@ const FileUploadModal = (props) => {
                 <span style={{ color: 'red', marginRight: '2em' }}>*</span>
               </Title>
               <Tooltip
-                title={!currentSelectedTech
-                  && 'Remove existing data or create a new project to change technology.'}
+                // title={currentSelectedTech
+                //   && 'Remove existing data or create a new project to change technology.'}
                 placement='bottom'
               >
                 <Select

@@ -38,9 +38,9 @@ const ProjectDetails = ({ width, height }) => {
 
   const parseTechSample = activeExperiment.sampleIds.filter(
     (sampleId) => samples[sampleId]?.type === sampleTech.PARSE,
-  );
+  )[0];
 
-  const { kit } = samples[parseTechSample[0]] || {};
+  const { kit } = samples[parseTechSample] || {};
 
   const samplesTableRef = useRef();
 
