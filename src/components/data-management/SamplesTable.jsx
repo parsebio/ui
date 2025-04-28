@@ -152,6 +152,10 @@ const SamplesTable = forwardRef((props, ref) => {
     }
   }, [activeExperiment, samples]);
 
+  useEffect(() => {
+    setSelectedTable('All');
+  }, [activeExperimentId]);
+
   const [VT, setVT] = useVT(
     () => ({
       scroll: { y: size.height },
@@ -243,7 +247,7 @@ const SamplesTable = forwardRef((props, ref) => {
           uploadStatus === UPLOADED ? (
             <UploadStatusView status={uploadStatus} />
           ) : (
-            <Tooltip title={`Not all files for this sample are uploaded, go to the ${techNamesToDisplay[record.technology]} tab`}>
+            <Tooltip title={`Not all files for this sample are uploaded, go to the ${techNamesToDisplay[record.technology]} tab for details.`}>
               <div>
                 <UploadStatusView status={uploadStatus} />
               </div>
@@ -267,14 +271,14 @@ const SamplesTable = forwardRef((props, ref) => {
 
   const renderSelectedTable = () => {
     let table = { };
-
-    if (tableColumns) {
-      if (selectedTable === 'All') {
-        table = getAllTechTable();
-      } else {
-        table = getTechSpecificTable();
-      }
+    if (!tableColumns.tables[selectedTable] && selectedTable !== 'All') {
+      setSelectedTable('All');
+    } else if (selectedTable === 'All') {
+      table = getAllTechTable();
+    } else {
+      table = getTechSpecificTable();
     }
+
     return (
 
       <Table

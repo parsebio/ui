@@ -11,7 +11,7 @@ const techNamesToDisplay = {
   [sampleTech.RHAPSODY]: `BD Rhapsody${String.fromCharCode(8482)}`,
   [sampleTech.SEURAT]: 'Seurat',
   [sampleTech.H5]: `10X Chromium${String.fromCharCode(8482)} - H5`,
-  [sampleTech.PARSE]: `Parse Evercode WT${String.fromCharCode(8482)}`,
+  [sampleTech.PARSE]: `Parse Evercode${String.fromCharCode(8482)} WT`,
 };
 
 const matchFileName = (fileName, fileNames) => {
