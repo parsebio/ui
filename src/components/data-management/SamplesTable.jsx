@@ -66,7 +66,10 @@ const SamplesTable = forwardRef((props, ref) => {
 
   const selectedTechs = Array.from(new Set(
     activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type).filter((type) => type),
-  )).sort();
+  )).sort((a, b) => {
+    if (a === 'parse') return -1;
+    return a.localeCompare(b);
+  });
 
   const [sampleNames, setSampleNames] = useState(new Set());
   const DragHandle = sortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
@@ -468,7 +471,7 @@ const SamplesTable = forwardRef((props, ref) => {
         refreshRate={500}
         onResize={(height) => { setSize({ height }); }}
       >
-        <Tabs defaultActiveKey='All' items={technologyTabs} onChange={(key) => setSelectedTable(key)} />
+        <Tabs defaultActiveKey='All' activeKey={selectedTable} items={technologyTabs} onChange={(key) => setSelectedTable(key)} />
         {renderSelectedTable()}
       </ReactResizeDetector>
     );
