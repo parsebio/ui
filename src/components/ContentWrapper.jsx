@@ -17,6 +17,7 @@ import {
   NodeExpandOutlined,
   FileDoneOutlined,
   DotChartOutlined,
+  TableOutlined,
 } from '@ant-design/icons';
 import {
   Layout,
@@ -332,6 +333,12 @@ const ContentWrapper = (props) => {
   );
 
   const menuLinks = [
+    {
+      module: modules.SAMPLE_LOADING_TABLE,
+      icon: <TableOutlined />,
+      name: 'Sample Loading Table',
+      items: [],
+    },
     {
       module: modules.SECONDARY_ANALYSIS,
       icon: <NodeExpandOutlined />,

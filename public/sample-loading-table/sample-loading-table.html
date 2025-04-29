@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Sample Loading Table</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=M+PLUS+2:wght@400;500;600;700;800;900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+
+	<script>
+		var siteUrl = window.location.href;
+		var imgPath = "images/";
+	</script>
+
+	<script src="dependencies/saphire-js.min.js"></script>
+	<script src="dependencies/text-accordion.min.js"></script>
+	<script src="sample-loading-table-worksheet.js"></script>
+	<link rel="stylesheet" href="dependencies/text-accordion.min.css" type="text/css" media="all" />
+
+	<!-- General styles from website -->
+		<link rel="stylesheet" href="website-css/bootstrap.min.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="website-css/style.min.css" type="text/css" media="all" />
+	<!-- End General styles from website -->
+
+	<link rel="stylesheet" href="dependencies/saphire.min.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="dependencies/saphire-icons.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="sample-loading-table-worksheet.min.css" type="text/css" media="all" />
+
+</head>
+
+<body>
+
+	<div class="worksheet">
+		<div class="p-t-50 p-b-100 contain-1300 p-mobile-1350">
+			<h1 class="p-b-25">
+				<span class="h1-pre">Evercode WT</span> Sample Loading Table
+			</h1>
+
+			<div class="sample-loading-worksheet-breadcrumbs">
+				<div id="arrow-box-1" class="arrow-box arrow-box-1 current">
+					<div class="worksheet-breadcrumbs-label vertical-center">
+						<i class="saphire-icon saphire-icons-ico-circle-check-solid" aria-hidden="true"></i>
+						Samples &amp; Cells
+					</div>
+				</div>
+				<div id="arrow-box-2" class="arrow-box arrow-box-2">
+					<div class="worksheet-breadcrumbs-label vertical-center">
+						<i class="saphire-icon saphire-icons-ico-circle-check-solid" aria-hidden="true"></i>
+						Sample Information
+					</div>
+				</div>
+				<div id="arrow-box-3" class="arrow-box arrow-box-3">
+					<div class="worksheet-breadcrumbs-label vertical-center">
+						<i class="saphire-icon saphire-icons-ico-circle-check-solid" aria-hidden="true"></i>
+						Download Loading Table
+					</div>
+				</div>
+			</div>
+
+			<div id="form-errors" class="form-errors" style="display: none;">
+				<div class="columns-flex">
+					<div class="col col-125 form-errors-icon">
+						<img decoding="async" src="images/exclamation-circle.svg" />
+					</div>
+					<div class="col col-fluid p-25">
+						<h2>Warnings</h2>
+						<div id="form-errors-message" class="form-errors-message"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="columns-flex">
+				<div class="col col-375 p-r-15">
+					<div class="worksheet-tile">
+						<h2>Samples &amp; Cells</h2>
+						<p>
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+							eiusmod tempor incididunt ut labore et dolore magna aliqua.
+						</p>
+						<div class="form-row">
+							<div class="form-row-label">
+								<label for="number-of-samples">Number of Samples:</label>
+							</div>
+							<input type="text" name="number-of-samples" id="number-of-samples"
+								class="restrict-to-numbers input-width-150" />
+						</div>
+						<div class="form-row">
+							<div class="form-row-label">
+								<label for="number-of-barcoded-cells">Target Number of Barcoded Cells:</label>
+								<div class="form-row-label-notes">
+									The default is 100,000 cells for Evercode WT
+								</div>
+							</div>
+							<input type="text" name="number-of-barcoded-cells" id="number-of-barcoded-cells"
+								class="restrict-to-numbers input-width-150" value="100000" />
+						</div>
+						<div class="p-t-5 p-b-5">
+							<button type="button" id="step-submit-1" class="btn btn-black btn-black-small" disabled="">
+								Next Step
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="col col-500 p-l-15 p-r-15">
+					<div id="sample-information-tile" class="worksheet-tile" style="display: none;">
+						<h2>Sample Information</h2>
+						<p>
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+							eiusmod tempor incididunt ut labore et dolore magna aliqua.
+							Adipiscing elit, sed do eiusmod tempor incididunt ut.
+						</p>
+						<div class="samples-table-user-input-container">
+							<table id="samples-table-user-input fixed-header" class="simple-table">
+								<thead>
+									<tr>
+										<th style="width: 35px;">#</th>
+										<th>Sample<br />Name</th>
+										<th style="width: 90px;">Percent<br />of Library</th>
+										<th style="width: 110px;">
+											Stock<br />Concentration (cells/uL)
+										</th>
+									</tr>
+								</thead>
+								<tbody id="samples-table-user-input-body"></tbody>
+								<tfoot>
+									<tr>
+										<td>&nbsp;</td>
+										<td></td>
+										<td style="padding-bottom: 10px;">
+											<div id="percent-of-library-total"
+												class="percent-of-library-total text-left"></div>
+										</td>
+										<td></td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+						<div class="p-t-20">
+							<button type="button" id="step-submit-2" class="btn btn-black btn-black-small" disabled="">
+								Next Step
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="col col-fluid p-l-15">
+					<div id="download-tile" class="worksheet-tile" style="display: none;">
+						<h2>Download</h2>
+						<p class="p-b-25">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+							eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+							ad
+						</p>
+						<a href="" id="download-csv" class="btn btn-gradient"><i
+								class="saphire-icon saphire-icons-ico-download-solid" aria-hidden="true"
+								style="margin-right: 5px;"></i>
+							Download Loading Table CSV</a>
+					</div>
+				</div>
+			</div>
+
+			<div id="worksheet-data" class="p-t-100" style="display: none;">
+				<h2>Table Data, Volumes, and Plate Configurations</h2>
+
+				<div class="text-accordion closed" data-closeopen="true">
+					<div class="text-accordion-title js-text-accordion-title">
+						<i class="saphire-icon saphire-icons-ico-chevron-right caret" aria-hidden="true"></i>
+						Sample Loading Table
+					</div>
+					<div class="text-accordion-body" style="display: none;">
+						<div class="table-container">
+							<table id="samples-table" class="samples-table">
+								<thead>
+									<tr>
+										<th class="sticky-top-left width-30">#</th>
+										<th class="width-125">Sample<br />Name</th>
+										<th class="width-125">Percent<br />of Library</th>
+										<th class="width-125">Stock<br />Concentration (cells/uL)</th>
+										<th class="width-125">Number<br />of Wells</th>
+										<th class="width-125">
+											Targeted Number<br />of Barcoded Cells
+										</th>
+										<th class="width-125">
+											Required Sample<br />Concentration (cells/uL)
+										</th>
+										<th class="width-125">
+											Volume of Sample<br />Stock Dilution (uL)
+										</th>
+										<th class="width-125">Number<br />of Wells</th>
+										<th class="width-125">
+											Volume of Sample<br />Dilution Buffer (uL)
+										</th>
+										<th class="width-125">Sample<br />Number</th>
+										<th class="width-125">Number of<br />Sample Wells</th>
+										<th class="width-125">Number of<br />Times Sample Called</th>
+										<th class="width-125">Sample Per<br />Well + Dead</th>
+										<th class="width-125">Sample Per<br />Input Well</th>
+										<th class="width-125">Sample Per<br />Intermediate</th>
+										<th class="width-125">Diluent Per<br />Intermediate</th>
+										<th class="width-125">Total<br />Diluent</th>
+										<th class="width-125">Corrected Sample</th>
+										<th class="width-125">Loc</th>
+									</tr>
+								</thead>
+
+								<tbody id="samples-table-body"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="text-accordion closed" data-closeopen="true">
+					<div class="text-accordion-title js-text-accordion-title">
+						<i class="saphire-icon saphire-icons-ico-chevron-right caret" aria-hidden="true"></i>
+						Integra Loading Table
+					</div>
+					<div class="text-accordion-body" style="display: none;">
+						<div class="columns-flex">
+							<div class="col col-500">
+								<div id="integra-loading-table-section">
+									<table id="samples-table" class="samples-table">
+										<thead>
+											<tr>
+												<th>Sample Name</th>
+												<th>Sample Location</th>
+												<th>Min Sample Stock Needed for Dilution (uL)</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-1"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A1</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-1"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-2"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A2</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-2"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-3"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A3</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-3"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-4"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A4</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-4"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-5"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A5</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-5"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-6"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A6</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-6"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-7"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A7</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-7"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-8"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A8</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-8"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-9"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A9</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-9"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-10"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A10</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-10"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-11"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A11</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-11"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-12"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>A12</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-12"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-13"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B1</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-13"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-14"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B2</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-14"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-15"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B3</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-15"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-16"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B4</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-16"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-17"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B5</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-17"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-18"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B6</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-18"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-19"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B7</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-19"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-20"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B8</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-20"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-21"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B9</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-21"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-22"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B10</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-22"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-23"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B11</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-23"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-24"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>B12</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-24"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-25"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C1</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-25"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-26"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C2</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-26"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-27"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C3</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-27"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-28"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C4</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-28"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-29"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C5</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-29"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-30"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C6</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-30"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-31"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C7</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-31"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-32"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C8</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-32"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-33"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C9</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-33"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-34"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C10</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-34"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-35"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C11</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-35"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-36"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>C12</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-36"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-37"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D1</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-37"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-38"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D2</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-38"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-39"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D3</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-39"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-40"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D4</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-40"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-41"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D5</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-41"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-42"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D6</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-42"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-43"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D7</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-43"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-44"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D8</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-44"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-45"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D9</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-45"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-46"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D10</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-46"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-47"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D11</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-47"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input id="loading-table-sample-name-48"
+														class="input-width-100-percent" type="text" />
+												</td>
+												<td>D12</td>
+												<td>
+													<input disabled="" id="loading-table-sample-needed-dilution-48"
+														class="input-width-100-percent" type="text" />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<div class="col col-300 p-t-75 p-l-50">
+								<label for="min-diluent-needed">Min Diluent Needed (uL):</label><br />
+								<input type="text" id="min-diluent-needed" />
+								<br /><br />
+								<label for="min-diluent-needed">Required Number of Sample Dilution Tubes:</label><br />
+								<input type="text" id="required-number-of-sample-dilution-tubes" />
+								<div class="p-t-50"></div>
+								<div id="sample-dilution-tube-locations" style="width: 250px;"></div>
+							</div>
+
+							<div class="col col-fluid p-l-100"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="text-accordion closed" data-closeopen="true">
+					<div class="text-accordion-title js-text-accordion-title">
+						<i class="saphire-icon saphire-icons-ico-chevron-right caret" aria-hidden="true"></i>
+						Plate Configuration
+					</div>
+					<div class="text-accordion-body" style="display: none;">
+						<div class="p-t-75">
+							<h2 class="h2-small">Plate Configuration</h2>
+							<div id="plate-configuration-wrapper">
+								<table class="plate-configuration-table">
+									<tbody>
+										<tr>
+											<th>&nbsp;</th>
+											<th>1</th>
+											<th>2</th>
+											<th>3</th>
+											<th>4</th>
+											<th>5</th>
+											<th>6</th>
+											<th>7</th>
+											<th>8</th>
+											<th>9</th>
+											<th>10</th>
+											<th>11</th>
+											<th>12</th>
+										</tr>
+										<tr>
+											<td class="row-head">a</td>
+											<td id="plate-configuration-cell-1-1">
+												<input type="text" id="plate-configuration-1-1" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-2">
+												<input type="text" id="plate-configuration-1-2" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-3">
+												<input type="text" id="plate-configuration-1-3" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-4">
+												<input type="text" id="plate-configuration-1-4" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-5">
+												<input type="text" id="plate-configuration-1-5" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-6">
+												<input type="text" id="plate-configuration-1-6" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-7">
+												<input type="text" id="plate-configuration-1-7" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-8">
+												<input type="text" id="plate-configuration-1-8" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-9">
+												<input type="text" id="plate-configuration-1-9" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-10">
+												<input type="text" id="plate-configuration-1-10" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-11">
+												<input type="text" id="plate-configuration-1-11" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-1-12">
+												<input type="text" id="plate-configuration-1-12" style="width: 40px;" />
+											</td>
+										</tr>
+										<tr>
+											<td class="row-head">b</td>
+											<td id="plate-configuration-cell-2-1">
+												<input type="text" id="plate-configuration-2-1" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-2">
+												<input type="text" id="plate-configuration-2-2" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-3">
+												<input type="text" id="plate-configuration-2-3" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-4">
+												<input type="text" id="plate-configuration-2-4" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-5">
+												<input type="text" id="plate-configuration-2-5" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-6">
+												<input type="text" id="plate-configuration-2-6" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-7">
+												<input type="text" id="plate-configuration-2-7" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-8">
+												<input type="text" id="plate-configuration-2-8" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-9">
+												<input type="text" id="plate-configuration-2-9" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-10">
+												<input type="text" id="plate-configuration-2-10" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-11">
+												<input type="text" id="plate-configuration-2-11" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-2-12">
+												<input type="text" id="plate-configuration-2-12" style="width: 40px;" />
+											</td>
+										</tr>
+										<tr>
+											<td class="row-head">c</td>
+											<td id="plate-configuration-cell-3-1">
+												<input type="text" id="plate-configuration-3-1" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-2">
+												<input type="text" id="plate-configuration-3-2" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-3">
+												<input type="text" id="plate-configuration-3-3" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-4">
+												<input type="text" id="plate-configuration-3-4" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-5">
+												<input type="text" id="plate-configuration-3-5" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-6">
+												<input type="text" id="plate-configuration-3-6" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-7">
+												<input type="text" id="plate-configuration-3-7" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-8">
+												<input type="text" id="plate-configuration-3-8" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-9">
+												<input type="text" id="plate-configuration-3-9" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-10">
+												<input type="text" id="plate-configuration-3-10" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-11">
+												<input type="text" id="plate-configuration-3-11" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-3-12">
+												<input type="text" id="plate-configuration-3-12" style="width: 40px;" />
+											</td>
+										</tr>
+										<tr>
+											<td class="row-head">d</td>
+											<td id="plate-configuration-cell-4-1">
+												<input type="text" id="plate-configuration-4-1" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-2">
+												<input type="text" id="plate-configuration-4-2" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-3">
+												<input type="text" id="plate-configuration-4-3" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-4">
+												<input type="text" id="plate-configuration-4-4" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-5">
+												<input type="text" id="plate-configuration-4-5" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-6">
+												<input type="text" id="plate-configuration-4-6" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-7">
+												<input type="text" id="plate-configuration-4-7" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-8">
+												<input type="text" id="plate-configuration-4-8" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-9">
+												<input type="text" id="plate-configuration-4-9" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-10">
+												<input type="text" id="plate-configuration-4-10" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-11">
+												<input type="text" id="plate-configuration-4-11" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-4-12">
+												<input type="text" id="plate-configuration-4-12" style="width: 40px;" />
+											</td>
+										</tr>
+										<tr>
+											<td class="row-head">e</td>
+											<td id="plate-configuration-cell-5-1">
+												<input type="text" id="plate-configuration-5-1" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-2">
+												<input type="text" id="plate-configuration-5-2" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-3">
+												<input type="text" id="plate-configuration-5-3" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-4">
+												<input type="text" id="plate-configuration-5-4" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-5">
+												<input type="text" id="plate-configuration-5-5" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-6">
+												<input type="text" id="plate-configuration-5-6" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-7">
+												<input type="text" id="plate-configuration-5-7" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-8">
+												<input type="text" id="plate-configuration-5-8" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-9">
+												<input type="text" id="plate-configuration-5-9" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-10">
+												<input type="text" id="plate-configuration-5-10" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-11">
+												<input type="text" id="plate-configuration-5-11" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-5-12">
+												<input type="text" id="plate-configuration-5-12" style="width: 40px;" />
+											</td>
+										</tr>
+										<tr>
+											<td class="row-head">f</td>
+											<td id="plate-configuration-cell-6-1">
+												<input type="text" id="plate-configuration-6-1" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-2">
+												<input type="text" id="plate-configuration-6-2" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-3">
+												<input type="text" id="plate-configuration-6-3" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-4">
+												<input type="text" id="plate-configuration-6-4" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-5">
+												<input type="text" id="plate-configuration-6-5" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-6">
+												<input type="text" id="plate-configuration-6-6" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-7">
+												<input type="text" id="plate-configuration-6-7" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-8">
+												<input type="text" id="plate-configuration-6-8" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-9">
+												<input type="text" id="plate-configuration-6-9" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-10">
+												<input type="text" id="plate-configuration-6-10" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-11">
+												<input type="text" id="plate-configuration-6-11" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-6-12">
+												<input type="text" id="plate-configuration-6-12" style="width: 40px;" />
+											</td>
+										</tr>
+										<tr>
+											<td class="row-head">g</td>
+											<td id="plate-configuration-cell-7-1">
+												<input type="text" id="plate-configuration-7-1" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-2">
+												<input type="text" id="plate-configuration-7-2" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-3">
+												<input type="text" id="plate-configuration-7-3" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-4">
+												<input type="text" id="plate-configuration-7-4" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-5">
+												<input type="text" id="plate-configuration-7-5" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-6">
+												<input type="text" id="plate-configuration-7-6" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-7">
+												<input type="text" id="plate-configuration-7-7" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-8">
+												<input type="text" id="plate-configuration-7-8" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-9">
+												<input type="text" id="plate-configuration-7-9" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-10">
+												<input type="text" id="plate-configuration-7-10" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-11">
+												<input type="text" id="plate-configuration-7-11" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-7-12">
+												<input type="text" id="plate-configuration-7-12" style="width: 40px;" />
+											</td>
+										</tr>
+										<tr>
+											<td class="row-head">h</td>
+											<td id="plate-configuration-cell-8-1">
+												<input type="text" id="plate-configuration-8-1" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-2">
+												<input type="text" id="plate-configuration-8-2" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-3">
+												<input type="text" id="plate-configuration-8-3" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-4">
+												<input type="text" id="plate-configuration-8-4" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-5">
+												<input type="text" id="plate-configuration-8-5" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-6">
+												<input type="text" id="plate-configuration-8-6" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-7">
+												<input type="text" id="plate-configuration-8-7" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-8">
+												<input type="text" id="plate-configuration-8-8" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-9">
+												<input type="text" id="plate-configuration-8-9" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-10">
+												<input type="text" id="plate-configuration-8-10" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-11">
+												<input type="text" id="plate-configuration-8-11" style="width: 40px;" />
+											</td>
+											<td id="plate-configuration-cell-8-12">
+												<input type="text" id="plate-configuration-8-12" style="width: 40px;" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+							<h2 class="p-t-50 h2-small">Plate Configuration Table</h2>
+							<table class="plate-configuration-listing-table">
+								<tbody>
+									<tr>
+										<th>Well #</th>
+										<th>Sample #</th>
+										<th>Number of Wells</th>
+										<th>Times Sample Called</th>
+									</tr>
+									<tr>
+										<td>1</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-1" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-1" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-1" />
+										</td>
+									</tr>
+									<tr>
+										<td>2</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-2" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-2" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-2" />
+										</td>
+									</tr>
+									<tr>
+										<td>3</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-3" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-3" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-3" />
+										</td>
+									</tr>
+									<tr>
+										<td>4</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-4" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-4" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-4" />
+										</td>
+									</tr>
+									<tr>
+										<td>5</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-5" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-5" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-5" />
+										</td>
+									</tr>
+									<tr>
+										<td>6</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-6" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-6" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-6" />
+										</td>
+									</tr>
+									<tr>
+										<td>7</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-7" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-7" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-7" />
+										</td>
+									</tr>
+									<tr>
+										<td>8</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-8" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-8" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-8" />
+										</td>
+									</tr>
+									<tr>
+										<td>9</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-9" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-9" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-9" />
+										</td>
+									</tr>
+									<tr>
+										<td>10</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-10" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-10" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-10" />
+										</td>
+									</tr>
+									<tr>
+										<td>11</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-11" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-11" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-11" />
+										</td>
+									</tr>
+									<tr>
+										<td>12</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-12" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-12" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-12" />
+										</td>
+									</tr>
+									<tr>
+										<td>13</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-13" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-13" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-13" />
+										</td>
+									</tr>
+									<tr>
+										<td>14</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-14" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-14" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-14" />
+										</td>
+									</tr>
+									<tr>
+										<td>15</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-15" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-15" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-15" />
+										</td>
+									</tr>
+									<tr>
+										<td>16</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-16" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-16" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-16" />
+										</td>
+									</tr>
+									<tr>
+										<td>17</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-17" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-17" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-17" />
+										</td>
+									</tr>
+									<tr>
+										<td>18</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-18" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-18" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-18" />
+										</td>
+									</tr>
+									<tr>
+										<td>19</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-19" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-19" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-19" />
+										</td>
+									</tr>
+									<tr>
+										<td>20</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-20" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-20" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-20" />
+										</td>
+									</tr>
+									<tr>
+										<td>21</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-21" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-21" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-21" />
+										</td>
+									</tr>
+									<tr>
+										<td>22</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-22" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-22" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-22" />
+										</td>
+									</tr>
+									<tr>
+										<td>23</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-23" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-23" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-23" />
+										</td>
+									</tr>
+									<tr>
+										<td>24</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-24" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-24" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-24" />
+										</td>
+									</tr>
+									<tr>
+										<td>25</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-25" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-25" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-25" />
+										</td>
+									</tr>
+									<tr>
+										<td>26</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-26" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-26" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-26" />
+										</td>
+									</tr>
+									<tr>
+										<td>27</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-27" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-27" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-27" />
+										</td>
+									</tr>
+									<tr>
+										<td>28</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-28" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-28" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-28" />
+										</td>
+									</tr>
+									<tr>
+										<td>29</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-29" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-29" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-29" />
+										</td>
+									</tr>
+									<tr>
+										<td>30</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-30" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-30" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-30" />
+										</td>
+									</tr>
+									<tr>
+										<td>31</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-31" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-31" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-31" />
+										</td>
+									</tr>
+									<tr>
+										<td>32</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-32" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-32" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-32" />
+										</td>
+									</tr>
+									<tr>
+										<td>33</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-33" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-33" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-33" />
+										</td>
+									</tr>
+									<tr>
+										<td>34</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-34" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-34" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-34" />
+										</td>
+									</tr>
+									<tr>
+										<td>35</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-35" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-35" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-35" />
+										</td>
+									</tr>
+									<tr>
+										<td>36</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-36" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-36" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-36" />
+										</td>
+									</tr>
+									<tr>
+										<td>37</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-37" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-37" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-37" />
+										</td>
+									</tr>
+									<tr>
+										<td>38</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-38" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-38" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-38" />
+										</td>
+									</tr>
+									<tr>
+										<td>39</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-39" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-39" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-39" />
+										</td>
+									</tr>
+									<tr>
+										<td>40</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-40" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-40" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-40" />
+										</td>
+									</tr>
+									<tr>
+										<td>41</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-41" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-41" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-41" />
+										</td>
+									</tr>
+									<tr>
+										<td>42</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-42" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-42" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-42" />
+										</td>
+									</tr>
+									<tr>
+										<td>43</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-43" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-43" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-43" />
+										</td>
+									</tr>
+									<tr>
+										<td>44</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-44" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-44" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-44" />
+										</td>
+									</tr>
+									<tr>
+										<td>45</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-45" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-45" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-45" />
+										</td>
+									</tr>
+									<tr>
+										<td>46</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-46" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-46" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-46" />
+										</td>
+									</tr>
+									<tr>
+										<td>47</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-47" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-47" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-47" />
+										</td>
+									</tr>
+									<tr>
+										<td>48</td>
+										<td>
+											<input type="text" id="plate-configuration-sample-number-48" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-wells-48" />
+										</td>
+										<td>
+											<input type="text" id="plate-configuration-times-sample-called-48" />
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="text-accordion closed" data-closeopen="true">
+					<div class="text-accordion-title js-text-accordion-title">
+						<i class="saphire-icon saphire-icons-ico-chevron-right caret" aria-hidden="true"></i>
+						Diluent Volumes
+					</div>
+					<div class="text-accordion-body" style="display: none;">
+						<div>
+							<div class="table-container">
+								<table id="export-table">
+									<thead>
+										<tr>
+											<th class="width-125">Sample ID</th>
+											<th class="width-125">Source Deck Position</th>
+											<th class="width-125">Source Well</th>
+											<th class="width-125">Target Deck Position</th>
+											<th class="width-125">Target Well</th>
+											<th class="width-125">Transfer Volume</th>
+											<th class="width-125">Tip Type</th>
+											<th class="width-125">Aspiration Speed</th>
+											<th class="width-125">Dispense Speed</th>
+											<th class="width-125">Source Mix Volume</th>
+											<th class="width-125">Target Mix Volume</th>
+											<th class="width-125">UseLLD (Y/N)</th>
+											<th class="width-125">Tip Eject</th>
+											<th class="width-125">Source Height (mm)</th>
+											<th class="width-125">Source SBO (mm)</th>
+											<th class="width-125">Source Tip Travel (Y/N)</th>
+											<th class="width-125">Target Height (mm)</th>
+											<th class="width-125">Target SBO (mm)</th>
+											<th class="width-125">Target Tip Travel (Y/N)</th>
+											<th class="width-125">Target Mix Height (mm)</th>
+											<th class="width-125">Target Mix Tip Travel (Y/N)</th>
+											<th class="width-125">Source Mix Cycles</th>
+											<th class="width-125">Source Mix Speed</th>
+											<th class="width-125">Source Mix Pause</th>
+											<th class="width-125">Target Mix Cycles</th>
+											<th class="width-125">Target Mix Speed</th>
+											<th class="width-125">Target Mix Pause</th>
+											<th class="width-125">Source Offset X</th>
+											<th class="width-125">Source Offset Y</th>
+											<th class="width-125">Target Offset X</th>
+											<th class="width-125">Target Offset Y</th>
+											<th class="width-125">TipTouch (Y/N)</th>
+											<th class="width-125">Tip Touch Height</th>
+											<th class="width-125">Tip Touch Distance</th>
+											<th class="width-125">Airgap Volume</th>
+											<th class="width-125">LLD Error Handling</th>
+											<th class="width-125">LLD Submerge Depth</th>
+										</tr>
+									</thead>
+									<tbody id="export-table-body"></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+</body>
+
+</html>
