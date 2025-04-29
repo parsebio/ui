@@ -34,13 +34,14 @@ const getDiffExprGenes = (getAllGenes, numGenes) => async (dispatch, getState) =
     comparisonGroup[comparisonType],
     comparisonType,
     { genesOnly: true },
+    pagination,
   );
 
   const timeout = getTimeoutForWorkerTask(getState(), 'DifferentialExpression');
 
   try {
     const result = await fetchWork(
-      experimentId, body, getState, dispatch, { timeout, extras: { pagination } },
+      experimentId, body, getState, dispatch, { timeout },
     );
 
     return result;
