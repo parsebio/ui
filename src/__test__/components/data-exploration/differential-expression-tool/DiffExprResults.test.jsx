@@ -258,15 +258,13 @@ describe('DiffExprResults', () => {
         comparisonType: 'between',
         experimentId: '1234',
         name: 'DifferentialExpression',
+        pagination: {
+          limit: 1000000, offset: 0, orderBy: 'logFC', orderDirection: 'DESC', responseKey: 0,
+        },
       },
       withResultStore.getState,
       expect.any(Function),
       {
-        extras: {
-          pagination: {
-            limit: 1000000, offset: 0, orderBy: 'logFC', orderDirection: 'DESC', responseKey: 0,
-          },
-        },
         timeout: 60,
       },
     );
