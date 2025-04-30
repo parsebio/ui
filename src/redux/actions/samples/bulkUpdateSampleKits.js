@@ -11,7 +11,7 @@ import { loadBackendStatus } from '../backendStatus';
 const bulkUpdateSampleKits = (sampleIds, kit) => async (dispatch, getState) => {
   const parseSampleIds = sampleIds.filter((sampleId) => getState().samples[sampleId].type === 'parse');
   if (parseSampleIds.length === 0) {
-    throw new Error('sampleIds array cannot be empty');
+    throw new Error('parse sampleIds array cannot be empty');
   }
 
   // In api v2 experimentId and experimentId are the same

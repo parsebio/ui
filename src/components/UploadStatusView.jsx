@@ -150,9 +150,7 @@ const UploadStatusView = ({
     );
   }
   if (
-    [
-      UploadStatus.INCOMPLETE,
-    ].includes(status)
+    status === UploadStatus.INCOMPLETE
   ) {
     return (
       <div style={uploadDivStyle}>

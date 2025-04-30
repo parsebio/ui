@@ -343,7 +343,6 @@ const SamplesTable = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     createMetadataColumn() {
-      // change to current table columns
       const key = `metadata_${tableColumns.length}`;
       const previousTableColumns = tableColumns;
 
