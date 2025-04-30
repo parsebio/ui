@@ -24,6 +24,10 @@
     "species": "Anableps anableps (Largescale foureyes)"
   },
   {
+    "name": "AgamP4",
+    "species": "Anopheles gambiae (African malaria mosquito, PEST)"
+  },
+  {
     "name": "TAIR10",
     "species": "Arabidopsis thaliana (Thale cress)"
   },
@@ -32,12 +36,20 @@
     "species": "Astatotilapia calliptera (Eastern happy)"
   },
   {
+    "name": "AstMex3",
+    "species": "Astyanax mexicanus (Mexican tetra)"
+  },
+  {
     "name": "ARS-UCD1.3",
     "species": "Bos taurus (Cow)"
   },
   {
     "name": "c_elegans.PRJEB28388.WS293",
     "species": "Caenorhabditis elegans (Roundworm)"
+  },
+  {
+    "name": "mCalJac1",
+    "species": "Callithrix jacchus (white-tufted-ear marmoset)"
   },
   {
     "name": "C_Albicans-Sc5314-2",
@@ -294,6 +306,10 @@
   {
     "name": "hg38_HBX2",
     "species": "Custom Homo sapiens (Human)"
+  },
+  {
+    "name": "GRCh38_SEOV",
+    "species": "Custom Homo sapiens"
   },
   {
     "name": "Mmul_10_MeV_GFP",
