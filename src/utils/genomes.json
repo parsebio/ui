@@ -240,6 +240,10 @@
     "species": "Mixed human and rat"
   },
   {
+    "name": "Dm_BDGP6",
+    "species": "Custom Drosophila melanogaster (Fruit fly)"
+  },
+  {
     "name": "GRCh38_mCherry",
     "species": "Custom Homo sapiens (Human)"
   },
@@ -340,6 +344,10 @@
     "species": "Custom Mus musculus (Mouse) with GFPh"
   },
   {
+    "name": "GRCm39_lacZ",
+    "species": "Custom Mus musculus (Mouse)"
+  },
+  {
     "name": "GRCm39_MCLab",
     "species": "Custom Mus musculus (Mouse)"
   },
@@ -402,6 +410,10 @@
   {
     "name": "mm10_rfp_srk",
     "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCg7b_enriched6db",
+    "species": "Custom Gallus gallus (chicken)"
   },
   {
     "name": "Gmax_v2",
