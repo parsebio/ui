@@ -196,8 +196,7 @@ const CellSetsTool = (props) => {
       },
       {
         key: 'annotateClusters',
-        label: (<ScanpyDisabler>Annotate clusters</ScanpyDisabler>),
-        disabled: isScanpy,
+        label: 'Annotate clusters',
         children: (
           <PermissionsChecker permissions={permissions.WRITE}>
             <AnnotateClustersTool

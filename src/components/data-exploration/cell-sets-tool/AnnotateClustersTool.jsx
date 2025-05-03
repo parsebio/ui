@@ -10,30 +10,6 @@ import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
 
-const tissueOptions = [
-  'Immune system',
-  'Pancreas',
-  'Liver',
-  'Eye',
-  'Kidney',
-  'Brain',
-  'Lung',
-  'Adrenal',
-  'Heart',
-  'Intestine',
-  'Muscle',
-  'Placenta',
-  'Spleen',
-  'Stomach',
-  'Thymus',
-  'Hippocampus',
-];
-
-const speciesOptions = [
-  'human',
-  'mouse',
-];
-
 const scTypeTooltipText = (
   <>
     Automatic annotation is performed using ScType, a marker gene-based tool
@@ -61,9 +37,100 @@ const scTypeTooltipText = (
   </>
 );
 
+const annotationTools = {
+  sctype: {
+    label: 'ScType',
+    tooltip: scTypeTooltipText,
+    tissueOptions: [
+      'Immune system', 'Pancreas', 'Liver', 'Eye', 'Kidney', 'Brain',
+      'Lung', 'Adrenal', 'Heart', 'Intestine', 'Muscle', 'Placenta',
+      'Spleen', 'Stomach', 'Thymus', 'Hippocampus',
+    ],
+  },
+  decoupler: {
+    label: 'Decoupler',
+    tooltip: 'Runs decoupler-py ORA cluster annotation.',
+    tissueOptions: [
+      'Immune system', 'Oral cavity', 'Brain', 'Kidney', 'Reproductive',
+      'Epithelium', 'GI tract', 'Thymus', 'Olfactory system', 'Placenta',
+      'Lungs', 'Liver', 'Zygote', 'Blood', 'Bone', 'Vasculature',
+      'Pancreas', 'Heart', 'Mammary gland', 'Connective tissue',
+      'Skeletal muscle', 'Skin', 'Embryo', 'Smooth muscle', 'Eye',
+      'Adrenal glands', 'Thyroid', 'Parathyroid glands', 'Urinary bladder',
+    ],
+  },
+  celltypist: {
+    label: 'Celltypist',
+    tooltip: 'Runs Celltypist cell type annotation.',
+    tissueOptions: [
+      'Immune_All_Low.pkl',
+      'Immune_All_High.pkl',
+      'Adult_COVID19_PBMC.pkl',
+      'Adult_CynomolgusMacaque_Hippocampus.pkl',
+      'Adult_Human_MTG.pkl',
+      'Adult_Human_PancreaticIslet.pkl',
+      'Adult_Human_PrefrontalCortex.pkl',
+      'Adult_Human_Skin.pkl',
+      'Adult_Human_Vascular.pkl',
+      'Adult_Mouse_Gut.pkl',
+      'Adult_Mouse_OlfactoryBulb.pkl',
+      'Adult_Pig_Hippocampus.pkl',
+      'Adult_RhesusMacaque_Hippocampus.pkl',
+      'Autopsy_COVID19_Lung.pkl',
+      'COVID19_HumanChallenge_Blood.pkl',
+      'COVID19_Immune_Landscape.pkl',
+      'Cells_Adult_Breast.pkl',
+      'Cells_Fetal_Lung.pkl',
+      'Cells_Human_Tonsil.pkl',
+      'Cells_Intestinal_Tract.pkl',
+      'Cells_Lung_Airway.pkl',
+      'Developing_Human_Brain.pkl',
+      'Developing_Human_Gonads.pkl',
+      'Developing_Human_Hippocampus.pkl',
+      'Developing_Human_Organs.pkl',
+      'Developing_Human_Thymus.pkl',
+      'Developing_Mouse_Brain.pkl',
+      'Developing_Mouse_Hippocampus.pkl',
+      'Fetal_Human_AdrenalGlands.pkl',
+      'Fetal_Human_Pancreas.pkl',
+      'Fetal_Human_Pituitary.pkl',
+      'Fetal_Human_Retina.pkl',
+      'Fetal_Human_Skin.pkl',
+      'Healthy_Adult_Heart.pkl',
+      'Healthy_COVID19_PBMC.pkl',
+      'Healthy_Human_Liver.pkl',
+      'Healthy_Mouse_Liver.pkl',
+      'Human_AdultAged_Hippocampus.pkl',
+      'Human_Colorectal_Cancer.pkl',
+      'Human_Developmental_Retina.pkl',
+      'Human_Embryonic_YolkSac.pkl',
+      'Human_Endometrium_Atlas.pkl',
+      'Human_IPF_Lung.pkl',
+      'Human_Longitudinal_Hippocampus.pkl',
+      'Human_Lung_Atlas.pkl',
+      'Human_PF_Lung.pkl',
+      'Human_Placenta_Decidua.pkl',
+      'Lethal_COVID19_Lung.pkl',
+      'Mouse_Dentate_Gyrus.pkl',
+      'Mouse_Isocortex_Hippocampus.pkl',
+      'Mouse_Postnatal_DentateGyrus.pkl',
+      'Mouse_Whole_Brain.pkl',
+      'Nuclei_Lung_Airway.pkl',
+      'Pan_Fetal_Human.pkl',
+    ],
+
+  },
+};
+
+const speciesOptions = [
+  'human',
+  'mouse',
+];
+
 const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
   const dispatch = useDispatch();
 
+  const [selectedTool, setSelectedTool] = useState('sctype');
   const [tissue, setTissue] = useState(null);
   const [species, setSpecies] = useState(null);
 
@@ -71,18 +138,25 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
 
   const allClustersValid = useMemo(() => Object.entries(cellSets.properties).every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
 
+  const currentTool = annotationTools[selectedTool];
+
   return (
     <Space direction='vertical'>
-      <Radio.Group>
-        <Tooltip title={scTypeTooltipText}>
-          <Radio>ScType</Radio>
-        </Tooltip>
+      <Radio.Group
+        value={selectedTool}
+        onChange={(e) => setSelectedTool(e.target.value)}
+      >
+        {Object.entries(annotationTools).map(([key, tool]) => (
+          <Tooltip title={tool.tooltip} key={key}>
+            <Radio value={key}>{tool.label}</Radio>
+          </Tooltip>
+        ))}
       </Radio.Group>
 
       <Space direction='vertical' style={{ width: '100%' }}>
         Tissue Type:
         <Select
-          options={tissueOptions.map((option) => ({ label: option, value: option }))}
+          options={currentTool.tissueOptions.map((option) => ({ label: option, value: option }))}
           value={tissue}
           placeholder='Select a tissue type'
           onChange={setTissue}
@@ -108,7 +182,12 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
         )}
       <Button
         onClick={() => {
-          dispatch(runCellSetsAnnotation(experimentId, species, tissue));
+          dispatch(runCellSetsAnnotation(
+            experimentId,
+            species,
+            tissue,
+            `${annotationTools[selectedTool].label}Annotate`,
+          ));
           onRunAnnotation();
         }}
         disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}

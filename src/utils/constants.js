@@ -88,6 +88,8 @@ const downsamplingMethods = {
 const cellSetsUpdatedMessages = {
   ClusterCells: endUserMessages.SUCCESS_CELL_SETS_RECLUSTERED,
   ScTypeAnnotate: endUserMessages.SUCCESS_CELL_SETS_ANNOTATED,
+  DecouplerAnnotate: endUserMessages.SUCCESS_CELL_SETS_ANNOTATED,
+  CelltypistAnnotate: endUserMessages.SUCCESS_CELL_SETS_ANNOTATED,
 };
 
 const cognitoMFA = {
