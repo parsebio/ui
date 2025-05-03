@@ -36,7 +36,6 @@ import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules, permissions } from 'utils/constants';
 import { composeTree } from 'utils/cellSets';
 import { complement, intersection, union } from 'utils/cellSetOperations';
-import ScanpyDisabler from 'utils/ScanpyDisabler';
 import PermissionsChecker from 'utils/PermissionsChecker';
 
 const FOCUS_TYPE = 'cellSets';
@@ -48,7 +47,6 @@ const CellSetsTool = (props) => {
   const { navigateTo } = useAppRouter();
 
   const cellSets = useSelector(getCellSets());
-  const isScanpy = useSelector(getIsScanpy());
 
   const {
     accessible, error, hierarchy, properties, hidden,
