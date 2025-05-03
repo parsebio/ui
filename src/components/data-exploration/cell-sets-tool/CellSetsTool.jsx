@@ -30,7 +30,7 @@ import {
   updateCellSetProperty,
 } from 'redux/actions/cellSets';
 import { runSubsetExperiment } from 'redux/actions/pipeline';
-import { getCellSets, getIsScanpy } from 'redux/selectors';
+import { getCellSets } from 'redux/selectors';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules, permissions } from 'utils/constants';
