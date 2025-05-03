@@ -156,6 +156,8 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
       <Space direction='vertical' style={{ width: '100%' }}>
         Tissue Type:
         <Select
+          showSearch
+          style={{ width: '100%' }}
           options={currentTool.tissueOptions.map((option) => ({ label: option, value: option }))}
           value={tissue}
           placeholder='Select a tissue type'
@@ -166,6 +168,8 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
       <Space direction='vertical' style={{ width: '100%' }}>
         Species:
         <Select
+          showSearch
+          style={{ width: '100%' }}
           options={speciesOptions.map((option) => ({ label: option, value: option }))}
           value={species}
           placeholder='Select a species'
