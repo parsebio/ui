@@ -339,14 +339,18 @@ const ContentWrapper = (props) => {
       icon: <NodeExpandOutlined />,
       name: 'Pipeline',
       selectedProjectText: (
-        <Tooltip title={moduleTooltips.SECONDARY_PROJECT}>
+        <Tooltip title={moduleTooltips.SECONDARY_ANALYSIS_PROJECT}>
           {secondaryAnalysisName || 'No run selected'}
         </Tooltip>),
       isDisabled: false,
       items: [
         {
           module: modules.SECONDARY_ANALYSIS_OUTPUT,
-          name: 'Pipeline Output',
+          name: (
+            <Tooltip title={moduleTooltips.SECONDARY_ANALYSIS_OUTPUT}>
+              Pipeline Output
+            </Tooltip>
+          ),
           icon: <FileDoneOutlined />,
 
           get isDisabled() {
@@ -365,27 +369,43 @@ const ContentWrapper = (props) => {
       module: modules.DATA_MANAGEMENT,
       icon: <DotChartOutlined />,
       name: 'Insights',
-      selectedProjectText: experimentName || 'No project selected',
+      selectedProjectText: (
+        <Tooltip title={moduleTooltips.TERTIARY_PROJECT}>
+          {experimentName || 'No project selected'}
+        </Tooltip>
+      ),
       get isDisabled() { return getTertiaryModuleDisabled(this.module); },
       items: [
         {
           module: modules.DATA_PROCESSING,
           icon: <BuildOutlined />,
-          name: 'Data Processing',
+          name: (
+            <Tooltip title={moduleTooltips.TERTIARY_DATA_PROCESSING}>
+              Data Processing
+            </Tooltip>
+          ),
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.DATA_EXPLORATION,
           icon: <FundViewOutlined />,
-          name: 'Data Exploration',
+          name: (
+            <Tooltip title={moduleTooltips.TERTIARY_DATA_EXPLORATION}>
+              Data Exploration
+            </Tooltip>
+          ),
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.PLOTS_AND_TABLES,
           icon: <BarChartOutlined />,
-          name: 'Plots and Tables',
+          name: (
+            <Tooltip title={moduleTooltips.TERTIARY_PLOTS_AND_TABLES}>
+              Plots and Tables
+            </Tooltip>
+          ),
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
         },
       ],

@@ -1,7 +1,9 @@
 import React from 'react';
 
+// We can't match exactly the tooltips to the module keys because some of the tooltips
+// appear on hover of non-module elements, like SECONDARY_ANALYSIS_PROJECT and TERTIARY_PROJECT
 const moduleTooltips = {
-  SECONDARY_PROJECT: (
+  SECONDARY_ANALYSIS_PROJECT: (
     <>
       Process FASTQ files from Parse Biosciences Evercode WT kits
       to generate pipeline output files including reports,
@@ -14,7 +16,7 @@ const moduleTooltips = {
       <a href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQ8SPEWG1JFT5GHTXKC' target='_blank' rel='noreferrer'>User Guide - Pipeline module</a>
     </>
   ),
-  SECONDARY_OUTPUT: (
+  SECONDARY_ANALYSIS_OUTPUT: (
     <>
       View Pipeline Run reports and download Pipeline output files
       <br />
