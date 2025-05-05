@@ -23,7 +23,6 @@ import {
   Menu,
   Typography,
   Divider,
-  Tooltip,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
@@ -50,7 +49,7 @@ import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
-import sidebarTitles from 'utils/sidebarTitles';
+import SidebarTitle from 'utils/SidebarTitle';
 import CookieBanner from './CookieBanner';
 import FeedbackButton from './sider/FeedbackButton';
 import ReferralButton from './sider/ReferralButton';
@@ -338,19 +337,12 @@ const ContentWrapper = (props) => {
       module: modules.SECONDARY_ANALYSIS,
       icon: <NodeExpandOutlined />,
       name: 'Pipeline',
-      selectedProjectText: (
-        <Tooltip title={sidebarTitles.SECONDARY_ANALYSIS_PROJECT}>
-          {secondaryAnalysisName || 'No run selected'}
-        </Tooltip>),
+      selectedProjectText: <SidebarTitle type='SECONDARY_ANALYSIS_PROJECT'>{secondaryAnalysisName || 'No run selected'}</SidebarTitle>,
       isDisabled: false,
       items: [
         {
           module: modules.SECONDARY_ANALYSIS_OUTPUT,
-          name: (
-            <Tooltip title={sidebarTitles.SECONDARY_ANALYSIS_OUTPUT}>
-              Pipeline Output
-            </Tooltip>
-          ),
+          name: <SidebarTitle type='SECONDARY_ANALYSIS_OUTPUT'>Pipeline Output</SidebarTitle>,
           icon: <FileDoneOutlined />,
 
           get isDisabled() {
@@ -369,43 +361,27 @@ const ContentWrapper = (props) => {
       module: modules.DATA_MANAGEMENT,
       icon: <DotChartOutlined />,
       name: 'Insights',
-      selectedProjectText: (
-        <Tooltip title={sidebarTitles.TERTIARY_PROJECT}>
-          {experimentName || 'No project selected'}
-        </Tooltip>
-      ),
+      selectedProjectText: <SidebarTitle type='TERTIARY_PROJECT'>{experimentName || 'No project selected'}</SidebarTitle>,
       get isDisabled() { return getTertiaryModuleDisabled(this.module); },
       items: [
         {
           module: modules.DATA_PROCESSING,
           icon: <BuildOutlined />,
-          name: (
-            <Tooltip title={sidebarTitles.TERTIARY_DATA_PROCESSING}>
-              Data Processing
-            </Tooltip>
-          ),
+          name: <SidebarTitle type='TERTIARY_DATA_PROCESSING'>Data Processing</SidebarTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.DATA_EXPLORATION,
           icon: <FundViewOutlined />,
-          name: (
-            <Tooltip title={sidebarTitles.TERTIARY_DATA_EXPLORATION}>
-              Data Exploration
-            </Tooltip>
-          ),
+          name: <SidebarTitle type='TERTIARY_DATA_EXPLORATION'>Data Exploration</SidebarTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.PLOTS_AND_TABLES,
           icon: <BarChartOutlined />,
-          name: (
-            <Tooltip title={sidebarTitles.TERTIARY_PLOTS_AND_TABLES}>
-              Plots and Tables
-            </Tooltip>
-          ),
+          name: <SidebarTitle type='TERTIARY_PLOTS_AND_TABLES'>Plots and Tables</SidebarTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
         },
       ],

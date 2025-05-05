@@ -1,8 +1,10 @@
 import React from 'react';
+import { Tooltip } from 'antd';
+import PropTypes from 'prop-types';
 
 // We can't match exactly the tooltips to the module keys because some of the tooltips
 // appear on hover of non-module elements, like SECONDARY_ANALYSIS_PROJECT and TERTIARY_PROJECT
-const sidebarTitles = {
+const sidebarTooltipTexts = {
   SECONDARY_ANALYSIS_PROJECT: (
     <>
       Process FASTQ files from Parse Biosciences Evercode WT kits
@@ -88,4 +90,26 @@ const sidebarTitles = {
   ),
 };
 
-export default sidebarTitles;
+const SidebarTitle = (props) => {
+  const { type, children } = props;
+
+  console.log('typeDebug');
+  console.log(type);
+
+  return (
+    <Tooltip
+      title={sidebarTooltipTexts[type]}
+      trigger={['hover', 'click']}
+      mouseEnterDelay={1.0}
+    >
+      {children}
+    </Tooltip>
+  );
+};
+
+SidebarTitle.propTypes = {
+  type: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+export default SidebarTitle;
