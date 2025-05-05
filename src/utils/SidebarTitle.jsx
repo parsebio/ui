@@ -99,7 +99,6 @@ const SidebarTitle = (props) => {
   return (
     <Tooltip
       title={sidebarTooltipTexts[type]}
-      trigger={['hover', 'click']}
       mouseEnterDelay={1.0}
     >
       {children}
