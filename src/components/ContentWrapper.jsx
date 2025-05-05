@@ -339,7 +339,7 @@ const ContentWrapper = (props) => {
       icon: <NodeExpandOutlined />,
       name: 'Pipeline',
       selectedProjectText: (
-        <Tooltip title={moduleTooltips.SECONDARY_DETAILS}>
+        <Tooltip title={moduleTooltips.SECONDARY_PROJECT}>
           {secondaryAnalysisName || 'No run selected'}
         </Tooltip>),
       isDisabled: false,
