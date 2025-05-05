@@ -23,6 +23,7 @@ import {
   Menu,
   Typography,
   Divider,
+  Tooltip,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
@@ -49,6 +50,7 @@ import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
+import moduleTooltips from 'utils/moduleTooltips';
 import CookieBanner from './CookieBanner';
 import FeedbackButton from './sider/FeedbackButton';
 import ReferralButton from './sider/ReferralButton';
@@ -336,7 +338,10 @@ const ContentWrapper = (props) => {
       module: modules.SECONDARY_ANALYSIS,
       icon: <NodeExpandOutlined />,
       name: 'Pipeline',
-      selectedProjectText: secondaryAnalysisName || 'No run selected',
+      selectedProjectText: (
+        <Tooltip title={moduleTooltips.SECONDARY_DETAILS}>
+          {secondaryAnalysisName || 'No run selected'}
+        </Tooltip>),
       isDisabled: false,
       items: [
         {
