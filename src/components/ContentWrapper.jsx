@@ -50,7 +50,7 @@ import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
-import moduleTooltips from 'utils/moduleTooltips';
+import sidebarTooltips from 'utils/sidebarTooltips';
 import CookieBanner from './CookieBanner';
 import FeedbackButton from './sider/FeedbackButton';
 import ReferralButton from './sider/ReferralButton';
@@ -339,7 +339,7 @@ const ContentWrapper = (props) => {
       icon: <NodeExpandOutlined />,
       name: 'Pipeline',
       selectedProjectText: (
-        <Tooltip title={moduleTooltips.SECONDARY_ANALYSIS_PROJECT}>
+        <Tooltip title={sidebarTooltips.SECONDARY_ANALYSIS_PROJECT}>
           {secondaryAnalysisName || 'No run selected'}
         </Tooltip>),
       isDisabled: false,
@@ -347,7 +347,7 @@ const ContentWrapper = (props) => {
         {
           module: modules.SECONDARY_ANALYSIS_OUTPUT,
           name: (
-            <Tooltip title={moduleTooltips.SECONDARY_ANALYSIS_OUTPUT}>
+            <Tooltip title={sidebarTooltips.SECONDARY_ANALYSIS_OUTPUT}>
               Pipeline Output
             </Tooltip>
           ),
@@ -370,7 +370,7 @@ const ContentWrapper = (props) => {
       icon: <DotChartOutlined />,
       name: 'Insights',
       selectedProjectText: (
-        <Tooltip title={moduleTooltips.TERTIARY_PROJECT}>
+        <Tooltip title={sidebarTooltips.TERTIARY_PROJECT}>
           {experimentName || 'No project selected'}
         </Tooltip>
       ),
@@ -380,7 +380,7 @@ const ContentWrapper = (props) => {
           module: modules.DATA_PROCESSING,
           icon: <BuildOutlined />,
           name: (
-            <Tooltip title={moduleTooltips.TERTIARY_DATA_PROCESSING}>
+            <Tooltip title={sidebarTooltips.TERTIARY_DATA_PROCESSING}>
               Data Processing
             </Tooltip>
           ),
@@ -391,7 +391,7 @@ const ContentWrapper = (props) => {
           module: modules.DATA_EXPLORATION,
           icon: <FundViewOutlined />,
           name: (
-            <Tooltip title={moduleTooltips.TERTIARY_DATA_EXPLORATION}>
+            <Tooltip title={sidebarTooltips.TERTIARY_DATA_EXPLORATION}>
               Data Exploration
             </Tooltip>
           ),
@@ -402,7 +402,7 @@ const ContentWrapper = (props) => {
           module: modules.PLOTS_AND_TABLES,
           icon: <BarChartOutlined />,
           name: (
-            <Tooltip title={moduleTooltips.TERTIARY_PLOTS_AND_TABLES}>
+            <Tooltip title={sidebarTooltips.TERTIARY_PLOTS_AND_TABLES}>
               Plots and Tables
             </Tooltip>
           ),

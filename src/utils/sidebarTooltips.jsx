@@ -2,7 +2,7 @@ import React from 'react';
 
 // We can't match exactly the tooltips to the module keys because some of the tooltips
 // appear on hover of non-module elements, like SECONDARY_ANALYSIS_PROJECT and TERTIARY_PROJECT
-const moduleTooltips = {
+const sidebarTooltips = {
   SECONDARY_ANALYSIS_PROJECT: (
     <>
       Process FASTQ files from Parse Biosciences Evercode WT kits
@@ -88,4 +88,4 @@ const moduleTooltips = {
   ),
 };
 
-export default moduleTooltips;
+export default sidebarTooltips;
