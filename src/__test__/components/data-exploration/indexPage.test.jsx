@@ -20,7 +20,7 @@ describe('Data exploration index page', () => {
   const experimentId = fake.EXPERIMENT_ID;
 
   const defaultResponses = generateDefaultMockAPIResponses(experimentId);
-  beforeEach(() => {
+  beforeEach(async () => {
     enableFetchMocks();
     fetchMock.resetMocks();
     fetchMock.doMock();
@@ -29,7 +29,7 @@ describe('Data exploration index page', () => {
     storeState = makeStore();
 
     // Set up state for backend status
-    storeState.dispatch(loadBackendStatus(experimentId));
+    await storeState.dispatch(loadBackendStatus(experimentId));
   });
 
   const dataExplorationFactory = createTestComponentFactory(DataExploration, { experimentId, route: '/some/route/lol.com', experimentData: {} });

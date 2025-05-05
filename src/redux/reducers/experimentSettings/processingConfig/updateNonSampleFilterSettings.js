@@ -6,12 +6,18 @@ import { mergeObjectReplacingArrays } from 'utils/arrayUtils';
 import { downsamplingMethods } from 'utils/constants';
 import initialState from '../initialState';
 
-const seuratV4Compatibility = (newConfig) => {
+const seuratV4Compatibility = (step, newConfig) => {
+  if (step !== 'dataIntegration') return;
+
   if (
     newConfig.dataIntegration.method === 'seuratv4'
-    && newConfig.downsampling.method === downsamplingMethods.GEOSKETCH
+    && newConfig.downsampling?.method === downsamplingMethods.GEOSKETCH
   ) {
-    newConfig.downsampling.method = downsamplingMethods.NONE;
+    // Account for possibility of downsampling not existing
+    newConfig.downsampling = {
+      ...newConfig.downsampling,
+      method: downsamplingMethods.NONE,
+    };
   }
 };
 
@@ -33,7 +39,7 @@ const updateNonSampleFilterSettings = produce((draft, action) => {
     configChange,
   );
 
-  compatiblityUpdates.forEach((update) => { update(newConfig); });
+  compatiblityUpdates.forEach((update) => { update(step, newConfig); });
 
   draft.processing[step] = newConfig;
 
