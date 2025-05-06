@@ -40,7 +40,7 @@ const ProjectDetails = ({ width, height }) => {
     (sampleId) => samples[sampleId]?.type === sampleTech.PARSE,
   )[0];
 
-  const { kit } = samples[parseTechSample] || {};
+  const { kit } = samples[parseTechSample] ?? {};
 
   const samplesTableRef = useRef();
 
