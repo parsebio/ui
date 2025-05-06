@@ -337,7 +337,7 @@ const ContentWrapper = (props) => {
       module: modules.SECONDARY_ANALYSIS,
       icon: <NodeExpandOutlined />,
       name: 'Pipeline',
-      selectedProjectText: <SidebarTitle type='SECONDARY_ANALYSIS_PROJECT'>{secondaryAnalysisName || 'No run selected'}</SidebarTitle>,
+      selectedProjectText: <SidebarTitle type='SECONDARY_ANALYSIS_PROJECT_DETAIL'>{secondaryAnalysisName || 'No run selected'}</SidebarTitle>,
       isDisabled: false,
       items: [
         {
@@ -364,7 +364,7 @@ const ContentWrapper = (props) => {
       module: modules.DATA_MANAGEMENT,
       icon: <DotChartOutlined />,
       name: 'Insights',
-      selectedProjectText: <SidebarTitle type='TERTIARY_PROJECT'>{experimentName || 'No project selected'}</SidebarTitle>,
+      selectedProjectText: <SidebarTitle type='TERTIARY_PROJECT_DETAIL'>{experimentName || 'No project selected'}</SidebarTitle>,
       get isDisabled() { return getTertiaryModuleDisabled(this.module); },
       items: [
         {

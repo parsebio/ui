@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import { modules } from './constants';
 
 // We can't match exactly the tooltips to the module keys because some of the tooltips
-// appear on hover of non-module elements, like SECONDARY_ANALYSIS_PROJECT and TERTIARY_PROJECT
+// appear on hover of non-module elements,
+// like SECONDARY_ANALYSIS_PROJECT_DETAIL and TERTIARY_PROJECT_DETAIL
 const sidebarTooltipTexts = {
-  SECONDARY_ANALYSIS_PROJECT: (
+  SECONDARY_ANALYSIS_PROJECT_DETAIL: (
     <>
       Process FASTQ files from Parse Biosciences Evercode WT kits
       to generate pipeline output files including reports,
@@ -35,7 +36,7 @@ const sidebarTooltipTexts = {
       (requires support suite login)
     </>
   ),
-  TERTIARY_PROJECT: (
+  TERTIARY_PROJECT_DETAIL: (
     <>
       Processed data files are input for downstream filtering, integration and cell type annotation,
       as well as deep dive visualization and exploration of gene expression and
