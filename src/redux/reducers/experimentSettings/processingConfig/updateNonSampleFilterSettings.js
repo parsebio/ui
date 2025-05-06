@@ -6,7 +6,7 @@ import { mergeObjectReplacingArrays } from 'utils/arrayUtils';
 import { downsamplingMethods } from 'utils/constants';
 import initialState from '../initialState';
 
-const seuratV4Compatibility = (step, newConfig) => {
+const setSeuratV4Compatibility = (step, newConfig) => {
   if (step !== 'dataIntegration') return;
 
   if (
@@ -20,10 +20,6 @@ const seuratV4Compatibility = (step, newConfig) => {
     };
   }
 };
-
-const compatiblityUpdates = [
-  seuratV4Compatibility,
-];
 
 const updateNonSampleFilterSettings = produce((draft, action) => {
   const { step, configChange, isALocalChange } = action.payload;
@@ -39,7 +35,7 @@ const updateNonSampleFilterSettings = produce((draft, action) => {
     configChange,
   );
 
-  compatiblityUpdates.forEach((update) => { update(step, newConfig); });
+  setSeuratV4Compatibility(step, newConfig);
 
   draft.processing[step] = newConfig;
 
