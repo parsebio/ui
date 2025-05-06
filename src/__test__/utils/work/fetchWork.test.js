@@ -73,7 +73,7 @@ describe('fetchWork', () => {
       { timeout },
     );
 
-    expect(mockCacheGet).not.toHaveBeenCalledWith(ETag);
+    expect(mockCacheGet).toHaveBeenCalledWith(ETag);
     expect(downloadFromS3).not.toHaveBeenCalled();
     expect(waitForWorkRequest).not.toHaveBeenCalled();
     expect(res).toMatchSnapshot();
