@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tooltip } from 'antd';
 import PropTypes from 'prop-types';
+import { modules } from './constants';
 
 // We can't match exactly the tooltips to the module keys because some of the tooltips
 // appear on hover of non-module elements, like SECONDARY_ANALYSIS_PROJECT and TERTIARY_PROJECT
@@ -18,7 +19,7 @@ const sidebarTooltipTexts = {
       <a href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQ8SPEWG1JFT5GHTXKC' target='_blank' rel='noreferrer'>User Guide - Pipeline module</a>
     </>
   ),
-  SECONDARY_ANALYSIS_OUTPUT: (
+  [modules.SECONDARY_ANALYSIS_OUTPUT]: (
     <>
       View Pipeline Run reports and download Pipeline output files
       <br />
@@ -50,7 +51,7 @@ const sidebarTooltipTexts = {
       <br />
     </>
   ),
-  TERTIARY_DATA_PROCESSING: (
+  [modules.DATA_PROCESSING]: (
     <>
       View quality control plots and adjust settings for filtering, integration and clustering.
       <br />
@@ -64,7 +65,7 @@ const sidebarTooltipTexts = {
       <a href='https://support.parsebiosciences.com/hc/en-us/articles/31741233000468-How-to-adjust-data-processing-settings-to-fit-your-dataset-and-troubleshoot-data-processing-failures' target='_blank' rel='noreferrer'>How to adjust data processing settings to fit your dataset and troubleshoot data processing failures</a>
     </>
   ),
-  TERTIARY_DATA_EXPLORATION: (
+  [modules.DATA_EXPLORATION]: (
     <>
       Take a deep dive into your dataset: view marker heatmap and gene expression,
       customize and annotate clusters, and perform differential expression and pathway analysis.
@@ -76,7 +77,7 @@ const sidebarTooltipTexts = {
       <a href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQAYF2CF8PEDVNAXA7B' target='_blank' rel='noreferrer'>User Guide - Data Exploration section</a>
     </>
   ),
-  TERTIARY_PLOTS_AND_TABLES: (
+  [modules.PLOTS_AND_TABLES]: (
     <>
       A range of plot types are available to visualize your data, all of which can
       be customized to your design preferences and exported as high resolution images.

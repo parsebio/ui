@@ -342,9 +342,12 @@ const ContentWrapper = (props) => {
       items: [
         {
           module: modules.SECONDARY_ANALYSIS_OUTPUT,
-          name: <SidebarTitle type='SECONDARY_ANALYSIS_OUTPUT'>Pipeline Output</SidebarTitle>,
+          name: (
+            <SidebarTitle type={modules.SECONDARY_ANALYSIS_OUTPUT}>
+              Pipeline Output
+            </SidebarTitle>
+          ),
           icon: <FileDoneOutlined />,
-
           get isDisabled() {
             return (
               !activeSecondaryAnalysisId
@@ -367,21 +370,21 @@ const ContentWrapper = (props) => {
         {
           module: modules.DATA_PROCESSING,
           icon: <BuildOutlined />,
-          name: <SidebarTitle type='TERTIARY_DATA_PROCESSING'>Data Processing</SidebarTitle>,
+          name: <SidebarTitle type={modules.DATA_PROCESSING}>Data Processing</SidebarTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.DATA_EXPLORATION,
           icon: <FundViewOutlined />,
-          name: <SidebarTitle type='TERTIARY_DATA_EXPLORATION'>Data Exploration</SidebarTitle>,
+          name: <SidebarTitle type={modules.DATA_EXPLORATION}>Data Exploration</SidebarTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.PLOTS_AND_TABLES,
           icon: <BarChartOutlined />,
-          name: <SidebarTitle type='TERTIARY_PLOTS_AND_TABLES'>Plots and Tables</SidebarTitle>,
+          name: <SidebarTitle type={modules.PLOTS_AND_TABLES}>Plots and Tables</SidebarTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
         },
       ],
