@@ -232,6 +232,7 @@ describe('Pathway analysis modal ', () => {
     expect(handleError).toHaveBeenCalledWith(e, endUserMessages.ERROR_LAUNCH_PATHWAY);
   });
 
+  // Skipping these tests because PantherDB is disable currently
   it.skip('Launches the service with PantherDB', async () => {
     await renderPathwayAnalysisModal(store);
 
