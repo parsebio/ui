@@ -93,9 +93,6 @@ const sidebarTooltipTexts = {
 const SidebarTitle = (props) => {
   const { type, children } = props;
 
-  console.log('typeDebug');
-  console.log(type);
-
   return (
     <Tooltip
       title={sidebarTooltipTexts[type]}
