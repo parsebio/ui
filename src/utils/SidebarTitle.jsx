@@ -99,6 +99,7 @@ const SidebarTitle = (props) => {
     <Tooltip
       title={sidebarTooltipTexts[type]}
       mouseEnterDelay={1.0}
+      placement='right'
     >
       {children}
     </Tooltip>
