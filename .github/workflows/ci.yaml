@@ -414,6 +414,7 @@ jobs:
     name: Ready for merging
     runs-on: ubuntu-24.04
     needs: [deploy, test]
+    if: success()
     steps:
       - id: ready-to-merge
         name: Signal readiness to merge
