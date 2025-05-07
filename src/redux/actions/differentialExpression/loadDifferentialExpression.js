@@ -22,9 +22,6 @@ const loadDifferentialExpression = (
     },
   });
 
-  const body = generateDiffExprBody(experimentId, comparisonGroup, comparisonType);
-
-  let extras = {};
   let pagination = {};
   if (tableState) {
     const currentPageSize = tableState.pagination.pageSize;
@@ -45,14 +42,21 @@ const loadDifferentialExpression = (
         expression: tableState.geneNamesFilter,
       }];
     }
-    extras = { pagination };
   }
+
+  const body = generateDiffExprBody(
+    experimentId,
+    comparisonGroup,
+    comparisonType,
+    undefined,
+    pagination,
+  );
 
   const timeout = getTimeoutForWorkerTask(getState(), 'DifferentialExpression');
 
   try {
     const data = await fetchWork(
-      experimentId, body, getState, dispatch, { timeout, extras },
+      experimentId, body, getState, dispatch, { timeout },
     );
 
     // eslint-disable-next-line prefer-const

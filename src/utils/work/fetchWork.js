@@ -8,7 +8,7 @@ import downloadFromS3 from 'utils/work/downloadFromS3';
 import waitForWorkRequest from 'utils/work/waitForWorkRequest';
 import checkRequest from 'utils/work/checkRequest';
 
-const getCachedResult = async (ETag, signedUrl, useBrowserCache) => {
+const getCachedResult = async (taskName, ETag, signedUrl, useBrowserCache) => {
   // Check if we have the ETag in the browser cache (no worker)
   const cachedData = useBrowserCache ? await cache.get(ETag) : null;
   if (cachedData) {
@@ -19,7 +19,7 @@ const getCachedResult = async (ETag, signedUrl, useBrowserCache) => {
     return null;
   }
 
-  const data = await downloadFromS3(ETag, signedUrl);
+  const data = await downloadFromS3(taskName, signedUrl);
 
   if (useBrowserCache) {
     await cache.set(ETag, data);
@@ -83,7 +83,7 @@ const fetchWork = async (
 
   onETagGenerated(ETag);
 
-  const cachedResult = await getCachedResult(ETag, signedUrl, useBrowserCache);
+  const cachedResult = await getCachedResult(body.name, ETag, signedUrl, useBrowserCache);
 
   if (cachedResult) {
     return cachedResult;

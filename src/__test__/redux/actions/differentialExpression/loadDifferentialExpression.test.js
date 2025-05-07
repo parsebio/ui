@@ -76,15 +76,13 @@ describe('loadDifferentialExpression action', () => {
         comparisonType: 'within',
         name: 'DifferentialExpression',
         experimentId: '1234',
+        pagination: {
+          limit: 50, offset: 0, orderBy: 'p_val_adj', orderDirection: 'ASC', responseKey: 0,
+        },
       },
       store.getState,
       expect.any(Function),
       {
-        extras: {
-          pagination: {
-            limit: 50, offset: 0, orderBy: 'p_val_adj', orderDirection: 'ASC', responseKey: 0,
-          },
-        },
         timeout: 60,
       });
     expect(loadingAction).toMatchSnapshot();
@@ -137,15 +135,13 @@ describe('loadDifferentialExpression action', () => {
         comparisonType: 'within',
         name: 'DifferentialExpression',
         experimentId: '1234',
+        pagination: {
+          limit: 50, offset: 0, orderBy: 'p_val_adj', orderDirection: 'ASC', responseKey: 0,
+        },
       },
       store.getState,
       expect.any(Function),
       {
-        extras: {
-          pagination: {
-            limit: 50, offset: 0, orderBy: 'p_val_adj', orderDirection: 'ASC', responseKey: 0,
-          },
-        },
         timeout: 60,
       });
 
@@ -192,15 +188,13 @@ describe('loadDifferentialExpression action', () => {
         comparisonType: 'within',
         name: 'DifferentialExpression',
         experimentId: '1234',
+        pagination: {
+          limit: 50, offset: 0, orderBy: 'p_val_adj', orderDirection: 'ASC', responseKey: 0,
+        },
       },
       store.getState,
       expect.any(Function),
       {
-        extras: {
-          pagination: {
-            limit: 50, offset: 0, orderBy: 'p_val_adj', orderDirection: 'ASC', responseKey: 0,
-          },
-        },
         timeout: 60,
       });
 
