@@ -55,12 +55,18 @@ const SecondaryAnalysisSettings = (props) => {
 
   const changeKit = useCallback((kit) => {
     calculateMaxSublibraries(kit);
+
     // changing the kit, changes the default selected number of sublibraries and samples
-    setFormValues((prevFormValues) => ({
-      ...prevFormValues,
-      numOfSublibraries: 1,
-      kit,
-    }));
+    setFormValues((prevFormValues) => {
+      const chemistryVersion = kit === 'wt_mega_384' ? '3' : prevFormValues.chemistryVersion;
+
+      return ({
+        ...prevFormValues,
+        numOfSublibraries: 1,
+        chemistryVersion,
+        kit,
+      });
+    });
   }, [calculateMaxSublibraries]);
 
   const handleValueChange = useCallback((key, value) => {
@@ -92,7 +98,7 @@ const SecondaryAnalysisSettings = (props) => {
             <Select
               placeholder='Select the chemistry version'
               onChange={(value) => handleValueChange('chemistryVersion', value)}
-              value={formValues.kit === 'wt_mega_384' ? '3' : formValues.chemistryVersion}
+              value={formValues.chemistryVersion}
               options={[
                 { label: 'v1', value: '1' },
                 { label: 'v2', value: '2' },
