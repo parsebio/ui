@@ -97,7 +97,14 @@ const SidebarTitle = (props) => {
 
   return (
     <Tooltip
-      title={sidebarTooltipTexts[type]}
+      title={(
+        <div
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.key === 'Enter' && e.stopPropagation()}
+        >
+          {sidebarTooltipTexts[type]}
+        </div>
+      )}
       mouseEnterDelay={0.5}
       placement='right'
     >
