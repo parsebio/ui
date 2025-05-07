@@ -84,7 +84,6 @@ const renderPathwayAnalysisModal = async (store, filtersApplied = false) => {
       </Provider>,
     );
   });
-
 };
 
 const genesList = ['gene1', 'gene2'];
