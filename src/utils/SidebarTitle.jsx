@@ -7,7 +7,7 @@ import { modules } from './constants';
 // appear on hover of non-module elements,
 // like SECONDARY_ANALYSIS_PROJECT_DETAIL and TERTIARY_PROJECT_DETAIL
 const sidebarTooltipTexts = {
-  SECONDARY_ANALYSIS_PROJECT_DETAIL: (
+  [modules.SECONDARY_ANALYSIS]: (
     <>
       Process FASTQ files from Parse Biosciences Evercode WT kits
       to generate pipeline output files including reports,
@@ -36,7 +36,7 @@ const sidebarTooltipTexts = {
       (requires support suite login)
     </>
   ),
-  TERTIARY_PROJECT_DETAIL: (
+  [modules.DATA_MANAGEMENT]: (
     <>
       Processed data files are input for downstream filtering, integration and cell type annotation,
       as well as deep dive visualization and exploration of gene expression and
@@ -98,7 +98,7 @@ const SidebarTitle = (props) => {
   return (
     <Tooltip
       title={sidebarTooltipTexts[type]}
-      mouseEnterDelay={1.0}
+      mouseEnterDelay={0.5}
       placement='right'
     >
       {children}
