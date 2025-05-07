@@ -84,6 +84,7 @@ const renderPathwayAnalysisModal = async (store, filtersApplied = false) => {
       </Provider>,
     );
   });
+
 };
 
 const genesList = ['gene1', 'gene2'];
@@ -237,9 +238,7 @@ describe('Pathway analysis modal ', () => {
     await renderPathwayAnalysisModal(store);
 
     // Choose enrichr and launch the analysis
-    await act(async () => {
-      await userEvent.click(screen.getByText(pathwayServices.PANTHERDB));
-    });
+    userEvent.click(screen.getByText(pathwayServices.PANTHERDB));
 
     const defaultSpecies = 'HUMAN';
 
