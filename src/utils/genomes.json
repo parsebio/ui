@@ -308,6 +308,10 @@
     "species": "Custom Homo sapiens (Human)"
   },
   {
+    "name": "GRCm39_KMT2A-MLLT3",
+    "species": "Custom Mus musculus (Mouse) with human KMT2A-MLLT3 fusion gene"
+  },
+  {
     "name": "GRCh38_SEOV",
     "species": "Custom Homo sapiens"
   },
