@@ -3,7 +3,23 @@ import _ from 'lodash';
 import produce, { current } from 'immer';
 
 import { mergeObjectReplacingArrays } from 'utils/arrayUtils';
+import { downsamplingMethods } from 'utils/constants';
 import initialState from '../initialState';
+
+const setSeuratV4Compatibility = (step, newConfig) => {
+  if (step !== 'dataIntegration') return;
+
+  if (
+    newConfig.dataIntegration.method === 'seuratv4'
+    && newConfig.downsampling?.method === downsamplingMethods.GEOSKETCH
+  ) {
+    // Account for possibility of downsampling not existing
+    newConfig.downsampling = {
+      ...newConfig.downsampling,
+      method: downsamplingMethods.NONE,
+    };
+  }
+};
 
 const updateNonSampleFilterSettings = produce((draft, action) => {
   const { step, configChange, isALocalChange } = action.payload;
@@ -18,6 +34,8 @@ const updateNonSampleFilterSettings = produce((draft, action) => {
     newConfig,
     configChange,
   );
+
+  setSeuratV4Compatibility(step, newConfig);
 
   draft.processing[step] = newConfig;
 

@@ -288,10 +288,6 @@
     "species": "Custom Homo sapiens (Human) with HIV"
   },
   {
-    "name": "GRCh38_HBX2",
-    "species": "Custom Homo sapiens (Human)"
-  },
-  {
     "name": "GRCh38_sp",
     "species": "Custom Homo sapiens (Human)"
   },
@@ -308,8 +304,12 @@
     "species": "Custom Homo sapiens (Human) with RFP and SRK"
   },
   {
-    "name": "hg38_HBX2",
+    "name": "hg38_HBX2-2",
     "species": "Custom Homo sapiens (Human)"
+  },
+  {
+    "name": "GRCm39_KMT2A-MLLT3",
+    "species": "Custom Mus musculus (Mouse) with human KMT2A-MLLT3 fusion gene"
   },
   {
     "name": "GRCh38_SEOV",

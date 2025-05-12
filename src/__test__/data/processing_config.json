@@ -3,7 +3,6 @@
     "cellSizeDistribution": {
       "a6322104-6b1b-4b13-8dca-ee952cb8c4d8": {
         "auto": false,
-        "auth_JWT": "mock AuthToken",
         "filterSettings": {
           "minCellSize": 359,
           "binStep": 200
@@ -12,7 +11,6 @@
           "minCellSize": 359,
           "binStep": 200
         },
-        "api_url": "http://host.docker.internal:3000",
         "enabled": true
       },
       "auto": true,
@@ -25,11 +23,9 @@
     "classifier": {
       "a6322104-6b1b-4b13-8dca-ee952cb8c4d8": {
         "auto": true,
-        "auth_JWT": "mock AuthToken",
         "filterSettings": {
           "FDR": 0.01
         },
-        "api_url": "http://host.docker.internal:3000",
         "prefiltered": false,
         "defaultFilterSettings": {
           "FDR": 0.01
@@ -66,18 +62,15 @@
           }
         }
       },
-      "auth_JWT": "mock AuthToken",
       "dimensionalityReduction": {
         "method": "rpca",
         "excludeGeneCategories": [],
         "numPCs": 30
-      },
-      "api_url": "http://host.docker.internal:3000"
+      }
     },
     "mitochondrialContent": {
       "a6322104-6b1b-4b13-8dca-ee952cb8c4d8": {
         "auto": true,
-        "auth_JWT": "mock AuthToken",
         "filterSettings": {
           "method": "absoluteThreshold",
           "methodSettings": {
@@ -96,7 +89,6 @@
             }
           }
         },
-        "api_url": "http://host.docker.internal:3000",
         "enabled": true
       },
       "auto": true,
@@ -112,8 +104,6 @@
       "enabled": true
     },
     "configureEmbedding": {
-      "auth_JWT": "mock AuthToken",
-      "api_url": "http://host.docker.internal:3000",
       "embeddingSettings": {
         "method": "umap",
         "methodSettings": {
@@ -139,7 +129,6 @@
     "numGenesVsNumUmis": {
       "a6322104-6b1b-4b13-8dca-ee952cb8c4d8": {
         "auto": true,
-        "auth_JWT": "mock AuthToken",
         "filterSettings": {
           "regressionType": "gam",
           "regressionTypeSettings": {
@@ -156,7 +145,6 @@
             }
           }
         },
-        "api_url": "http://host.docker.internal:3000",
         "enabled": true
       },
       "auto": true,
@@ -173,7 +161,6 @@
     "doubletScores": {
       "a6322104-6b1b-4b13-8dca-ee952cb8c4d8": {
         "auto": true,
-        "auth_JWT": "mock AuthToken",
         "filterSettings": {
           "probabilityThreshold": 0.3877274,
           "binStep": 0.05
@@ -182,7 +169,6 @@
           "probabilityThreshold": 0.3877274,
           "binStep": 0.05
         },
-        "api_url": "http://host.docker.internal:3000",
         "enabled": true
       },
       "auto": true,

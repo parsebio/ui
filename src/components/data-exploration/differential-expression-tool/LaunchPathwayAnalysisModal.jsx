@@ -125,7 +125,7 @@ const LaunchPathwayAnalysisModal = (props) => {
           <Radio.Group value={externalService} onChange={(e) => setExternalService(e.target.value)}>
             {Object.keys(pathwayServices).map((service) => {
               const serviceName = pathwayServices[service];
-              return (<Radio key={service} value={serviceName}>{serviceName}</Radio>);
+              return (<Radio key={service} value={serviceName} disabled={service === 'PANTHERDB'}>{serviceName}</Radio>);
             })}
           </Radio.Group>
         </Row>
