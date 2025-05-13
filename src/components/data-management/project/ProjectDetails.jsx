@@ -65,11 +65,9 @@ const ProjectDetails = ({ width, height }) => {
         <div style={{ flex: 'none', paddingBottom: '1em' }}>
           <div style={{ display: 'flex', justifyContent: 'right', flexWrap: 'wrap' }}>
             <Space style={{ flexWrap: 'wrap' }}>
-              <ScanpyDisabler experimentId={activeExperimentId}>
-                <Button onClick={clone}>
-                  Copy
-                </Button>
-              </ScanpyDisabler>
+              <Button onClick={clone}>
+                Copy
+              </Button>
               <AddMetadataButton samplesTableRef={samplesTableRef} />
               <ExperimentMenu />
             </Space>
