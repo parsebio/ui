@@ -140,6 +140,10 @@
     "species": "Mustela furo (Ferret)"
   },
   {
+    "name": "mMacEug1_pri_v2",
+    "species": "Notamacropus eugenii (Tammar wallaby)"
+  },
+  {
     "name": "OmykA_1.1",
     "species": "Oncorhynchus mykiss (Rainbow trout)"
   },
@@ -286,6 +290,10 @@
   {
     "name": "GRCh38_HIV",
     "species": "Custom Homo sapiens (Human) with HIV"
+  },
+  {
+    "name": "GRCh38_HPV16_HPV18",
+    "species": "Custom Homo sapiens (Human) with HPV16 and HPV18 strains"
   },
   {
     "name": "GRCh38_sp",
