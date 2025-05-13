@@ -1,5 +1,5 @@
 /**
- * This file is required for jest to work with '@wojtekmaj/enzyme-adapter-react-17'
+ * This file is required for jest to work with '@wojtekmaj/enzyme-adapter-react-18'
  * module.
  */
 import {
