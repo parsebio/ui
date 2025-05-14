@@ -21,7 +21,6 @@ import SamplesTable from 'components/data-management/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import AddMetadataButton from 'components/data-management/metadata/AddMetadataButton';
 import { bulkUpdateSampleKits } from 'redux/actions/samples';
-import ScanpyDisabler from 'utils/ScanpyDisabler';
 
 const { Text, Title } = Typography;
 
