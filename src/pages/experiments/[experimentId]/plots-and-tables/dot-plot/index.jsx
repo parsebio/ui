@@ -79,7 +79,7 @@ const plotStylingConfig = [
   },
 ];
 
-const DotPlotPage = (props) => {
+function DotPlotPage(props) {
   const { experimentId } = props;
 
   const dispatch = useDispatch();
@@ -145,15 +145,13 @@ const DotPlotPage = (props) => {
     });
   };
 
-  const hasMoreThanTwoGroupsToCompare = useMemo(
-    () => {
-      if (!cellSets.accessible || !config?.selectedCellSet || !config?.selectedPoints) {
-        return false;
-      }
+  const hasMoreThanTwoGroupsToCompare = useMemo(() => {
+    if (!cellSets.accessible || !config?.selectedCellSet || !config?.selectedPoints) {
+      return false;
+    }
 
-      return hasGroupsToCompare(config.selectedCellSet, config.selectedPoints);
-    }, [cellSets.accessible, config?.selectedCellSet, config?.selectedPoints],
-  );
+    return hasGroupsToCompare(config.selectedCellSet, config.selectedPoints);
+  }, [cellSets.accessible, config?.selectedCellSet, config?.selectedPoints]);
 
   const shouldFetchPlotData = () => {
     if (!cellSets.accessible || !config) return false;
@@ -491,22 +489,20 @@ const DotPlotPage = (props) => {
   };
 
   return (
-    <>
-      <PlotContainer
-        experimentId={experimentId}
-        plotUuid={plotUuid}
-        plotType={plotType}
-        plotName={plotNames.DOT_PLOT}
-        plotStylingConfig={plotStylingConfig}
-        extraToolbarControls={<ExportAsCSV data={getCSVData()} filename={csvFileName} />}
-        extraControlPanels={renderExtraPanels()}
-        defaultActiveKey='gene-selection'
-      >
-        {renderPlot()}
-      </PlotContainer>
-    </>
+    <PlotContainer
+      experimentId={experimentId}
+      plotUuid={plotUuid}
+      plotType={plotType}
+      plotName={plotNames.DOT_PLOT}
+      plotStylingConfig={plotStylingConfig}
+      extraToolbarControls={<ExportAsCSV data={getCSVData()} filename={csvFileName} />}
+      extraControlPanels={renderExtraPanels()}
+      defaultActiveKey='gene-selection'
+    >
+      {renderPlot()}
+    </PlotContainer>
   );
-};
+}
 
 DotPlotPage.propTypes = {
   experimentId: PropTypes.string.isRequired,
