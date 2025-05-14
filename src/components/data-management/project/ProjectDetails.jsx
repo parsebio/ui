@@ -16,11 +16,12 @@ import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
 import { layout, sampleTech } from 'utils/constants';
 
-import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
+// import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import AddMetadataButton from 'components/data-management/metadata/AddMetadataButton';
 import { bulkUpdateSampleKits } from 'redux/actions/samples';
 import ScanpyDisabler from 'utils/ScanpyDisabler';
+import SamplesContainer from '../SamplesContainer/SamplesContainer';
 
 const { Text, Title } = Typography;
 
@@ -42,13 +43,16 @@ const ProjectDetails = ({ width, height }) => {
 
   const { kit } = samples[parseTechSample] ?? {};
 
-  const samplesTableRef = useRef();
+  const samplesContainerRef = useRef();
 
   const clone = async () => {
     const newExperimentId = await dispatch(cloneExperiment(activeExperimentId, `Copy of ${activeExperiment.name}`));
     await dispatch(loadExperiments());
     dispatch(setActiveExperiment(newExperimentId));
   };
+
+  console.log('samplesContainerRefDebug');
+  console.log(samplesContainerRef);
 
   return (
     // The height of this div has to be fixed to enable sample scrolling
@@ -75,7 +79,7 @@ const ProjectDetails = ({ width, height }) => {
                   Copy
                 </Button>
               </ScanpyDisabler>
-              <AddMetadataButton samplesTableRef={samplesTableRef} />
+              <AddMetadataButton samplesTableRef={samplesContainerRef.current?.samplesTableRef} />
               <ExperimentMenu />
             </Space>
           </div>
@@ -115,9 +119,7 @@ const ProjectDetails = ({ width, height }) => {
             }}
           />
           <SampleOptions />
-          <SamplesTable
-            ref={samplesTableRef}
-          />
+          <SamplesContainer ref={samplesContainerRef} />
         </div>
       </div>
     </div>

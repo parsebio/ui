@@ -1,12 +1,19 @@
-import { Alert, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Alert, Tabs } from 'antd';
+import React, {
+  forwardRef,
+  useEffect, useImperativeHandle, useMemo, useRef, useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ReactResizeDetector from 'react-resize-detector';
 
 import { loadSamples } from 'redux/actions/samples';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
-import SamplesLoader from './SamplesLoader';
+import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 
-const SamplesContainer = (props) => {
+import SamplesLoader from 'components/data-management/SamplesContainer/SamplesLoader';
+import SamplesTableNew from 'components/data-management/SamplesContainer/SamplesTableNew';
+
+const SamplesContainer = forwardRef((props, ref) => {
   const dispatch = useDispatch();
 
   const activeExperimentId = useSelector((state) => state.experiments.meta.activeExperimentId);
@@ -22,11 +29,21 @@ const SamplesContainer = (props) => {
   );
 
   const [samplesLoaded, setSamplesLoaded] = useState(false);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const [selectedTable, setSelectedTable] = useState('All');
+
+  const samplesTableRef = useRef();
+
+  useImperativeHandle(ref, () => ({ samplesTableRef }));
 
   useConditionalEffect(() => {
     setSamplesLoaded(false);
 
     dispatch(loadSamples(activeExperimentId));
+  }, [activeExperimentId]);
+
+  useEffect(() => {
+    setSelectedTable('All');
   }, [activeExperimentId]);
 
   useEffect(() => {
@@ -36,6 +53,41 @@ const SamplesContainer = (props) => {
       setSamplesLoaded(true);
     }
   }, [activeExperiment, samples]);
+
+  const selectedTechs = useMemo(() => (
+    Array.from(new Set(
+      activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type).filter((type) => type),
+    )).sort((a, b) => {
+      if (a === 'parse') return -1;
+      return a.localeCompare(b);
+    })
+  ), [activeExperiment, samples]);
+
+  const renderTabs = () => {
+    const technologyTabs = [{
+      key: 'All',
+      label: 'All',
+    }];
+
+    selectedTechs.forEach((tech) => {
+      technologyTabs.push({
+        key: tech,
+        label: techNamesToDisplay[tech],
+      });
+    });
+
+    return (
+      <ReactResizeDetector
+        handleHeight
+        refreshMode='throttle'
+        refreshRate={500}
+        onResize={(height) => { setSize({ height }); }}
+      >
+        <Tabs defaultActiveKey='All' activeKey={selectedTable} items={technologyTabs} onChange={(key) => setSelectedTable(key)} />
+        <SamplesTableNew ref={samplesTableRef} size={size} selectedTable={selectedTable} />
+      </ReactResizeDetector>
+    );
+  };
 
   return (
     <>
@@ -61,10 +113,10 @@ const SamplesContainer = (props) => {
         )
           : !samplesLoaded || samplesLoading || samplesValidating
             ? <SamplesLoader samplesLoading samplesValidating />
-            : renderSamplesTable()
+            : renderTabs()
       }
     </>
   );
-};
+});
 
 export default SamplesContainer;
