@@ -52,7 +52,6 @@ const SamplesTable = forwardRef((props, ref) => {
   const [fullTableData, setFullTableData] = useState([]);
 
   const samples = useSelector((state) => state.samples);
-  const samplesLoading = useSelector((state) => state.samples.meta.loading);
 
   const activeExperimentId = useSelector((state) => state.experiments.meta.activeExperimentId);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
@@ -146,7 +145,7 @@ const SamplesTable = forwardRef((props, ref) => {
   useMemo(() => setVT({ body: { row: DraggableBodyRow } }), [selectedTable]);
 
   useEffect(() => {
-    if (activeExperiment?.sampleIds.length > 0 && !samplesLoading) {
+    if (activeExperiment?.sampleIds.length > 0) {
       // if there are samples - build the table columns
       const sanitizedSampleNames = new Set(
         activeExperiment.sampleIds.map((id) => samples[id]?.name.trim()),
@@ -162,7 +161,7 @@ const SamplesTable = forwardRef((props, ref) => {
         commonColumns: [...initialTableColumns.commonColumns, ...metadataColumns],
       });
     }
-  }, [samples, activeExperiment?.sampleIds, samplesLoading]);
+  }, [samples, activeExperiment?.sampleIds]);
 
   const getTechSpecificTable = () => {
     const selectedTableColumns = [
