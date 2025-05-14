@@ -49,6 +49,7 @@ import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
+import SidebarTitle from 'utils/SidebarTitle';
 import CookieBanner from './CookieBanner';
 import FeedbackButton from './sider/FeedbackButton';
 import ReferralButton from './sider/ReferralButton';
@@ -335,15 +336,18 @@ const ContentWrapper = (props) => {
     {
       module: modules.SECONDARY_ANALYSIS,
       icon: <NodeExpandOutlined />,
-      name: 'Pipeline',
+      name: <SidebarTitle type={modules.SECONDARY_ANALYSIS}>Pipeline</SidebarTitle>,
       selectedProjectText: secondaryAnalysisName || 'No run selected',
       isDisabled: false,
       items: [
         {
           module: modules.SECONDARY_ANALYSIS_OUTPUT,
-          name: 'Pipeline Output',
+          name: (
+            <SidebarTitle type={modules.SECONDARY_ANALYSIS_OUTPUT}>
+              Pipeline Output
+            </SidebarTitle>
+          ),
           icon: <FileDoneOutlined />,
-
           get isDisabled() {
             return (
               !activeSecondaryAnalysisId
@@ -359,28 +363,28 @@ const ContentWrapper = (props) => {
     {
       module: modules.DATA_MANAGEMENT,
       icon: <DotChartOutlined />,
-      name: 'Insights',
+      name: <SidebarTitle type={modules.DATA_MANAGEMENT}>Insights</SidebarTitle>,
       selectedProjectText: experimentName || 'No project selected',
       get isDisabled() { return getTertiaryModuleDisabled(this.module); },
       items: [
         {
           module: modules.DATA_PROCESSING,
           icon: <BuildOutlined />,
-          name: 'Data Processing',
+          name: <SidebarTitle type={modules.DATA_PROCESSING}>Data Processing</SidebarTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.DATA_EXPLORATION,
           icon: <FundViewOutlined />,
-          name: 'Data Exploration',
+          name: <SidebarTitle type={modules.DATA_EXPLORATION}>Data Exploration</SidebarTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.PLOTS_AND_TABLES,
           icon: <BarChartOutlined />,
-          name: 'Plots and Tables',
+          name: <SidebarTitle type={modules.PLOTS_AND_TABLES}>Plots and Tables</SidebarTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
         },
       ],

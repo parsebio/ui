@@ -140,6 +140,10 @@
     "species": "Mustela furo (Ferret)"
   },
   {
+    "name": "mMacEug1_pri_v2",
+    "species": "Notamacropus eugenii (Tammar wallaby)"
+  },
+  {
     "name": "OmykA_1.1",
     "species": "Oncorhynchus mykiss (Rainbow trout)"
   },
@@ -288,8 +292,8 @@
     "species": "Custom Homo sapiens (Human) with HIV"
   },
   {
-    "name": "GRCh38_HBX2",
-    "species": "Custom Homo sapiens (Human)"
+    "name": "GRCh38_HPV16_HPV18",
+    "species": "Custom Homo sapiens (Human) with HPV16 and HPV18 strains"
   },
   {
     "name": "GRCh38_sp",
@@ -308,8 +312,12 @@
     "species": "Custom Homo sapiens (Human) with RFP and SRK"
   },
   {
-    "name": "hg38_HBX2",
+    "name": "hg38_HBX2-2",
     "species": "Custom Homo sapiens (Human)"
+  },
+  {
+    "name": "GRCm39_KMT2A-MLLT3",
+    "species": "Custom Mus musculus (Mouse) with human KMT2A-MLLT3 fusion gene"
   },
   {
     "name": "GRCh38_SEOV",
