@@ -98,7 +98,12 @@ const SamplesContainer = forwardRef((props, ref) => {
         onResize={(height) => { setSize({ height }); }}
       >
         <Tabs defaultActiveKey='All' activeKey={selectedTable} items={technologyTabs} onChange={(key) => setSelectedTable(key)} />
-        <SamplesTableNew ref={samplesTableRef} size={size} selectedTable={selectedTable} />
+        <SamplesTableNew
+          ref={samplesTableRef}
+          size={size}
+          selectedTable={selectedTable}
+          selectedTechs={selectedTechs}
+        />
       </ReactResizeDetector>
     );
   };

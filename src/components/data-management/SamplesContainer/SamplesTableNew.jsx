@@ -45,7 +45,7 @@ const { UPLOADED, INCOMPLETE } = UploadStatus;
 const { Text } = Typography;
 
 const SamplesTable = forwardRef((props, ref) => {
-  const { size, selectedTable } = props;
+  const { size, selectedTable, selectedTechs } = props;
 
   const dispatch = useDispatch();
 
@@ -55,13 +55,6 @@ const SamplesTable = forwardRef((props, ref) => {
 
   const activeExperimentId = useSelector((state) => state.experiments.meta.activeExperimentId);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
-
-  const selectedTechs = Array.from(new Set(
-    activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type).filter((type) => type),
-  )).sort((a, b) => {
-    if (a === 'parse') return -1;
-    return a.localeCompare(b);
-  });
 
   const [sampleNames, setSampleNames] = useState(new Set());
   const DragHandle = sortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
@@ -92,6 +85,7 @@ const SamplesTable = forwardRef((props, ref) => {
             <SampleNameCell cellInfo={{ text, record, indx }} />
           ),
         }];
+
         fileUploadUtils[tech].requiredFiles.forEach(
           (requiredFile, indx) => columns.tables[tech].push({
             index: 2 + indx,
