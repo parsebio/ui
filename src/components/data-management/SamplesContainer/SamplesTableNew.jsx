@@ -49,7 +49,6 @@ const SamplesTable = forwardRef((props, ref) => {
 
   const dispatch = useDispatch();
 
-  // const [selectedTable, setSelectedTable] = useState('All');
   const [fullTableData, setFullTableData] = useState([]);
 
   const samples = useSelector((state) => state.samples);
@@ -67,8 +66,6 @@ const SamplesTable = forwardRef((props, ref) => {
 
   const [sampleNames, setSampleNames] = useState(new Set());
   const DragHandle = sortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
-
-  // const [samplesLoaded, setSamplesLoaded] = useState(false);
 
   const initialTableColumns = useMemo(() => {
     const columns = {
