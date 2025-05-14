@@ -65,6 +65,7 @@ const SamplesContainer = forwardRef((props, ref) => {
     const typesSet = new Set(Object.values(experimentSamples).map(({ type }) => type));
 
     // If selectedTable has no samples, select 'All'
+    // This happens when all samples of a tech get deleted
     if (selectedTable !== 'All' && !typesSet.has(selectedTable)) {
       setSelectedTable('All');
     }
