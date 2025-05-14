@@ -8,7 +8,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 
 import { Provider } from 'react-redux';
 import React from 'react';
-import SamplesTable from 'components/data-management/SamplesTable';
+import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import _ from 'lodash';
 import { act } from 'react-dom/test-utils';
 import configureMockStore from 'redux-mock-store';

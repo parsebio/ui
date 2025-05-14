@@ -20,7 +20,7 @@ import { ClipLoader } from 'react-spinners';
 import ExampleExperimentsSpace from 'components/data-management/ExampleExperimentsSpace';
 import MetadataPopover from 'components/data-management/metadata/MetadataPopover';
 import MetadataColumnTitle from 'components/data-management/metadata/MetadataColumn';
-import { UploadCell, SampleNameCell, EditableFieldCell } from 'components/data-management/SamplesTableCells';
+import { UploadCell, SampleNameCell, EditableFieldCell } from 'components/data-management/SamplesContainer/SamplesTableCells';
 
 import {
   deleteMetadataTrack,
@@ -273,7 +273,7 @@ const SamplesTable = forwardRef((props, ref) => {
   };
 
   const renderSelectedTable = () => {
-    let table = { };
+    let table = {};
     if (!tableColumns.tables[selectedTable] && selectedTable !== 'All') {
       setSelectedTable('All');
     } else if (selectedTable === 'All') {

@@ -16,7 +16,7 @@ import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
 import { layout, sampleTech } from 'utils/constants';
 
-import SamplesTable from 'components/data-management/SamplesTable';
+import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import AddMetadataButton from 'components/data-management/metadata/AddMetadataButton';
 import { bulkUpdateSampleKits } from 'redux/actions/samples';
