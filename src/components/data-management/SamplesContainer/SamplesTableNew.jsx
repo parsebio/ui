@@ -72,6 +72,7 @@ const SamplesTable = forwardRef((props, ref) => {
       }],
     };
 
+    // TODO, this is likely not necessary, following work is here
     if (selectedTechs.length > 0) {
       selectedTechs.forEach((tech) => {
         columns.tables[tech] = [{
