@@ -1,8 +1,9 @@
-import { Alert, Tabs } from 'antd';
 import React, {
   forwardRef,
   useEffect, useImperativeHandle, useMemo, useRef, useState,
 } from 'react';
+import _ from 'lodash';
+import { Alert, Tabs } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactResizeDetector from 'react-resize-detector';
 
@@ -12,6 +13,7 @@ import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 
 import SamplesLoader from 'components/data-management/SamplesContainer/SamplesLoader';
 import SamplesTableNew from 'components/data-management/SamplesContainer/SamplesTableNew';
+import { getSamples } from 'redux/selectors';
 
 const SamplesContainer = forwardRef((props, ref) => {
   const dispatch = useDispatch();
@@ -27,6 +29,8 @@ const SamplesContainer = forwardRef((props, ref) => {
   const samplesValidating = useSelector(
     (state) => state.samples.meta.validating.includes(activeExperimentId),
   );
+
+  const experimentSamples = useSelector(getSamples(activeExperimentId));
 
   const [samplesLoaded, setSamplesLoaded] = useState(false);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -47,12 +51,24 @@ const SamplesContainer = forwardRef((props, ref) => {
   }, [activeExperimentId]);
 
   useEffect(() => {
+    // TODO Look into improving this a bit, cna probably be done in a more simple way
     const newSamplesLoaded = activeExperiment?.sampleIds.every((sampleId) => samples[sampleId]);
 
     if (newSamplesLoaded === true && samplesLoaded === false) {
       setSamplesLoaded(true);
     }
   }, [activeExperiment, samples]);
+
+  useEffect(() => {
+    if (_.isNil(experimentSamples)) return;
+
+    const typesSet = new Set(Object.values(experimentSamples).map(({ type }) => type));
+
+    // If selectedTable has no samples, select 'All'
+    if (selectedTable !== 'All' && !typesSet.has(selectedTable)) {
+      setSelectedTable('All');
+    }
+  }, [experimentSamples]);
 
   const selectedTechs = useMemo(() => (
     Array.from(new Set(

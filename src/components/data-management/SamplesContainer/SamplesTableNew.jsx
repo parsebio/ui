@@ -247,18 +247,9 @@ const SamplesTable = forwardRef((props, ref) => {
   };
 
   const renderSelectedTable = () => {
-    // const table = selectedTable === 'All' ? getAllTechTable() : getTechSpecificTable();
-    let table = {};
-    if (!tableColumns.tables[selectedTable] && selectedTable !== 'All') {
-      // setSelectedTable('All');
-    } else if (selectedTable === 'All') {
-      table = getAllTechTable();
-    } else {
-      table = getTechSpecificTable();
-    }
+    const table = selectedTable === 'All' ? getAllTechTable() : getTechSpecificTable();
 
     return (
-
       <Table
         scroll={{ y: size.height, x: 'max-content' }}
         components={VT}
