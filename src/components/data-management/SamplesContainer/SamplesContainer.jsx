@@ -42,12 +42,9 @@ const SamplesContainer = forwardRef((props, ref) => {
 
   useConditionalEffect(() => {
     setSamplesLoaded(false);
+    setSelectedTable('All');
 
     dispatch(loadSamples(activeExperimentId));
-  }, [activeExperimentId]);
-
-  useEffect(() => {
-    setSelectedTable('All');
   }, [activeExperimentId]);
 
   useEffect(() => {
