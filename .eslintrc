@@ -18,6 +18,7 @@
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     // no-return-await disabled because of https://stackoverflow.com/a/44806230
     "no-return-await": "off",
+    "react/function-component-definition": "off",
     "indent": [
       2,
       2,
