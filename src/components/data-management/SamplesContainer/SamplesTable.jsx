@@ -298,6 +298,11 @@ const SamplesTable = forwardRef((props, ref) => {
     dispatch(createMetadataTrack(name, activeExperimentId));
   };
 
+  // TODO We should probably look into finding a better way to do this
+  // Imperative handles are a last resort for when we are using imperative APIs,
+  // not for internal code we have full control over like this case
+  // Once this is removed, it will be easier to refactor this into separate tables
+  // AllTechsTable and SingleTechTable and remove a lot of complexity
   useImperativeHandle(ref, () => ({
     createMetadataColumn() {
       const key = `metadata_${tableColumns.length}`;
