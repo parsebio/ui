@@ -12,7 +12,7 @@ import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 
 import SamplesLoader from 'components/data-management/SamplesContainer/SamplesLoader';
-import SamplesTableNew from 'components/data-management/SamplesContainer/SamplesTableNew';
+import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import { getSamples } from 'redux/selectors';
 
 const SamplesContainer = forwardRef((props, ref) => {
@@ -98,7 +98,7 @@ const SamplesContainer = forwardRef((props, ref) => {
         onResize={(height) => { setSize({ height }); }}
       >
         <Tabs defaultActiveKey='All' activeKey={selectedTable} items={technologyTabs} onChange={(key) => setSelectedTable(key)} />
-        <SamplesTableNew
+        <SamplesTable
           ref={samplesTableRef}
           size={size}
           selectedTable={selectedTable}

@@ -7,15 +7,15 @@ import { useVT } from 'virtualizedtableforantd4';
 
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Table, Row, Typography, Space, Alert, Tabs, Tooltip,
+  Table,
+  Typography,
+  Space,
+  Tooltip,
 } from 'antd';
 import {
   MenuOutlined,
 } from '@ant-design/icons';
 import { sortableHandle } from 'react-sortable-hoc';
-
-import ReactResizeDetector from 'react-resize-detector';
-import { ClipLoader } from 'react-spinners';
 
 import ExampleExperimentsSpace from 'components/data-management/ExampleExperimentsSpace';
 import MetadataPopover from 'components/data-management/metadata/MetadataPopover';
@@ -28,14 +28,14 @@ import {
   updateValuesInMetadataTrack,
   reorderSamples,
 } from 'redux/actions/experiments';
-import { loadSamples } from 'redux/actions/samples';
+
 import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState';
 
 import DraggableBodyRow from 'components/data-management/DraggableBodyRow';
 import UploadStatusView from 'components/UploadStatusView';
 import { metadataNameToKey, metadataKeyToName } from 'utils/data-management/metadataUtils';
 import integrationTestConstants from 'utils/integrationTestConstants';
-import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
+
 import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import { sampleTech } from 'utils/constants';
 import { fileTypeToDisplay } from 'utils/sampleFileType';
@@ -45,36 +45,19 @@ const { UPLOADED, INCOMPLETE } = UploadStatus;
 const { Text } = Typography;
 
 const SamplesTable = forwardRef((props, ref) => {
+  const { size, selectedTable, selectedTechs } = props;
+
   const dispatch = useDispatch();
 
-  const [selectedTable, setSelectedTable] = useState('All');
   const [fullTableData, setFullTableData] = useState([]);
 
   const samples = useSelector((state) => state.samples);
 
-  const samplesLoading = useSelector((state) => state.samples.meta.loading);
   const activeExperimentId = useSelector((state) => state.experiments.meta.activeExperimentId);
-  const samplesValidating = useSelector(
-    (state) => state.samples.meta.validating.includes(activeExperimentId),
-  );
-
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
-
-  const parentExperimentName = useSelector(
-    (state) => state.experiments[activeExperiment?.parentExperimentId]?.name,
-  );
-
-  const selectedTechs = Array.from(new Set(
-    activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type).filter((type) => type),
-  )).sort((a, b) => {
-    if (a === 'parse') return -1;
-    return a.localeCompare(b);
-  });
 
   const [sampleNames, setSampleNames] = useState(new Set());
   const DragHandle = sortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
-
-  const [samplesLoaded, setSamplesLoaded] = useState(false);
 
   const initialTableColumns = useMemo(() => {
     const columns = {
@@ -89,6 +72,7 @@ const SamplesTable = forwardRef((props, ref) => {
       }],
     };
 
+    // TODO, this is likely not necessary, following work is here
     if (selectedTechs.length > 0) {
       selectedTechs.forEach((tech) => {
         columns.tables[tech] = [{
@@ -102,6 +86,7 @@ const SamplesTable = forwardRef((props, ref) => {
             <SampleNameCell cellInfo={{ text, record, indx }} />
           ),
         }];
+
         fileUploadUtils[tech].requiredFiles.forEach(
           (requiredFile, indx) => columns.tables[tech].push({
             index: 2 + indx,
@@ -145,20 +130,6 @@ const SamplesTable = forwardRef((props, ref) => {
     setFullTableData(newData);
   }, [activeExperiment?.sampleIds, samples]);
 
-  const [size, setSize] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    const newSamplesLoaded = activeExperiment?.sampleIds.every((sampleId) => samples[sampleId]);
-
-    if (newSamplesLoaded === true && samplesLoaded === false) {
-      setSamplesLoaded(true);
-    }
-  }, [activeExperiment, samples]);
-
-  useEffect(() => {
-    setSelectedTable('All');
-  }, [activeExperimentId]);
-
   const [VT, setVT] = useVT(
     () => ({
       scroll: { y: size.height },
@@ -169,7 +140,7 @@ const SamplesTable = forwardRef((props, ref) => {
   useMemo(() => setVT({ body: { row: DraggableBodyRow } }), [selectedTable]);
 
   useEffect(() => {
-    if (activeExperiment?.sampleIds.length > 0 && !samplesLoading) {
+    if (activeExperiment?.sampleIds.length > 0) {
       // if there are samples - build the table columns
       const sanitizedSampleNames = new Set(
         activeExperiment.sampleIds.map((id) => samples[id]?.name.trim()),
@@ -185,13 +156,7 @@ const SamplesTable = forwardRef((props, ref) => {
         commonColumns: [...initialTableColumns.commonColumns, ...metadataColumns],
       });
     }
-  }, [samples, activeExperiment?.sampleIds, samplesLoading]);
-
-  useConditionalEffect(() => {
-    setSamplesLoaded(false);
-
-    dispatch(loadSamples(activeExperimentId));
-  }, [activeExperimentId]);
+  }, [samples, activeExperiment?.sampleIds]);
 
   const getTechSpecificTable = () => {
     const selectedTableColumns = [
@@ -273,17 +238,9 @@ const SamplesTable = forwardRef((props, ref) => {
   };
 
   const renderSelectedTable = () => {
-    let table = {};
-    if (!tableColumns.tables[selectedTable] && selectedTable !== 'All') {
-      setSelectedTable('All');
-    } else if (selectedTable === 'All') {
-      table = getAllTechTable();
-    } else {
-      table = getTechSpecificTable();
-    }
+    const table = selectedTable === 'All' ? getAllTechTable() : getTechSpecificTable();
 
     return (
-
       <Table
         scroll={{ y: size.height, x: 'max-content' }}
         components={VT}
@@ -416,27 +373,6 @@ const SamplesTable = forwardRef((props, ref) => {
     };
   }, [activeExperiment?.sampleIds, selectedTechs, samples]);
 
-  const renderLoader = () => (
-    <>
-      <Row justify='center'>
-        <ClipLoader
-          size={50}
-          color='#8f0b10'
-        />
-      </Row>
-
-      <Row justify='center'>
-        <Text>
-          {
-            samplesLoading ? 'We\'re getting your samples ...'
-              : samplesValidating ? 'We\'re validating your samples ...'
-                : ''
-          }
-        </Text>
-      </Row>
-    </>
-  );
-
   const locale = {
     emptyText: (
       <ExampleExperimentsSpace
@@ -451,59 +387,7 @@ const SamplesTable = forwardRef((props, ref) => {
     await dispatch(reorderSamples(activeExperimentId, fromIndex, toIndex));
   };
 
-  const renderSamplesTable = () => {
-    const technologyTabs = [{
-      key: 'All',
-      label: 'All',
-    }];
-
-    selectedTechs.forEach((tech) => {
-      technologyTabs.push({
-        key: tech,
-        label: techNamesToDisplay[tech],
-      });
-    });
-    return (
-      <ReactResizeDetector
-        handleHeight
-        refreshMode='throttle'
-        refreshRate={500}
-        onResize={(height) => { setSize({ height }); }}
-      >
-        <Tabs defaultActiveKey='All' activeKey={selectedTable} items={technologyTabs} onChange={(key) => setSelectedTable(key)} />
-        {renderSelectedTable()}
-      </ReactResizeDetector>
-    );
-  };
-
-  return (
-    <>
-      {
-        activeExperiment?.isSubsetted ? (
-          <center>
-            <Alert
-              type='info'
-              message='Subsetted experiment'
-              description={(
-                <>
-                  This is a subset of
-                  {' '}
-                  <b>{parentExperimentName || ' a deleted experiment'}</b>
-                  .
-                  <br />
-                  You can  see remaining samples after subsetting in
-                  the data processing and data exploration pages.
-                </>
-              )}
-            />
-          </center>
-        )
-          : !samplesLoaded || samplesLoading || samplesValidating
-            ? renderLoader()
-            : renderSamplesTable()
-      }
-    </>
-  );
+  return renderSelectedTable();
 });
 
 export default SamplesTable;
