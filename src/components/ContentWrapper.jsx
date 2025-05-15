@@ -116,10 +116,9 @@ const ContentWrapper = (props) => {
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
 
-  const firstSampleId = Object.keys(samples).find(
-    (id) => samples[id].experimentId === currentExperimentId,
-  );
-  const selectedTechnology = firstSampleId ? samples[firstSampleId].type : false;
+  console.log('experiment', experiment);
+
+  const hasSeuratTechnology = experiment?.sampleIds?.some((id) => samples[id]?.type === 'seurat');
 
   const experimentName = experimentData?.experimentName || experiment?.name;
   const secondaryAnalysisName = useSelector(
@@ -148,7 +147,7 @@ const ContentWrapper = (props) => {
   const completedGem2sSteps = backendStatus?.gem2s?.completedSteps;
   const seuratStatusKey = backendStatus?.seurat?.status;
 
-  const isSeurat = seuratStatusKey && selectedTechnology === 'seurat';
+  const isSeurat = seuratStatusKey && hasSeuratTechnology;
 
   const [pipelinesRerunStatus, setPipelinesRerunStatus] = useState(null);
   const seuratRunning = seuratStatusKey === 'RUNNING' && isSeurat;

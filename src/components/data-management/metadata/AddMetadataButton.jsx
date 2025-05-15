@@ -24,7 +24,10 @@ const AddMetadataButton = ({ samplesTableRef }) => {
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
   const isSubsetted = activeExperiment?.isSubsetted;
   const samples = useSelector((state) => state.samples);
-  const selectedTech = samples[activeExperiment?.sampleIds[0]]?.type;
+
+  const hasSeuratTechnology = activeExperiment?.sampleIds
+    .some((sampleId) => samples[sampleId]?.type === sampleTech.SEURAT);
+
   const cellLevelMetadata = useSelector(
     (state) => state.experiments[activeExperimentId]?.cellLevelMetadata,
   ) || false;
@@ -115,7 +118,7 @@ const AddMetadataButton = ({ samplesTableRef }) => {
         disabled={
           activeExperiment.sampleIds?.length === 0
           || isSubsetted
-          || selectedTech === sampleTech.SEURAT
+          || hasSeuratTechnology
         }
       >
         <Button>

@@ -120,7 +120,8 @@ const DataProcessingPage = ({ experimentId }) => {
   const [runQCModalVisible, setRunQCModalVisible] = useState(false);
   const [inputsList, setInputsList] = useState([]);
   const [shownSampleIds, setShownSampleIds] = useState(sampleKeys);
-  const sampleTechnology = samples[sampleKeys[0]]?.type;
+  const hasParseTechnology = sampleKeys.some((key) => samples[key]?.type === sampleTech.PARSE);
+
   const cellSets = useSelector(getCellSets());
 
   // cell sets get created after the filter doublets step
@@ -194,12 +195,12 @@ const DataProcessingPage = ({ experimentId }) => {
         processingConfig[step][key]?.prefiltered)));
   };
 
-  const sampleDisabledMessage = (step, sampleTechnologyParam) => {
+  const sampleDisabledMessage = (step, hasParseTech) => {
     if (checkIfSampleIsPrefiltered(step)) {
       return 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.';
     }
 
-    if (sampleTechnologyParam === sampleTech.PARSE && step === 'classifier') {
+    if (hasParseTech && step === 'classifier') {
       return 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.';
     }
 
@@ -727,7 +728,7 @@ const DataProcessingPage = ({ experimentId }) => {
         {
           !checkIfSampleIsEnabled(key) ? (
             <Alert
-              message={sampleDisabledMessage(key, sampleTechnology)}
+              message={sampleDisabledMessage(key, hasParseTechnology)}
               type='info'
               showIcon
             />

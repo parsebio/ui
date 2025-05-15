@@ -13,9 +13,12 @@ import PermissionsChecker from 'utils/PermissionsChecker';
 const SubsetCellSetsOperation = (props) => {
   const { onCreate } = props;
 
-  const firstSampleId = useSelector((store) => store.experimentSettings.info.sampleIds[0]);
+  const sampleIds = useSelector((store) => store.experimentSettings.info.sampleIds);
   const experimentName = useSelector((store) => store.experimentSettings.info.experimentName);
-  const experimentType = useSelector((store) => store.samples[firstSampleId]?.type);
+
+  const samples = useSelector((store) => store.samples);
+  const hasSeuratTechnology = sampleIds
+    .some((sampleId) => samples[sampleId]?.type === sampleTech.SEURAT);
 
   const [showSubsetCellSets, setShowSubsetCellSets] = useState(false);
 
@@ -25,7 +28,7 @@ const SubsetCellSetsOperation = (props) => {
         <Tooltip placement='top' title='Subset selected cell sets to a new project.'>
           <Button
             type='dashed'
-            disabled={experimentType === sampleTech.SEURAT}
+            disabled={hasSeuratTechnology}
             aria-label='Create new experiment from selected cellsets'
             size='small'
             icon={<PieChartOutlined />}
