@@ -116,8 +116,6 @@ const ContentWrapper = (props) => {
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
 
-  console.log('experiment', experiment);
-
   const hasSeuratTechnology = experiment?.sampleIds?.some((id) => samples[id]?.type === 'seurat');
 
   const experimentName = experimentData?.experimentName || experiment?.name;
