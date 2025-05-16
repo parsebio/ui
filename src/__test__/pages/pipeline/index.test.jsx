@@ -74,9 +74,7 @@ describe('Pipeline Page', () => {
 
   const renderPipelinePage = async () => await render(
     <Provider store={storeState}>
-      <DndProvider backend={HTML5Backend}>
-        <Pipeline />
-      </DndProvider>
+      <Pipeline />
     </Provider>,
   );
 
@@ -153,9 +151,7 @@ describe('Pipeline Page', () => {
     });
 
     await waitFor(() => {
-      expect(mockNavigateTo).toHaveBeenCalledWith(
-        modules.SECONDARY_ANALYSIS_OUTPUT, { secondaryAnalysisId: mockAnalysisIds.readyToLaunch },
-      );
+      expect(mockNavigateTo).toHaveBeenCalledWith(modules.SECONDARY_ANALYSIS_OUTPUT, { secondaryAnalysisId: mockAnalysisIds.readyToLaunch });
     });
   });
 
@@ -214,9 +210,7 @@ describe('Pipeline Page', () => {
     await fireEvent.click(screen.getByText(/Go to output/i));
 
     await waitFor(() => {
-      expect(mockNavigateTo).toHaveBeenCalledWith(
-        modules.SECONDARY_ANALYSIS_OUTPUT, { secondaryAnalysisId: mockAnalysisIds.readyToLaunch },
-      );
+      expect(mockNavigateTo).toHaveBeenCalledWith(modules.SECONDARY_ANALYSIS_OUTPUT, { secondaryAnalysisId: mockAnalysisIds.readyToLaunch });
     });
   });
 
@@ -305,9 +299,7 @@ describe('Pipeline Page', () => {
     });
 
     await waitFor(() => {
-      expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(
-        mockAnalysisIds.emptyAnalysis, message.file,
-      );
+      expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(mockAnalysisIds.emptyAnalysis, message.file);
     });
   });
 

@@ -32,15 +32,12 @@ module.exports = {
     'test-utils',
   ],
   transform: {
-    '(react-dnd|dnd-core|@react-dnd).+\\.[tj]sx?$': ['babel-jest', { presets: ['@nrwl/react/babel'] }],
     '^.+\\.(js|jsx|ts|tsx)$': '<rootDir>/node_modules/babel-jest',
     '^.+\\.css$': '<rootDir>/config/jest/cssTransform.js',
-
   },
   transformIgnorePatterns: [
     '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$',
     '^.+\\.module\\.(css|sass|scss)$',
-    '/node_modules/(?!react-dnd|dnd-core|@react-dnd)',
   ],
   modulePaths: [],
   moduleDirectories: ['node_modules', 'src'],
@@ -49,8 +46,6 @@ module.exports = {
     '^react-native$': 'react-native-web',
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     uuid: require.resolve('uuid'), // https://stackoverflow.com/a/73203803
-    'react-dnd': 'react-dnd-cjs',
-    'react-dnd-html5-backend': 'react-dnd-html5-backend-cjs',
   },
   moduleFileExtensions: [
     'web.js',
