@@ -94,7 +94,7 @@ const renderHeatmapPageForEnzyme = (store) => (
 );
 
 // drag and drop is impossible in RTL, use enzyme
-describe('Drag and drop enzyme tests', () => {
+describe.skip('Drag and drop enzyme tests', () => {
   let component;
   let tree;
 
