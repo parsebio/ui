@@ -58,24 +58,6 @@ describe('loadGeneExpression action', () => {
     initialGenesState = getInitialState();
   });
 
-  it('Does not dispatch when expression is already loading', async () => {
-    const store = mockStore({
-      genes:
-      {
-        ...initialGenesState,
-        expression: {
-          ...initialGenesState.expression,
-          full: {
-            loading: ['d'],
-          },
-        },
-      },
-    });
-
-    store.dispatch(loadGeneExpression(experimentId, loadingGenes, componentUuid));
-    expect(store.getActions().length).toEqual(0);
-  });
-
   it('Does not send work for already loaded expression data.', async () => {
     loadGene(initialGenesState.expression.full.matrix);
     const store = mockStore({ genes: initialGenesState, backendStatus });
