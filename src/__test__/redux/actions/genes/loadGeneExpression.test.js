@@ -64,7 +64,7 @@ describe('loadGeneExpression action', () => {
 
     fetchWork.mockImplementationOnce(() => (
       // No need to mock the result accurately.
-      new Promise((resolve) => resolve({}))));
+      new Promise((resolve) => { resolve({}); })));
 
     await store.dispatch(loadGeneExpression(experimentId, loadingGenes, componentUuid));
 
@@ -84,7 +84,7 @@ describe('loadGeneExpression action', () => {
 
     const mockResult = getOneGeneMatrix('geneA', 1);
 
-    fetchWork.mockImplementationOnce(() => new Promise((resolve) => resolve(mockResult)));
+    fetchWork.mockImplementationOnce(() => new Promise((resolve) => { resolve(mockResult); }));
 
     await store.dispatch(
       loadGeneExpression(experimentId, loadingGenes, componentUuid),
@@ -103,7 +103,7 @@ describe('loadGeneExpression action', () => {
       backendStatus,
     });
 
-    fetchWork.mockImplementationOnce(() => new Promise((resolve, reject) => reject(new Error('random error!'))));
+    fetchWork.mockImplementationOnce(() => new Promise((resolve, reject) => { reject(new Error('random error!')); }));
     await store.dispatch(
       loadGeneExpression(experimentId, loadingGenes, componentUuid),
     );
@@ -134,7 +134,7 @@ describe('loadGeneExpression action', () => {
       },
     });
 
-    fetchWork.mockImplementation(() => new Promise((resolve, reject) => reject(new Error('random error!'))));
+    fetchWork.mockImplementation(() => new Promise((resolve, reject) => { reject(new Error('random error!')); }));
     await store.dispatch(loadGeneExpression(experimentId, loadingGenes, componentUuid));
 
     const loadingAction = store.getActions()[0];
