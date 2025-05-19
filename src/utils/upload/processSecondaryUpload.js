@@ -59,7 +59,7 @@ const uploadSecondaryAnalysisFile = async (
 const createAndUploadSecondaryAnalysisFiles = async (
   secondaryAnalysisId,
   filesList,
-  handlesList = [],
+  handlesList,
   type,
   dispatch,
 ) => {
