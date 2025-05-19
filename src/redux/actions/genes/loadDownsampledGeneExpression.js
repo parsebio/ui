@@ -40,9 +40,7 @@ const loadDownsampledGeneExpression = (
 
   const hiddenCellSets = withHiddenCellSets ? Array.from(getCellSets()(state.cellSets).hidden) : [];
 
-  const cellSets = await getCellSetsThatAffectDownsampling(
-    experimentId, selectedCellSetKey, groupedTracks, dispatch, getState,
-  );
+  const cellSets = await getCellSetsThatAffectDownsampling(experimentId, selectedCellSetKey, groupedTracks, dispatch, getState);
 
   const downsampleSettings = {
     selectedCellSet: selectedCellSetKey,
@@ -72,7 +70,10 @@ const loadDownsampledGeneExpression = (
       stats,
       cellOrder,
     } = await fetchWork(
-      experimentId, body, getState, dispatch,
+      experimentId,
+      body,
+      getState,
+      dispatch,
       {
         timeout,
         onETagGenerated: (ETag) => {

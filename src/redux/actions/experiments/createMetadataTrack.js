@@ -15,9 +15,7 @@ import { metadataNameToKey } from 'utils/data-management/metadataUtils';
 import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState';
 import { loadBackendStatus } from '../backendStatus';
 
-const createMetadataTrack = (
-  name, experimentId,
-) => async (dispatch, getState) => {
+const createMetadataTrack = (name, experimentId) => async (dispatch, getState) => {
   const experiment = getState().experiments[experimentId];
   const { samples } = getState();
 
