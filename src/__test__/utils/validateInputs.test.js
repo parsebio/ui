@@ -145,15 +145,15 @@ describe('validateUnit unit test', () => {
 
     const checks = [rules.UNIQUE_NAME];
 
-    const { isValid, results } = validateInputs(
-      validName, checks, { existingNames: projectNames },
-    );
+    const { isValid, results } = validateInputs(validName, checks, { existingNames: projectNames });
 
     expect(isValid).toEqual(true);
     expect(results).toEqual([true]);
 
     const { isValid: isInvalid, results: invalidResult } = validateInputs(
-      invalidName, checks, { existingNames: projectNames },
+      invalidName,
+      checks,
+      { existingNames: projectNames },
     );
 
     expect(isInvalid).not.toEqual(true);
