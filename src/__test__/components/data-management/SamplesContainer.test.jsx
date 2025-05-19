@@ -1,22 +1,21 @@
 import React from 'react';
 import { screen, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import SamplesContainer from 'components/data-management/SamplesContainer/SamplesContainer';
-import mockAPI, { generateDefaultMockAPIResponses, statusResponse } from '__test__/test-utils/mockAPI';
+import mockAPI, { generateDefaultMockAPIResponses } from '__test__/test-utils/mockAPI';
 import fake from '__test__/test-utils/constants';
 import { makeStore } from 'redux/store';
-import { validateSamples, loadSamples } from 'redux/actions/samples';
+import { loadSamples } from 'redux/actions/samples';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { loadExperiments, setActiveExperiment } from 'redux/actions/experiments';
 import {
   SAMPLES_VALIDATING_UPDATED,
 } from 'redux/actionTypes/samples';
-import { experiments, samples } from '__test__/test-utils/mockData';
+import { samples } from '__test__/test-utils/mockData';
 import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import { updateExperimentInfo } from 'redux/actions/experimentSettings';
 
