@@ -53,7 +53,8 @@ describe('experimentSettingsReducer', () => {
   });
 
   it('Updates existing value properly', () => {
-    const newState = experimentSettingsReducer(initialState,
+    const newState = experimentSettingsReducer(
+      initialState,
       {
         type: EXPERIMENT_SETTINGS_NON_SAMPLE_FILTER_UPDATE,
         payload:
@@ -61,14 +62,16 @@ describe('experimentSettingsReducer', () => {
           step: 'configureEmbedding',
           configChange: { embeddingSettings: { method: 'newMethod' } },
         },
-      });
+      },
+    );
 
     expect(newState.processing.configureEmbedding.embeddingSettings.method).toEqual('newMethod');
     expect(newState).toMatchSnapshot();
   });
 
   it('Adds new value properly', () => {
-    const newState = experimentSettingsReducer(initialState,
+    const newState = experimentSettingsReducer(
+      initialState,
       {
         type: EXPERIMENT_SETTINGS_NON_SAMPLE_FILTER_UPDATE,
         payload:
@@ -76,14 +79,16 @@ describe('experimentSettingsReducer', () => {
           step: 'configureEmbedding',
           configChange: { embeddingSettings: { newProperty: 'property' } },
         },
-      });
+      },
+    );
 
     expect(newState.processing.configureEmbedding.embeddingSettings.newProperty).toEqual('property');
     expect(newState).toMatchSnapshot();
   });
 
   it('Adds new object properly', () => {
-    const newState = experimentSettingsReducer(initialState,
+    const newState = experimentSettingsReducer(
+      initialState,
       {
         type: EXPERIMENT_SETTINGS_NON_SAMPLE_FILTER_UPDATE,
         payload:
@@ -91,14 +96,16 @@ describe('experimentSettingsReducer', () => {
           step: 'configureEmbedding',
           configChange: { embeddingSettings: { newProperty: { name: 'a', value: 'b' } } },
         },
-      });
+      },
+    );
 
     expect(newState.processing.configureEmbedding.embeddingSettings.newProperty).toEqual({ name: 'a', value: 'b' });
     expect(newState).toMatchSnapshot();
   });
 
   it('Updates sample settings properly', () => {
-    const newState = experimentSettingsReducer(initialExperimentState,
+    const newState = experimentSettingsReducer(
+      initialExperimentState,
       {
         type: EXPERIMENT_SETTINGS_SAMPLE_FILTER_UPDATE,
         payload:
@@ -107,7 +114,8 @@ describe('experimentSettingsReducer', () => {
           sampleId: 'sample-KO',
           diff: { binStep: 400 },
         },
-      });
+      },
+    );
 
     const expectedCellSizeDistribution = {
       'sample-KO': {
@@ -128,7 +136,8 @@ describe('experimentSettingsReducer', () => {
   });
 
   it('Changing filter enabled property updates sample filter enabled property as well', () => {
-    const newState = experimentSettingsReducer(initialExperimentState,
+    const newState = experimentSettingsReducer(
+      initialExperimentState,
       {
         type: EXPERIMENT_SETTINGS_SET_QC_STEP_ENABLED,
         payload:
@@ -136,7 +145,8 @@ describe('experimentSettingsReducer', () => {
           step: 'cellSizeDistribution',
           enabled: false,
         },
-      });
+      },
+    );
 
     const expectedCellSizeDistribution = {
       'sample-KO': {
