@@ -11,7 +11,7 @@ import cellMetaLoading from './cellMetaLoading';
 import cellMetaLoaded from './cellMetaLoaded';
 import cellMetaError from './cellMetaError';
 
-const cellMetaReducer = (state = initialState, action) => {
+const cellMetaReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case CELL_META_LOADING: {
       return cellMetaLoading(state, action);

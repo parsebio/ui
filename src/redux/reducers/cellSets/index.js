@@ -23,7 +23,7 @@ import { cellSetsHide, cellSetsUnhide, cellSetsUnhideAll } from 'redux/reducers/
 import cellSetsClusteringUpdating from 'redux/reducers/cellSets/cellSetsClusteringUpdating';
 import cellSetsClusteringUpdated from 'redux/reducers/cellSets/cellSetsClusteringUpdated';
 
-const cellSetsReducer = (state = initialState, action) => {
+const cellSetsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case CELL_SETS_LOADING: {
       return cellSetsLoading(state, action);
