@@ -50,7 +50,6 @@ const SamplesContainer = forwardRef((props, ref) => {
   useEffect(() => {
     // TODO Look into improving this a bit, cna probably be done in a more simple way
     const newSamplesLoaded = activeExperiment?.sampleIds.every((sampleId) => samples[sampleId]);
-
     if (newSamplesLoaded === true && samplesLoaded === false) {
       setSamplesLoaded(true);
     }
@@ -131,7 +130,12 @@ const SamplesContainer = forwardRef((props, ref) => {
           </center>
         )
           : !samplesLoaded || samplesLoading || samplesValidating
-            ? <SamplesLoader samplesLoading samplesValidating />
+            ? (
+              <SamplesLoader
+                samplesLoading={samplesLoading}
+                samplesValidating={samplesValidating}
+              />
+            )
             : renderTabs()
       }
     </>

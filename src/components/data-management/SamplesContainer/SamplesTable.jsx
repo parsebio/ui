@@ -72,39 +72,36 @@ const SamplesTable = forwardRef((props, ref) => {
       }],
     };
 
-    // TODO, this is likely not necessary, following work is here
-    if (selectedTechs.length > 0) {
-      selectedTechs.forEach((tech) => {
-        columns.tables[tech] = [{
-          className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
-          index: 1,
-          key: 'sample',
-          title: tech === sampleTech.SEURAT ? 'File' : 'Sample',
-          dataIndex: 'name',
-          fixed: 'left',
-          render: (text, record, indx) => (
-            <SampleNameCell cellInfo={{ text, record, indx }} />
-          ),
-        }];
+    selectedTechs.forEach((tech) => {
+      columns.tables[tech] = [{
+        className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
+        index: 1,
+        key: 'sample',
+        title: tech === sampleTech.SEURAT ? 'File' : 'Sample',
+        dataIndex: 'name',
+        fixed: 'left',
+        render: (text, record, indx) => (
+          <SampleNameCell cellInfo={{ text, record, indx }} />
+        ),
+      }];
 
-        fileUploadUtils[tech].requiredFiles.forEach(
-          (requiredFile, indx) => columns.tables[tech].push({
-            index: 2 + indx,
-            title: <center>{fileTypeToDisplay[requiredFile]}</center>,
-            key: requiredFile,
-            dataIndex: requiredFile,
-            width: 170,
-            onCell: () => ({ style: { margin: '0px', padding: '0px' } }),
-            render: (tableCellData) => tableCellData && (
-              <UploadCell
-                columnId={requiredFile}
-                sampleUuid={tableCellData.sampleUuid}
-              />
-            ),
-          }),
-        );
-      });
-    }
+      fileUploadUtils[tech].requiredFiles.forEach(
+        (requiredFile, indx) => columns.tables[tech].push({
+          index: 2 + indx,
+          title: <center>{fileTypeToDisplay[requiredFile]}</center>,
+          key: requiredFile,
+          dataIndex: requiredFile,
+          width: 170,
+          onCell: () => ({ style: { margin: '0px', padding: '0px' } }),
+          render: (tableCellData) => tableCellData && (
+            <UploadCell
+              columnId={requiredFile}
+              sampleUuid={tableCellData.sampleUuid}
+            />
+          ),
+        }),
+      );
+    });
     return columns;
   }, [selectedTechs]);
 
