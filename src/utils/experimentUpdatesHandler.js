@@ -86,7 +86,7 @@ const onGEM2SUpdate = (update, dispatch, experimentId) => {
   const processingConfig = update?.output?.processingConfig;
 
   if (processingConfig) {
-    dispatch(loadedProcessingConfig(experimentId, processingConfig, true));
+    dispatch(loadedProcessingConfig(processingConfig, true));
   }
 
   // If we finished subsetSeurat, then we now know which samples survived the subset

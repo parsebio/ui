@@ -3,9 +3,7 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
 import WorkResponseError from 'utils/errors/http/WorkResponseError';
 
-const createCellSetByExpression = (
-  experimentId, selectedGenes,
-) => async (dispatch, getState) => {
+const createCellSetByExpression = (experimentId, selectedGenes) => async (dispatch, getState) => {
   const body = {
     name: 'GetExpressionCellSets',
     genesConfig: selectedGenes,
