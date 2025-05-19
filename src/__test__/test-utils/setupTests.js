@@ -17,6 +17,10 @@ jest.mock('components/data-exploration/DynamicVitessceWrappers', () => ({
 
 jest.mock('utils/work/downloadFromS3');
 
+// The updated versions of react - dnd seem to not have a compatible version
+// of the testing libraries anymore, so trying anything with the old way of setting up tests
+// (with wrapWithTestBackend from react-dnd-test-utils or similar options) breaks.
+
 jest.mock('react-dnd', () => {
   const mockBackend = { /* add methods as needed for your tests */ };
   const mockManager = {
