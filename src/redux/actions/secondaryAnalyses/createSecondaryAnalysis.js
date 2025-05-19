@@ -12,9 +12,7 @@ import endUserMessages from 'utils/endUserMessages';
 
 import handleError from 'utils/http/handleError';
 
-const createSecondaryAnalysis = (
-  name, description,
-) => async (dispatch) => {
+const createSecondaryAnalysis = (name, description) => async (dispatch) => {
   const secondaryAnalysisId = uuidv4();
   const createdAt = dayjs().toISOString();
 

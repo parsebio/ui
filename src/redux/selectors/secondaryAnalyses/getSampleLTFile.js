@@ -5,7 +5,8 @@ const SAMPLE_LOADING_TABLE = 'samplelt';
 
 const getSampleLTFile = (secondaryAnalysisId) => (state) => {
   const files = _.pickBy(
-    state[secondaryAnalysisId]?.files.data, (file) => file.type === SAMPLE_LOADING_TABLE,
+    state[secondaryAnalysisId]?.files.data,
+    (file) => file.type === SAMPLE_LOADING_TABLE,
   );
 
   // Single file to return, so just return it

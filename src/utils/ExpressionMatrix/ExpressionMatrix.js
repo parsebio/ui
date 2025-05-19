@@ -162,7 +162,7 @@ class ExpressionMatrix {
       acum[currentSymbol] = index;
       return acum;
     }, {});
-  }
+  };
 
   /**
    * Generates a new index for the geneSymbol
@@ -176,7 +176,7 @@ class ExpressionMatrix {
     this.geneIndexes[geneSymbol] = lastFreeIndex;
 
     return lastFreeIndex;
-  }
+  };
 
   #getExpression = (geneSymbol, cellIndexes, matrix) => {
     const geneIndex = this.geneIndexes[geneSymbol];
@@ -188,7 +188,7 @@ class ExpressionMatrix {
     const result = getColumn(geneIndex, matrix, cellIndexes);
 
     return result;
-  }
+  };
 
   #getDensifiedExpression = (geneSymbol, cellIndexes, matrix) => {
     const result = this.#getExpression(geneSymbol, cellIndexes, matrix);
@@ -200,7 +200,7 @@ class ExpressionMatrix {
 
     // If its a matrix transform it to an array
     return result.valueOf().flat();
-  }
+  };
 
   #getExpressionSparse = (geneSymbol, cellIndexes, matrix, keyAsString) => {
     const result = this.#getExpression(geneSymbol, cellIndexes, matrix);
@@ -211,7 +211,7 @@ class ExpressionMatrix {
     if (typeof result === 'number') return new SparseMap([[cellIndexes[0], result]]);
 
     return new SparseMap(result, cellIndexes, keyAsString);
-  }
+  };
 }
 
 export default ExpressionMatrix;
