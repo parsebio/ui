@@ -97,9 +97,7 @@ const fetchWork = async (
     broadcast,
   );
 
-  const data = await getResult(
-    experimentId, ETag, request, timeout, body, dispatch,
-  );
+  const data = await getResult(experimentId, ETag, request, timeout, body, dispatch);
 
   if (useBrowserCache) {
     await cache.set(ETag, data);

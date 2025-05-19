@@ -4,6 +4,25 @@ import UploadStatus from 'utils/upload/UploadStatus';
 import FileUploader from 'utils/upload/FileUploader/FileUploader';
 import UploadsCoordinatorError from 'utils/errors/upload/UploadsCoordinatorError';
 
+const completeMultipartUpload = async (parts, uploadId, s3Path, type) => {
+  const requestUrl = '/v2/completeMultipartUpload';
+
+  const body = {
+    parts, uploadId, s3Path, type,
+  };
+
+  await fetchAPI(
+    requestUrl,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    },
+  );
+};
+
 class UploadsCoordinator {
   static get() {
     if (!UploadsCoordinator.instance) UploadsCoordinator.instance = new UploadsCoordinator();
@@ -28,7 +47,7 @@ class UploadsCoordinator {
       this.uploading = true;
       this.#beginUpload(params, { resolve, reject });
     });
-  })
+  });
 
   #beginUpload = async (params, promise) => {
     const [
@@ -69,7 +88,7 @@ class UploadsCoordinator {
       onStatusUpdate(UploadStatus.UPLOADING);
       const parts = await fileUploader.upload();
 
-      await this.#completeMultipartUpload(parts, uploadId, key, type);
+      await completeMultipartUpload(parts, uploadId, key, type);
 
       onStatusUpdate(UploadStatus.UPLOADED);
 
@@ -89,24 +108,7 @@ class UploadsCoordinator {
         this.uploading = false;
       }
     });
-  }
-
-  #completeMultipartUpload = async (parts, uploadId, s3Path, type) => {
-    const requestUrl = '/v2/completeMultipartUpload';
-
-    const body = {
-      parts, uploadId, s3Path, type,
-    };
-
-    await fetchAPI(requestUrl,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
-  }
+  };
 }
 
 export default UploadsCoordinator;

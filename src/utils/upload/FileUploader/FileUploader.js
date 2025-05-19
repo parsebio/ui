@@ -111,7 +111,8 @@ class FileUploader {
       this.reject = reject;
 
       this.readStream = filereaderStream(
-        this.file?.fileObject || this.file, { chunkSize: this.chunkSize, offset },
+        this.file?.fileObject || this.file,
+        { chunkSize: this.chunkSize, offset },
       );
 
       this.#setupReadStreamHandlers();
@@ -125,7 +126,7 @@ class FileUploader {
 
   #subscribeToAbortSignal = () => {
     this.abortController.signal.addEventListener('abort', (reason) => this.#cleanupExecution(reason));
-  }
+  };
 
   #getUploadedParts = async () => {
     const {
@@ -143,7 +144,7 @@ class FileUploader {
         key,
       }),
     });
-  }
+  };
 
   #setupGzipStreamHandlers = () => {
     this.gzipStream.ondata = async (err, chunk) => {
@@ -155,7 +156,7 @@ class FileUploader {
         this.#abortUpload(e);
       }
     };
-  }
+  };
 
   #setupReadStreamHandlers = () => {
     this.readStream.on('data', async (chunk) => {
@@ -195,12 +196,12 @@ class FileUploader {
         this.#abortUpload(e);
       }
     });
-  }
+  };
 
   #abortUpload = (e) => {
     this.abortController?.abort(e.message);
     console.error(e);
-  }
+  };
 
   #cleanupExecution = (reason) => {
     this.readStream?.destroy();
@@ -208,7 +209,7 @@ class FileUploader {
 
     const reasonMessage = reason?.target.reason;
     this.reject(new FileUploaderError(reasonMessage));
-  }
+  };
 
   #handleChunkLoadFinished = async (chunk) => {
     await navigator.locks.request(this.handleChunkLoadFinished, async () => {
@@ -233,7 +234,7 @@ class FileUploader {
         this.#abortUpload(e);
       }
     });
-  }
+  };
 
   chunkNumbersDebug = [];
 
@@ -256,7 +257,7 @@ class FileUploader {
         this.readStream.pause();
       }
     })
-  )
+  );
 
   #releaseUploadSlot = async () => (
     await navigator.locks.request(this.freeUploadSlotsLock, async () => {
@@ -264,7 +265,7 @@ class FileUploader {
 
       this.readStream.resume();
     })
-  )
+  );
 }
 
 export default FileUploader;
