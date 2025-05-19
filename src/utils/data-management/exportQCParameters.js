@@ -8,8 +8,11 @@ const exportQCParameters = (config) => {
   return new Blob([string], { type: 'text/plain;charset=utf-8' });
 };
 
-const filterQCParameters = (config, projectSamples,
-  samplesStore) => {
+const filterQCParameters = (
+  config,
+  projectSamples,
+  samplesStore,
+) => {
   const filtered = _.mapValues(config, (step) => (
     !_.get(step, 'enabled', true)
       ? { disabled: true }
