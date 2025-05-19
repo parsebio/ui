@@ -94,6 +94,7 @@ const renderHeatmapPageForEnzyme = (store) => (
 );
 
 // drag and drop is impossible in RTL, use enzyme
+// Broken since updating to node 20, could be related to react-dnd being mocked, not sure
 describe.skip('Drag and drop enzyme tests', () => {
   let component;
   let tree;
