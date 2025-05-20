@@ -231,7 +231,12 @@ const SamplesTable = forwardRef((props, ref) => {
     const filteredSamplesToUpdate = selectedSamples
       .filter((sampleUuid) => canUpdateCell(sampleUuid, actionType));
 
-    dispatch(updateValuesInMetadataTrack(activeExperimentId, filteredSamplesToUpdate, metadataKey, value));
+    dispatch(updateValuesInMetadataTrack(
+      activeExperimentId,
+      filteredSamplesToUpdate,
+      metadataKey,
+      value,
+    ));
   };
 
   const generateDataForItem = useCallback((sampleUuid) => {
@@ -349,32 +354,28 @@ const SamplesTable = forwardRef((props, ref) => {
   );
 
   return (
-    <>
-      {
-        activeExperiment?.isSubsetted ? (
-          <center>
-            <Alert
-              type='info'
-              message='Subsetted experiment'
-              description={(
-                <>
-                  This is a subset of
-                  {' '}
-                  <b>{parentExperimentName || ' a deleted experiment'}</b>
-                  .
-                  <br />
-                  You can  see remaining samples after subsetting in
-                  the data processing and data exploration pages.
-                </>
-              )}
-            />
-          </center>
-        )
-          : !samplesLoaded || samplesLoading || samplesValidating
-            ? renderLoader()
-            : renderSamplesTable()
-      }
-    </>
+    activeExperiment?.isSubsetted ? (
+      <center>
+        <Alert
+          type='info'
+          message='Subsetted experiment'
+          description={(
+            <>
+              This is a subset of
+              {' '}
+              <b>{parentExperimentName || ' a deleted experiment'}</b>
+              .
+              <br />
+              You can  see remaining samples after subsetting in
+              the data processing and data exploration pages.
+            </>
+          )}
+        />
+      </center>
+    )
+      : !samplesLoaded || samplesLoading || samplesValidating
+        ? renderLoader()
+        : renderSamplesTable()
   );
 });
 
