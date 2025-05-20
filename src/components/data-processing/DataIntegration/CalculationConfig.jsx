@@ -377,7 +377,7 @@ const CalculationConfig = (props) => {
               </Space>
             </Form.Item>
 
-            {dataIntegration.method === 'seuratv4' ? renderDimReductionMethod() : <></>}
+            {dataIntegration.method === 'seuratv4' ? renderDimReductionMethod() : null}
 
           </div>
         </Panel>
