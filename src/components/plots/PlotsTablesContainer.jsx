@@ -121,7 +121,6 @@ const plots = [
 const disabledByScanpy = [
   'normalized-matrix-key',
   'trajectory-analysis-key',
-  'batch-differential-expression-key',
 ];
 
 const PlotsTablesContainer = (props) => {
