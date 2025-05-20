@@ -18,13 +18,15 @@ jest.mock('utils/getTimeoutForWorkerTask', () => ({
 }));
 
 jest.mock('utils/work/fetchWork', () => ({
-  fetchWork: jest.fn(() => new Promise((resolve) => resolve({
-    rows: [{
-      gene_names: 'R3ALG3N3',
-      dispersions: 12.3131,
-    }],
-    total: 1,
-  }))),
+  fetchWork: jest.fn(() => new Promise((resolve) => {
+    resolve({
+      rows: [{
+        gene_names: 'R3ALG3N3',
+        dispersions: 12.3131,
+      }],
+      total: 1,
+    });
+  })),
 }));
 
 const mockStore = configureMockStore([thunk]);

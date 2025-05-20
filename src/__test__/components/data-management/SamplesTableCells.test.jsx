@@ -77,9 +77,7 @@ describe('UploadCell', () => {
     const percentUploaded = 67;
 
     await storeState.dispatch(
-      updateSampleFileUpload(
-        experimentId, sampleId, sampleFileId, 'features10x', UploadStatus.UPLOADING, percentUploaded,
-      ),
+      updateSampleFileUpload(experimentId, sampleId, sampleFileId, 'features10x', UploadStatus.UPLOADING, percentUploaded),
     );
 
     render(

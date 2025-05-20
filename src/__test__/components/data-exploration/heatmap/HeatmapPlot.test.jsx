@@ -145,8 +145,13 @@ describe('HeatmapPlot', () => {
     fetchWork
       .mockReset()
       .mockImplementationOnce(() => markerGenesData5)
-      .mockImplementationOnce((_experimentId, _body, _getState, _dispatch,
-        { onETagGenerated }) => {
+      .mockImplementationOnce((
+        _experimentId,
+        _body,
+        _getState,
+        _dispatch,
+        { onETagGenerated },
+      ) => {
         onEtagGeneratedCallback = onETagGenerated;
         return new Promise(() => { });
       });
