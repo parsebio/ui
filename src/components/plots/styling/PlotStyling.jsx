@@ -68,7 +68,7 @@ const PlotStyling = (props) => {
           {el.controls.map((control) => {
             // If control is a string, no prop is passed
             if (_.isString(control)) {
-              return ComponentMapping[control]({});
+              return ComponentMapping[control]({}, config, onUpdate);
             }
 
             return ComponentMapping[control.name](control.props || {}, config, onUpdate);
