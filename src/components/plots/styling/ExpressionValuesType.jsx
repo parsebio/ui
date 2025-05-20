@@ -17,27 +17,25 @@ const ExpressionValuesType = (props) => {
   };
 
   return (
-    <>
-      <Form
-        size='small'
-        labelCol={{ span: 12 }}
-        wrapperCol={{ span: 12 }}
-      >
-        <p><strong>Type</strong></p>
-        <Form.Item>
-          <Radio.Group
-            value={expressionValue}
-            onChange={(e) => onChange(e)}
-          >
-            {Object.keys(expressionValues).map((type) => (
-              <Radio value={type} key={type}>
-                {expressionValues[type]}
-              </Radio>
-            ))}
-          </Radio.Group>
-        </Form.Item>
-      </Form>
-    </>
+    <Form
+      size='small'
+      labelCol={{ span: 12 }}
+      wrapperCol={{ span: 12 }}
+    >
+      <p><strong>Type</strong></p>
+      <Form.Item>
+        <Radio.Group
+          value={expressionValue}
+          onChange={(e) => onChange(e)}
+        >
+          {Object.keys(expressionValues).map((type) => (
+            <Radio value={type} key={type}>
+              {expressionValues[type]}
+            </Radio>
+          ))}
+        </Radio.Group>
+      </Form.Item>
+    </Form>
   );
 };
 

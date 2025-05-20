@@ -35,7 +35,9 @@ const ContinuousEmbeddingReduxWrapper = (props) => {
       loading={expressions.loading.length > 0}
       error={expressions.error}
       reloadPlotData={() => dispatch(loadGeneExpression(
-        experimentId, [config?.shownGene], plotUuid,
+        experimentId,
+        [config?.shownGene],
+        plotUuid,
       ))}
     />
   );

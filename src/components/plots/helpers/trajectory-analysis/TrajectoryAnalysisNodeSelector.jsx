@@ -33,19 +33,17 @@ const TrajectoryAnalysisNodeSelector = (props) => {
         <Alert
           type='info'
           message={(
-            <>
-              <p>
-                To get started,
-                {' '}
-                select clusters to include in the analysis under
-                {' '}
-                <strong>Select data</strong>
-                {' '}
-                and run
-                {' '}
-                <strong>Calculate root nodes</strong>
-              </p>
-            </>
+            <p>
+              To get started,
+              {' '}
+              select clusters to include in the analysis under
+              {' '}
+              <strong>Select data</strong>
+              {' '}
+              and run
+              {' '}
+              <strong>Calculate root nodes</strong>
+            </p>
           )}
         />
       );

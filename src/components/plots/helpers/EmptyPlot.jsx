@@ -12,7 +12,7 @@ const EmptyPlot = ({ mini }) => {
       <Empty
         style={{ width: 102 }}
         image={Empty.PRESENTED_IMAGE_SIMPLE}
-        description={<></>}
+        description={null}
       />
     );
   }

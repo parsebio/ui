@@ -111,7 +111,7 @@ const WrappedApp = ({ Component, pageProps }) => {
     }
   }, [amplifyConfig]);
   if (!amplifyConfigured) {
-    return <></>;
+    return null;
   }
 
   const mainContent = () => {

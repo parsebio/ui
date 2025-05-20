@@ -53,12 +53,10 @@ const Error = (props) => {
             {statusCode && <Text type='secondary'>{`HTTP ${statusCode}`}</Text>}
 
             {errorText && (
-              <>
-                <span>
-                  <Text type='secondary'>The error is reported as:&nbsp;</Text>
-                  <Text code>{errorText}</Text>
-                </span>
-              </>
+              <span>
+                <Text type='secondary'>The error is reported as:&nbsp;</Text>
+                <Text code>{errorText}</Text>
+              </span>
             )}
 
           </Space>
