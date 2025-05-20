@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 
-import PlotLayout from 'components/data-processing/PlotLayout';
-import BasicFilterPlot from 'components/plots/BasicFilterPlot';
+import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
 import generateFractionHistogramSpec from 'utils/plotSpecs/generateMitochondrialFractionHistogram';
 import generateFractionScatterplotSpec from 'utils/plotSpecs/generateMitochondrialFractionScatterplot';
 import CalculationConfig from './CalculationConfig';
@@ -22,25 +21,13 @@ const MitochondrialContent = (props) => {
       title: 'Mitochondrial Fraction',
       plotUuid: generateDataProcessingPlotUuid(sampleId, filterName, 0),
       plotType: 'mitochondrialFractionHistogram',
-      plot: (config, plotData, actions) => (
-        <BasicFilterPlot
-          spec={generateFractionHistogramSpec(config, plotData)}
-          actions={actions}
-          miniPlot={config.miniPlot}
-        />
-      ),
+      specGenerator: generateFractionHistogramSpec,
     },
     logHistogram: {
       title: 'Mitochondrial Fraction (Log)',
       plotUuid: generateDataProcessingPlotUuid(sampleId, filterName, 1),
       plotType: 'mitochondrialFractionLogHistogram',
-      plot: (config, plotData, actions) => (
-        <BasicFilterPlot
-          spec={generateFractionScatterplotSpec(config, plotData)}
-          actions={actions}
-          miniPlot={config.miniPlot}
-        />
-      ),
+      specGenerator: generateFractionScatterplotSpec,
     },
   };
 
@@ -70,7 +57,7 @@ const MitochondrialContent = (props) => {
   const renderCalculationConfig = () => <CalculationConfig />;
 
   return (
-    <PlotLayout
+    <FilterPlotLayout
       experimentId={experimentId}
       plots={plots}
       filterName={filterName}

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import PlotLayout from 'components/data-processing/PlotLayout';
+import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
 import '__test__/test-utils/setupTests';
 
 // Mock data and store setup
@@ -46,7 +46,7 @@ const initialState = {
 
 const renderComponent = (store) => render(
   <Provider store={store}>
-    <PlotLayout
+    <FilterPlotLayout
       experimentId={experimentId}
       plots={plots}
       filterName={filterName}
@@ -63,7 +63,7 @@ const renderComponent = (store) => render(
   </Provider>,
 );
 
-describe('PlotLayout', () => {
+describe('FilterPlotLayout', () => {
   let store;
 
   beforeEach(() => {
