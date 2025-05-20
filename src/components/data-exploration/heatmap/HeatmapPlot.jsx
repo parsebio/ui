@@ -79,8 +79,10 @@ const HeatmapPlot = (props) => {
 
   const cellSets = useSelector(getCellSets());
 
-  const heatmapSettings = useSelector((state) => state.componentConfig[COMPONENT_TYPE]?.config,
-    _.isEqual) || {};
+  const heatmapSettings = useSelector(
+    (state) => state.componentConfig[COMPONENT_TYPE]?.config,
+    _.isEqual,
+  ) || {};
   const selectedTracks = useSelector(getSelectedMetadataTracks(COMPONENT_TYPE));
   const louvainClustersResolution = useSelector(
     (state) => state.experimentSettings.processing
@@ -268,7 +270,10 @@ const HeatmapPlot = (props) => {
 
           if ((expressionDataError || viewError) && !_.isNil(selectedGenes)) {
             debouncedLoadDownsampledGeneExpression(
-              experimentId, selectedGenes, COMPONENT_TYPE, true,
+              experimentId,
+              selectedGenes,
+              COMPONENT_TYPE,
+              true,
             );
           }
         }}
@@ -312,7 +317,8 @@ const HeatmapPlot = (props) => {
     const cellSetClassKey = selectedTracks[trackIndex];
 
     const cellClassProps = getContainingCellSetsProperties(
-      parseInt(cellIndexStr, 10), [cellSetClassKey],
+      parseInt(cellIndexStr, 10),
+      [cellSetClassKey],
       cellSets,
     )[cellSetClassKey][0];
 
@@ -370,7 +376,7 @@ const HeatmapPlot = (props) => {
               }
               coordinates={cellCoordinatesRef.current}
             />
-          ) : <></>
+          ) : null
         }
       </div>
     </div>

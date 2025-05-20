@@ -114,23 +114,22 @@ const CellSetsTool = (props) => {
 
   const cellSetUnionOnCreateHandler = useCallback((name, color) => {
     dispatch(
-      createCellSet(
-        experimentId, name, color, union(selectedCellSetKeys, properties),
-      ),
+      createCellSet(experimentId, name, color, union(selectedCellSetKeys, properties)),
     );
   }, [experimentId, selectedCellSetKeys, properties]);
 
   const cellSetIntersectionOnCreateHandler = useCallback((name, color) => {
     dispatch(
-      createCellSet(
-        experimentId, name, color, intersection(selectedCellSetKeys, properties),
-      ),
+      createCellSet(experimentId, name, color, intersection(selectedCellSetKeys, properties)),
     );
   }, [experimentId, selectedCellSetKeys, properties]);
 
   const cellSetComplementOnCreateHandler = useCallback((name, color) => {
     dispatch(createCellSet(
-      experimentId, name, color, complement(selectedCellSetKeys, properties, hierarchy),
+      experimentId,
+      name,
+      color,
+      complement(selectedCellSetKeys, properties, hierarchy),
     ));
   }, [experimentId, selectedCellSetKeys, properties, hierarchy]);
 

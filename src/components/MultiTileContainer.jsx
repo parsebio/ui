@@ -7,7 +7,7 @@ import { layout } from 'utils/constants';
 import { useDragDropManager } from 'react-dnd';
 
 const renderWindow = (tile, width, height, style) => {
-  if (!tile) return <></>;
+  if (!tile) return null;
 
   return (
     <div style={{
@@ -16,7 +16,7 @@ const renderWindow = (tile, width, height, style) => {
       ...style,
     }}
     >
-      {height && width ? tile(width, height) : <></>}
+      {height && width ? tile(width, height) : null}
     </div>
   );
 };

@@ -25,7 +25,9 @@ const MetadataColumnTitle = (props) => {
       name={name}
       validateInput={
         (newName, metadataNameValidation) => validateInputs(
-          newName, metadataNameValidation, validationParams,
+          newName,
+          metadataNameValidation,
+          validationParams,
         ).isValid
       }
       setCells={setCells}

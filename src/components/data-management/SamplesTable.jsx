@@ -231,9 +231,7 @@ const SamplesTable = forwardRef((props, ref) => {
     const filteredSamplesToUpdate = selectedSamples
       .filter((sampleUuid) => canUpdateCell(sampleUuid, actionType));
 
-    dispatch(updateValuesInMetadataTrack(
-      activeExperimentId, filteredSamplesToUpdate, metadataKey, value,
-    ));
+    dispatch(updateValuesInMetadataTrack(activeExperimentId, filteredSamplesToUpdate, metadataKey, value));
   };
 
   const generateDataForItem = useCallback((sampleUuid) => {

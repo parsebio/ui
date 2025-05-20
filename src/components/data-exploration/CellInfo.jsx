@@ -50,18 +50,18 @@ const CellInfo = (props) => {
           <div style={cellInfoStyle}>
             {`Gene name: ${cellInfo.geneName}`}
           </div>
-        ) : <></>}
+        ) : null}
         {cellInfo.expression !== undefined ? (
           <div style={cellInfoStyle}>
             Expression Level:&nbsp;
             {parseFloat(cellInfo.expression.toFixed(3))}
           </div>
-        ) : <></>}
+        ) : null}
         {cellInfo.cellSets?.length > 0 ? cellInfo.cellSets.map((cellSetName) => (
           <div key={`${cellSetName}-key`} style={cellInfoStyle}>
             {cellSetName}
           </div>
-        )) : <></>}
+        )) : null}
       </Card>
     </div>
   );
