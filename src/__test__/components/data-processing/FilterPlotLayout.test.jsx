@@ -16,12 +16,12 @@ const filterTableUuid = 'filterTableUuid1';
 const plots = {
   plot1: {
     plotUuid: 'plotUuid1',
-    plot: jest.fn(),
+    specGenerator: jest.fn(),
     plotType: 'type1',
   },
   plot2: {
     plotUuid: 'plotUuid2',
-    plot: jest.fn(),
+    specGenerator: jest.fn(),
     plotType: 'type2',
   },
 };
@@ -79,6 +79,6 @@ describe('FilterPlotLayout', () => {
     renderComponent(store);
     const miniPlotButton = screen.getAllByRole('button')[0];
     userEvent.click(miniPlotButton);
-    expect(plots.plot1.plot).toHaveBeenCalled();
+    expect(plots.plot1.specGenerator).toHaveBeenCalled();
   });
 });
