@@ -311,7 +311,10 @@ function DotPlotPage(props) {
   // When fetching new genes, reorder data to match selected genes
   useEffect(() => {
     if (
-      plotData?.length !== cellSets.hierarchy[0]?.children.length * config?.selectedGenes.length
+      (
+        plotData?.length
+        !== (cellSets.hierarchy[0]?.children.length ?? 0) * (config?.selectedGenes.length ?? 0)
+      )
       || !reorderAfterFetch
     ) return;
 
@@ -347,7 +350,7 @@ function DotPlotPage(props) {
   };
 
   const onGenesSelect = (genes) => {
-    const allGenes = _.uniq([...config?.selectedGenes, ...genes]);
+    const allGenes = _.uniq([...config?.selectedGenes ?? {}, ...genes]);
 
     if (_.isEqual(allGenes, config?.selectedGenes)) return;
 

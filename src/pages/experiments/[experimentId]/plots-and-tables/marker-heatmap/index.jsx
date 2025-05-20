@@ -253,7 +253,7 @@ const MarkerHeatmap = ({ experimentId }) => {
   }, 1000), []);
 
   const onGenesSelect = useCallback((genes) => {
-    const allGenes = _.uniq([...config?.selectedGenes, ...genes]);
+    const allGenes = _.uniq([...config?.selectedGenes ?? {}, ...genes]);
 
     if (_.isEqual(allGenes, config?.selectedGenes)) return;
 
@@ -433,21 +433,18 @@ const MarkerHeatmap = ({ experimentId }) => {
   };
 
   return (
-    <>
-      <PlotContainer
-        experimentId={experimentId}
-        plotUuid={plotUuid}
-        plotType={plotType}
-        plotName={plotNames.MARKER_HEATMAP}
-        plotStylingConfig={plotStylingConfig}
-        extraControlPanels={renderExtraPanels()}
-        defaultActiveKey='gene-selection'
-        onPlotReset={onReset}
-        // Disable onUpdate handling of the config
-      >
-        {renderPlot()}
-      </PlotContainer>
-    </>
+    <PlotContainer
+      experimentId={experimentId}
+      plotUuid={plotUuid}
+      plotType={plotType}
+      plotName={plotNames.MARKER_HEATMAP}
+      plotStylingConfig={plotStylingConfig}
+      extraControlPanels={renderExtraPanels()}
+      defaultActiveKey='gene-selection'
+      onPlotReset={onReset}
+    >
+      {renderPlot()}
+    </PlotContainer>
   );
 };
 

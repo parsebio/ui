@@ -33,6 +33,24 @@ import PipelineLogsViewer from 'components/secondary-analysis/PipelineLogsViewer
 
 const { Text, Paragraph, Title } = Typography;
 
+// eslint-disable-next-line react/prop-types
+const ProgressBar = ({ totalTasks, running, succeeded }) => {
+  const succeededPercentage = _.round((succeeded / totalTasks) * 100);
+  const runningPercentage = _.round((running / totalTasks) * 100);
+  return (
+    <div>
+      <Tooltip title={`Tasks : ${succeeded} done / ${running} in progress / ${totalTasks - succeeded - running} not started`}>
+        <Progress
+          percent={succeededPercentage + runningPercentage}
+          success={{ percent: succeededPercentage }}
+          type='dashboard'
+          showInfo={false}
+        />
+      </Tooltip>
+    </div>
+  );
+};
+
 const AnalysisDetails = ({ secondaryAnalysisId }) => {
   const dispatch = useDispatch();
 
@@ -188,24 +206,6 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     || !secondaryAnalysis) {
     return <PreloadContent />;
   }
-  const ProgressBar = () => {
-    const { totalTasks } = secondaryAnalysis.status;
-    const { running, succeeded } = progress;
-    const succeededPercentage = _.round((succeeded / totalTasks) * 100);
-    const runningPercentage = _.round((running / totalTasks) * 100);
-    return (
-      <div>
-        <Tooltip title={`Tasks : ${succeeded} done / ${running} in progress / ${totalTasks - succeeded - running} not started`}>
-          <Progress
-            percent={succeededPercentage + runningPercentage}
-            success={{ percent: succeededPercentage }}
-            type='dashboard'
-            showInfo={false}
-          />
-        </Tooltip>
-      </div>
-    );
-  };
 
   if (secondaryAnalysis?.status.current !== 'finished') {
     const messages = {
@@ -303,7 +303,11 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         <Card>
           <div style={{ display: 'block', justifyContent: 'center' }}>
             <div>
-              <ProgressBar />
+              <ProgressBar
+                totalTasks={secondaryAnalysis.status.totalTasks}
+                running={progress.running}
+                succeeded={progress.succeeded}
+              />
               <Title level={3}>
                 The pipeline is running
                 {' '}
@@ -374,8 +378,12 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         {associatedExperimentId && (
           <Button
             onClick={async () => {
-              navigateTo(modules.DATA_PROCESSING,
-                { experimentId: associatedExperimentId }, false, true);
+              navigateTo(
+                modules.DATA_PROCESSING,
+                { experimentId: associatedExperimentId },
+                false,
+                true,
+              );
             }}
             type='primary'
           >
