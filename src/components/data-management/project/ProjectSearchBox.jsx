@@ -62,7 +62,7 @@ const getUserSearchRegex = async (searchBy, projectType) => {
       return new RegExp(projectIds.join('|'), 'i');
     }
     // if empty list, match nothing (instead of matching everything)
-    return new RegExp('^(?!x)x');
+    return /^(?!x)x/;
   } catch (e) {
     if (e.response && e.response.status === 403) {
       // if unauthorized revert to default behaviour
