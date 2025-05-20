@@ -76,7 +76,7 @@ const ProjectDetails = ({ width, height }) => {
                   Copy
                 </Button>
               </ScanpyDisabler>
-              <AddMetadataButton samplesTableRef={samplesContainerRef.current?.samplesTableRef} />
+              <AddMetadataButton samplesTableRef={samplesContainerRef} />
               <ExperimentMenu />
             </Space>
           </div>

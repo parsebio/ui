@@ -1,6 +1,6 @@
 import React, {
   forwardRef,
-  useEffect, useImperativeHandle, useMemo, useRef, useState,
+  useEffect, useMemo, useState,
 } from 'react';
 import _ from 'lodash';
 import { Alert, Tabs } from 'antd';
@@ -35,10 +35,6 @@ const SamplesContainer = forwardRef((props, ref) => {
   const [samplesLoaded, setSamplesLoaded] = useState(false);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [selectedTable, setSelectedTable] = useState('All');
-
-  const samplesTableRef = useRef();
-
-  useImperativeHandle(ref, () => ({ samplesTableRef }));
 
   useConditionalEffect(() => {
     setSamplesLoaded(false);
@@ -96,13 +92,17 @@ const SamplesContainer = forwardRef((props, ref) => {
         refreshRate={500}
         onResize={(height) => { setSize({ height }); }}
       >
-        <Tabs defaultActiveKey='All' activeKey={selectedTable} items={technologyTabs} onChange={(key) => setSelectedTable(key)} />
-        <SamplesTable
-          ref={samplesTableRef}
-          size={size}
-          selectedTable={selectedTable}
-          selectedTechs={selectedTechs}
-        />
+        {() => (
+          <>
+            <Tabs defaultActiveKey='All' activeKey={selectedTable} items={technologyTabs} onChange={(key) => setSelectedTable(key)} />
+            <SamplesTable
+              ref={ref}
+              size={size}
+              selectedTable={selectedTable}
+              selectedTechs={selectedTechs}
+            />
+          </>
+        )}
       </ReactResizeDetector>
     );
   };
