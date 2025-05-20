@@ -18,8 +18,7 @@ import mockAPI, {
 } from '__test__/test-utils/mockAPI';
 import { makeStore } from 'redux/store';
 import { mockAnalysisIds } from '__test__/data/secondaryAnalyses/secondary_analyses';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+
 import userEvent from '@testing-library/user-event';
 import endUserMessages from 'utils/endUserMessages';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
@@ -151,7 +150,10 @@ describe('Pipeline Page', () => {
     });
 
     await waitFor(() => {
-      expect(mockNavigateTo).toHaveBeenCalledWith(modules.SECONDARY_ANALYSIS_OUTPUT, { secondaryAnalysisId: mockAnalysisIds.readyToLaunch });
+      expect(mockNavigateTo).toHaveBeenCalledWith(
+        modules.SECONDARY_ANALYSIS_OUTPUT,
+        { secondaryAnalysisId: mockAnalysisIds.readyToLaunch },
+      );
     });
   });
 
@@ -210,7 +212,10 @@ describe('Pipeline Page', () => {
     await fireEvent.click(screen.getByText(/Go to output/i));
 
     await waitFor(() => {
-      expect(mockNavigateTo).toHaveBeenCalledWith(modules.SECONDARY_ANALYSIS_OUTPUT, { secondaryAnalysisId: mockAnalysisIds.readyToLaunch });
+      expect(mockNavigateTo).toHaveBeenCalledWith(
+        modules.SECONDARY_ANALYSIS_OUTPUT,
+        { secondaryAnalysisId: mockAnalysisIds.readyToLaunch },
+      );
     });
   });
 
@@ -299,7 +304,10 @@ describe('Pipeline Page', () => {
     });
 
     await waitFor(() => {
-      expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(mockAnalysisIds.emptyAnalysis, message.file);
+      expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(
+        mockAnalysisIds.emptyAnalysis,
+        message.file,
+      );
     });
   });
 

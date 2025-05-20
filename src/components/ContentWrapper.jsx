@@ -67,7 +67,67 @@ const backendErrors = [
   pipelineStatusValues.ABORTED,
 ];
 
-function ContentWrapper(props) {
+const BigLogo = () => (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      pointerEvents: 'none',
+      userSelect: 'none',
+    }}
+  >
+    <svg xmlns='http://www.w3.org/2000/svg' width={200} height={50}>
+      <defs id='svg_document_defs'>
+        <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
+      </defs>
+      <g transform='translate(20, 25)'>
+
+        {/* provided by? TBD */}
+        <image href='/Parse_icon_white.png' x='-5' y='-20' width='18%' />
+        <text
+          style={{ outlineStyle: 'none' }}
+          fontWeight='900'
+          textRendering='geometricPrecision'
+          fontFamily='M Plus 2'
+          fill='#F0F2F5'
+          fontSize='22.00px'
+          textAnchor='start'
+          dominantBaseline='middle'
+          x='35'
+        >
+          Trailmaker
+        </text>
+      </g>
+    </svg>
+  </div>
+);
+
+const SmallLogo = () => (
+  <div
+    style={{
+      background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
+      paddingTop: '8px',
+      paddingBottom: '8px',
+      pointerEvents: 'none',
+      userSelect: 'none',
+    }}
+  >
+    <svg xmlns='http://www.w3.org/2000/svg' width={100} height={30}>
+      <defs id='svg_document_defs'>
+        <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
+      </defs>
+      <g>
+        <image href='/Parse_icon_white.png' x='20' y='0' width='35%' />
+      </g>
+    </svg>
+  </div>
+);
+
+const ContentWrapper = (props) => {
   const dispatch = useDispatch();
 
   const [collapsed, setCollapsed] = useState(false);
@@ -216,7 +276,7 @@ function ContentWrapper(props) {
     dispatch(loadUser());
   }, []);
 
-  if (!user) return <></>;
+  if (!user) return null;
 
   const getStatusObject = (type, status, message = null, completedSteps = null) => ({
     type,
@@ -225,7 +285,10 @@ function ContentWrapper(props) {
     ...(completedSteps && { completedSteps }),
   });
 
-  const gem2sNotCreated = checkEveryIsValue([gem2sStatusKey, seuratStatusKey], pipelineStatusValues.NOT_CREATED);
+  const gem2sNotCreated = checkEveryIsValue(
+    [gem2sStatusKey, seuratStatusKey],
+    pipelineStatusValues.NOT_CREATED,
+  );
 
   const getSeuratStatus = () => {
     if (seuratRunningError) {
@@ -269,70 +332,6 @@ function ContentWrapper(props) {
   };
 
   const currentStatusScreen = getCurrentStatusScreen();
-
-  function BigLogo() {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
-          paddingTop: '10px',
-          paddingBottom: '10px',
-          pointerEvents: 'none',
-          userSelect: 'none',
-        }}
-      >
-        <svg xmlns='http://www.w3.org/2000/svg' width={200} height={50}>
-          <defs id='svg_document_defs'>
-            <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
-          </defs>
-          <g transform='translate(20, 25)'>
-
-            {/* provided by? TBD */}
-            <image href='/Parse_icon_white.png' x='-5' y='-20' width='18%' />
-            <text
-              style={{ outlineStyle: 'none' }}
-              fontWeight='900'
-              textRendering='geometricPrecision'
-              fontFamily='M Plus 2'
-              fill='#F0F2F5'
-              fontSize='22.00px'
-              textAnchor='start'
-              dominantBaseline='middle'
-              x='35'
-            >
-              Trailmaker
-            </text>
-          </g>
-        </svg>
-      </div>
-    );
-  }
-
-  function SmallLogo() {
-    return (
-      <div
-        style={{
-          background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
-          paddingTop: '8px',
-          paddingBottom: '8px',
-          pointerEvents: 'none',
-          userSelect: 'none',
-        }}
-      >
-        <svg xmlns='http://www.w3.org/2000/svg' width={100} height={30}>
-          <defs id='svg_document_defs'>
-            <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
-          </defs>
-          <g>
-            <image href='/Parse_icon_white.png' x='20' y='0' width='35%' />
-          </g>
-        </svg>
-      </div>
-    );
-  }
 
   const menuLinks = [
     {
@@ -422,7 +421,7 @@ function ContentWrapper(props) {
 
       if (seuratComplete && currentModule === modules.DATA_PROCESSING) {
         navigateTo(modules.DATA_EXPLORATION, { experimentId: routeExperimentId });
-        return <></>;
+        return null;
       }
 
       if (process.env.NODE_ENV === 'development') {
@@ -528,7 +527,7 @@ function ContentWrapper(props) {
     );
   };
 
-  if (!user) return <></>;
+  if (!user) return null;
 
   const menuItems = menuLinks
     .map(menuItemRender);
@@ -604,7 +603,7 @@ function ContentWrapper(props) {
 
     </DndProvider>
   );
-}
+};
 
 ContentWrapper.propTypes = {
   routeExperimentId: PropTypes.string,

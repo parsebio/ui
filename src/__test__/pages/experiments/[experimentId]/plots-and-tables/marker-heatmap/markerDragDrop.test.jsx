@@ -26,7 +26,7 @@ import { arrayMoveImmutable } from 'utils/arrayUtils';
 import { loadCellSets } from 'redux/actions/cellSets';
 import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
-jest.mock('components/sider/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => null);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
@@ -81,17 +81,6 @@ const defaultProps = { experimentId };
 
 const heatmapPageFactory = createTestComponentFactory(MarkerHeatmap, defaultProps);
 
-// Helper function to get current order of displayed genes in enzyme tests
-const getCurrentGeneOrder = (component) => {
-  const treeNodes = component.find('div.ant-tree-treenode');
-  const newOrder = [];
-  treeNodes.forEach((node) => {
-    newOrder.push(node.text());
-  });
-  newOrder.splice(0, 1);
-  return newOrder;
-};
-
 enableFetchMocks();
 
 const renderHeatmapPageForEnzyme = (store) => (
@@ -106,7 +95,6 @@ const renderHeatmapPageForEnzyme = (store) => (
 // Broken since updating to node 20, could be related to react-dnd being mocked, not sure
 describe('Drag and drop enzyme tests', () => {
   let component;
-  let tree;
 
   beforeAll(async () => {
     await preloadAll();
@@ -134,9 +122,6 @@ describe('Drag and drop enzyme tests', () => {
     component = renderHeatmapPageForEnzyme(storeState);
 
     await waitForComponentToPaint(component);
-
-    // antd renders 5 elements, use the first one
-    tree = component.find({ 'data-testid': 'HierachicalTreeGenes' }).at(0);
   });
 
   it('changes nothing on drop in place', async () => {

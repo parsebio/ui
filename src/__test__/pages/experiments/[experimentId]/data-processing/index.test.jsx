@@ -31,7 +31,7 @@ import config from 'config';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-jest.mock('components/sider/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => null);
 jest.mock('redux/actions/experimentSettings/processingConfig/saveProcessingSettings');
 jest.mock('redux/actions/experiments', () => ({
   cloneExperiment: jest.fn(() => () => { }),
@@ -47,13 +47,13 @@ jest.mock('react-virtuoso', () => ({
 }));
 
 // Mock all filter components
-jest.mock('components/data-processing/CellSizeDistribution/CellSizeDistribution', () => () => <></>);
-jest.mock('components/data-processing/MitochondrialContent/MitochondrialContent', () => () => <></>);
-jest.mock('components/data-processing/GenesVsUMIs/GenesVsUMIs', () => () => <></>);
-jest.mock('components/data-processing/DoubletScores/DoubletScores', () => () => <></>);
-jest.mock('components/data-processing/DataIntegration/DataIntegration', () => () => <></>);
-jest.mock('components/data-processing/ConfigureEmbedding/ConfigureEmbedding', () => () => <></>);
-jest.mock('components/data-processing/SelectShownSamplesDropdown', () => () => <></>);
+jest.mock('components/data-processing/CellSizeDistribution/CellSizeDistribution', () => () => null);
+jest.mock('components/data-processing/MitochondrialContent/MitochondrialContent', () => () => null);
+jest.mock('components/data-processing/GenesVsUMIs/GenesVsUMIs', () => () => null);
+jest.mock('components/data-processing/DoubletScores/DoubletScores', () => () => null);
+jest.mock('components/data-processing/DataIntegration/DataIntegration', () => () => null);
+jest.mock('components/data-processing/ConfigureEmbedding/ConfigureEmbedding', () => () => null);
+jest.mock('components/data-processing/SelectShownSamplesDropdown', () => () => null);
 
 const mockNavigateTo = jest.fn();
 
