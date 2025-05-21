@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import {
   Space, Typography, Button, Select,
 } from 'antd';
-import _ from 'lodash';
 import {
   cloneExperiment, updateExperiment, loadExperiments, setActiveExperiment,
 } from 'redux/actions/experiments';
@@ -15,12 +14,13 @@ import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 
 import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
-import { layout } from 'utils/constants';
+import { layout, sampleTech } from 'utils/constants';
 
-import SamplesTable from 'components/data-management/SamplesTable';
+// import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import AddMetadataButton from 'components/data-management/metadata/AddMetadataButton';
 import { bulkUpdateSampleKits } from 'redux/actions/samples';
+import SamplesContainer from '../SamplesContainer/SamplesContainer';
 
 const { Text, Title } = Typography;
 
@@ -34,9 +34,15 @@ const ProjectDetails = ({ width, height }) => {
 
   const { activeExperimentId } = useSelector((state) => state.experiments.meta);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
-  const { kit, type } = useSelector((state) => _.pick(state.samples[activeExperiment.sampleIds[0]], ['kit', 'type']));
+  const samples = useSelector((state) => state.samples);
 
-  const samplesTableRef = useRef();
+  const parseTechSample = activeExperiment.sampleIds.filter(
+    (sampleId) => samples[sampleId]?.type === sampleTech.PARSE,
+  )[0];
+
+  const { kit } = samples[parseTechSample] ?? {};
+
+  const samplesContainerRef = useRef();
 
   const clone = async () => {
     const newExperimentId = await dispatch(cloneExperiment(activeExperimentId, `Copy of ${activeExperiment.name}`));
@@ -64,16 +70,16 @@ const ProjectDetails = ({ width, height }) => {
         <div style={{ flex: 'none', paddingBottom: '1em' }}>
           <div style={{ display: 'flex', justifyContent: 'right', flexWrap: 'wrap' }}>
             <Space style={{ flexWrap: 'wrap' }}>
-              <Button onClick={clone}>
-                Copy
-              </Button>
-              <AddMetadataButton samplesTableRef={samplesTableRef} />
+                <Button onClick={clone}>
+                  Copy
+                </Button>
+              <AddMetadataButton samplesTableRef={samplesContainerRef} />
               <ExperimentMenu />
             </Space>
           </div>
 
         </div>
-        {type === 'parse' && (
+        {parseTechSample && (
           <div>
             <Text strong>
               Parse Kit Type:
@@ -107,9 +113,7 @@ const ProjectDetails = ({ width, height }) => {
             }}
           />
           <SampleOptions />
-          <SamplesTable
-            ref={samplesTableRef}
-          />
+          <SamplesContainer ref={samplesContainerRef} />
         </div>
       </div>
     </div>
