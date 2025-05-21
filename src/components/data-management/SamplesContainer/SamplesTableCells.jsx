@@ -16,8 +16,8 @@ import downloadSampleFile from 'utils/data-management/downloadSampleFile';
 import { createAndUploadSampleFile } from 'utils/upload/processSampleUpload';
 import { fileTypeToDisplay } from 'utils/sampleFileType';
 import UploadStatusView from 'components/UploadStatusView';
-import EditableField from '../EditableField';
-import UploadDetailsModal from './UploadDetailsModal';
+import EditableField from '../../EditableField';
+import UploadDetailsModal from '../UploadDetailsModal';
 
 const { Text } = Typography;
 

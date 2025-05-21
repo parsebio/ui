@@ -1,4 +1,4 @@
-import { metadataKeyToName, metadataNameToKey, temporaryMetadataKey } from 'utils/data-management/metadataUtils';
+import { metadataKeyToName, metadataNameToKey } from 'utils/data-management/metadataUtils';
 
 describe('MetadataKeyToName', () => {
   it('Formats metadata key properly', () => {
@@ -18,15 +18,5 @@ describe('metadataNameToKey', () => {
 
   it('Returns empty string given empty string', () => {
     expect(metadataNameToKey('')).toEqual('');
-  });
-});
-
-describe('temporaryMetadataKey', () => {
-  it('Returns metadata_ postfixed with the next number of column', () => {
-    const columns0 = [];
-    expect(temporaryMetadataKey(columns0)).toEqual('metadata_0');
-
-    const columns2 = ['a', 'b'];
-    expect(temporaryMetadataKey(columns2)).toEqual('metadata_2');
   });
 });

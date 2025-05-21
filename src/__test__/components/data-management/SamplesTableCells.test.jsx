@@ -10,7 +10,7 @@ import {
   UploadCell,
   EditableFieldCell,
   SampleNameCell,
-} from 'components/data-management/SamplesTableCells';
+} from 'components/data-management/SamplesContainer/SamplesTableCells';
 import UploadStatus, { messageForStatus } from 'utils/upload/UploadStatus';
 import { makeStore } from 'redux/store';
 import mockAPI, { generateDefaultMockAPIResponses, statusResponse } from '__test__/test-utils/mockAPI';
