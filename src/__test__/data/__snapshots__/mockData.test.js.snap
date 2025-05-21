@@ -65,7 +65,7 @@ exports[`Mock data Describes samples 1`] = `
     },
     "name": "Mock sample 0",
     "options": {},
-    "sampleTechnology": "10x",
+    "sampleTechnology": "parse",
     "updatedAt": "2021-12-07 17:38:42.036+00",
   },
   {
@@ -197,7 +197,7 @@ exports[`Mock data Describes samples 1`] = `
     },
     "name": "Mock sample 2",
     "options": {},
-    "sampleTechnology": "10x",
+    "sampleTechnology": "parse",
     "updatedAt": "2021-12-07 17:38:42.036+00",
   },
 ]
@@ -336,7 +336,7 @@ exports[`Mock response data Describes samples response 1`] = `
       },
       "name": "Mock sample 0",
       "options": {},
-      "sampleTechnology": "10x",
+      "sampleTechnology": "parse",
       "updatedAt": "2021-12-07 17:38:42.036+00",
     },
     {
@@ -468,7 +468,7 @@ exports[`Mock response data Describes samples response 1`] = `
       },
       "name": "Mock sample 2",
       "options": {},
-      "sampleTechnology": "10x",
+      "sampleTechnology": "parse",
       "updatedAt": "2021-12-07 17:38:42.036+00",
     },
   ],

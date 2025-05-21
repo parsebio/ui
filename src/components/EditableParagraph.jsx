@@ -46,7 +46,7 @@ const EditableParagraph = (props) => {
     <div
       contentEditable
       ref={paragraphEditor}
-      style={{ backgroundColor: 'white' }}
+      style={{ maxHeight: 200, overflowY: 'auto', backgroundColor: 'white' }}
       onBlur={(e) => handleUpdate(e)}
       onKeyDown={(e) => {
         if (e.keyCode === 13) {
@@ -81,10 +81,14 @@ const EditableParagraph = (props) => {
   const renderContent = () => {
     if (isExpanded) {
       return (
-        <p>
-          {text}
+        <>
+          <p
+            style={{ maxHeight: 200, overflowY: 'auto' }}
+          >
+            {text}
+          </p>
           {renderControls()}
-        </p>
+        </>
       );
     }
 

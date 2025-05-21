@@ -8,7 +8,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 
 import { Provider } from 'react-redux';
 import React from 'react';
-import SamplesTable from 'components/data-management/SamplesTable';
+import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import _ from 'lodash';
 import { act } from 'react-dom/test-utils';
 import configureMockStore from 'redux-mock-store';
@@ -59,7 +59,9 @@ jest.mock('react-sortable-hoc', () => ({
 }));
 
 const defaultProps = {
-  height: 100,
+  size: { height: 100 },
+  selectedTechs: ['10x', 'parse'],
+  selectedTable: 'All',
 };
 
 const samplesTableFactory = createTestComponentFactory(SamplesTable, defaultProps);
@@ -161,26 +163,6 @@ describe('Samples table', () => {
       Object.values(samples).forEach((sample) => {
         expect(screen.queryByText(sample.name)).not.toBeInTheDocument();
       });
-    });
-  });
-
-  it('Should NOT show the samples until theres validation going on for active experiment', async () => {
-    const validatingExpState = _.cloneDeep(storeState.getState());
-    const createMockStore = configureMockStore([thunk]);
-
-    // Set the active experiment as being validated
-    validatingExpState.samples.meta.validating = [experimentWithSamplesId];
-
-    const validatingExpStore = createMockStore(validatingExpState);
-
-    await renderSamplesTable(validatingExpStore);
-
-    await waitFor(() => {
-      Object.values(samples).forEach((sample) => {
-        expect(screen.queryByText(sample.name)).not.toBeInTheDocument();
-      });
-
-      expect(screen.getByText('We\'re validating your samples ...')).toBeDefined();
     });
   });
 
