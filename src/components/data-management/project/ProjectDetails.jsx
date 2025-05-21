@@ -70,9 +70,9 @@ const ProjectDetails = ({ width, height }) => {
         <div style={{ flex: 'none', paddingBottom: '1em' }}>
           <div style={{ display: 'flex', justifyContent: 'right', flexWrap: 'wrap' }}>
             <Space style={{ flexWrap: 'wrap' }}>
-                <Button onClick={clone}>
-                  Copy
-                </Button>
+              <Button onClick={clone}>
+                Copy
+              </Button>
               <AddMetadataButton samplesTableRef={samplesContainerRef} />
               <ExperimentMenu />
             </Space>
