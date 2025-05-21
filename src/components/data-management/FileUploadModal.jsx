@@ -189,15 +189,15 @@ const FileUploadModal = (props) => {
                 <span style={{ color: 'red', marginRight: '2em' }}>*</span>
               </Title>
               <Tooltip
-                // title={currentSelectedTech
-                //   && 'Remove existing data or create a new project to change technology.'}
+                title={currentSelectedTech
+                  && 'Remove existing data or create a new project to change technology.'}
                 placement='bottom'
               >
                 <Select
                   aria-label='sampleTechnologySelect'
                   data-testid='uploadTechSelect'
                   defaultValue={selectedTech}
-                  // disabled={currentSelectedTech}
+                  disabled={currentSelectedTech}
                   onChange={(value) => setSelectedTech(value)}
                   // Fix the width so that the dropdown doesn't change size when the value changes
                   style={{ width: 180 }}
