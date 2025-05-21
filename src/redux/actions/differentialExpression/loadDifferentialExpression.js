@@ -66,10 +66,6 @@ const loadDifferentialExpression = (
 
     const rows = getArray(diffExprData);
 
-    if (!total && !Object.keys(pagination).length) {
-      total = rows.length;
-    }
-
     dispatch({
       type: DIFF_EXPR_LOADED,
       payload: {
