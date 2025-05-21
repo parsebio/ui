@@ -20,7 +20,6 @@ import { layout, sampleTech } from 'utils/constants';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import AddMetadataButton from 'components/data-management/metadata/AddMetadataButton';
 import { bulkUpdateSampleKits } from 'redux/actions/samples';
-import ScanpyDisabler from 'utils/ScanpyDisabler';
 import SamplesContainer from '../SamplesContainer/SamplesContainer';
 
 const { Text, Title } = Typography;
@@ -71,11 +70,9 @@ const ProjectDetails = ({ width, height }) => {
         <div style={{ flex: 'none', paddingBottom: '1em' }}>
           <div style={{ display: 'flex', justifyContent: 'right', flexWrap: 'wrap' }}>
             <Space style={{ flexWrap: 'wrap' }}>
-              <ScanpyDisabler experimentId={activeExperimentId}>
-                <Button onClick={clone}>
-                  Copy
-                </Button>
-              </ScanpyDisabler>
+              <Button onClick={clone}>
+                Copy
+              </Button>
               <AddMetadataButton samplesTableRef={samplesContainerRef} />
               <ExperimentMenu />
             </Space>
