@@ -41,7 +41,7 @@ import { sampleTech } from 'utils/constants';
 import { fileTypeToDisplay } from 'utils/sampleFileType';
 import UploadStatus from 'utils/upload/UploadStatus';
 
-const { UPLOADED, INCOMPLETE } = UploadStatus;
+const { UPLOADED, INCOMPLETE, UPLOADING } = UploadStatus;
 const { Text } = Typography;
 
 const SamplesTable = forwardRef((props, ref) => {
@@ -178,11 +178,17 @@ const SamplesTable = forwardRef((props, ref) => {
       const allUploaded = filesInSample
         .every(([, value]) => value.upload.status === UPLOADED);
 
+      const anyUploading = filesInSample
+        .every(([, value]) => [UPLOADING, UPLOADED].includes(value.upload.status));
+
       const allFilesPresent = fileUploadUtils[samples[item.uuid].type]?.requiredFiles
         .every((fileType) => filesInSample.map(([fileKey]) => fileKey).includes(fileType));
 
-      const status = (allUploaded && allFilesPresent)
-        ? UPLOADED : INCOMPLETE;
+      const status = allUploaded && allFilesPresent
+        ? UPLOADED
+        : anyUploading
+          ? UPLOADING
+          : INCOMPLETE;
 
       selectedTableData.push({
         ...item,
@@ -209,7 +215,7 @@ const SamplesTable = forwardRef((props, ref) => {
         title: 'Upload Status',
         dataIndex: 'uploadStatus',
         render: (uploadStatus, record) => (
-          uploadStatus === UPLOADED ? (
+          [UPLOADED, UPLOADING].includes(uploadStatus) ? (
             <UploadStatusView status={uploadStatus} />
           ) : (
             <Tooltip title={`Not all files for this sample are uploaded, go to the ${techNamesToDisplay[record.technology]} tab for details.`}>
