@@ -3,7 +3,8 @@ import {
 } from '../../../actionTypes/experimentSettings';
 
 const loadedProcessingConfig = (
-  experimentId, processingConfig, fromGem2s = false,
+  processingConfig,
+  fromGem2s = false,
 ) => (dispatch) => {
   dispatch({
     type: EXPERIMENT_SETTINGS_PROCESSING_CONFIG_LOADED,

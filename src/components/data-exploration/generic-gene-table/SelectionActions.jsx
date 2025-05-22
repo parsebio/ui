@@ -82,7 +82,7 @@ const SelectionActions = (props) => {
 
   return (
     <Row style={{ float: 'left', paddingRight: '50px' }}>
-      {extraOptions ?? <></>}
+      {extraOptions ?? null}
 
       {extraOptions && selectedGenes.length > 0 && (
         <Divider style={{ height: '1px', marginTop: '5px', marginBottom: '5px' }} />
@@ -125,7 +125,7 @@ const SelectionActions = (props) => {
             )
           }
         </>
-      ) : <></>}
+      ) : null}
     </Row>
   );
 };

@@ -364,7 +364,10 @@ const SamplesTable = forwardRef((props, ref) => {
       .filter((sampleUuid) => canUpdateCell(sampleUuid, actionType));
 
     dispatch(updateValuesInMetadataTrack(
-      activeExperimentId, filteredSamplesToUpdate, metadataKey, value,
+      activeExperimentId,
+      filteredSamplesToUpdate,
+      metadataKey,
+      value,
     ));
   };
 

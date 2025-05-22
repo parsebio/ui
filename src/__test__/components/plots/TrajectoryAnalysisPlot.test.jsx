@@ -79,7 +79,8 @@ const defaultProps = {
 };
 
 const trajectoryAnalysisPlotFactory = createTestComponentFactory(
-  TrajectoryAnalysisPlot, defaultProps,
+  TrajectoryAnalysisPlot,
+  defaultProps,
 );
 
 const renderTrajectoryAnalysisPlot = async (store, props) => {

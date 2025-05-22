@@ -4,7 +4,10 @@ import { getArray } from 'utils/arrayUtils';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 
 const getBatchDiffExpr = (
-  experimentId, comparison, chosenOperation, batchClusterNames,
+  experimentId,
+  comparison,
+  chosenOperation,
+  batchClusterNames,
 ) => async (dispatch, getState) => {
   const {
     cellSet, compareWith, comparisonType,
@@ -35,9 +38,7 @@ const getBatchDiffExpr = (
   const timeout = getTimeoutForWorkerTask(getState(), 'DifferentialExpression') * numberOfComparisons;
 
   try {
-    const data = await fetchWork(
-      experimentId, workBody, getState, dispatch, { timeout },
-    );
+    const data = await fetchWork(experimentId, workBody, getState, dispatch, { timeout });
 
     if (!data.length) {
       pushNotificationMessage('warning', 'No data available for this comparison, make sure the selected cell set is not empty');

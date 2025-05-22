@@ -4,6 +4,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import { Skeleton } from 'antd';
+import BasicFilterPlot from 'components/plots/BasicFilterPlot';
 
 const getMiniaturizedConfig = (config) => {
   const miniatureConfig = {
@@ -39,7 +40,7 @@ const getMiniaturizedConfig = (config) => {
 
 const MiniPlot = (props) => {
   const {
-    plotUuid, plotFn, actions,
+    plotUuid, specGenerator, actions,
   } = props;
 
   const { config, plotData } = useSelector(
@@ -55,7 +56,14 @@ const MiniPlot = (props) => {
       );
     }
 
-    return plotFn(getMiniaturizedConfig(config), plotData || [], actions);
+    return (
+      <BasicFilterPlot
+        spec={specGenerator(getMiniaturizedConfig(config), plotData || [])}
+        actions={actions}
+        // We might be able to improve a bit on this part
+        miniPlot
+      />
+    );
   };
 
   return (
@@ -66,7 +74,7 @@ const MiniPlot = (props) => {
 MiniPlot.propTypes = {
   experimentId: PropTypes.string.isRequired,
   plotUuid: PropTypes.string.isRequired,
-  plotFn: PropTypes.func.isRequired,
+  specGenerator: PropTypes.func.isRequired,
   actions: PropTypes.bool.isRequired,
 };
 

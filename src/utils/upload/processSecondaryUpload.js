@@ -18,12 +18,18 @@ const uploadSecondaryAnalysisFile = async (
   // const shouldCompress = await getShouldCompress(file);
 
   dispatch(updateSecondaryAnalysisFile(
-    secondaryAnalysisId, uploadUrlParams.fileId, UploadStatus.QUEUED, { abortController },
+    secondaryAnalysisId,
+    uploadUrlParams.fileId,
+    UploadStatus.QUEUED,
+    { abortController },
   ));
 
   const onUpdateUploadStatus = (status, percentProgress) => {
     dispatch(updateSecondaryAnalysisFile(
-      secondaryAnalysisId, uploadUrlParams.fileId, status, { percentProgress },
+      secondaryAnalysisId,
+      uploadUrlParams.fileId,
+      status,
+      { percentProgress },
     ));
   };
 
@@ -51,7 +57,11 @@ const uploadSecondaryAnalysisFile = async (
 };
 
 const createAndUploadSecondaryAnalysisFiles = async (
-  secondaryAnalysisId, filesList, handlesList = [], type, dispatch,
+  secondaryAnalysisId,
+  filesList,
+  handlesList,
+  type,
+  dispatch,
 ) => {
   const uploadUrlParamsList = await Promise.all(
     filesList.map(async (file, index) => {
@@ -73,9 +83,7 @@ const resumeUpload = async (secondaryAnalysisId, fileHandle, uploadUrlParams, di
   try {
     const file = await fileHandle.getFile();
 
-    await uploadSecondaryAnalysisFile(
-      file, secondaryAnalysisId, uploadUrlParams, dispatch, true,
-    );
+    await uploadSecondaryAnalysisFile(file, secondaryAnalysisId, uploadUrlParams, dispatch, true);
   } catch (e) {
     console.trace('Error resuming upload:', e);
     if (e.message.startsWith('PermissionError')) {

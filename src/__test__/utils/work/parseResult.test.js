@@ -17,6 +17,7 @@ describe('unpackResult with json result', () => {
     const storageArrayBuffer = new ArrayBuffer(10);
     const parsedResult = { a: 10 };
 
+    // eslint-disable-next-line camelcase
     JSON_parse.mockReturnValueOnce(parsedResult);
 
     const result = parseResult(storageArrayBuffer, 'RandomWorkRequest');

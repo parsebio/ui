@@ -32,7 +32,7 @@ import experimentsMetadataRename from './experimentsMetadataRename';
 import samplesValidatingUpdated from './samplesValidatingUpdated';
 import samplesBulkKitUpdate from './samplesBulkKitUpdate';
 
-const samplesReducer = (state = initialState, action) => {
+const samplesReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case SAMPLES_CREATED: {
       return samplesCreated(state, action);

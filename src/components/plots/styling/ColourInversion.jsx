@@ -16,21 +16,19 @@ const ColourInversion = (props) => {
   };
 
   return (
-    <>
-      <Form
-        size='small'
-        labelCol={{ span: 12 }}
-        wrapperCol={{ span: 12 }}
-      >
-        <p><strong>Background Color</strong></p>
-        <Form.Item>
-          <Radio.Group onChange={onChange} value={config.colour.toggleInvert}>
-            <Radio value='#FFFFFF'>Standard</Radio>
-            <Radio value='#000000'>Invert</Radio>
-          </Radio.Group>
-        </Form.Item>
-      </Form>
-    </>
+    <Form
+      size='small'
+      labelCol={{ span: 12 }}
+      wrapperCol={{ span: 12 }}
+    >
+      <p><strong>Background Color</strong></p>
+      <Form.Item>
+        <Radio.Group onChange={onChange} value={config.colour.toggleInvert}>
+          <Radio value='#FFFFFF'>Standard</Radio>
+          <Radio value='#000000'>Invert</Radio>
+        </Radio.Group>
+      </Form.Item>
+    </Form>
   );
 };
 

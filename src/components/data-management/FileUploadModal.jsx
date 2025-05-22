@@ -34,9 +34,9 @@ const { Option } = Select;
 const SEURAT_MAX_FILE_SIZE = 15 * 1024 * 1024 * 1024;
 
 const extraHelpText = {
-  [sampleTech['10X']]: () => <></>,
-  [sampleTech.SEURAT]: () => <></>,
-  [sampleTech.H5]: () => <></>,
+  [sampleTech['10X']]: () => null,
+  [sampleTech.SEURAT]: () => null,
+  [sampleTech.H5]: () => null,
   [sampleTech.RHAPSODY]: () => (
     <Paragraph>
       <ul>
@@ -51,7 +51,7 @@ const extraHelpText = {
       </ul>
     </Paragraph>
   ),
-  [sampleTech.PARSE]: () => <></>,
+  [sampleTech.PARSE]: () => null,
 };
 
 const emptyFiles = { valid: [], invalid: [] };
@@ -129,33 +129,31 @@ const FileUploadModal = (props) => {
   const { fileUploadParagraphs, dropzoneText, webkitdirectory } = fileUploadUtils[selectedTech];
 
   const renderHelpText = () => (
-    <>
-      <Space direction='vertical' style={{ width: '100%' }}>
-        {
-          fileUploadParagraphs.map((text) => (
-            <Paragraph key={text}>
-              <div dangerouslySetInnerHTML={{ __html: text }} />
-            </Paragraph>
-          ))
-        }
-        <List
-          dataSource={fileUploadUtils[selectedTech].inputInfo}
-          size='small'
-          itemLayout='vertical'
-          bordered
-          renderItem={(item) => (
-            <List.Item>
-              {
-                item.map((fileName) => (
-                  <span key={fileName} className='ant-typography' dangerouslySetInnerHTML={{ __html: item }} />
-                ))
-              }
-            </List.Item>
-          )}
-        />
-        {extraHelpText[selectedTech]()}
-      </Space>
-    </>
+    <Space direction='vertical' style={{ width: '100%' }}>
+      {
+        fileUploadParagraphs.map((text) => (
+          <Paragraph key={text}>
+            <div dangerouslySetInnerHTML={{ __html: text }} />
+          </Paragraph>
+        ))
+      }
+      <List
+        dataSource={fileUploadUtils[selectedTech].inputInfo}
+        size='small'
+        itemLayout='vertical'
+        bordered
+        renderItem={(item) => (
+          <List.Item>
+            {
+              item.map((fileName) => (
+                <span key={fileName} className='ant-typography' dangerouslySetInnerHTML={{ __html: item }} />
+              ))
+            }
+          </List.Item>
+        )}
+      />
+      {extraHelpText[selectedTech]()}
+    </Space>
   );
 
   return (
@@ -273,13 +271,9 @@ const FileUploadModal = (props) => {
                     <Space>
                       {!file.errors
                         ? (
-                          <>
-                            <CheckCircleTwoTone twoToneColor='#52c41a' />
-                          </>
+                          <CheckCircleTwoTone twoToneColor='#52c41a' />
                         ) : (
-                          <>
-                            <CloseCircleTwoTone twoToneColor='#f5222d' />
-                          </>
+                          <CloseCircleTwoTone twoToneColor='#f5222d' />
                         )}
                       <Text
                         ellipsis={{
@@ -305,13 +299,9 @@ const FileUploadModal = (props) => {
               dataSource={files.invalid}
               getItemText={(file) => _.trim(file.path, '/')}
               getItemExplanation={(file) => file.rejectReason}
-              collapsedExplanation={(
-                <>
-                  {
-                    `${files.invalid.length}${files.invalid.length > 1 ? ' files were' : ' file was'} ignored. Click to display`
-                  }
-                </>
-              )}
+              collapsedExplanation={
+                `${files.invalid.length}${files.invalid.length > 1 ? ' files were' : ' file was'} ignored. Click to display`
+              }
             />
           )}
         </Col>

@@ -8,11 +8,9 @@ const PlotsTablesHome = (props) => {
   const { experimentId } = props;
 
   return (
-    <>
-      <SingleTileContainer>
-        <PlotsTablesContainer experimentId={experimentId} />
-      </SingleTileContainer>
-    </>
+    <SingleTileContainer>
+      <PlotsTablesContainer experimentId={experimentId} />
+    </SingleTileContainer>
   );
 };
 

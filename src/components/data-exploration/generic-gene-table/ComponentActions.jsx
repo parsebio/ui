@@ -56,7 +56,7 @@ const ComponentActions = (props) => {
   );
 
   if (selectedGenes.length === 0) {
-    return (<></>);
+    return null;
   }
 
   return (

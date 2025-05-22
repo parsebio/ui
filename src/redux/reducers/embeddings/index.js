@@ -11,7 +11,7 @@ import embeddingsLoading from './embeddingsLoading';
 import embeddingsLoaded from './embeddingsLoaded';
 import embeddingsError from './embeddingsError';
 
-const notificationsReducer = (state = initialState, action) => {
+const notificationsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case EMBEDDINGS_LOADING: {
       return embeddingsLoading(state, action);

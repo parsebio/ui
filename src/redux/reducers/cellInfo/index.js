@@ -6,7 +6,7 @@ import updateCellInfo from './updateCellInfo';
 import cellInfoFocus from './cellInfoFocus';
 import cellInfoUnfocus from './cellInfoUnfocus';
 
-const cellInfoReducer = (state = initialState, action) => {
+const cellInfoReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case CELL_INFO_UPDATE: {
       return updateCellInfo(state, action);

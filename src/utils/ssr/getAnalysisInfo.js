@@ -26,9 +26,11 @@ const getAnalysisInfo = async (context, store, Auth) => {
 
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
-  const secondaryAnalysis = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}`,
+  const secondaryAnalysis = await fetchAPI(
+    `/v2/secondaryAnalysis/${secondaryAnalysisId}`,
     {},
-    { uiUrl: url, jwt });
+    { uiUrl: url, jwt },
+  );
 
   const secondaryAnalysisForRedux = _.cloneDeep(secondaryAnalysis);
 

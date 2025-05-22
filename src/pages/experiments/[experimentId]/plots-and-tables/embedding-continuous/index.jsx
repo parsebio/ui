@@ -97,9 +97,7 @@ const ContinuousEmbeddingPage = ({ experimentId }) => {
 
   const changeSelectedPlotGene = (gene) => {
     const plotUuidToUpdate = updateAll ? multiViewPlotUuids[0] : selectedPlotUuid;
-    dispatch(loadGeneExpression(
-      experimentId, [plotConfigs[plotUuidToUpdate]?.shownGene], gene,
-    ));
+    dispatch(loadGeneExpression(experimentId, [plotConfigs[plotUuidToUpdate]?.shownGene], gene));
     dispatch(updatePlotConfig(plotUuidToUpdate, { shownGene: gene, title: { text: gene } }));
   };
 
@@ -135,29 +133,27 @@ const ContinuousEmbeddingPage = ({ experimentId }) => {
   );
 
   return (
-    <>
-      <PlotContainer
+    <PlotContainer
+      experimentId={experimentId}
+      plotUuid={selectedPlotUuid}
+      plotType={plotType}
+      plotName={plotNames.CONTINUOUS_EMBEDDING}
+      plotStylingConfig={plotStylingConfig}
+      extraControlPanels={renderExtraPanels()}
+      defaultActiveKey='view-multiple-plots'
+      onPlotReset={() => dispatch(
+        updatePlotConfig(multiViewUuid, { nrows: 1, ncols: 1, plotUuids: [`${plotUuid}-0`] }),
+      )}
+      onUpdate={updateAll ? updateAllWithChanges : updatePlotWithChanges}
+    >
+      <MultiViewGrid
         experimentId={experimentId}
-        plotUuid={selectedPlotUuid}
+        renderPlot={renderPlot}
+        updateAllWithChanges={updateAllWithChanges}
         plotType={plotType}
-        plotName={plotNames.CONTINUOUS_EMBEDDING}
-        plotStylingConfig={plotStylingConfig}
-        extraControlPanels={renderExtraPanels()}
-        defaultActiveKey='view-multiple-plots'
-        onPlotReset={() => dispatch(
-          updatePlotConfig(multiViewUuid, { nrows: 1, ncols: 1, plotUuids: [`${plotUuid}-0`] }),
-        )}
-        onUpdate={updateAll ? updateAllWithChanges : updatePlotWithChanges}
-      >
-        <MultiViewGrid
-          experimentId={experimentId}
-          renderPlot={renderPlot}
-          updateAllWithChanges={updateAllWithChanges}
-          plotType={plotType}
-          plotUuid={plotUuid}
-        />
-      </PlotContainer>
-    </>
+        plotUuid={plotUuid}
+      />
+    </PlotContainer>
   );
 };
 

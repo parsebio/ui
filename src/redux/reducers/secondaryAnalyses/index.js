@@ -43,7 +43,7 @@ import secondaryAnalysisStatusLoaded from './secondaryAnalysisStatusLoaded';
 import secondaryAnalysisLogsLoaded from './secondaryAnalysisLogsLoaded';
 import secondaryAnalysisLogsLoading from './secondaryAnalysisLogsLoading';
 
-const notificationsReducer = (state = initialState, action) => {
+const notificationsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case SECONDARY_ANALYSES_LOADING: {
       return secondaryAnalysesLoading(state, action);

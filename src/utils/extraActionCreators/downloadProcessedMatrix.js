@@ -36,9 +36,7 @@ const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => 
 
     const timeout = getTimeoutForWorkerTask(getState(), taskName);
 
-    const data = await fetchWork(
-      experimentId, body, getState, dispatch, { timeout },
-    );
+    const data = await fetchWork(experimentId, body, getState, dispatch, { timeout });
 
     const processedMatrix = `${experimentId}_processed_matrix`;
     const fileName = processing.dataIntegration.analysisTool === analysisTools.SCANPY

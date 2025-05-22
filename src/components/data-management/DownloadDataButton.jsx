@@ -124,9 +124,7 @@ const DownloadDataButton = () => {
       disabled: !allSamplesAnalysed || backendLoading,
       onClick: () => {
         const config = _.omit(experimentSettings.processing, ['meta']);
-        const filteredConfig = filterQCParameters(
-          config, activeExperiment.sampleIds, samples,
-        );
+        const filteredConfig = filterQCParameters(config, activeExperiment.sampleIds, samples);
         const blob = exportQCParameters(filteredConfig);
         saveAs(blob, `${activeExperimentId.split('-')[0]}_settings.txt`);
       },

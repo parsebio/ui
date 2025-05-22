@@ -9,9 +9,7 @@ import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { loadBackendStatus } from '../backendStatus';
 
-const renameMetadataTrack = (
-  oldName, newName, experimentId,
-) => async (dispatch, getState) => {
+const renameMetadataTrack = (oldName, newName, experimentId) => async (dispatch, getState) => {
   const experiment = getState().experiments[experimentId];
 
   const oldMetadataKey = metadataNameToKey(oldName);

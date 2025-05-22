@@ -35,7 +35,7 @@ const experimentId = fake.EXPERIMENT_ID;
 const plotUuid = 'volcanoPlotMain';
 const defaultProps = { experimentId };
 
-jest.mock('components/sider/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => null);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;

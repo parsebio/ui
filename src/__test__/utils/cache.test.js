@@ -3,11 +3,12 @@ import * as localForage from 'localforage';
 import cache from 'utils/cache';
 
 jest.mock('localforage', () => ({
-  ready: jest.fn(() => new Promise((resolve) => resolve())),
+  ready: jest.fn(() => new Promise((resolve) => { resolve(); })),
 
   setItem: jest.fn((key) => new Promise((resolve, reject) => {
     if (key === 'invalid') {
-      return reject();
+      reject();
+      return;
     }
     resolve();
   })),
@@ -31,9 +32,9 @@ jest.mock('localforage', () => ({
     }
   })),
 
-  removeItem: jest.fn(() => new Promise((resolve) => resolve())),
-  length: jest.fn(() => new Promise((resolve) => resolve(3))),
-  keys: jest.fn(() => new Promise((resolve) => resolve(['key1', 'key2', 'key3']))),
+  removeItem: jest.fn(() => new Promise((resolve) => { resolve(); })),
+  length: jest.fn(() => new Promise((resolve) => { resolve(3); })),
+  keys: jest.fn(() => new Promise((resolve) => { resolve(['key1', 'key2', 'key3']); })),
 }));
 
 describe('cache init', () => {

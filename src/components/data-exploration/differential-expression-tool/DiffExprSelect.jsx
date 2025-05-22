@@ -20,7 +20,7 @@ const DiffExprSelect = (props) => {
   const tree = composeTree(hierarchy, properties, filterTypes);
 
   const renderChildren = (rootKey, children) => {
-    if (!children || children.length === 0) { return (<></>); }
+    if (!children || children.length === 0) { return null; }
 
     // If this is the `compareWith` option, we need to add `the rest`
     // under the group previously selected.

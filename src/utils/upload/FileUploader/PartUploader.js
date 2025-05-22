@@ -44,7 +44,7 @@ class PartUploader {
 
       await this.#executeUpload();
     });
-  }
+  };
 
   finishUpload = async () => {
     if (this.#accumulatedChunks.length > 0) {
@@ -52,7 +52,7 @@ class PartUploader {
     }
 
     return this.#uploadedParts;
-  }
+  };
 
   #executeUpload = async () => {
     const partNumber = this.#uploadedParts.length + 1;
@@ -78,9 +78,9 @@ class PartUploader {
     this.#accumulatedChunks = [];
 
     this.#uploadedParts.push({ ETag: partResponse.headers.etag, PartNumber: partNumber });
-  }
+  };
 
-  #getAccumulatedUploadSize = () => _.sum(_.map(this.#accumulatedChunks, 'chunk.length'))
+  #getAccumulatedUploadSize = () => _.sum(_.map(this.#accumulatedChunks, 'chunk.length'));
 
   #getSignedUrlForPart = async (partNumber) => {
     const {

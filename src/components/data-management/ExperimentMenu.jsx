@@ -63,8 +63,10 @@ const ExperimentMenu = () => {
               <Button
                 disabled={!isLatestSecondaryExecution}
                 type='primary'
-                onClick={() => navigateTo(modules.SECONDARY_ANALYSIS_OUTPUT,
-                  { secondaryAnalysisId: linkedSecondaryAnalysisId })}
+                onClick={() => navigateTo(
+                  modules.SECONDARY_ANALYSIS_OUTPUT,
+                  { secondaryAnalysisId: linkedSecondaryAnalysisId },
+                )}
               >
                 Go to Pipeline Outputs
               </Button>
@@ -86,7 +88,7 @@ const ExperimentMenu = () => {
           currentSelectedTech={selectedTech}
           onCancel={() => setUploadModalVisible(false)}
         />
-      ) : <></>}
+      ) : null}
     </>
   );
 };

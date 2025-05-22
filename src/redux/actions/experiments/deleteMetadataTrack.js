@@ -9,9 +9,7 @@ import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 import { metadataNameToKey } from 'utils/data-management/metadataUtils';
 
-const deleteMetadataTrack = (
-  name, experimentId,
-) => async (dispatch, getState) => {
+const deleteMetadataTrack = (name, experimentId) => async (dispatch, getState) => {
   const experiment = getState().experiments[experimentId];
 
   const metadataKey = metadataNameToKey(name);

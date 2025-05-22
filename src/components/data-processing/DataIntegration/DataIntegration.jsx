@@ -46,7 +46,8 @@ const DataIntegration = (props) => {
 
   const dispatch = useDispatch();
   const debounceSave = useCallback(
-    _.debounce((plotUuid) => dispatch(savePlotConfig(experimentId, plotUuid)), 2000), [],
+    _.debounce((plotUuid) => dispatch(savePlotConfig(experimentId, plotUuid)), 2000),
+    [],
   );
 
   const numLegendItems = useSelector(getCellSetsHierarchyByKeys(['sample']))[0]?.children?.length;

@@ -17,8 +17,6 @@ const loadProcessingSettings = (experimentId) => async (dispatch) => {
         data: data.processingConfig || data,
       },
     });
-
-    return;
   } catch (e) {
     const errorMessage = handleError(e, endUserMessages.ERROR_FETCHING_DATA_PROCESSING_SETTINGS);
 
