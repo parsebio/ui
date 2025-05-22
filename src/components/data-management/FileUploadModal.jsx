@@ -206,7 +206,8 @@ const FileUploadModal = (props) => {
                   {
                     Object.values(sampleTech)
                       .map((tech) => (
-                        <Option key={`key-${tech}`}
+                        <Option
+                          key={`key-${tech}`}
                           value={tech}
                           disabled={
                             currentSelectedTech
