@@ -27,8 +27,10 @@ const LaunchAnalysisButton = () => {
 
   const { activeExperimentId } = experiments.meta;
   const activeExperiment = experiments[activeExperimentId];
-  const selectedTech = samples[activeExperiment?.sampleIds[0]]?.type;
-  const isTechSeurat = selectedTech === sampleTech.SEURAT;
+
+  const hasSeuratTechnology = activeExperiment?.sampleIds.some(
+    (sampleId) => samples[sampleId]?.type === sampleTech.SEURAT,
+  );
 
   const [pipelinesRerunStatus, setPipelinesRerunStatus] = useState({
     runPipeline: null, rerun: true, reasons: [], complete: false,
@@ -41,7 +43,7 @@ const LaunchAnalysisButton = () => {
     }
 
     if (shouldNavigate) {
-      const moduleName = isTechSeurat && pipelinesRerunStatus.complete
+      const moduleName = hasSeuratTechnology && pipelinesRerunStatus.complete
         ? modules.DATA_EXPLORATION : modules.DATA_PROCESSING;
       navigateTo(moduleName, { experimentId: activeExperimentId });
     }
@@ -49,7 +51,7 @@ const LaunchAnalysisButton = () => {
 
   useEffect(() => {
     // The value of backend status is null for new experiments that have never run
-    const setupPipeline = isTechSeurat ? 'seurat' : 'gem2s';
+    const setupPipeline = hasSeuratTechnology ? 'seurat' : 'gem2s';
     const {
       pipeline: qcBackendStatus, [setupPipeline]: setupBackendStatus,
     } = backendStatus[activeExperimentId]?.status ?? {};
@@ -64,7 +66,7 @@ const LaunchAnalysisButton = () => {
         setupBackendStatus,
         qcBackendStatus,
         activeExperiment,
-        isTechSeurat,
+        hasSeuratTechnology,
       ),
     );
   }, [backendStatus, activeExperimentId, samples, activeExperiment]);
@@ -85,11 +87,14 @@ const LaunchAnalysisButton = () => {
 
     const metadataKeysAvailable = activeExperiment.metadataKeys.length;
 
-    const allSampleFilesUploaded = (sample) => (
-      fileUploadUtils[selectedTech].requiredFiles
-        .every((fileType) => Object.keys(sample.files).includes(fileType))
-      && Object.values(sample.files).every((file) => file.upload.status === UploadStatus.UPLOADED)
-    );
+    const allSampleFilesUploaded = (sample) => {
+      const sampleTechnology = sample.type;
+      return (
+        fileUploadUtils[sampleTechnology].requiredFiles
+          .every((fileType) => Object.keys(sample.files).includes(fileType))
+        && Object.values(sample.files).every((file) => file.upload.status === UploadStatus.UPLOADED)
+      );
+    };
 
     const allSampleMetadataInserted = (sample) => {
       if (!metadataKeysAvailable) return true;
@@ -172,7 +177,7 @@ const LaunchAnalysisButton = () => {
 
     if (pipelinesRerunStatus.rerun) {
       buttonText = 'Process project';
-    } else if (isTechSeurat && pipelinesRerunStatus.complete) {
+    } else if (hasSeuratTechnology && pipelinesRerunStatus.complete) {
       buttonText = 'Go to Data Exploration';
     } else {
       buttonText = 'Go to Data Processing';
