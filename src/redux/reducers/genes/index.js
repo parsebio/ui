@@ -30,7 +30,7 @@ import genesSelect from 'redux/reducers/genes/genesSelect';
 import genesDeselect from 'redux/reducers/genes/genesDeselect';
 import downsampledGenesError from './downsampledGenesError';
 
-const genesReducer = (state = getInitialState(), action) => {
+const genesReducer = (state = getInitialState(), action = {}) => {
   switch (action.type) {
     case GENES_PROPERTIES_LOADING: {
       return genesPropertiesLoading(state, action);

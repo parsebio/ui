@@ -58,7 +58,7 @@ describe('loadDifferentialExpression action', () => {
       },
       backendStatus,
     });
-    fetchWork.mockImplementationOnce(() => new Promise((resolve, reject) => reject(new Error('random error!'))));
+    fetchWork.mockImplementationOnce(() => new Promise((resolve, reject) => { reject(new Error('random error!')); }));
 
     await store.dispatch(
       loadDifferentialExpression(experimentId, cellSets, comparisonType, defaultTableState),
@@ -68,7 +68,8 @@ describe('loadDifferentialExpression action', () => {
     expect(loadingAction.type).toEqual(DIFF_EXPR_LOADING);
 
     expect(fetchWork).toHaveBeenCalledTimes(1);
-    expect(fetchWork).toHaveBeenCalledWith('1234',
+    expect(fetchWork).toHaveBeenCalledWith(
+      '1234',
       {
         cellSet: 'louvain-0',
         compareWith: 'louvain-1',
@@ -84,7 +85,8 @@ describe('loadDifferentialExpression action', () => {
       expect.any(Function),
       {
         timeout: 60,
-      });
+      },
+    );
     expect(loadingAction).toMatchSnapshot();
 
     const loadedAction = store.getActions()[1];
@@ -115,7 +117,7 @@ describe('loadDifferentialExpression action', () => {
         total: 500,
       };
 
-      return new Promise((resolve) => resolve(resolveWith));
+      return new Promise((resolve) => { resolve(resolveWith); });
     });
 
     await store.dispatch(
@@ -127,7 +129,8 @@ describe('loadDifferentialExpression action', () => {
     expect(loadingAction).toMatchSnapshot();
 
     expect(fetchWork).toHaveBeenCalledTimes(1);
-    expect(fetchWork).toHaveBeenCalledWith('1234',
+    expect(fetchWork).toHaveBeenCalledWith(
+      '1234',
       {
         cellSet: 'louvain-0',
         compareWith: 'louvain-1',
@@ -143,7 +146,8 @@ describe('loadDifferentialExpression action', () => {
       expect.any(Function),
       {
         timeout: 60,
-      });
+      },
+    );
 
     const loadedAction = store.getActions()[1];
     expect(loadedAction.type).toEqual(DIFF_EXPR_LOADED);
@@ -168,7 +172,7 @@ describe('loadDifferentialExpression action', () => {
         total: 500,
       };
 
-      return new Promise((resolve) => resolve(resolveWith));
+      return new Promise((resolve) => { resolve(resolveWith); });
     });
 
     await store.dispatch(
@@ -180,7 +184,8 @@ describe('loadDifferentialExpression action', () => {
     expect(loadingAction).toMatchSnapshot();
 
     expect(fetchWork).toHaveBeenCalledTimes(1);
-    expect(fetchWork).toHaveBeenCalledWith('1234',
+    expect(fetchWork).toHaveBeenCalledWith(
+      '1234',
       {
         cellSet: 'louvain-0',
         compareWith: 'louvain-1',
@@ -196,7 +201,8 @@ describe('loadDifferentialExpression action', () => {
       expect.any(Function),
       {
         timeout: 60,
-      });
+      },
+    );
 
     const loadedAction = store.getActions()[1];
     expect(loadedAction.type).toEqual(DIFF_EXPR_LOADED);
@@ -225,7 +231,7 @@ describe('loadDifferentialExpression action', () => {
         total: 0,
       };
 
-      return new Promise((resolve) => resolve(resolveWith));
+      return new Promise((resolve) => { resolve(resolveWith); });
     });
     await store.dispatch(
       loadDifferentialExpression(experimentId, cellSets, comparisonType, defaultTableState),

@@ -5,7 +5,9 @@ import handleError from 'utils/http/handleError';
 import UploadStatus from 'utils/upload/UploadStatus';
 
 const updateCellLevelMetadataFileUpload = (
-  experimentId, uploadStatus, percentProgress,
+  experimentId,
+  uploadStatus,
+  percentProgress,
 ) => async (dispatch) => {
   // Don't send an api update whenever the progress bar is updated, only for uploadStatus changes
   // TODO: move progress to not even be a part of redux, manage it in a different way

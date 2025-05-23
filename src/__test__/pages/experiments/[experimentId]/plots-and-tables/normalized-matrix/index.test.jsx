@@ -49,7 +49,8 @@ describe('Normalized matrix index page', () => {
     },
   };
   const mockApiResponses = _.merge(
-    generateDefaultMockAPIResponses(fake.EXPERIMENT_ID), customAPIResponses,
+    generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
+    customAPIResponses,
   );
 
   beforeEach(async () => {

@@ -40,7 +40,11 @@ describe('ExpressionMatrix', () => {
       } = getTwoGenesMatrix();
 
       matrix.pushGeneExpression(
-        orderedGeneNames, rawExpression, truncatedExpression, zScore, stats,
+        orderedGeneNames,
+        rawExpression,
+        truncatedExpression,
+        zScore,
+        stats,
       );
 
       expect(matrix).toMatchSnapshot();
@@ -52,7 +56,11 @@ describe('ExpressionMatrix', () => {
       } = getTwoGenesMatrix();
 
       matrix.pushGeneExpression(
-        orderedGeneNames, rawExpression, truncatedExpression, zScore, stats,
+        orderedGeneNames,
+        rawExpression,
+        truncatedExpression,
+        zScore,
+        stats,
       );
 
       expect(matrix).toMatchSnapshot();
@@ -67,7 +75,11 @@ describe('ExpressionMatrix', () => {
       } = getTwoGenesMatrix();
 
       matrix.pushGeneExpression(
-        orderedGeneNames, rawExpression, truncatedExpression, zScore, stats,
+        orderedGeneNames,
+        rawExpression,
+        truncatedExpression,
+        zScore,
+        stats,
       );
     });
 
@@ -124,7 +136,11 @@ describe('ExpressionMatrix', () => {
       } = getOtherTwoGenesMatrix();
 
       matrix.pushGeneExpression(
-        orderedGeneNames, rawExpression, truncatedExpression, zScore, stats,
+        orderedGeneNames,
+        rawExpression,
+        truncatedExpression,
+        zScore,
+        stats,
       );
 
       expect(matrix).toMatchSnapshot();
@@ -136,7 +152,11 @@ describe('ExpressionMatrix', () => {
       } = getOtherFourGenesMatrix();
 
       matrix.pushGeneExpression(
-        orderedGeneNames, rawExpression, truncatedExpression, zScore, stats,
+        orderedGeneNames,
+        rawExpression,
+        truncatedExpression,
+        zScore,
+        stats,
       );
 
       expect(matrix).toMatchSnapshot();
@@ -151,7 +171,11 @@ describe('ExpressionMatrix', () => {
 
       // Add the same data matrix already has
       matrix.pushGeneExpression(
-        orderedGeneNames, rawExpression, truncatedExpression, zScore, stats,
+        orderedGeneNames,
+        rawExpression,
+        truncatedExpression,
+        zScore,
+        stats,
       );
 
       // Nothing changed

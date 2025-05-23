@@ -12,7 +12,7 @@ const makeBlob = (data) => ({
   data,
   size: data.length,
   slice(start, end) { return makeBlob(data.slice(start, end)); },
-  arrayBuffer() { return new Promise((resolve) => resolve(data.buffer)); },
+  arrayBuffer() { return new Promise((resolve) => { resolve(data.buffer); }); },
 });
 
 const mockFileLocations = {

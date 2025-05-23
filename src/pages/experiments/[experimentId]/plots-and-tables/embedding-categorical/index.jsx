@@ -161,20 +161,18 @@ const EmbeddingCategoricalPage = ({ experimentId }) => {
   };
 
   return (
-    <>
-      <PlotContainer
-        experimentId={experimentId}
-        plotName={plotNames.CATEGORICAL_EMBEDDING}
-        plotUuid={plotUuid}
-        plotType={plotType}
-        plotStylingConfig={plotStylingConfig}
-        plotInfo='In order to rename existing clusters or create new ones, use the cell set tool, located in the Data Exploration page.'
-        extraControlPanels={renderExtraPanels()}
-        defaultActiveKey='group-by'
-      >
-        {render()}
-      </PlotContainer>
-    </>
+    <PlotContainer
+      experimentId={experimentId}
+      plotName={plotNames.CATEGORICAL_EMBEDDING}
+      plotUuid={plotUuid}
+      plotType={plotType}
+      plotStylingConfig={plotStylingConfig}
+      plotInfo='In order to rename existing clusters or create new ones, use the cell set tool, located in the Data Exploration page.'
+      extraControlPanels={renderExtraPanels()}
+      defaultActiveKey='group-by'
+    >
+      {render()}
+    </PlotContainer>
   );
 };
 EmbeddingCategoricalPage.propTypes = {

@@ -45,9 +45,7 @@ const updatesAreAllowed = (dataUpdated, rootNode) => {
   return _.intersection(dataUpdatedKeys, allowedPropertyKeys).length === dataUpdatedKeys.length;
 };
 
-const updateCellSetProperty = (
-  experimentId, key, dataUpdated,
-) => async (dispatch, getState) => {
+const updateCellSetProperty = (experimentId, key, dataUpdated) => async (dispatch, getState) => {
   const { loading, error, properties } = getCellSets()(getState().cellSets);
 
   if (loading || error) {

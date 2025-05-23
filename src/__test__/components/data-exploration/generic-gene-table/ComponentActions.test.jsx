@@ -17,7 +17,7 @@ jest.mock('utils/getTimeoutForWorkerTask', () => ({
 }));
 
 const mockThreeGenesMatrix = getThreeGenesMatrix();
-jest.mock('utils/work/fetchWork', () => (jest.fn(() => new Promise((resolve) => resolve(mockThreeGenesMatrix)))));
+jest.mock('utils/work/fetchWork', () => jest.fn(() => new Promise((resolve) => { resolve(mockThreeGenesMatrix); })));
 
 const mockStore = configureMockStore([thunk]);
 

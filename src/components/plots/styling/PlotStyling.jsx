@@ -28,29 +28,29 @@ import VolcanoDisplayLabels from './volcano/DisplayLabels';
 
 const { Panel } = Collapse;
 
+const ComponentMapping = {
+  dimensions: (attr, config, onUpdate) => <DimensionsRangeEditor key='dimensions' config={config} onUpdate={onUpdate} {...attr} />,
+  title: (attr, config, onUpdate) => <TitleDesign key='title' config={config} onUpdate={onUpdate} {...attr} />,
+  font: (attr, config, onUpdate) => <FontDesign key='font' config={config} onUpdate={onUpdate} {...attr} />,
+  axes: (attr, config, onUpdate) => <AxesDesign key='axes' config={config} onUpdate={onUpdate} {...attr} />,
+  axesWithRanges: (attr, config, onUpdate) => <AxesWithRangesDesign key='axesWithRanges' config={config} onUpdate={onUpdate} {...attr} />,
+  colourScheme: (attr, config, onUpdate) => <ColourbarDesign key='colourScheme' config={config} onUpdate={onUpdate} {...attr} />,
+  colourInversion: (attr, config, onUpdate) => <ColourInversion key='colourInversion' config={config} onUpdate={onUpdate} {...attr} />,
+  expressionValuesType: (attr, config, onUpdate) => <ExpressionValuesType key='expressionValuesType' config={config} onUpdate={onUpdate} {...attr} />,
+  expressionValuesCapping: (attr, config, onUpdate) => <ExpressionValuesCapping key='expressionValuesCapping' config={config} onUpdate={onUpdate} {...attr} />,
+  markers: (attr, config, onUpdate) => <PointDesign key='markers' config={config} onUpdate={onUpdate} {...attr} />,
+  legend: (attr, config, onUpdate) => <LegendEditor key='legend' onUpdate={onUpdate} config={config} {...attr} />,
+  labels: (attr, config, onUpdate) => <LabelsDesign key='labels' onUpdate={onUpdate} config={config} {...attr} />,
+  violinMarkers: (attr, config, onUpdate) => <ViolinMarkersEditor key='violinMarkers' config={config} onUpdate={onUpdate} {...attr} />,
+  volcanoThresholds: (attr, config, onUpdate) => <VolcanoThresholdsGuidesEditor key='volcanoThresholds' config={config} onUpdate={onUpdate} {...attr} />,
+  volcanoMarkers: (attr, config, onUpdate) => <VolcanoMarkersEditor key='volcanoMarkers' config={config} onUpdate={onUpdate} {...attr} />,
+  volcanoLabels: (attr, config, onUpdate) => <VolcanoDisplayLabels key='volcanoLabels' config={config} onUpdate={onUpdate} {...attr} />,
+};
+
 const PlotStyling = (props) => {
   const {
     formConfig, config, onUpdate, extraPanels, defaultActiveKey,
   } = props;
-
-  const ComponentMapping = {
-    dimensions: (attr) => <DimensionsRangeEditor key='dimensions' config={config} onUpdate={onUpdate} {...attr} />,
-    title: (attr) => <TitleDesign key='title' config={config} onUpdate={onUpdate} {...attr} />,
-    font: (attr) => <FontDesign key='font' config={config} onUpdate={onUpdate} {...attr} />,
-    axes: (attr) => <AxesDesign key='axes' config={config} onUpdate={onUpdate} {...attr} />,
-    axesWithRanges: (attr) => <AxesWithRangesDesign key='axesWithRanges' config={config} onUpdate={onUpdate} {...attr} />,
-    colourScheme: (attr) => <ColourbarDesign key='colourScheme' config={config} onUpdate={onUpdate} {...attr} />,
-    colourInversion: (attr) => <ColourInversion key='colourInversion' config={config} onUpdate={onUpdate} {...attr} />,
-    expressionValuesType: (attr) => <ExpressionValuesType key='expressionValuesType' config={config} onUpdate={onUpdate} {...attr} />,
-    expressionValuesCapping: (attr) => <ExpressionValuesCapping key='expressionValuesCapping' config={config} onUpdate={onUpdate} {...attr} />,
-    markers: (attr) => <PointDesign key='markers' config={config} onUpdate={onUpdate} {...attr} />,
-    legend: (attr) => <LegendEditor key='legend' onUpdate={onUpdate} config={config} {...attr} />,
-    labels: (attr) => <LabelsDesign key='labels' onUpdate={onUpdate} config={config} {...attr} />,
-    violinMarkers: (attr) => <ViolinMarkersEditor key='violinMarkers' config={config} onUpdate={onUpdate} {...attr} />,
-    volcanoThresholds: (attr) => <VolcanoThresholdsGuidesEditor key='volcanoThresholds' config={config} onUpdate={onUpdate} {...attr} />,
-    volcanoMarkers: (attr) => <VolcanoMarkersEditor key='volcanoMarkers' config={config} onUpdate={onUpdate} {...attr} />,
-    volcanoLabels: (attr) => <VolcanoDisplayLabels key='volcanoLabels' config={config} onUpdate={onUpdate} {...attr} />,
-  };
 
   const formatPanelKey = (key) => key.trim().toLowerCase().replace(' ', '-');
 
@@ -68,10 +68,10 @@ const PlotStyling = (props) => {
           {el.controls.map((control) => {
             // If control is a string, no prop is passed
             if (_.isString(control)) {
-              return ComponentMapping[control]({});
+              return ComponentMapping[control]({}, config, onUpdate);
             }
 
-            return ComponentMapping[control.name](control.props || {});
+            return ComponentMapping[control.name](control.props || {}, config, onUpdate);
           })}
 
           {
@@ -89,7 +89,7 @@ const PlotStyling = (props) => {
         </Panel>
       );
     }
-    return <></>;
+    return null;
   });
 
   return (

@@ -40,7 +40,8 @@ const defaultProps = {
 };
 
 const categoricalEmbeddingPlotFactory = createTestComponentFactory(
-  CategoricalEmbeddingPlot, defaultProps,
+  CategoricalEmbeddingPlot,
+  defaultProps,
 );
 
 const renderCategoricalEmbeddingPlot = async (store, props) => {

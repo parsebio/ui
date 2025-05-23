@@ -14,11 +14,9 @@ const RepositoryPage = () => {
   }, [user]);
 
   return (
-    <>
-      <RepositoryTable
-        data={exampleExperiments}
-      />
-    </>
+    <RepositoryTable
+      data={exampleExperiments}
+    />
   );
 };
 

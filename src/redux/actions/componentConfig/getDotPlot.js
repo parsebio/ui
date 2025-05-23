@@ -77,9 +77,7 @@ const getDotPlot = (
       payload: { plotUuid },
     });
 
-    const data = await fetchWork(
-      experimentId, body, getState, dispatch, { timeout },
-    );
+    const data = await fetchWork(experimentId, body, getState, dispatch, { timeout });
 
     const plotData = transformToPlotData(data);
     orderCellSets(plotData, cellSets, config);

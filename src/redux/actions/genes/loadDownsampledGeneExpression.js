@@ -36,12 +36,16 @@ const loadDownsampledGeneExpression = (
     groupedTracks,
     selectedCellSet: selectedCellSetKey,
     selectedPoints,
-  } = state.componentConfig[componentUuid]?.config;
+  } = state.componentConfig[componentUuid]?.config ?? {};
 
   const hiddenCellSets = withHiddenCellSets ? Array.from(getCellSets()(state.cellSets).hidden) : [];
 
   const cellSets = await getCellSetsThatAffectDownsampling(
-    experimentId, selectedCellSetKey, groupedTracks, dispatch, getState,
+    experimentId,
+    selectedCellSetKey,
+    groupedTracks,
+    dispatch,
+    getState,
   );
 
   const downsampleSettings = {
@@ -72,7 +76,10 @@ const loadDownsampledGeneExpression = (
       stats,
       cellOrder,
     } = await fetchWork(
-      experimentId, body, getState, dispatch,
+      experimentId,
+      body,
+      getState,
+      dispatch,
       {
         timeout,
         onETagGenerated: (ETag) => {

@@ -79,7 +79,7 @@ const plotStylingConfig = [
   },
 ];
 
-const DotPlotPage = (props) => {
+function DotPlotPage(props) {
   const { experimentId } = props;
 
   const dispatch = useDispatch();
@@ -145,15 +145,13 @@ const DotPlotPage = (props) => {
     });
   };
 
-  const hasMoreThanTwoGroupsToCompare = useMemo(
-    () => {
-      if (!cellSets.accessible || !config?.selectedCellSet || !config?.selectedPoints) {
-        return false;
-      }
+  const hasMoreThanTwoGroupsToCompare = useMemo(() => {
+    if (!cellSets.accessible || !config?.selectedCellSet || !config?.selectedPoints) {
+      return false;
+    }
 
-      return hasGroupsToCompare(config.selectedCellSet, config.selectedPoints);
-    }, [cellSets.accessible, config?.selectedCellSet, config?.selectedPoints],
-  );
+    return hasGroupsToCompare(config.selectedCellSet, config.selectedPoints);
+  }, [cellSets.accessible, config?.selectedCellSet, config?.selectedPoints]);
 
   const shouldFetchPlotData = () => {
     if (!cellSets.accessible || !config) return false;
@@ -313,7 +311,10 @@ const DotPlotPage = (props) => {
   // When fetching new genes, reorder data to match selected genes
   useEffect(() => {
     if (
-      plotData?.length !== cellSets.hierarchy[0]?.children.length * config?.selectedGenes.length
+      (
+        plotData?.length
+        !== (cellSets.hierarchy[0]?.children.length ?? 0) * (config?.selectedGenes.length ?? 0)
+      )
       || !reorderAfterFetch
     ) return;
 
@@ -349,7 +350,7 @@ const DotPlotPage = (props) => {
   };
 
   const onGenesSelect = (genes) => {
-    const allGenes = _.uniq([...config?.selectedGenes, ...genes]);
+    const allGenes = _.uniq([...config?.selectedGenes ?? {}, ...genes]);
 
     if (_.isEqual(allGenes, config?.selectedGenes)) return;
 
@@ -491,22 +492,20 @@ const DotPlotPage = (props) => {
   };
 
   return (
-    <>
-      <PlotContainer
-        experimentId={experimentId}
-        plotUuid={plotUuid}
-        plotType={plotType}
-        plotName={plotNames.DOT_PLOT}
-        plotStylingConfig={plotStylingConfig}
-        extraToolbarControls={<ExportAsCSV data={getCSVData()} filename={csvFileName} />}
-        extraControlPanels={renderExtraPanels()}
-        defaultActiveKey='gene-selection'
-      >
-        {renderPlot()}
-      </PlotContainer>
-    </>
+    <PlotContainer
+      experimentId={experimentId}
+      plotUuid={plotUuid}
+      plotType={plotType}
+      plotName={plotNames.DOT_PLOT}
+      plotStylingConfig={plotStylingConfig}
+      extraToolbarControls={<ExportAsCSV data={getCSVData()} filename={csvFileName} />}
+      extraControlPanels={renderExtraPanels()}
+      defaultActiveKey='gene-selection'
+    >
+      {renderPlot()}
+    </PlotContainer>
   );
-};
+}
 
 DotPlotPage.propTypes = {
   experimentId: PropTypes.string.isRequired,

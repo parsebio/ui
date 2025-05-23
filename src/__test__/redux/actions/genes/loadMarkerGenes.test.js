@@ -69,7 +69,7 @@ describe('loadMarkerGenes action', () => {
       // Simulate etag being generated
       optionals.onETagGenerated('new-etag');
 
-      return new Promise((resolve) => resolve(mockResult));
+      return new Promise((resolve) => { resolve(mockResult); });
     });
 
     await store.dispatch(loadMarkerGenes(experimentId, 'interactiveHeatmap'));
@@ -90,7 +90,7 @@ describe('loadMarkerGenes action', () => {
       // Simulate etag being generated
       optionals.onETagGenerated('new-etag');
 
-      return new Promise((_resolve, reject) => reject(new Error('random error!')));
+      return new Promise((_resolve, reject) => { reject(new Error('random error!')); });
     });
 
     await store.dispatch(loadMarkerGenes(experimentId, 'interactiveHeatmap'));
@@ -152,7 +152,7 @@ describe('loadMarkerGenes action', () => {
       // Simulate etag being generated
       optionals.onETagGenerated('new-etag');
 
-      return new Promise((resolve) => resolve(mockResult));
+      return new Promise((resolve) => { resolve(mockResult); });
     });
 
     await store.dispatch(loadMarkerGenes(experimentId, 'interactiveHeatmap'));

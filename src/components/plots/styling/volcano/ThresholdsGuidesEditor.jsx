@@ -63,109 +63,107 @@ const ThresholdsGuidesEditor = (props) => {
   const debouncedUpdate = _.debounce((update) => { onUpdate(update); }, 300);
 
   return (
-    <>
-      <Form
-        size='small'
-        labelCol={{ span: 12 }}
-        wrapperCol={{ span: 12 }}
+    <Form
+      size='small'
+      labelCol={{ span: 12 }}
+      wrapperCol={{ span: 12 }}
+    >
+      <p><strong>Significance Thresholds</strong></p>
+      <Form.Item
+        label={(
+          <span>
+            Adjusted p-value
+          </span>
+        )}
       >
-        <p><strong>Significance Thresholds</strong></p>
-        <Form.Item
-          label={(
-            <span>
-              Adjusted p-value
-            </span>
-          )}
-        >
-          <Space direction='vertical' style={{ width: '100%' }}>
-            <Space>
-              <InputNumber
-                min={0}
-                value={config.adjPvalueThreshold}
-                step={1}
-                type='number'
-                onChange={(val) => debouncedUpdate({ adjPvalueThreshold: val })}
-              />
-              <Checkbox
-                checked={config.showpvalueThresholdGuides}
-                onChange={(e) => {
-                  onUpdate({ showpvalueThresholdGuides: e.target.checked });
-                }}
-              >
-                Show Guideline
-              </Checkbox>
-            </Space>
-            <Text type='secondary'>
-              -log10(adj p-value) =
-              {' '}
-              {-Math.log10(config.adjPvalueThreshold).toPrecision(3)}
-            </Text>
-          </Space>
-        </Form.Item>
-
-        <Form.Item
-          label={(
-            <span>
-              Fold change
-              {' '}
-              <em>(log)</em>
-            </span>
-          )}
-        >
+        <Space direction='vertical' style={{ width: '100%' }}>
           <Space>
             <InputNumber
               min={0}
-              step={0.1}
-              value={config.logFoldChangeThreshold}
-              onChange={(val) => debouncedUpdate({ logFoldChangeThreshold: val })}
+              value={config.adjPvalueThreshold}
+              step={1}
+              type='number'
+              onChange={(val) => debouncedUpdate({ adjPvalueThreshold: val })}
             />
             <Checkbox
-              checked={config.showLogFoldChangeThresholdGuides}
+              checked={config.showpvalueThresholdGuides}
               onChange={(e) => {
-                onUpdate({ showLogFoldChangeThresholdGuides: e.target.checked });
+                onUpdate({ showpvalueThresholdGuides: e.target.checked });
               }}
             >
               Show Guideline
             </Checkbox>
           </Space>
-        </Form.Item>
+          <Text type='secondary'>
+            -log10(adj p-value) =
+            {' '}
+            {-Math.log10(config.adjPvalueThreshold).toPrecision(3)}
+          </Text>
+        </Space>
+      </Form.Item>
 
-        <p><strong>Guideline Design</strong></p>
-        <Form.Item
-          label='Width'
-        >
+      <Form.Item
+        label={(
+          <span>
+            Fold change
+            {' '}
+            <em>(log)</em>
+          </span>
+        )}
+      >
+        <Space>
           <InputNumber
-            min={1}
-            value={config.thresholdGuideWidth}
-            type='number'
-            onChange={(val) => debouncedUpdate({ thresholdGuideWidth: val })}
+            min={0}
+            step={0.1}
+            value={config.logFoldChangeThreshold}
+            onChange={(val) => debouncedUpdate({ logFoldChangeThreshold: val })}
           />
-        </Form.Item>
-        <Form.Item
-          label='Colors'
-        >
-          <Select
-            value='Browse...'
-            style={{ width: 200 }}
-            onChange={() => false}
-            open={colorPickerOpen}
-            onFocus={() => setColorPickerOpen(true)}
-            onBlur={() => setColorPickerOpen(false)}
+          <Checkbox
+            checked={config.showLogFoldChangeThresholdGuides}
+            onChange={(e) => {
+              onUpdate({ showLogFoldChangeThresholdGuides: e.target.checked });
+            }}
           >
-            {colorPickerOptions.map(({ config: configName, name: text }) => (
-              <Option value={configName}>
-                <ColorPickerOption
-                  text={text}
-                  config={config}
-                  onUpdate={onUpdate}
-                  configType={configName}
-                />
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </Form>
-    </>
+            Show Guideline
+          </Checkbox>
+        </Space>
+      </Form.Item>
+
+      <p><strong>Guideline Design</strong></p>
+      <Form.Item
+        label='Width'
+      >
+        <InputNumber
+          min={1}
+          value={config.thresholdGuideWidth}
+          type='number'
+          onChange={(val) => debouncedUpdate({ thresholdGuideWidth: val })}
+        />
+      </Form.Item>
+      <Form.Item
+        label='Colors'
+      >
+        <Select
+          value='Browse...'
+          style={{ width: 200 }}
+          onChange={() => false}
+          open={colorPickerOpen}
+          onFocus={() => setColorPickerOpen(true)}
+          onBlur={() => setColorPickerOpen(false)}
+        >
+          {colorPickerOptions.map(({ config: configName, name: text }) => (
+            <Option value={configName}>
+              <ColorPickerOption
+                text={text}
+                config={config}
+                onUpdate={onUpdate}
+                configType={configName}
+              />
+            </Option>
+          ))}
+        </Select>
+      </Form.Item>
+    </Form>
   );
 };
 

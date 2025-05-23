@@ -26,8 +26,10 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock('components/data-processing/DataProcessingIntercept',
-  () => jest.fn(() => <>Data Processing Intercept</>));
+jest.mock(
+  'components/data-processing/DataProcessingIntercept',
+  () => jest.fn(() => <>Data Processing Intercept</>),
+);
 jest.mock('redux/actions/experiments/switchExperiment');
 jest.mock('redux/actions/experiments/updateExperiment');
 jest.mock('redux/actions/experiments/setActiveExperiment');

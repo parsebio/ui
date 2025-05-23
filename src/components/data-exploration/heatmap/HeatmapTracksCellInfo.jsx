@@ -47,12 +47,12 @@ const HeatmapTracksCellInfo = (props) => {
           <div style={cellInfoStyle}>
             {`Cell id: ${cellId}`}
           </div>
-        ) : <></>}
+        ) : null}
         {trackName ? (
           <div style={cellInfoStyle}>
             {`Group name: ${trackName}`}
           </div>
-        ) : <></>}
+        ) : null}
       </Card>
     </div>
   );
@@ -61,7 +61,7 @@ const HeatmapTracksCellInfo = (props) => {
     return renderCellInfo();
   }
 
-  return (<></>);
+  return null;
 };
 
 HeatmapTracksCellInfo.propTypes = {

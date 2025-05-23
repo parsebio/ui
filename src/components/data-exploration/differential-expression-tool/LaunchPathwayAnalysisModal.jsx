@@ -79,159 +79,155 @@ const LaunchPathwayAnalysisModal = (props) => {
   const canLaunchService = () => !launchingPathwayAnalysis && species;
 
   return (
-    <>
-      <Modal
-        open
-        title='Pathway Analysis'
-        width='50%'
-        onCancel={onCancel}
-        footer={(
-          <Button
-            disabled={!canLaunchService()}
-            loading={launchingPathwayAnalysis}
-            type='primary'
-            onClick={() => launchPathwayAnalysis(externalService)}
-          >
-            {!canLaunchService() ? 'Loading...' : 'Launch'}
-          </Button>
-        )}
-      >
-        {!advancedFiltersAdded && (
-          <Alert
-            type='warning'
-            showIcon
-            style={{
-              ...marginSpacing,
-              width: '100%',
-            }}
-            message={(
-              <>
-                You have not performed any filtering on the genes!
-                <Button
-                  type='link'
-                  size='small'
-                  onClick={() => onOpenAdvancedFilters()}
-                >
-                  Click here to open the advanced filtering options.
-                </Button>
-              </>
-            )}
-          />
-        )}
-
-        <Row style={marginSpacing}><b>External service</b></Row>
-
-        <Row style={marginSpacing}>
-          <Radio.Group value={externalService} onChange={(e) => setExternalService(e.target.value)}>
-            {Object.keys(pathwayServices).map((service) => {
-              const serviceName = pathwayServices[service];
-              return (<Radio key={service} value={serviceName} disabled={service === 'PANTHERDB'}>{serviceName}</Radio>);
-            })}
-          </Radio.Group>
-        </Row>
-
-        <Row style={marginSpacing}>
-          <Space direction='vertical'>
-            <b>Species</b>
-
-            <Select
-              loading={speciesList[externalService].length === 0}
-              value={species}
-              onChange={(value) => setSpecies(value)}
-              style={{ width: 400 }}
-            >
-              {
-                speciesList[externalService].map((option) => (
-                  <Select.Option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    <i>{option.label}</i>
-                  </Select.Option>
-                ))
-              }
-            </Select>
-          </Space>
-          <Space
-            style={{ marginLeft: '5%' }}
-            direction='vertical'
-          >
-            <b>Number of genes</b>
-            <Space>
-              <Radio.Group
-                value={useAllGenes}
-                onChange={(e) => setUseAllGenes(e.target.value)}
-              >
-                <Space>
-                  <Radio value>All</Radio>
-                  <Radio value={false}>Top</Radio>
-                </Space>
-              </Radio.Group>
-              <InputNumber
-                value={numGenes}
-                onChange={(value) => setNumGenes(value)}
-                disabled={useAllGenes}
-                size='medium'
-                style={{ width: '100px' }}
-                min={0}
-                placeholder='# of genes'
-              />
-            </Space>
-          </Space>
-        </Row>
-        {externalService === pathwayServices.PANTHERDB && (
-          <Paragraph>
-            It is
-            <b> strongly recommended </b>
-            {' '}
-            to input the reference list of genes by setting it
-            in &quot;Reference List&quot; in the PantherDB results page
-            and re-run the pathway analysis.
-            {' '}
-            <Button
-              type='link'
-              disabled={gettingBackgroundGenes}
-              loading={gettingBackgroundGenes}
-              style={inlineButtonStyle}
-              onClick={async () => {
-                const genesList = await getBackgroundGenesList();
-                const fileUrl = writeToFileURL(genesList);
-                downloadFromUrl(fileUrl, { fileName: 'reference_genes_list.txt' });
-              }}
-            >
-              Click here to download the reference genes list
-            </Button>
-            .
-          </Paragraph>
-        )}
-
+    <Modal
+      open
+      title='Pathway Analysis'
+      width='50%'
+      onCancel={onCancel}
+      footer={(
+        <Button
+          disabled={!canLaunchService()}
+          loading={launchingPathwayAnalysis}
+          type='primary'
+          onClick={() => launchPathwayAnalysis(externalService)}
+        >
+          {!canLaunchService() ? 'Loading...' : 'Launch'}
+        </Button>
+      )}
+    >
+      {!advancedFiltersAdded && (
         <Alert
           type='warning'
+          showIcon
           style={{
+            ...marginSpacing,
             width: '100%',
           }}
           message={(
             <>
-              <Paragraph
-                style={{
-                  margin: 0,
-                }}
+              You have not performed any filtering on the genes!
+              <Button
+                type='link'
+                size='small'
+                onClick={() => onOpenAdvancedFilters()}
               >
-                You will be redirected to an external service to carry out pathway analysis. The
-                {' '}
-                <b>list of genes</b>
-                {' '}
-                and
-                {' '}
-                <b>species</b>
-                {' '}
-                will be submitted. No other information about you or your project will be sent.
-              </Paragraph>
+                Click here to open the advanced filtering options.
+              </Button>
             </>
           )}
         />
-      </Modal>
-    </>
+      )}
+
+      <Row style={marginSpacing}><b>External service</b></Row>
+
+      <Row style={marginSpacing}>
+        <Radio.Group value={externalService} onChange={(e) => setExternalService(e.target.value)}>
+          {Object.keys(pathwayServices).map((service) => {
+            const serviceName = pathwayServices[service];
+            return (<Radio key={service} value={serviceName} disabled={service === 'PANTHERDB'}>{serviceName}</Radio>);
+          })}
+        </Radio.Group>
+      </Row>
+
+      <Row style={marginSpacing}>
+        <Space direction='vertical'>
+          <b>Species</b>
+
+          <Select
+            loading={speciesList[externalService].length === 0}
+            value={species}
+            onChange={(value) => setSpecies(value)}
+            style={{ width: 400 }}
+          >
+            {
+              speciesList[externalService].map((option) => (
+                <Select.Option
+                  key={option.value}
+                  value={option.value}
+                >
+                  <i>{option.label}</i>
+                </Select.Option>
+              ))
+            }
+          </Select>
+        </Space>
+        <Space
+          style={{ marginLeft: '5%' }}
+          direction='vertical'
+        >
+          <b>Number of genes</b>
+          <Space>
+            <Radio.Group
+              value={useAllGenes}
+              onChange={(e) => setUseAllGenes(e.target.value)}
+            >
+              <Space>
+                <Radio value>All</Radio>
+                <Radio value={false}>Top</Radio>
+              </Space>
+            </Radio.Group>
+            <InputNumber
+              value={numGenes}
+              onChange={(value) => setNumGenes(value)}
+              disabled={useAllGenes}
+              size='medium'
+              style={{ width: '100px' }}
+              min={0}
+              placeholder='# of genes'
+            />
+          </Space>
+        </Space>
+      </Row>
+      {externalService === pathwayServices.PANTHERDB && (
+        <Paragraph>
+          It is
+          <b> strongly recommended </b>
+          {' '}
+          to input the reference list of genes by setting it
+          in &quot;Reference List&quot; in the PantherDB results page
+          and re-run the pathway analysis.
+          {' '}
+          <Button
+            type='link'
+            disabled={gettingBackgroundGenes}
+            loading={gettingBackgroundGenes}
+            style={inlineButtonStyle}
+            onClick={async () => {
+              const genesList = await getBackgroundGenesList();
+              const fileUrl = writeToFileURL(genesList);
+              downloadFromUrl(fileUrl, { fileName: 'reference_genes_list.txt' });
+            }}
+          >
+            Click here to download the reference genes list
+          </Button>
+          .
+        </Paragraph>
+      )}
+
+      <Alert
+        type='warning'
+        style={{
+          width: '100%',
+        }}
+        message={(
+          <Paragraph
+            style={{
+              margin: 0,
+            }}
+          >
+            You will be redirected to an external service to carry out pathway analysis. The
+            {' '}
+            <b>list of genes</b>
+            {' '}
+            and
+            {' '}
+            <b>species</b>
+            {' '}
+            will be submitted. No other information about you or your project will be sent.
+          </Paragraph>
+        )}
+      />
+    </Modal>
   );
 };
 

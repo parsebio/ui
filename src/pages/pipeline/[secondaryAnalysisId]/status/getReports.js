@@ -38,7 +38,7 @@ const getReports = async (secondaryAnalysisId, retries = 3) => {
   } catch (error) {
     if (retries > 0) {
       console.error(`Retrying getReports, attempts remaining: ${retries - 1}`);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => { setTimeout(resolve, 2000); });
       return getReports(secondaryAnalysisId, retries - 1);
     }
     throw new Error(`Failed to get reports after multiple attempts: ${error.message}`);

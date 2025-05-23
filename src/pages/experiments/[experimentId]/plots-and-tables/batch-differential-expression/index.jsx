@@ -372,7 +372,7 @@ const BatchDiffExpression = (props) => {
                         showIcon
                       />
                     )
-                    : <></>
+                    : null
               }
             </Space>
             <br />

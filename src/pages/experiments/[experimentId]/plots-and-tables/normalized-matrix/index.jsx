@@ -132,77 +132,75 @@ const NormalizedMatrixPage = (props) => {
     }
 
     return (
-      <>
-        <Space
-          direction='vertical'
-          split={<></>}
-          style={{
-            overflow: 'scroll', marginLeft: '10px', marginRight: '10px', paddingTop: '10px',
-          }}
-        >
-          <Space>Select the parameters for subsetting the normalized expression matrix.</Space>
-          <Space direction='vertical'>
-            Subset by samples:
-            <MultiSelect
-              options={sample.children.map(({ key, name }) => ({ key, name }))}
-              onChange={onSelectedItemsChanged('sample')}
-              selectedKeys={config.sample}
-              placeholder='All'
-              style={{ width: '200px' }}
-            />
-          </Space>
-          <Space direction='vertical'>
-            Subset by metadata group:
-            <MultiSelect
-              options={metadataCellSets.map(({ key, name }) => ({ key, name }))}
-              onChange={onSelectedItemsChanged('metadata')}
-              selectedKeys={config.metadata}
-              placeholder='All'
-              style={{ width: '200px' }}
-            />
-          </Space>
-          <Space direction='vertical'>
-            Subset by clusters:
-            <MultiSelect
-              options={louvain.children.map(({ key, name }) => ({ key, name }))}
-              onChange={onSelectedItemsChanged('louvain')}
-              selectedKeys={config.louvain}
-              placeholder='All'
-              style={{ width: '200px' }}
-            />
-          </Space>
-          <Space direction='vertical'>
-            Subset by custom cell sets:
-            <MultiSelect
-              options={scratchpad.children.map(({ key, name }) => ({ key, name }))}
-              onChange={onSelectedItemsChanged('scratchpad')}
-              selectedKeys={config.scratchpad}
-              placeholder='All'
-              style={{ width: '200px' }}
-            />
-          </Space>
-          <Space direction='vertical'>
-            Subset by cell-level metadata:
-            <MultiSelect
-              options={cellLevelMetadataCellSets.map(({ key, name }) => ({ key, name }))}
-              onChange={onSelectedItemsChanged('clm')}
-              selectedKeys={config.clm}
-              placeholder='All'
-              style={{ width: '200px' }}
-            />
-          </Space>
-
-          <Button
-            size='small'
-            onClick={
-              () => dispatch(downloadNormalizedMatrix(plotUuid, experimentId, config))
-            }
-          >
-            Download
-          </Button>
-          {configError && renderDownloadNormalizedError(configError)}
+      <Space
+        direction='vertical'
+        split={null}
+        style={{
+          overflow: 'scroll', marginLeft: '10px', marginRight: '10px', paddingTop: '10px',
+        }}
+      >
+        <Space>Select the parameters for subsetting the normalized expression matrix.</Space>
+        <Space direction='vertical'>
+          Subset by samples:
+          <MultiSelect
+            options={sample.children.map(({ key, name }) => ({ key, name }))}
+            onChange={onSelectedItemsChanged('sample')}
+            selectedKeys={config.sample}
+            placeholder='All'
+            style={{ width: '200px' }}
+          />
         </Space>
-      </>
+        <Space direction='vertical'>
+          Subset by metadata group:
+          <MultiSelect
+            options={metadataCellSets.map(({ key, name }) => ({ key, name }))}
+            onChange={onSelectedItemsChanged('metadata')}
+            selectedKeys={config.metadata}
+            placeholder='All'
+            style={{ width: '200px' }}
+          />
+        </Space>
+        <Space direction='vertical'>
+          Subset by clusters:
+          <MultiSelect
+            options={louvain.children.map(({ key, name }) => ({ key, name }))}
+            onChange={onSelectedItemsChanged('louvain')}
+            selectedKeys={config.louvain}
+            placeholder='All'
+            style={{ width: '200px' }}
+          />
+        </Space>
+        <Space direction='vertical'>
+          Subset by custom cell sets:
+          <MultiSelect
+            options={scratchpad.children.map(({ key, name }) => ({ key, name }))}
+            onChange={onSelectedItemsChanged('scratchpad')}
+            selectedKeys={config.scratchpad}
+            placeholder='All'
+            style={{ width: '200px' }}
+          />
+        </Space>
+        <Space direction='vertical'>
+          Subset by cell-level metadata:
+          <MultiSelect
+            options={cellLevelMetadataCellSets.map(({ key, name }) => ({ key, name }))}
+            onChange={onSelectedItemsChanged('clm')}
+            selectedKeys={config.clm}
+            placeholder='All'
+            style={{ width: '200px' }}
+          />
+        </Space>
+
+        <Button
+          size='small'
+          onClick={
+            () => dispatch(downloadNormalizedMatrix(plotUuid, experimentId, config))
+          }
+        >
+          Download
+        </Button>
+        {configError && renderDownloadNormalizedError(configError)}
+      </Space>
     );
   };
 

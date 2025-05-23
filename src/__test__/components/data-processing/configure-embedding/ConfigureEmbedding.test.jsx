@@ -78,7 +78,8 @@ const customAPIResponses = {
 };
 
 const mockApiResponses = _.merge(
-  generateDefaultMockAPIResponses(fake.EXPERIMENT_ID), customAPIResponses,
+  generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
+  customAPIResponses,
 );
 
 describe('Configure Embedding', () => {

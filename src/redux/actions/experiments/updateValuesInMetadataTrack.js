@@ -11,7 +11,10 @@ import endUserMessages from 'utils/endUserMessages';
 import { loadBackendStatus } from '../backendStatus';
 
 const updateValuesInMetadataTrack = (
-  experimentId, sampleIds, metadataTrackKey, value,
+  experimentId,
+  sampleIds,
+  metadataTrackKey,
+  value,
 ) => async (dispatch) => {
   if (sampleIds.length === 0) return;
   dispatch({ type: SAMPLES_SAVING, payload: { message: endUserMessages.SAVING_SAMPLE } });

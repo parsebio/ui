@@ -1,7 +1,6 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import _ from 'lodash';
-
-import { wrapWithTestBackend } from 'react-dnd-test-utils';
 
 const createTestComponentFactory = (Component, defaultProps = {}) => (customProps = {}) => {
   // Merge is given an empty object so that it always
@@ -12,10 +11,7 @@ const createTestComponentFactory = (Component, defaultProps = {}) => (customProp
     customProps,
   );
 
-  const [ComponentWithContext] = wrapWithTestBackend(Component);
-
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  return <ComponentWithContext {...props} />;
+  return <Component {...props} />;
 };
 
 export default createTestComponentFactory;

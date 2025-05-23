@@ -68,7 +68,8 @@ const Pipeline = () => {
   const user = useSelector((state) => state.user.current);
 
   const initialLoadPending = useSelector(
-    (state) => state.secondaryAnalyses.meta.initialLoadPending, _.isEqual,
+    (state) => state.secondaryAnalyses.meta.initialLoadPending,
+    _.isEqual,
   );
 
   const activeSecondaryAnalysisId = useSelector(
@@ -86,7 +87,8 @@ const Pipeline = () => {
     refGenome,
   } = useSelector(
     (state) => _.pick(
-      state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {}, analysisDetailsKeys,
+      state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {},
+      analysisDetailsKeys,
     ),
     _.isEqual,
   );
@@ -363,7 +365,7 @@ const Pipeline = () => {
   const ANALYSIS_LIST = 'Runs';
   const ANALYSIS_DETAILS = 'Run Details';
 
-  const LaunchAnalysisButton = () => {
+  const renderLaunchAnalysisButton = () => {
     const firstTimeLaunch = currentStatus === 'not_created';
 
     const launchAnalysis = () => {
@@ -474,9 +476,7 @@ const Pipeline = () => {
                       placement='left'
                     >
                       <Space direction='horizontal'>
-                        {pipelineCanBeRun && (
-                          <LaunchAnalysisButton />
-                        )}
+                        {pipelineCanBeRun && renderLaunchAnalysisButton()}
                         {pipelineRunAccessible && (
                           <Button
                             type='primary'

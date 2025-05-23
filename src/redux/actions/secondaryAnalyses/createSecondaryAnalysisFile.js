@@ -6,7 +6,10 @@ import cache from 'utils/cache';
 import handleError from 'utils/http/handleError';
 
 const createSecondaryAnalysisFile = (
-  secondaryAnalysisId, file, type, fileHandle = null,
+  secondaryAnalysisId,
+  file,
+  type,
+  fileHandle = null,
 ) => async (dispatch) => {
   const { name, size } = file;
   try {

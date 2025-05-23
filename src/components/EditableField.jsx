@@ -154,41 +154,28 @@ const EditableField = (props) => {
                   }}
                 />
               </Tooltip>
-            ) : <></>
+            ) : null
         }
       </>
     );
   };
 
   return (
-    <>
-      <Space direction='vertical'>
-        <Space align='start'>
-          {renderEditState()}
-          {
-            deleteEnabled
-              ? (
-                <Tooltip placement='top' title={deleteMessage} mouseLeaveDelay={0}>
-                  {confirmDelete ? (
-                    <Popconfirm
-                      title={confirmDelete}
-                      onConfirm={deleteEditableField}
-                      okText='Yes'
-                      disabled={disabled}
-                      cancelText='No'
-                    >
-                      <Button
-                        disabled={disabled}
-                        data-test-class={
-                          integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON
-                        }
-                        aria-label='Delete'
-                        size='small'
-                        shape='circle'
-                        icon={<DeleteOutlined />}
-                      />
-                    </Popconfirm>
-                  ) : (
+    <Space direction='vertical'>
+      <Space align='start'>
+        {renderEditState()}
+        {
+          deleteEnabled
+            ? (
+              <Tooltip placement='top' title={deleteMessage} mouseLeaveDelay={0}>
+                {confirmDelete ? (
+                  <Popconfirm
+                    title={confirmDelete}
+                    onConfirm={deleteEditableField}
+                    okText='Yes'
+                    disabled={disabled}
+                    cancelText='No'
+                  >
                     <Button
                       disabled={disabled}
                       data-test-class={
@@ -198,20 +185,31 @@ const EditableField = (props) => {
                       size='small'
                       shape='circle'
                       icon={<DeleteOutlined />}
-                      onClick={deleteEditableField}
                     />
-                  )}
-                </Tooltip>
-              ) : <></>
-          }
-        </Space>
-        {!isValid ? (
-          <Text type='danger' style={{ fontSize: 12, fontWeight: 600 }}>
-            {validationFunc(editedValue) === false ? 'Invalid input' : validationFunc(editedValue)}
-          </Text>
-        ) : <></>}
+                  </Popconfirm>
+                ) : (
+                  <Button
+                    disabled={disabled}
+                    data-test-class={
+                      integrationTestConstants.classes.EDITABLE_FIELD_DELETE_BUTTON
+                    }
+                    aria-label='Delete'
+                    size='small'
+                    shape='circle'
+                    icon={<DeleteOutlined />}
+                    onClick={deleteEditableField}
+                  />
+                )}
+              </Tooltip>
+            ) : null
+        }
       </Space>
-    </>
+      {!isValid ? (
+        <Text type='danger' style={{ fontSize: 12, fontWeight: 600 }}>
+          {validationFunc(editedValue) === false ? 'Invalid input' : validationFunc(editedValue)}
+        </Text>
+      ) : null}
+    </Space>
   );
 };
 

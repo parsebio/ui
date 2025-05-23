@@ -22,7 +22,7 @@ const NoStyleAntdMenuItem = ({ children }) => (
 );
 
 NoStyleAntdMenuItem.defaultProps = {
-  children: () => <></>,
+  children: () => null,
 };
 
 NoStyleAntdMenuItem.propTypes = {

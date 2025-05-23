@@ -32,7 +32,7 @@ import userEvent from '@testing-library/user-event';
 import { updatePlotConfig } from 'redux/actions/componentConfig';
 import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
-jest.mock('components/sider/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => null);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
@@ -108,9 +108,7 @@ const runGetRootNodes = async () => {
 
   // Wait until data is loaded
   await waitFor(() => {
-    expect(screen.getByRole(
-      'graphics-document', { name: 'Trajectory analysis plot showing clusters with trajectory' },
-    )).toBeInTheDocument();
+    expect(screen.getByRole('graphics-document', { name: 'Trajectory analysis plot showing clusters with trajectory' })).toBeInTheDocument();
   });
 };
 

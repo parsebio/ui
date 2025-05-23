@@ -9,7 +9,11 @@ import generateDiffExprBody from 'utils/work/generateDiffExprBody';
 import { getArray } from 'utils/arrayUtils';
 
 const loadDifferentialExpression = (
-  experimentId, comparisonGroup, comparisonType, tableState, newAdvancedFilters = null,
+  experimentId,
+  comparisonGroup,
+  comparisonType,
+  tableState,
+  newAdvancedFilters = null,
 ) => async (dispatch, getState) => {
   const advancedFilters = newAdvancedFilters
     ?? getState().differentialExpression.comparison.advancedFilters;
@@ -55,18 +59,12 @@ const loadDifferentialExpression = (
   const timeout = getTimeoutForWorkerTask(getState(), 'DifferentialExpression');
 
   try {
-    const data = await fetchWork(
-      experimentId, body, getState, dispatch, { timeout },
-    );
+    const data = await fetchWork(experimentId, body, getState, dispatch, { timeout });
 
     // eslint-disable-next-line prefer-const
     let { total, data: diffExprData } = data;
 
     const rows = getArray(diffExprData);
-
-    if (!total && !Object.keys(pagination).length) {
-      total = rows.length;
-    }
 
     dispatch({
       type: DIFF_EXPR_LOADED,

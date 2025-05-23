@@ -44,9 +44,7 @@ const getTrajectoryPlotPseudoTime = (
       payload: { plotUuid },
     });
 
-    const data = await fetchWork(
-      experimentId, body, getState, dispatch, { timeout, rerun: true },
-    );
+    const data = await fetchWork(experimentId, body, getState, dispatch, { timeout, rerun: true });
 
     const { plotData } = getState().componentConfig[plotUuid];
 

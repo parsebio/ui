@@ -86,7 +86,7 @@ jobs:
       - id: setup-node
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '20.17.0'
           cache: 'npm'
 
       - id: install
@@ -135,7 +135,7 @@ jobs:
       - id: setup-node
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '20.17.0'
           cache: 'npm'
 
       - id: install

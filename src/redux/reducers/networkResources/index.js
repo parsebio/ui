@@ -7,7 +7,7 @@ import initialState from './initialState';
 import deploymentInfoLoaded from './deploymentInfoLoaded';
 import environmentHydrate from './environmentHydrate';
 
-const networkResourcesReducer = (state = initialState, action) => {
+const networkResourcesReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case NETWORK_RESOURCES_DEPLOYMENT_INFO_LOADED: {
       return deploymentInfoLoaded(state, action);

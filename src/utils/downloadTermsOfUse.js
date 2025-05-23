@@ -12,7 +12,7 @@ const downloadTermsOfUse = async (setDataUseBlob, retries = 3) => {
   } catch (e) {
     if (retries > 0) {
       console.error(`Retrying downloadTermsOfUse, attempts remaining: ${retries - 1}`);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => { setTimeout(resolve, 2000); });
       return downloadTermsOfUse(setDataUseBlob, retries - 1);
     }
   }

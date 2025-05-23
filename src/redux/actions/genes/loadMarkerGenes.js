@@ -10,9 +10,7 @@ import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 
-const loadMarkerGenes = (
-  experimentId, plotUuid, options = {},
-) => async (dispatch, getState) => {
+const loadMarkerGenes = (experimentId, plotUuid, options = {}) => async (dispatch, getState) => {
   const {
     numGenes = 5,
     groupedTracks = ['sample', 'louvain'],
@@ -22,7 +20,11 @@ const loadMarkerGenes = (
   } = options;
 
   const cellSets = await getCellSetsThatAffectDownsampling(
-    experimentId, selectedCellSet, groupedTracks, dispatch, getState,
+    experimentId,
+    selectedCellSet,
+    groupedTracks,
+    dispatch,
+    getState,
   );
 
   const downsampleSettings = {

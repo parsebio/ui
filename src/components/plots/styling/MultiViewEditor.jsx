@@ -113,7 +113,11 @@ const MultiViewEditor = (props) => {
       };
 
       dispatch(loadConditionalComponentConfig(
-        experimentId, plotUuidToAdd, plotType, true, customConfig,
+        experimentId,
+        plotUuidToAdd,
+        plotType,
+        true,
+        customConfig,
       ));
     });
 
