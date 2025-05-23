@@ -209,32 +209,28 @@ const VolcanoPlotPage = (props) => {
   };
 
   const renderExtraPanels = () => (
-    <>
-      <Panel header='Differential expression' key='differential-expression'>
-        <DiffExprCompute
-          experimentId={experimentId}
-          onCompute={onComputeDiffExp}
-          needPValues
-        />
-      </Panel>
-    </>
+    <Panel header='Differential expression' key='differential-expression'>
+      <DiffExprCompute
+        experimentId={experimentId}
+        onCompute={onComputeDiffExp}
+        needPValues
+      />
+    </Panel>
   );
 
   return (
-    <>
-      <PlotContainer
-        experimentId={experimentId}
-        plotUuid={plotUuid}
-        plotType={plotType}
-        plotName={plotNames.VOLCANO_PLOT}
-        plotStylingConfig={plotStylingConfig}
-        extraToolbarControls={generateExportDropdown()}
-        extraControlPanels={renderExtraPanels()}
-        defaultActiveKey='differential-expression'
-      >
-        {renderPlot()}
-      </PlotContainer>
-    </>
+    <PlotContainer
+      experimentId={experimentId}
+      plotUuid={plotUuid}
+      plotType={plotType}
+      plotName={plotNames.VOLCANO_PLOT}
+      plotStylingConfig={plotStylingConfig}
+      extraToolbarControls={generateExportDropdown()}
+      extraControlPanels={renderExtraPanels()}
+      defaultActiveKey='differential-expression'
+    >
+      {renderPlot()}
+    </PlotContainer>
   );
 };
 

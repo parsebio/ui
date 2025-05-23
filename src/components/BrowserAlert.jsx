@@ -3,7 +3,7 @@ import { Alert } from 'antd';
 
 const BrowserAlert = () => {
   const renderContent = () => {
-    if (navigator.userAgent.match('Chrome')) return <></>;
+    if (navigator.userAgent.match('Chrome')) return null;
 
     return (
       <Alert

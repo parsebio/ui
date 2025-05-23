@@ -15,7 +15,8 @@ describe('backendStatusReducer.test.js', () => {
   const experimentId = '1234';
 
   it('updates backend status on error properly', () => {
-    const newState = backendStatusReducer(initialState,
+    const newState = backendStatusReducer(
+      initialState,
       {
         type: BACKEND_STATUS_ERROR,
         payload:
@@ -23,7 +24,8 @@ describe('backendStatusReducer.test.js', () => {
           experimentId,
           error: 'error',
         },
-      });
+      },
+    );
 
     expect(newState[experimentId].error).toEqual('error');
 
@@ -32,8 +34,10 @@ describe('backendStatusReducer.test.js', () => {
   });
 
   it('updates backend status on loading properly', () => {
-    const newState = backendStatusReducer(initialState,
-      { type: BACKEND_STATUS_LOADING, payload: { experimentId } });
+    const newState = backendStatusReducer(
+      initialState,
+      { type: BACKEND_STATUS_LOADING, payload: { experimentId } },
+    );
 
     expect(newState[experimentId].loading).toEqual(true);
     expect(newState[experimentId].error).toEqual(false);
@@ -49,7 +53,8 @@ describe('backendStatusReducer.test.js', () => {
 
     initialBackendPipelineStatus[experimentId].status = { pipeline: { status: 'NotCreated' }, gem2s: { status: 'Running' } };
 
-    const newState = backendStatusReducer(initialBackendPipelineStatus,
+    const newState = backendStatusReducer(
+      initialBackendPipelineStatus,
       {
         type: BACKEND_STATUS_LOADED,
         payload: {
@@ -59,7 +64,8 @@ describe('backendStatusReducer.test.js', () => {
             pipeline: { status: 'Running' },
           },
         },
-      });
+      },
+    );
 
     // Sets backend load states correctly
     expect(newState[experimentId].loading).toEqual(false);
@@ -83,7 +89,8 @@ describe('backendStatusReducer.test.js', () => {
       },
     };
 
-    const newState = backendStatusReducer(initialBackendPipelineStatus,
+    const newState = backendStatusReducer(
+      initialBackendPipelineStatus,
       {
         type: BACKEND_STATUS_UPDATED,
         payload: {
@@ -92,7 +99,8 @@ describe('backendStatusReducer.test.js', () => {
             gem2s: { status: 'Running' },
           },
         },
-      });
+      },
+    );
 
     // Doesn't affect backend load states
     expect(newState[experimentId].loading).toEqual(true);

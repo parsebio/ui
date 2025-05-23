@@ -11,4 +11,5 @@ class APIError extends Error {
     this.errors = errors;
   }
 }
-module.exports = APIError;
+
+export default APIError;

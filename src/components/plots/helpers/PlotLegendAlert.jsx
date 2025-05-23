@@ -15,7 +15,7 @@ const PlotLegendAlert = (props) => {
         message={(
           <p>
             {'We have hidden the plot legend, because it is too large and it interferes '}
-            {'with the display of the plot.'}
+            with the display of the plot.
             <br />
             {'You can still display the plot legend by changing the value of "Toggle Legend" option '}
             {`in "${stylingSectionName}" settings under "Legend"`}

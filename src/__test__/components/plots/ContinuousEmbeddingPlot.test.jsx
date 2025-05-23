@@ -51,7 +51,8 @@ const defaultProps = {
 };
 
 const continuousEmbeddingPlotFactory = createTestComponentFactory(
-  ContinuousEmbeddingPlot, defaultProps,
+  ContinuousEmbeddingPlot,
+  defaultProps,
 );
 
 const renderContinuousEmbeddingPlot = async (store, props) => {

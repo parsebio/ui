@@ -14,7 +14,7 @@ import backendStatusLoaded from './backendStatusLoaded';
 import backendStatusUpdated from './backendStatusUpdated';
 import backendStatusError from './backendStatusError';
 
-const backendStatusReducer = (state = initialState, action) => {
+const backendStatusReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case BACKEND_STATUS_LOADING: {
       return backendStatusLoading(state, action);

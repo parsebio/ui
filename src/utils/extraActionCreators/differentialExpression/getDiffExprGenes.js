@@ -40,9 +40,7 @@ const getDiffExprGenes = (getAllGenes, numGenes) => async (dispatch, getState) =
   const timeout = getTimeoutForWorkerTask(getState(), 'DifferentialExpression');
 
   try {
-    const result = await fetchWork(
-      experimentId, body, getState, dispatch, { timeout },
-    );
+    const result = await fetchWork(experimentId, body, getState, dispatch, { timeout });
 
     return result;
   } catch (error) {

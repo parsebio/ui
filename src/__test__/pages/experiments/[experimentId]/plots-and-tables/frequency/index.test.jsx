@@ -20,8 +20,8 @@ import ExportAsCSV from 'components/plots/ExportAsCSV';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
 import { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
 
-jest.mock('components/plots/ExportAsCSV', () => jest.fn(() => (<></>)));
-jest.mock('components/sider/UserButton', () => () => <></>);
+jest.mock('components/plots/ExportAsCSV', () => jest.fn(() => null));
+jest.mock('components/sider/UserButton', () => () => null);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
@@ -37,8 +37,10 @@ const plotUuid = 'frequencyPlotMain';
 const customAPIResponses = {
   [`/plots/${plotUuid}$`]: () => statusResponse(404, 'Not Found'),
 };
+
 const mockApiResponses = _.merge(
-  generateDefaultMockAPIResponses(fake.EXPERIMENT_ID), customAPIResponses,
+  generateDefaultMockAPIResponses(fake.EXPERIMENT_ID),
+  customAPIResponses,
 );
 
 describe('Frequency plots and tables index page', () => {

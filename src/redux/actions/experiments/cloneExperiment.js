@@ -12,9 +12,7 @@ import endUserMessages from 'utils/endUserMessages';
 import handleError from 'utils/http/handleError';
 import httpStatusCodes from 'utils/http/httpStatusCodes';
 
-const cloneExperiment = (
-  originalId, name = null,
-) => async (dispatch) => {
+const cloneExperiment = (originalId, name = null) => async (dispatch) => {
   dispatch({
     type: EXPERIMENTS_SAVING,
   });

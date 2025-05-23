@@ -248,8 +248,8 @@ const generateBaseSpec = (
       labelColor: config?.colour.masterColour,
       tickColor: config?.colour.masterColour,
       gridColor: config?.colour.masterColour,
-      gridOpacity: (config?.axes.gridOpacity / 20),
-      gridWidth: (config?.axes.gridWidth / 20),
+      gridOpacity: ((config?.axes.gridOpacity ?? 0) / 20),
+      gridWidth: ((config?.axes.gridWidth ?? 0) / 20),
       offset: config?.axes.offset,
       titleFontSize: config?.axes.titleFontSize,
       titleColor: config?.colour.masterColour,
@@ -265,8 +265,8 @@ const generateBaseSpec = (
       orient: 'left',
       titlePadding: paddingSize,
       gridColor: config?.colour.masterColour,
-      gridOpacity: (config?.axes.gridOpacity / 20),
-      gridWidth: (config?.axes.gridWidth / 20),
+      gridOpacity: ((config?.axes.gridOpacity ?? 0) / 20),
+      gridWidth: ((config?.axes.gridWidth ?? 0) / 20),
       tickColor: config?.colour.masterColour,
       offset: config?.axes.offset,
       title: config?.axes.yAxisText || `${method} 2`,
@@ -410,7 +410,7 @@ const insertClusterColorsSpec = (
           stroke: { scale: 'cellSetMarkColors', field: 'cellSetKey' },
           fill: { scale: 'cellSetMarkColors', field: 'cellSetKey' },
           shape: { value: config?.marker.shape },
-          fillOpacity: { value: config?.marker.opacity / 10 },
+          fillOpacity: { value: (config?.marker.opacity ?? 0) / 10 },
         },
       },
     },
@@ -426,7 +426,7 @@ const insertTrajectorySpec = (
   spec.description = `${spec.description} with trajectory`;
 
   spec.data = [
-    ...spec?.data,
+    ...(spec?.data ?? {}),
     {
       name: 'pathData',
       values: pathData,
@@ -582,7 +582,7 @@ const insertPseudotimeSpec = (spec, config, pseudotime) => {
   spec.description = `${spec.description} showing pseudotime`;
 
   spec.data = [
-    ...spec?.data,
+    ...(spec?.data ?? {}),
     {
       name: 'backgroundPseudotime',
       values: pseudotime.cellsWithoutPseudotimeValue,

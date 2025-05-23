@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureStore from 'redux-mock-store';
-import PlotLayout from 'components/data-processing/PlotLayout';
+import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
 import '__test__/test-utils/setupTests';
 
 // Mock data and store setup
@@ -16,12 +16,12 @@ const filterTableUuid = 'filterTableUuid1';
 const plots = {
   plot1: {
     plotUuid: 'plotUuid1',
-    plot: jest.fn(),
+    specGenerator: jest.fn(),
     plotType: 'type1',
   },
   plot2: {
     plotUuid: 'plotUuid2',
-    plot: jest.fn(),
+    specGenerator: jest.fn(),
     plotType: 'type2',
   },
 };
@@ -46,7 +46,7 @@ const initialState = {
 
 const renderComponent = (store) => render(
   <Provider store={store}>
-    <PlotLayout
+    <FilterPlotLayout
       experimentId={experimentId}
       plots={plots}
       filterName={filterName}
@@ -63,7 +63,7 @@ const renderComponent = (store) => render(
   </Provider>,
 );
 
-describe('PlotLayout', () => {
+describe('FilterPlotLayout', () => {
   let store;
 
   beforeEach(() => {
@@ -79,6 +79,6 @@ describe('PlotLayout', () => {
     renderComponent(store);
     const miniPlotButton = screen.getAllByRole('button')[0];
     userEvent.click(miniPlotButton);
-    expect(plots.plot1.plot).toHaveBeenCalled();
+    expect(plots.plot1.specGenerator).toHaveBeenCalled();
   });
 });

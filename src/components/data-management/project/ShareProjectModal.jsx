@@ -144,7 +144,7 @@ const ShareProjectModal = (props) => {
           {cancelButton}
           {role === 'owner' ? (
             <Popconfirm
-              title={() => (
+              title={(
                 <div>
                   By assigning
                   {' '}

@@ -2,9 +2,7 @@ import generateVegaGeneExpressionsData from 'components/plots/helpers/heatmap/ve
 import generateVegaHeatmapTracksData from 'components/plots/helpers/heatmap/vega/utils/generateVegaHeatmapTracksData';
 import { reversed } from 'utils/arrayUtils';
 
-const generateVegaData = (
-  cellOrder, expressionMatrix, heatmapSettings, cellSets,
-) => {
+const generateVegaData = (cellOrder, expressionMatrix, heatmapSettings, cellSets) => {
   const { selectedGenes, selectedTracks, guardLines } = heatmapSettings;
   const trackOrder = reversed(selectedTracks);
 
@@ -18,7 +16,10 @@ const generateVegaData = (
   };
 
   data.geneExpressionsData = generateVegaGeneExpressionsData(
-    cellOrder, selectedGenes, expressionMatrix, heatmapSettings,
+    cellOrder,
+    selectedGenes,
+    expressionMatrix,
+    heatmapSettings,
   );
 
   const trackData = trackOrder.map(

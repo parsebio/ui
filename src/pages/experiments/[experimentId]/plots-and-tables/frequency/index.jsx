@@ -202,20 +202,18 @@ const FrequencyPlotPage = ({ experimentId }) => {
   };
 
   return (
-    <>
-      <PlotContainer
-        experimentId={experimentId}
-        plotUuid={plotUuid}
-        plotType={plotType}
-        plotName={plotNames.FREQUENCY_PLOT}
-        plotStylingConfig={plotStylingConfig}
-        extraToolbarControls={<ExportAsCSV data={csvData} filename={csvFilename} />}
-        extraControlPanels={renderExtraPanels()}
-        defaultActiveKey='select-data'
-      >
-        {renderPlot()}
-      </PlotContainer>
-    </>
+    <PlotContainer
+      experimentId={experimentId}
+      plotUuid={plotUuid}
+      plotType={plotType}
+      plotName={plotNames.FREQUENCY_PLOT}
+      plotStylingConfig={plotStylingConfig}
+      extraToolbarControls={<ExportAsCSV data={csvData} filename={csvFilename} />}
+      extraControlPanels={renderExtraPanels()}
+      defaultActiveKey='select-data'
+    >
+      {renderPlot()}
+    </PlotContainer>
   );
 };
 

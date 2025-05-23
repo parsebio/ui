@@ -2,11 +2,11 @@
 
 // This implements a sparse version of the Map
 class SparseMap extends Map {
-  #keys
+  #keys;
 
-  #sparsifiedValue
+  #sparsifiedValue;
 
-  #map
+  #map;
 
   constructor(sparseRow, definedKeys, keyAsString, sparsifiedValue = 0) {
     super();

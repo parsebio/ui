@@ -76,7 +76,8 @@ describe('Share project modal', () => {
   };
 
   const mockApiResponses = _.merge(
-    generateDefaultMockAPIResponses(experimentId), customAPIResponses,
+    generateDefaultMockAPIResponses(experimentId),
+    customAPIResponses,
   );
 
   let storeState = null;

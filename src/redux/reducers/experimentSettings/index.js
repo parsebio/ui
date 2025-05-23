@@ -33,7 +33,7 @@ import updateExperimentInfo from './updateExperimentInfo';
 import pipelineVersionUpdated from './pipelineVersionUpdated';
 import pipelineStart from './pipelineStart';
 
-const experimentSettingsReducer = (state = initialState, action) => {
+const experimentSettingsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case EXPERIMENT_SETTINGS_INFO_UPDATE: {
       return updateExperimentInfo(state, action);

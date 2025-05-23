@@ -3,9 +3,7 @@ import handleError from 'utils/http/handleError';
 import { loadSamples } from '../samples';
 import loadExperiments from './loadExperiments';
 
-const uploadMetadataFile = (
-  experimentId, data,
-) => async (dispatch) => {
+const uploadMetadataFile = (experimentId, data) => async (dispatch) => {
   try {
     await fetchAPI(
       `/v2/experiments/${experimentId}/metadataTracks`,

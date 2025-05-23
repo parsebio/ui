@@ -7,7 +7,10 @@ const cartesian = (...array) => (
 );
 
 const generateVegaGeneExpressionsData = (
-  cellOrder, geneOrder, expressionMatrix, heatmapSettings,
+  cellOrder,
+  geneOrder,
+  expressionMatrix,
+  heatmapSettings,
 ) => {
   const { expressionValue, truncatedValues } = heatmapSettings;
 
@@ -28,9 +31,7 @@ const generateVegaGeneExpressionsData = (
     const geneExpression = { rawExpression: expressionMatrix.getRawExpression(gene, cellOrder) };
 
     if (truncatedValues) {
-      geneExpression.truncatedExpression = expressionMatrix.getTruncatedExpression(
-        gene, cellOrder,
-      );
+      geneExpression.truncatedExpression = expressionMatrix.getTruncatedExpression(gene, cellOrder);
     }
 
     preloadedExpressions[gene] = geneExpression;

@@ -92,7 +92,7 @@ const renderContentWrapper = async (expId, expData) => {
       <Provider store={store}>
         <AppRouteProvider>
           <ContentWrapper routeExperimentId={expId} experimentData={expData}>
-            <>Test</>
+            Test
           </ContentWrapper>
         </AppRouteProvider>
       </Provider>,

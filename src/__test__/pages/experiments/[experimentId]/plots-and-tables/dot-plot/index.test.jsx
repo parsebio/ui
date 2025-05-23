@@ -42,8 +42,8 @@ import waitForComponentToPaint from '__test__/test-utils/waitForComponentToPaint
 import { arrayMoveImmutable } from 'utils/arrayUtils';
 import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
-jest.mock('components/plots/ExportAsCSV', () => jest.fn(() => (<></>)));
-jest.mock('components/sider/UserButton', () => () => <></>);
+jest.mock('components/plots/ExportAsCSV', () => jest.fn(() => null));
+jest.mock('components/sider/UserButton', () => () => null);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;

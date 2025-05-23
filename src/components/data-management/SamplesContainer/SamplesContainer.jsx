@@ -108,37 +108,33 @@ const SamplesContainer = forwardRef((props, ref) => {
   };
 
   return (
-    <>
-      {
-        activeExperiment?.isSubsetted ? (
-          <center>
-            <Alert
-              type='info'
-              message='Subsetted experiment'
-              description={(
-                <>
-                  This is a subset of
-                  {' '}
-                  <b>{parentExperimentName || ' a deleted experiment'}</b>
-                  .
-                  <br />
-                  You can  see remaining samples after subsetting in
-                  the data processing and data exploration pages.
-                </>
-              )}
-            />
-          </center>
+    activeExperiment?.isSubsetted ? (
+      <center>
+        <Alert
+          type='info'
+          message='Subsetted experiment'
+          description={(
+            <>
+              This is a subset of
+              {' '}
+              <b>{parentExperimentName || ' a deleted experiment'}</b>
+              .
+              <br />
+              You can  see remaining samples after subsetting in
+              the data processing and data exploration pages.
+            </>
+          )}
+        />
+      </center>
+    )
+      : !samplesLoaded || samplesLoading || samplesValidating
+        ? (
+          <SamplesLoader
+            samplesLoading={samplesLoading}
+            samplesValidating={samplesValidating}
+          />
         )
-          : !samplesLoaded || samplesLoading || samplesValidating
-            ? (
-              <SamplesLoader
-                samplesLoading={samplesLoading}
-                samplesValidating={samplesValidating}
-              />
-            )
-            : renderTabs()
-      }
-    </>
+        : renderTabs()
   );
 });
 

@@ -136,7 +136,7 @@ const DiffExprCompute = (props) => {
   };
 
   const checkAndRenderAlert = () => {
-    if (!isFormValid) return <></>;
+    if (!isFormValid) return null;
     const canRun = canRunDiffExpr();
 
     const renderAlert = (type, description) => (

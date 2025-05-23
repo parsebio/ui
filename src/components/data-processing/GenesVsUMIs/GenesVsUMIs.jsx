@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import { useSelector } from 'react-redux';
 
-import PlotLayout from 'components/data-processing/PlotLayout';
-import BasicFilterPlot from 'components/plots/BasicFilterPlot';
+import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
 import generateSpec from 'utils/plotSpecs/generateFeaturesVsUMIsScatterplot';
 import transformOldFeaturesVsUMIsPlotData from 'components/plots/helpers/transformOldFeaturesVsUMIsPlotData';
 import CalculationConfig from './CalculationConfig';
@@ -25,27 +24,28 @@ const GenesVsUMIs = ({
     source: true,
     editor: false,
   };
+
   const plotData = useSelector(
     (state) => state.componentConfig[plotUuid]?.plotData,
   );
 
+  const getPlotSpecGenerator = useCallback(() => (
+    (config, plotDataForSpec) => {
+      // we can remove this if we migrate old plotData to the new schema
+      const needTransformPlotData = Array.isArray(plotDataForSpec) && plotDataForSpec.length;
+      const newPlotData = needTransformPlotData
+        ? transformOldFeaturesVsUMIsPlotData(plotDataForSpec)
+        : plotDataForSpec;
+
+      return newPlotData?.pointsData ? generateSpec(config, newPlotData, expConfig) : null;
+    }
+  ), [expConfig]);
+
   const plots = {
     featuresVsUMIsScatterplot: {
       plotUuid,
-      plot: (config, data, actions) => {
-        // we can remove this if we migrate old plotData to the new schema
-        const needTransformPlotData = Array.isArray(data) && data.length;
-        const newPlotData = needTransformPlotData
-          ? transformOldFeaturesVsUMIsPlotData(data)
-          : data;
-        return (
-          <BasicFilterPlot
-            spec={newPlotData?.pointsData ? generateSpec(config, newPlotData, expConfig) : null}
-            actions={actions}
-          />
-        );
-      },
       plotType,
+      specGenerator: getPlotSpecGenerator(),
     },
   };
 
@@ -77,7 +77,7 @@ const GenesVsUMIs = ({
   );
 
   return (
-    <PlotLayout
+    <FilterPlotLayout
       experimentId={experimentId}
       plots={plots}
       filterName={filterName}

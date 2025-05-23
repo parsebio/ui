@@ -9,7 +9,7 @@ const IframeModal = (props) => {
 
   return (
     <Modal
-      title={<></>}
+      title={null}
       open
       width={1200}
       footer={null}

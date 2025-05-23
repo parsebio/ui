@@ -13,9 +13,7 @@ import endUserMessages from 'utils/endUserMessages';
 
 import handleError from 'utils/http/handleError';
 
-const createExperiment = (
-  name, description,
-) => async (dispatch) => {
+const createExperiment = (name, description) => async (dispatch) => {
   const createdAt = dayjs().toISOString();
   const experimentId = uuidv4();
 

@@ -154,7 +154,9 @@ const Embedding = (props) => {
     const { truncatedMin, truncatedMax } = expressionMatrix.getStats(focusData.key);
 
     const cellExpressionColors = colorByGeneExpression(
-      truncatedExpression, truncatedMin, truncatedMax,
+      truncatedExpression,
+      truncatedMin,
+      truncatedMax,
     );
 
     setCellColors(cellExpressionColors);
@@ -377,7 +379,7 @@ const Embedding = (props) => {
                     coordinates={cellCoordinatesRef}
                   />
                 </div>
-              ) : <></>
+              ) : null
             )
         }
       </div>

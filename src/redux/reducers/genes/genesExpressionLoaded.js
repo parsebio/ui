@@ -7,7 +7,8 @@ const genesExpressionLoaded = (state, action) => {
   const {
     componentUuid, genes,
     loadingStatus = _.difference(
-      upperCaseArray(state.expression.full.loading), upperCaseArray(genes),
+      upperCaseArray(state.expression.full.loading),
+      upperCaseArray(genes),
     ),
     newGenes = undefined,
   } = action.payload;

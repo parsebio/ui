@@ -25,8 +25,10 @@ import { analysisTools } from 'utils/constants';
 
 jest.mock('utils/getTimeoutForWorkerTask', () => () => 1);
 
-jest.mock('redux/actions/backendStatus/loadBackendStatus',
-  () => jest.fn().mockImplementation(() => async () => { }));
+jest.mock(
+  'redux/actions/backendStatus/loadBackendStatus',
+  () => jest.fn().mockImplementation(() => async () => { }),
+);
 
 jest.mock('redux/actions/experimentSettings/processingConfig/saveProcessingSettings');
 
@@ -92,9 +94,7 @@ describe('runQC action', () => {
 
   it('Dispatches status error if loading fails', async () => {
     fetchMock.resetMocks();
-    fetchMock.mockResponse(
-      JSON.stringify({ message: 'some weird error that happened' }), { status: 400 },
-    );
+    fetchMock.mockResponse(JSON.stringify({ message: 'some weird error that happened' }), { status: 400 });
 
     const store = mockStore(initialState);
     await store.dispatch(runQC(experimentId));

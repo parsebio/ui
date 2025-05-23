@@ -176,6 +176,10 @@
     "species": "Ovis aries (Sheep), Breed: Rambouillet, Ensembl: GCA_016772045.2"
   },
   {
+    "name": "Panubis1",
+    "species": "Papio anubis (Olive baboon)"
+  },
+  {
     "name": "PFal3D7",
     "species": "Plasmodium falciparum 3D7"
   },
@@ -245,6 +249,10 @@
   },
   {
     "name": "Dm_BDGP6",
+    "species": "Custom Drosophila melanogaster (Fruit fly)"
+  },
+  {
+    "name": "Dm_BDGP6_54_GAL4_Cas9",
     "species": "Custom Drosophila melanogaster (Fruit fly)"
   },
   {
@@ -336,6 +344,10 @@
     "species": "Custom Mus musculus (Mouse) Trophoblast Stem Cells"
   },
   {
+    "name": "GRCm38_YFP",
+    "species": "Custom Mus musculus (Mouse)"
+  },
+  {
     "name": "mm39-custom-2",
     "species": "Custom Mus musculus (Mouse)"
   },
@@ -358,6 +370,10 @@
   {
     "name": "GRCm39_MCLab",
     "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCm39_tagBFP_tdTom",
+    "species": "Custom Mus musculus (Mouse) with tagBFP and tdTom"
   },
   {
     "name": "mm39-tdTom",
@@ -402,6 +418,10 @@
   {
     "name": "GRCm39_RI250310_2",
     "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCm39_sfGFP-myc",
+    "species": "Custom Mus musculus (Mouse) with sfGFP"
   },
   {
     "name": "GRCm38_Usutu",

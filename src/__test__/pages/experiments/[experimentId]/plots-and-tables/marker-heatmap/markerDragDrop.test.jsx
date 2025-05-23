@@ -3,7 +3,6 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import _ from 'lodash';
 import MarkerHeatmap from 'pages/experiments/[experimentId]/plots-and-tables/marker-heatmap/index';
 import React from 'react';
-import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { makeStore } from 'redux/store';
@@ -27,7 +26,7 @@ import { arrayMoveImmutable } from 'utils/arrayUtils';
 import { loadCellSets } from 'redux/actions/cellSets';
 import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
-jest.mock('components/sider/UserButton', () => () => <></>);
+jest.mock('components/sider/UserButton', () => () => null);
 jest.mock('react-resize-detector', () => (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
@@ -44,6 +43,16 @@ jest.mock('localforage', () => ({
 }));
 
 jest.mock('utils/work/fetchWork');
+
+// Mock antd's Tree to track props
+const mockTree = jest.fn(() => <div data-testid='HierachicalTreeGenes' />);
+jest.mock('antd', () => {
+  const antd = jest.requireActual('antd');
+  return {
+    ...antd,
+    Tree: (props) => mockTree(props),
+  };
+});
 
 const mockWorkerResponses = {
   MarkerHeatmap: markerGenesData5,
@@ -72,17 +81,6 @@ const defaultProps = { experimentId };
 
 const heatmapPageFactory = createTestComponentFactory(MarkerHeatmap, defaultProps);
 
-// Helper function to get current order of displayed genes in enzyme tests
-const getCurrentGeneOrder = (component) => {
-  const treeNodes = component.find('div.ant-tree-treenode');
-  const newOrder = [];
-  treeNodes.forEach((node) => {
-    newOrder.push(node.text());
-  });
-  newOrder.splice(0, 1);
-  return newOrder;
-};
-
 enableFetchMocks();
 
 const renderHeatmapPageForEnzyme = (store) => (
@@ -94,9 +92,9 @@ const renderHeatmapPageForEnzyme = (store) => (
 );
 
 // drag and drop is impossible in RTL, use enzyme
+// Broken since updating to node 20, could be related to react-dnd being mocked, not sure
 describe('Drag and drop enzyme tests', () => {
   let component;
-  let tree;
 
   beforeAll(async () => {
     await preloadAll();
@@ -104,6 +102,7 @@ describe('Drag and drop enzyme tests', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
+    mockTree.mockClear();
 
     fetchWork
       .mockReset()
@@ -123,16 +122,14 @@ describe('Drag and drop enzyme tests', () => {
     component = renderHeatmapPageForEnzyme(storeState);
 
     await waitForComponentToPaint(component);
-
-    // antd renders 5 elements, use the first one
-    tree = component.find({ 'data-testid': 'HierachicalTreeGenes' }).at(0);
   });
 
   it('changes nothing on drop in place', async () => {
-    // default genes are in the tree
-    markerGenesData5.orderedGeneNames.forEach((geneName) => {
-      expect(tree.containsMatchingElement(geneName));
-    });
+    expect(mockTree).toHaveBeenCalled();
+    const lastTreeProps = _.last(mockTree.mock.calls)[0];
+
+    expect(lastTreeProps.treeData.map((node) => mount(node.title).text()))
+      .toEqual(markerGenesData5.orderedGeneNames);
 
     // dropping in place does nothing
     const info = {
@@ -141,15 +138,13 @@ describe('Drag and drop enzyme tests', () => {
       node: { dragOver: false },
     };
 
-    tree.getElement().props.onDrop(info);
+    _.last(mockTree.mock.calls)[0].onDrop(info);
 
-    await act(async () => {
-      component.update();
-    });
+    component.update();
 
-    const newOrder = getCurrentGeneOrder(component);
-
-    expect(_.isEqual(newOrder, markerGenesData5.orderedGeneNames)).toEqual(true);
+    const newLastTreeProps = _.last(mockTree.mock.calls)[0];
+    expect(newLastTreeProps.treeData.map((node) => mount(node.title).text()))
+      .toEqual(markerGenesData5.orderedGeneNames);
   });
 
   it('re-orders genes correctly', async () => {
@@ -160,16 +155,18 @@ describe('Drag and drop enzyme tests', () => {
       node: { dragOver: false },
     };
 
-    tree.getElement().props.onDrop(info);
+    const callsPreDrop = mockTree.mock.calls.length;
 
-    await act(async () => {
-      component.update();
-    });
+    _.last(mockTree.mock.calls)[0].onDrop(info);
 
-    const newOrder = getCurrentGeneOrder(component);
+    component.update();
+    await waitForComponentToPaint(component);
 
+    // After reordering, there was more renders
+    expect(mockTree.mock.calls.length).toBeGreaterThan(callsPreDrop);
+
+    const treeProps = _.last(mockTree.mock.calls)[0];
     const expectedOrder = arrayMoveImmutable(markerGenesData5.orderedGeneNames, 1, 3);
-
-    expect(_.isEqual(newOrder, expectedOrder)).toEqual(true);
+    expect(treeProps.treeData.map((node) => mount(node.title).text())).toEqual(expectedOrder);
   });
 });

@@ -77,74 +77,70 @@ const SecondaryAnalysisSettings = (props) => {
   }, []);
 
   return (
-    <>
-      <Form
-        layout='vertical'
-        size='middle'
-        style={{ width: '90%', height: '50%' }}
+    <Form
+      layout='vertical'
+      size='middle'
+      style={{ width: '90%', height: '50%' }}
+    >
+      <Form.Item
+        label='Parse Biosciences technology details:'
+        name='technologyDetails'
       >
+        <Space direction='vertical' style={{ width: '92%' }}>
+          <Select
+            placeholder='Select the kit you used in your experiment'
+            value={formValues.kit}
+            onChange={changeKit}
+            options={kitOptions}
+          />
+
+          <Select
+            placeholder='Select the chemistry version'
+            onChange={(value) => handleValueChange('chemistryVersion', value)}
+            value={formValues.chemistryVersion}
+            options={[
+              { label: 'v1', value: '1' },
+              { label: 'v2', value: '2' },
+              { label: 'v3', value: '3' },
+            ]}
+            disabled={formValues.kit === 'wt_mega_384'}
+          />
+        </Space>
+      </Form.Item>
+
+      {formValues.kit && (
         <Form.Item
-          label='Parse Biosciences technology details:'
-          name='technologyDetails'
+          name='numOfSublibraries'
         >
-          <Space direction='vertical' style={{ width: '92%' }}>
-            <Select
-              placeholder='Select the kit you used in your experiment'
-              value={formValues.kit}
-              onChange={changeKit}
-              options={kitOptions}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ marginRight: '5px' }}>
+              Number of
+              {' '}
+              <a
+                href='https://support.parsebiosciences.com/hc/en-us/articles/360052394312-What-is-a-sublibrary-'
+                target='_blank'
+                rel='noreferrer'
+              >
+                sublibraries
+              </a>
+              {' '}
+              to be processed in this pipeline run. Note that this number should match
+              the number of FASTQ file pairs that you plan to upload.
+            </div>
+            <SliderWithInput
+              style={{ marginLeft: '20px', width: '20%' }}
+              min={1}
+              max={maxSublibraries}
+              value={formValues.numOfSublibraries}
+              onUpdate={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
+              disabled={!formValues.kit}
+              step={1}
+              debounceTime={0}
             />
-
-            <Select
-              placeholder='Select the chemistry version'
-              onChange={(value) => handleValueChange('chemistryVersion', value)}
-              value={formValues.chemistryVersion}
-              options={[
-                { label: 'v1', value: '1' },
-                { label: 'v2', value: '2' },
-                { label: 'v3', value: '3' },
-              ]}
-              disabled={formValues.kit === 'wt_mega_384'}
-            />
-          </Space>
+          </div>
         </Form.Item>
-
-        {formValues.kit && (
-          <>
-            <Form.Item
-              name='numOfSublibraries'
-            >
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ marginRight: '5px' }}>
-                  Number of
-                  {' '}
-                  <a
-                    href='https://support.parsebiosciences.com/hc/en-us/articles/360052394312-What-is-a-sublibrary-'
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    sublibraries
-                  </a>
-                  {' '}
-                  to be processed in this pipeline run. Note that this number should match
-                  the number of FASTQ file pairs that you plan to upload.
-                </div>
-                <SliderWithInput
-                  style={{ marginLeft: '20px', width: '20%' }}
-                  min={1}
-                  max={maxSublibraries}
-                  value={formValues.numOfSublibraries}
-                  onUpdate={(value) => handleValueChange('numOfSublibraries', parseInt(value, 10))}
-                  disabled={!formValues.kit}
-                  step={1}
-                  debounceTime={0}
-                />
-              </div>
-            </Form.Item>
-          </>
-        )}
-      </Form>
-    </>
+      )}
+    </Form>
   );
 };
 
