@@ -3,26 +3,29 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+
 import CookieBanner from 'components/CookieBanner';
 import { cookiesAgreedCognitoKey } from 'utils/constants';
 import { updateUserAttributes } from 'redux/actions/user';
 
 jest.mock('redux/actions/user', () => ({
-  updateUserAttributes: jest.fn(),
+  updateUserAttributes: jest.fn(() => () => Promise.resolve()),
 }));
 
-const mockStore = configureMockStore();
-const store = mockStore({
-  user: {
-    current: {
-      attributes: {
-        [cookiesAgreedCognitoKey]: undefined,
-      },
-    },
-  },
-});
+const mockStore = configureMockStore([thunk]);
 
 describe('CookieBanner', () => {
+  const store = mockStore({
+    user: {
+      current: {
+        attributes: {
+          [cookiesAgreedCognitoKey]: undefined,
+        },
+      },
+    },
+  });
+
   it('renders correctly and can accept cookies', () => {
     render(
       <Provider store={store}>

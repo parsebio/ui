@@ -17,7 +17,7 @@ const ProjectsListContainer = (props) => {
   const { height, onCreateNewProject, projectType } = props;
 
   const { navigateTo } = useAppRouter();
-  const [filterParam, setFilterParam] = useState(new RegExp('.*', 'i'));
+  const [filterParam, setFilterParam] = useState(/.*/i);
 
   const menuItems = [
     {

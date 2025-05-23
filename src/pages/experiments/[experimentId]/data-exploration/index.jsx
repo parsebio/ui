@@ -132,12 +132,10 @@ const ExplorationViewPage = ({ experimentId }) => {
   };
 
   return (
-    <>
-      <MultiTileContainer
-        tileMap={TILE_MAP}
-        initialArrangement={windows}
-      />
-    </>
+    <MultiTileContainer
+      tileMap={TILE_MAP}
+      initialArrangement={windows}
+    />
   );
 };
 

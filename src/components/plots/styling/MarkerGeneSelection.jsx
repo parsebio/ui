@@ -93,18 +93,16 @@ const MarkerGeneSelection = (props) => {
   };
 
   return (
-    <>
-      <Space direction='vertical' size='middle'>
-        <Radio.Group
-          onChange={(e) => onUpdate({ useMarkerGenes: e.target.value })}
-          value={config.useMarkerGenes}
-        >
-          <Radio value={false}>Custom genes</Radio>
-          <Radio value>Marker genes</Radio>
-        </Radio.Group>
-        {renderOptions()}
-      </Space>
-    </>
+    <Space direction='vertical' size='middle'>
+      <Radio.Group
+        onChange={(e) => onUpdate({ useMarkerGenes: e.target.value })}
+        value={config.useMarkerGenes}
+      >
+        <Radio value={false}>Custom genes</Radio>
+        <Radio value>Marker genes</Radio>
+      </Radio.Group>
+      {renderOptions()}
+    </Space>
   );
 };
 

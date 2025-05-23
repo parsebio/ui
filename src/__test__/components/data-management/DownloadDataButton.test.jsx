@@ -247,8 +247,10 @@ describe('DownloadDataButton', () => {
     expect(fetchWork.mock.calls).toMatchSnapshot();
 
     expect(writeToFileURL).toHaveBeenCalledWith(mockResult);
-    expect(downloadFromUrl).toHaveBeenCalledWith(mockFileUrl,
-      { fileName: `${experimentId}_processed_matrix.h5ad` });
+    expect(downloadFromUrl).toHaveBeenCalledWith(
+      mockFileUrl,
+      { fileName: `${experimentId}_processed_matrix.h5ad` },
+    );
   });
 
   it('Shows an error if there is an error downloading data', async () => {

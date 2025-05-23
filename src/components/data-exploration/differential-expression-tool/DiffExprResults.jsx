@@ -46,12 +46,13 @@ const DiffExprResults = (props) => {
   const geneTableState = useRef({});
 
   const buildColumns = (rowData) => {
-    const rowDataKeys = Object.keys(rowData[0]);
+    const rowDataKeys = Object.keys(rowData[0] ?? {});
     return columnDefinitions.filter(({ key }) => rowDataKeys.includes(key));
   };
 
   useEffect(() => {
-    if (!data.length || !Object.keys(properties).length) return;
+    if (!Object.keys(properties).length) return;
+
     setColumns(buildColumns(data));
     setDataShown(data);
   }, [data, properties]);

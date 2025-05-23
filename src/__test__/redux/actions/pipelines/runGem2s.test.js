@@ -14,8 +14,10 @@ import { runGem2s } from 'redux/actions/pipeline';
 const mockStore = configureStore([thunk]);
 enableFetchMocks();
 
-jest.mock('redux/actions/backendStatus/loadBackendStatus',
-  () => jest.fn().mockImplementation(() => async () => { }));
+jest.mock(
+  'redux/actions/backendStatus/loadBackendStatus',
+  () => jest.fn().mockImplementation(() => async () => { }),
+);
 
 const experimentId = 'experiment-id';
 const projectId = 'project-id';

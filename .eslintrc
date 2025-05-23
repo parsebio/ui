@@ -1,5 +1,5 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
@@ -18,6 +18,7 @@
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     // no-return-await disabled because of https://stackoverflow.com/a/44806230
     "no-return-await": "off",
+    "react/function-component-definition": "off",
     "indent": [
       2,
       2,
@@ -31,6 +32,10 @@
     "linebreak-style": 0,
     "consistent-return": 0,
     "no-use-before-define": 0,
+    "react/no-unstable-nested-components": [
+      "error",
+      { "allowAsProps": true }
+    ],
     "no-multi-assign": 0,
     "no-lonely-if": 1,
     "no-nested-ternary": 0,

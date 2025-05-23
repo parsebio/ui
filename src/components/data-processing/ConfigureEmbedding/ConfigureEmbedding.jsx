@@ -49,7 +49,8 @@ const ConfigureEmbedding = (props) => {
 
   const dispatch = useDispatch();
   const debounceSave = useCallback(
-    _.debounce((plotUuid) => dispatch(savePlotConfig(experimentId, plotUuid)), 2000), [],
+    _.debounce((plotUuid) => dispatch(savePlotConfig(experimentId, plotUuid)), 2000),
+    [],
   );
   const cellMetaToLoad = ['mitochondrialContent', 'doubletScores', 'numOfGenes', 'numOfUmis'];
   const controlsDisabledForViolin = plotType === 'violin';
@@ -483,7 +484,7 @@ const ConfigureEmbedding = (props) => {
                         </Radio>
                       );
                     }
-                    return <></>;
+                    return null;
                   })}
                 </Radio.Group>
               </Space>

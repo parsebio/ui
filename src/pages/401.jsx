@@ -21,20 +21,18 @@ const UnauthorizedPage = ({ title, subTitle, hint }) => (
       />
     )}
     subTitle={(
-      <>
-        <Title
-          level={5}
-          style={{ fontWeight: 'normal' }}
-        >
-          {subTitle}
-          {hint && (
-            <>
-              <br />
-              <span>{hint}</span>
-            </>
-          )}
-        </Title>
-      </>
+      <Title
+        level={5}
+        style={{ fontWeight: 'normal' }}
+      >
+        {subTitle}
+        {hint && (
+          <>
+            <br />
+            <span>{hint}</span>
+          </>
+        )}
+      </Title>
     )}
     extra={(
       <>

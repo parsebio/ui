@@ -7,7 +7,12 @@ import handleError from 'utils/http/handleError';
 import UploadStatus from 'utils/upload/UploadStatus';
 
 const updateSampleFileUpload = (
-  experimentId, sampleId, sampleFileId, type, uploadStatus, uploadProgress,
+  experimentId,
+  sampleId,
+  sampleFileId,
+  type,
+  uploadStatus,
+  uploadProgress,
 ) => async (dispatch) => {
   const updatedAt = dayjs().toISOString();
 

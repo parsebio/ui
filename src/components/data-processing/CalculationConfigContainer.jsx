@@ -79,7 +79,7 @@ const CalculationConfigContainer = (props) => {
       {
         sampleIds.length > 1 ? (
           <Button onClick={copySettingsToAllSamples} disabled={auto === 'automatic'}>Copy to all samples</Button>
-        ) : <></>
+        ) : null
       }
 
     </div>

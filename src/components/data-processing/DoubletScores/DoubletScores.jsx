@@ -2,11 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 
-import PlotLayout from 'components/data-processing/PlotLayout';
+import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
 import generateSpec from 'utils/plotSpecs/generateDoubletScoreHistogram';
-import BasicFilterPlot
-from 'components/plots/BasicFilterPlot';
-import CalculationConfig from './CalculationConfig';
+import CalculationConfig from 'components/data-processing/DoubletScores/CalculationConfig';
 
 const DoubletScores = ({
   experimentId, sampleId, sampleIds, onConfigChange, stepDisabled, stepHadErrors,
@@ -19,13 +17,8 @@ const DoubletScores = ({
   const plots = {
     doubletScoreHistogram: {
       plotUuid,
-      plot: (config, plotData, actions) => (
-        <BasicFilterPlot
-          spec={generateSpec(config, plotData)}
-          actions={actions}
-        />
-      ),
       plotType,
+      specGenerator: generateSpec,
     },
   };
 
@@ -50,7 +43,7 @@ const DoubletScores = ({
 
   const renderCalculationConfig = () => <CalculationConfig />;
   return (
-    <PlotLayout
+    <FilterPlotLayout
       experimentId={experimentId}
       plots={plots}
       filterName={filterName}

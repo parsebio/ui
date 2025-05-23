@@ -24,9 +24,7 @@ const reorderCellSetJsonMerger = (cellSetKey, newPosition, cellClassKey) => (
   }]
 );
 
-const reorderCellSet = (
-  experimentId, cellSetKey, newPosition,
-) => async (dispatch, getState) => {
+const reorderCellSet = (experimentId, cellSetKey, newPosition) => async (dispatch, getState) => {
   const { parentNodeKey } = getCellSets()(getState().cellSets).properties[cellSetKey];
 
   try {

@@ -6,11 +6,16 @@ const second = 1000;
 const baseDelay = 2 * second;
 
 const backoff = async (currentRetry) => (
-  new Promise((resolve) => setTimeout(resolve, baseDelay * (2 ** currentRetry)))
+  new Promise((resolve) => { setTimeout(resolve, baseDelay * (2 ** currentRetry)); })
 );
 
 const putInS3 = async (
-  blob, signedUrlGenerator, abortController, onUploadProgress, retryPolicy, currentRetry = 0,
+  blob,
+  signedUrlGenerator,
+  abortController,
+  onUploadProgress,
+  retryPolicy,
+  currentRetry = 0,
 ) => {
   try {
     const signedUrl = await signedUrlGenerator();
@@ -33,7 +38,12 @@ const putInS3 = async (
       }
 
       return await putInS3(
-        blob, signedUrlGenerator, abortController, onUploadProgress, retryPolicy, currentRetry + 1,
+        blob,
+        signedUrlGenerator,
+        abortController,
+        onUploadProgress,
+        retryPolicy,
+        currentRetry + 1,
       );
     }
 

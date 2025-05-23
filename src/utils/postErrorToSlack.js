@@ -94,9 +94,7 @@ const postError = async (errorLog, context) => {
     });
 
     if (!res.ok) {
-      throw new Error(
-        `Failed sending error message to Slack: ${res.status}`, res.statusText,
-      );
+      throw new Error(`Failed sending error message to Slack: ${res.status}`, res.statusText);
     }
   } catch (err) {
     console.error(err);

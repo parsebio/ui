@@ -69,7 +69,11 @@ const MultiViewGrid = (props) => {
 
   const loadComponent = (componentUuid, type, skipAPI, customConfig) => {
     dispatch(loadConditionalComponentConfig(
-      experimentId, componentUuid, type, skipAPI, customConfig,
+      experimentId,
+      componentUuid,
+      type,
+      skipAPI,
+      customConfig,
     ));
   };
 
@@ -92,8 +96,10 @@ const MultiViewGrid = (props) => {
     if (plotConfigs[firstPlotUuid]
       && !plotConfigs[firstPlotUuid]?.shownGene
       && highestDispersionGene) {
-      dispatch(updatePlotConfig(firstPlotUuid,
-        { shownGene: highestDispersionGene, title: { text: highestDispersionGene } }));
+      dispatch(updatePlotConfig(
+        firstPlotUuid,
+        { shownGene: highestDispersionGene, title: { text: highestDispersionGene } },
+      ));
     }
   }, [plotConfigs, highestDispersionGene]);
 

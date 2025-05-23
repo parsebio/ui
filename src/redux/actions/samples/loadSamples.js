@@ -6,6 +6,7 @@ import {
   SAMPLES_ERROR,
   SAMPLES_LOADING,
 } from 'redux/actionTypes/samples';
+import UploadStatus from 'utils/upload/UploadStatus';
 
 const adaptedToRedux = (samples, experimentId) => {
   const reduxSamples = {};
@@ -17,10 +18,12 @@ const adaptedToRedux = (samples, experimentId) => {
       const fileType = files[key]?.sampleFileType;
       if (!fileType) throw new Error('No sample file found');
 
+      const status = files[key].uploadStatus === UploadStatus.UPLOADING
+        ? UploadStatus.DROP_AGAIN : files[key].uploadStatus;
       apiV1Files[fileType] = {
         size: files[key].size,
         upload: {
-          status: files[key].uploadStatus,
+          status,
         },
       };
     });

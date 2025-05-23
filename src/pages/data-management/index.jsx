@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadExperiments, createExperiment } from 'redux/actions/experiments';
 
@@ -61,39 +61,43 @@ const DataManagementPage = () => {
   const PROJECTS_LIST = 'Projects';
   const PROJECT_DETAILS = 'Project Details';
 
+  const projectsListRenderer = useCallback((width, height) => (
+    <ProjectsListContainer
+      height={height}
+      projectType='experiments'
+      onCreateNewProject={() => setNewProjectModalVisible(true)}
+    />
+  ), []);
+
+  const projectDetailsRenderer = useCallback((width, height) => {
+    if (!activeExperimentId) {
+      return <ExampleExperimentsSpace introductionText='You have no projects yet.' />;
+    }
+
+    if (!activeExperiment) {
+      return (
+        <center>
+          <Loader />
+        </center>
+      );
+    }
+
+    return (
+      <ProjectDetails
+        width={width}
+        height={height}
+      />
+    );
+  }, [activeExperimentId, activeExperiment]);
+
   const TILE_MAP = {
     [PROJECTS_LIST]: {
       toolbarControls: [],
-      component: (width, height) => (
-        <ProjectsListContainer
-          height={height}
-          projectType='experiments'
-          onCreateNewProject={() => setNewProjectModalVisible(true)}
-        />
-      ),
+      component: projectsListRenderer,
     },
     [PROJECT_DETAILS]: {
       toolbarControls: [],
-      component: (width, height) => {
-        if (!activeExperimentId) {
-          return <ExampleExperimentsSpace introductionText='You have no projects yet.' />;
-        }
-
-        if (!activeExperiment) {
-          return (
-            <center>
-              <Loader />
-            </center>
-          );
-        }
-
-        return (
-          <ProjectDetails
-            width={width}
-            height={height}
-          />
-        );
-      },
+      component: projectDetailsRenderer,
     },
   };
 
@@ -115,7 +119,7 @@ const DataManagementPage = () => {
             setNewProjectModalVisible(false);
           }}
         />
-      ) : (<></>)}
+      ) : null}
       <MultiTileContainer
         tileMap={TILE_MAP}
         initialArrangement={windows}

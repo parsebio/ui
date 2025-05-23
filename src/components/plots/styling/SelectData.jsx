@@ -54,7 +54,7 @@ const SelectData = (props) => {
   const optionTree = composeTree(hierarchy, properties);
 
   const renderChildren = (rootNodeKey, children) => {
-    if (!children || children.length === 0) { return (<></>); }
+    if (!children || children.length === 0) { return null; }
 
     const shouldDisable = (key) => key.startsWith(`${config.selectedCellSet}/`);
     return children.map(({ key, name }) => {

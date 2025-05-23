@@ -38,7 +38,7 @@ import samplesCreated from './samplesCreated';
 
 import pipelineVersionUpdated from './pipelineVersionUpdated';
 
-const experimentsReducer = (state = initialState, action) => {
+const experimentsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case EXPERIMENTS_CREATED: {
       return experimentsCreate(state, action);

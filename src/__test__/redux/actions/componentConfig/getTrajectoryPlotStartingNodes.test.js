@@ -85,7 +85,7 @@ describe('Get trajectory plot starting nodes', () => {
   });
 
   it('Dispatches error if there are errors when fetching work', async () => {
-    fetchWork.mockImplementationOnce(() => new Promise((resolve, reject) => reject(new Error('random error!'))));
+    fetchWork.mockImplementationOnce(() => new Promise((resolve, reject) => { reject(new Error('random error!')); }));
 
     await store.dispatch(getTrajectoryPlotStartingNodes(experimentId, plotUuid));
 

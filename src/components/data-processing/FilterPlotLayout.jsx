@@ -14,6 +14,7 @@ import {
   loadPlotConfig,
   savePlotConfig,
 } from 'redux/actions/componentConfig';
+import BasicFilterPlot from 'components/plots/BasicFilterPlot';
 
 const { Panel } = Collapse;
 
@@ -21,7 +22,7 @@ const { Panel } = Collapse;
 This component is used to render the main plot and the mini plots for the
 classifier, cell size distribution and mitochondrial content filters.
 */
-const PlotLayout = ({
+const FilterPlotLayout = ({
   experimentId,
   plots,
   filterName,
@@ -56,7 +57,8 @@ const PlotLayout = ({
   );
 
   const debounceSave = useCallback(
-    _.debounce((plotUuid) => dispatch(savePlotConfig(experimentId, plotUuid)), 2000), [],
+    _.debounce((plotUuid) => dispatch(savePlotConfig(experimentId, plotUuid)), 2000),
+    [],
   );
 
   const { sampleIds: allSampleIds } = useSelector((state) => state.experimentSettings.info);
@@ -89,7 +91,13 @@ const PlotLayout = ({
         : filterSettings;
 
       _.merge(newConfig, expConfigSettings);
-      setPlot(plots[selectedPlot].plot(newConfig, selectedPlotData, allowedPlotActions));
+
+      setPlot((
+        <BasicFilterPlot
+          spec={plots[selectedPlot].specGenerator(newConfig, selectedPlotData)}
+          actions={allowedPlotActions}
+        />
+      ));
     }
   }, [filterSettings, selectedConfig, selectedPlotData]);
   const renderPlot = () => {
@@ -128,7 +136,7 @@ const PlotLayout = ({
               <MiniPlot
                 experimentId={experimentId}
                 plotUuid={plotObj.plotUuid}
-                plotFn={plotObj.plot}
+                specGenerator={plotObj.specGenerator}
                 actions={false}
               />
             </button>
@@ -143,8 +151,8 @@ const PlotLayout = ({
       style={{
         minHeight:
           window.innerWidth <= 1090
-            ? selectedConfig?.dimensions?.height + 1000
-            : selectedConfig?.dimensions?.height + 270,
+            ? selectedConfig?.dimensions?.height ?? 0 + 1000
+            : selectedConfig?.dimensions?.height ?? 0 + 270,
       }}
     >
       <Row gutter={16}>
@@ -180,7 +188,7 @@ const PlotLayout = ({
             </Panel>
             <Panel header='Plot styling' key='styling'>
               <div style={{ height: 8 }} />
-              <div style={{ overflowY: 'auto', maxHeight: selectedConfig?.dimensions?.height + 100 }}>
+              <div style={{ overflowY: 'auto', maxHeight: selectedConfig?.dimensions?.height ?? 0 + 100 }}>
                 <PlotStyling
                   formConfig={plotStylingControlsConfig}
                   config={selectedPlotConfig}
@@ -194,7 +202,8 @@ const PlotLayout = ({
     </div>
   );
 };
-PlotLayout.propTypes = {
+
+FilterPlotLayout.propTypes = {
   experimentId: PropTypes.string.isRequired,
   plots: PropTypes.object.isRequired,
   filterName: PropTypes.string.isRequired,
@@ -211,7 +220,7 @@ PlotLayout.propTypes = {
   allowedPlotActions: PropTypes.object,
 };
 
-PlotLayout.defaultProps = {
+FilterPlotLayout.defaultProps = {
   stepDisabled: false,
   allowedPlotActions: {
     export: true,
@@ -220,4 +229,4 @@ PlotLayout.defaultProps = {
     editor: true,
   },
 };
-export default PlotLayout;
+export default FilterPlotLayout;

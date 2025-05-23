@@ -18,7 +18,12 @@ import UploadStatus from 'utils/upload/UploadStatus';
 // ones we should not create new samples,
 // just reuse their sampleIds and upload the new files
 const splitByAlreadyExistingSamples = (
-  newSamples, sampleIds, samples, sampleTechnology, options, kit,
+  newSamples,
+  sampleIds,
+  samples,
+  sampleTechnology,
+  options,
+  kit,
 ) => {
   const alreadyCreatedSampleIds = {};
 
@@ -78,7 +83,12 @@ const createSamples = (
   const {
     samplesToCreate, alreadyCreatedSampleIds,
   } = splitByAlreadyExistingSamples(
-    newSamples, experiment.sampleIds, samples, sampleTechnology, options, kit,
+    newSamples,
+    experiment.sampleIds,
+    samples,
+    sampleTechnology,
+    options,
+    kit,
   );
 
   if (samplesToCreate.length === 0) {
@@ -117,10 +127,8 @@ const createSamples = (
         createdDate,
         lastModified: createdDate,
         options,
-        metadata: experiment?.metadataKeys.reduce(
-          (acc, metadataKey) => (
-            { ...acc, [metadataKey]: METADATA_DEFAULT_VALUE }), {},
-        ) ?? {},
+        metadata: experiment?.metadataKeys.reduce((acc, metadataKey) => (
+          { ...acc, [metadataKey]: METADATA_DEFAULT_VALUE }), {}) ?? {},
 
         files: Object.keys(files).reduce(((acc, fileType) => (
           { ...acc, [fileType]: { upload: { status: UploadStatus.UPLOADING } } }

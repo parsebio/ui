@@ -11,4 +11,4 @@ class WorkTimeoutError extends Error {
   }
 }
 
-module.exports = WorkTimeoutError;
+export default WorkTimeoutError;

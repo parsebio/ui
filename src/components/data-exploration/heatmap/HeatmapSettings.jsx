@@ -37,23 +37,21 @@ const HeatmapSettings = (props) => {
   ];
 
   return (
-    <>
-      <Dropdown
-        arrow
-        type='link'
-        size='small'
-        menu={{ items: menuItems }}
-        trigger={['click']}
-      >
-        <Tooltip title='Settings'>
-          <Button
-            type='text'
-            icon={<SettingOutlined />}
-            className='bp3-button bp3-minimal'
-          />
-        </Tooltip>
-      </Dropdown>
-    </>
+    <Dropdown
+      arrow
+      type='link'
+      size='small'
+      menu={{ items: menuItems }}
+      trigger={['click']}
+    >
+      <Tooltip title='Settings'>
+        <Button
+          type='text'
+          icon={<SettingOutlined />}
+          className='bp3-button bp3-minimal'
+        />
+      </Tooltip>
+    </Dropdown>
   );
 };
 

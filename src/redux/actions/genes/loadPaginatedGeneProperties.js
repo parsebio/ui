@@ -10,7 +10,10 @@ import fetchWork from 'utils/work/fetchWork';
 import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
 
 const loadPaginatedGeneProperties = (
-  experimentId, properties, componentUuid, tableState,
+  experimentId,
+  properties,
+  componentUuid,
+  tableState,
 ) => async (dispatch, getState) => {
   const { loading } = getState().genes.properties;
 
@@ -46,7 +49,11 @@ const loadPaginatedGeneProperties = (
 
   try {
     const { gene_names: geneNames, dispersions, total } = await fetchWork(
-      experimentId, body, getState, dispatch, { timeout },
+      experimentId,
+      body,
+      getState,
+      dispatch,
+      { timeout },
     );
 
     const loadedProperties = {};

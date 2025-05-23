@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import generateKneePlotSpec from 'utils/plotSpecs/generateClassifierKneePlot';
 import generateEmptyDropsSpec from 'utils/plotSpecs/generateClassifierEmptyDropsPlot';
-import BasicFilterPlot from 'components/plots/BasicFilterPlot';
-import PlotLayout from 'components/data-processing/PlotLayout';
+import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
 import CalculationConfig from './CalculationConfig';
 
 const filterName = 'classifier';
@@ -19,30 +18,23 @@ const Classifier = ({
   const expConfig = useSelector(
     (state) => state.experimentSettings.processing[filterName][sampleId].filterSettings,
   );
+
+  const getSpecGenerator = useCallback((generator) => (
+    (config, plotData) => generator(config, expConfig, plotData)
+  ), [expConfig]);
+
   const plots = {
     kneePlot: {
       title: 'Knee Plot',
       plotUuid: generateDataProcessingPlotUuid(sampleId, filterName, 1),
       plotType: 'classifierKneePlot',
-      plot: (config, plotData, actions) => (
-        <BasicFilterPlot
-          spec={generateKneePlotSpec(config, expConfig, plotData)}
-          actions={actions}
-          miniPlot={config.miniPlot}
-        />
-      ),
+      specGenerator: getSpecGenerator(generateKneePlotSpec),
     },
     emptyDropsPlot: {
       title: 'Empty Drops Plot',
       plotUuid: generateDataProcessingPlotUuid(sampleId, filterName, 0),
       plotType: 'classifierEmptyDropsPlot',
-      plot: (config, plotData, actions) => (
-        <BasicFilterPlot
-          spec={generateEmptyDropsSpec(config, expConfig, plotData)}
-          actions={actions}
-          miniPlot={config.miniPlot}
-        />
-      ),
+      specGenerator: getSpecGenerator(generateEmptyDropsSpec),
     },
   };
 
@@ -68,7 +60,7 @@ const Classifier = ({
   const renderCalculationConfig = () => <CalculationConfig />;
 
   return (
-    <PlotLayout
+    <FilterPlotLayout
       experimentId={experimentId}
       plots={plots}
       filterName={filterName}

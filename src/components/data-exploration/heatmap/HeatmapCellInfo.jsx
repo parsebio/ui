@@ -49,18 +49,18 @@ const HeatmapCellInfo = (props) => {
           <div style={cellInfoStyle}>
             {`Cell id: ${cellId}`}
           </div>
-        ) : <></>}
+        ) : null}
         {geneName ? (
           <div style={cellInfoStyle}>
             {`Gene name: ${geneName}`}
           </div>
-        ) : <></>}
+        ) : null}
         {geneExpression !== undefined ? (
           <div style={cellInfoStyle}>
             Expression:&nbsp;
             {geneExpression}
           </div>
-        ) : <></>}
+        ) : null}
       </Card>
     </div>
   );
@@ -69,7 +69,7 @@ const HeatmapCellInfo = (props) => {
     return renderCellInfo();
   }
 
-  return (<></>);
+  return null;
 };
 
 HeatmapCellInfo.defaultProps = {

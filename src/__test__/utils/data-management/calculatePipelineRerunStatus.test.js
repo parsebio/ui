@@ -67,9 +67,7 @@ describe('calculateGem2sRerunStatus', () => {
       shouldRerun: false,
     };
 
-    const { rerun } = calculateGem2sRerunStatus(
-      failedGem2sBackendStatus, experiment,
-    );
+    const { rerun } = calculateGem2sRerunStatus(failedGem2sBackendStatus, experiment);
 
     expect(rerun).toEqual(true);
   });

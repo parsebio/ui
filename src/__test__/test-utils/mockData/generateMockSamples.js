@@ -2,38 +2,42 @@ import _ from 'lodash';
 
 import fake from '__test__/test-utils/constants';
 import sampleFileType from 'utils/sampleFileType';
+import { sampleTech } from 'utils/constants';
 
-const mockSampleTemplate = (experimentId, sampleId, idx) => ({
-  id: sampleId,
-  experimentId,
-  name: `Mock sample ${idx}`,
-  sampleTechnology: '10x',
-  createdAt: '2021-12-07 17:36:27.773+00',
-  updatedAt: '2021-12-07 17:38:42.036+00',
-  metadata: { age: 'BL', timePoint: 'BL' },
-  files: {
-    matrix10X: {
-      uploadStatus: 'uploaded',
-      sampleFileType: sampleFileType.MATRIX_10_X,
-      size: 1000,
-      s3Path: 'testcfd8122f-25af-4f1a-a306-3268d44ed401',
+const mockSampleTemplate = (experimentId, sampleId, idx) => {
+  const type = idx === 1 ? sampleTech['10X'] : sampleTech.PARSE;
+  return {
+    id: sampleId,
+    experimentId,
+    name: `Mock sample ${idx}`,
+    sampleTechnology: type,
+    createdAt: '2021-12-07 17:36:27.773+00',
+    updatedAt: '2021-12-07 17:38:42.036+00',
+    metadata: { age: 'BL', timePoint: 'BL' },
+    files: {
+      matrix10X: {
+        uploadStatus: 'uploaded',
+        sampleFileType: sampleFileType.MATRIX_10_X,
+        size: 1000,
+        s3Path: 'testcfd8122f-25af-4f1a-a306-3268d44ed401',
+      },
+      barcodes10X: {
+        uploadStatus: 'uploaded',
+        sampleFileType: sampleFileType.BARCODES_10_X,
+        size: 100,
+        s3Path: 'testcfd8122f-25af-4f1a-a306-3268d44ed402',
+      },
+      features10X: {
+        uploadStatus: 'uploaded',
+        sampleFileType: sampleFileType.FEATURES_10_X,
+        size: 100,
+        s3Path: 'testcfd8122f-25af-4f1a-a306-3268d44ed403',
+      },
     },
-    barcodes10X: {
-      uploadStatus: 'uploaded',
-      sampleFileType: sampleFileType.BARCODES_10_X,
-      size: 100,
-      s3Path: 'testcfd8122f-25af-4f1a-a306-3268d44ed402',
-    },
-    features10X: {
-      uploadStatus: 'uploaded',
-      sampleFileType: sampleFileType.FEATURES_10_X,
-      size: 100,
-      s3Path: 'testcfd8122f-25af-4f1a-a306-3268d44ed403',
-    },
-  },
-  options: {},
-  kit: null,
-});
+    options: {},
+    kit: null,
+  };
+};
 
 const generateMockSamples = (experimentId, numSamples = 3) => {
   const samples = [];

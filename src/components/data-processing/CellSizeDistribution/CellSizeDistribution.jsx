@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect, useCallback,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 
-import PlotLayout from 'components/data-processing/PlotLayout';
-import BasicFilterPlot from 'components/plots/BasicFilterPlot';
-import generateKneePlotSpec from 'utils/plotSpecs/generateCellSizeDistributionKneePlot';
+import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
+import kneePlotSpecGenerator from 'utils/plotSpecs/generateCellSizeDistributionKneePlot';
 import generateHistogramSpec from 'utils/plotSpecs/generateCellSizeDistributionHistogram';
-import CalculationConfig from './CalculationConfig';
+import CalculationConfig from 'components/data-processing/CellSizeDistribution/CalculationConfig';
 
 const HIGHEST_UMI_DEFAULT = 17000;
 const filterName = 'cellSizeDistribution';
@@ -25,34 +26,28 @@ const CellSizeDistribution = ({
   );
 
   useEffect(() => {
-    setHighestUmi(_.maxBy(histogramPlotData,
-      (datum) => datum.u)?.u ?? HIGHEST_UMI_DEFAULT);
+    setHighestUmi(_.maxBy(
+      histogramPlotData,
+      (datum) => datum.u,
+    )?.u ?? HIGHEST_UMI_DEFAULT);
   }, [histogramPlotData]);
+
+  const getHistogramSpecGenerator = useCallback(() => (
+    (config, plotData) => generateHistogramSpec(config, plotData, highestUmi)
+  ), [highestUmi]);
 
   const plots = {
     kneePlot: {
       title: 'Knee Plot',
       plotUuid: generateDataProcessingPlotUuid(sampleId, filterName, 0),
       plotType: 'cellSizeDistributionKneePlot',
-      plot: (config, plotData, actions) => (
-        <BasicFilterPlot
-          spec={generateKneePlotSpec(config, plotData)}
-          actions={actions}
-          miniPlot={config.miniPlot}
-        />
-      ),
+      specGenerator: kneePlotSpecGenerator,
     },
     histogram: {
       title: 'Histogram',
       plotUuid: generateDataProcessingPlotUuid(sampleId, filterName, 1),
       plotType: 'cellSizeDistributionHistogram',
-      plot: (config, plotData, actions) => (
-        <BasicFilterPlot
-          spec={generateHistogramSpec(config, plotData, highestUmi)}
-          actions={actions}
-          miniPlot={config.miniPlot}
-        />
-      ),
+      specGenerator: getHistogramSpecGenerator(),
     },
   };
 
@@ -81,7 +76,7 @@ const CellSizeDistribution = ({
   const renderCalculationConfig = () => (
     <CalculationConfig highestUmi={highestUmi} />);
   return (
-    <PlotLayout
+    <FilterPlotLayout
       experimentId={experimentId}
       plots={plots}
       filterName={filterName}

@@ -9,15 +9,15 @@ import fetchAPI from 'utils/http/fetchAPI';
 import { loadBackendStatus } from '../backendStatus';
 
 const bulkUpdateSampleKits = (sampleIds, kit) => async (dispatch, getState) => {
-  if (sampleIds.length === 0) {
-    throw new Error('sampleIds array cannot be empty');
+  const parseSampleIds = sampleIds.filter((sampleId) => getState().samples[sampleId].type === 'parse');
+  if (parseSampleIds.length === 0) {
+    throw new Error('parse sampleIds array cannot be empty');
   }
 
   // In api v2 experimentId and experimentId are the same
   const { experimentId } = getState().samples[sampleIds[0]];
-
   const url = `/v2/experiments/${experimentId}/samples/kit`;
-  const body = { sampleIds, kit };
+  const body = { sampleIds: parseSampleIds, kit };
 
   dispatch({
     type: SAMPLES_SAVING,
@@ -45,7 +45,7 @@ const bulkUpdateSampleKits = (sampleIds, kit) => async (dispatch, getState) => {
     dispatch({
       type: SAMPLES_BULK_KIT_UPDATE,
       payload: {
-        sampleIds,
+        sampleIds: parseSampleIds,
         kit,
       },
     });

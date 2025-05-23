@@ -1,5 +1,6 @@
 import React, {
   useContext, useState, useEffect,
+  useMemo,
 } from 'react';
 import propTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -165,9 +166,15 @@ const AppRouteProvider = (props) => {
     window.location = url;
   };
 
+  const value = useMemo(() => ({
+    navigateTo,
+    currentModule,
+    forceNavigateToUrl,
+  }), [navigateTo, currentModule, forceNavigateToUrl]);
+
   return (
-    <AppRouterContext.Provider value={{ navigateTo, currentModule, forceNavigateToUrl }}>
-      {renderIntercept ?? <></>}
+    <AppRouterContext.Provider value={value}>
+      {renderIntercept ?? null}
       {children}
     </AppRouterContext.Provider>
   );

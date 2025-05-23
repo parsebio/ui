@@ -1,3 +1,4 @@
+/* eslint-disable import/no-import-module-exports */
 /* eslint-disable global-require */
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
@@ -39,4 +40,5 @@ const makeStore = () => {
 };
 
 const wrapper = createWrapper(makeStore, { debug: false });
+
 export { wrapper, makeStore };
