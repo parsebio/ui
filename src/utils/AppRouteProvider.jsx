@@ -43,6 +43,7 @@ const PATH_REGEX = {
   [modules.DATA_EXPLORATION]: '/data-exploration',
   [modules.PLOTS_AND_TABLES]: '/plots-and-tables',
   [modules.SETTINGS]: '/settings',
+  [modules.SAMPLE_LOADING_TABLE]: '/sample-loading-table',
   [modules.DEFAULT]: '/',
 };
 
@@ -54,6 +55,7 @@ const PATHS = {
   [modules.DATA_PROCESSING]: `/experiments/[experimentId]${PATH_REGEX[modules.DATA_PROCESSING]}`,
   [modules.DATA_EXPLORATION]: `/experiments/[experimentId]${PATH_REGEX[modules.DATA_EXPLORATION]}`,
   [modules.PLOTS_AND_TABLES]: `/experiments/[experimentId]${PATH_REGEX[modules.PLOTS_AND_TABLES]}`,
+  [modules.SAMPLE_LOADING_TABLE]: `${PATH_REGEX[modules.SAMPLE_LOADING_TABLE]}`,
   [modules.SETTINGS]: `${PATH_REGEX[modules.DATA_MANAGEMENT]} /[settingsName]`,
 };
 

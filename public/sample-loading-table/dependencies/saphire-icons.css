@@ -1,0 +1,40 @@
+@font-face {
+  font-family: "saphire-icons";
+  src: url('saphire-icons.eot?t=1743697716696'); /* IE9*/
+  src: url('saphire-icons.eot?t=1743697716696#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url("saphire-icons.woff2?t=1743697716696") format("woff2"),
+  url("saphire-icons.woff?t=1743697716696") format("woff"),
+  url('saphire-icons.ttf?t=1743697716696') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('saphire-icons.svg?t=1743697716696#saphire-icons') format('svg'); /* iOS 4.1- */
+}
+
+[class^="saphire-icons-"], [class*=" saphire-icons-"] {
+  font-family: 'saphire-icons' !important;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.saphire-icons-ico-arrow-right:before { content: "\ea01"; }
+.saphire-icons-ico-check-solid:before { content: "\ea02"; }
+.saphire-icons-ico-chevron-down-circle:before { content: "\ea03"; }
+.saphire-icons-ico-chevron-down:before { content: "\ea04"; }
+.saphire-icons-ico-chevron-left-circle:before { content: "\ea05"; }
+.saphire-icons-ico-chevron-left:before { content: "\ea06"; }
+.saphire-icons-ico-chevron-right-circle:before { content: "\ea07"; }
+.saphire-icons-ico-chevron-right:before { content: "\ea08"; }
+.saphire-icons-ico-chevron-up-circle:before { content: "\ea09"; }
+.saphire-icons-ico-chevron-up:before { content: "\ea0a"; }
+.saphire-icons-ico-circle-check-solid:before { content: "\ea0b"; }
+.saphire-icons-ico-circle-play-solid:before { content: "\ea0c"; }
+.saphire-icons-ico-download-solid:before { content: "\ea0d"; }
+.saphire-icons-ico-exclamation-circle:before { content: "\ea0e"; }
+.saphire-icons-ico-map-pin-line:before { content: "\ea0f"; }
+.saphire-icons-ico-map-pin-solid:before { content: "\ea10"; }
+.saphire-icons-ico-play-solid:before { content: "\ea11"; }
+.saphire-icons-ico-social-linkedin:before { content: "\ea12"; }
+.saphire-icons-ico-social-x:before { content: "\ea13"; }
+.saphire-icons-ico-times-circle:before { content: "\ea14"; }
+.saphire-icons-ico-times:before { content: "\ea15"; }
+
