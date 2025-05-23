@@ -79,11 +79,12 @@ const LaunchAnalysisButton = () => {
   const canLaunchAnalysis = useCallback(() => {
     if (activeExperiment.sampleIds.length === 0) return false;
 
-    // Check that samples is loaded
-    const testSampleUuid = activeExperiment.sampleIds[0];
-    if (samples[testSampleUuid] === undefined) return false;
-
-    if (samples[testSampleUuid].type === 'parse' & samples[testSampleUuid].kit === null) return false;
+    // Check that the samples are loaded
+    if (!activeExperiment.sampleIds.every((sampleId) => samples[sampleId])) return false;
+    const parseSampleId = activeExperiment.sampleIds.find(
+      (sampleId) => samples[sampleId]?.type === sampleTech.PARSE,
+    );
+    if (parseSampleId && !samples[parseSampleId]?.kit) return false;
 
     const metadataKeysAvailable = activeExperiment.metadataKeys.length;
 
