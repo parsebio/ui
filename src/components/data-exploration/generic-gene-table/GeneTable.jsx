@@ -111,8 +111,11 @@ const GeneTable = (props) => {
 
   const rowSelection = {
     onSelect: (gene, selected) => {
-      dispatch(changeGeneSelection(experimentId, [gene.key],
-        (selected) ? GeneSelectionStatus.select : GeneSelectionStatus.deselect));
+      dispatch(changeGeneSelection(
+        experimentId,
+        [gene.key],
+        (selected) ? GeneSelectionStatus.select : GeneSelectionStatus.deselect,
+      ));
     },
     onSelectAll: (selected, selectedRows, changeRows) => {
       // changeRows returns the row objects for all genes that were affected
@@ -120,8 +123,11 @@ const GeneTable = (props) => {
       const genes = [];
       changeRows.forEach((row) => genes.push(row.gene_names));
 
-      dispatch(changeGeneSelection(experimentId, genes,
-        (selected) ? GeneSelectionStatus.select : GeneSelectionStatus.deselect));
+      dispatch(changeGeneSelection(
+        experimentId,
+        genes,
+        (selected) ? GeneSelectionStatus.select : GeneSelectionStatus.deselect,
+      ));
     },
   };
 
@@ -218,7 +224,7 @@ const GeneTable = (props) => {
       direction='vertical'
       style={{ width: '100%' }}
     >
-      {loading ? <></> : (
+      {loading ? null : (
         <>
           <GeneSelectionMenu extraOptions={extraOptions} experimentId={experimentId} />
           <FilterGenes

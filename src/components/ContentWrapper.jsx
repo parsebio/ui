@@ -8,8 +8,9 @@ import React, {
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
-import MultiBackend from 'react-dnd-multi-backend';
-import HTML5ToTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch';
+import { DndProvider } from 'react-dnd-multi-backend';
+import { HTML5toTouch } from 'rdndmb-html5-to-touch';
+
 import {
   BuildOutlined,
   FundViewOutlined,
@@ -33,7 +34,7 @@ import PreloadContent from 'components/PreloadContent';
 import GEM2SLoadingScreen from 'components/GEM2SLoadingScreen';
 import PipelineRedirectToDataProcessing from 'components/PipelineRedirectToDataProcessing';
 
-import { getBackendStatus } from 'redux/selectors';
+import { getBackendStatus, getHasSeuratTechnology } from 'redux/selectors';
 import { loadUser } from 'redux/actions/user';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
@@ -44,7 +45,6 @@ import experimentUpdatesHandler from 'utils/experimentUpdatesHandler';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import pipelineStatusValues from 'utils/pipelineStatusValues';
 
-import { DndProvider } from 'react-dnd';
 import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
@@ -66,6 +66,66 @@ const backendErrors = [
   pipelineStatusValues.TIMED_OUT,
   pipelineStatusValues.ABORTED,
 ];
+
+const BigLogo = () => (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      pointerEvents: 'none',
+      userSelect: 'none',
+    }}
+  >
+    <svg xmlns='http://www.w3.org/2000/svg' width={200} height={50}>
+      <defs id='svg_document_defs'>
+        <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
+      </defs>
+      <g transform='translate(20, 25)'>
+
+        {/* provided by? TBD */}
+        <image href='/Parse_icon_white.png' x='-5' y='-20' width='18%' />
+        <text
+          style={{ outlineStyle: 'none' }}
+          fontWeight='900'
+          textRendering='geometricPrecision'
+          fontFamily='M Plus 2'
+          fill='#F0F2F5'
+          fontSize='22.00px'
+          textAnchor='start'
+          dominantBaseline='middle'
+          x='35'
+        >
+          Trailmaker
+        </text>
+      </g>
+    </svg>
+  </div>
+);
+
+const SmallLogo = () => (
+  <div
+    style={{
+      background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
+      paddingTop: '8px',
+      paddingBottom: '8px',
+      pointerEvents: 'none',
+      userSelect: 'none',
+    }}
+  >
+    <svg xmlns='http://www.w3.org/2000/svg' width={100} height={30}>
+      <defs id='svg_document_defs'>
+        <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
+      </defs>
+      <g>
+        <image href='/Parse_icon_white.png' x='20' y='0' width='35%' />
+      </g>
+    </svg>
+  </div>
+);
 
 const ContentWrapper = (props) => {
   const dispatch = useDispatch();
@@ -116,10 +176,7 @@ const ContentWrapper = (props) => {
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
 
-  const firstSampleId = Object.keys(samples).find(
-    (id) => samples[id].experimentId === currentExperimentId,
-  );
-  const selectedTechnology = firstSampleId ? samples[firstSampleId].type : false;
+  const hasSeuratTechnology = useSelector(getHasSeuratTechnology(currentExperimentId));
 
   const experimentName = experimentData?.experimentName || experiment?.name;
   const secondaryAnalysisName = useSelector(
@@ -148,7 +205,7 @@ const ContentWrapper = (props) => {
   const completedGem2sSteps = backendStatus?.gem2s?.completedSteps;
   const seuratStatusKey = backendStatus?.seurat?.status;
 
-  const isSeurat = seuratStatusKey && selectedTechnology === 'seurat';
+  const isSeurat = seuratStatusKey && hasSeuratTechnology;
 
   const [pipelinesRerunStatus, setPipelinesRerunStatus] = useState(null);
   const seuratRunning = seuratStatusKey === 'RUNNING' && isSeurat;
@@ -216,7 +273,7 @@ const ContentWrapper = (props) => {
     dispatch(loadUser());
   }, []);
 
-  if (!user) return <></>;
+  if (!user) return null;
 
   const getStatusObject = (type, status, message = null, completedSteps = null) => ({
     type,
@@ -226,7 +283,8 @@ const ContentWrapper = (props) => {
   });
 
   const gem2sNotCreated = checkEveryIsValue(
-    [gem2sStatusKey, seuratStatusKey], pipelineStatusValues.NOT_CREATED,
+    [gem2sStatusKey, seuratStatusKey],
+    pipelineStatusValues.NOT_CREATED,
   );
 
   const getSeuratStatus = () => {
@@ -271,66 +329,6 @@ const ContentWrapper = (props) => {
   };
 
   const currentStatusScreen = getCurrentStatusScreen();
-
-  const BigLogo = () => (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
-        paddingTop: '10px',
-        paddingBottom: '10px',
-        pointerEvents: 'none',
-        userSelect: 'none',
-      }}
-    >
-      <svg xmlns='http://www.w3.org/2000/svg' width={200} height={50}>
-        <defs id='svg_document_defs'>
-          <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
-        </defs>
-        <g transform='translate(20, 25)'>
-
-          {/* provided by? TBD */}
-          <image href='/Parse_icon_white.png' x='-5' y='-20' width='18%' />
-          <text
-            style={{ outlineStyle: 'none' }}
-            fontWeight='900'
-            textRendering='geometricPrecision'
-            fontFamily='M Plus 2'
-            fill='#F0F2F5'
-            fontSize='22.00px'
-            textAnchor='start'
-            dominantBaseline='middle'
-            x='35'
-          >
-            Trailmaker
-          </text>
-        </g>
-      </svg>
-    </div>
-  );
-
-  const SmallLogo = () => (
-    <div
-      style={{
-        background: `linear-gradient(315deg, ${brandColors.DARK_LILAC} 0%, ${brandColors.INDIGO} 30%, ${brandColors.DARK_INDIGO} 100%)`,
-        paddingTop: '8px',
-        paddingBottom: '8px',
-        pointerEvents: 'none',
-        userSelect: 'none',
-      }}
-    >
-      <svg xmlns='http://www.w3.org/2000/svg' width={100} height={30}>
-        <defs id='svg_document_defs'>
-          <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
-        </defs>
-        <g>
-          <image href='/Parse_icon_white.png' x='20' y='0' width='35%' />
-        </g>
-      </svg>
-    </div>
-  );
 
   const menuLinks = [
     {
@@ -420,7 +418,7 @@ const ContentWrapper = (props) => {
 
       if (seuratComplete && currentModule === modules.DATA_PROCESSING) {
         navigateTo(modules.DATA_EXPLORATION, { experimentId: routeExperimentId });
-        return <></>;
+        return null;
       }
 
       if (process.env.NODE_ENV === 'development') {
@@ -526,7 +524,7 @@ const ContentWrapper = (props) => {
     );
   };
 
-  if (!user) return <></>;
+  if (!user) return null;
 
   const menuItems = menuLinks
     .map(menuItemRender);
@@ -535,75 +533,72 @@ const ContentWrapper = (props) => {
     || items.some((item) => item.module === currentModule);
 
   return (
-    <>
-      <DndProvider backend={MultiBackend} options={HTML5ToTouch}>
-        {/* Privacy policy only for biomage deployment */}
-        {termsOfUseNotAccepted(user, domainName) && (
-          <TermsOfUseIntercept user={user} />
-        )}
-        <BrowserAlert />
+    <DndProvider options={HTML5toTouch}>
+      {/* Privacy policy only for biomage deployment */}
+      {termsOfUseNotAccepted(user, domainName) && (
+        <TermsOfUseIntercept user={user} />
+      )}
+      <BrowserAlert />
 
-        <Layout style={{ minHeight: '100vh' }}>
-          <Sider
-            style={{
-              background: brandColors.BLACK_INDIGO, overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
-            }}
-            width={210}
-            theme='dark'
-            mode='inline'
-            collapsible
-            collapsed={collapsed}
-            onCollapse={(collapse) => setCollapsed(collapse)}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              {collapsed ? <SmallLogo /> : <BigLogo />}
-              <Menu
-                style={{ background: brandColors.BLACK_INDIGO }}
-                data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
-                theme='dark'
-                selectedKeys={[currentModule]}
-                mode='inline'
-                openKeys={collapsed ? undefined
-                  : menuLinks
-                    .filter((item) => isUserInModule(item.module, item.items))
-                    .map((item) => item.module)}
-              >
-                {menuItems}
-              </Menu>
-              <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: collapsed ? 'center' : 'left' }}>
-                <FeedbackButton buttonType='text' collapsed={collapsed} />
-                <ReferralButton collapsed={collapsed} />
-                <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
-                <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
-                  <UserButton />
+      <Layout style={{ minHeight: '100vh' }}>
+        <Sider
+          style={{
+            background: brandColors.BLACK_INDIGO, overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
+          }}
+          width={210}
+          theme='dark'
+          mode='inline'
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(collapse) => setCollapsed(collapse)}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            {collapsed ? <SmallLogo /> : <BigLogo />}
+            <Menu
+              style={{ background: brandColors.BLACK_INDIGO }}
+              data-test-id={integrationTestConstants.ids.NAVIGATION_MENU}
+              theme='dark'
+              selectedKeys={[currentModule]}
+              mode='inline'
+              openKeys={collapsed ? undefined
+                : menuLinks
+                  .filter((item) => isUserInModule(item.module, item.items))
+                  .map((item) => item.module)}
+            >
+              {menuItems}
+            </Menu>
+            <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: collapsed ? 'center' : 'left' }}>
+              <FeedbackButton buttonType='text' collapsed={collapsed} />
+              <ReferralButton collapsed={collapsed} />
+              <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
+              <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
+                <UserButton />
+                <br />
+                <br />
+                <span style={{ fontSize: '0.75em', color: 'hsla(0, 0%, 100%, 0.65)' }}>
+                  &copy;
+                  {' '}
+                  <a href='https://parsebiosciences.com/' style={{ color: 'inherit', textDecoration: 'none' }}>Parse Biosciences</a>
+                  {' '}
+                  2020-2025.
                   <br />
-                  <br />
-                  <span style={{ fontSize: '0.75em', color: 'hsla(0, 0%, 100%, 0.65)' }}>
-                    &copy;
-                    {' '}
-                    <a href='https://parsebiosciences.com/' style={{ color: 'inherit', textDecoration: 'none' }}>Parse Biosciences</a>
-                    {' '}
-                    2020-2025.
-                    <br />
-                    All rights reserved.
-                  </span>
-                </div>
+                  All rights reserved.
+                </span>
               </div>
             </div>
+          </div>
 
-          </Sider>
-          <CookieBanner />
+        </Sider>
+        <CookieBanner />
 
-          <Layout
-            style={!collapsed ? { marginLeft: '210px' } : { marginLeft: '80px' }} // this is the collapsed width for our sider
-          >
-            {renderContent()}
-          </Layout>
+        <Layout
+          style={!collapsed ? { marginLeft: '210px' } : { marginLeft: '80px' }} // this is the collapsed width for our sider
+        >
+          {renderContent()}
         </Layout>
+      </Layout>
 
-      </DndProvider>
-
-    </>
+    </DndProvider>
   );
 };
 

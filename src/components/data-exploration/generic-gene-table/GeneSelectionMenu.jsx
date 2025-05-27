@@ -22,16 +22,14 @@ const GeneSelectionMenu = (props) => {
         onListSelected={onListSelected}
       />
       {listed ? (
-        <>
-          <Select
-            value={selectedGenes}
-            mode='multiple'
-            showArrow={false}
-            removeIcon={(<div />)}
-            style={{ width: '100%' }}
-          />
-        </>
-      ) : (<></>)}
+        <Select
+          value={selectedGenes}
+          mode='multiple'
+          showArrow={false}
+          removeIcon={(<div />)}
+          style={{ width: '100%' }}
+        />
+      ) : null}
     </Space>
   );
 };

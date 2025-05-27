@@ -15,12 +15,9 @@ const Expandable = (props) => {
         }
       }}
     >
-      {!isExpanded ? collapsedContent
-        : (
-          <>
-            {expandedContent}
-          </>
-        )}
+      {
+        !isExpanded ? collapsedContent : expandedContent
+      }
     </span>
   );
 };

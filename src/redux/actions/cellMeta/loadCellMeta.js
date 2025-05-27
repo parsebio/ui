@@ -7,9 +7,7 @@ import {
   CELL_META_ERROR,
 } from '../../actionTypes/cellMeta';
 
-const loadCellMeta = (
-  experimentId, metaName,
-) => async (dispatch, getState) => {
+const loadCellMeta = (experimentId, metaName) => async (dispatch, getState) => {
   const { loading, error } = getState().cellMeta[metaName];
 
   if (!loading && !error) {
@@ -38,9 +36,7 @@ const loadCellMeta = (
   const timeout = getTimeoutForWorkerTask(getState(), plotWorkName[metaName]);
 
   try {
-    const data = await fetchWork(
-      experimentId, body, getState, dispatch, { timeout },
-    );
+    const data = await fetchWork(experimentId, body, getState, dispatch, { timeout });
     dispatch({
       type: CELL_META_LOADED,
       payload: {

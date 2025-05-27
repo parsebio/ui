@@ -68,7 +68,7 @@ const LegendEditor = (props) => {
                 }
               </Radio.Group>
             </Form.Item>
-            { config.legend.direction ? (
+            {config.legend.direction ? (
               <>
                 <p><strong>Direction</strong></p>
                 <Form.Item>
@@ -81,7 +81,7 @@ const LegendEditor = (props) => {
                   </Radio.Group>
                 </Form.Item>
               </>
-            ) : <></>}
+            ) : null}
           </>
         )
       }

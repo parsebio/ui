@@ -166,14 +166,17 @@ describe('Batch differential expression tests ', () => {
       expect(enabledComputeButton).toBeEnabled();
       userEvent.click(enabledComputeButton);
 
-      expect(getBatchDiffExprSpy).toHaveBeenCalledWith('testae48e318dab9a1bd0bexperiment',
+      expect(getBatchDiffExprSpy).toHaveBeenCalledWith(
+        'testae48e318dab9a1bd0bexperiment',
         {
           basis: 'louvain',
           cellSet: 'sample/b62028a1-ffa0-4f10-823d-93c9ddb88898',
           compareWith: 'sample/rest',
           comparisonType: 'between',
-        }, 'compareForCellSets',
-        ['louvain-0', 'louvain-1', 'louvain-2', 'louvain-3', 'louvain-4', 'louvain-5', 'louvain-6', 'louvain-7', 'louvain-8', 'louvain-9', 'louvain-10', 'louvain-11', 'louvain-12', 'louvain-13']);
+        },
+        'compareForCellSets',
+        ['louvain-0', 'louvain-1', 'louvain-2', 'louvain-3', 'louvain-4', 'louvain-5', 'louvain-6', 'louvain-7', 'louvain-8', 'louvain-9', 'louvain-10', 'louvain-11', 'louvain-12', 'louvain-13'],
+      );
     });
   });
 

@@ -22,6 +22,7 @@ const ExperimentMenu = () => {
 
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
   const [shareExperimentModalVisible, setShareExperimentModalVisible] = useState(false);
+  // change this last before releasing the parse 10x integration epic
   const selectedTech = samples[activeExperiment?.sampleIds[0]]?.type;
 
   const {
@@ -63,8 +64,10 @@ const ExperimentMenu = () => {
               <Button
                 disabled={!isLatestSecondaryExecution}
                 type='primary'
-                onClick={() => navigateTo(modules.SECONDARY_ANALYSIS_OUTPUT,
-                  { secondaryAnalysisId: linkedSecondaryAnalysisId })}
+                onClick={() => navigateTo(
+                  modules.SECONDARY_ANALYSIS_OUTPUT,
+                  { secondaryAnalysisId: linkedSecondaryAnalysisId },
+                )}
               >
                 Go to Pipeline Outputs
               </Button>
@@ -86,7 +89,7 @@ const ExperimentMenu = () => {
           currentSelectedTech={selectedTech}
           onCancel={() => setUploadModalVisible(false)}
         />
-      ) : <></>}
+      ) : null}
     </>
   );
 };

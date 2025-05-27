@@ -105,7 +105,7 @@ const HierarchicalTree = (props) => {
         />
       );
     }
-    return <></>;
+    return null;
   };
 
   const renderEditableField = (modified, parentKey, parentType) => (
@@ -146,7 +146,7 @@ const HierarchicalTree = (props) => {
       );
     }
 
-    return <></>;
+    return null;
   };
 
   const renderHideButton = (modified) => {
@@ -156,7 +156,7 @@ const HierarchicalTree = (props) => {
       );
     }
 
-    return <></>;
+    return null;
   };
 
   const renderTitlesRecursive = (source, parentKey = null, parentType = null) => {

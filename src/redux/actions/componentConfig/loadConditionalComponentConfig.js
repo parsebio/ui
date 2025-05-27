@@ -7,7 +7,11 @@ import handleError from 'utils/http/handleError';
 import httpStatusCodes from 'utils/http/httpStatusCodes';
 
 const loadConditionalComponentConfig = (
-  experimentId, componentUuid, type, skipAPI, customConfig = {},
+  experimentId,
+  componentUuid,
+  type,
+  skipAPI,
+  customConfig = {},
 ) => async (dispatch) => {
   const defaultConfig = initialPlotConfigStates[type] ?? initialComponentConfigStates[type];
   const configToUse = _.merge({}, defaultConfig, customConfig);

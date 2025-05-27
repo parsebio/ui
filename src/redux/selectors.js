@@ -67,6 +67,10 @@ const getSamples = (...params) => (state) => (
   samplesSelectors.getSamples(...params)(state.samples)
 );
 
+const getHasSeuratTechnology = (...params) => (state) => (
+  samplesSelectors.getHasSeuratTechnology(...params)(state)
+);
+
 const getHasPermissions = (...params) => (state) => (
   generalSelectors.getHasPermissions(...params)(state)
 );
@@ -89,4 +93,5 @@ export {
   getMetadataToSampleIds,
   getSamples,
   getHasPermissions,
+  getHasSeuratTechnology,
 };

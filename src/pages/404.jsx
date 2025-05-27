@@ -22,20 +22,18 @@ const NotFoundPage = ({
       />
     )}
     subTitle={(
-      <>
-        <Title
-          level={5}
-          style={{ fontWeight: 'normal' }}
-        >
-          {subTitle}
-          {hint && (
-            <>
-              <br />
-              <span>{hint}</span>
-            </>
-          )}
-        </Title>
-      </>
+      <Title
+        level={5}
+        style={{ fontWeight: 'normal' }}
+      >
+        {subTitle}
+        {hint && (
+          <>
+            <br />
+            <span>{hint}</span>
+          </>
+        )}
+      </Title>
     )}
     extra={(
       <>

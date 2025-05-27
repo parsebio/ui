@@ -3,7 +3,10 @@ import fetchAPI from 'utils/http/fetchAPI';
 import { SECONDARY_ANALYSIS_FILES_UPDATE } from 'redux/actionTypes/secondaryAnalyses';
 
 const updateSecondaryAnalysisFile = (
-  secondaryAnalysisId, fileId, uploadStatus, extras = {},
+  secondaryAnalysisId,
+  fileId,
+  uploadStatus,
+  extras = {},
 ) => async (dispatch) => {
   const { percentProgress = 0, abortController = null } = extras;
 

@@ -28,7 +28,6 @@ class BrowserCache {
     this.tail = null;
     this.lru = {};
     this.initialised = false;
-    return BrowserCache.instance;
   }
 
   async _init() {

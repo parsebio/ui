@@ -87,7 +87,7 @@ describe('Get trajectory plot pseudotime', () => {
   });
 
   it('Dispatches error if there are errors when fetching work', async () => {
-    fetchWork.mockImplementationOnce(() => new Promise((resolve, reject) => reject(new Error('random error!'))));
+    fetchWork.mockImplementationOnce(() => new Promise((resolve, reject) => { reject(new Error('random error!')); }));
 
     await store.dispatch(getTrajectoryPlotPseudoTime(selectedRootNodes, experimentId, plotUuid));
 

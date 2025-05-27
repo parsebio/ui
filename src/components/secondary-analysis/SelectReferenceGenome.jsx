@@ -30,36 +30,34 @@ const SelectReferenceGenome = (props) => {
   };
 
   return (
-    <>
-      <div style={{
-        display: 'flex', flexDirection: 'column', height: '17vh',
-      }}
-      >
-        <div>
-          Select the reference genome:
-        </div>
-        <br />
-        <Select
-          showSearch
-          style={{ width: '90%' }}
-          value={refGenome}
-          placeholder='Select the reference genome'
-          onChange={changeRefGenome}
-          options={options}
-          filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
-        />
-        <div style={{ marginTop: 'auto', marginBottom: '0.1em' }}>
-          <Text type='secondary'>
-            <i>
-              If the genome you require is not available, please contact us at
-              {' '}
-              <a href='mailto:support@parsebiosciences.com'>support@parsebiosciences.com</a>
-              .
-            </i>
-          </Text>
-        </div>
+    <div style={{
+      display: 'flex', flexDirection: 'column', height: '17vh',
+    }}
+    >
+      <div>
+        Select the reference genome:
       </div>
-    </>
+      <br />
+      <Select
+        showSearch
+        style={{ width: '90%' }}
+        value={refGenome}
+        placeholder='Select the reference genome'
+        onChange={changeRefGenome}
+        options={options}
+        filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
+      />
+      <div style={{ marginTop: 'auto', marginBottom: '0.1em' }}>
+        <Text type='secondary'>
+          <i>
+            If the genome you require is not available, please contact us at
+            {' '}
+            <a href='mailto:support@parsebiosciences.com'>support@parsebiosciences.com</a>
+            .
+          </i>
+        </Text>
+      </div>
+    </div>
   );
 };
 SelectReferenceGenome.defaultProps = {

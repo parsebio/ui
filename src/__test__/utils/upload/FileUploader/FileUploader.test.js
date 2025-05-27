@@ -160,7 +160,12 @@ describe('FileUploader', () => {
       } = getDefaultConstructorParams();
 
       const fileUploader = new FileUploader(
-        file, chunkSize, uploadParams, abortController, onStatusUpdate, options,
+        file,
+        chunkSize,
+        uploadParams,
+        abortController,
+        onStatusUpdate,
+        options,
       );
 
       mockUploadChunk.mockResolvedValueOnce();

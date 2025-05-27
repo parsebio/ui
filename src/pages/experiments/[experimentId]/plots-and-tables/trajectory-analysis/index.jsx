@@ -231,16 +231,14 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
   };
 
   const renderExtraToolbarControls = () => (
-    <>
-      <Button
-        size='small'
-        onClick={() => {
-          resetZoomRef.current.resetZoom();
-        }}
-      >
-        Reset Zoom
-      </Button>
-    </>
+    <Button
+      size='small'
+      onClick={() => {
+        resetZoomRef.current.resetZoom();
+      }}
+    >
+      Reset Zoom
+    </Button>
   );
 
   const handleClickNode = (action, selectedNodeId) => {
@@ -251,126 +249,122 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
     dispatch(updateTrajectoryPlotSelectedNodes(plotUuid, nodesInLasso, 'add'));
   };
 
-  const options = useMemo(() => cellSetsHierarchy.reduce(
-    (acc, curr) => {
-      const { key: parentKey, name: parentName, children } = curr;
-      acc.push({ key: parentKey, name: `All ${parentName}` });
-      acc.push(...children.flat());
-      return acc;
-    }, [],
-  ), [cellSetsHierarchy]);
+  const options = useMemo(() => cellSetsHierarchy.reduce((acc, curr) => {
+    const { key: parentKey, name: parentName, children } = curr;
+    acc.push({ key: parentKey, name: `All ${parentName}` });
+    acc.push(...children.flat());
+    return acc;
+  }, []), [cellSetsHierarchy]);
 
   return (
-    <>
-      <PlotContainer
-        experimentId={experimentId}
-        plotUuid={plotUuid}
-        plotType={plotType}
-        plotName={plotNames.TRAJECTORY_ANALYSIS}
-        plotStylingConfig={plotStylingConfig}
-        extraToolbarControls={renderExtraToolbarControls()}
-        defaultActiveKey='trajectory-analysis'
-        saveDebounceTime={10}
-        extraControlPanels={(
-          <>
-            <Panel header='Trajectory analysis' key='trajectory-analysis'>
-              <Space direction='vertical' style={{ width: '100%' }}>
-                <span>
-                  <strong>1.</strong>
-                  {' '}
-                  Select cell sets to use for trajectory analysis
-                </span>
-                <MultiSelect
-                  options={options}
-                  onChange={
-                    (chosenCellSets) => {
-                      updatePlotWithChanges({ selectedCellSets: chosenCellSets });
-                      setDisplaySettings({
-                        showPseudotimeValues: false,
-                        showStartingNodes: false,
-                        hasRunPseudotime: false,
-                        hasRunStartingNodes: false,
-                      });
-                    }
-                  }
-                  placeholder='Select cell sets'
-                  selectedKeys={selectedCellSets}
-                  style={{ width: '100%' }}
-                />
-                <Button
-                  type='primary'
-                  disabled={!selectedCellSets?.length || plotLoading}
-                  onClick={() => {
-                    dispatch(
-                      getTrajectoryPlotStartingNodes(experimentId, plotUuid, selectedCellSets),
-                    );
-                    updatePlotWithChanges({ selectedNodes: [] });
+    <PlotContainer
+      experimentId={experimentId}
+      plotUuid={plotUuid}
+      plotType={plotType}
+      plotName={plotNames.TRAJECTORY_ANALYSIS}
+      plotStylingConfig={plotStylingConfig}
+      extraToolbarControls={renderExtraToolbarControls()}
+      defaultActiveKey='trajectory-analysis'
+      saveDebounceTime={10}
+      extraControlPanels={(
+        <>
+          <Panel header='Trajectory analysis' key='trajectory-analysis'>
+            <Space direction='vertical' style={{ width: '100%' }}>
+              <span>
+                <strong>1.</strong>
+                {' '}
+                Select cell sets to use for trajectory analysis
+              </span>
+              <MultiSelect
+                options={options}
+                onChange={
+                  (chosenCellSets) => {
+                    updatePlotWithChanges({ selectedCellSets: chosenCellSets });
                     setDisplaySettings({
-                      ...displaySettings,
                       showPseudotimeValues: false,
-                      showStartingNodes: true,
-                      hasRunStartingNodes: true,
+                      showStartingNodes: false,
+                      hasRunPseudotime: false,
+                      hasRunStartingNodes: false,
                     });
-                  }}
-                  block
-                >
-                  Calculate root nodes
-                </Button>
-                {
-                  selectedCellSets?.length > 0
-                  && displaySettings.hasRunStartingNodes
-                  && startingNodesReady
-                  && (
-                    <>
-                      <p style={{ margin: '1em 0 0 0' }}>
-                        <strong>2.</strong>
-                        {' '}
-                        Select root nodes
-                      </p>
-                      <TrajectoryAnalysisNodeSelector
-                        experimentId={experimentId}
-                        plotUuid={plotUuid}
-                        setDisplaySettings={setDisplaySettings}
-                        displaySettings={displaySettings}
-                      />
-                    </>
-                  )
+                  }
                 }
-              </Space>
-            </Panel>
-            <Panel header='Display' key='display'>
-              <TrajectoryAnalysisDisplaySettings
-                experimentId={experimentId}
-                plotUuid={plotUuid}
-                setDisplaySettings={setDisplaySettings}
-                displaySettings={displaySettings}
+                placeholder='Select cell sets'
+                selectedKeys={selectedCellSets}
+                style={{ width: '100%' }}
               />
-            </Panel>
-          </>
-        )}
-        onPlotReset={() => {
-          setDisplaySettings(initialDisplaySettings);
-          resetZoomRef.current.resetZoom();
-        }}
-        plotInfo={(
-          <>
-            Trajectory inference (TI) or pseudotemporal ordering is a
-            computational technique used in single-cell transcriptomics to
-            determine the pattern of a dynamic process experienced by cells and
-            then arrange cells based on their progression through the process by
-            projecting the cells onto an axis called pseudotime. A “trajectory”
-            shows the path of the progression. Currently, Trajectory Analysis
-            is implemented using the
-            {' '}
-            <a href='https://cole-trapnell-lab.github.io/monocle3/'> Monocle3 </a>
-            {' '}
-            workflow.
-          </>
-        )}
-      >
-        {render()}
-      </PlotContainer>
-    </>
+              <Button
+                type='primary'
+                disabled={!selectedCellSets?.length || plotLoading}
+                onClick={() => {
+                  dispatch(
+                    getTrajectoryPlotStartingNodes(experimentId, plotUuid, selectedCellSets),
+                  );
+                  updatePlotWithChanges({ selectedNodes: [] });
+                  setDisplaySettings({
+                    ...displaySettings,
+                    showPseudotimeValues: false,
+                    showStartingNodes: true,
+                    hasRunStartingNodes: true,
+                  });
+                }}
+                block
+              >
+                Calculate root nodes
+              </Button>
+              {
+                selectedCellSets?.length > 0
+                && displaySettings.hasRunStartingNodes
+                && startingNodesReady
+                && (
+                  <>
+                    <p style={{ margin: '1em 0 0 0' }}>
+                      <strong>2.</strong>
+                      {' '}
+                      Select root nodes
+                    </p>
+                    <TrajectoryAnalysisNodeSelector
+                      experimentId={experimentId}
+                      plotUuid={plotUuid}
+                      setDisplaySettings={setDisplaySettings}
+                      displaySettings={displaySettings}
+                    />
+                  </>
+                )
+              }
+            </Space>
+          </Panel>
+          <Panel header='Display' key='display'>
+            <TrajectoryAnalysisDisplaySettings
+              experimentId={experimentId}
+              plotUuid={plotUuid}
+              setDisplaySettings={setDisplaySettings}
+              displaySettings={displaySettings}
+            />
+          </Panel>
+        </>
+      )}
+      onPlotReset={() => {
+        setDisplaySettings(initialDisplaySettings);
+        resetZoomRef.current.resetZoom();
+      }}
+      plotInfo={(
+        <>
+          Trajectory inference (TI) or pseudotemporal ordering is a
+          computational technique used in single-cell transcriptomics to
+          determine the pattern of a dynamic process experienced by cells and
+          then arrange cells based on their progression through the process by
+          projecting the cells onto an axis called pseudotime. A “trajectory”
+          shows the path of the progression. Currently, Trajectory Analysis
+          is implemented using the
+          {' '}
+          <a href='https://cole-trapnell-lab.github.io/monocle3/'> Monocle3 </a>
+          {' '}
+          workflow.
+        </>
+      )}
+    >
+      {render()}
+    </PlotContainer>
   );
 };
 TrajectoryAnalysisPage.propTypes = {

@@ -42,7 +42,9 @@ const MetadataPopover = (props) => {
       value={`Track ${existingMetadata.filter((key) => key.match('Track_')).length + 1}`}
       defaultEditing
       validationFunc={(name) => validateInputs(
-        metadataKeyToName(metadataNameToKey(name)), validationChecks, validationParams,
+        metadataKeyToName(metadataNameToKey(name)),
+        validationChecks,
+        validationParams,
       ).isValid}
       formatter={(value) => value.trim()}
     />

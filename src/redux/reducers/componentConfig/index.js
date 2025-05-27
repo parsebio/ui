@@ -19,7 +19,7 @@ import trajectoryNodesUpdated from 'redux/reducers/componentConfig/trajectoryNod
 
 import cellClassDelete from 'redux/reducers/componentConfig/cellClassDelete';
 
-const plotsReducer = (state = initialState, action) => {
+const plotsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case LOAD_CONFIG:
       return loadConfig(state, action);

@@ -90,9 +90,7 @@ const ViolinPlotMain = (props) => {
           error={expression.error}
           reason={expression.error}
           onClick={() => {
-            dispatch(loadGeneExpression(
-              experimentId, [config?.shownGene], plotUuid,
-            ));
+            dispatch(loadGeneExpression(experimentId, [config?.shownGene], plotUuid));
           }}
         />
       );

@@ -18,7 +18,7 @@ import differentialExpressionSetGeneOrdering from 'redux/reducers/differentialEx
 import cellSetsDelete from 'redux/reducers/differentialExpression/cellSetsDelete';
 import initialState from 'redux/reducers/differentialExpression/initialState';
 
-const differentialExpressionReducer = (state = initialState, action) => {
+const differentialExpressionReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case DIFF_EXPR_LOADING: {
       return differentialExpressionLoading(state, action);

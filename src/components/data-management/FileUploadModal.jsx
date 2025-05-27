@@ -34,9 +34,9 @@ const { Option } = Select;
 const SEURAT_MAX_FILE_SIZE = 15 * 1024 * 1024 * 1024;
 
 const extraHelpText = {
-  [sampleTech['10X']]: () => <></>,
-  [sampleTech.SEURAT]: () => <></>,
-  [sampleTech.H5]: () => <></>,
+  [sampleTech['10X']]: () => null,
+  [sampleTech.SEURAT]: () => null,
+  [sampleTech.H5]: () => null,
   [sampleTech.RHAPSODY]: () => (
     <Paragraph>
       <ul>
@@ -51,7 +51,7 @@ const extraHelpText = {
       </ul>
     </Paragraph>
   ),
-  [sampleTech.PARSE]: () => <></>,
+  [sampleTech.PARSE]: () => null,
 };
 
 const emptyFiles = { valid: [], invalid: [] };
@@ -129,33 +129,31 @@ const FileUploadModal = (props) => {
   const { fileUploadParagraphs, dropzoneText, webkitdirectory } = fileUploadUtils[selectedTech];
 
   const renderHelpText = () => (
-    <>
-      <Space direction='vertical' style={{ width: '100%' }}>
-        {
-          fileUploadParagraphs.map((text) => (
-            <Paragraph key={text}>
-              <div dangerouslySetInnerHTML={{ __html: text }} />
-            </Paragraph>
-          ))
-        }
-        <List
-          dataSource={fileUploadUtils[selectedTech].inputInfo}
-          size='small'
-          itemLayout='vertical'
-          bordered
-          renderItem={(item) => (
-            <List.Item>
-              {
-                item.map((fileName) => (
-                  <span key={fileName} className='ant-typography' dangerouslySetInnerHTML={{ __html: item }} />
-                ))
-              }
-            </List.Item>
-          )}
-        />
-        {extraHelpText[selectedTech]()}
-      </Space>
-    </>
+    <Space direction='vertical' style={{ width: '100%' }}>
+      {
+        fileUploadParagraphs.map((text) => (
+          <Paragraph key={text}>
+            <div dangerouslySetInnerHTML={{ __html: text }} />
+          </Paragraph>
+        ))
+      }
+      <List
+        dataSource={fileUploadUtils[selectedTech].inputInfo}
+        size='small'
+        itemLayout='vertical'
+        bordered
+        renderItem={(item) => (
+          <List.Item>
+            {
+              item.map((fileName) => (
+                <span key={fileName} className='ant-typography' dangerouslySetInnerHTML={{ __html: item }} />
+              ))
+            }
+          </List.Item>
+        )}
+      />
+      {extraHelpText[selectedTech]()}
+    </Space>
   );
 
   return (
@@ -189,7 +187,7 @@ const FileUploadModal = (props) => {
                 <span style={{ color: 'red', marginRight: '2em' }}>*</span>
               </Title>
               <Tooltip
-                title={currentSelectedTech
+                title={currentSelectedTech === sampleTech.SEURAT
                   && 'Remove existing data or create a new project to change technology.'}
                 placement='bottom'
               >
@@ -197,6 +195,10 @@ const FileUploadModal = (props) => {
                   aria-label='sampleTechnologySelect'
                   data-testid='uploadTechSelect'
                   defaultValue={selectedTech}
+                  // TODO to enable multitech selection
+                  // - uncomment this line
+                  // - remove the currently enabled disable line
+                  // disabled={currentSelectedTech === sampleTech.SEURAT}
                   disabled={currentSelectedTech}
                   onChange={(value) => setSelectedTech(value)}
                   // Fix the width so that the dropdown doesn't change size when the value changes
@@ -205,7 +207,15 @@ const FileUploadModal = (props) => {
                   {
                     Object.values(sampleTech)
                       .map((tech) => (
-                        <Option key={`key-${tech}`} value={tech}>
+                        <Option
+                          key={`key-${tech}`}
+                          value={tech}
+                          disabled={
+                            currentSelectedTech
+                            && currentSelectedTech !== sampleTech.SEURAT
+                            && tech === sampleTech.SEURAT
+                          }
+                        >
                           {techNamesToDisplay[tech]}
                         </Option>
                       ))
@@ -273,13 +283,9 @@ const FileUploadModal = (props) => {
                     <Space>
                       {!file.errors
                         ? (
-                          <>
-                            <CheckCircleTwoTone twoToneColor='#52c41a' />
-                          </>
+                          <CheckCircleTwoTone twoToneColor='#52c41a' />
                         ) : (
-                          <>
-                            <CloseCircleTwoTone twoToneColor='#f5222d' />
-                          </>
+                          <CloseCircleTwoTone twoToneColor='#f5222d' />
                         )}
                       <Text
                         ellipsis={{
@@ -305,13 +311,9 @@ const FileUploadModal = (props) => {
               dataSource={files.invalid}
               getItemText={(file) => _.trim(file.path, '/')}
               getItemExplanation={(file) => file.rejectReason}
-              collapsedExplanation={(
-                <>
-                  {
-                    `${files.invalid.length}${files.invalid.length > 1 ? ' files were' : ' file was'} ignored. Click to display`
-                  }
-                </>
-              )}
+              collapsedExplanation={
+                `${files.invalid.length}${files.invalid.length > 1 ? ' files were' : ' file was'} ignored. Click to display`
+              }
             />
           )}
         </Col>

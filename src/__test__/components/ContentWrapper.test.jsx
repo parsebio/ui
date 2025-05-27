@@ -14,7 +14,7 @@ import ContentWrapper from 'components/ContentWrapper';
 import AppRouteProvider from 'utils/AppRouteProvider';
 
 import { makeStore } from 'redux/store';
-import { getBackendStatus } from 'redux/selectors';
+import { getBackendStatus, getHasSeuratTechnology } from 'redux/selectors';
 
 import { loadExperiments, setActiveExperiment } from 'redux/actions/experiments';
 
@@ -92,7 +92,7 @@ const renderContentWrapper = async (expId, expData) => {
       <Provider store={store}>
         <AppRouteProvider>
           <ContentWrapper routeExperimentId={expId} experimentData={expData}>
-            <>Test</>
+            Test
           </ContentWrapper>
         </AppRouteProvider>
       </Provider>,
@@ -120,7 +120,7 @@ describe('ContentWrapper', () => {
 
     fetchMock.resetMocks();
     fetchMock.mockIf(/.*/, mockAPI(mockAPIResponses));
-
+    getHasSeuratTechnology.mockImplementation(() => () => false);
     useRouter.mockImplementation(() => ({
       pathname: '/data-management',
     }));
@@ -353,6 +353,8 @@ describe('ContentWrapper', () => {
     expect(screen.queryByText(/Browser not supported/)).not.toBeInTheDocument();
   });
   it('renders child components if project is Seurat and processed', async () => {
+    getHasSeuratTechnology.mockImplementation(() => () => true);
+
     getBackendStatus.mockImplementation(() => () => ({
       [experimentId]: {
         loading: false,

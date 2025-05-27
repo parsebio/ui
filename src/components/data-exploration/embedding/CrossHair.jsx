@@ -52,7 +52,7 @@ const CrossHair = (props) => {
       </div>
     );
   }
-  return (<></>);
+  return null;
 };
 
 CrossHair.defaultProps = {};

@@ -63,7 +63,11 @@ const createSampleFile = (
     return body.sampleFileId;
   } catch (e) {
     dispatch(updateSampleFileUpload(
-      experimentId, sampleId, sampleFileId, type, UploadStatus.UPLOAD_ERROR,
+      experimentId,
+      sampleId,
+      sampleFileId,
+      type,
+      UploadStatus.UPLOAD_ERROR,
     ));
 
     throw e;

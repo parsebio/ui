@@ -104,9 +104,7 @@ const ViolinIndex = ({ experimentId }) => {
 
   const changeSelectedPlotGene = (gene) => {
     const plotUuidToUpdate = updateAll ? multiViewPlotUuids[0] : selectedPlotUuid;
-    dispatch(loadGeneExpression(
-      experimentId, [plotConfigs[plotUuidToUpdate]?.shownGene], gene,
-    ));
+    dispatch(loadGeneExpression(experimentId, [plotConfigs[plotUuidToUpdate]?.shownGene], gene));
     dispatch(updatePlotConfig(plotUuidToUpdate, { shownGene: gene, title: { text: gene } }));
   };
 
@@ -142,22 +140,20 @@ const ViolinIndex = ({ experimentId }) => {
     />
   );
   return (
-    <>
-      <PlotContainer
-        experimentId={experimentId}
-        plotUuid={selectedPlotUuid}
-        plotType={plotType}
-        plotName={plotNames.VIOLIN_PLOT}
-        plotStylingConfig={plotStylingConfig}
-        plotInfo='In order to rename existing clusters or create new ones, use the cell set tool, located in the Data Exploration page.'
-        extraControlPanels={renderExtraPanels()}
-        defaultActiveKey='view-multiple-plots'
-        onUpdate={updateAll ? updateAllWithChanges : updatePlotWithChanges}
-        onPlotReset={resetMultiView}
-      >
-        {renderMultiView()}
-      </PlotContainer>
-    </>
+    <PlotContainer
+      experimentId={experimentId}
+      plotUuid={selectedPlotUuid}
+      plotType={plotType}
+      plotName={plotNames.VIOLIN_PLOT}
+      plotStylingConfig={plotStylingConfig}
+      plotInfo='In order to rename existing clusters or create new ones, use the cell set tool, located in the Data Exploration page.'
+      extraControlPanels={renderExtraPanels()}
+      defaultActiveKey='view-multiple-plots'
+      onUpdate={updateAll ? updateAllWithChanges : updatePlotWithChanges}
+      onPlotReset={resetMultiView}
+    >
+      {renderMultiView()}
+    </PlotContainer>
   );
 };
 

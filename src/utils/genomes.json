@@ -140,6 +140,10 @@
     "species": "Mustela furo (Ferret)"
   },
   {
+    "name": "mMacEug1_pri_v2",
+    "species": "Notamacropus eugenii (Tammar wallaby)"
+  },
+  {
     "name": "OmykA_1.1",
     "species": "Oncorhynchus mykiss (Rainbow trout)"
   },
@@ -170,6 +174,10 @@
   {
     "name": "ARS-UI_Ramb_v3",
     "species": "Ovis aries (Sheep), Breed: Rambouillet, Ensembl: GCA_016772045.2"
+  },
+  {
+    "name": "Panubis1",
+    "species": "Papio anubis (Olive baboon)"
   },
   {
     "name": "PFal3D7",
@@ -244,6 +252,10 @@
     "species": "Custom Drosophila melanogaster (Fruit fly)"
   },
   {
+    "name": "Dm_BDGP6_54_GAL4_Cas9",
+    "species": "Custom Drosophila melanogaster (Fruit fly)"
+  },
+  {
     "name": "GRCh38_mCherry",
     "species": "Custom Homo sapiens (Human)"
   },
@@ -288,6 +300,10 @@
     "species": "Custom Homo sapiens (Human) with HIV"
   },
   {
+    "name": "GRCh38_HPV16_HPV18",
+    "species": "Custom Homo sapiens (Human) with HPV16 and HPV18 strains"
+  },
+  {
     "name": "GRCh38_sp",
     "species": "Custom Homo sapiens (Human)"
   },
@@ -328,6 +344,10 @@
     "species": "Custom Mus musculus (Mouse) Trophoblast Stem Cells"
   },
   {
+    "name": "GRCm38_YFP",
+    "species": "Custom Mus musculus (Mouse)"
+  },
+  {
     "name": "mm39-custom-2",
     "species": "Custom Mus musculus (Mouse)"
   },
@@ -350,6 +370,10 @@
   {
     "name": "GRCm39_MCLab",
     "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCm39_tagBFP_tdTom",
+    "species": "Custom Mus musculus (Mouse) with tagBFP and tdTom"
   },
   {
     "name": "mm39-tdTom",
@@ -394,6 +418,10 @@
   {
     "name": "GRCm39_RI250310_2",
     "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCm39_sfGFP-myc",
+    "species": "Custom Mus musculus (Mouse) with sfGFP"
   },
   {
     "name": "GRCm38_Usutu",

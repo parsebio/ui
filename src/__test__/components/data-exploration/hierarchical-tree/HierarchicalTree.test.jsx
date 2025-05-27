@@ -63,7 +63,7 @@ describe('HierarchicalTree', () => {
     jest.resetAllMocks(); // Reset all mocks after each test
   });
 
-  it('Renders correctly', () => {
+  it('Renders correctly', async () => {
     const treeData = [{
       key: '1',
       name: 'my element',
@@ -74,12 +74,13 @@ describe('HierarchicalTree', () => {
     const component = mount(
       <HierarchicalTree treeData={treeData} experimentId={fake.EXPERIMENT_ID} />,
     );
-    waitForComponentToPaint(component);
+
+    await waitForComponentToPaint(component);
     const tree = component.find('HierarchicalTree Tree');
     expect(tree).toHaveLength(1);
   });
 
-  it('can drag first component at the last position', () => {
+  it('can drag first component at the last position', async () => {
     const treeData = [
       {
         key: '1',
@@ -115,7 +116,8 @@ describe('HierarchicalTree', () => {
         onCellSetReorder={mockOnCellSetReorder}
       />,
     );
-    waitForComponentToPaint(component);
+
+    await waitForComponentToPaint(component);
     const tree = component.find('HierarchicalTree Tree');
 
     tree.getElement().props.onDrop(dropInfo);
@@ -128,7 +130,7 @@ describe('HierarchicalTree', () => {
     expect(newPosition).toEqual(1);
   });
 
-  it('Can\'t have child component change parent', () => {
+  it('Can\'t have child component change parent', async () => {
     const treeData = [
       {
         key: '1',
@@ -162,7 +164,8 @@ describe('HierarchicalTree', () => {
         onCellSetReorder={mockOnCellSetReorder}
       />,
     );
-    waitForComponentToPaint(component);
+
+    await waitForComponentToPaint(component);
     const tree = component.find('HierarchicalTree Tree');
     tree.getElement().props.onDrop(dropInfo);
     component.update();
@@ -170,7 +173,7 @@ describe('HierarchicalTree', () => {
     expect(mockOnCellSetReorder).toHaveBeenCalledTimes(0);
   });
 
-  it("Can't drop parent inside node", () => {
+  it("Can't drop parent inside node", async () => {
     const treeData = [
       firstParent,
       secondParent,
@@ -198,7 +201,9 @@ describe('HierarchicalTree', () => {
         onCellSetReorder={mockOnCellSetReorder}
       />,
     );
-    waitForComponentToPaint(component);
+
+    await waitForComponentToPaint(component);
+
     const tree = component.find('HierarchicalTree Tree');
     tree.getElement().props.onDrop(dropInfo);
     component.update();
@@ -206,7 +211,7 @@ describe('HierarchicalTree', () => {
     expect(mockOnCellSetReorder).toHaveBeenCalledTimes(0);
   });
 
-  it("Can't drag child across parent nodes", () => {
+  it("Can't drag child across parent nodes", async () => {
     const treeData = [
       firstParent,
       secondParent,
@@ -235,7 +240,8 @@ describe('HierarchicalTree', () => {
       />,
     );
 
-    waitForComponentToPaint(component);
+    await waitForComponentToPaint(component);
+
     const tree = component.find('HierarchicalTree Tree');
     tree.getElement().props.onDrop(dropInfo);
     component.update();
@@ -243,7 +249,7 @@ describe('HierarchicalTree', () => {
     expect(mockOnCellSetReorder).toHaveBeenCalledTimes(0);
   });
 
-  it("Doesn't trigger drop if positions don't change", () => {
+  it("Doesn't trigger drop if positions don't change", async () => {
     const treeData = [
       firstParent,
       secondParent,
@@ -273,7 +279,8 @@ describe('HierarchicalTree', () => {
       />,
     );
 
-    waitForComponentToPaint(component);
+    await waitForComponentToPaint(component);
+
     const tree = component.find('HierarchicalTree Tree');
     tree.getElement().props.onDrop(dropInfo);
     component.update();
@@ -281,7 +288,7 @@ describe('HierarchicalTree', () => {
     expect(mockOnCellSetReorder).toHaveBeenCalledTimes(0);
   });
 
-  it('Can drop in child as if it dropped in gap', () => {
+  it('Can drop in child as if it dropped in gap', async () => {
     const treeData = [
       firstParent,
       secondParent,
@@ -312,7 +319,8 @@ describe('HierarchicalTree', () => {
       />,
     );
 
-    waitForComponentToPaint(component);
+    await waitForComponentToPaint(component);
+
     const tree = component.find('HierarchicalTree Tree');
     tree.getElement().props.onDrop(dropInfo);
     component.update();
@@ -529,7 +537,7 @@ describe('HierarchicalTree', () => {
     expect(parentEditableField.find(EditOutlined)).toHaveLength(0);
   });
 
-  it('Disables interactions when use does not have write permissions', () => {
+  it('Disables interactions when use does not have write permissions', async () => {
     useSelector.mockImplementationOnce(() => false);
 
     const treeData = [
@@ -547,6 +555,8 @@ describe('HierarchicalTree', () => {
         experimentId={fake.EXPERIMENT_ID}
       />,
     );
+
+    await waitForComponentToPaint(component);
 
     const permissionsChecker = component.find('PermissionsChecker');
     expect(permissionsChecker).toHaveLength(1);

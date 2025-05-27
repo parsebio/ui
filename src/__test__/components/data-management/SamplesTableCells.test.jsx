@@ -10,7 +10,7 @@ import {
   UploadCell,
   EditableFieldCell,
   SampleNameCell,
-} from 'components/data-management/SamplesTableCells';
+} from 'components/data-management/SamplesContainer/SamplesTableCells';
 import UploadStatus, { messageForStatus } from 'utils/upload/UploadStatus';
 import { makeStore } from 'redux/store';
 import mockAPI, { generateDefaultMockAPIResponses, statusResponse } from '__test__/test-utils/mockAPI';
@@ -77,9 +77,7 @@ describe('UploadCell', () => {
     const percentUploaded = 67;
 
     await storeState.dispatch(
-      updateSampleFileUpload(
-        experimentId, sampleId, sampleFileId, 'features10x', UploadStatus.UPLOADING, percentUploaded,
-      ),
+      updateSampleFileUpload(experimentId, sampleId, sampleFileId, 'features10x', UploadStatus.UPLOADING, percentUploaded),
     );
 
     render(

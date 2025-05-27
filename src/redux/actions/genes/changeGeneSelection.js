@@ -4,9 +4,7 @@ import {
 
 import GeneSelectionStatus from './geneSelectionStatus';
 
-const changeGeneSelection = (
-  experimentId, genes, status,
-) => async (dispatch) => {
+const changeGeneSelection = (experimentId, genes, status) => async (dispatch) => {
   if (status === GeneSelectionStatus.select) {
     dispatch({
       type: GENES_SELECT,

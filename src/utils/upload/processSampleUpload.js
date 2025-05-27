@@ -19,7 +19,12 @@ import UploadsCoordinatorError from 'utils/errors/upload/UploadsCoordinatorError
 import FileUploaderError from 'utils/errors/upload/FileUploaderError';
 
 const createAndUploadSampleFile = async (
-  file, fileType, experimentId, sampleId, dispatch, selectedTech,
+  file,
+  fileType,
+  experimentId,
+  sampleId,
+  dispatch,
+  selectedTech,
 ) => {
   const abortController = new AbortController();
 
@@ -55,7 +60,12 @@ const createAndUploadSampleFile = async (
     const updateSampleFileUploadProgress = (status, percentProgress = 0) => {
       dispatch(
         updateSampleFileUpload(
-          experimentId, sampleId, sampleFileId, fileType, status, percentProgress,
+          experimentId,
+          sampleId,
+          sampleFileId,
+          fileType,
+          status,
+          percentProgress,
         ),
       );
     };
@@ -75,7 +85,11 @@ const createAndUploadSampleFile = async (
     ]);
   } catch (e) {
     dispatch(updateSampleFileUpload(
-      experimentId, sampleId, sampleFileId, fileType, UploadStatus.UPLOAD_ERROR,
+      experimentId,
+      sampleId,
+      sampleFileId,
+      fileType,
+      UploadStatus.UPLOAD_ERROR,
     ));
   }
 };

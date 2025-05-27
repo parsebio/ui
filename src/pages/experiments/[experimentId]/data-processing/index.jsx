@@ -120,7 +120,8 @@ const DataProcessingPage = ({ experimentId }) => {
   const [runQCModalVisible, setRunQCModalVisible] = useState(false);
   const [inputsList, setInputsList] = useState([]);
   const [shownSampleIds, setShownSampleIds] = useState(sampleKeys);
-  const sampleTechnology = samples[sampleKeys[0]]?.type;
+  const hasParseTechnology = sampleKeys.some((key) => samples[key]?.type === sampleTech.PARSE);
+
   const cellSets = useSelector(getCellSets());
 
   // cell sets get created after the filter doublets step
@@ -194,12 +195,12 @@ const DataProcessingPage = ({ experimentId }) => {
         processingConfig[step][key]?.prefiltered)));
   };
 
-  const sampleDisabledMessage = (step, sampleTechnologyParam) => {
+  const sampleDisabledMessage = (step, hasParseTech) => {
     if (checkIfSampleIsPrefiltered(step)) {
       return 'This filter is disabled because one of the sample(s) is pre-filtered. Click \'Next\' to continue processing your data.';
     }
 
-    if (sampleTechnologyParam === sampleTech.PARSE && step === 'classifier') {
+    if (hasParseTech && step === 'classifier') {
       return 'This filter is disabled by default for Parse data, as the emptyDrops method may not perform optimally with non-droplet based data. You can choose to enable this filter.';
     }
 
@@ -445,200 +446,196 @@ const DataProcessingPage = ({ experimentId }) => {
     const stepPrefiltered = checkIfSampleIsPrefiltered(currentStep.key) || false;
 
     return (
-      <>
-        <Row justify='space-between'>
-          <Col>
-            {/* Should be just wide enough that no ellipsis appears */}
-            <Row>
-              <Col style={{ paddingBottom: '8px', paddingRight: '8px' }}>
-                <Space style={{ width: '100%' }}>
-                  <Select
-                    value={stepIdx}
-                    onChange={(idx) => {
-                      changeStepId(idx);
-                    }}
-                    style={{ fontWeight: 'bold', width: '19vw' }}
-                    placeholder='Jump to a step...'
-                  >
-                    {
-                      steps.map(
-                        ({ name, key }, i) => {
-                          // Display for users with 1-based index
-                          const text = `${i + 1}. ${name}`;
+      <Row justify='space-between'>
+        <Col>
+          {/* Should be just wide enough that no ellipsis appears */}
+          <Row>
+            <Col style={{ paddingBottom: '8px', paddingRight: '8px' }}>
+              <Space style={{ width: '100%' }}>
+                <Select
+                  value={stepIdx}
+                  onChange={(idx) => {
+                    changeStepId(idx);
+                  }}
+                  style={{ fontWeight: 'bold', width: '19vw' }}
+                  placeholder='Jump to a step...'
+                >
+                  {
+                    steps.map(
+                      ({ name, key }, i) => {
+                        // Display for users with 1-based index
+                        const text = `${i + 1}. ${name}`;
 
-                          return (
-                            <Option
-                              value={i}
-                              key={key}
-                              disabled={stepIsDisabled(i)}
-                            >
-                              {!checkIfSampleIsEnabled(key) ? (
+                        return (
+                          <Option
+                            value={i}
+                            key={key}
+                            disabled={stepIsDisabled(i)}
+                          >
+                            {!checkIfSampleIsEnabled(key) ? (
+                              <>
+                                {/* disabled */}
+                                <Text
+                                  type='secondary'
+                                >
+                                  <CloseOutlined />
+                                </Text>
+                                <span
+                                  style={{ marginLeft: '0.25rem', textDecoration: 'line-through' }}
+                                >
+                                  {text}
+                                </span>
+                              </>
+                            ) : getStepHadErrors(steps[i].key) ? (
+                              <>
+                                {/* error */}
+                                <Text
+                                  type='danger'
+                                >
+                                  <CloseOutlined />
+                                </Text>
+                                <span
+                                  style={{ marginLeft: '0.25rem' }}
+                                >
+                                  {text}
+                                </span>
+                              </>
+                            ) : !stepIsDisabled(i) ? (
+                              <>
+                                {/* finished */}
+                                <Text
+                                  type='success'
+                                >
+                                  <CheckOutlined />
+                                </Text>
+                                <span
+                                  style={{ marginLeft: '0.25rem' }}
+                                >
+                                  {text}
+                                </span>
+                              </>
+                            ) : pipelineRunning && !isStepComplete(key) ? (
+                              <>
+                                {/* incomplete */}
+                                <Text
+                                  type='warning'
+                                  strong
+                                >
+                                  <EllipsisOutlined />
+                                </Text>
+                                <span style={{ marginLeft: '0.25rem' }}>{text}</span>
+                              </>
+                            ) : pipelineNotFinished
+                              && !pipelineRunning
+                              && !isStepComplete(key)
+                              ? (
                                 <>
-                                  {/* disabled */}
-                                  <Text
-                                    type='secondary'
-                                  >
-                                    <CloseOutlined />
-                                  </Text>
-                                  <span
-                                    style={{ marginLeft: '0.25rem', textDecoration: 'line-through' }}
-                                  >
-                                    {text}
-                                  </span>
-                                </>
-                              ) : getStepHadErrors(steps[i].key) ? (
-                                <>
-                                  {/* error */}
                                   <Text
                                     type='danger'
-                                  >
-                                    <CloseOutlined />
-                                  </Text>
-                                  <span
-                                    style={{ marginLeft: '0.25rem' }}
-                                  >
-                                    {text}
-                                  </span>
-                                </>
-                              ) : !stepIsDisabled(i) ? (
-                                <>
-                                  {/* finished */}
-                                  <Text
-                                    type='success'
-                                  >
-                                    <CheckOutlined />
-                                  </Text>
-                                  <span
-                                    style={{ marginLeft: '0.25rem' }}
-                                  >
-                                    {text}
-                                  </span>
-                                </>
-                              ) : pipelineRunning && !isStepComplete(key) ? (
-                                <>
-                                  {/* incomplete */}
-                                  <Text
-                                    type='warning'
                                     strong
                                   >
-                                    <EllipsisOutlined />
+                                    <WarningOutlined />
                                   </Text>
                                   <span style={{ marginLeft: '0.25rem' }}>{text}</span>
                                 </>
-                              ) : pipelineNotFinished
-                                && !pipelineRunning
-                                && !isStepComplete(key)
-                                ? (
-                                  <>
-                                    <Text
-                                      type='danger'
-                                      strong
-                                    >
-                                      <WarningOutlined />
-                                    </Text>
-                                    <span style={{ marginLeft: '0.25rem' }}>{text}</span>
-                                  </>
-                                )
-                                : <></>}
-                            </Option>
-                          );
-                        },
-                      )
-                    }
-                  </Select>
-                  {currentStep.description && (
-                    <Tooltip title={currentStep.description}>
-                      <Button icon={<InfoCircleOutlined />} />
-                    </Tooltip>
-                  )}
-                  {currentStep.multiSample && (
-                    <Tooltip title={`${!stepEnabled ? 'Enable this filter' : 'Disable this filter'}`}>
-                      <Button
-                        disabled={stepPrefiltered}
-                        data-testid='enableFilterButton'
-                        onClick={async () => {
-                          await dispatch(saveProcessingSettings(experimentId, currentStep.key));
-                          if (!processingConfig.meta.saveSettingsError) {
-                            dispatch(setQCStepEnabled(
-                              currentStep.key, !stepEnabled,
-                            ));
-                          }
-                        }}
-                      >
-                        {
-                          stepEnabled ? 'Disable' : 'Enable'
-                        }
-                      </Button>
-                    </Tooltip>
-                  )}
-                </Space>
-              </Col>
-              <Col>
-                {renderRunOrDiscardButtons()}
-              </Col>
-            </Row>
-            <Row>
-              {currentStep.multiSample && (
-                <SelectShownSamplesDropdown
-                  experimentId={experimentId}
-                  shownSampleIds={shownSampleIds}
-                  setShownSampleIds={setShownSampleIds}
-                />
-              )}
-            </Row>
-          </Col>
-          <Col>
-            <Row align='middle' justify='space-between'>
-              <Col>
-                <StatusIndicator
-                  experimentId={experimentId}
-                  allSteps={steps}
-                  currentStep={stepIdx}
-                  completedSteps={completedSteps}
-                />
-                <Space size='small'>
-                  <Tooltip title='Previous'>
+                              )
+                              : null}
+                          </Option>
+                        );
+                      },
+                    )
+                  }
+                </Select>
+                {currentStep.description && (
+                  <Tooltip title={currentStep.description}>
+                    <Button icon={<InfoCircleOutlined />} />
+                  </Tooltip>
+                )}
+                {currentStep.multiSample && (
+                  <Tooltip title={`${!stepEnabled ? 'Enable this filter' : 'Disable this filter'}`}>
                     <Button
-                      data-testid='pipelinePrevStep'
-                      disabled={stepIdx === 0}
-                      icon={<LeftOutlined />}
-                      onClick={() => changeStepId(Math.max(stepIdx - 1, 0))}
+                      disabled={stepPrefiltered}
+                      data-testid='enableFilterButton'
+                      onClick={async () => {
+                        await dispatch(saveProcessingSettings(experimentId, currentStep.key));
+                        if (!processingConfig.meta.saveSettingsError) {
+                          dispatch(setQCStepEnabled(currentStep.key, !stepEnabled));
+                        }
+                      }}
+                    >
+                      {
+                        stepEnabled ? 'Disable' : 'Enable'
+                      }
+                    </Button>
+                  </Tooltip>
+                )}
+              </Space>
+            </Col>
+            <Col>
+              {renderRunOrDiscardButtons()}
+            </Col>
+          </Row>
+          <Row>
+            {currentStep.multiSample && (
+              <SelectShownSamplesDropdown
+                experimentId={experimentId}
+                shownSampleIds={shownSampleIds}
+                setShownSampleIds={setShownSampleIds}
+              />
+            )}
+          </Row>
+        </Col>
+        <Col>
+          <Row align='middle' justify='space-between'>
+            <Col>
+              <StatusIndicator
+                experimentId={experimentId}
+                allSteps={steps}
+                currentStep={stepIdx}
+                completedSteps={completedSteps}
+              />
+              <Space size='small'>
+                <Tooltip title='Previous'>
+                  <Button
+                    data-testid='pipelinePrevStep'
+                    disabled={stepIdx === 0}
+                    icon={<LeftOutlined />}
+                    onClick={() => changeStepId(Math.max(stepIdx - 1, 0))}
+                    size='small'
+                  />
+                </Tooltip>
+                {stepIdx !== steps.length - 1 ? (
+                  <Tooltip title='Next'>
+                    <Button
+                      data-testid='pipelineNextStep'
+                      onClick={() => {
+                        const newStepIdx = Math.min(stepIdx + 1, steps.length - 1);
+                        changeStepId(newStepIdx);
+                      }}
+                      disabled={steps[stepIdx + 1] !== undefined && stepIsDisabled(stepIdx + 1)}
+                      icon={<RightOutlined />}
                       size='small'
                     />
                   </Tooltip>
-                  {stepIdx !== steps.length - 1 ? (
-                    <Tooltip title='Next'>
+                )
+                  : (
+                    <Tooltip title='Finish QC'>
                       <Button
-                        data-testid='pipelineNextStep'
-                        onClick={() => {
-                          const newStepIdx = Math.min(stepIdx + 1, steps.length - 1);
-                          changeStepId(newStepIdx);
-                        }}
-                        disabled={steps[stepIdx + 1] !== undefined && stepIsDisabled(stepIdx + 1)}
-                        icon={<RightOutlined />}
+                        type='primary'
+                        disabled={steps[stepIdx + 1]
+                          && pipelineNotFinished
+                          && !isStepComplete(steps[stepIdx + 1].key)}
+                        icon={<CheckOutlined />}
                         size='small'
+                        onClick={() => navigateTo(modules.DATA_EXPLORATION, { experimentId })}
                       />
                     </Tooltip>
-                  )
-                    : (
-                      <Tooltip title='Finish QC'>
-                        <Button
-                          type='primary'
-                          disabled={steps[stepIdx + 1]
-                            && pipelineNotFinished
-                            && !isStepComplete(steps[stepIdx + 1].key)}
-                          icon={<CheckOutlined />}
-                          size='small'
-                          onClick={() => navigateTo(modules.DATA_EXPLORATION, { experimentId })}
-                        />
-                      </Tooltip>
-                    )}
-                </Space>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </>
+                  )}
+              </Space>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     );
   };
 
@@ -713,7 +710,7 @@ const DataProcessingPage = ({ experimentId }) => {
               type='info'
               showIcon
             />
-          ) : <></>
+          ) : null
         }
         {
           sampleNamesWithWarning.length > 0 ? (
@@ -722,16 +719,16 @@ const DataProcessingPage = ({ experimentId }) => {
               type='info'
               showIcon
             />
-          ) : <></>
+          ) : null
         }
         {
           !checkIfSampleIsEnabled(key) ? (
             <Alert
-              message={sampleDisabledMessage(key, sampleTechnology)}
+              message={sampleDisabledMessage(key, hasParseTechnology)}
               type='info'
               showIcon
             />
-          ) : <></>
+          ) : null
         }
         {render(key, experimentId)}
       </Space>
