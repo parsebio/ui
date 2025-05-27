@@ -34,7 +34,7 @@ import PreloadContent from 'components/PreloadContent';
 import GEM2SLoadingScreen from 'components/GEM2SLoadingScreen';
 import PipelineRedirectToDataProcessing from 'components/PipelineRedirectToDataProcessing';
 
-import { getBackendStatus } from 'redux/selectors';
+import { getBackendStatus, getHasSeuratTechnology } from 'redux/selectors';
 import { loadUser } from 'redux/actions/user';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
@@ -176,7 +176,7 @@ const ContentWrapper = (props) => {
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
 
-  const hasSeuratTechnology = experiment?.sampleIds?.some((id) => samples[id]?.type === 'seurat');
+  const hasSeuratTechnology = useSelector(getHasSeuratTechnology(currentExperimentId));
 
   const experimentName = experimentData?.experimentName || experiment?.name;
   const secondaryAnalysisName = useSelector(

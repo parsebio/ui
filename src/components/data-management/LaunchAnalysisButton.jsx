@@ -14,6 +14,7 @@ import { useAppRouter } from 'utils/AppRouteProvider';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 import { WarningOutlined } from '@ant-design/icons';
 import fileUploadUtils from 'utils/upload/fileUploadUtils';
+import { getHasSeuratTechnology } from 'redux/selectors';
 
 const { Text } = Typography;
 
@@ -28,9 +29,7 @@ const LaunchAnalysisButton = () => {
   const { activeExperimentId } = experiments.meta;
   const activeExperiment = experiments[activeExperimentId];
 
-  const hasSeuratTechnology = activeExperiment?.sampleIds.some(
-    (sampleId) => samples[sampleId]?.type === sampleTech.SEURAT,
-  );
+  const hasSeuratTechnology = useSelector(getHasSeuratTechnology(activeExperimentId));
 
   const [pipelinesRerunStatus, setPipelinesRerunStatus] = useState({
     runPipeline: null, rerun: true, reasons: [], complete: false,
@@ -84,7 +83,7 @@ const LaunchAnalysisButton = () => {
     const parseSampleId = activeExperiment.sampleIds.find(
       (sampleId) => samples[sampleId]?.type === sampleTech.PARSE,
     );
-    if (parseSampleId && !samples[parseSampleId]?.kit) return false;
+    if (parseSampleId && _.isNil(samples[parseSampleId].kit)) return false;
 
     const metadataKeysAvailable = activeExperiment.metadataKeys.length;
 
