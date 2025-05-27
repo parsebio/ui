@@ -271,6 +271,15 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
     const { withSSRContext } = (await import('aws-amplify'));
 
     const { Auth } = withSSRContext(ctx);
+    Auth.configure(amplifyConfig.Auth);
+
+    console.log('AuthDebug');
+    console.log(Auth);
+
+    const user = await Auth.currentAuthenticatedUser();
+
+    console.log('userDebug');
+    console.log(user);
 
     if (query?.experimentId) {
       const { default: getExperimentInfo } = (await import('utils/ssr/getExperimentInfo'));
