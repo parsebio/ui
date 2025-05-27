@@ -8,13 +8,13 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
 import uploadMetadataFile from 'redux/actions/experiments/uploadMetadataFile';
-import { sampleTech } from 'utils/constants';
 import {
   createCellLevelMetadata,
   updateCellLevelMetadataFileUpload,
 } from 'redux/actions/experiments';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
+import { getHasSeuratTechnology } from 'redux/selectors';
 import MetadataUploadModal from './MetadataUploadModal';
 import CellLevelUploadModal from './CellLevelUploadModal';
 
@@ -23,8 +23,9 @@ const AddMetadataButton = ({ samplesTableRef }) => {
   const { activeExperimentId } = useSelector((state) => state.experiments.meta);
   const activeExperiment = useSelector((state) => state.experiments[activeExperimentId]);
   const isSubsetted = activeExperiment?.isSubsetted;
-  const samples = useSelector((state) => state.samples);
-  const selectedTech = samples[activeExperiment?.sampleIds[0]]?.type;
+
+  const hasSeuratTechnology = useSelector(getHasSeuratTechnology(activeExperimentId));
+
   const cellLevelMetadata = useSelector(
     (state) => state.experiments[activeExperimentId]?.cellLevelMetadata,
   ) || false;
@@ -115,7 +116,7 @@ const AddMetadataButton = ({ samplesTableRef }) => {
         disabled={
           activeExperiment.sampleIds?.length === 0
           || isSubsetted
-          || selectedTech === sampleTech.SEURAT
+          || hasSeuratTechnology
         }
       >
         <Button>
