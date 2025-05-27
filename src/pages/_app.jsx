@@ -267,6 +267,7 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
   const { amplifyConfig } = results[1];
 
   try {
+    console.log('SSRcookiesDebug ', JSON.stringify(ctx.req?.headers?.cookie));
     const { withSSRContext } = (await import('aws-amplify'));
 
     const { Auth } = withSSRContext(ctx);
