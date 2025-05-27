@@ -59,17 +59,41 @@ const getExperimentInfo = async (context, store, Auth) => {
   }
   console.log('getExperimentInfoDebug5');
 
-  const jwt = user.getSignInUserSession().getIdToken().getJwtToken();
+  const signInUserSessionJwt = user.getSignInUserSession().getIdToken().getJwtToken();
+
+  console.log('getSignInUserSessionjwtIdDebug');
+  console.log(signInUserSessionJwt);
+
+  const currentSessionIdJwtToken = Auth.currentSession().getIdToken().getJwtToken();
   console.log('getExperimentInfoDebug6');
 
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   console.log('getExperimentInfoDebug7');
 
-  const experimentDataV2 = await fetchAPI(
-    `/v2/experiments/${experimentId}`,
-    {},
-    { uiUrl: url, jwt },
-  );
+  let experimentDataV2;
+  try {
+    experimentDataV2 = await fetchAPI(
+      `/v2/experiments/${experimentId}`,
+      {},
+      { uiUrl: url, jwt: signInUserSessionJwt },
+    );
+  } catch (e) {
+    console.error('signInUserSessionJwt failed');
+  }
+
+  try {
+    experimentDataV2 = await fetchAPI(
+      `/v2/experiments/${experimentId}`,
+      {},
+      { uiUrl: url, jwt: currentSessionIdJwtToken },
+    );
+  } catch (e) {
+    console.error('currentSessionIdJwtToken failed');
+  }
+
+  if (!experimentDataV2) {
+    throw new Error('Still not working after trying both JWTs');
+  }
   console.log('getExperimentInfoDebug8');
 
   const experimentData = toApiV1(experimentDataV2);
