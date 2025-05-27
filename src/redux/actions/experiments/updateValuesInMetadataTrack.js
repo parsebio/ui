@@ -12,16 +12,13 @@ import { loadBackendStatus } from '../backendStatus';
 
 const updateValuesInMetadataTrack = (
   experimentId,
-  sampleIds,
   metadataTrackKey,
-  value,
+  updates,
 ) => async (dispatch) => {
-  if (sampleIds.length === 0) return;
+  if (updates.length === 0) return;
   dispatch({ type: SAMPLES_SAVING, payload: { message: endUserMessages.SAVING_SAMPLE } });
 
   try {
-    const body = { value, sampleIds };
-
     await fetchAPI(
       `/v2/experiments/${experimentId}/metadataTracks/${metadataTrackKey}`,
       {
@@ -29,16 +26,15 @@ const updateValuesInMetadataTrack = (
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ updates }),
       },
     );
 
     dispatch({
       type: SAMPLES_VALUE_IN_METADATA_TRACK_UPDATED,
       payload: {
-        sampleUuids: sampleIds,
         key: metadataTrackKey,
-        value,
+        updates,
       },
     });
 

@@ -290,7 +290,11 @@ const SamplesTable = forwardRef((props, ref) => {
           dataIndex={key}
           rowIdx={rowIdx}
           onAfterSubmit={(newValue) => {
-            dispatch(updateValuesInMetadataTrack(activeExperimentId, [record.uuid], key, newValue));
+            dispatch(updateValuesInMetadataTrack(
+              activeExperimentId,
+              key,
+              [{ sampleIds: [record.uuid], newValue }],
+            ));
           }}
         />
       ),
@@ -365,9 +369,8 @@ const SamplesTable = forwardRef((props, ref) => {
 
     dispatch(updateValuesInMetadataTrack(
       activeExperimentId,
-      filteredSamplesToUpdate,
       metadataKey,
-      value,
+      [{ sampleIds: filteredSamplesToUpdate, value }],
     ));
   };
 

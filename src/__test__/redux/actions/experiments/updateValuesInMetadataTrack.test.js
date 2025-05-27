@@ -34,7 +34,11 @@ describe('updateValuesInMetadataTrack action', () => {
     fetchMock.mockIf(/.*/, () => promiseResponse(JSON.stringify({})));
 
     await store.dispatch(
-      updateValuesInMetadataTrack(experimentId, sampleIds, metadataTrackKeyRCompatible, value),
+      updateValuesInMetadataTrack(
+        experimentId,
+        metadataTrackKeyRCompatible,
+        [{ sampleIds, value }],
+      ),
     );
 
     const actions = store.getActions();
@@ -62,7 +66,11 @@ describe('updateValuesInMetadataTrack action', () => {
     fetchMock.mockRejectOnce(() => Promise.reject(new Error('Some error')));
 
     await store.dispatch(
-      updateValuesInMetadataTrack(experimentId, sampleIds, metadataTrackKeyRCompatible, value),
+      updateValuesInMetadataTrack(
+        experimentId,
+        metadataTrackKeyRCompatible,
+        [{ sampleIds, value }],
+      ),
     );
 
     const actions = store.getActions();
