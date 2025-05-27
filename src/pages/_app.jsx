@@ -4,6 +4,7 @@ import _ from 'lodash';
 import '../index.css';
 
 import Amplify, { Credentials } from '@aws-amplify/core';
+
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider } from 'antd';
@@ -29,6 +30,8 @@ import { brandColors, notAgreedToTermsStatus, cookiesAgreedCognitoKey } from 'ut
 import 'antd/dist/antd.variable.min.css';
 import { loadUser } from 'redux/actions/user';
 import { setUpDispatch } from 'utils/http/fetchAPI';
+import { CookieStorage } from '@aws-amplify/auth';
+import getConfig from 'next/config';
 
 ConfigProvider.config({
   theme: {
@@ -101,6 +104,20 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     if (amplifyConfig) {
+      const { domainName } = process.env.NODE_ENV !== 'development'
+        ? getConfig().publicRuntimeConfig.domainName
+        : 'localhost';
+
+      const storage = new CookieStorage({
+        domain: domainName,
+        path: '/',
+        expires: 365,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
+      });
+
+      amplifyConfig.Auth.storage = storage;
+
       Amplify.configure(amplifyConfig);
 
       if (environment === 'development') {

@@ -93,8 +93,10 @@ const nextConfig = {
         webpackConfigPlugins(
           config,
           params,
-        ), params,
-      ), params,
+        ),
+        params,
+      ),
+      params,
     );
 
     if (!dev) {
