@@ -64,8 +64,11 @@ const getExperimentInfo = async (context, store, Auth) => {
   console.log('getSignInUserSessionjwtIdDebug');
   console.log(signInUserSessionJwt);
 
-  const currentSessionIdJwtToken = Auth.currentSession().getIdToken().getJwtToken();
+  const currentSessionIdJwtToken = (await Auth.currentSession()).getIdToken().getJwtToken();
   console.log('getExperimentInfoDebug6');
+
+  console.log('currentSessionIdJwtTokenDebug');
+  console.log(currentSessionIdJwtToken);
 
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   console.log('getExperimentInfoDebug7');
@@ -78,7 +81,7 @@ const getExperimentInfo = async (context, store, Auth) => {
       { uiUrl: url, jwt: signInUserSessionJwt },
     );
   } catch (e) {
-    console.error('signInUserSessionJwt failed');
+    console.error('signInUserSessionJwt failed', e);
   }
 
   try {
@@ -88,11 +91,38 @@ const getExperimentInfo = async (context, store, Auth) => {
       { uiUrl: url, jwt: currentSessionIdJwtToken },
     );
   } catch (e) {
-    console.error('currentSessionIdJwtToken failed');
+    console.error('currentSessionIdJwtToken failed', e);
+  }
+
+  try {
+    const accessSignInIuser = user.getSignInUserSession().getAccessToken().getJwtToken();
+    console.log('accessSignInIuserDebug');
+    console.log(accessSignInIuser);
+    experimentDataV2 = await fetchAPI(
+      `/v2/experiments/${experimentId}`,
+      {},
+      { uiUrl: url, jwt: accessSignInIuser },
+    );
+  } catch (e) {
+    console.error('signInUserSessionAccessToken failed');
+  }
+
+  try {
+    const currentSessionAccessToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
+    console.log('currentSessionAccessTokenDebug');
+    console.log(currentSessionAccessToken);
+
+    experimentDataV2 = await fetchAPI(
+      `/v2/experiments/${experimentId}`,
+      {},
+      { uiUrl: url, jwt: currentSessionAccessToken },
+    );
+  } catch (e) {
+    console.error('currentSessionAccessToken failed');
   }
 
   if (!experimentDataV2) {
-    throw new Error('Still not working after trying both JWTs');
+    throw new Error('Still not working after trying both JWTs and both access tokens');
   }
   console.log('getExperimentInfoDebug8');
 
