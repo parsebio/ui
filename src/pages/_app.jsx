@@ -104,6 +104,8 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     if (amplifyConfig) {
+      console.log('getConfigDebug');
+      console.log(getConfig());
       const { domainName } = process.env.NODE_ENV !== 'development'
         ? getConfig().publicRuntimeConfig.domainName
         : 'localhost';
