@@ -63,6 +63,13 @@ const SamplesContainer = forwardRef((props, ref) => {
     }
   }, [experimentSamples]);
 
+  useConditionalEffect(() => {
+    // If multitech, then add the Technology metadata track
+    if (selectedTechs.length > 1) {
+
+    }
+  }, [selectedTechs]);
+
   const selectedTechs = useMemo(() => (
     Array.from(new Set(
       activeExperiment?.sampleIds.map((sampleId) => samples[sampleId]?.type).filter((type) => type),
