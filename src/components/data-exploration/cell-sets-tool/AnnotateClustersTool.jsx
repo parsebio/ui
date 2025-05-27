@@ -9,6 +9,7 @@ import {
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
+import celltypistModels from './celltypist.json';
 
 const scTypeTooltipText = (
   <>
@@ -62,63 +63,6 @@ const annotationTools = {
   celltypist: {
     label: 'Celltypist',
     tooltip: 'Runs Celltypist cell type annotation.',
-    tissueOptions: [
-      'Immune_All_Low.pkl',
-      'Immune_All_High.pkl',
-      'Adult_COVID19_PBMC.pkl',
-      'Adult_CynomolgusMacaque_Hippocampus.pkl',
-      'Adult_Human_MTG.pkl',
-      'Adult_Human_PancreaticIslet.pkl',
-      'Adult_Human_PrefrontalCortex.pkl',
-      'Adult_Human_Skin.pkl',
-      'Adult_Human_Vascular.pkl',
-      'Adult_Mouse_Gut.pkl',
-      'Adult_Mouse_OlfactoryBulb.pkl',
-      'Adult_Pig_Hippocampus.pkl',
-      'Adult_RhesusMacaque_Hippocampus.pkl',
-      'Autopsy_COVID19_Lung.pkl',
-      'COVID19_HumanChallenge_Blood.pkl',
-      'COVID19_Immune_Landscape.pkl',
-      'Cells_Adult_Breast.pkl',
-      'Cells_Fetal_Lung.pkl',
-      'Cells_Human_Tonsil.pkl',
-      'Cells_Intestinal_Tract.pkl',
-      'Cells_Lung_Airway.pkl',
-      'Developing_Human_Brain.pkl',
-      'Developing_Human_Gonads.pkl',
-      'Developing_Human_Hippocampus.pkl',
-      'Developing_Human_Organs.pkl',
-      'Developing_Human_Thymus.pkl',
-      'Developing_Mouse_Brain.pkl',
-      'Developing_Mouse_Hippocampus.pkl',
-      'Fetal_Human_AdrenalGlands.pkl',
-      'Fetal_Human_Pancreas.pkl',
-      'Fetal_Human_Pituitary.pkl',
-      'Fetal_Human_Retina.pkl',
-      'Fetal_Human_Skin.pkl',
-      'Healthy_Adult_Heart.pkl',
-      'Healthy_COVID19_PBMC.pkl',
-      'Healthy_Human_Liver.pkl',
-      'Healthy_Mouse_Liver.pkl',
-      'Human_AdultAged_Hippocampus.pkl',
-      'Human_Colorectal_Cancer.pkl',
-      'Human_Developmental_Retina.pkl',
-      'Human_Embryonic_YolkSac.pkl',
-      'Human_Endometrium_Atlas.pkl',
-      'Human_IPF_Lung.pkl',
-      'Human_Longitudinal_Hippocampus.pkl',
-      'Human_Lung_Atlas.pkl',
-      'Human_PF_Lung.pkl',
-      'Human_Placenta_Decidua.pkl',
-      'Lethal_COVID19_Lung.pkl',
-      'Mouse_Dentate_Gyrus.pkl',
-      'Mouse_Isocortex_Hippocampus.pkl',
-      'Mouse_Postnatal_DentateGyrus.pkl',
-      'Mouse_Whole_Brain.pkl',
-      'Nuclei_Lung_Airway.pkl',
-      'Pan_Fetal_Human.pkl',
-    ],
-
   },
 };
 
@@ -131,20 +75,80 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
   const dispatch = useDispatch();
 
   const [selectedTool, setSelectedTool] = useState('sctype');
+  // Celltypist-specific state
+  const [ctSpecies, setCtSpecies] = useState(null);
+  const [ctTissue, setCtTissue] = useState(null);
+  const [ctModel, setCtModel] = useState(null);
+  // Shared state for other tools
   const [tissue, setTissue] = useState(null);
   const [species, setSpecies] = useState(null);
 
   const cellSets = useSelector(getCellSets());
 
-  const allClustersValid = useMemo(() => Object.entries(cellSets.properties).every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
+  const allClustersValid = useMemo(() => Object.entries(cellSets.properties)
+    .every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
 
   const currentTool = annotationTools[selectedTool];
 
+  // --- Celltypist filtering logic ---
+  const celltypistModelList = useMemo(
+    () => (celltypistModels.models || [])
+      .filter((m) => m.display_name && m.species && m.tissue),
+    [],
+  );
+  const ctSpeciesOptions = useMemo(
+    () => _.uniq(celltypistModelList.map((m) => m.species)).sort(),
+    [celltypistModelList],
+  );
+  const ctTissueOptions = useMemo(
+    () => {
+      if (!ctSpecies) return [];
+      return _.uniq(
+        celltypistModelList.filter((m) => m.species === ctSpecies)
+          .map((m) => m.tissue),
+      ).sort();
+    },
+    [celltypistModelList, ctSpecies],
+  );
+  const ctModelOptions = useMemo(
+    () => {
+      if (!ctSpecies || !ctTissue) return [];
+      return celltypistModelList
+        .filter((m) => m.species === ctSpecies && m.tissue === ctTissue)
+        .map((m) => ({ label: m.display_name, value: m.display_name }));
+    },
+    [celltypistModelList, ctSpecies, ctTissue],
+  );
+  const selectedCtModelObj = useMemo(
+    () => celltypistModelList.find(
+      (m) => m.display_name === ctModel && m.species === ctSpecies && m.tissue === ctTissue,
+    ),
+    [celltypistModelList, ctModel, ctSpecies, ctTissue],
+  );
+
+  // Reset dependent selections if parent changes
+  React.useEffect(() => {
+    setCtTissue(null);
+    setCtModel(null);
+  }, [ctSpecies]);
+  React.useEffect(() => {
+    setCtModel(null);
+  }, [ctTissue]);
+
+  // --- Render ---
   return (
     <Space direction='vertical'>
       <Radio.Group
         value={selectedTool}
-        onChange={(e) => setSelectedTool(e.target.value)}
+        onChange={(e) => {
+          setSelectedTool(e.target.value);
+          // Reset all tool-specific state
+          setTissue(null);
+          setSpecies(null);
+          setCtSpecies(null);
+          setCtTissue(null);
+          setCtModel(null);
+        }}
       >
         {Object.entries(annotationTools).map(([key, tool]) => (
           <Tooltip title={tool.tooltip} key={key}>
@@ -153,48 +157,122 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
         ))}
       </Radio.Group>
 
-      <Space direction='vertical' style={{ width: '100%' }}>
-        Tissue Type:
-        <Select
-          showSearch
-          style={{ width: '100%' }}
-          options={currentTool.tissueOptions.map((option) => ({ label: option, value: option }))}
-          value={tissue}
-          placeholder='Select a tissue type'
-          onChange={setTissue}
+      {selectedTool === 'celltypist' ? (
+        <>
+          <Space direction='vertical' style={{ width: '100%' }}>
+            Species:
+            <Select
+              showSearch
+              style={{ width: '100%' }}
+              options={ctSpeciesOptions.map((option) => ({ label: option, value: option }))}
+              value={ctSpecies}
+              placeholder='Select a species'
+              onChange={setCtSpecies}
+            />
+          </Space>
+          <Space direction='vertical' style={{ width: '100%' }}>
+            Tissue:
+            <Select
+              showSearch
+              style={{ width: '100%' }}
+              options={ctTissueOptions.map((option) => ({ label: option, value: option }))}
+              value={ctTissue}
+              placeholder='Select a tissue type'
+              onChange={setCtTissue}
+              disabled={!ctSpecies}
+            />
+          </Space>
+          <Space direction='vertical' style={{ width: '100%' }}>
+            Model:
+            <Select
+              showSearch
+              style={{ width: '100%' }}
+              options={ctModelOptions}
+              value={ctModel}
+              placeholder='Select a model'
+              onChange={setCtModel}
+              disabled={!ctTissue}
+            />
+          </Space>
+          {selectedCtModelObj && selectedCtModelObj.source && (
+            <div style={{ marginTop: 8 }}>
+              Source:
+              <br />
+              <a href={selectedCtModelObj.source} target='_blank' rel='noreferrer'>
+                {selectedCtModelObj.source}
+              </a>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <Space direction='vertical' style={{ width: '100%' }}>
+            Tissue Type:
+            <Select
+              showSearch
+              style={{ width: '100%' }}
+              options={currentTool.tissueOptions
+                .map((option) => ({ label: option, value: option }))}
+              value={tissue}
+              placeholder='Select a tissue type'
+              onChange={setTissue}
+            />
+          </Space>
+          <Space direction='vertical' style={{ width: '100%' }}>
+            Species:
+            <Select
+              showSearch
+              style={{ width: '100%' }}
+              options={speciesOptions.map((option) => ({ label: option, value: option }))}
+              value={species}
+              placeholder='Select a species'
+              onChange={setSpecies}
+            />
+          </Space>
+        </>
+      )}
+      {!allClustersValid && (
+        <Alert
+          message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
+          type='info'
+          showIcon
         />
-      </Space>
-
-      <Space direction='vertical' style={{ width: '100%' }}>
-        Species:
-        <Select
-          showSearch
-          style={{ width: '100%' }}
-          options={speciesOptions.map((option) => ({ label: option, value: option }))}
-          value={species}
-          placeholder='Select a species'
-          onChange={setSpecies}
-        />
-      </Space>
-      {!allClustersValid
-        && (
-          <Alert
-            message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
-            type='info'
-            showIcon
-          />
-        )}
+      )}
       <Button
         onClick={() => {
-          dispatch(runCellSetsAnnotation(
-            experimentId,
-            species,
-            tissue,
-            `${annotationTools[selectedTool].label}Annotate`,
-          ));
+          if (selectedTool === 'celltypist') {
+            // For celltypist, send only the model URL minus the common prefix as 'tissue' param.
+            // Do not send species/tissue.
+            const CT_URL_PREFIX = 'https://celltypist.cog.sanger.ac.uk/models/';
+            let modelPath = null;
+            if (
+              selectedCtModelObj
+              && selectedCtModelObj.url
+              && selectedCtModelObj.url.startsWith(CT_URL_PREFIX)
+            ) {
+              modelPath = selectedCtModelObj.url.substring(CT_URL_PREFIX.length);
+            }
+            dispatch(runCellSetsAnnotation(
+              experimentId,
+              null, // species
+              modelPath, // tissue param is actually the model path
+              `${annotationTools[selectedTool].label}Annotate`,
+            ));
+          } else {
+            dispatch(runCellSetsAnnotation(
+              experimentId,
+              species,
+              tissue,
+              `${annotationTools[selectedTool].label}Annotate`,
+            ));
+          }
           onRunAnnotation();
         }}
-        disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}
+        disabled={
+          selectedTool === 'celltypist'
+            ? (_.isNil(ctSpecies) || _.isNil(ctTissue) || _.isNil(ctModel) || !allClustersValid)
+            : (_.isNil(tissue) || _.isNil(species) || !allClustersValid)
+        }
         style={{ marginTop: '20px' }}
       >
         Compute
