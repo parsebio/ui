@@ -344,6 +344,10 @@
     "species": "Custom Mus musculus (Mouse) Trophoblast Stem Cells"
   },
   {
+    "name": "GRCm39_B6_129P2",
+    "species": "Custom Mus musculus (Mouse)"
+  },
+  {
     "name": "GRCm38_YFP",
     "species": "Custom Mus musculus (Mouse)"
   },
