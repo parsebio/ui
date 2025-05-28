@@ -14,7 +14,7 @@ import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import SamplesLoader from 'components/data-management/SamplesContainer/SamplesLoader';
 import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import { getSamples } from 'redux/selectors';
-import { createMetadataTrack } from 'redux/actions/experiments';
+import { createMetadataTrack, updateValuesInMetadataTrack } from 'redux/actions/experiments';
 
 const SamplesContainer = forwardRef((props, ref) => {
   const dispatch = useDispatch();
@@ -63,13 +63,6 @@ const SamplesContainer = forwardRef((props, ref) => {
       setSelectedTable('All');
     }
   }, [experimentSamples]);
-
-  useConditionalEffect(async () => {
-    // If multitech, then add the Technology metadata track
-    if (selectedTechs.length > 1) {
-      await dispatch(createMetadataTrack('Technology', activeExperimentId));
-    }
-  }, [selectedTechs]);
 
   const selectedTechs = useMemo(() => (
     Array.from(new Set(

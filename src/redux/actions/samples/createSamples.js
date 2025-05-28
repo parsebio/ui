@@ -13,6 +13,7 @@ import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState'
 import { defaultSampleOptions, sampleTemplate } from 'redux/reducers/samples/initialState';
 import { sampleTech } from 'utils/constants';
 import UploadStatus from 'utils/upload/UploadStatus';
+import { createMetadataTrack, updateValuesInMetadataTrack } from '../experiments';
 
 // If the sample name of new samples coincides with already existing
 // ones we should not create new samples,
@@ -50,6 +51,18 @@ const splitByAlreadyExistingSamples = (
   return { samplesToCreate, alreadyCreatedSampleIds };
 };
 
+const getSamplesByTechnology = (samples) => (
+  samples
+    .reduce(
+      (acc, sample) => {
+        acc[sample.type] = acc[sample.type] ?? [];
+        acc[sample.type].push(sample);
+        return acc;
+      },
+      {},
+    )
+);
+
 const createSamples = (
   experimentId,
   newSamples,
@@ -72,12 +85,20 @@ const createSamples = (
   let options = defaultSampleOptions[sampleTechnology] || {};
   let kit = null;
 
-  // If there are other samples in the same experiment, use the options and kit
-  // values from the other samples
-  if (experiment.sampleIds.length) {
-    const firstSampleId = experiment.sampleIds[0];
-    options = samples[firstSampleId].options;
-    kit = samples[firstSampleId].kit;
+  const oldSamples = Object.values(samples)
+    .filter(({ uuid }) => experiment.sampleIds.includes(uuid));
+
+  const oldSamplesByTechnology = getSamplesByTechnology(oldSamples);
+
+  // If there are other parse samples in the same experiment, use the options and kit
+  // values from the other ones (since we don't allow multi kits exps yet)
+  if (
+    sampleTechnology === 'parse'
+    && oldSamplesByTechnology.parse?.length > 0
+  ) {
+    const firstSample = oldSamplesByTechnology.parse[0];
+    options = firstSample.options;
+    kit = firstSample.kit;
   }
 
   const {
@@ -142,6 +163,36 @@ const createSamples = (
         samples: newSamplesToRedux,
       },
     });
+
+    // If multitech, then add the Technology metadata track
+    if (Object.keys(oldSamplesByTechnology).length > 1) {
+      let samplesToUpdateByTechnology = getSamplesByTechnology(newSamples);
+
+      // If the Technology metadata track does not exist:
+      if (_.isNil(_.sample(oldSamplesByTechnology).metadata.Technology)) {
+        // Create it
+        await dispatch(createMetadataTrack('Technology', experimentId));
+
+        samplesToUpdateByTechnology = _.mergeWith(
+          {},
+          samplesToUpdateByTechnology,
+          oldSamplesByTechnology,
+          (objValue, srcValue) => {
+            if (_.isArray(objValue) && _.isArray(srcValue)) {
+              return objValue.concat(srcValue);
+            }
+          },
+        );
+      }
+
+      const updates = Object.entries(samplesToUpdateByTechnology)
+        .map(([technology, currSamples]) => ({
+          value: technology,
+          sampleIds: currSamples.map((sample) => sample.uuid),
+        }));
+
+      await dispatch(updateValuesInMetadataTrack(experimentId, 'Technology', updates));
+    }
 
     dispatch({ type: SAMPLES_SAVED });
 

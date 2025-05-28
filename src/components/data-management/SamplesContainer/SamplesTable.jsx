@@ -293,7 +293,7 @@ const SamplesTable = forwardRef((props, ref) => {
             dispatch(updateValuesInMetadataTrack(
               activeExperimentId,
               key,
-              [{ sampleIds: [record.uuid], newValue }],
+              [{ sampleIds: [record.uuid], value: newValue }],
             ));
           }}
         />
