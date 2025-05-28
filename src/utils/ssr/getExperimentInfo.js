@@ -122,7 +122,7 @@ const getExperimentInfo = async (context, store, Auth) => {
   }
 
   if (!experimentDataV2) {
-    throw new Error('Still not working after trying both JWTs and both access tokens');
+    console.error('Still not working after trying both JWTs and both access tokens');
   }
   console.log('getExperimentInfoDebug8');
 
