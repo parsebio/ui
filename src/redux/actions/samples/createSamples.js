@@ -164,25 +164,30 @@ const createSamples = (
       },
     });
 
-    // If multitech, then add the Technology metadata track
-    if (Object.keys(oldSamplesByTechnology).length > 1) {
-      let samplesToUpdateByTechnology = getSamplesByTechnology(newSamples);
+    const newSamplesToUpdateByTechnology = getSamplesByTechnology(newSamplesToRedux);
 
-      // If the Technology metadata track does not exist:
-      if (_.isNil(_.sample(oldSamplesByTechnology).metadata.Technology)) {
+    const allSamples = _.mergeWith(
+      {},
+      newSamplesToUpdateByTechnology,
+      oldSamplesByTechnology,
+      (objValue, srcValue) => {
+        if (_.isArray(objValue) && _.isArray(srcValue)) {
+          return objValue.concat(srcValue);
+        }
+      },
+    );
+
+    // If multitech, then add the Technology metadata track
+    if (Object.keys(allSamples).length > 1) {
+      let samplesToUpdateByTechnology = newSamplesToUpdateByTechnology;
+
+      // If the Technology metadata track does not already exist:
+      if (_.isNil(_.sample(oldSamplesByTechnology).metadata?.Technology)) {
         // Create it
+
         await dispatch(createMetadataTrack('Technology', experimentId));
 
-        samplesToUpdateByTechnology = _.mergeWith(
-          {},
-          samplesToUpdateByTechnology,
-          oldSamplesByTechnology,
-          (objValue, srcValue) => {
-            if (_.isArray(objValue) && _.isArray(srcValue)) {
-              return objValue.concat(srcValue);
-            }
-          },
-        );
+        samplesToUpdateByTechnology = allSamples;
       }
 
       const updates = Object.entries(samplesToUpdateByTechnology)
@@ -198,6 +203,7 @@ const createSamples = (
 
     return sampleIdsByName;
   } catch (e) {
+    console.error(e);
     const errorMessage = handleError(e, endUserMessages.ERROR_CREATING_SAMPLE);
 
     dispatch({

@@ -198,8 +198,8 @@ const FileUploadModal = (props) => {
                   // TODO to enable multitech selection
                   // - uncomment this line
                   // - remove the currently enabled disable line
-                  // disabled={currentSelectedTech === sampleTech.SEURAT}
-                  disabled={currentSelectedTech}
+                  disabled={currentSelectedTech === sampleTech.SEURAT}
+                  // disabled={currentSelectedTech}
                   onChange={(value) => setSelectedTech(value)}
                   // Fix the width so that the dropdown doesn't change size when the value changes
                   style={{ width: 180 }}
