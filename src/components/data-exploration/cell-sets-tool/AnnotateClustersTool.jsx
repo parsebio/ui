@@ -9,7 +9,7 @@ import {
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
-import CellTypistAnnotate from './CellTypistAnnotate';
+import CellTypistAnnotate from './AnnotateClusters/CellTypistAnnotate';
 
 const ScTypeTooltipText = (
   <>

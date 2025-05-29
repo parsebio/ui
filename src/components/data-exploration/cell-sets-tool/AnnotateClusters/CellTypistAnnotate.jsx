@@ -8,7 +8,7 @@ import {
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
-import celltypistModels from './celltypist.json';
+import celltypistModels from 'components/data-exploration/cell-sets-tool/AnnotateClusters/celltypistModels.json';
 
 const annotationTools = {
   celltypist: {
