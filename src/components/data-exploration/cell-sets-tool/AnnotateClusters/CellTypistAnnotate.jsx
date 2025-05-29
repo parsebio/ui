@@ -4,10 +4,13 @@ import _ from 'lodash';
 
 import {
   Button, Select, Space,
+  Typography,
 } from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch } from 'react-redux';
 import celltypistModels from 'components/data-exploration/cell-sets-tool/AnnotateClusters/celltypistModels.json';
+
+const { Text } = Typography;
 
 // TODO cleanup, no need for this object
 const annotationTools = {
@@ -41,12 +44,20 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
 
     return celltypistModels
       .filter((model) => model.species === selectedSpecies && model.tissue === selectedTissue)
-      .map((model) => ({ label: model.display_name, value: model.display_name }));
+      .map(({ displayName }) => ({
+
+        label: (
+          <Text ellipsis={{ tooltip: displayName }}>
+            {displayName}
+          </Text>
+        ),
+        value: displayName,
+      }));
   }, [celltypistModels, selectedSpecies, selectedTissue]);
 
   const selectedModelObj = useMemo(() => (
     celltypistModels.find((model) => (
-      model.display_name === selectedModel
+      model.displayName === selectedModel
       && model.species === selectedSpecies
       && model.tissue === selectedTissue
     ))
@@ -80,7 +91,10 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           <Select
             showSearch
             style={{ width: '100%' }}
-            options={tissueOptions.map((option) => ({ label: option, value: option }))}
+            options={tissueOptions.map((option) => ({
+              label: <Text ellipsis={{ tooltip: option }} style={{ width: '100%' }}>{option}</Text>,
+              value: option,
+            }))}
             value={selectedTissue}
             placeholder='Select a tissue type'
             onChange={setSelectedTissue}
