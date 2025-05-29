@@ -44,7 +44,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
       }))
   ), [selectedSpecies, selectedTissue]);
 
-  const selectedModelObj = useMemo(() => (
+  const selectedModel = useMemo(() => (
     celltypistModels.find((model) => (
       model.displayName === selectedModelName
       && model.species === selectedSpecies
@@ -103,12 +103,12 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           disabled={!selectedTissue}
         />
       </Space>
-      {selectedModelObj?.source && (
+      {selectedModel?.source && (
         <div style={{ marginTop: 8 }}>
           Source:
           <br />
-          <a href={selectedModelObj.source} target='_blank' rel='noreferrer'>
-            {selectedModelObj.source}
+          <a href={selectedModel.source} target='_blank' rel='noreferrer'>
+            {selectedModel.source}
           </a>
         </div>
       )}
@@ -118,8 +118,8 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           const CellTypistUrlPrefix = 'https://celltypist.cog.sanger.ac.uk/models/';
           let modelKey = null;
 
-          if (selectedModelObj?.url?.startsWith(CellTypistUrlPrefix)) {
-            modelKey = selectedModelObj.url.substring(CellTypistUrlPrefix.length);
+          if (selectedModel?.url?.startsWith(CellTypistUrlPrefix)) {
+            modelKey = selectedModel.url.substring(CellTypistUrlPrefix.length);
           }
 
           const methodParams = {
