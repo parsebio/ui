@@ -45,8 +45,10 @@ const ScTypeAndDecouplerAnnotate = ({ experimentId, onRunAnnotation, selectedToo
 
   const cellSets = useSelector(getCellSets());
 
-  const allClustersValid = useMemo(() => Object.entries(cellSets.properties)
-    .every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
+  const allClustersValid = useMemo(() => (
+    Object.entries(cellSets.properties)
+      .every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1)
+  ), [cellSets]);
 
   const currentTool = annotationTools[selectedTool];
 

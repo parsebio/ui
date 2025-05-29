@@ -23,44 +23,35 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   const [ctTissue, setCtTissue] = useState(null);
   const [ctModel, setCtModel] = useState(null);
 
-  const celltypistModelList = useMemo(
-    () => (celltypistModels.models || [])
-      .filter((m) => m.display_name && m.species && m.tissue),
-    [],
-  );
+  const celltypistModelList = useMemo(() => (
+    (celltypistModels.models || [])
+      .filter((m) => m.display_name && m.species && m.tissue)
+  ), []);
 
-  const ctSpeciesOptions = useMemo(
-    () => _.uniq(celltypistModelList.map((m) => m.species)).sort(),
-    [celltypistModelList],
-  );
+  const ctSpeciesOptions = useMemo(() => (
+    _.uniq(celltypistModelList.map((m) => m.species)).sort()
+  ), [celltypistModelList]);
 
-  const ctTissueOptions = useMemo(
-    () => {
-      if (!ctSpecies) return [];
-      return _.uniq(
-        celltypistModelList.filter((m) => m.species === ctSpecies)
-          .map((m) => m.tissue),
-      ).sort();
-    },
-    [celltypistModelList, ctSpecies],
-  );
+  const ctTissueOptions = useMemo(() => {
+    if (!ctSpecies) return [];
 
-  const ctModelOptions = useMemo(
-    () => {
-      if (!ctSpecies || !ctTissue) return [];
-      return celltypistModelList
-        .filter((m) => m.species === ctSpecies && m.tissue === ctTissue)
-        .map((m) => ({ label: m.display_name, value: m.display_name }));
-    },
-    [celltypistModelList, ctSpecies, ctTissue],
-  );
+    return _.uniq(
+      celltypistModelList.filter((m) => m.species === ctSpecies)
+        .map((m) => m.tissue),
+    ).sort();
+  }, [celltypistModelList, ctSpecies]);
 
-  const selectedCtModelObj = useMemo(
-    () => celltypistModelList.find(
+  const ctModelOptions = useMemo(() => {
+    if (!ctSpecies || !ctTissue) return [];
+    return celltypistModelList
+      .filter((m) => m.species === ctSpecies && m.tissue === ctTissue)
+      .map((m) => ({ label: m.display_name, value: m.display_name }));
+  }, [celltypistModelList, ctSpecies, ctTissue]);
+
+  const selectedCtModelObj = useMemo(() => (
+    celltypistModelList.find(
       (m) => m.display_name === ctModel && m.species === ctSpecies && m.tissue === ctTissue,
-    ),
-    [celltypistModelList, ctModel, ctSpecies, ctTissue],
-  );
+    )), [celltypistModelList, ctModel, ctSpecies, ctTissue]);
 
   useEffect(() => {
     setCtTissue(null);
