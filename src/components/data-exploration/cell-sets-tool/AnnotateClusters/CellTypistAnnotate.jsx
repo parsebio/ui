@@ -20,7 +20,6 @@ const annotationTools = {
 const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   const dispatch = useDispatch();
 
-  // Celltypist-specific state
   const [ctSpecies, setCtSpecies] = useState(null);
   const [ctTissue, setCtTissue] = useState(null);
   const [ctModel, setCtModel] = useState(null);
@@ -30,7 +29,6 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   const allClustersValid = useMemo(() => Object.entries(cellSets.properties)
     .every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
 
-  // --- Celltypist filtering logic ---
   const celltypistModelList = useMemo(
     () => (celltypistModels.models || [])
       .filter((m) => m.display_name && m.species && m.tissue),
@@ -67,7 +65,6 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     [celltypistModelList, ctModel, ctSpecies, ctTissue],
   );
 
-  // Reset dependent selections if parent changes
   React.useEffect(() => {
     setCtTissue(null);
     setCtModel(null);
@@ -76,7 +73,6 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     setCtModel(null);
   }, [ctTissue]);
 
-  // --- Render ---
   return (
     <Space direction='vertical'>
       <>
@@ -134,8 +130,6 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
       )}
       <Button
         onClick={() => {
-          // For celltypist, send only the model URL minus the common prefix as 'tissue' param.
-          // Species should be null
           const CellTypistUrlPrefix = 'https://celltypist.cog.sanger.ac.uk/models/';
           let modelKey = null;
           if (
