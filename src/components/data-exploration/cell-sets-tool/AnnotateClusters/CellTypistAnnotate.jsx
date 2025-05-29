@@ -20,7 +20,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
 
   const [selectedSpecies, setSelectedSpecies] = useState(null);
   const [selectedTissue, setSelectedTissue] = useState(null);
-  const [selectedModel, setSelectedModel] = useState(null);
+  const [selectedModelName, setSelectedModelName] = useState(null);
 
   const speciesOptions = useMemo(() => (
     _.uniq(celltypistModels.map((model) => model.species)).sort()
@@ -46,19 +46,18 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
 
   const selectedModelObj = useMemo(() => (
     celltypistModels.find((model) => (
-      model.displayName === selectedModel
+      model.displayName === selectedModelName
       && model.species === selectedSpecies
       && model.tissue === selectedTissue
     ))
-  ), [selectedModel, selectedSpecies, selectedTissue]);
+  ), [selectedModelName, selectedSpecies, selectedTissue]);
 
   useEffect(() => {
     setSelectedTissue(null);
-    setSelectedModel(null);
   }, [selectedSpecies]);
 
   useEffect(() => {
-    setSelectedModel(null);
+    setSelectedModelName(null);
   }, [selectedTissue]);
 
   return (
@@ -98,9 +97,9 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           showSearch
           style={{ width: '100%' }}
           options={modelOptions}
-          value={selectedModel}
+          value={selectedModelName}
           placeholder='Select a model'
-          onChange={setSelectedModel}
+          onChange={setSelectedModelName}
           disabled={!selectedTissue}
         />
       </Space>
@@ -134,7 +133,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           ));
           onRunAnnotation();
         }}
-        disabled={_.isNil(selectedSpecies) || _.isNil(selectedTissue) || _.isNil(selectedModel)}
+        disabled={_.isNil(selectedSpecies) || _.isNil(selectedTissue) || _.isNil(selectedModelName)}
         style={{ marginTop: '20px' }}
       >
         Compute
