@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-import { Auth } from '@aws-amplify/auth';
+import { Auth, totpQrcode } from 'aws-amplify';
 
 import {
   Input, Button, Typography, Space, Divider, Row,
   Tooltip,
 } from 'antd';
 
-import { totpQrcode } from '@aws-amplify/ui';
 import QRCode from 'qrcode.react';
 import { ClipLoader } from 'react-spinners';
 

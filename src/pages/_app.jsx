@@ -3,7 +3,7 @@ import '../../assets/nprogress.css';
 import _ from 'lodash';
 import '../index.css';
 
-import Amplify, { Credentials } from '@aws-amplify/core';
+import { Amplify, Credentials } from 'aws-amplify';
 
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
@@ -30,7 +30,6 @@ import { brandColors, notAgreedToTermsStatus, cookiesAgreedCognitoKey } from 'ut
 import 'antd/dist/antd.variable.min.css';
 import { loadUser } from 'redux/actions/user';
 import { setUpDispatch } from 'utils/http/fetchAPI';
-import { CookieStorage } from '@aws-amplify/auth';
 import getConfig from 'next/config';
 
 ConfigProvider.config({
@@ -42,23 +41,23 @@ ConfigProvider.config({
 });
 
 const mockCredentialsForInframock = () => {
-  Credentials.get = async () => ({
-    expired: false,
-    expireTime: null,
-    refreshCallbacks: [],
-    accessKeyId: 'asd', // pragma: allowlist secret
-    secretAccessKey: 'asfdsa', // pragma: allowlist secret
-    sessionToken: 'asdfasdf', // pragma: allowlist secret
-  });
+  // Credentials.get = async () => ({
+  //   expired: false,
+  //   expireTime: null,
+  //   refreshCallbacks: [],
+  //   accessKeyId: 'asd', // pragma: allowlist secret
+  //   secretAccessKey: 'asfdsa', // pragma: allowlist secret
+  //   sessionToken: 'asdfasdf', // pragma: allowlist secret
+  // });
 
-  Credentials.shear = async () => ({
-    expired: false,
-    expireTime: null,
-    refreshCallbacks: [],
-    accessKeyId: 'asd', // pragma: allowlist secret
-    secretAccessKey: 'asfdsa', // pragma: allowlist secret
-    sessionToken: 'asdfasdf', // pragma: allowlist secret
-  });
+  // Credentials.shear = async () => ({
+  //   expired: false,
+  //   expireTime: null,
+  //   refreshCallbacks: [],
+  //   accessKeyId: 'asd', // pragma: allowlist secret
+  //   secretAccessKey: 'asfdsa', // pragma: allowlist secret
+  //   sessionToken: 'asdfasdf', // pragma: allowlist secret
+  // });
 };
 
 NProgress.configure({ showSpinner: false });
@@ -110,15 +109,15 @@ const WrappedApp = ({ Component, pageProps }) => {
         ? getConfig().publicRuntimeConfig.domainName
         : 'localhost';
 
-      const storage = new CookieStorage({
-        domain: domainName,
-        path: '/',
-        expires: 365,
-        secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'strict',
-      });
-
-      amplifyConfig.Auth.storage = storage;
+      amplifyConfig.Auth.cookieStorage = {
+        cookieStorage: {
+          domain: domainName,
+          path: '/',
+          expires: 365,
+          secure: process.env.NODE_ENV !== 'development',
+          sameSite: 'strict',
+        },
+      };
 
       Amplify.configure(amplifyConfig);
 

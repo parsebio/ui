@@ -22,7 +22,7 @@ import ExperimentMenu from 'components/data-management/ExperimentMenu';
 import { loadExperiments, setActiveExperiment } from 'redux/actions/experiments';
 
 const mockNavigateTo = jest.fn();
-jest.mock('@aws-amplify/auth', () => ({
+jest.mock('aws-amplify', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
       username: 'mockuser',

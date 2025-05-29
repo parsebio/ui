@@ -1,4 +1,4 @@
-import { Auth } from '@aws-amplify/auth';
+import { Auth } from 'aws-amplify';
 import StackTrace from 'stacktrace-js';
 import fetchAPI from './http/fetchAPI';
 

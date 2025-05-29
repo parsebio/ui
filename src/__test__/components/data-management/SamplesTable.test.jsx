@@ -28,7 +28,7 @@ jest.mock('utils/AppRouteProvider', () => ({
     navigateTo: mockNavigateTo,
   })),
 }));
-jest.mock('@aws-amplify/auth', () => ({
+jest.mock('aws-amplify', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn(() => Promise.resolve({
       attributes: {
