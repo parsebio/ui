@@ -9,7 +9,6 @@ import {
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
-import celltypistModels from './celltypist.json';
 import CellTypistAnnotate from './CellTypistAnnotate';
 
 const ScTypeTooltipText = (
@@ -115,10 +114,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
   const dispatch = useDispatch();
 
   const [selectedTool, setSelectedTool] = useState('sctype');
-  // Celltypist-specific state
-  const [ctSpecies, setCtSpecies] = useState(null);
-  const [ctTissue, setCtTissue] = useState(null);
-  const [ctModel, setCtModel] = useState(null);
+
   // Shared state for other tools
   const [tissue, setTissue] = useState(null);
   const [species, setSpecies] = useState(null);
@@ -130,28 +126,6 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
 
   const currentTool = annotationTools[selectedTool];
 
-  // --- Celltypist filtering logic ---
-  const celltypistModelList = useMemo(
-    () => (celltypistModels.models || [])
-      .filter((m) => m.display_name && m.species && m.tissue),
-    [],
-  );
-
-  const selectedCtModelObj = useMemo(
-    () => celltypistModelList.find(
-      (m) => m.display_name === ctModel && m.species === ctSpecies && m.tissue === ctTissue,
-    ),
-    [celltypistModelList, ctModel, ctSpecies, ctTissue],
-  );
-
-  React.useEffect(() => {
-    setCtTissue(null);
-    setCtModel(null);
-  }, [ctSpecies]);
-  React.useEffect(() => {
-    setCtModel(null);
-  }, [ctTissue]);
-
   return (
     <Space direction='vertical'>
       <Radio.Group
@@ -160,9 +134,6 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
           setSelectedTool(e.target.value);
           setTissue(null);
           setSpecies(null);
-          setCtSpecies(null);
-          setCtTissue(null);
-          setCtModel(null);
         }}
       >
         {Object.entries(annotationTools).map(([key, tool]) => (
@@ -201,6 +172,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
           </Space>
         </>
       )}
+
       {!allClustersValid && (
         <Alert
           message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
@@ -208,31 +180,14 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
           showIcon
         />
       )}
+
       <Button
         onClick={() => {
-          let methodParams;
-          if (selectedTool === 'celltypist') {
-            // For celltypist, send only the model URL minus the common prefix as 'tissue' param.
-            // Species should be null
-            const CellTypistUrlPrefix = 'https://celltypist.cog.sanger.ac.uk/models/';
-            let modelKey = null;
-            if (
-              selectedCtModelObj
-              && selectedCtModelObj.url
-              && selectedCtModelObj.url.startsWith(CellTypistUrlPrefix)
-            ) {
-              modelKey = selectedCtModelObj.url.substring(CellTypistUrlPrefix.length);
-            }
-            methodParams = {
-              modelKey,
-            };
-          } else {
-            // for other tools, send species and tissue as params
-            methodParams = {
-              species,
-              tissue,
-            };
-          }
+          const methodParams = {
+            species,
+            tissue,
+          };
+
           dispatch(runCellSetsAnnotation(
             experimentId,
             annotationTools[selectedTool].label,
@@ -240,11 +195,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
           ));
           onRunAnnotation();
         }}
-        disabled={
-          selectedTool === 'celltypist'
-            ? (_.isNil(ctSpecies) || _.isNil(ctTissue) || _.isNil(ctModel) || !allClustersValid)
-            : (_.isNil(tissue) || _.isNil(species) || !allClustersValid)
-        }
+        disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}
         style={{ marginTop: '20px' }}
       >
         Compute
