@@ -24,7 +24,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
 
   const speciesOptions = useMemo(() => (
     _.uniq(celltypistModels.map((model) => model.species)).sort()
-  ), [celltypistModels]);
+  ), []);
 
   const tissueOptions = useMemo(() => {
     if (_.isNil(selectedSpecies)) return [];
@@ -33,7 +33,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
       celltypistModels.filter((model) => model.species === selectedSpecies)
         .map((model) => model.tissue),
     ).sort();
-  }, [celltypistModels, selectedSpecies]);
+  }, [selectedSpecies]);
 
   const modelOptions = useMemo(() => (
     celltypistModels
@@ -42,7 +42,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
         label: <Tooltipped text={displayName} />,
         value: displayName,
       }))
-  ), [celltypistModels, selectedSpecies, selectedTissue]);
+  ), [selectedSpecies, selectedTissue]);
 
   const selectedModelObj = useMemo(() => (
     celltypistModels.find((model) => (
@@ -50,7 +50,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
       && model.species === selectedSpecies
       && model.tissue === selectedTissue
     ))
-  ), [celltypistModels, selectedModel, selectedSpecies, selectedTissue]);
+  ), [selectedModel, selectedSpecies, selectedTissue]);
 
   useEffect(() => {
     setSelectedTissue(null);
