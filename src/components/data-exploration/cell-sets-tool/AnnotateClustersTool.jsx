@@ -78,32 +78,21 @@ const annotationTools = {
   sctype: {
     label: 'ScType',
     tooltip: ScTypeTooltipText,
-    tissueOptions: [
-      'Immune system', 'Pancreas', 'Liver', 'Eye', 'Kidney', 'Brain',
-      'Lung', 'Adrenal', 'Heart', 'Intestine', 'Muscle', 'Placenta',
-      'Spleen', 'Stomach', 'Thymus', 'Hippocampus',
-    ],
   },
   decoupler: {
     label: 'Decoupler',
     tooltip: DecouplerTooltipText,
-    tissueOptions: [
-      'Immune system', 'Oral cavity', 'Brain', 'Kidney', 'Reproductive',
-      'Epithelium', 'GI tract', 'Thymus', 'Olfactory system', 'Placenta',
-      'Lungs', 'Liver', 'Zygote', 'Blood', 'Bone', 'Vasculature',
-      'Pancreas', 'Heart', 'Mammary gland', 'Connective tissue',
-      'Skeletal muscle', 'Skin', 'Embryo', 'Smooth muscle', 'Eye',
-      'Adrenal glands', 'Thyroid', 'Parathyroid glands', 'Urinary bladder',
-    ],
   },
   celltypist: {
     label: 'CellTypist',
+    // TODO fill in tooltip
     tooltip: 'Runs CellTypist cell type annotation.',
   },
 };
 
 const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
   const [selectedTool, setSelectedTool] = useState('sctype');
+
   return (
     <Space direction='vertical'>
       <Radio.Group
