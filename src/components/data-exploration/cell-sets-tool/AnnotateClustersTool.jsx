@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Radio, Select, Space, Tooltip,
+  Radio, Space, Tooltip,
 } from 'antd';
 
 import CellTypistAnnotate from './AnnotateClusters/CellTypistAnnotate';
+import ScTypeAndDecouplerAnnotate from './AnnotateClusters/ScTypeAndDecouplerAnnotate';
 
 const ScTypeTooltipText = (
   <>
@@ -101,28 +102,14 @@ const annotationTools = {
   },
 };
 
-const speciesOptions = [
-  'human',
-  'mouse',
-];
-
 const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
   const [selectedTool, setSelectedTool] = useState('sctype');
-
-  // Shared state for other tools
-  const [tissue, setTissue] = useState(null);
-  const [species, setSpecies] = useState(null);
-
-  const currentTool = annotationTools[selectedTool];
-
   return (
     <Space direction='vertical'>
       <Radio.Group
         value={selectedTool}
         onChange={(e) => {
           setSelectedTool(e.target.value);
-          setTissue(null);
-          setSpecies(null);
         }}
       >
         {Object.entries(annotationTools).map(([key, tool]) => (
@@ -133,33 +120,16 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
       </Radio.Group>
 
       {selectedTool === 'celltypist' ? (
-        <CellTypistAnnotate experimentId={experimentId} onRunAnnotation={onRunAnnotation} />
+        <CellTypistAnnotate
+          experimentId={experimentId}
+          onRunAnnotation={onRunAnnotation}
+        />
       ) : (
-        <>
-          <Space direction='vertical' style={{ width: '100%' }}>
-            Species:
-            <Select
-              showSearch
-              style={{ width: '100%' }}
-              options={speciesOptions.map((option) => ({ label: option, value: option }))}
-              value={species}
-              placeholder='Select a species'
-              onChange={setSpecies}
-            />
-          </Space>
-          <Space direction='vertical' style={{ width: '100%' }}>
-            Tissue Type:
-            <Select
-              showSearch
-              style={{ width: '100%' }}
-              options={currentTool.tissueOptions
-                .map((option) => ({ label: option, value: option }))}
-              value={tissue}
-              placeholder='Select a tissue type'
-              onChange={setTissue}
-            />
-          </Space>
-        </>
+        <ScTypeAndDecouplerAnnotate
+          experimentId={experimentId}
+          onRunAnnotation={onRunAnnotation}
+          selectedTool={selectedTool}
+        />
       )}
 
     </Space>

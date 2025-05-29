@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import {
-  Button,
-  Radio, Select, Space, Tooltip, Alert,
+  Button, Select, Space, Alert,
 } from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
@@ -121,73 +120,56 @@ const ScTypeAndDecouplerAnnotate = ({ experimentId, onRunAnnotation, selectedToo
 
   return (
     <Space direction='vertical'>
-      <Radio.Group
-        value={selectedTool}
-        onChange={() => {
-          setTissue(null);
-          setSpecies(null);
+      <Space direction='vertical' style={{ width: '100%' }}>
+        Species:
+        <Select
+          showSearch
+          style={{ width: '100%' }}
+          options={speciesOptions.map((option) => ({ label: option, value: option }))}
+          value={species}
+          placeholder='Select a species'
+          onChange={setSpecies}
+        />
+      </Space>
+      <Space direction='vertical' style={{ width: '100%' }}>
+        Tissue Type:
+        <Select
+          showSearch
+          style={{ width: '100%' }}
+          options={currentTool.tissueOptions
+            .map((option) => ({ label: option, value: option }))}
+          value={tissue}
+          placeholder='Select a tissue type'
+          onChange={setTissue}
+        />
+      </Space>
+      {!allClustersValid && (
+        <Alert
+          message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
+          type='info'
+          showIcon
+        />
+      )}
+
+      <Button
+        onClick={() => {
+          const methodParams = {
+            species,
+            tissue,
+          };
+
+          dispatch(runCellSetsAnnotation(
+            experimentId,
+            annotationTools[selectedTool].label,
+            methodParams,
+          ));
+          onRunAnnotation();
         }}
+        disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}
+        style={{ marginTop: '20px' }}
       >
-        {Object.entries(annotationTools).map(([key, tool]) => (
-          <Tooltip title={tool.tooltip} key={key} placement='left' mouseEnterDelay={0.5}>
-            <Radio value={key}>{tool.label}</Radio>
-          </Tooltip>
-        ))}
-      </Radio.Group>
-
-      <>
-        <Space direction='vertical' style={{ width: '100%' }}>
-          Species:
-          <Select
-            showSearch
-            style={{ width: '100%' }}
-            options={speciesOptions.map((option) => ({ label: option, value: option }))}
-            value={species}
-            placeholder='Select a species'
-            onChange={setSpecies}
-          />
-        </Space>
-        <Space direction='vertical' style={{ width: '100%' }}>
-          Tissue Type:
-          <Select
-            showSearch
-            style={{ width: '100%' }}
-            options={currentTool.tissueOptions
-              .map((option) => ({ label: option, value: option }))}
-            value={tissue}
-            placeholder='Select a tissue type'
-            onChange={setTissue}
-          />
-        </Space>
-        {!allClustersValid && (
-          <Alert
-            message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
-            type='info'
-            showIcon
-          />
-        )}
-
-        <Button
-          onClick={() => {
-            const methodParams = {
-              species,
-              tissue,
-            };
-
-            dispatch(runCellSetsAnnotation(
-              experimentId,
-              annotationTools[selectedTool].label,
-              methodParams,
-            ));
-            onRunAnnotation();
-          }}
-          disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}
-          style={{ marginTop: '20px' }}
-        >
-          Compute
-        </Button>
-      </>
-
+        Compute
+      </Button>
     </Space>
   );
 };
@@ -197,7 +179,7 @@ ScTypeAndDecouplerAnnotate.defaultProps = {};
 ScTypeAndDecouplerAnnotate.propTypes = {
   experimentId: PropTypes.string.isRequired,
   onRunAnnotation: PropTypes.func.isRequired,
-  selectedTool: PropTypes.string.isRequired,
+  selectedTool: PropTypes.oneOf(['sctype', 'decoupler']).isRequired,
 };
 
 export default ScTypeAndDecouplerAnnotate;
