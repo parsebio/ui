@@ -13,7 +13,6 @@ import celltypistModels from 'components/data-exploration/cell-sets-tool/Annotat
 const annotationTools = {
   celltypist: {
     label: 'CellTypist',
-    tooltip: 'Runs CellTypist cell type annotation.',
   },
 };
 
