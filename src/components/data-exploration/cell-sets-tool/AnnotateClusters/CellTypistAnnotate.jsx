@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -65,11 +65,12 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     [celltypistModelList, ctModel, ctSpecies, ctTissue],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCtTissue(null);
     setCtModel(null);
   }, [ctSpecies]);
-  React.useEffect(() => {
+
+  useEffect(() => {
     setCtModel(null);
   }, [ctTissue]);
 
