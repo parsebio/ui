@@ -25,33 +25,37 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
 
   const celltypistModelList = useMemo(() => (
     (celltypistModels.models || [])
-      .filter((m) => m.display_name && m.species && m.tissue)
+      .filter((model) => model.display_name && model.species && model.tissue)
   ), []);
 
-  const ctSpeciesOptions = useMemo(() => (
-    _.uniq(celltypistModelList.map((m) => m.species)).sort()
+  const speciesOptions = useMemo(() => (
+    _.uniq(celltypistModelList.map((model) => model.species)).sort()
   ), [celltypistModelList]);
 
-  const ctTissueOptions = useMemo(() => {
+  const tissueOptions = useMemo(() => {
     if (!ctSpecies) return [];
 
     return _.uniq(
-      celltypistModelList.filter((m) => m.species === ctSpecies)
-        .map((m) => m.tissue),
+      celltypistModelList.filter((model) => model.species === ctSpecies)
+        .map((model) => model.tissue),
     ).sort();
   }, [celltypistModelList, ctSpecies]);
 
-  const ctModelOptions = useMemo(() => {
-    if (!ctSpecies || !ctTissue) return [];
+  const modelOptions = useMemo(() => {
+    if (!(ctSpecies && ctTissue)) return [];
+
     return celltypistModelList
-      .filter((m) => m.species === ctSpecies && m.tissue === ctTissue)
-      .map((m) => ({ label: m.display_name, value: m.display_name }));
+      .filter((model) => model.species === ctSpecies && model.tissue === ctTissue)
+      .map((model) => ({ label: model.display_name, value: model.display_name }));
   }, [celltypistModelList, ctSpecies, ctTissue]);
 
-  const selectedCtModelObj = useMemo(() => (
-    celltypistModelList.find(
-      (m) => m.display_name === ctModel && m.species === ctSpecies && m.tissue === ctTissue,
-    )), [celltypistModelList, ctModel, ctSpecies, ctTissue]);
+  const selectedModelObj = useMemo(() => (
+    celltypistModelList.find((model) => (
+      model.display_name === ctModel
+      && model.species === ctSpecies
+      && model.tissue === ctTissue
+    ))
+  ), [celltypistModelList, ctModel, ctSpecies, ctTissue]);
 
   useEffect(() => {
     setCtTissue(null);
@@ -70,7 +74,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           <Select
             showSearch
             style={{ width: '100%' }}
-            options={ctSpeciesOptions.map((option) => ({ label: option, value: option }))}
+            options={speciesOptions.map((option) => ({ label: option, value: option }))}
             value={ctSpecies}
             placeholder='Select a species'
             onChange={setCtSpecies}
@@ -81,7 +85,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           <Select
             showSearch
             style={{ width: '100%' }}
-            options={ctTissueOptions.map((option) => ({ label: option, value: option }))}
+            options={tissueOptions.map((option) => ({ label: option, value: option }))}
             value={ctTissue}
             placeholder='Select a tissue type'
             onChange={setCtTissue}
@@ -93,19 +97,19 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           <Select
             showSearch
             style={{ width: '100%' }}
-            options={ctModelOptions}
+            options={modelOptions}
             value={ctModel}
             placeholder='Select a model'
             onChange={setCtModel}
             disabled={!ctTissue}
           />
         </Space>
-        {selectedCtModelObj && selectedCtModelObj.source && (
+        {selectedModelObj && selectedModelObj.source && (
           <div style={{ marginTop: 8 }}>
             Source:
             <br />
-            <a href={selectedCtModelObj.source} target='_blank' rel='noreferrer'>
-              {selectedCtModelObj.source}
+            <a href={selectedModelObj.source} target='_blank' rel='noreferrer'>
+              {selectedModelObj.source}
             </a>
           </div>
         )}
@@ -116,11 +120,11 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           const CellTypistUrlPrefix = 'https://celltypist.cog.sanger.ac.uk/models/';
           let modelKey = null;
           if (
-            selectedCtModelObj
-            && selectedCtModelObj.url
-            && selectedCtModelObj.url.startsWith(CellTypistUrlPrefix)
+            selectedModelObj
+            && selectedModelObj.url
+            && selectedModelObj.url.startsWith(CellTypistUrlPrefix)
           ) {
-            modelKey = selectedCtModelObj.url.substring(CellTypistUrlPrefix.length);
+            modelKey = selectedModelObj.url.substring(CellTypistUrlPrefix.length);
           }
           const methodParams = {
             modelKey,
