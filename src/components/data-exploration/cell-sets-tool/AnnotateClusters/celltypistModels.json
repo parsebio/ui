@@ -116,7 +116,7 @@
         "No_celltypes": 126,
         "source": "https://doi.org/10.1038/s41586-024-07251-0",
         "tissue": "gut",
-        "species": "mouse",
+        "species": "Mus musculus",
         "displayName": "Adult_Mouse_Gut v2"
     },
     {
@@ -128,7 +128,7 @@
         "No_celltypes": 40,
         "source": "https://doi.org/10.1016/j.celrep.2018.11.034",
         "tissue": "olfactory bulb",
-        "species": "mouse",
+        "species": "Mus musculus",
         "displayName": "Adult_Mouse_OlfactoryBulb v1"
     },
     {
@@ -320,7 +320,7 @@
         "No_celltypes": 174,
         "source": "https://doi.org/10.1038/s41586-021-03775-x",
         "tissue": "brain",
-        "species": "mouse",
+        "species": "Mus musculus",
         "displayName": "Developing_Mouse_Brain v1"
     },
     {
@@ -332,7 +332,7 @@
         "No_celltypes": 11,
         "source": "https://doi.org/10.1038/s41467-020-20343-5",
         "tissue": "hippocampus",
-        "species": "mouse",
+        "species": "Mus musculus",
         "displayName": "Developing_Mouse_Hippocampus v1"
     },
     {
@@ -440,7 +440,7 @@
         "No_celltypes": 17,
         "source": "https://doi.org/10.1016/j.cell.2021.12.018",
         "tissue": "liver",
-        "species": "mouse",
+        "species": "Mus musculus",
         "displayName": "Healthy_Mouse_Liver v1"
     },
     {
@@ -584,7 +584,7 @@
         "No_celltypes": 24,
         "source": "https://doi.org/10.1038/s41593-017-0056-2",
         "tissue": "dentate gyrus",
-        "species": "mouse",
+        "species": "Mus musculus",
         "displayName": "Mouse_Dentate_Gyrus v1"
     },
     {
@@ -596,7 +596,7 @@
         "No_celltypes": 42,
         "source": "https://doi.org/10.1016/j.cell.2021.04.021",
         "tissue": "isocortex, hippocampus",
-        "species": "mouse",
+        "species": "Mus musculus",
         "displayName": "Mouse_Isocortex_Hippocampus v1"
     },
     {
@@ -608,7 +608,7 @@
         "No_celltypes": 22,
         "source": "https://doi.org/10.1038/s41593-017-0056-2",
         "tissue": "dentate gyrus",
-        "species": "mouse",
+        "species": "Mus musculus",
         "displayName": "Mouse_Postnatal_DentateGyrus v1"
     },
     {
@@ -620,7 +620,7 @@
         "No_celltypes": 334,
         "source": "https://doi.org/10.1038/s41586-023-06812-z",
         "tissue": "whole brain",
-        "species": "mouse",
+        "species": "Mus musculus",
         "displayName": "Mouse_Whole_Brain v1"
     },
     {
