@@ -11,8 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
 import CellTypistAnnotate from './CellTypistAnnotate';
 
-// TODO tooltips are kind fo big and cover the main part,
-// let's make them take alittle bit longer to show up and also appear on the right or left
 const ScTypeTooltipText = (
   <>
     Uses ScType, a marker gene-based tool developed by Aleksandr Ianevski et al.
@@ -101,6 +99,10 @@ const annotationTools = {
       'Adrenal glands', 'Thyroid', 'Parathyroid glands', 'Urinary bladder',
     ],
   },
+  celltypist: {
+    label: 'CellTypist',
+    tooltip: 'Runs CellTypist cell type annotation.',
+  },
 };
 
 const speciesOptions = [
@@ -135,7 +137,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
         }}
       >
         {Object.entries(annotationTools).map(([key, tool]) => (
-          <Tooltip title={tool.tooltip} key={key}>
+          <Tooltip title={tool.tooltip} key={key} placement='left' mouseEnterDelay={0.5}>
             <Radio value={key}>{tool.label}</Radio>
           </Tooltip>
         ))}
