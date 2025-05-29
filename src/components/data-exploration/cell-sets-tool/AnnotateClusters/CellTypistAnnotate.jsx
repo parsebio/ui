@@ -12,7 +12,7 @@ import celltypistModels from 'components/data-exploration/cell-sets-tool/Annotat
 // TODO cleanup, no need for this object
 const annotationTools = {
   celltypist: {
-    label: 'CellTypist',
+    value: 'CellTypist',
   },
 };
 
@@ -136,7 +136,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           };
           dispatch(runCellSetsAnnotation(
             experimentId,
-            annotationTools.celltypist.label,
+            annotationTools.celltypist.value,
             methodParams,
           ));
           onRunAnnotation();
