@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
 import CellTypistAnnotate from './CellTypistAnnotate';
 
+// TODO tooltips are kind fo big and cover the main part,
+// let's make them take alittle bit longer to show up and also appear on the right or left
 const ScTypeTooltipText = (
   <>
     Uses ScType, a marker gene-based tool developed by Aleksandr Ianevski et al.
@@ -170,36 +172,36 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
               onChange={setTissue}
             />
           </Space>
+          {!allClustersValid && (
+            <Alert
+              message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
+              type='info'
+              showIcon
+            />
+          )}
+
+          <Button
+            onClick={() => {
+              const methodParams = {
+                species,
+                tissue,
+              };
+
+              dispatch(runCellSetsAnnotation(
+                experimentId,
+                annotationTools[selectedTool].label,
+                methodParams,
+              ));
+              onRunAnnotation();
+            }}
+            disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}
+            style={{ marginTop: '20px' }}
+          >
+            Compute
+          </Button>
         </>
       )}
 
-      {!allClustersValid && (
-        <Alert
-          message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
-          type='info'
-          showIcon
-        />
-      )}
-
-      <Button
-        onClick={() => {
-          const methodParams = {
-            species,
-            tissue,
-          };
-
-          dispatch(runCellSetsAnnotation(
-            experimentId,
-            annotationTools[selectedTool].label,
-            methodParams,
-          ));
-          onRunAnnotation();
-        }}
-        disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}
-        style={{ marginTop: '20px' }}
-      >
-        Compute
-      </Button>
     </Space>
   );
 };
