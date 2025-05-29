@@ -11,7 +11,7 @@ import { getCellSets } from 'redux/selectors';
 
 const annotationTools = {
   sctype: {
-    label: 'ScType',
+    value: 'ScType',
     tissueOptions: [
       'Immune system', 'Pancreas', 'Liver', 'Eye', 'Kidney', 'Brain',
       'Lung', 'Adrenal', 'Heart', 'Intestine', 'Muscle', 'Placenta',
@@ -19,7 +19,7 @@ const annotationTools = {
     ],
   },
   decoupler: {
-    label: 'Decoupler',
+    value: 'Decoupler',
     tissueOptions: [
       'Immune system', 'Oral cavity', 'Brain', 'Kidney', 'Reproductive',
       'Epithelium', 'GI tract', 'Thymus', 'Olfactory system', 'Placenta',
@@ -92,7 +92,7 @@ const ScTypeAndDecouplerAnnotate = ({ experimentId, onRunAnnotation, selectedToo
 
           dispatch(runCellSetsAnnotation(
             experimentId,
-            annotationTools[selectedTool].label,
+            annotationTools[selectedTool].value,
             methodParams,
           ));
           onRunAnnotation();
