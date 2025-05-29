@@ -39,6 +39,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     () => _.uniq(celltypistModelList.map((m) => m.species)).sort(),
     [celltypistModelList],
   );
+
   const ctTissueOptions = useMemo(
     () => {
       if (!ctSpecies) return [];
@@ -49,6 +50,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     },
     [celltypistModelList, ctSpecies],
   );
+
   const ctModelOptions = useMemo(
     () => {
       if (!ctSpecies || !ctTissue) return [];
@@ -58,6 +60,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     },
     [celltypistModelList, ctSpecies, ctTissue],
   );
+
   const selectedCtModelObj = useMemo(
     () => celltypistModelList.find(
       (m) => m.display_name === ctModel && m.species === ctSpecies && m.tissue === ctTissue,
