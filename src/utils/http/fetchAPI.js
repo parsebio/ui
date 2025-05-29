@@ -34,6 +34,7 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
   console.log(JSON.stringify(parameters));
 
   parameters.headers.Authorization = authJWT;
+  parameters.headers.authorization = authJWT;
 
   console.log('parametersPostDebug');
   console.log(JSON.stringify(parameters));
