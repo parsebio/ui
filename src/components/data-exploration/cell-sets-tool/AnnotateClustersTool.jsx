@@ -101,10 +101,6 @@ const annotationTools = {
       'Adrenal glands', 'Thyroid', 'Parathyroid glands', 'Urinary bladder',
     ],
   },
-  celltypist: {
-    label: 'CellTypist',
-    tooltip: 'Runs CellTypist cell type annotation.',
-  },
 };
 
 const speciesOptions = [
