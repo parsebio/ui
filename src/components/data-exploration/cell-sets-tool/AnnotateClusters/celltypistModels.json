@@ -7,7 +7,7 @@
         "details": "immune sub-populations combined from 20 tissues of 18 studies",
         "No_celltypes": 98,
         "source": "https://doi.org/10.1126/science.abl5197",
-        "tissue": "immune system",
+        "tissue": "Immune system",
         "species": "Homo sapiens (human)",
         "displayName": "Immune_All_Low v2"
     },
@@ -19,7 +19,7 @@
         "details": "immune populations combined from 20 tissues of 18 studies",
         "No_celltypes": 32,
         "source": "https://doi.org/10.1126/science.abl5197",
-        "tissue": "immune system",
+        "tissue": "Immune system",
         "species": "Homo sapiens (human)",
         "displayName": "Immune_All_High v2"
     },
@@ -31,7 +31,7 @@
         "details": "peripheral blood mononuclear cell types from COVID-19 patients and healthy controls",
         "No_celltypes": 20,
         "source": "https://doi.org/10.1038/s41591-020-0944-y",
-        "tissue": "blood",
+        "tissue": "Blood",
         "species": "Homo sapiens (human)",
         "displayName": "Adult_COVID19_PBMC v1"
     },
@@ -43,7 +43,7 @@
         "details": "cell types from the hippocampus of adult cynomolgus monkeys (Macaca fascicularis)",
         "No_celltypes": 34,
         "source": "https://doi.org/10.1038/s41593-022-01073-x",
-        "tissue": "hippocampus",
+        "tissue": "Hippocampus",
         "species": "Macaca fascicularis (cynomolgus macaque)",
         "displayName": "Adult_CynomolgusMacaque_Hippocampus v1"
     },
@@ -55,7 +55,7 @@
         "details": "cell types and subtypes (10x-based) from the adult human middle temporal gyrus",
         "No_celltypes": 127,
         "source": "celltypes.brain-map.org/rnaseq",
-        "tissue": "middle temporal gyrus",
+        "tissue": "Middle temporal gyrus",
         "species": "Homo sapiens (human)",
         "displayName": "Adult_Human_MTG v1"
     },
@@ -67,7 +67,7 @@
         "details": "cell types from pancreatic islets of healthy adult humans",
         "No_celltypes": 12,
         "source": "https://doi.org/10.1016/j.molmet.2022.101595",
-        "tissue": "pancreatic islets",
+        "tissue": "Pancreatic islets",
         "species": "Homo sapiens (human)",
         "displayName": "Adult_Human_PancreaticIslet v1"
     },
@@ -79,7 +79,7 @@
         "details": "cell types and subtypes from the adult human dorsolateral prefrontal cortex",
         "No_celltypes": 113,
         "source": "https://doi.org/10.1126/science.abo7257",
-        "tissue": "dorsolateral prefrontal cortex",
+        "tissue": "Dorsolateral prefrontal cortex",
         "species": "Homo sapiens (human)",
         "displayName": "Adult_Human_PrefrontalCortex v1"
     },
@@ -91,7 +91,7 @@
         "details": "cell types from human healthy adult skin",
         "No_celltypes": 34,
         "source": "https://doi.org/10.1126/science.aba6500",
-        "tissue": "skin",
+        "tissue": "Skin",
         "species": "Homo sapiens (human)",
         "displayName": "Adult_Human_Skin v1"
     },
@@ -103,7 +103,7 @@
         "details": "vascular populations combined from multiple adult human organs",
         "No_celltypes": 42,
         "source": "https://doi.org/10.1038/s41591-024-03376-x",
-        "tissue": "vascular system",
+        "tissue": "Vascular system",
         "species": "Homo sapiens (human)",
         "displayName": "Adult_Human_Vascular v1"
     },
@@ -115,7 +115,7 @@
         "details": "cell types in the adult mouse gut combined from eight datasets",
         "No_celltypes": 126,
         "source": "https://doi.org/10.1038/s41586-024-07251-0",
-        "tissue": "gut",
+        "tissue": "Gut",
         "species": "Mus musculus (mouse)",
         "displayName": "Adult_Mouse_Gut v2"
     },
@@ -127,7 +127,7 @@
         "details": "cell types from the olfactory bulb of adult mice",
         "No_celltypes": 40,
         "source": "https://doi.org/10.1016/j.celrep.2018.11.034",
-        "tissue": "olfactory bulb",
+        "tissue": "Olfactory bulb",
         "species": "Mus musculus (mouse)",
         "displayName": "Adult_Mouse_OlfactoryBulb v1"
     },
@@ -139,7 +139,7 @@
         "details": "cell types from the adult pig hippocampus",
         "No_celltypes": 13,
         "source": "https://doi.org/10.1016/j.neuron.2021.10.036",
-        "tissue": "hippocampus",
+        "tissue": "Hippocampus",
         "species": "Sus scrofa (pig)",
         "displayName": "Adult_Pig_Hippocampus v1"
     },
@@ -151,7 +151,7 @@
         "details": "cell types from the hippocampus of adult rhesus monkeys (Macaca mulatta)",
         "No_celltypes": 14,
         "source": "https://doi.org/10.1016/j.neuron.2021.10.036",
-        "tissue": "hippocampus",
+        "tissue": "Hippocampus",
         "species": "Macaca mulatta (rhesus macaque)",
         "displayName": "Adult_RhesusMacaque_Hippocampus v1"
     },
@@ -163,7 +163,7 @@
         "details": "cell types from the lungs of 16 SARS-CoV-2 infected COVID-19 autopsy adult donors",
         "No_celltypes": 34,
         "source": "https://doi.org/10.1038/s41586-021-03570-8",
-        "tissue": "lung",
+        "tissue": "Lung",
         "species": "Homo sapiens (human)",
         "displayName": "Autopsy_COVID19_Lung v1"
     },
@@ -175,7 +175,7 @@
         "details": "detailed blood cell states from 16 individuals after being challenged with SARS-CoV-2",
         "No_celltypes": 83,
         "source": "https://doi.org/10.1038/s41586-024-07575-x",
-        "tissue": "blood",
+        "tissue": "Blood",
         "species": "Homo sapiens (human)",
         "displayName": "COVID19_HumanChallenge_Blood v1"
     },
@@ -187,7 +187,7 @@
         "details": "immune subtypes from lung and blood of COVID-19 patients and healthy controls",
         "No_celltypes": 64,
         "source": "https://doi.org/10.1016/j.cell.2021.01.053",
-        "tissue": "lung, blood",
+        "tissue": "Lung, blood",
         "species": "Homo sapiens (human)",
         "displayName": "COVID19_Immune_Landscape v1"
     },
@@ -199,7 +199,7 @@
         "details": "cell types from the adult human breast",
         "No_celltypes": 58,
         "source": "https://doi.org/10.1038/s41586-023-06252-9",
-        "tissue": "breast",
+        "tissue": "Breast",
         "species": "Homo sapiens (human)",
         "displayName": "Cells_Adult_Breast v1"
     },
@@ -211,7 +211,7 @@
         "details": "cell types from human embryonic and fetal lungs",
         "No_celltypes": 144,
         "source": "https://doi.org/10.1016/j.cell.2022.11.005",
-        "tissue": "lung",
+        "tissue": "Lung",
         "species": "Homo sapiens (human)",
         "displayName": "Cells_Fetal_Lung v2"
     },
@@ -223,7 +223,7 @@
         "details": "tonsillar cell types from humans (3-65 years)",
         "No_celltypes": 117,
         "source": "https://doi.org/10.1016/j.immuni.2024.01.006",
-        "tissue": "tonsil",
+        "tissue": "Tonsil",
         "species": "Homo sapiens (human)",
         "displayName": "Cells_Human_Tonsil v1"
     },
@@ -235,7 +235,7 @@
         "details": "intestinal cells from fetal, pediatric (healthy and Crohn's disease) and adult human gut",
         "No_celltypes": 134,
         "source": "https://doi.org/10.1038/s41586-021-03852-1",
-        "tissue": "intestinal tract",
+        "tissue": "Intestinal tract",
         "species": "Homo sapiens (human)",
         "displayName": "Cells_Intestinal_Tract v1"
     },
@@ -247,7 +247,7 @@
         "details": "cell populations from scRNA-seq of five locations of the human lungs and airways",
         "No_celltypes": 78,
         "source": "https://doi.org/10.1101/2021.11.26.470108",
-        "tissue": "lung, airway",
+        "tissue": "Lung, airway",
         "species": "Homo sapiens (human)",
         "displayName": "Cells_Lung_Airway v4"
     },
@@ -259,7 +259,7 @@
         "details": "cell types from the first-trimester developing human brain",
         "No_celltypes": 129,
         "source": "https://doi.org/10.1126/science.adf1226",
-        "tissue": "brain",
+        "tissue": "Brain",
         "species": "Homo sapiens (human)",
         "displayName": "Developing_Human_Brain v1"
     },
@@ -271,7 +271,7 @@
         "details": "cell types of human gonadal and adjacent extragonadal tissue from the first and second trimesters of gestation",
         "No_celltypes": 53,
         "source": "https://doi.org/10.1038/s41586-022-04918-4",
-        "tissue": "gonads",
+        "tissue": "Gonads",
         "species": "Homo sapiens (human)",
         "displayName": "Developing_Human_Gonads v1"
     },
@@ -283,7 +283,7 @@
         "details": "cell types from the developing human hippocampus",
         "No_celltypes": 15,
         "source": "https://doi.org/10.1038/s41586-019-1917-5",
-        "tissue": "hippocampus",
+        "tissue": "Hippocampus",
         "species": "Homo sapiens (human)",
         "displayName": "Developing_Human_Hippocampus v1"
     },
@@ -295,7 +295,7 @@
         "details": "cell types of five endoderm-derived organs in developing humans from 7\u201321 post-conception weeks",
         "No_celltypes": 27,
         "source": "https://doi.org/10.1016/j.cell.2021.04.028",
-        "tissue": "endoderm-derived organs",
+        "tissue": "Endoderm-derived organs",
         "species": "Homo sapiens (human)",
         "displayName": "Developing_Human_Organs v1"
     },
@@ -307,7 +307,7 @@
         "details": "cell populations in embryonic, fetal, pediatric, and adult stages of the human thymus",
         "No_celltypes": 55,
         "source": "https://doi.org/10.1126/science.aay3224",
-        "tissue": "thymus",
+        "tissue": "Thymus",
         "species": "Homo sapiens (human)",
         "displayName": "Developing_Human_Thymus v1"
     },
@@ -319,7 +319,7 @@
         "details": "cell types from the embryonic mouse brain between gastrulation and birth",
         "No_celltypes": 174,
         "source": "https://doi.org/10.1038/s41586-021-03775-x",
-        "tissue": "brain",
+        "tissue": "Brain",
         "species": "Mus musculus (mouse)",
         "displayName": "Developing_Mouse_Brain v1"
     },
@@ -331,7 +331,7 @@
         "details": "cell types from the mouse hippocampus at postnatal day 7",
         "No_celltypes": 11,
         "source": "https://doi.org/10.1038/s41467-020-20343-5",
-        "tissue": "hippocampus",
+        "tissue": "Hippocampus",
         "species": "Mus musculus (mouse)",
         "displayName": "Developing_Mouse_Hippocampus v1"
     },
@@ -343,7 +343,7 @@
         "details": "cell types of human fetal adrenal glands from 8 to 14 post-conceptional weeks",
         "No_celltypes": 9,
         "source": "https://doi.org/10.1016/j.ccell.2020.08.014",
-        "tissue": "adrenal glands",
+        "tissue": "Adrenal glands",
         "species": "Homo sapiens (human)",
         "displayName": "Fetal_Human_AdrenalGlands v1"
     },
@@ -355,7 +355,7 @@
         "details": "pancreatic cell types from human embryos at 9-19 weeks post conception",
         "No_celltypes": 19,
         "source": "https://doi.org/10.1038/s41422-021-00486-w",
-        "tissue": "pancreas",
+        "tissue": "Pancreas",
         "species": "Homo sapiens (human)",
         "displayName": "Fetal_Human_Pancreas v1"
     },
@@ -367,7 +367,7 @@
         "details": "cell types of human fetal pituitaries from 7 to 25 weeks postfertilization",
         "No_celltypes": 14,
         "source": "https://doi.org/10.1038/s41467-020-19012-4",
-        "tissue": "pituitary",
+        "tissue": "Pituitary",
         "species": "Homo sapiens (human)",
         "displayName": "Fetal_Human_Pituitary v1"
     },
@@ -379,7 +379,7 @@
         "details": "cell types from human fetal neural retina and retinal pigment epithelium",
         "No_celltypes": 25,
         "source": "https://doi.org/10.1371/journal.pbio.3000365",
-        "tissue": "retina",
+        "tissue": "Retina",
         "species": "Homo sapiens (human)",
         "displayName": "Fetal_Human_Retina v1"
     },
@@ -391,7 +391,7 @@
         "details": "cell types from developing human fetal skin",
         "No_celltypes": 14,
         "source": "https://doi.org/10.1126/science.aba6500",
-        "tissue": "skin",
+        "tissue": "Skin",
         "species": "Homo sapiens (human)",
         "displayName": "Fetal_Human_Skin v1"
     },
@@ -403,7 +403,7 @@
         "details": "cell types from eight anatomical regions of the healthy adult human heart",
         "No_celltypes": 75,
         "source": "https://doi.org/10.1038/s41586-023-06311-1",
-        "tissue": "heart",
+        "tissue": "Heart",
         "species": "Homo sapiens (human)",
         "displayName": "Healthy_Adult_Heart v1"
     },
@@ -415,7 +415,7 @@
         "details": "peripheral blood mononuclear cell types from healthy and COVID-19 individuals",
         "No_celltypes": 51,
         "source": "https://doi.org/10.1038/s41591-021-01329-2",
-        "tissue": "blood",
+        "tissue": "Blood",
         "species": "Homo sapiens (human)",
         "displayName": "Healthy_COVID19_PBMC v1"
     },
@@ -427,7 +427,7 @@
         "details": "cell types from scRNA-seq and snRNA-seq of the adult human liver",
         "No_celltypes": 17,
         "source": "https://doi.org/10.1016/j.cell.2021.12.018",
-        "tissue": "liver",
+        "tissue": "Liver",
         "species": "Homo sapiens (human)",
         "displayName": "Healthy_Human_Liver v1"
     },
@@ -439,7 +439,7 @@
         "details": "cell types from scRNA-seq and snRNA-seq of the healthy murine liver",
         "No_celltypes": 17,
         "source": "https://doi.org/10.1016/j.cell.2021.12.018",
-        "tissue": "liver",
+        "tissue": "Liver",
         "species": "Mus musculus (mouse)",
         "displayName": "Healthy_Mouse_Liver v1"
     },
@@ -451,7 +451,7 @@
         "details": "cell types from the hippocampus of adult and aged humans",
         "No_celltypes": 15,
         "source": "https://doi.org/10.1038/s41586-022-04912-w",
-        "tissue": "hippocampus",
+        "tissue": "Hippocampus",
         "species": "Homo sapiens (human)",
         "displayName": "Human_AdultAged_Hippocampus v1"
     },
@@ -463,7 +463,7 @@
         "details": "cell types of colon tissues from patients with colorectal cancer",
         "No_celltypes": 36,
         "source": "https://doi.org/10.1038/s41588-020-0636-z",
-        "tissue": "colon",
+        "tissue": "Colon",
         "species": "Homo sapiens (human)",
         "displayName": "Human_Colorectal_Cancer v1"
     },
@@ -475,7 +475,7 @@
         "details": "cell types from human fetal retina",
         "No_celltypes": 16,
         "source": "https://doi.org/10.1016/j.celrep.2020.01.007",
-        "tissue": "retina",
+        "tissue": "Retina",
         "species": "Homo sapiens (human)",
         "displayName": "Human_Developmental_Retina v1"
     },
@@ -487,7 +487,7 @@
         "details": "cell types of the human yolk sac from 4-8 post-conception weeks",
         "No_celltypes": 49,
         "source": "https://doi.org/10.1126/science.add7564",
-        "tissue": "yolk sac",
+        "tissue": "Yolk sac",
         "species": "Homo sapiens (human)",
         "displayName": "Human_Embryonic_YolkSac v1"
     },
@@ -499,7 +499,7 @@
         "details": "endometrial cell types integrated from seven datasets across the menstrual cycle",
         "No_celltypes": 36,
         "source": "https://doi.org/10.1038/s41588-024-01873-w",
-        "tissue": "endometrium",
+        "tissue": "Endometrium",
         "species": "Homo sapiens (human)",
         "displayName": "Human_Endometrium_Atlas v1"
     },
@@ -511,7 +511,7 @@
         "details": "cell types from idiopathic pulmonary fibrosis, chronic obstructive pulmonary disease, and healthy lungs of adult humans",
         "No_celltypes": 38,
         "source": "https://doi.org/10.1126/sciadv.aba1983",
-        "tissue": "lung",
+        "tissue": "Lung",
         "species": "Homo sapiens (human)",
         "displayName": "Human_IPF_Lung v1"
     },
@@ -523,7 +523,7 @@
         "details": "cell types from the adult human anterior and posterior hippocampus",
         "No_celltypes": 24,
         "source": "https://doi.org/10.1016/j.neuron.2021.05.003",
-        "tissue": "hippocampus",
+        "tissue": "Hippocampus",
         "species": "Homo sapiens (human)",
         "displayName": "Human_Longitudinal_Hippocampus v1"
     },
@@ -535,7 +535,7 @@
         "details": "integrated Human Lung Cell Atlas (HLCA) combining multiple datasets of the healthy respiratory system",
         "No_celltypes": 61,
         "source": "https://doi.org/10.1038/s41591-023-02327-2",
-        "tissue": "lung",
+        "tissue": "Lung",
         "species": "Homo sapiens (human)",
         "displayName": "Human_Lung_Atlas v2"
     },
@@ -547,7 +547,7 @@
         "details": "cell types from different forms of pulmonary fibrosis lungs of adult humans",
         "No_celltypes": 31,
         "source": "https://doi.org/10.1126/sciadv.aba1972",
-        "tissue": "lung",
+        "tissue": "Lung",
         "species": "Homo sapiens (human)",
         "displayName": "Human_PF_Lung v1"
     },
@@ -559,7 +559,7 @@
         "details": "cell types from first-trimester human placentas with matched maternal blood and decidua",
         "No_celltypes": 32,
         "source": "https://doi.org/10.1038/s41586-018-0698-6",
-        "tissue": "placenta",
+        "tissue": "Placenta",
         "species": "Homo sapiens (human)",
         "displayName": "Human_Placenta_Decidua v1"
     },
@@ -571,7 +571,7 @@
         "details": "cell types from the lungs of individuals who died of COVID-19 and control individuals",
         "No_celltypes": 41,
         "source": "https://doi.org/10.1038/s41586-021-03569-1",
-        "tissue": "lung",
+        "tissue": "Lung",
         "species": "Homo sapiens (human)",
         "displayName": "Lethal_COVID19_Lung v1"
     },
@@ -583,7 +583,7 @@
         "details": "cell types from the dentate gyrus in perinatal, juvenile, and adult mice",
         "No_celltypes": 24,
         "source": "https://doi.org/10.1038/s41593-017-0056-2",
-        "tissue": "dentate gyrus",
+        "tissue": "Dentate gyrus",
         "species": "Mus musculus (mouse)",
         "displayName": "Mouse_Dentate_Gyrus v1"
     },
@@ -595,7 +595,7 @@
         "details": "cell types from the adult mouse isocortex (neocortex) and hippocampal formation",
         "No_celltypes": 42,
         "source": "https://doi.org/10.1016/j.cell.2021.04.021",
-        "tissue": "isocortex, hippocampus",
+        "tissue": "Isocortex, hippocampus",
         "species": "Mus musculus (mouse)",
         "displayName": "Mouse_Isocortex_Hippocampus v1"
     },
@@ -607,7 +607,7 @@
         "details": "cell types from the mouse dentate gyrus in postnatal days 12-35",
         "No_celltypes": 22,
         "source": "https://doi.org/10.1038/s41593-017-0056-2",
-        "tissue": "dentate gyrus",
+        "tissue": "Dentate gyrus",
         "species": "Mus musculus (mouse)",
         "displayName": "Mouse_Postnatal_DentateGyrus v1"
     },
@@ -619,7 +619,7 @@
         "details": "cell types from the whole adult mouse brain",
         "No_celltypes": 334,
         "source": "https://doi.org/10.1038/s41586-023-06812-z",
-        "tissue": "whole brain",
+        "tissue": "Whole brain",
         "species": "Mus musculus (mouse)",
         "displayName": "Mouse_Whole_Brain v1"
     },
@@ -631,7 +631,7 @@
         "details": "cell populations from snRNA-seq of five locations of the human lungs and airways",
         "No_celltypes": 78,
         "source": "https://doi.org/10.1101/2021.11.26.470108",
-        "tissue": "lung, airway",
+        "tissue": "Lung, airway",
         "species": "Homo sapiens (human)",
         "displayName": "Nuclei_Lung_Airway v4"
     },
@@ -643,7 +643,7 @@
         "details": "stromal and immune populations from the human fetus",
         "No_celltypes": 138,
         "source": "https://doi.org/10.1126/science.abo0510",
-        "tissue": "stromal, immune",
+        "tissue": "Stromal, immune",
         "species": "Homo sapiens (human)",
         "displayName": "Pan_Fetal_Human v2"
     }
