@@ -27,7 +27,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   ), [celltypistModels]);
 
   const tissueOptions = useMemo(() => {
-    if (!selectedSpecies) return [];
+    if (_.isNil(selectedSpecies)) return [];
 
     return _.uniq(
       celltypistModels.filter((model) => model.species === selectedSpecies)
@@ -35,16 +35,14 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     ).sort();
   }, [celltypistModels, selectedSpecies]);
 
-  const modelOptions = useMemo(() => {
-    if (!(selectedSpecies && selectedTissue)) return [];
-
-    return celltypistModels
+  const modelOptions = useMemo(() => (
+    celltypistModels
       .filter((model) => model.species === selectedSpecies && model.tissue === selectedTissue)
       .map(({ displayName }) => ({
         label: <Tooltipped text={displayName} />,
         value: displayName,
-      }));
-  }, [celltypistModels, selectedSpecies, selectedTissue]);
+      }))
+  ), [celltypistModels, selectedSpecies, selectedTissue]);
 
   const selectedModelObj = useMemo(() => (
     celltypistModels.find((model) => (
@@ -106,7 +104,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           disabled={!selectedTissue}
         />
       </Space>
-      {selectedModelObj && selectedModelObj.source && (
+      {selectedModelObj?.source && (
         <div style={{ marginTop: 8 }}>
           Source:
           <br />
@@ -120,16 +118,15 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
         onClick={() => {
           const CellTypistUrlPrefix = 'https://celltypist.cog.sanger.ac.uk/models/';
           let modelKey = null;
-          if (
-            selectedModelObj
-            && selectedModelObj.url
-            && selectedModelObj.url.startsWith(CellTypistUrlPrefix)
-          ) {
+
+          if (selectedModelObj?.url?.startsWith(CellTypistUrlPrefix)) {
             modelKey = selectedModelObj.url.substring(CellTypistUrlPrefix.length);
           }
+
           const methodParams = {
             modelKey,
           };
+
           dispatch(runCellSetsAnnotation(
             experimentId,
             annotationTools.celltypist.value,
