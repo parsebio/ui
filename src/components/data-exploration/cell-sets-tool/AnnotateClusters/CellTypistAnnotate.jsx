@@ -23,39 +23,34 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   const [selectedTissue, setSelectedTissue] = useState(null);
   const [selectedModel, setSelectedModel] = useState(null);
 
-  const celltypistModelList = useMemo(() => (
-    (celltypistModels.models || [])
-      .filter((model) => model.display_name && model.species && model.tissue)
-  ), []);
-
   const speciesOptions = useMemo(() => (
-    _.uniq(celltypistModelList.map((model) => model.species)).sort()
-  ), [celltypistModelList]);
+    _.uniq(celltypistModels.map((model) => model.species)).sort()
+  ), [celltypistModels]);
 
   const tissueOptions = useMemo(() => {
     if (!selectedSpecies) return [];
 
     return _.uniq(
-      celltypistModelList.filter((model) => model.species === selectedSpecies)
+      celltypistModels.filter((model) => model.species === selectedSpecies)
         .map((model) => model.tissue),
     ).sort();
-  }, [celltypistModelList, selectedSpecies]);
+  }, [celltypistModels, selectedSpecies]);
 
   const modelOptions = useMemo(() => {
     if (!(selectedSpecies && selectedTissue)) return [];
 
-    return celltypistModelList
+    return celltypistModels
       .filter((model) => model.species === selectedSpecies && model.tissue === selectedTissue)
       .map((model) => ({ label: model.display_name, value: model.display_name }));
-  }, [celltypistModelList, selectedSpecies, selectedTissue]);
+  }, [celltypistModels, selectedSpecies, selectedTissue]);
 
   const selectedModelObj = useMemo(() => (
-    celltypistModelList.find((model) => (
+    celltypistModels.find((model) => (
       model.display_name === selectedModel
       && model.species === selectedSpecies
       && model.tissue === selectedTissue
     ))
-  ), [celltypistModelList, selectedModel, selectedSpecies, selectedTissue]);
+  ), [celltypistModels, selectedModel, selectedSpecies, selectedTissue]);
 
   useEffect(() => {
     setSelectedTissue(null);
