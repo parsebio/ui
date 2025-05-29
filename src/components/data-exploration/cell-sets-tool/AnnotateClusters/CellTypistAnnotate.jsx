@@ -45,12 +45,8 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   ), [selectedSpecies, selectedTissue]);
 
   const selectedModel = useMemo(() => (
-    celltypistModels.find((model) => (
-      model.displayName === selectedModelName
-      && model.species === selectedSpecies
-      && model.tissue === selectedTissue
-    ))
-  ), [selectedModelName, selectedSpecies, selectedTissue]);
+    celltypistModels.find((model) => model.displayName === selectedModelName)
+  ), [selectedModelName]);
 
   useEffect(() => {
     setSelectedTissue(null);
