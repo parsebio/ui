@@ -98,10 +98,6 @@ const annotationTools = {
       'Adrenal glands', 'Thyroid', 'Parathyroid glands', 'Urinary bladder',
     ],
   },
-  celltypist: {
-    label: 'CellTypist',
-    tooltip: 'Runs CellTypist cell type annotation.',
-  },
 };
 
 const speciesOptions = [
@@ -109,10 +105,8 @@ const speciesOptions = [
   'mouse',
 ];
 
-const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
+const AnnotateClustersTool = ({ experimentId, onRunAnnotation, selectedTool }) => {
   const dispatch = useDispatch();
-
-  const [selectedTool, setSelectedTool] = useState('sctype');
 
   // Shared state for other tools
   const [tissue, setTissue] = useState(null);
@@ -129,8 +123,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
     <Space direction='vertical'>
       <Radio.Group
         value={selectedTool}
-        onChange={(e) => {
-          setSelectedTool(e.target.value);
+        onChange={() => {
           setTissue(null);
           setSpecies(null);
         }}
@@ -204,6 +197,7 @@ AnnotateClustersTool.defaultProps = {};
 AnnotateClustersTool.propTypes = {
   experimentId: PropTypes.string.isRequired,
   onRunAnnotation: PropTypes.func.isRequired,
+  selectedTool: PropTypes.string.isRequired,
 };
 
 export default AnnotateClustersTool;

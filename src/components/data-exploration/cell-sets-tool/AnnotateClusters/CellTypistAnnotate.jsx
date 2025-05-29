@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import {
-  Button, Select, Space, Alert,
+  Button, Select, Space,
 } from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCellSets } from 'redux/selectors';
+import { useDispatch } from 'react-redux';
 import celltypistModels from 'components/data-exploration/cell-sets-tool/AnnotateClusters/celltypistModels.json';
 
+// TODO cleanup, no need for this object
 const annotationTools = {
   celltypist: {
     label: 'CellTypist',
@@ -23,11 +23,6 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   const [ctSpecies, setCtSpecies] = useState(null);
   const [ctTissue, setCtTissue] = useState(null);
   const [ctModel, setCtModel] = useState(null);
-
-  const cellSets = useSelector(getCellSets());
-
-  const allClustersValid = useMemo(() => Object.entries(cellSets.properties)
-    .every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
 
   const celltypistModelList = useMemo(
     () => (celltypistModels.models || [])
@@ -125,13 +120,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           </div>
         )}
       </>
-      {!allClustersValid && (
-        <Alert
-          message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
-          type='info'
-          showIcon
-        />
-      )}
+
       <Button
         onClick={() => {
           const CellTypistUrlPrefix = 'https://celltypist.cog.sanger.ac.uk/models/';
@@ -153,7 +142,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           ));
           onRunAnnotation();
         }}
-        disabled={_.isNil(ctSpecies) || _.isNil(ctTissue) || _.isNil(ctModel) || !allClustersValid}
+        disabled={_.isNil(ctSpecies) || _.isNil(ctTissue) || _.isNil(ctModel)}
         style={{ marginTop: '20px' }}
       >
         Compute

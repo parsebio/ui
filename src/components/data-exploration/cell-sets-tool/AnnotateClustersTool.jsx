@@ -1,12 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 
 import {
-  Button,
-  Radio, Select, Space, Tooltip, Alert,
+  Radio, Select, Space, Tooltip,
 } from 'antd';
-import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
 import CellTypistAnnotate from './AnnotateClusters/CellTypistAnnotate';
@@ -170,33 +167,6 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
               onChange={setTissue}
             />
           </Space>
-          {!allClustersValid && (
-            <Alert
-              message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
-              type='info'
-              showIcon
-            />
-          )}
-
-          <Button
-            onClick={() => {
-              const methodParams = {
-                species,
-                tissue,
-              };
-
-              dispatch(runCellSetsAnnotation(
-                experimentId,
-                annotationTools[selectedTool].label,
-                methodParams,
-              ));
-              onRunAnnotation();
-            }}
-            disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}
-            style={{ marginTop: '20px' }}
-          >
-            Compute
-          </Button>
         </>
       )}
 
