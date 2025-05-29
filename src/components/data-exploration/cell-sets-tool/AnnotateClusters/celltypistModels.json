@@ -8,7 +8,7 @@
         "No_celltypes": 98,
         "source": "https://doi.org/10.1126/science.abl5197",
         "tissue": "immune system",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Immune_All_Low v2"
     },
     {
@@ -20,7 +20,7 @@
         "No_celltypes": 32,
         "source": "https://doi.org/10.1126/science.abl5197",
         "tissue": "immune system",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Immune_All_High v2"
     },
     {
@@ -32,7 +32,7 @@
         "No_celltypes": 20,
         "source": "https://doi.org/10.1038/s41591-020-0944-y",
         "tissue": "blood",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Adult_COVID19_PBMC v1"
     },
     {
@@ -56,7 +56,7 @@
         "No_celltypes": 127,
         "source": "celltypes.brain-map.org/rnaseq",
         "tissue": "middle temporal gyrus",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Adult_Human_MTG v1"
     },
     {
@@ -68,7 +68,7 @@
         "No_celltypes": 12,
         "source": "https://doi.org/10.1016/j.molmet.2022.101595",
         "tissue": "pancreatic islets",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Adult_Human_PancreaticIslet v1"
     },
     {
@@ -80,7 +80,7 @@
         "No_celltypes": 113,
         "source": "https://doi.org/10.1126/science.abo7257",
         "tissue": "dorsolateral prefrontal cortex",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Adult_Human_PrefrontalCortex v1"
     },
     {
@@ -92,7 +92,7 @@
         "No_celltypes": 34,
         "source": "https://doi.org/10.1126/science.aba6500",
         "tissue": "skin",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Adult_Human_Skin v1"
     },
     {
@@ -104,7 +104,7 @@
         "No_celltypes": 42,
         "source": "https://doi.org/10.1038/s41591-024-03376-x",
         "tissue": "vascular system",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Adult_Human_Vascular v1"
     },
     {
@@ -164,7 +164,7 @@
         "No_celltypes": 34,
         "source": "https://doi.org/10.1038/s41586-021-03570-8",
         "tissue": "lung",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Autopsy_COVID19_Lung v1"
     },
     {
@@ -176,7 +176,7 @@
         "No_celltypes": 83,
         "source": "https://doi.org/10.1038/s41586-024-07575-x",
         "tissue": "blood",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "COVID19_HumanChallenge_Blood v1"
     },
     {
@@ -188,7 +188,7 @@
         "No_celltypes": 64,
         "source": "https://doi.org/10.1016/j.cell.2021.01.053",
         "tissue": "lung, blood",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "COVID19_Immune_Landscape v1"
     },
     {
@@ -200,7 +200,7 @@
         "No_celltypes": 58,
         "source": "https://doi.org/10.1038/s41586-023-06252-9",
         "tissue": "breast",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Cells_Adult_Breast v1"
     },
     {
@@ -212,7 +212,7 @@
         "No_celltypes": 144,
         "source": "https://doi.org/10.1016/j.cell.2022.11.005",
         "tissue": "lung",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Cells_Fetal_Lung v2"
     },
     {
@@ -224,7 +224,7 @@
         "No_celltypes": 117,
         "source": "https://doi.org/10.1016/j.immuni.2024.01.006",
         "tissue": "tonsil",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Cells_Human_Tonsil v1"
     },
     {
@@ -236,7 +236,7 @@
         "No_celltypes": 134,
         "source": "https://doi.org/10.1038/s41586-021-03852-1",
         "tissue": "intestinal tract",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Cells_Intestinal_Tract v1"
     },
     {
@@ -248,7 +248,7 @@
         "No_celltypes": 78,
         "source": "https://doi.org/10.1101/2021.11.26.470108",
         "tissue": "lung, airway",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Cells_Lung_Airway v4"
     },
     {
@@ -260,7 +260,7 @@
         "No_celltypes": 129,
         "source": "https://doi.org/10.1126/science.adf1226",
         "tissue": "brain",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Developing_Human_Brain v1"
     },
     {
@@ -272,7 +272,7 @@
         "No_celltypes": 53,
         "source": "https://doi.org/10.1038/s41586-022-04918-4",
         "tissue": "gonads",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Developing_Human_Gonads v1"
     },
     {
@@ -284,7 +284,7 @@
         "No_celltypes": 15,
         "source": "https://doi.org/10.1038/s41586-019-1917-5",
         "tissue": "hippocampus",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Developing_Human_Hippocampus v1"
     },
     {
@@ -296,7 +296,7 @@
         "No_celltypes": 27,
         "source": "https://doi.org/10.1016/j.cell.2021.04.028",
         "tissue": "endoderm-derived organs",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Developing_Human_Organs v1"
     },
     {
@@ -308,7 +308,7 @@
         "No_celltypes": 55,
         "source": "https://doi.org/10.1126/science.aay3224",
         "tissue": "thymus",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Developing_Human_Thymus v1"
     },
     {
@@ -344,7 +344,7 @@
         "No_celltypes": 9,
         "source": "https://doi.org/10.1016/j.ccell.2020.08.014",
         "tissue": "adrenal glands",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Fetal_Human_AdrenalGlands v1"
     },
     {
@@ -356,7 +356,7 @@
         "No_celltypes": 19,
         "source": "https://doi.org/10.1038/s41422-021-00486-w",
         "tissue": "pancreas",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Fetal_Human_Pancreas v1"
     },
     {
@@ -368,7 +368,7 @@
         "No_celltypes": 14,
         "source": "https://doi.org/10.1038/s41467-020-19012-4",
         "tissue": "pituitary",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Fetal_Human_Pituitary v1"
     },
     {
@@ -380,7 +380,7 @@
         "No_celltypes": 25,
         "source": "https://doi.org/10.1371/journal.pbio.3000365",
         "tissue": "retina",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Fetal_Human_Retina v1"
     },
     {
@@ -392,7 +392,7 @@
         "No_celltypes": 14,
         "source": "https://doi.org/10.1126/science.aba6500",
         "tissue": "skin",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Fetal_Human_Skin v1"
     },
     {
@@ -404,7 +404,7 @@
         "No_celltypes": 75,
         "source": "https://doi.org/10.1038/s41586-023-06311-1",
         "tissue": "heart",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Healthy_Adult_Heart v1"
     },
     {
@@ -416,7 +416,7 @@
         "No_celltypes": 51,
         "source": "https://doi.org/10.1038/s41591-021-01329-2",
         "tissue": "blood",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Healthy_COVID19_PBMC v1"
     },
     {
@@ -428,7 +428,7 @@
         "No_celltypes": 17,
         "source": "https://doi.org/10.1016/j.cell.2021.12.018",
         "tissue": "liver",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Healthy_Human_Liver v1"
     },
     {
@@ -452,7 +452,7 @@
         "No_celltypes": 15,
         "source": "https://doi.org/10.1038/s41586-022-04912-w",
         "tissue": "hippocampus",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_AdultAged_Hippocampus v1"
     },
     {
@@ -464,7 +464,7 @@
         "No_celltypes": 36,
         "source": "https://doi.org/10.1038/s41588-020-0636-z",
         "tissue": "colon",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_Colorectal_Cancer v1"
     },
     {
@@ -476,7 +476,7 @@
         "No_celltypes": 16,
         "source": "https://doi.org/10.1016/j.celrep.2020.01.007",
         "tissue": "retina",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_Developmental_Retina v1"
     },
     {
@@ -488,7 +488,7 @@
         "No_celltypes": 49,
         "source": "https://doi.org/10.1126/science.add7564",
         "tissue": "yolk sac",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_Embryonic_YolkSac v1"
     },
     {
@@ -500,7 +500,7 @@
         "No_celltypes": 36,
         "source": "https://doi.org/10.1038/s41588-024-01873-w",
         "tissue": "endometrium",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_Endometrium_Atlas v1"
     },
     {
@@ -512,7 +512,7 @@
         "No_celltypes": 38,
         "source": "https://doi.org/10.1126/sciadv.aba1983",
         "tissue": "lung",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_IPF_Lung v1"
     },
     {
@@ -524,7 +524,7 @@
         "No_celltypes": 24,
         "source": "https://doi.org/10.1016/j.neuron.2021.05.003",
         "tissue": "hippocampus",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_Longitudinal_Hippocampus v1"
     },
     {
@@ -536,7 +536,7 @@
         "No_celltypes": 61,
         "source": "https://doi.org/10.1038/s41591-023-02327-2",
         "tissue": "lung",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_Lung_Atlas v2"
     },
     {
@@ -548,7 +548,7 @@
         "No_celltypes": 31,
         "source": "https://doi.org/10.1126/sciadv.aba1972",
         "tissue": "lung",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_PF_Lung v1"
     },
     {
@@ -560,7 +560,7 @@
         "No_celltypes": 32,
         "source": "https://doi.org/10.1038/s41586-018-0698-6",
         "tissue": "placenta",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Human_Placenta_Decidua v1"
     },
     {
@@ -572,7 +572,7 @@
         "No_celltypes": 41,
         "source": "https://doi.org/10.1038/s41586-021-03569-1",
         "tissue": "lung",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Lethal_COVID19_Lung v1"
     },
     {
@@ -632,7 +632,7 @@
         "No_celltypes": 78,
         "source": "https://doi.org/10.1101/2021.11.26.470108",
         "tissue": "lung, airway",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Nuclei_Lung_Airway v4"
     },
     {
@@ -644,7 +644,7 @@
         "No_celltypes": 138,
         "source": "https://doi.org/10.1126/science.abo0510",
         "tissue": "stromal, immune",
-        "species": "human",
+        "species": "Homo sapiens",
         "displayName": "Pan_Fetal_Human v2"
     }
 ]
