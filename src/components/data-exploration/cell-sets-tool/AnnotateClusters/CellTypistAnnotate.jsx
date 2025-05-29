@@ -64,7 +64,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   return (
     <Space direction='vertical'>
       <>
-        <Space direction='vertical' style={{ width: '100%' }}>
+        <Space direction='vertical' style={{ width: '250px' }}>
           Species:
           <Select
             showSearch
