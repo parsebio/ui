@@ -26,7 +26,7 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
     ...params,
     headers: {
       ...headers,
-      ...(authJWT && { Authorization: `Bearer ${authJWT}` }),
+      ...(authJWT && { authorization: `Bearer ${authJWT}` }),
     },
   };
 
