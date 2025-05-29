@@ -8,13 +8,6 @@ import { useDispatch } from 'react-redux';
 import celltypistModels from 'components/data-exploration/cell-sets-tool/AnnotateClusters/celltypistModels.json';
 import Tooltipped from 'utils/Tooltipped';
 
-// TODO cleanup, no need for this object
-const annotationTools = {
-  celltypist: {
-    value: 'CellTypist',
-  },
-};
-
 const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   const dispatch = useDispatch();
 
@@ -124,7 +117,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
 
           dispatch(runCellSetsAnnotation(
             experimentId,
-            annotationTools.celltypist.value,
+            'CellTypist',
             methodParams,
           ));
           onRunAnnotation();
