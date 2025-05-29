@@ -16,6 +16,12 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
   const authJWT = extras.jwt || await getAuthJWT();
   const parseJson = extras.parseJson ?? true;
 
+  console.log('authJWTDebug');
+  console.log(authJWT);
+
+  console.log('extrasDebug');
+  console.log(extras);
+
   const parameters = {
     ...params,
     headers: {
@@ -23,6 +29,14 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
       ...(authJWT && { Authorization: `Bearer ${authJWT}` }),
     },
   };
+
+  console.log('parametersPreDebug');
+  console.log(JSON.stringify(parameters));
+
+  parameters.headers.Authorization = authJWT;
+
+  console.log('parametersPostDebug');
+  console.log(JSON.stringify(parameters));
 
   const url = getApiEndpoint(extras.uiUrl) + path;
 
