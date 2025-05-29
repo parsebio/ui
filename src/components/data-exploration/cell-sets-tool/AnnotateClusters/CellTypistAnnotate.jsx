@@ -129,7 +129,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           ));
           onRunAnnotation();
         }}
-        disabled={_.isNil(selectedSpecies) || _.isNil(selectedTissue) || _.isNil(selectedModelName)}
+        disabled={[selectedSpecies, selectedTissue, selectedModelName].some(_.isNil)}
         style={{ marginTop: '20px' }}
       >
         Compute
