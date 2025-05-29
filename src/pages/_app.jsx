@@ -110,13 +110,11 @@ const WrappedApp = ({ Component, pageProps }) => {
         : 'localhost';
 
       amplifyConfig.Auth.cookieStorage = {
-        cookieStorage: {
-          domain: domainName,
-          path: '/',
-          expires: 365,
-          secure: process.env.NODE_ENV !== 'development',
-          sameSite: 'strict',
-        },
+        domain: domainName,
+        path: '/',
+        expires: 365,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
       };
 
       Amplify.configure(amplifyConfig);
