@@ -2,16 +2,11 @@ import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import {
-  Button, Select, Space,
-  Typography,
-} from 'antd';
+import { Button, Select, Space } from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch } from 'react-redux';
 import celltypistModels from 'components/data-exploration/cell-sets-tool/AnnotateClusters/celltypistModels.json';
 import Tooltipped from 'utils/Tooltipped';
-
-const { Text } = Typography;
 
 // TODO cleanup, no need for this object
 const annotationTools = {
@@ -70,58 +65,56 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
 
   return (
     <Space direction='vertical'>
-      <>
-        <Space direction='vertical' style={{ width: '250px' }}>
-          Species:
-          <Select
-            showSearch
-            style={{ width: '100%' }}
-            options={speciesOptions.map((option) => ({
-              label: <Tooltipped text={option} />,
-              value: option,
-            }))}
-            value={selectedSpecies}
-            placeholder='Select a species'
-            onChange={setSelectedSpecies}
-          />
-        </Space>
-        <Space direction='vertical' style={{ width: '100%' }}>
-          Tissue:
-          <Select
-            showSearch
-            style={{ width: '100%' }}
-            options={tissueOptions.map((option) => ({
-              label: <Tooltipped text={option} />,
-              value: option,
-            }))}
-            value={selectedTissue}
-            placeholder='Select a tissue type'
-            onChange={setSelectedTissue}
-            disabled={!selectedSpecies}
-          />
-        </Space>
-        <Space direction='vertical' style={{ width: '100%' }}>
-          Model:
-          <Select
-            showSearch
-            style={{ width: '100%' }}
-            options={modelOptions}
-            value={selectedModel}
-            placeholder='Select a model'
-            onChange={setSelectedModel}
-            disabled={!selectedTissue}
-          />
-        </Space>
-        {selectedModelObj && selectedModelObj.source && (
-          <div style={{ marginTop: 8 }}>
-            Source:
-            <br />
-            <a href={selectedModelObj.source} target='_blank' rel='noreferrer'>
-              {selectedModelObj.source}
-            </a>
-          </div>
-        )}
-      </>
+      <Space direction='vertical' style={{ width: '250px' }}>
+        Species:
+        <Select
+          showSearch
+          style={{ width: '100%' }}
+          options={speciesOptions.map((option) => ({
+            label: <Tooltipped text={option} />,
+            value: option,
+          }))}
+          value={selectedSpecies}
+          placeholder='Select a species'
+          onChange={setSelectedSpecies}
+        />
+      </Space>
+      <Space direction='vertical' style={{ width: '100%' }}>
+        Tissue:
+        <Select
+          showSearch
+          style={{ width: '100%' }}
+          options={tissueOptions.map((option) => ({
+            label: <Tooltipped text={option} />,
+            value: option,
+          }))}
+          value={selectedTissue}
+          placeholder='Select a tissue type'
+          onChange={setSelectedTissue}
+          disabled={!selectedSpecies}
+        />
+      </Space>
+      <Space direction='vertical' style={{ width: '100%' }}>
+        Model:
+        <Select
+          showSearch
+          style={{ width: '100%' }}
+          options={modelOptions}
+          value={selectedModel}
+          placeholder='Select a model'
+          onChange={setSelectedModel}
+          disabled={!selectedTissue}
+        />
+      </Space>
+      {selectedModelObj && selectedModelObj.source && (
+        <div style={{ marginTop: 8 }}>
+          Source:
+          <br />
+          <a href={selectedModelObj.source} target='_blank' rel='noreferrer'>
+            {selectedModelObj.source}
+          </a>
+        </div>
+      )}
 
       <Button
         onClick={() => {
