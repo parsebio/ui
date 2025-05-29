@@ -19,9 +19,9 @@ const annotationTools = {
 const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   const dispatch = useDispatch();
 
-  const [ctSpecies, setCtSpecies] = useState(null);
-  const [ctTissue, setCtTissue] = useState(null);
-  const [ctModel, setCtModel] = useState(null);
+  const [selectedSpecies, setSelectedSpecies] = useState(null);
+  const [selectedTissue, setSelectedTissue] = useState(null);
+  const [selectedModel, setSelectedModel] = useState(null);
 
   const celltypistModelList = useMemo(() => (
     (celltypistModels.models || [])
@@ -33,38 +33,38 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   ), [celltypistModelList]);
 
   const tissueOptions = useMemo(() => {
-    if (!ctSpecies) return [];
+    if (!selectedSpecies) return [];
 
     return _.uniq(
-      celltypistModelList.filter((model) => model.species === ctSpecies)
+      celltypistModelList.filter((model) => model.species === selectedSpecies)
         .map((model) => model.tissue),
     ).sort();
-  }, [celltypistModelList, ctSpecies]);
+  }, [celltypistModelList, selectedSpecies]);
 
   const modelOptions = useMemo(() => {
-    if (!(ctSpecies && ctTissue)) return [];
+    if (!(selectedSpecies && selectedTissue)) return [];
 
     return celltypistModelList
-      .filter((model) => model.species === ctSpecies && model.tissue === ctTissue)
+      .filter((model) => model.species === selectedSpecies && model.tissue === selectedTissue)
       .map((model) => ({ label: model.display_name, value: model.display_name }));
-  }, [celltypistModelList, ctSpecies, ctTissue]);
+  }, [celltypistModelList, selectedSpecies, selectedTissue]);
 
   const selectedModelObj = useMemo(() => (
     celltypistModelList.find((model) => (
-      model.display_name === ctModel
-      && model.species === ctSpecies
-      && model.tissue === ctTissue
+      model.display_name === selectedModel
+      && model.species === selectedSpecies
+      && model.tissue === selectedTissue
     ))
-  ), [celltypistModelList, ctModel, ctSpecies, ctTissue]);
+  ), [celltypistModelList, selectedModel, selectedSpecies, selectedTissue]);
 
   useEffect(() => {
-    setCtTissue(null);
-    setCtModel(null);
-  }, [ctSpecies]);
+    setSelectedTissue(null);
+    setSelectedModel(null);
+  }, [selectedSpecies]);
 
   useEffect(() => {
-    setCtModel(null);
-  }, [ctTissue]);
+    setSelectedModel(null);
+  }, [selectedTissue]);
 
   return (
     <Space direction='vertical'>
@@ -75,9 +75,9 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
             showSearch
             style={{ width: '100%' }}
             options={speciesOptions.map((option) => ({ label: option, value: option }))}
-            value={ctSpecies}
+            value={selectedSpecies}
             placeholder='Select a species'
-            onChange={setCtSpecies}
+            onChange={setSelectedSpecies}
           />
         </Space>
         <Space direction='vertical' style={{ width: '100%' }}>
@@ -86,10 +86,10 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
             showSearch
             style={{ width: '100%' }}
             options={tissueOptions.map((option) => ({ label: option, value: option }))}
-            value={ctTissue}
+            value={selectedTissue}
             placeholder='Select a tissue type'
-            onChange={setCtTissue}
-            disabled={!ctSpecies}
+            onChange={setSelectedTissue}
+            disabled={!selectedSpecies}
           />
         </Space>
         <Space direction='vertical' style={{ width: '100%' }}>
@@ -98,10 +98,10 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
             showSearch
             style={{ width: '100%' }}
             options={modelOptions}
-            value={ctModel}
+            value={selectedModel}
             placeholder='Select a model'
-            onChange={setCtModel}
-            disabled={!ctTissue}
+            onChange={setSelectedModel}
+            disabled={!selectedTissue}
           />
         </Space>
         {selectedModelObj && selectedModelObj.source && (
@@ -136,7 +136,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           ));
           onRunAnnotation();
         }}
-        disabled={_.isNil(ctSpecies) || _.isNil(ctTissue) || _.isNil(ctModel)}
+        disabled={_.isNil(selectedSpecies) || _.isNil(selectedTissue) || _.isNil(selectedModel)}
         style={{ marginTop: '20px' }}
       >
         Compute
