@@ -10,6 +10,7 @@ import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
 import celltypistModels from './celltypist.json';
+import CellTypistAnnotate from './CellTypistAnnotate';
 
 const ScTypeTooltipText = (
   <>
@@ -135,29 +136,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
       .filter((m) => m.display_name && m.species && m.tissue),
     [],
   );
-  const ctSpeciesOptions = useMemo(
-    () => _.uniq(celltypistModelList.map((m) => m.species)).sort(),
-    [celltypistModelList],
-  );
-  const ctTissueOptions = useMemo(
-    () => {
-      if (!ctSpecies) return [];
-      return _.uniq(
-        celltypistModelList.filter((m) => m.species === ctSpecies)
-          .map((m) => m.tissue),
-      ).sort();
-    },
-    [celltypistModelList, ctSpecies],
-  );
-  const ctModelOptions = useMemo(
-    () => {
-      if (!ctSpecies || !ctTissue) return [];
-      return celltypistModelList
-        .filter((m) => m.species === ctSpecies && m.tissue === ctTissue)
-        .map((m) => ({ label: m.display_name, value: m.display_name }));
-    },
-    [celltypistModelList, ctSpecies, ctTissue],
-  );
+
   const selectedCtModelObj = useMemo(
     () => celltypistModelList.find(
       (m) => m.display_name === ctModel && m.species === ctSpecies && m.tissue === ctTissue,
@@ -165,7 +144,6 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
     [celltypistModelList, ctModel, ctSpecies, ctTissue],
   );
 
-  // Reset dependent selections if parent changes
   React.useEffect(() => {
     setCtTissue(null);
     setCtModel(null);
@@ -174,14 +152,12 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
     setCtModel(null);
   }, [ctTissue]);
 
-  // --- Render ---
   return (
     <Space direction='vertical'>
       <Radio.Group
         value={selectedTool}
         onChange={(e) => {
           setSelectedTool(e.target.value);
-          // Reset all tool-specific state
           setTissue(null);
           setSpecies(null);
           setCtSpecies(null);
@@ -197,52 +173,7 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
       </Radio.Group>
 
       {selectedTool === 'celltypist' ? (
-        <>
-          <Space direction='vertical' style={{ width: '100%' }}>
-            Species:
-            <Select
-              showSearch
-              style={{ width: '100%' }}
-              options={ctSpeciesOptions.map((option) => ({ label: option, value: option }))}
-              value={ctSpecies}
-              placeholder='Select a species'
-              onChange={setCtSpecies}
-            />
-          </Space>
-          <Space direction='vertical' style={{ width: '100%' }}>
-            Tissue:
-            <Select
-              showSearch
-              style={{ width: '100%' }}
-              options={ctTissueOptions.map((option) => ({ label: option, value: option }))}
-              value={ctTissue}
-              placeholder='Select a tissue type'
-              onChange={setCtTissue}
-              disabled={!ctSpecies}
-            />
-          </Space>
-          <Space direction='vertical' style={{ width: '100%' }}>
-            Model:
-            <Select
-              showSearch
-              style={{ width: '100%' }}
-              options={ctModelOptions}
-              value={ctModel}
-              placeholder='Select a model'
-              onChange={setCtModel}
-              disabled={!ctTissue}
-            />
-          </Space>
-          {selectedCtModelObj && selectedCtModelObj.source && (
-            <div style={{ marginTop: 8 }}>
-              Source:
-              <br />
-              <a href={selectedCtModelObj.source} target='_blank' rel='noreferrer'>
-                {selectedCtModelObj.source}
-              </a>
-            </div>
-          )}
-        </>
+        <CellTypistAnnotate experimentId={experimentId} onRunAnnotation={onRunAnnotation} />
       ) : (
         <>
           <Space direction='vertical' style={{ width: '100%' }}>
