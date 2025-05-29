@@ -9,6 +9,7 @@ import {
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch } from 'react-redux';
 import celltypistModels from 'components/data-exploration/cell-sets-tool/AnnotateClusters/celltypistModels.json';
+import Tooltipped from 'utils/Tooltipped';
 
 const { Text } = Typography;
 
@@ -45,12 +46,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     return celltypistModels
       .filter((model) => model.species === selectedSpecies && model.tissue === selectedTissue)
       .map(({ displayName }) => ({
-
-        label: (
-          <Text ellipsis={{ tooltip: displayName }}>
-            {displayName}
-          </Text>
-        ),
+        label: <Tooltipped text={displayName} />,
         value: displayName,
       }));
   }, [celltypistModels, selectedSpecies, selectedTissue]);
@@ -80,7 +76,10 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           <Select
             showSearch
             style={{ width: '100%' }}
-            options={speciesOptions.map((option) => ({ label: option, value: option }))}
+            options={speciesOptions.map((option) => ({
+              label: <Tooltipped text={option} />,
+              value: option,
+            }))}
             value={selectedSpecies}
             placeholder='Select a species'
             onChange={setSelectedSpecies}
@@ -92,7 +91,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
             showSearch
             style={{ width: '100%' }}
             options={tissueOptions.map((option) => ({
-              label: <Text ellipsis={{ tooltip: option }} style={{ width: '100%' }}>{option}</Text>,
+              label: <Tooltipped text={option} />,
               value: option,
             }))}
             value={selectedTissue}
