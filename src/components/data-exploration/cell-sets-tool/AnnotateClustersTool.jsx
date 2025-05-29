@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCellSets } from 'redux/selectors';
 import celltypistModels from './celltypist.json';
 
-const scTypeTooltipText = (
+const ScTypeTooltipText = (
   <>
     Uses ScType, a marker gene-based tool developed by Aleksandr Ianevski et al.
     It uses a marker genes database which was built using
@@ -37,7 +37,7 @@ const scTypeTooltipText = (
   </>
 );
 
-const decouplerTooltipText = (
+const DecouplerTooltipText = (
   <>
     Uses the
     {' '}
@@ -80,7 +80,7 @@ const decouplerTooltipText = (
 const annotationTools = {
   sctype: {
     label: 'ScType',
-    tooltip: scTypeTooltipText,
+    tooltip: ScTypeTooltipText,
     tissueOptions: [
       'Immune system', 'Pancreas', 'Liver', 'Eye', 'Kidney', 'Brain',
       'Lung', 'Adrenal', 'Heart', 'Intestine', 'Muscle', 'Placenta',
@@ -89,7 +89,7 @@ const annotationTools = {
   },
   decoupler: {
     label: 'Decoupler',
-    tooltip: decouplerTooltipText,
+    tooltip: DecouplerTooltipText,
     tissueOptions: [
       'Immune system', 'Oral cavity', 'Brain', 'Kidney', 'Reproductive',
       'Epithelium', 'GI tract', 'Thymus', 'Olfactory system', 'Placenta',
@@ -100,8 +100,8 @@ const annotationTools = {
     ],
   },
   celltypist: {
-    label: 'Celltypist',
-    tooltip: 'Runs Celltypist cell type annotation.',
+    label: 'CellTypist',
+    tooltip: 'Runs CellTypist cell type annotation.',
   },
 };
 
