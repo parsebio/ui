@@ -105,7 +105,7 @@ const speciesOptions = [
   'mouse',
 ];
 
-const AnnotateClustersTool = ({ experimentId, onRunAnnotation, selectedTool }) => {
+const ScTypeAndDecouplerAnnotate = ({ experimentId, onRunAnnotation, selectedTool }) => {
   const dispatch = useDispatch();
 
   // Shared state for other tools
@@ -192,12 +192,12 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation, selectedTool }) =
   );
 };
 
-AnnotateClustersTool.defaultProps = {};
+ScTypeAndDecouplerAnnotate.defaultProps = {};
 
-AnnotateClustersTool.propTypes = {
+ScTypeAndDecouplerAnnotate.propTypes = {
   experimentId: PropTypes.string.isRequired,
   onRunAnnotation: PropTypes.func.isRequired,
   selectedTool: PropTypes.string.isRequired,
 };
 
-export default AnnotateClustersTool;
+export default ScTypeAndDecouplerAnnotate;

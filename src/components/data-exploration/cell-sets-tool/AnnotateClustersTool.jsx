@@ -1,11 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import {
   Radio, Select, Space, Tooltip,
 } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCellSets } from 'redux/selectors';
+
 import CellTypistAnnotate from './AnnotateClusters/CellTypistAnnotate';
 
 const ScTypeTooltipText = (
@@ -108,18 +107,11 @@ const speciesOptions = [
 ];
 
 const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
-  const dispatch = useDispatch();
-
   const [selectedTool, setSelectedTool] = useState('sctype');
 
   // Shared state for other tools
   const [tissue, setTissue] = useState(null);
   const [species, setSpecies] = useState(null);
-
-  const cellSets = useSelector(getCellSets());
-
-  const allClustersValid = useMemo(() => Object.entries(cellSets.properties)
-    .every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
 
   const currentTool = annotationTools[selectedTool];
 
