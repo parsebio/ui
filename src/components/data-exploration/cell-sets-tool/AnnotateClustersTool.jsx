@@ -284,16 +284,16 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
             // For celltypist, send only the model URL minus the common prefix as 'tissue' param.
             // Species should be null
             const CT_URL_PREFIX = 'https://celltypist.cog.sanger.ac.uk/models/';
-            let modelPath = null;
+            let modelKey = null;
             if (
               selectedCtModelObj
               && selectedCtModelObj.url
               && selectedCtModelObj.url.startsWith(CT_URL_PREFIX)
             ) {
-              modelPath = selectedCtModelObj.url.substring(CT_URL_PREFIX.length);
+              modelKey = selectedCtModelObj.url.substring(CT_URL_PREFIX.length);
             }
             methodParams = {
-              modelKey: modelPath,
+              modelKey,
             };
           } else {
             // for other tools, send species and tissue as params
