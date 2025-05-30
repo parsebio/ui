@@ -34,7 +34,7 @@ import PreloadContent from 'components/PreloadContent';
 import GEM2SLoadingScreen from 'components/GEM2SLoadingScreen';
 import PipelineRedirectToDataProcessing from 'components/PipelineRedirectToDataProcessing';
 
-import { getBackendStatus } from 'redux/selectors';
+import { getBackendStatus, getHasSeuratTechnology } from 'redux/selectors';
 import { loadUser } from 'redux/actions/user';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
@@ -176,10 +176,7 @@ const ContentWrapper = (props) => {
   const currentExperimentId = currentExperimentIdRef.current;
   const experiment = useSelector((state) => state?.experiments[currentExperimentId]);
 
-  const firstSampleId = Object.keys(samples).find(
-    (id) => samples[id].experimentId === currentExperimentId,
-  );
-  const selectedTechnology = firstSampleId ? samples[firstSampleId].type : false;
+  const hasSeuratTechnology = useSelector(getHasSeuratTechnology(currentExperimentId));
 
   const experimentName = experimentData?.experimentName || experiment?.name;
   const secondaryAnalysisName = useSelector(
@@ -208,7 +205,7 @@ const ContentWrapper = (props) => {
   const completedGem2sSteps = backendStatus?.gem2s?.completedSteps;
   const seuratStatusKey = backendStatus?.seurat?.status;
 
-  const isSeurat = seuratStatusKey && selectedTechnology === 'seurat';
+  const isSeurat = seuratStatusKey && hasSeuratTechnology;
 
   const [pipelinesRerunStatus, setPipelinesRerunStatus] = useState(null);
   const seuratRunning = seuratStatusKey === 'RUNNING' && isSeurat;
