@@ -5,6 +5,8 @@ import {
   Radio, Space, Tooltip,
 } from 'antd';
 
+import ScanpyDisabler from 'utils/ScanpyDisabler';
+import SeuratDisabler from 'utils/SeuratDisabler';
 import CellTypistAnnotate from './AnnotateClusters/CellTypistAnnotate';
 import ScTypeAndDecouplerAnnotate from './AnnotateClusters/ScTypeAndDecouplerAnnotate';
 
@@ -78,15 +80,17 @@ const annotationTools = {
   sctype: {
     label: 'ScType',
     tooltip: ScTypeTooltipText,
+    Disabler: ScanpyDisabler,
   },
   decoupler: {
     label: 'Decoupler',
     tooltip: DecouplerTooltipText,
+    Disabler: SeuratDisabler,
   },
   celltypist: {
     label: 'CellTypist',
-    // TODO fill in tooltip
     tooltip: 'Runs CellTypist cell type annotation.',
+    Disabler: SeuratDisabler,
   },
 };
 
@@ -100,12 +104,21 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
         onChange={(e) => {
           setSelectedTool(e.target.value);
         }}
+        style={{ display: 'flex', flexDirection: 'row' }}
       >
-        {Object.entries(annotationTools).map(([key, tool]) => (
-          <Tooltip title={tool.tooltip} key={key} placement='left' mouseEnterDelay={0.5}>
-            <Radio value={key}>{tool.label}</Radio>
-          </Tooltip>
-        ))}
+        {Object.entries(annotationTools).map(([key, tool]) => {
+          const { Disabler } = tool;
+          const radio = (
+            <Tooltip title={tool.tooltip} key={key} placement='left' mouseEnterDelay={0.5}>
+              <Radio value={key}>{tool.label}</Radio>
+            </Tooltip>
+          );
+          return Disabler ? (
+            <Disabler experimentId={experimentId} key={key}>
+              {radio}
+            </Disabler>
+          ) : radio;
+        })}
       </Radio.Group>
 
       {selectedTool === 'celltypist' ? (
