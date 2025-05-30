@@ -76,6 +76,36 @@ const DecouplerTooltipText = (
   </>
 );
 
+const CellTypistTooltipText = (
+  <>
+    Uses CellTypist, an automated scRNA-seq annotation tool based on regularised
+    logistic regression classifiers. More details can be found in the
+    {' '}
+    <a target='_blank' href='https://www.celltypist.org' rel='noreferrer'>
+      CellTypist website
+    </a>
+    .
+    <br />
+    <br />
+    References:
+    Automatic cell-type harmonization and integration across Human Cell Atlas
+    datasets. Cell 186, 5876-5891.e20 (2023).
+    {' '}
+    <a target='_blank' href='https://doi.org/10.1016/j.cell.2023.11.026' rel='noreferrer'>
+      https://doi.org/10.1016/j.cell.2023.11.026
+    </a>
+    ;
+    <br />
+    Cross-tissue immune cell analysis reveals tissue-specific features in humans.
+    Science 376, eabl5197 (2022).
+    {' '}
+    <a target='_blank' href='https://doi.org/10.1126/science.abl5197' rel='noreferrer'>
+      https://doi.org/10.1126/science.abl5197
+    </a>
+    .
+  </>
+);
+
 const annotationTools = {
   sctype: {
     label: 'ScType',
@@ -89,7 +119,7 @@ const annotationTools = {
   },
   celltypist: {
     label: 'CellTypist',
-    tooltip: 'Runs CellTypist cell type annotation.',
+    tooltip: CellTypistTooltipText,
     Disabler: SeuratDisabler,
   },
 };
