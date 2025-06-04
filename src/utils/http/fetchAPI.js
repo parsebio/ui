@@ -38,6 +38,11 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
 
   let response;
   try {
+    axios.interceptors.request.use((config) => {
+      console.log('headersDebug', JSON.stringify(config.headers));
+      return config;
+    });
+
     response = await axios({
       url,
       method: params.method || 'GET',
