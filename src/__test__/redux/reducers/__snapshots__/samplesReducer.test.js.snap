@@ -156,7 +156,28 @@ exports[`samplesReducer Handles experimentMetadataRename correctly 1`] = `
 }
 `;
 
-exports[`samplesReducer Handles samplesValueInMetadataTrackUpdated correctly 1`] = `
+exports[`samplesReducer Handles samplesValueInMetadataTrackUpdated single update, multiple values correctly 1`] = `
+{
+  "asd123": {
+    "metadata": {
+      "metadata-test": "new-value-1",
+    },
+  },
+  "meta": {
+    "error": false,
+    "loading": false,
+    "saving": false,
+    "validating": [],
+  },
+  "qwe234": {
+    "metadata": {
+      "metadata-test": "new-value-2",
+    },
+  },
+}
+`;
+
+exports[`samplesReducer Handles samplesValueInMetadataTrackUpdated single update, single value correctly 1`] = `
 {
   "asd123": {
     "metadata": {
