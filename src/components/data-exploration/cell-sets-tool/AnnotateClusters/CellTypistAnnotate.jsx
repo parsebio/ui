@@ -16,7 +16,10 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   const [selectedModelName, setSelectedModelName] = useState(null);
 
   const speciesOptions = useMemo(() => (
-    _.uniq(celltypistModels.map((model) => model.species)).sort()
+    _.uniq(celltypistModels.map((model) => model.species)).sort().map((option) => ({
+      label: <Tooltipped text={option} />,
+      value: option,
+    }))
   ), []);
 
   const tissueOptions = useMemo(() => {
@@ -25,7 +28,10 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     return _.uniq(
       celltypistModels.filter((model) => model.species === selectedSpecies)
         .map((model) => model.tissue),
-    ).sort();
+    ).sort().map((option) => ({
+      label: <Tooltipped text={option} />,
+      value: option,
+    }));
   }, [selectedSpecies]);
 
   const modelOptions = useMemo(() => (
@@ -56,10 +62,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
         <Select
           showSearch
           style={{ width: '100%' }}
-          options={speciesOptions.map((option) => ({
-            label: <Tooltipped text={option} />,
-            value: option,
-          }))}
+          options={speciesOptions}
           value={selectedSpecies}
           placeholder='Select a species'
           onChange={setSelectedSpecies}
@@ -70,10 +73,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
         <Select
           showSearch
           style={{ width: '100%' }}
-          options={tissueOptions.map((option) => ({
-            label: <Tooltipped text={option} />,
-            value: option,
-          }))}
+          options={tissueOptions}
           value={selectedTissue}
           placeholder='Select a tissue type'
           onChange={setSelectedTissue}
