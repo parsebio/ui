@@ -52,7 +52,7 @@ const FilterPlotLayout = ({
         return notification.message;
       }
       return null;
-    }).filter((message) => message);
+    })?.filter((message) => message);
   }
   const filterSettings = useSelector(
     (state) => state.experimentSettings.processing[filterName][sampleId].filterSettings,
