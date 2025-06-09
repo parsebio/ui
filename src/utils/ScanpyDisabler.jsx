@@ -7,7 +7,7 @@ import { getIsScanpy } from 'redux/selectors';
 import { Tooltip } from 'antd';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
-const scanpyDisableMessage = 'This feature is available for Seurat projects but is not yet implemented in Scanpy beta mode - it\'s coming soon!';
+const scanpyDisableMessage = 'This feature is only available for Seurat projects.';
 
 const ScanpyDisabler = ({ experimentId: customExperimentId, children }) => {
   const dispatch = useDispatch();
