@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   SAMPLES_ERROR,
   SAMPLES_SAVING,
@@ -8,7 +9,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import handleError from 'utils/http/handleError';
 
 import endUserMessages from 'utils/endUserMessages';
-import { loadBackendStatus } from '../backendStatus';
+import { loadBackendStatus } from 'redux/actions/backendStatus';
 
 const updateValuesInMetadataTrack = (
   experimentId,
@@ -16,8 +17,7 @@ const updateValuesInMetadataTrack = (
   updates,
 ) => async (dispatch) => {
   if (
-    updates.length === 0
-    || updates.some(({ sampleIds }) => sampleIds.length === 0)
+    _.sumBy(updates, ({ sampleIds }) => sampleIds.length) === 0
   ) return;
 
   dispatch({ type: SAMPLES_SAVING, payload: { message: endUserMessages.SAVING_SAMPLE } });
