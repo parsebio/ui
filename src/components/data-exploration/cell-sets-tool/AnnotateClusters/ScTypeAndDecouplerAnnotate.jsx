@@ -32,8 +32,8 @@ const annotationTools = {
 };
 
 const speciesOptions = [
-  'human',
-  'mouse',
+  { label: 'human', value: 'human' },
+  { label: 'mouse', value: 'mouse' },
 ];
 
 const ScTypeAndDecouplerAnnotate = ({ experimentId, onRunAnnotation, selectedTool }) => {
@@ -59,7 +59,7 @@ const ScTypeAndDecouplerAnnotate = ({ experimentId, onRunAnnotation, selectedToo
         <Select
           showSearch
           style={{ width: '100%' }}
-          options={speciesOptions.map((option) => ({ label: option, value: option }))}
+          options={speciesOptions}
           value={species}
           placeholder='Select a species'
           onChange={setSpecies}
