@@ -15,7 +15,11 @@ const updateValuesInMetadataTrack = (
   metadataTrackKey,
   updates,
 ) => async (dispatch) => {
-  if (updates.length === 0) return;
+  if (
+    updates.length === 0
+    || updates.some(({ sampleIds }) => sampleIds.length === 0)
+  ) return;
+
   dispatch({ type: SAMPLES_SAVING, payload: { message: endUserMessages.SAVING_SAMPLE } });
 
   try {
