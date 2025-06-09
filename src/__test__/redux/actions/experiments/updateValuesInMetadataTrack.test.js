@@ -53,7 +53,7 @@ describe('updateValuesInMetadataTrack action', () => {
     expect(fetchMock).toHaveBeenCalledWith(
       `http://localhost:3000/v2/experiments/${experimentId}/metadataTracks/${metadataTrackKeyRCompatible}`,
       {
-        body: JSON.stringify({ value, sampleIds }),
+        body: JSON.stringify([{ sampleIds, value }]),
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
       },
