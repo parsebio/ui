@@ -85,8 +85,7 @@ const createSamples = (
   let options = defaultSampleOptions[sampleTechnology] || {};
   let kit = null;
 
-  const oldSamples = Object.values(samples)
-    .filter(({ uuid }) => experiment.sampleIds.includes(uuid));
+  const oldSamples = experiment.sampleIds.map((sampleId) => samples[sampleId]);
 
   const oldSamplesByTechnology = getSamplesByTechnology(oldSamples);
 
