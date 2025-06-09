@@ -156,7 +156,7 @@ exports[`samplesReducer Handles experimentMetadataRename correctly 1`] = `
 }
 `;
 
-exports[`samplesReducer Handles samplesValueInMetadataTrackUpdated single update, multiple values correctly 1`] = `
+exports[`samplesReducer Handles samplesValueInMetadataTrackUpdated multiple updates correctly 1`] = `
 {
   "asd123": {
     "metadata": {

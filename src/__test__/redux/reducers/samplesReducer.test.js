@@ -289,7 +289,7 @@ describe('samplesReducer', () => {
     expect(newState).toMatchSnapshot();
   });
 
-  it('Handles samplesValueInMetadataTrackUpdated single update, multiple values correctly', () => {
+  it('Handles samplesValueInMetadataTrackUpdated multiple updates correctly', () => {
     const metadataKey = 'metadata-test';
     const metadataOldValue1 = 'old-value-1';
     const metadataNewValue1 = 'new-value-1';
