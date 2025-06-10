@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getIsScanpy } from 'redux/selectors';
+import { getIsSeurat } from 'redux/selectors';
 import { Tooltip } from 'antd';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
-const scanpyDisableMessage = 'This feature is only available for Seurat projects.';
+const seuratDisableMessage = 'This feature is not available in Seurat mode.';
 
-const ScanpyDisabler = ({ experimentId: customExperimentId, children }) => {
+const SeuratDisabler = ({ experimentId: customExperimentId, children }) => {
   const dispatch = useDispatch();
 
-  const isScanpy = useSelector(getIsScanpy());
+  const isSeurat = useSelector(getIsSeurat());
   const openExperimentId = useSelector((state) => (
     state.experimentSettings.info.experimentId
   ), _.isEqual);
@@ -20,17 +20,17 @@ const ScanpyDisabler = ({ experimentId: customExperimentId, children }) => {
   const experimentId = customExperimentId ?? openExperimentId;
 
   useEffect(() => {
-    if (_.isNil(isScanpy)) {
+    if (_.isNil(isSeurat)) {
       dispatch(loadProcessingSettings(experimentId));
     }
-  }, [isScanpy, experimentId]);
+  }, [isSeurat, experimentId]);
 
-  if (!isScanpy) { return children; }
+  if (!isSeurat) { return children; }
 
   // First div is to trigger hover events
   // Second div is to disable everything under the tooltip without having to clone the children
   return (
-    <Tooltip title={scanpyDisableMessage}>
+    <Tooltip title={seuratDisableMessage}>
       <div>
         <div disabled style={{ pointerEvents: 'none', opacity: 0.5 }}>
           {children}
@@ -40,15 +40,14 @@ const ScanpyDisabler = ({ experimentId: customExperimentId, children }) => {
   );
 };
 
-ScanpyDisabler.defaultProps = {
+SeuratDisabler.defaultProps = {
   experimentId: undefined,
 };
 
-ScanpyDisabler.propTypes = {
+SeuratDisabler.propTypes = {
   children: PropTypes.node.isRequired,
   experimentId: PropTypes.string,
 };
 
-export default ScanpyDisabler;
-
-export { scanpyDisableMessage };
+export default SeuratDisabler;
+export { seuratDisableMessage };
