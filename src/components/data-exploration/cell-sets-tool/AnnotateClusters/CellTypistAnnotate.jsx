@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -47,13 +47,25 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
     celltypistModels.find((model) => model.displayName === selectedModelName)
   ), [selectedModelName]);
 
-  useEffect(() => {
-    setSelectedTissue(null);
-  }, [selectedSpecies]);
+  const runCellTypistAnnotate = () => {
+    const CellTypistUrlPrefix = 'https://celltypist.cog.sanger.ac.uk/models/';
+    let modelKey = null;
 
-  useEffect(() => {
-    setSelectedModelName(null);
-  }, [selectedTissue]);
+    if (selectedModel?.url?.startsWith(CellTypistUrlPrefix)) {
+      modelKey = selectedModel.url.substring(CellTypistUrlPrefix.length);
+    }
+
+    const methodParams = {
+      modelKey,
+    };
+
+    dispatch(runCellSetsAnnotation(
+      experimentId,
+      'CellTypist',
+      methodParams,
+    ));
+    onRunAnnotation();
+  };
 
   return (
     <Space direction='vertical'>
@@ -65,7 +77,12 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           options={speciesOptions}
           value={selectedSpecies}
           placeholder='Select a species'
-          onChange={setSelectedSpecies}
+          onChange={(key) => {
+            setSelectedSpecies(key);
+            setSelectedTissue(null);
+            setSelectedModelName(null);
+          }}
+
         />
       </Space>
       <Space direction='vertical' style={{ width: '100%' }}>
@@ -76,7 +93,10 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
           options={tissueOptions}
           value={selectedTissue}
           placeholder='Select a tissue type'
-          onChange={setSelectedTissue}
+          onChange={(key) => {
+            setSelectedTissue(key);
+            setSelectedModelName(null);
+          }}
           disabled={!selectedSpecies}
         />
       </Space>
@@ -103,25 +123,7 @@ const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
       )}
 
       <Button
-        onClick={() => {
-          const CellTypistUrlPrefix = 'https://celltypist.cog.sanger.ac.uk/models/';
-          let modelKey = null;
-
-          if (selectedModel?.url?.startsWith(CellTypistUrlPrefix)) {
-            modelKey = selectedModel.url.substring(CellTypistUrlPrefix.length);
-          }
-
-          const methodParams = {
-            modelKey,
-          };
-
-          dispatch(runCellSetsAnnotation(
-            experimentId,
-            'CellTypist',
-            methodParams,
-          ));
-          onRunAnnotation();
-        }}
+        onClick={runCellTypistAnnotate}
         disabled={[selectedSpecies, selectedTissue, selectedModelName].some(_.isNil)}
         style={{ marginTop: '20px' }}
       >
