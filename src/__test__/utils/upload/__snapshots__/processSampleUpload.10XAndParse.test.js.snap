@@ -1277,6 +1277,25 @@ exports[`processUpload parse, null Should not upload files if there are errors b
     },
   ],
   [
+    "http://localhost:3000/v2/experiments/project-uuid/metadataTracks/Technology",
+    {
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "PUT",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/experiments/project-uuid/metadataTracks/Technology",
+    {
+      "body": "[{"value":"Parse Evercode WT","sampleIds":["mockSampleId"]},{"value":"10X Chromium","sampleIds":["sample-uuid"]}]",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
     "http://localhost:3000/v2/experiments/project-uuid/samples/mockSampleId/sampleFiles/featuresParse",
     {
       "body": "{"sampleFileId":"mockSampleFileId","size":1024}",
@@ -1394,6 +1413,37 @@ exports[`processUpload parse, null Updates redux correctly when there are file u
         "Content-Type": "application/json",
       },
       "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/experiments/project-uuid/metadataTracks/Technology",
+    {
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "PUT",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/experiments/project-uuid/backendStatus",
+    {
+      "headers": {},
+    },
+  ],
+  [
+    "http://localhost:3000/v2/experiments/project-uuid/metadataTracks/Technology",
+    {
+      "body": "[{"value":"Parse Evercode WT","sampleIds":["mockSampleId"]},{"value":"10X Chromium","sampleIds":["sample-uuid"]}]",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/experiments/project-uuid/backendStatus",
+    {
+      "headers": {},
     },
   ],
   [
@@ -1741,6 +1791,37 @@ exports[`processUpload parse, null Uploads and updates redux correctly when ther
         "Content-Type": "application/json",
       },
       "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/experiments/project-uuid/metadataTracks/Technology",
+    {
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "PUT",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/experiments/project-uuid/backendStatus",
+    {
+      "headers": {},
+    },
+  ],
+  [
+    "http://localhost:3000/v2/experiments/project-uuid/metadataTracks/Technology",
+    {
+      "body": "[{"value":"Parse Evercode WT","sampleIds":["mockSampleId"]},{"value":"10X Chromium","sampleIds":["sample-uuid"]}]",
+      "headers": {
+        "Content-Type": "application/json",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "http://localhost:3000/v2/experiments/project-uuid/backendStatus",
+    {
+      "headers": {},
     },
   ],
   [

@@ -19,13 +19,13 @@ import { EXPERIMENTS_METADATA_RENAME } from 'redux/actionTypes/experiments';
 import sampleFileType from 'utils/sampleFileType';
 
 describe('samplesReducer', () => {
-  const mockUuid1 = 'asd123';
-  const mockUuid2 = 'qwe234';
+  const mockId1 = 'asd123';
+  const mockId2 = 'qwe234';
 
   const sample1 = {
     ...sampleTemplate,
     name: 'test sample',
-    uuid: mockUuid1,
+    uuid: mockId1,
     createdDate: '2021-01-01T14:48:00.000Z',
     lastModified: '2021-01-01T14:48:00.000Z',
   };
@@ -33,7 +33,7 @@ describe('samplesReducer', () => {
   const sample2 = {
     ...sampleTemplate,
     name: 'test sample 2',
-    uuid: mockUuid2,
+    uuid: mockId2,
     createdDate: '2021-01-02T14:48:00.000Z',
     lastModified: '2021-01-02T14:48:00.000Z',
   };
@@ -93,7 +93,7 @@ describe('samplesReducer', () => {
     const newState = samplesReducer(oneSampleState, {
       type: SAMPLES_UPDATE,
       payload: {
-        sampleUuid: mockUuid1,
+        sampleUuid: mockId1,
         sample: updateActionResult,
       },
     });
@@ -106,7 +106,7 @@ describe('samplesReducer', () => {
     const newState = samplesReducer(oneSampleState, {
       type: SAMPLES_FILE_UPDATE,
       payload: {
-        sampleUuid: mockUuid1,
+        sampleUuid: mockId1,
         sampleFileType: sampleFileType.FEATURES_10_X,
         fileDiff: mockFile,
         lastModified: 'newLastModified',
@@ -217,7 +217,7 @@ describe('samplesReducer', () => {
 
     const sampleWithMetadata = {
       ...oneSampleState,
-      [oneSampleState[mockUuid1]]: {
+      [oneSampleState[mockId1]]: {
         metadata: {},
       },
     };
@@ -225,12 +225,12 @@ describe('samplesReducer', () => {
     const newState = samplesReducer(sampleWithMetadata, {
       type: SAMPLES_UPDATE,
       payload: {
-        sampleUuid: mockUuid1,
+        sampleUuid: mockId1,
         sample: { metadata: { [metadataKey]: metadataValue } },
       },
     });
 
-    expect(newState[mockUuid1].metadata[metadataKey]).toEqual(metadataValue);
+    expect(newState[mockId1].metadata[metadataKey]).toEqual(metadataValue);
     expect(newState).toMatchSnapshot();
   });
 
@@ -240,7 +240,7 @@ describe('samplesReducer', () => {
 
     const sampleWithMetadata = {
       ...oneSampleState,
-      [oneSampleState[mockUuid1]]: {
+      [oneSampleState[mockId1]]: {
         metadata: {
           [metadataKey]: metadataValue,
         },
@@ -250,23 +250,23 @@ describe('samplesReducer', () => {
     const newState = samplesReducer(sampleWithMetadata, {
       type: SAMPLES_METADATA_DELETE,
       payload: {
-        sampleUuid: mockUuid1,
+        sampleUuid: mockId1,
         metadataKey,
       },
     });
 
-    expect(newState[mockUuid1].metadata[metadataKey]).toBeUndefined();
+    expect(newState[mockId1].metadata[metadataKey]).toBeUndefined();
     expect(newState).toMatchSnapshot();
   });
 
-  it('Handles samplesValueInMetadataTrackUpdated correctly', () => {
+  it('Handles samplesValueInMetadataTrackUpdated single update, single value correctly', () => {
     const metadataKey = 'metadata-test';
     const metadataOldValue = 'old-value';
     const metadataNewValue = 'new-value';
 
     const sampleWithMetadata = {
       ...oneSampleState,
-      [mockUuid1]: {
+      [mockId1]: {
         metadata: {
           [metadataKey]: metadataOldValue,
         },
@@ -276,9 +276,55 @@ describe('samplesReducer', () => {
     const newState = samplesReducer(sampleWithMetadata, {
       type: SAMPLES_VALUE_IN_METADATA_TRACK_UPDATED,
       payload: {
-        sampleUuids: [mockUuid1],
         key: metadataKey,
-        value: metadataNewValue,
+        updates: [
+          {
+            sampleIds: [mockId1],
+            value: metadataNewValue,
+          },
+        ],
+      },
+    });
+
+    expect(newState).toMatchSnapshot();
+  });
+
+  it('Handles samplesValueInMetadataTrackUpdated multiple updates correctly', () => {
+    const metadataKey = 'metadata-test';
+    const metadataOldValue1 = 'old-value-1';
+    const metadataNewValue1 = 'new-value-1';
+
+    const metadataOldValue2 = 'old-value-2';
+    const metadataNewValue2 = 'new-value-2';
+
+    const sampleWithMetadata = {
+      ...oneSampleState,
+      [mockId1]: {
+        metadata: {
+          [metadataKey]: metadataOldValue1,
+        },
+      },
+      [mockId2]: {
+        metadata: {
+          [metadataKey]: metadataOldValue2,
+        },
+      },
+    };
+
+    const newState = samplesReducer(sampleWithMetadata, {
+      type: SAMPLES_VALUE_IN_METADATA_TRACK_UPDATED,
+      payload: {
+        key: metadataKey,
+        updates: [
+          {
+            sampleIds: [mockId1],
+            value: metadataNewValue1,
+          },
+          {
+            sampleIds: [mockId2],
+            value: metadataNewValue2,
+          },
+        ],
       },
     });
 
@@ -293,7 +339,7 @@ describe('samplesReducer', () => {
 
     const stateWithMetadata = {
       ...oneSampleState,
-      [mockUuid1]: {
+      [mockId1]: {
         experimentId,
         metadata: {
           [oldMetadataKey]: metadataValue,
@@ -310,19 +356,19 @@ describe('samplesReducer', () => {
       },
     });
 
-    expect(newState[mockUuid1].metadata[newMetadataKey]).toEqual(metadataValue);
-    expect(newState[mockUuid1].metadata[oldMetadataKey]).not.toBeDefined();
+    expect(newState[mockId1].metadata[newMetadataKey]).toEqual(metadataValue);
+    expect(newState[mockId1].metadata[oldMetadataKey]).not.toBeDefined();
     expect(newState).toMatchSnapshot();
   });
 
   it('Updates options correctly', () => {
     const stateWithOldOptions = {
       ...twoSamplesState,
-      [mockUuid1]: {
+      [mockId1]: {
         ...sample1,
         options: { someOption: false },
       },
-      [mockUuid2]: {
+      [mockId2]: {
         ...sample2,
         options: { someOption: false },
       },
@@ -331,7 +377,7 @@ describe('samplesReducer', () => {
     const newState = samplesReducer(stateWithOldOptions, {
       type: SAMPLES_OPTIONS_UPDATE,
       payload: {
-        sampleUuids: [mockUuid1, mockUuid2],
+        sampleUuids: [mockId1, mockId2],
         diff: { someOption: true },
       },
     });
@@ -342,11 +388,11 @@ describe('samplesReducer', () => {
   it('Adds validating to an experiment', () => {
     const stateWithOldOptions = {
       ...twoSamplesState,
-      [mockUuid1]: {
+      [mockId1]: {
         ...sample1,
         options: { someOption: false },
       },
-      [mockUuid2]: {
+      [mockId2]: {
         ...sample2,
         options: { someOption: false },
       },
@@ -368,11 +414,11 @@ describe('samplesReducer', () => {
   it('Removes validating from an experiment', () => {
     const stateWithOldOptions = {
       ...twoSamplesState,
-      [mockUuid1]: {
+      [mockId1]: {
         ...sample1,
         options: { someOption: false },
       },
-      [mockUuid2]: {
+      [mockId2]: {
         ...sample2,
         options: { someOption: false },
       },
@@ -398,7 +444,7 @@ describe('samplesReducer', () => {
     const newState = samplesReducer(initialState, {
       type: SAMPLES_FILE_UPDATE,
       payload: {
-        sampleUuid: mockUuid1,
+        sampleUuid: mockId1,
         sampleFileType: sampleFileType.FEATURES_10_X,
         fileDiff: mockFile,
         lastModified: 'newLastModified',
