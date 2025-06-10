@@ -226,15 +226,6 @@ const SamplesTable = forwardRef((props, ref) => {
           )
         ),
       },
-      {
-        index: 4,
-        key: 'technology',
-        title: 'Technology',
-        dataIndex: 'technology',
-        render: (text) => (
-          <Text>{techNamesToDisplay[text]}</Text>
-        ),
-      },
       ...tableColumns.commonColumns,
     ].sort((a, b) => a.index - b.index);
     return { data: selectedTableData, columns: selectedTableColumns };
