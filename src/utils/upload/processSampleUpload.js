@@ -10,7 +10,7 @@ import UploadStatus from 'utils/upload/UploadStatus';
 import { inspectFile, Verdict } from 'utils/upload/fileInspector';
 import fetchAPI from 'utils/http/fetchAPI';
 
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';

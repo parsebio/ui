@@ -19,7 +19,7 @@ import {
 } from '@ant-design/icons';
 
 import _ from 'lodash';
-import { analysisTools, downsamplingMethods } from 'utils/constants';
+import { analysisTools, downsamplingMethods } from 'const';
 
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import { updateFilterSettings } from 'redux/actions/experimentSettings';

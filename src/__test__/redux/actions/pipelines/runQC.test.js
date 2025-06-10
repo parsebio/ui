@@ -21,7 +21,7 @@ import { runQC } from 'redux/actions/pipeline';
 
 import generateExperimentSettingsMock from '__test__/test-utils/experimentSettings.mock';
 import '__test__/test-utils/setupTests';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 
 jest.mock('utils/getTimeoutForWorkerTask', () => () => 1);
 

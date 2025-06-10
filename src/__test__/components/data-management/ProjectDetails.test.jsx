@@ -26,7 +26,7 @@ import initialExperimentSettingsState from 'redux/reducers/experimentSettings/in
 import { initialExperimentBackendStatus } from 'redux/reducers/backendStatus/initialState';
 
 import PipelineStatus from 'utils/pipelineStatusValues';
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 import UploadStatus from 'utils/upload/UploadStatus';
 import ProjectDetails from 'components/data-management/project/ProjectDetails';
 

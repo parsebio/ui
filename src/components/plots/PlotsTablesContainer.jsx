@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import Link from 'next/link';
 
-import { plotNames, layout } from 'utils/constants';
+import { plotNames, layout } from 'const';
 import ScanpyDisabler from 'utils/ScanpyDisabler';
 
 const CARD_STYLE = { marginBottom: '1em' };

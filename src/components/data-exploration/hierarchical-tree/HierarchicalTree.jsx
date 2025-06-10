@@ -12,7 +12,7 @@ import EditableField from 'components/EditableField';
 import ColorPicker from 'components/ColorPicker';
 import FocusButton from 'components/FocusButton';
 import HideButton from 'components/data-exploration/cell-sets-tool/HideButton';
-import { permissions } from 'utils/constants';
+import { permissions } from 'const';
 import PermissionsChecker from 'utils/PermissionsChecker';
 
 const HierarchicalTree = (props) => {

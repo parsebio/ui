@@ -1,5 +1,5 @@
 import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 
 const getHasSeuratTechnology = (experimentId) => (state) => {
   const sampleIds = state.experiments[experimentId]?.sampleIds || [];

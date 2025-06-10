@@ -39,7 +39,7 @@ import { loadUser } from 'redux/actions/user';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
 import { isBrowser } from 'utils/deploymentInfo';
-import { modules, brandColors } from 'utils/constants';
+import { modules, brandColors } from 'const';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import experimentUpdatesHandler from 'utils/experimentUpdatesHandler';
 import integrationTestConstants from 'utils/integrationTestConstants';

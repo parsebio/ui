@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import _ from 'lodash';
 
-import { modules, sampleTech } from 'utils/constants';
+import { modules, sampleTech } from 'const';
 
 import UploadStatus from 'utils/upload/UploadStatus';
 import integrationTestConstants from 'utils/integrationTestConstants';

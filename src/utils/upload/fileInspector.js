@@ -1,6 +1,6 @@
 import { Gunzip } from 'fflate';
 
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 import techOptions from 'utils/upload/fileUploadUtils';
 import readFileToBuffer from 'utils/upload/readFileToBuffer';
 

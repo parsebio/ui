@@ -11,7 +11,7 @@ import endUserMessages from 'utils/endUserMessages';
 
 import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState';
 import { defaultSampleOptions, sampleTemplate } from 'redux/reducers/samples/initialState';
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 import UploadStatus from 'utils/upload/UploadStatus';
 import { createMetadataTrack, updateValuesInMetadataTrack } from '../experiments';
 

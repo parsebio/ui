@@ -37,7 +37,7 @@ import { metadataNameToKey, metadataKeyToName } from 'utils/data-management/meta
 import integrationTestConstants from 'utils/integrationTestConstants';
 
 import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 import { fileTypeToDisplay } from 'utils/sampleFileType';
 import UploadStatus from 'utils/upload/UploadStatus';
 

@@ -1,4 +1,4 @@
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 
 import validate10x from 'utils/upload/validate10x';
 import validateRhapsody from 'utils/upload/validateRhapsody';

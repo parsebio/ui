@@ -12,7 +12,7 @@ import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';
 import revokeRole from 'utils/data-management/experimentSharing/revokeRole';
 import { getHasPermissions } from 'redux/selectors';
-import { permissions } from 'utils/constants';
+import { permissions } from 'const';
 import PermissionsChecker from 'utils/PermissionsChecker';
 import { removeProject } from 'redux/actions/projects';
 

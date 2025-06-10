@@ -13,7 +13,7 @@ import { loadCellSets } from 'redux/actions/cellSets';
 import PlotContainer from 'components/plots/PlotContainer';
 import ViolinPlotMain from 'components/plots/ViolinPlotMain';
 import { getCellSets, getPlotConfigs } from 'redux/selectors';
-import { plotNames, plotUuids, plotTypes } from 'utils/constants';
+import { plotNames, plotUuids, plotTypes } from 'const';
 import MultiViewGrid from 'components/plots/MultiViewGrid';
 
 const plotUuid = plotUuids.VIOLIN_PLOT;

@@ -1,4 +1,4 @@
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 import { inspectFile, Verdict } from 'utils/upload/fileInspector';
 import readFileToBuffer from 'utils/upload/readFileToBuffer';
 

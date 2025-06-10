@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import waitForActions from 'redux-mock-store-await-actions';
 import axios from 'axios';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 import { waitFor } from '@testing-library/react';
 
 import { SAMPLES_FILE_UPDATE } from 'redux/actionTypes/samples';

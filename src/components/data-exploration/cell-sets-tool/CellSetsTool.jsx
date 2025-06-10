@@ -33,7 +33,7 @@ import { runSubsetExperiment } from 'redux/actions/pipeline';
 import { getCellSets, getIsScanpy } from 'redux/selectors';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules, permissions } from 'utils/constants';
+import { modules, permissions } from 'const';
 import { composeTree } from 'utils/cellSets';
 import { complement, intersection, union } from 'utils/cellSetOperations';
 import ScanpyDisabler from 'utils/ScanpyDisabler';

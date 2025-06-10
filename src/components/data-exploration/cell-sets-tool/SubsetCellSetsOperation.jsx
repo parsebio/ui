@@ -7,7 +7,7 @@ import { Tooltip, Button } from 'antd';
 import { PieChartOutlined } from '@ant-design/icons';
 
 import SubsetCellSetsModal from 'components/data-exploration/cell-sets-tool/SubsetCellSetsModal';
-import { permissions } from 'utils/constants';
+import { permissions } from 'const';
 import PermissionsChecker from 'utils/PermissionsChecker';
 import { getHasSeuratTechnology } from 'redux/selectors';
 

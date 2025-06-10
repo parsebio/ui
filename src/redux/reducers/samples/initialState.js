@@ -1,4 +1,4 @@
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 
 const sampleTemplate = {
   name: null,

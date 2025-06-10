@@ -61,7 +61,7 @@ import { loadSamples } from 'redux/actions/samples';
 import { runQC } from 'redux/actions/pipeline';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules, sampleTech } from 'utils/constants';
+import { modules, sampleTech } from 'const';
 import QCRerunDisabledModal from 'components/modals/QCRerunDisabledModal';
 import isUserAuthorized from 'utils/access/isUserAuthorized';
 import { getURL } from 'redux/actions/pipeline/runQC';

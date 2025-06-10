@@ -11,7 +11,7 @@ import {
 import { runGem2s, runSeurat } from 'redux/actions/pipeline';
 
 import PipelineStatus from 'utils/pipelineStatusValues';
-import { sampleTech } from 'utils/constants';
+import { sampleTech } from 'const';
 import LaunchAnalysisButton from 'components/data-management/LaunchAnalysisButton';
 import initialExperimentsState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
 import initialSamplesState, { sampleTemplate } from 'redux/reducers/samples/initialState';
