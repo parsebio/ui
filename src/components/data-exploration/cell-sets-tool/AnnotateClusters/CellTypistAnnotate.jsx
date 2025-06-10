@@ -2,11 +2,27 @@ import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { Button, Select, Space } from 'antd';
+import {
+  Button, Select, Space, Typography,
+} from 'antd';
 import { runCellSetsAnnotation } from 'redux/actions/cellSets';
 import { useDispatch } from 'react-redux';
 import celltypistModels from 'components/data-exploration/cell-sets-tool/AnnotateClusters/celltypistModels.json';
-import Tooltipped from 'utils/Tooltipped';
+
+const { Text } = Typography;
+
+const Tooltipped = ({ text }) => (
+  <Text ellipsis={{ tooltip: text }}>
+    {text}
+  </Text>
+);
+
+Tooltipped.defaultProps = {
+  text: '',
+};
+Tooltipped.propTypes = {
+  text: PropTypes.string,
+};
 
 const CellTypistAnnotate = ({ experimentId, onRunAnnotation }) => {
   const dispatch = useDispatch();
