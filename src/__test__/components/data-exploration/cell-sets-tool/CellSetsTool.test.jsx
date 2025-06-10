@@ -827,16 +827,16 @@ describe('AnnotateClustersTool', () => {
     // Switch to tab
     userEvent.click(annotateClustersTabTitle);
 
-    const tissueSelector = screen.getAllByRole('combobox')[0];
-    const speciesSelector = screen.getAllByRole('combobox')[1];
-
-    // Choose the liver option
-    userEvent.click(tissueSelector);
-    userEvent.click(screen.getByText(/Liver/));
+    const speciesSelector = screen.getAllByRole('combobox')[0];
+    const tissueSelector = screen.getAllByRole('combobox')[1];
 
     // Choose the mouse option
     userEvent.click(speciesSelector);
     userEvent.click(screen.getAllByText(/mouse/)[1]);
+
+    // Choose the liver option
+    userEvent.click(tissueSelector);
+    userEvent.click(screen.getByText(/Liver/));
 
     // Now the button's enabled
     const button = screen.getByRole('button', { name: /Compute/ });
@@ -853,7 +853,7 @@ describe('AnnotateClustersTool', () => {
     });
   });
 
-  it('Is disabled for scanpy', async () => {
+  it('Is enabled for scanpy', async () => {
     fetchMock.resetMocks();
     fetchMock.mockIf(/.*/, mockAPI(generateDefaultMockAPIResponses(experimentId, analysisTools.SCANPY)));
 
@@ -872,6 +872,6 @@ describe('AnnotateClustersTool', () => {
 
     // Check that the tab is disabled for scanpy
     const annotateClustersTabTitle = screen.getByText('Annotate clusters');
-    expect(annotateClustersTabTitle.parentElement.parentElement).toHaveAttribute('aria-disabled', 'true');
+    expect(annotateClustersTabTitle.parentElement.parentElement).not.toHaveAttribute('aria-disabled', 'true');
   });
 });
