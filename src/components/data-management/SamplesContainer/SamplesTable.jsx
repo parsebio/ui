@@ -42,7 +42,6 @@ import { fileTypeToDisplay } from 'utils/sampleFileType';
 import UploadStatus from 'utils/upload/UploadStatus';
 
 const { UPLOADED, INCOMPLETE, UPLOADING } = UploadStatus;
-const { Text } = Typography;
 
 const SamplesTable = forwardRef((props, ref) => {
   const { size, selectedTable, selectedTechs } = props;
