@@ -401,7 +401,7 @@ describe('ProjectDetails', () => {
     act(() => userEvent.click(screen.getByRole('button', { name: 'Save' })));
 
     expect(mockedupdateValuesInMetadataTrack).toHaveBeenCalledTimes(1);
-    expect(mockedupdateValuesInMetadataTrack).toHaveBeenCalledWith('experiment-1', ['sample-1'], 'metadata-1', 'myBrandNewMetadataWithWhitespaces');
+    expect(mockedupdateValuesInMetadataTrack).toHaveBeenCalledWith('experiment-1', 'metadata-1', [{ sampleIds: ['sample-1'], value: 'myBrandNewMetadataWithWhitespaces' }]);
   });
 
   it('Download dropdown is disabled if there are no samples', () => {
