@@ -14,7 +14,6 @@ import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import SamplesLoader from 'components/data-management/SamplesContainer/SamplesLoader';
 import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import { getSamples } from 'redux/selectors';
-import { createMetadataTrack, updateValuesInMetadataTrack } from 'redux/actions/experiments';
 
 const SamplesContainer = forwardRef((props, ref) => {
   const dispatch = useDispatch();
