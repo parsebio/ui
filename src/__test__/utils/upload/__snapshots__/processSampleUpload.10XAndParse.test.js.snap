@@ -1288,7 +1288,7 @@ exports[`processUpload parse, null Should not upload files if there are errors b
   [
     "http://localhost:3000/v2/experiments/project-uuid/metadataTracks/Technology",
     {
-      "body": "[{"value":"parse","sampleIds":["mockSampleId"]},{"value":"10x","sampleIds":["sample-uuid"]}]",
+      "body": "[{"value":"Parse Evercode WT","sampleIds":["mockSampleId"]},{"value":"10X Chromium","sampleIds":["sample-uuid"]}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1433,7 +1433,7 @@ exports[`processUpload parse, null Updates redux correctly when there are file u
   [
     "http://localhost:3000/v2/experiments/project-uuid/metadataTracks/Technology",
     {
-      "body": "[{"value":"parse","sampleIds":["mockSampleId"]},{"value":"10x","sampleIds":["sample-uuid"]}]",
+      "body": "[{"value":"Parse Evercode WT","sampleIds":["mockSampleId"]},{"value":"10X Chromium","sampleIds":["sample-uuid"]}]",
       "headers": {
         "Content-Type": "application/json",
       },
@@ -1811,7 +1811,7 @@ exports[`processUpload parse, null Uploads and updates redux correctly when ther
   [
     "http://localhost:3000/v2/experiments/project-uuid/metadataTracks/Technology",
     {
-      "body": "[{"value":"parse","sampleIds":["mockSampleId"]},{"value":"10x","sampleIds":["sample-uuid"]}]",
+      "body": "[{"value":"Parse Evercode WT","sampleIds":["mockSampleId"]},{"value":"10X Chromium","sampleIds":["sample-uuid"]}]",
       "headers": {
         "Content-Type": "application/json",
       },
