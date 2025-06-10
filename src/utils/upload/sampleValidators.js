@@ -1,4 +1,4 @@
-import { sampleTech } from 'const';
+import sampleTech from 'const/enums/sampleTech';
 
 import validate10x from 'utils/upload/validate10x';
 import validateRhapsody from 'utils/upload/validateRhapsody';

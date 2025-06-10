@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import fake from '__test__/test-utils/constants';
 import sampleFileType from 'utils/sampleFileType';
-import { sampleTech } from 'const';
+import sampleTech from 'const/enums/sampleTech';
 
 const mockSampleTemplate = (experimentId, sampleId, idx) => {
   const type = idx === 1 ? sampleTech['10X'] : sampleTech.PARSE;

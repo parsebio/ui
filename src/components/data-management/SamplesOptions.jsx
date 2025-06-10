@@ -6,7 +6,7 @@ import { Typography, Checkbox, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import updateSamplesOptions from 'redux/actions/experiments/updateSamplesOptions';
 
-import { sampleTech } from 'const';
+import sampleTech from 'const/enums/sampleTech';
 
 const { Text, Paragraph } = Typography;
 

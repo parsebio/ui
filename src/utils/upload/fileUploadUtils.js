@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
-import { sampleTech } from 'const';
+import sampleTech from 'const/enums/sampleTech';
+
 import endUserMessages from 'utils/endUserMessages';
 import handleError from 'utils/http/handleError';
 import sampleFileType from 'utils/sampleFileType';

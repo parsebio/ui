@@ -7,7 +7,7 @@ import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
-import { sampleTech } from 'const';
+import sampleTech from 'const/enums/sampleTech';
 
 import experimentsInitialState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
 import samplesInitialState, { sampleTemplate } from 'redux/reducers/samples/initialState';

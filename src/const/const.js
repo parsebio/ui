@@ -27,14 +27,6 @@ const modules = {
   DEFAULT: '',
 };
 
-const sampleTech = {
-  PARSE: 'parse',
-  '10X': '10x',
-  RHAPSODY: 'rhapsody',
-  SEURAT: 'seurat',
-  H5: '10x_h5',
-};
-
 const plotTypes = {
   CONTINUOUS_EMBEDDING: 'embeddingContinuous',
   CATEGORICAL_EMBEDDING: 'embeddingCategorical',
@@ -114,7 +106,6 @@ const permissions = {
 export {
   api,
   modules,
-  sampleTech,
   brandColors,
   plotTypes,
   plotUuids,

@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import dayjs from 'dayjs';
 
+import sampleTech from 'const/enums/sampleTech';
+
 import {
   SAMPLES_CREATED, SAMPLES_ERROR, SAMPLES_SAVED, SAMPLES_SAVING,
 } from 'redux/actionTypes/samples';
@@ -11,7 +13,6 @@ import endUserMessages from 'utils/endUserMessages';
 
 import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState';
 import { defaultSampleOptions, sampleTemplate } from 'redux/reducers/samples/initialState';
-import { sampleTech } from 'const';
 import UploadStatus from 'utils/upload/UploadStatus';
 import { createMetadataTrack, updateValuesInMetadataTrack } from '../experiments';
 

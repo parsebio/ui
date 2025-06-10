@@ -12,7 +12,7 @@ import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 
 import techOptions, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
-import { sampleTech } from 'const';
+import sampleTech from 'const/enums/sampleTech';
 
 import mockFile from '__test__/test-utils/mockFile';
 import FileUploadModal from 'components/data-management/FileUploadModal';

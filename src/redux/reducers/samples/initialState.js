@@ -1,4 +1,4 @@
-import { sampleTech } from 'const';
+import sampleTech from 'const/enums/sampleTech';
 
 const sampleTemplate = {
   name: null,

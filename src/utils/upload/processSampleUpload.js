@@ -2,6 +2,8 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
 
+import sampleTech from 'const/enums/sampleTech';
+
 import {
   createSamples, createSampleFile, updateSampleFileUpload, validateSamples,
 } from 'redux/actions/samples';
@@ -10,7 +12,6 @@ import UploadStatus from 'utils/upload/UploadStatus';
 import { inspectFile, Verdict } from 'utils/upload/fileInspector';
 import fetchAPI from 'utils/http/fetchAPI';
 
-import { sampleTech } from 'const';
 import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';

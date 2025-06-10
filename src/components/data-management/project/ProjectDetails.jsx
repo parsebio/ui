@@ -6,6 +6,10 @@ import PropTypes from 'prop-types';
 import {
   Space, Typography, Button, Select,
 } from 'antd';
+
+import { layout } from 'const';
+import sampleTech from 'const/enums/sampleTech';
+
 import {
   cloneExperiment, updateExperiment, loadExperiments, setActiveExperiment,
 } from 'redux/actions/experiments';
@@ -14,7 +18,6 @@ import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 
 import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
-import { layout, sampleTech } from 'const';
 
 // import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';

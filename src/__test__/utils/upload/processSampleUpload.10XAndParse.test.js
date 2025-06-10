@@ -12,14 +12,13 @@ import {
 import initialSampleState, { sampleTemplate } from 'redux/reducers/samples/initialState';
 import initialExperimentState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
 
+import sampleTech from 'const/enums/sampleTech';
+
 import UploadStatus from 'utils/upload/UploadStatus';
-
 import processSampleUpload from 'utils/upload/processSampleUpload';
-
 import validate10x from 'utils/upload/validate10x';
 import validateParse from 'utils/upload/validateParse';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import { sampleTech } from 'const';
 import mockFile from '__test__/test-utils/mockFile';
 import mockBackendStatusData from '__test__/data/backend_status.json';
 import { setupNavigatorLocks, teardownNavigatorLocks } from '__test__/test-utils/mockLocks';
