@@ -184,23 +184,24 @@ const createSamples = (
       },
     );
 
+    let technologyMetadataTrackExists = Boolean(
+      _.sample(
+        Object.values(oldSamplesByTechnology)[0] ?? [],
+      )?.metadata?.Technology,
+    );
+
+    let samplesToUpdateByTechnology = newSamplesToUpdateByTechnology;
+
     // If multitech, then add the Technology metadata track
-    if (Object.keys(allSamples).length > 1) {
-      let samplesToUpdateByTechnology = newSamplesToUpdateByTechnology;
+    if (Object.keys(allSamples).length > 1 && !technologyMetadataTrackExists) {
+      // If the Technology metadata track does not already exist, create it
+      await dispatch(createMetadataTrack('Technology', experimentId));
 
-      // If the Technology metadata track does not already exist:
-      if (
-        _.isNil(_.sample(
-          Object.values(oldSamplesByTechnology)[0] ?? [],
-        )?.metadata?.Technology)
-      ) {
-        // Create it
+      samplesToUpdateByTechnology = allSamples;
+      technologyMetadataTrackExists = true;
+    }
 
-        await dispatch(createMetadataTrack('Technology', experimentId));
-
-        samplesToUpdateByTechnology = allSamples;
-      }
-
+    if (technologyMetadataTrackExists) {
       const updates = Object.entries(samplesToUpdateByTechnology)
         .map(([technology, currSamples]) => ({
           value: metadataValuesByTechnology[technology],
