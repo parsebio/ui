@@ -181,7 +181,11 @@ const createSamples = (
       let samplesToUpdateByTechnology = newSamplesToUpdateByTechnology;
 
       // If the Technology metadata track does not already exist:
-      if (_.isNil(_.sample(oldSamplesByTechnology).metadata?.Technology)) {
+      if (
+        _.isNil(_.sample(
+          Object.values(oldSamplesByTechnology)[0] ?? [],
+        )?.metadata?.Technology)
+      ) {
         // Create it
 
         await dispatch(createMetadataTrack('Technology', experimentId));
