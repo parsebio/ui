@@ -52,7 +52,7 @@ import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
 
 import { modules } from 'const';
-import sampleTech from 'const/enums/sampleTech';
+import sampleTech from 'const/enums/SampleTech';
 
 import {
   getBackendStatus, getFilterChanges, getSamples, getCellSets,

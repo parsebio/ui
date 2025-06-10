@@ -3,7 +3,7 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import downloadSingleFile from 'utils/data-management/downloadSampleFile';
 import downloadFromUrl from 'utils/downloadFromUrl';
 
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 import fake from '__test__/test-utils/constants';
 import sampleFileType from 'utils/sampleFileType';
 
@@ -24,7 +24,7 @@ describe('downloadFromUrl', () => {
 
     fetchMock.mockResponse(JSON.stringify(mockSignedUrl));
 
-    await downloadSingleFile(fake.EXPERIMENT_ID, fake.SAMPLE_ID, sampleFileType.FEATURES_10_X, sampleTech['10X']);
+    await downloadSingleFile(fake.EXPERIMENT_ID, fake.SAMPLE_ID, sampleFileType.FEATURES_10_X, SampleTech['10X']);
 
     expect(downloadFromUrl).toHaveBeenCalledWith(mockSignedUrl);
     expect(fetchMock.mock.calls).toMatchSnapshot();

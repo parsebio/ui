@@ -7,7 +7,7 @@ import axios from 'axios';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { waitFor } from '@testing-library/react';
 
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 import { SAMPLES_FILE_UPDATE } from 'redux/actionTypes/samples';
 import initialSampleState, { sampleTemplate } from 'redux/reducers/samples/initialState';
 import initialExperimentState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
@@ -42,7 +42,7 @@ const getValidFiles = (fileSize = 1 * MB) => {
   return seuratFiles;
 };
 
-const sampleType = sampleTech.SEURAT;
+const sampleType = SampleTech.SEURAT;
 const mockSampleUuid = 'sample-uuid';
 const mockExperimentId = 'project-uuid';
 const sampleName = 'mockSampleName';

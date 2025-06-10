@@ -19,7 +19,7 @@ import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-des
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
 
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
 import handleError from 'utils/http/handleError';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
@@ -34,10 +34,10 @@ const { Option } = Select;
 const SEURAT_MAX_FILE_SIZE = 15 * 1024 * 1024 * 1024;
 
 const extraHelpText = {
-  [sampleTech['10X']]: () => null,
-  [sampleTech.SEURAT]: () => null,
-  [sampleTech.H5]: () => null,
-  [sampleTech.RHAPSODY]: () => (
+  [SampleTech['10X']]: () => null,
+  [SampleTech.SEURAT]: () => null,
+  [SampleTech.H5]: () => null,
+  [SampleTech.RHAPSODY]: () => (
     <Paragraph>
       <ul>
         <li>
@@ -51,7 +51,7 @@ const extraHelpText = {
       </ul>
     </Paragraph>
   ),
-  [sampleTech.PARSE]: () => null,
+  [SampleTech.PARSE]: () => null,
 };
 
 const emptyFiles = { valid: [], invalid: [] };
@@ -64,7 +64,7 @@ const FileUploadModal = (props) => {
   const previouslyUploadedSamples = Object.keys(samples)
     .filter((key) => samples[key].experimentId === activeExperimentId);
 
-  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? sampleTech.PARSE);
+  const [selectedTech, setSelectedTech] = useState(currentSelectedTech ?? SampleTech.PARSE);
   const [canUpload, setCanUpload] = useState(false);
   const [files, setFiles] = useState(emptyFiles);
 
@@ -82,7 +82,7 @@ const FileUploadModal = (props) => {
     const filteredFiles = acceptedFiles
       .filter((file) => !file.name.startsWith('.') && !file.name.startsWith('__MACOSX'));
 
-    if (selectedTech === sampleTech.SEURAT) {
+    if (selectedTech === SampleTech.SEURAT) {
       // TODO1 this needs to be further refactored before it is moved into
       // fileUploadUtils as a filterFiles call, right now it's a bit unnecessarily complicated
       const newFiles = await Promise.all(filteredFiles.map((file) => (
@@ -187,7 +187,7 @@ const FileUploadModal = (props) => {
                 <span style={{ color: 'red', marginRight: '2em' }}>*</span>
               </Title>
               <Tooltip
-                title={currentSelectedTech === sampleTech.SEURAT
+                title={currentSelectedTech === SampleTech.SEURAT
                   && 'Remove existing data or create a new project to change technology.'}
                 placement='bottom'
               >
@@ -198,22 +198,22 @@ const FileUploadModal = (props) => {
                   // TODO to enable multitech selection
                   // - uncomment this line
                   // - remove the currently enabled disable line
-                  disabled={currentSelectedTech === sampleTech.SEURAT}
+                  disabled={currentSelectedTech === SampleTech.SEURAT}
                   // disabled={currentSelectedTech}
                   onChange={(value) => setSelectedTech(value)}
                   // Fix the width so that the dropdown doesn't change size when the value changes
                   style={{ width: 180 }}
                 >
                   {
-                    Object.values(sampleTech)
+                    Object.values(SampleTech)
                       .map((tech) => (
                         <Option
                           key={`key-${tech}`}
                           value={tech}
                           disabled={
                             currentSelectedTech
-                            && currentSelectedTech !== sampleTech.SEURAT
-                            && tech === sampleTech.SEURAT
+                            && currentSelectedTech !== SampleTech.SEURAT
+                            && tech === SampleTech.SEURAT
                           }
                         >
                           {techNamesToDisplay[tech]}

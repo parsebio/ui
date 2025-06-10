@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 
 import endUserMessages from 'utils/endUserMessages';
 import handleError from 'utils/http/handleError';
@@ -8,11 +8,11 @@ import sampleFileType from 'utils/sampleFileType';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 
 const techNamesToDisplay = {
-  [sampleTech['10X']]: `10X Chromium${String.fromCharCode(8482)}`,
-  [sampleTech.RHAPSODY]: `BD Rhapsody${String.fromCharCode(8482)}`,
-  [sampleTech.SEURAT]: 'Seurat',
-  [sampleTech.H5]: `10X Chromium${String.fromCharCode(8482)} - H5`,
-  [sampleTech.PARSE]: `Parse Evercode${String.fromCharCode(8482)} WT`,
+  [SampleTech['10X']]: `10X Chromium${String.fromCharCode(8482)}`,
+  [SampleTech.RHAPSODY]: `BD Rhapsody${String.fromCharCode(8482)}`,
+  [SampleTech.SEURAT]: 'Seurat',
+  [SampleTech.H5]: `10X Chromium${String.fromCharCode(8482)} - H5`,
+  [SampleTech.PARSE]: `Parse Evercode${String.fromCharCode(8482)} WT`,
 };
 
 const matchFileName = (fileName, fileNames) => {
@@ -65,7 +65,7 @@ const getFileSampleAndNameDefault = (filePath) => {
 
 /* eslint-disable max-len */
 const fileUploadUtils = {
-  [sampleTech['10X']]: {
+  [SampleTech['10X']]: {
     acceptedFiles: new Set([
       'barcodes.tsv',
       'barcodes.tsv.gz',
@@ -108,11 +108,11 @@ const fileUploadUtils = {
 
       return fileNameToType[name];
     },
-    filterFiles: filterFilesDefaultConstructor(sampleTech['10X']),
+    filterFiles: filterFilesDefaultConstructor(SampleTech['10X']),
     getFileSampleAndName: getFileSampleAndNameDefault,
-    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(sampleTech['10X']),
+    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(SampleTech['10X']),
   },
-  [sampleTech.SEURAT]: {
+  [SampleTech.SEURAT]: {
     validExtensionTypes: ['.rds'],
     inputInfo: [
       ['<code>scdata$samples</code>: sample assignment. If absent, treated as unisample.'],
@@ -140,10 +140,10 @@ const fileUploadUtils = {
     getCorrespondingType: () => 'seurat',
     // For more information on this one check the TODO1 at FileUploadModal
     filterFiles: () => { throw new Error('Not Implemented'); },
-    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(sampleTech.SEURAT),
+    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(SampleTech.SEURAT),
     getFileSampleAndName: getFileSampleAndNameDefault,
   },
-  [sampleTech.RHAPSODY]: {
+  [SampleTech.RHAPSODY]: {
     acceptedFiles: new Set(['expression_data.st', 'expression_data.st.gz']),
     requiredFiles: ['rhapsody'],
     inputInfo: [
@@ -158,11 +158,11 @@ const fileUploadUtils = {
     webkitdirectory: '',
     isNameValid: (fileName) => fileName.toLowerCase().match(/.*expression_data.st(.gz)?$/),
     getCorrespondingType: () => 'rhapsody',
-    filterFiles: filterFilesDefaultConstructor(sampleTech.RHAPSODY),
-    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(sampleTech.RHAPSODY),
+    filterFiles: filterFilesDefaultConstructor(SampleTech.RHAPSODY),
+    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(SampleTech.RHAPSODY),
     getFileSampleAndName: getFileSampleAndNameDefault,
   },
-  [sampleTech.H5]: {
+  [SampleTech.H5]: {
     acceptedFiles: new Set(['matrix.h5', 'matrix.h5.gz']),
     inputInfo: [['<code>matrix.h5</code> or <code>matrix.h5.gz</code>']],
     requiredFiles: ['10x_h5'],
@@ -171,11 +171,11 @@ const fileUploadUtils = {
     You can change this name later in Insights.`],
     isNameValid: (fileName) => fileName.toLowerCase().match(/.*matrix.h5(.gz)?$/),
     getCorrespondingType: () => '10x_h5',
-    filterFiles: filterFilesDefaultConstructor(sampleTech.H5),
-    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(sampleTech.H5),
+    filterFiles: filterFilesDefaultConstructor(SampleTech.H5),
+    getFilePathToDisplay: getFilePathToDisplayDefaultConstructor(SampleTech.H5),
     getFileSampleAndName: getFileSampleAndNameDefault,
   },
-  [sampleTech.PARSE]: {
+  [SampleTech.PARSE]: {
     acceptedFiles: new Set([
       'all_genes.csv',
       'all_genes.csv.gz',
@@ -219,7 +219,7 @@ const fileUploadUtils = {
     filterFiles: async (files) => {
       const sampleNameMatcher = '([^/]+)';
 
-      const parseUtils = fileUploadUtils[sampleTech.PARSE];
+      const parseUtils = fileUploadUtils[SampleTech.PARSE];
 
       // Gets a dirNameDGE and a list to filter over
       // Returns the same list of files
@@ -291,13 +291,13 @@ const fileUploadUtils = {
 
       return {
         valid: await Promise.all(filesToUpload.map((file) => (
-          fileObjectToFileRecord(file, sampleTech.PARSE)
+          fileObjectToFileRecord(file, SampleTech.PARSE)
         ))),
         invalid: invalidFiles,
       };
     },
     getFilePathToDisplay: (filePath) => {
-      const { sample, filteredState, name } = fileUploadUtils[sampleTech.PARSE].getFileSampleAndName(filePath);
+      const { sample, filteredState, name } = fileUploadUtils[SampleTech.PARSE].getFileSampleAndName(filePath);
 
       if (filteredState) {
         return [sample, filteredState, name].join('/');

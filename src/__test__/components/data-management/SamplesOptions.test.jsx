@@ -7,7 +7,7 @@ import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 
 import experimentsInitialState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
 import samplesInitialState, { sampleTemplate } from 'redux/reducers/samples/initialState';
@@ -31,7 +31,7 @@ const sample10x = {
   name: '10x sample',
   experimentId: experimentId10x,
   uuid: sampleId10x,
-  type: sampleTech['10X'],
+  type: SampleTech['10X'],
 };
 
 const sampleRhapsody = {
@@ -39,7 +39,7 @@ const sampleRhapsody = {
   name: 'sample experiment',
   experimentId: experimentIdRhapsody,
   uuid: sampleIdRhapsody,
-  type: sampleTech.RHAPSODY,
+  type: SampleTech.RHAPSODY,
 };
 
 const platformState = {

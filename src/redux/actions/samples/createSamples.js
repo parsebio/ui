@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import dayjs from 'dayjs';
 
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 
 import {
   SAMPLES_CREATED, SAMPLES_ERROR, SAMPLES_SAVED, SAMPLES_SAVING,
@@ -17,11 +17,11 @@ import UploadStatus from 'utils/upload/UploadStatus';
 import { createMetadataTrack, updateValuesInMetadataTrack } from '../experiments';
 
 const metadataValuesByTechnology = {
-  [sampleTech.PARSE]: 'Parse Evercode WT',
-  [sampleTech['10X']]: '10X Chromium',
-  [sampleTech.RHAPSODY]: 'BD Rhapsody',
-  [sampleTech.SEURAT]: 'Seurat',
-  [sampleTech.H5]: '10X Chromium - H5',
+  [SampleTech.PARSE]: 'Parse Evercode WT',
+  [SampleTech['10X']]: '10X Chromium',
+  [SampleTech.RHAPSODY]: 'BD Rhapsody',
+  [SampleTech.SEURAT]: 'Seurat',
+  [SampleTech.H5]: '10X Chromium - H5',
 };
 
 // If the sample name of new samples coincides with already existing
@@ -89,7 +89,7 @@ const createSamples = (
 
   const createdDate = dayjs().toISOString();
 
-  if (!Object.values(sampleTech).includes(sampleTechnology)) throw new Error(`Sample technology ${sampleTechnology} is not recognized`);
+  if (!Object.values(SampleTech).includes(sampleTechnology)) throw new Error(`Sample technology ${sampleTechnology} is not recognized`);
 
   let options = defaultSampleOptions[sampleTechnology] || {};
   let kit = null;

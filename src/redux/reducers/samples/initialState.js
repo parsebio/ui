@@ -1,4 +1,4 @@
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 
 const sampleTemplate = {
   name: null,
@@ -27,7 +27,7 @@ const sampleFileTemplate = {
 };
 
 const defaultSampleOptions = {
-  [sampleTech.RHAPSODY]: {
+  [SampleTech.RHAPSODY]: {
     includeAbSeq: false,
   },
 };

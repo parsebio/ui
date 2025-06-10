@@ -26,7 +26,7 @@ import initialExperimentSettingsState from 'redux/reducers/experimentSettings/in
 import { initialExperimentBackendStatus } from 'redux/reducers/backendStatus/initialState';
 
 import PipelineStatus from 'utils/pipelineStatusValues';
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 import UploadStatus from 'utils/upload/UploadStatus';
 import ProjectDetails from 'components/data-management/project/ProjectDetails';
 
@@ -118,7 +118,7 @@ const withDataState = {
       name: sample1Name,
       experimentId: experiment1id,
       uuid: sample1Uuid,
-      type: sampleTech['10X'],
+      type: SampleTech['10X'],
       metadata: ['value-1'],
       fileNames: ['features.tsv.gz', 'barcodes.tsv.gz', 'matrix.mtx.gz'],
       files: {
@@ -133,7 +133,7 @@ const withDataState = {
       name: sample2Name,
       experimentId: experiment1id,
       uuid: sample2Uuid,
-      type: sampleTech['10X'],
+      type: SampleTech['10X'],
       metadata: ['value-2'],
       fileNames: ['features.tsv.gz', 'barcodes.tsv.gz', 'matrix.mtx.gz'],
       files: {
@@ -178,7 +178,7 @@ const withSeuratDataState = {
       name: sample1Name,
       experimentId: experiment1id,
       uuid: sample1Uuid,
-      type: sampleTech.SEURAT,
+      type: SampleTech.SEURAT,
       fileNames: ['r.rds'],
       files: {
         'r.rds': { valid: true, upload: { status: UploadStatus.UPLOADED } },

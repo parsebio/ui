@@ -1,4 +1,4 @@
-import sampleTech from 'const/enums/sampleTech';
+import sampleTech from 'const/enums/SampleTech';
 
 import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
 

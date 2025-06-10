@@ -12,7 +12,7 @@ import {
 import initialSampleState, { sampleTemplate } from 'redux/reducers/samples/initialState';
 import initialExperimentState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
 
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 
 import UploadStatus from 'utils/upload/UploadStatus';
 import processSampleUpload from 'utils/upload/processSampleUpload';
@@ -36,7 +36,7 @@ const getValidFiles = (selectedSampleTech, optionals = {}) => {
   let barcodesPathPrefix;
   let matrixPathPrefix;
 
-  if (selectedSampleTech === sampleTech['10X']) {
+  if (selectedSampleTech === SampleTech['10X']) {
     featuresFileName = cellrangerVersion === 'v2' ? 'genes.tsv.gz' : 'features.tsv.gz';
     barcodesFileName = 'barcodes.tsv.gz';
     matrixFileName = 'matrix.mtx.gz';
@@ -44,7 +44,7 @@ const getValidFiles = (selectedSampleTech, optionals = {}) => {
     featuresPathPrefix = 'WT13';
     barcodesPathPrefix = 'WT13';
     matrixPathPrefix = 'WT13';
-  } else if (selectedSampleTech === sampleTech.PARSE) {
+  } else if (selectedSampleTech === SampleTech.PARSE) {
     featuresFileName = 'all_genes.csv.gz';
     barcodesFileName = 'cell_metadata.csv.gz';
     matrixFileName = 'DGE.mtx.gz';
@@ -115,14 +115,14 @@ const initialState = {
       uuid: mockSampleUuid,
       name: sampleName,
       experimentId: mockExperimentId,
-      type: sampleTech['10X'],
+      type: SampleTech['10X'],
     },
     [mockUnrelatedSampleUuid]: {
       ...sampleTemplate,
       uuid: mockUnrelatedSampleUuid,
       name: sampleName,
       experimentId: mockUnrelatedExperimentId,
-      type: sampleTech['10X'],
+      type: SampleTech['10X'],
     },
   },
 };
@@ -197,9 +197,9 @@ const mockProcessUploadCalls = () => {
 };
 
 describe.each([
-  { selectedSampleTech: sampleTech.PARSE, cellrangerVersion: null },
-  { selectedSampleTech: sampleTech['10X'], cellrangerVersion: 'v2' },
-  { selectedSampleTech: sampleTech['10X'], cellrangerVersion: 'v3' },
+  { selectedSampleTech: SampleTech.PARSE, cellrangerVersion: null },
+  { selectedSampleTech: SampleTech['10X'], cellrangerVersion: 'v2' },
+  { selectedSampleTech: SampleTech['10X'], cellrangerVersion: 'v3' },
 ])('processUpload $selectedSampleTech, $cellrangerVersion', ({ selectedSampleTech, cellrangerVersion }) => {
   beforeEach(() => {
     jest.clearAllMocks();

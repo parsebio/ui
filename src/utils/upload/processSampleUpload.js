@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
 
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 
 import {
   createSamples, createSampleFile, updateSampleFileUpload, validateSamples,
@@ -108,7 +108,7 @@ const beginSampleFileUpload = async (experimentId, sampleFileId, metadata) => aw
 
 const getMetadata = (fileName, selectedTech) => {
   const metadata = {};
-  if (selectedTech === sampleTech['10X']) {
+  if (selectedTech === SampleTech['10X']) {
     if (fileName.includes('genes')) {
       metadata.cellranger_version = 'v2';
     } else if (fileName.includes('features')) {

@@ -1,4 +1,4 @@
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 import { inspectFile, Verdict } from 'utils/upload/fileInspector';
 import readFileToBuffer from 'utils/upload/readFileToBuffer';
 
@@ -14,7 +14,7 @@ describe('fileInspector', () => {
       name: 'random_file.gz',
     };
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.INVALID_NAME);
   });
 
@@ -32,7 +32,7 @@ describe('fileInspector', () => {
         Promise.resolve(Buffer.from('ACGTACGTACGT-1')),
       );
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.VALID_UNZIPPED);
   });
 
@@ -42,7 +42,7 @@ describe('fileInspector', () => {
       slice() { },
     };
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.INVALID_NAME);
   });
 
@@ -66,10 +66,10 @@ describe('fileInspector', () => {
         Promise.resolve(Buffer.from('Def. not a matrix')),
       );
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.VALID_UNZIPPED);
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.INVALID_FORMAT);
   });
 
@@ -105,16 +105,16 @@ describe('fileInspector', () => {
         Promise.resolve(Buffer.from('"lnc_inter_chr1_')),
       );
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.VALID_UNZIPPED);
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.VALID_UNZIPPED);
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.VALID_UNZIPPED);
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.VALID_UNZIPPED);
   });
 
@@ -138,10 +138,10 @@ describe('fileInspector', () => {
         Promise.resolve(Buffer.from('ACGTACGTACGT-1\t')),
       );
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.VALID_UNZIPPED);
 
-    expect(await inspectFile(file, sampleTech['10X']))
+    expect(await inspectFile(file, SampleTech['10X']))
       .toEqual(Verdict.INVALID_FORMAT);
   });
 
@@ -154,7 +154,7 @@ describe('fileInspector', () => {
       .mockReturnValueOnce(
         Promise.resolve(Buffer.from([0x1f, 0x8b])),
       );
-    expect(await inspectFile(file, sampleTech.RHAPSODY))
+    expect(await inspectFile(file, SampleTech.RHAPSODY))
       .toEqual(Verdict.VALID_ZIPPED);
   });
 
@@ -167,7 +167,7 @@ describe('fileInspector', () => {
       .mockReturnValueOnce(
         Promise.resolve(),
       );
-    expect(await inspectFile(file, sampleTech.RHAPSODY))
+    expect(await inspectFile(file, SampleTech.RHAPSODY))
       .toEqual(Verdict.INVALID_NAME);
   });
 
@@ -185,7 +185,7 @@ describe('fileInspector', () => {
       name: 'scdata.rds',
     };
 
-    expect(await inspectFile(file, sampleTech.SEURAT))
+    expect(await inspectFile(file, SampleTech.SEURAT))
       .toEqual(Verdict.VALID_ZIPPED);
   });
 
@@ -194,7 +194,7 @@ describe('fileInspector', () => {
       name: 'blah.txt',
     };
 
-    expect(await inspectFile(file, sampleTech.SEURAT))
+    expect(await inspectFile(file, SampleTech.SEURAT))
       .toEqual(Verdict.INVALID_NAME);
   });
 });

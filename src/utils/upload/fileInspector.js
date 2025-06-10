@@ -1,6 +1,6 @@
 import { Gunzip } from 'fflate';
 
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 import techOptions from 'utils/upload/fileUploadUtils';
 import readFileToBuffer from 'utils/upload/readFileToBuffer';
 
@@ -22,23 +22,23 @@ const getShouldCompress = async (file) => {
 };
 
 const inspectFile = async (file, technology) => {
-  if (Object.values(sampleTech).includes(technology)
+  if (Object.values(SampleTech).includes(technology)
     && !techOptions[technology].isNameValid(file.name)) {
     return Verdict.INVALID_NAME;
   }
 
   // Validate a file requested for upload to the platform.
-  if (technology === sampleTech['10X']) {
+  if (technology === SampleTech['10X']) {
     return inspect10XFile(file);
-  } if (technology === sampleTech.SEURAT) {
+  } if (technology === SampleTech.SEURAT) {
     // only extension is checked
     return Verdict.VALID_ZIPPED;
-  } if (technology === sampleTech.RHAPSODY) {
+  } if (technology === SampleTech.RHAPSODY) {
     // TODO: check why we would forbid non-gzipped files
     return inspectRhapsodyFile(file);
-  } if (technology === sampleTech.H5) {
+  } if (technology === SampleTech.H5) {
     return inspectH5File(file);
-  } if (technology === sampleTech.PARSE) {
+  } if (technology === SampleTech.PARSE) {
     // TODO: look into adding validation
     return inspectParseFile(file);
   }
@@ -47,7 +47,7 @@ const inspectFile = async (file, technology) => {
 };
 
 const inspectH5File = async (file) => {
-  if (!techOptions[sampleTech.H5].isNameValid(file.name)) {
+  if (!techOptions[SampleTech.H5].isNameValid(file.name)) {
     return Verdict.INVALID_NAME;
   }
   return await getShouldCompress(file);

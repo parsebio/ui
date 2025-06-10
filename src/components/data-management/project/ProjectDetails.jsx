@@ -8,7 +8,7 @@ import {
 } from 'antd';
 
 import { layout } from 'const';
-import sampleTech from 'const/enums/sampleTech';
+import SampleTech from 'const/enums/SampleTech';
 
 import {
   cloneExperiment, updateExperiment, loadExperiments, setActiveExperiment,
@@ -40,7 +40,7 @@ const ProjectDetails = ({ width, height }) => {
   const samples = useSelector((state) => state.samples);
 
   const parseTechSample = activeExperiment.sampleIds.filter(
-    (sampleId) => samples[sampleId]?.type === sampleTech.PARSE,
+    (sampleId) => samples[sampleId]?.type === SampleTech.PARSE,
   )[0];
 
   const { kit } = samples[parseTechSample] ?? {};
