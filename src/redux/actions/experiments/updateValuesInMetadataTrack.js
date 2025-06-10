@@ -44,6 +44,7 @@ const updateValuesInMetadataTrack = (
 
     await dispatch(loadBackendStatus(experimentId));
   } catch (e) {
+    console.error(e);
     const errorMessage = handleError(e, endUserMessages.ERROR_SAVING);
 
     dispatch({

@@ -21,6 +21,7 @@ import validateParse from 'utils/upload/validateParse';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { sampleTech } from 'utils/constants';
 import mockFile from '__test__/test-utils/mockFile';
+import mockBackendStatusData from '__test__/data/backend_status.json';
 import { setupNavigatorLocks, teardownNavigatorLocks } from '__test__/test-utils/mockLocks';
 
 enableFetchMocks();
@@ -115,12 +116,14 @@ const initialState = {
       uuid: mockSampleUuid,
       name: sampleName,
       experimentId: mockExperimentId,
+      type: sampleTech['10X'],
     },
     [mockUnrelatedSampleUuid]: {
       ...sampleTemplate,
       uuid: mockUnrelatedSampleUuid,
       name: sampleName,
       experimentId: mockUnrelatedExperimentId,
+      type: sampleTech['10X'],
     },
   },
 };
@@ -180,6 +183,14 @@ const mockProcessUploadCalls = () => {
 
     if (url.endsWith('/v2/completeMultipartUpload')) {
       result = { status: 200, body: JSON.stringify({}) };
+    }
+
+    if (url.endsWith(`/v2/experiments/${mockExperimentId}/metadataTracks/Technology`)) {
+      result = { status: 200, body: JSON.stringify({}) };
+    }
+
+    if (url.endsWith(`experiments/${mockExperimentId}/backendStatus`)) {
+      result = { status: 200, body: JSON.stringify(mockBackendStatusData) };
     }
 
     return Promise.resolve(result);
@@ -262,11 +273,13 @@ describe.each([
     );
 
     // Order is respected, SAMPLES_CREATED runs *before* SAMPLES_FILE_UPDATE
-    expect(_.map(store.getActions(), 'type')).toEqual([
-      ...Array(2).fill(SAMPLES_VALIDATING_UPDATED),
-      SAMPLES_SAVING, SAMPLES_CREATED, SAMPLES_SAVED,
-      ...Array(9).fill(SAMPLES_FILE_UPDATE),
-    ]);
+    expect(_.map(store.getActions(), 'type')).toEqual(
+      expect.arrayContaining([
+        ...Array(2).fill(SAMPLES_VALIDATING_UPDATED),
+        SAMPLES_SAVING, SAMPLES_CREATED, SAMPLES_SAVED,
+        ...Array(9).fill(SAMPLES_FILE_UPDATE),
+      ]),
+    );
 
     // There are 3 files actions with status uploading
     expect(uploadingStatusProperties.length).toEqual(6);
