@@ -34,7 +34,11 @@ describe('updateValuesInMetadataTrack action', () => {
     fetchMock.mockIf(/.*/, () => promiseResponse(JSON.stringify({})));
 
     await store.dispatch(
-      updateValuesInMetadataTrack(experimentId, sampleIds, metadataTrackKeyRCompatible, value),
+      updateValuesInMetadataTrack(
+        experimentId,
+        metadataTrackKeyRCompatible,
+        [{ sampleIds, value }],
+      ),
     );
 
     const actions = store.getActions();
@@ -49,7 +53,7 @@ describe('updateValuesInMetadataTrack action', () => {
     expect(fetchMock).toHaveBeenCalledWith(
       `http://localhost:3000/v2/experiments/${experimentId}/metadataTracks/${metadataTrackKeyRCompatible}`,
       {
-        body: JSON.stringify({ value, sampleIds }),
+        body: JSON.stringify([{ sampleIds, value }]),
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
       },
@@ -62,7 +66,11 @@ describe('updateValuesInMetadataTrack action', () => {
     fetchMock.mockRejectOnce(() => Promise.reject(new Error('Some error')));
 
     await store.dispatch(
-      updateValuesInMetadataTrack(experimentId, sampleIds, metadataTrackKeyRCompatible, value),
+      updateValuesInMetadataTrack(
+        experimentId,
+        metadataTrackKeyRCompatible,
+        [{ sampleIds, value }],
+      ),
     );
 
     const actions = store.getActions();

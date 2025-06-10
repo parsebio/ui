@@ -9,6 +9,7 @@ const rules = {
   START_WITH_ALPHABET: 'START_WITH_ALPHABET',
   VALID_EMAIL: 'VALID_EMAIL',
   VALID_UUID: 'VALID_UUID',
+  RESERVED_NAME: 'RESERVED_NAME',
 };
 
 const errorMessages = {
@@ -22,6 +23,7 @@ const errorMessages = {
   [rules.START_WITH_ALPHABET]: 'Name can only start with letter',
   [rules.VALID_EMAIL]: 'Invalid email',
   [rules.VALID_UUID]: 'Invalid UUID',
+  [rules.RESERVED_NAME]: 'This name is reserved, use a different one',
 };
 
 const validationFns = {
@@ -106,6 +108,15 @@ const validationFns = {
     return true;
   },
 
+  [rules.RESERVED_NAME](checkName, input, params) {
+    const usesReservedName = params.reservedNames.includes(input);
+
+    console.log('usesReservedNameDebug');
+    console.log(usesReservedName);
+    if (usesReservedName) return errorMessages[checkName];
+
+    return true;
+  },
 };
 
 /**
