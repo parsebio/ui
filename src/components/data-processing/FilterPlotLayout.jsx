@@ -45,8 +45,9 @@ const FilterPlotLayout = ({
   );
   const filterTableData = useSelector((state) => state.componentConfig[filterTableUuid]?.plotData);
   const pipelineStatus = useSelector(getBackendStatus(experimentId))?.status?.pipeline;
+  let tableWarnings = [];
   if (filterTableData) {
-    filterTableData.warnings = pipelineStatus.notifications?.map((notification) => {
+    tableWarnings = pipelineStatus.notifications?.map((notification) => {
       const { sampleId: notificationSampleId, stepName } = notification;
       if (filterTableUuid.includes(`${notificationSampleId}-${stepName}`)) {
         return notification.message;
@@ -178,7 +179,7 @@ const FilterPlotLayout = ({
           <Divider />
           <Row style={{ marginTop: '0.5em' }}>
             {filterTableData
-              ? <FilterResultTable tableData={filterTableData} />
+              ? <FilterResultTable tableData={filterTableData} warnings={tableWarnings} />
               : <Skeleton />}
           </Row>
         </Col>
