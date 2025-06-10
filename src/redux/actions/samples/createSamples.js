@@ -13,6 +13,15 @@ import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState'
 import { defaultSampleOptions, sampleTemplate } from 'redux/reducers/samples/initialState';
 import { sampleTech } from 'utils/constants';
 import UploadStatus from 'utils/upload/UploadStatus';
+import { createMetadataTrack, updateValuesInMetadataTrack } from '../experiments';
+
+const metadataValuesByTechnology = {
+  [sampleTech.PARSE]: 'Parse Evercode WT',
+  [sampleTech['10X']]: '10X Chromium',
+  [sampleTech.RHAPSODY]: 'BD Rhapsody',
+  [sampleTech.SEURAT]: 'Seurat',
+  [sampleTech.H5]: '10X Chromium - H5',
+};
 
 // If the sample name of new samples coincides with already existing
 // ones we should not create new samples,
@@ -50,6 +59,18 @@ const splitByAlreadyExistingSamples = (
   return { samplesToCreate, alreadyCreatedSampleIds };
 };
 
+const getSamplesByTechnology = (samples) => (
+  samples
+    .reduce(
+      (acc, sample) => {
+        acc[sample.type] = acc[sample.type] ?? [];
+        acc[sample.type].push(sample);
+        return acc;
+      },
+      {},
+    )
+);
+
 const createSamples = (
   experimentId,
   newSamples,
@@ -72,12 +93,19 @@ const createSamples = (
   let options = defaultSampleOptions[sampleTechnology] || {};
   let kit = null;
 
-  // If there are other samples in the same experiment, use the options and kit
-  // values from the other samples
-  if (experiment.sampleIds.length) {
-    const firstSampleId = experiment.sampleIds[0];
-    options = samples[firstSampleId].options;
-    kit = samples[firstSampleId].kit;
+  const oldSamples = experiment.sampleIds.map((sampleId) => samples[sampleId]);
+
+  const oldSamplesByTechnology = getSamplesByTechnology(oldSamples);
+
+  // If there are other parse samples in the same experiment, use the options and kit
+  // values from the other ones (since we don't allow multi kits exps yet)
+  if (
+    sampleTechnology === 'parse'
+    && oldSamplesByTechnology.parse?.length > 0
+  ) {
+    const firstSample = oldSamplesByTechnology.parse[0];
+    options = firstSample.options;
+    kit = firstSample.kit;
   }
 
   const {
@@ -143,10 +171,51 @@ const createSamples = (
       },
     });
 
+    const newSamplesToUpdateByTechnology = getSamplesByTechnology(newSamplesToRedux);
+
+    const allSamples = _.mergeWith(
+      {},
+      newSamplesToUpdateByTechnology,
+      oldSamplesByTechnology,
+      (objValue, srcValue) => {
+        if (_.isArray(objValue) && _.isArray(srcValue)) {
+          return objValue.concat(srcValue);
+        }
+      },
+    );
+
+    let technologyMetadataTrackExists = Boolean(
+      _.sample(
+        Object.values(oldSamplesByTechnology)[0] ?? [],
+      )?.metadata?.Technology,
+    );
+
+    let samplesToUpdateByTechnology = newSamplesToUpdateByTechnology;
+
+    // If multitech, then add the Technology metadata track
+    if (Object.keys(allSamples).length > 1 && !technologyMetadataTrackExists) {
+      // If the Technology metadata track does not already exist, create it
+      await dispatch(createMetadataTrack('Technology', experimentId));
+
+      samplesToUpdateByTechnology = allSamples;
+      technologyMetadataTrackExists = true;
+    }
+
+    if (technologyMetadataTrackExists) {
+      const updates = Object.entries(samplesToUpdateByTechnology)
+        .map(([technology, currSamples]) => ({
+          value: metadataValuesByTechnology[technology],
+          sampleIds: currSamples.map((sample) => sample.uuid),
+        }));
+
+      await dispatch(updateValuesInMetadataTrack(experimentId, 'Technology', updates));
+    }
+
     dispatch({ type: SAMPLES_SAVED });
 
     return sampleIdsByName;
   } catch (e) {
+    console.error(e);
     const errorMessage = handleError(e, endUserMessages.ERROR_CREATING_SAMPLE);
 
     dispatch({
