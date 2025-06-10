@@ -11,6 +11,7 @@ const validationChecks = [
   rules.ALPHANUM_SPACE,
   rules.UNIQUE_NAME_CASE_INSENSITIVE,
   rules.START_WITH_ALPHABET,
+  rules.RESERVED_NAME,
 ];
 
 const MetadataPopover = (props) => {
@@ -28,6 +29,17 @@ const MetadataPopover = (props) => {
     existingNames: existingMetadata.map(
       (metadataKey) => metadataKeyToName(metadataKey).toLowerCase(),
     ),
+    reservedNames: ['Technology'],
+  };
+
+  const validationFunc = (name) => {
+    const { isValid, results } = validateInputs(
+      metadataKeyToName(metadataNameToKey(name)),
+      validationChecks,
+      validationParams,
+    );
+
+    return isValid || results.find((result) => result !== true);
   };
 
   const getContent = () => (
@@ -41,11 +53,7 @@ const MetadataPopover = (props) => {
       deleteEnabled={false}
       value={`Track ${existingMetadata.filter((key) => key.match('Track_')).length + 1}`}
       defaultEditing
-      validationFunc={(name) => validateInputs(
-        metadataKeyToName(metadataNameToKey(name)),
-        validationChecks,
-        validationParams,
-      ).isValid}
+      validationFunc={validationFunc}
       formatter={(value) => value.trim()}
     />
   );
