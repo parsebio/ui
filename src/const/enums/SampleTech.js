@@ -16,7 +16,5 @@ const techNamesToDisplay = {
 
 const getTechNameToDisplay = (tech) => techNamesToDisplay[tech];
 
-// techOptions
-
 export default SampleTech;
 export { getTechNameToDisplay };

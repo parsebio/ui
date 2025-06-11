@@ -1,7 +1,7 @@
 import { Gunzip } from 'fflate';
 
 import SampleTech from 'const/enums/SampleTech';
-import techOptions from 'utils/upload/fileUploadUtils';
+import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import readFileToBuffer from 'utils/upload/readFileToBuffer';
 
 const Verdict = {
@@ -23,7 +23,7 @@ const getShouldCompress = async (file) => {
 
 const inspectFile = async (file, technology) => {
   if (Object.values(SampleTech).includes(technology)
-    && !techOptions[technology].isNameValid(file.name)) {
+    && !fileUploadUtils[technology].isNameValid(file.name)) {
     return Verdict.INVALID_NAME;
   }
 
@@ -47,7 +47,7 @@ const inspectFile = async (file, technology) => {
 };
 
 const inspectH5File = async (file) => {
-  if (!techOptions[SampleTech.H5].isNameValid(file.name)) {
+  if (!fileUploadUtils[SampleTech.H5].isNameValid(file.name)) {
     return Verdict.INVALID_NAME;
   }
   return await getShouldCompress(file);
