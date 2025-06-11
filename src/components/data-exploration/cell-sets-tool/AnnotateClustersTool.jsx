@@ -1,55 +1,30 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 
 import {
-  Button,
-  Radio, Select, Space, Tooltip, Alert,
+  Radio, Space, Tooltip,
 } from 'antd';
-import { runCellSetsAnnotation } from 'redux/actions/cellSets';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCellSets } from 'redux/selectors';
 
-const tissueOptions = [
-  'Immune system',
-  'Pancreas',
-  'Liver',
-  'Eye',
-  'Kidney',
-  'Brain',
-  'Lung',
-  'Adrenal',
-  'Heart',
-  'Intestine',
-  'Muscle',
-  'Placenta',
-  'Spleen',
-  'Stomach',
-  'Thymus',
-  'Hippocampus',
-];
+import ScanpyDisabler from 'utils/ScanpyDisabler';
+import SeuratDisabler from 'utils/SeuratDisabler';
+import CellTypistAnnotate from './AnnotateClusters/CellTypistAnnotate';
+import ScTypeAndDecouplerAnnotate from './AnnotateClusters/ScTypeAndDecouplerAnnotate';
 
-const speciesOptions = [
-  'human',
-  'mouse',
-];
-
-const scTypeTooltipText = (
+const ScTypeTooltipText = (
   <>
-    Automatic annotation is performed using ScType, a marker gene-based tool
-    developed by Aleksandr Ianevski et al.
-    It uses a marker genes database which was build using
+    Uses ScType, a marker gene-based tool developed by Aleksandr Ianevski et al.
+    It uses a marker genes database which was built using
     {' '}
     <a target='_blank' href='http://biocc.hrbmu.edu.cn/CellMarker/' rel='noreferrer'>CellMarker</a>
     ,
     {' '}
     <a target='_blank' href='https://panglaodb.se/' rel='noreferrer'>PanglaoDB</a>
     ,
-    and 15 novel cell types with corresponding marker genes added by
-    manual curation of more than 10 papers.
-    The current version of the ScType database contains a total of
-    3,980 cell markers for 194 cell types in 17 human tissues and 4,212 cell markers
-    for 194 cell types in 17 mouse tissues.
+    and 15 novel cell types with corresponding marker genes added by manual
+    curation of more than 10 papers.
+    The current version of the ScType database contains a total of 3,980 cell
+    markers for 194 cell types in 17 human tissues and 4,212 cell markers for
+    194 cell types in 17 mouse tissues.
     More details can be found in
     {' '}
     <a target='_blank' href='https://www.nature.com/articles/s41467-022-28803-w' rel='noreferrer'>the ScType paper</a>
@@ -61,61 +36,134 @@ const scTypeTooltipText = (
   </>
 );
 
+const DecouplerTooltipText = (
+  <>
+    Uses the
+    {' '}
+    {' '}
+    <a target='_blank' href='https://doi.org/10.2307/2340521' rel='noreferrer'>
+      Overrepresentation Analysis (ORA)
+    </a>
+    {' '}
+    method implemented in decoupler-py. ORA measures the overlap between a target feature set
+    {' '}
+    (the marker genes in the
+    <a target='_blank' href='https://panglaodb.se/' rel='noreferrer'> PanglaoDB</a>
+    {' '}
+    database)
+    and the marker genes of a given experiment. With these, a contingency table
+    is built and a one-tailed Fisher&apos;s exact test is computed to determine if a
+    cell type&apos;s set of features are over-represented in the selected features from the data.
+
+    More details can be found in the
+    {' '}
+    <a target='_blank' href='https://decoupler-py.readthedocs.io/en/latest/' rel='noreferrer'>
+      decoupler documentation
+    </a>
+    , and on the original paper.
+
+    <br />
+    <br />
+    Badia-i-Mompel P., Vélez Santiago J., Braunger J., Geiss C., Dimitrov D.,
+    Müller-Dott S., Taus P., Dugourd A., Holland C.H., Ramirez Flores R.O.
+    and Saez-Rodriguez J. 2022.
+    decoupleR: Ensemble of computational methods to infer biological activities from omics data.
+    Bioinformatics Advances.
+    {' '}
+    <a target='_blank' href='https://doi.org/10.1093/bioadv/vbac016' rel='noreferrer'>
+      https://doi.org/10.1093/bioadv/vbac016
+    </a>
+  </>
+);
+
+const CellTypistTooltipText = (
+  <>
+    Uses CellTypist, an automated scRNA-seq annotation tool based on regularised
+    logistic regression classifiers. More details can be found in the
+    {' '}
+    <a target='_blank' href='https://www.celltypist.org' rel='noreferrer'>
+      CellTypist website
+    </a>
+    .
+    <br />
+    <br />
+    References:
+    Automatic cell-type harmonization and integration across Human Cell Atlas
+    datasets. Cell 186, 5876-5891.e20 (2023).
+    {' '}
+    <a target='_blank' href='https://doi.org/10.1016/j.cell.2023.11.026' rel='noreferrer'>
+      https://doi.org/10.1016/j.cell.2023.11.026
+    </a>
+    ;
+    <br />
+    Cross-tissue immune cell analysis reveals tissue-specific features in humans.
+    Science 376, eabl5197 (2022).
+    {' '}
+    <a target='_blank' href='https://doi.org/10.1126/science.abl5197' rel='noreferrer'>
+      https://doi.org/10.1126/science.abl5197
+    </a>
+    .
+  </>
+);
+
+const annotationTools = {
+  sctype: {
+    label: 'ScType',
+    tooltip: ScTypeTooltipText,
+    Disabler: ScanpyDisabler,
+  },
+  decoupler: {
+    label: 'Decoupler',
+    tooltip: DecouplerTooltipText,
+    Disabler: SeuratDisabler,
+  },
+  celltypist: {
+    label: 'CellTypist',
+    tooltip: CellTypistTooltipText,
+    Disabler: SeuratDisabler,
+  },
+};
+
 const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
-  const dispatch = useDispatch();
-
-  const [tissue, setTissue] = useState(null);
-  const [species, setSpecies] = useState(null);
-
-  const cellSets = useSelector(getCellSets());
-
-  const allClustersValid = useMemo(() => Object.entries(cellSets.properties).every(([, value]) => value.parentNodeKey !== 'louvain' || value.cellIds.size > 1), [cellSets]);
+  const [selectedTool, setSelectedTool] = useState('sctype');
 
   return (
     <Space direction='vertical'>
-      <Radio.Group>
-        <Tooltip title={scTypeTooltipText}>
-          <Radio>ScType</Radio>
-        </Tooltip>
+      <Radio.Group
+        value={selectedTool}
+        onChange={(e) => {
+          setSelectedTool(e.target.value);
+        }}
+        style={{ display: 'flex', flexDirection: 'row' }}
+      >
+        {Object.entries(annotationTools).map(([key, tool]) => {
+          const { Disabler } = tool;
+          const radio = (
+            <Tooltip title={tool.tooltip} key={key} placement='left' mouseEnterDelay={0.5}>
+              <Radio value={key}>{tool.label}</Radio>
+            </Tooltip>
+          );
+          return Disabler ? (
+            <Disabler experimentId={experimentId} key={key}>
+              {radio}
+            </Disabler>
+          ) : radio;
+        })}
       </Radio.Group>
 
-      <Space direction='vertical' style={{ width: '100%' }}>
-        Tissue Type:
-        <Select
-          options={tissueOptions.map((option) => ({ label: option, value: option }))}
-          value={tissue}
-          placeholder='Select a tissue type'
-          onChange={setTissue}
+      {selectedTool === 'celltypist' ? (
+        <CellTypistAnnotate
+          experimentId={experimentId}
+          onRunAnnotation={onRunAnnotation}
         />
-      </Space>
+      ) : (
+        <ScTypeAndDecouplerAnnotate
+          experimentId={experimentId}
+          onRunAnnotation={onRunAnnotation}
+          selectedTool={selectedTool}
+        />
+      )}
 
-      <Space direction='vertical' style={{ width: '100%' }}>
-        Species:
-        <Select
-          options={speciesOptions.map((option) => ({ label: option, value: option }))}
-          value={species}
-          placeholder='Select a species'
-          onChange={setSpecies}
-        />
-      </Space>
-      {!allClustersValid
-        && (
-          <Alert
-            message='There are some clusters with too few cells to compute annotations. Try increasing the clustering resolution value.'
-            type='info'
-            showIcon
-          />
-        )}
-      <Button
-        onClick={() => {
-          dispatch(runCellSetsAnnotation(experimentId, species, tissue));
-          onRunAnnotation();
-        }}
-        disabled={_.isNil(tissue) || _.isNil(species) || !allClustersValid}
-        style={{ marginTop: '20px' }}
-      >
-        Compute
-      </Button>
     </Space>
   );
 };
