@@ -30,13 +30,12 @@ import {
   updateCellSetProperty,
 } from 'redux/actions/cellSets';
 import { runSubsetExperiment } from 'redux/actions/pipeline';
-import { getCellSets, getIsScanpy } from 'redux/selectors';
+import { getCellSets } from 'redux/selectors';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
 import { modules, permissions } from 'const';
 import { composeTree } from 'utils/cellSets';
 import { complement, intersection, union } from 'utils/cellSetOperations';
-import ScanpyDisabler from 'utils/ScanpyDisabler';
 import PermissionsChecker from 'utils/PermissionsChecker';
 
 const FOCUS_TYPE = 'cellSets';
@@ -48,7 +47,6 @@ const CellSetsTool = (props) => {
   const { navigateTo } = useAppRouter();
 
   const cellSets = useSelector(getCellSets());
-  const isScanpy = useSelector(getIsScanpy());
 
   const {
     accessible, error, hierarchy, properties, hidden,
@@ -195,8 +193,7 @@ const CellSetsTool = (props) => {
       },
       {
         key: 'annotateClusters',
-        label: (<ScanpyDisabler>Annotate clusters</ScanpyDisabler>),
-        disabled: isScanpy,
+        label: 'Annotate clusters',
         children: (
           <PermissionsChecker permissions={permissions.WRITE}>
             <AnnotateClustersTool

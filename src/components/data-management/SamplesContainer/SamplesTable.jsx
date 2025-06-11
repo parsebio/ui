@@ -8,7 +8,6 @@ import { useVT } from 'virtualizedtableforantd4';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Table,
-  Typography,
   Space,
   Tooltip,
 } from 'antd';

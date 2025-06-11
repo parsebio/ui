@@ -119,7 +119,6 @@ const plots = [
 ];
 
 const disabledByScanpy = [
-  'normalized-matrix-key',
   'trajectory-analysis-key',
 ];
 

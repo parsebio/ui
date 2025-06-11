@@ -59,6 +59,10 @@ const getIsScanpy = (...params) => (state) => (
   experimentSettingsSelectors.getIsScanpy(...params)(state.experimentSettings)
 );
 
+const getIsSeurat = (...params) => (state) => (
+  experimentSettingsSelectors.getIsSeurat(...params)(state.experimentSettings)
+);
+
 const getMetadataToSampleIds = (...params) => (state) => (
   samplesSelectors.getMetadataToSampleIds(...params)(state.samples)
 );
@@ -90,6 +94,7 @@ export {
   getFilterChanges,
   getAnalysisTool,
   getIsScanpy,
+  getIsSeurat,
   getMetadataToSampleIds,
   getSamples,
   getHasPermissions,
