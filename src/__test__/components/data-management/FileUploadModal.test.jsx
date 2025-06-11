@@ -11,7 +11,7 @@ import configureMockStore from 'redux-mock-store';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 
-import techOptions from 'utils/upload/fileUploadUtils';
+import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import SampleTech, { getTechNameToDisplay } from 'const/enums/SampleTech';
 
 import mockFile from '__test__/test-utils/mockFile';
@@ -91,7 +91,7 @@ describe('FileUploadModal', () => {
 
     // It contains instructions on what files can be uploaded
     expect(screen.getByText(/For each sample, upload a folder containing/i)).toBeInTheDocument();
-    techOptions[SampleTech['10X']].acceptedFiles.forEach((filename) => {
+    fileUploadUtils[SampleTech['10X']].acceptedFiles.forEach((filename) => {
       expect(screen.getByText(filename)).toBeInTheDocument();
     });
 
@@ -384,7 +384,7 @@ describe('FileUploadModal', () => {
     });
 
     // It contains what files can be uploaded
-    techOptions[chosenTech].acceptedFiles.forEach((filename) => {
+    fileUploadUtils[chosenTech].acceptedFiles.forEach((filename) => {
       expect(screen.getByText(filename)).toBeInTheDocument();
     });
   });
@@ -396,7 +396,7 @@ describe('FileUploadModal', () => {
     selectTech(SampleTech.PARSE);
 
     // It mentions the files that can be uploaded
-    techOptions[SampleTech.PARSE].acceptedFiles.forEach((filename) => {
+    fileUploadUtils[SampleTech.PARSE].acceptedFiles.forEach((filename) => {
       expect(screen.getByText(filename)).toBeInTheDocument();
     });
 
