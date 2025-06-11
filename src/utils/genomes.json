@@ -368,6 +368,10 @@
     "species": "Custom Mus musculus (Mouse) with GFPh"
   },
   {
+    "name": "GRCm39_hsplacZ",
+    "species": "Custom Mus musculus (Mouse)"
+  },
+  {
     "name": "GRCm39_lacZ",
     "species": "Custom Mus musculus (Mouse)"
   },
