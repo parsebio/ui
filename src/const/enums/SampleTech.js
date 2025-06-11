@@ -1,49 +1,22 @@
-class SampleTech {
-  constructor({
-    value,
-    displayName,
-  }) {
-    this.value = value;
-    this.displayName = displayName;
-  }
-
-  toString() {
-    return this.value;
-  }
-}
-
-export const PARSE = new SampleTech({
-  value: 'parse',
-  displayName: `Parse Evercode${String.fromCharCode(8482)} WT`,
-});
-
-export const TENX = new SampleTech({
-  value: '10x',
-  displayName: `10X Chromium${String.fromCharCode(8482)}`,
-});
-
-export const RHAPSODY = new SampleTech({
-  value: 'rhapsody',
-  displayName: `BD Rhapsody${String.fromCharCode(8482)}`,
-});
-
-export const SEURAT = new SampleTech({
-  value: 'seurat',
-  displayName: 'Seurat',
-});
-
-export const H5 = new SampleTech({
-  value: '10x_h5',
-  displayName: `10X Chromium${String.fromCharCode(8482)} - H5`,
-});
-
-
-const SampleTechEnum = {
-  PARSE,
-  TENX,
-  RHAPSODY,
-  SEURAT,
-  H5,
+const SampleTech = {
+  PARSE: 'parse',
+  '10X': '10x',
+  RHAPSODY: 'rhapsody',
+  SEURAT: 'seurat',
+  H5: '10x_h5',
 };
 
-export default SampleTechEnum;
+const techNamesToDisplay = {
+  [SampleTech['10X']]: `10X Chromium${String.fromCharCode(8482)}`,
+  [SampleTech.RHAPSODY]: `BD Rhapsody${String.fromCharCode(8482)}`,
+  [SampleTech.SEURAT]: 'Seurat',
+  [SampleTech.H5]: `10X Chromium${String.fromCharCode(8482)} - H5`,
+  [SampleTech.PARSE]: `Parse Evercode${String.fromCharCode(8482)} WT`,
+};
+
+const getTechNameToDisplay = (tech) => techNamesToDisplay[tech];
+
+// techOptions
+
+export default SampleTech;
+export { getTechNameToDisplay };

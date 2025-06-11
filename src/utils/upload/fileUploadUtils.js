@@ -7,14 +7,6 @@ import handleError from 'utils/http/handleError';
 import sampleFileType from 'utils/sampleFileType';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 
-const techNamesToDisplay = {
-  [SampleTech['10X']]: `10X Chromium${String.fromCharCode(8482)}`,
-  [SampleTech.RHAPSODY]: `BD Rhapsody${String.fromCharCode(8482)}`,
-  [SampleTech.SEURAT]: 'Seurat',
-  [SampleTech.H5]: `10X Chromium${String.fromCharCode(8482)} - H5`,
-  [SampleTech.PARSE]: `Parse Evercode${String.fromCharCode(8482)} WT`,
-};
-
 const matchFileName = (fileName, fileNames) => {
   const regexString = `.*(${Array.from(fileNames).join('|')})$`;
   const regexp = new RegExp(regexString, 'i');
@@ -327,5 +319,4 @@ const fileUploadUtils = {
   },
 };
 
-export { techNamesToDisplay };
 export default fileUploadUtils;

@@ -19,8 +19,8 @@ import { CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined } from '@ant-des
 import Dropzone from 'react-dropzone';
 import { useSelector } from 'react-redux';
 
-import SampleTech from 'const/enums/SampleTech';
-import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
+import SampleTech, { getTechNameToDisplay } from 'const/enums/SampleTech';
+import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import handleError from 'utils/http/handleError';
 import { fileObjectToFileRecord } from 'utils/upload/processSampleUpload';
 import integrationTestConstants from 'utils/integrationTestConstants';
@@ -216,7 +216,7 @@ const FileUploadModal = (props) => {
                             && tech === SampleTech.SEURAT
                           }
                         >
-                          {techNamesToDisplay[tech]}
+                          {getTechNameToDisplay(tech)}
                         </Option>
                       ))
                   }

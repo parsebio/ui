@@ -11,8 +11,8 @@ import configureMockStore from 'redux-mock-store';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 
-import techOptions, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
-import SampleTech from 'const/enums/SampleTech';
+import techOptions from 'utils/upload/fileUploadUtils';
+import SampleTech, { getTechNameToDisplay } from 'const/enums/SampleTech';
 
 import mockFile from '__test__/test-utils/mockFile';
 import FileUploadModal from 'components/data-management/FileUploadModal';
@@ -64,10 +64,10 @@ const renderFileUploadModal = async (store, currentSelectedTech = null) => {
   )));
 };
 
-const seuratTech = techNamesToDisplay[SampleTech.SEURAT];
+const seuratTech = getTechNameToDisplay(SampleTech.SEURAT);
 
 const selectTech = (selectedTech) => {
-  const displayedName = techNamesToDisplay[selectedTech];
+  const displayedName = getTechNameToDisplay(selectedTech);
 
   const techSelection = screen.getByRole('combobox', { name: 'sampleTechnologySelect' });
 
@@ -123,7 +123,7 @@ describe('FileUploadModal', () => {
     await renderFileUploadModal(initialStore);
 
     // It has default parse selected
-    expect(screen.queryAllByText(techNamesToDisplay[SampleTech.PARSE]).length).toBe(1);
+    expect(screen.queryAllByText(getTechNameToDisplay(SampleTech.PARSE)).length).toBe(1);
     expect(screen.queryAllByText(seuratTech).length).toBe(0);
 
     selectTech(SampleTech.SEURAT);
@@ -368,7 +368,7 @@ describe('FileUploadModal', () => {
 
     // Switch file upload to Rhapsody
     const chosenTech = SampleTech.RHAPSODY;
-    const displayedName = techNamesToDisplay[chosenTech];
+    const displayedName = getTechNameToDisplay(chosenTech);
 
     const techSelection = screen.getByRole('combobox', { name: 'sampleTechnologySelect' });
 
