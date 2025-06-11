@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import dayjs from 'dayjs';
 
-import SampleTech from 'const/enums/SampleTech';
+import SampleTech, { getSampleTechMetadataValue } from 'const/enums/SampleTech';
 
 import {
   SAMPLES_CREATED, SAMPLES_ERROR, SAMPLES_SAVED, SAMPLES_SAVING,
@@ -15,14 +15,6 @@ import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState'
 import { defaultSampleOptions, sampleTemplate } from 'redux/reducers/samples/initialState';
 import UploadStatus from 'utils/upload/UploadStatus';
 import { createMetadataTrack, updateValuesInMetadataTrack } from '../experiments';
-
-const metadataValuesByTechnology = {
-  [SampleTech.PARSE]: 'Parse Evercode WT',
-  [SampleTech['10X']]: '10X Chromium',
-  [SampleTech.RHAPSODY]: 'BD Rhapsody',
-  [SampleTech.SEURAT]: 'Seurat',
-  [SampleTech.H5]: '10X Chromium - H5',
-};
 
 // If the sample name of new samples coincides with already existing
 // ones we should not create new samples,
@@ -205,7 +197,7 @@ const createSamples = (
     if (technologyMetadataTrackExists) {
       const updates = Object.entries(samplesToUpdateByTechnology)
         .map(([technology, currSamples]) => ({
-          value: metadataValuesByTechnology[technology],
+          value: getSampleTechMetadataValue(technology),
           sampleIds: currSamples.map((sample) => sample.uuid),
         }));
 
