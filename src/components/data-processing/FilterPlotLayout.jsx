@@ -44,14 +44,12 @@ const FilterPlotLayout = ({
     (state) => state.componentConfig[plots[selectedPlot].plotUuid]?.config,
   );
   const filterTableData = useSelector((state) => state.componentConfig[filterTableUuid]?.plotData);
-  const pipelineStatus = useSelector(getBackendStatus(experimentId))?.status?.pipeline;
-  let tableWarnings = [];
-  if (filterTableData) {
-    tableWarnings = pipelineStatus.notifications?.[filterName]
+  const tableWarnings = useSelector((state) => {
+    const pipelineStatus = getBackendStatus(experimentId)(state)?.status?.pipeline;
+    return pipelineStatus?.notifications?.[filterName]
       .filter((notification) => notification.sampleId === sampleId)
       .map((notification) => notification.message);
-  }
-
+  }, _.isEqual);
   const filterSettings = useSelector(
     (state) => state.experimentSettings.processing[filterName][sampleId].filterSettings,
   );
