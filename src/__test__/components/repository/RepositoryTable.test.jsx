@@ -15,6 +15,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import initialState from 'redux/reducers/experiments/initialState';
 import thunk from 'redux-thunk';
 import userEvent from '@testing-library/user-event';
+import { sampleTech } from 'utils/constants';
 
 jest.mock('utils/http/fetchAPI');
 const mockNavigateTo = jest.fn();
@@ -32,7 +33,7 @@ const experiment1 = {
   species: 'Human',
   sampleCount: '4',
   cellCount: '23000',
-  technology: '10x',
+  sampleTechnologies: [sampleTech['10X']],
   description: 'A sample experiment for users to try',
 };
 
@@ -75,15 +76,34 @@ describe('RepositoryTable', () => {
     expect(screen.findByText('There are no experiments in the repository yet.')).toBeDefined();
   });
 
-  it('renders correctly the experiment', async () => {
+  it('renders correctly an experiment', async () => {
     await renderRepository(emptyStore, [experiment1]);
 
     // Expect there to be no experiments
-    Object.values(experiment1).forEach((prop) => {
-      if (prop === '10x') {
+    Object.keys(experiment1).forEach((key) => {
+      if (key === 'sampleTechnologies') {
         expect(screen.findByText('10x Chromium')).toBeDefined();
       } else {
-        expect(screen.findByText(prop)).toBeDefined();
+        expect(screen.findByText(experiment1[key])).toBeDefined();
+      }
+    });
+  });
+
+  it('renders correctly an experiment with multiple technologies', async () => {
+    const experimentWithMultipleTechs = {
+      ...experiment1,
+      sampleTechnologies: [sampleTech['10X'], sampleTech.Parse],
+    };
+
+    await renderRepository(emptyStore, [experimentWithMultipleTechs]);
+
+    // Expect there to be no experiments
+    Object.keys(experiment1).forEach((key) => {
+      if (key === 'sampleTechnologies') {
+        expect(screen.findByText('10x Chromium')).toBeDefined();
+        expect(screen.findByText('Parse Evercode WT')).toBeDefined();
+      } else {
+        expect(screen.findByText(experiment1[key])).toBeDefined();
       }
     });
   });
