@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   SAMPLES_ERROR,
   SAMPLES_SAVING,
@@ -8,20 +9,20 @@ import fetchAPI from 'utils/http/fetchAPI';
 import handleError from 'utils/http/handleError';
 
 import endUserMessages from 'utils/endUserMessages';
-import { loadBackendStatus } from '../backendStatus';
+import { loadBackendStatus } from 'redux/actions/backendStatus';
 
 const updateValuesInMetadataTrack = (
   experimentId,
-  sampleIds,
   metadataTrackKey,
-  value,
+  updates,
 ) => async (dispatch) => {
-  if (sampleIds.length === 0) return;
+  if (
+    _.sumBy(updates, ({ sampleIds }) => sampleIds.length) === 0
+  ) return;
+
   dispatch({ type: SAMPLES_SAVING, payload: { message: endUserMessages.SAVING_SAMPLE } });
 
   try {
-    const body = { value, sampleIds };
-
     await fetchAPI(
       `/v2/experiments/${experimentId}/metadataTracks/${metadataTrackKey}`,
       {
@@ -29,21 +30,21 @@ const updateValuesInMetadataTrack = (
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(updates),
       },
     );
 
     dispatch({
       type: SAMPLES_VALUE_IN_METADATA_TRACK_UPDATED,
       payload: {
-        sampleUuids: sampleIds,
         key: metadataTrackKey,
-        value,
+        updates,
       },
     });
 
     await dispatch(loadBackendStatus(experimentId));
   } catch (e) {
+    console.error(e);
     const errorMessage = handleError(e, endUserMessages.ERROR_SAVING);
 
     dispatch({

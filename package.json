@@ -14,9 +14,9 @@
     ]
   },
   "scripts": {
-    "start": "NODE_ENV=development node server.js",
+    "start": "NODE_ENV=development node --max-http-header-size=81920 server.js",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
-    "prod": "NODE_ENV=production node server.js",
+    "prod": "NODE_ENV=production node --max-http-header-size=81920 server.js",
     "pretest": "",
     "test": "jest --silent",
     "coverage": "jest --coverage --silent",

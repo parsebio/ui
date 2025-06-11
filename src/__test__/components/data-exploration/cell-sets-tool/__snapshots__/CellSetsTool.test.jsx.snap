@@ -6,9 +6,12 @@ exports[`AnnotateClustersTool Can dispatch work request 1`] = `
     [
       "1234",
       {
+        "method": "ScType",
+        "methodParams": {
+          "species": "mouse",
+          "tissue": "Liver",
+        },
         "name": "ScTypeAnnotate",
-        "species": "mouse",
-        "tissue": "Liver",
       },
       [Function],
       [Function],
