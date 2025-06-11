@@ -47,14 +47,11 @@ const FilterPlotLayout = ({
   const pipelineStatus = useSelector(getBackendStatus(experimentId))?.status?.pipeline;
   let tableWarnings = [];
   if (filterTableData) {
-    tableWarnings = pipelineStatus.notifications?.map((notification) => {
-      const { sampleId: notificationSampleId, stepName } = notification;
-      if (filterTableUuid.includes(`${notificationSampleId}-${stepName}`)) {
-        return notification.message;
-      }
-      return null;
-    })?.filter((message) => message);
+    tableWarnings = pipelineStatus.notifications?.[filterName]
+      .filter((notification) => notification.sampleId === sampleId)
+      .map((notification) => notification.message);
   }
+
   const filterSettings = useSelector(
     (state) => state.experimentSettings.processing[filterName][sampleId].filterSettings,
   );

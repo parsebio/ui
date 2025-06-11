@@ -669,7 +669,7 @@ const DataProcessingPage = ({ experimentId }) => {
         />
       );
     }
-    const warningsForStep = pipelineStatus?.notifications.filter(({ stepName, message }) => stepName === key && message === 'FILTERED_TOO_MANY_CELLS');
+    const warningsForStep = pipelineStatus?.notifications[key].filter(({ message }) => message === 'FILTERED_TOO_MANY_CELLS');
     const sampleNamesWithWarning = warningsForStep.map(({ sampleId }) => samples[sampleId]?.name);
 
     const pluralWarnings = sampleNamesWithWarning.length > 1;
