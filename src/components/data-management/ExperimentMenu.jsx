@@ -22,6 +22,7 @@ const ExperimentMenu = () => {
 
   const [uploadModalVisible, setUploadModalVisible] = useState(false);
   const [shareExperimentModalVisible, setShareExperimentModalVisible] = useState(false);
+  // change this last before releasing the parse 10x integration epic
   const selectedTech = samples[activeExperiment?.sampleIds[0]]?.type;
 
   const {

@@ -8,7 +8,6 @@ import { useVT } from 'virtualizedtableforantd4';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Table,
-  Typography,
   Space,
   Tooltip,
 } from 'antd';
@@ -42,7 +41,6 @@ import { fileTypeToDisplay } from 'utils/sampleFileType';
 import UploadStatus from 'utils/upload/UploadStatus';
 
 const { UPLOADED, INCOMPLETE, UPLOADING } = UploadStatus;
-const { Text } = Typography;
 
 const SamplesTable = forwardRef((props, ref) => {
   const { size, selectedTable, selectedTechs } = props;
@@ -226,15 +224,6 @@ const SamplesTable = forwardRef((props, ref) => {
           )
         ),
       },
-      {
-        index: 4,
-        key: 'technology',
-        title: 'Technology',
-        dataIndex: 'technology',
-        render: (text) => (
-          <Text>{techNamesToDisplay[text]}</Text>
-        ),
-      },
       ...tableColumns.commonColumns,
     ].sort((a, b) => a.index - b.index);
     return { data: selectedTableData, columns: selectedTableColumns };
@@ -290,7 +279,11 @@ const SamplesTable = forwardRef((props, ref) => {
           dataIndex={key}
           rowIdx={rowIdx}
           onAfterSubmit={(newValue) => {
-            dispatch(updateValuesInMetadataTrack(activeExperimentId, [record.uuid], key, newValue));
+            dispatch(updateValuesInMetadataTrack(
+              activeExperimentId,
+              key,
+              [{ sampleIds: [record.uuid], value: newValue }],
+            ));
           }}
         />
       ),
@@ -365,9 +358,8 @@ const SamplesTable = forwardRef((props, ref) => {
 
     dispatch(updateValuesInMetadataTrack(
       activeExperimentId,
-      filteredSamplesToUpdate,
       metadataKey,
-      value,
+      [{ sampleIds: filteredSamplesToUpdate, value }],
     ));
   };
 
