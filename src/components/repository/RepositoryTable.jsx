@@ -35,7 +35,7 @@ const RepositoryTable = (props) => {
     species: row.species,
     sampleCount: row.sampleCount,
     cellCount: row.cellCount,
-    sampleTechnology: techNamesToDisplay[row.sampleTechnology],
+    sampleTechnologies: `${row.sampleTechnologies.map((tech) => techNamesToDisplay[tech]).join(', ')}`,
     description: row.description,
   }));
 
@@ -97,7 +97,7 @@ RepositoryTable.propTypes = {
       species: PropTypes.string,
       sampleCount: PropTypes.string,
       cellCount: PropTypes.number,
-      sampleTechnology: PropTypes.string,
+      sampleTechnologies: PropTypes.arrayOf(PropTypes.string),
     }),
   ),
 };
@@ -143,9 +143,9 @@ const TABLE_COLUMNS = [
     key: 'cellCount',
   },
   {
-    title: 'Technology',
-    dataIndex: 'sampleTechnology',
-    key: 'sampleTechnology',
+    title: 'Technologies',
+    dataIndex: 'sampleTechnologies',
+    key: 'sampleTechnologies',
   },
   {
     title: 'Short description',
