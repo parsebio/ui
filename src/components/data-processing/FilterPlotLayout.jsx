@@ -48,7 +48,7 @@ const FilterPlotLayout = ({
 
   const tableWarnings = useSelector((state) => {
     const pipelineStatus = getBackendStatus(experimentId)(state)?.status?.pipeline;
-    if (!pipelineStatus.notifications) return [];
+    if (!pipelineStatus?.notifications) return [];
     return pipelineStatus.notifications?.[filterName]
       .filter((notification) => notification.sampleId === sampleId)
       .map((notification) => notification.message);
