@@ -669,13 +669,13 @@ const DataProcessingPage = ({ experimentId }) => {
         />
       );
     }
-    const warningsForStep = pipelineStatus?.notifications[key]?.filter(({ message }) => message === 'FILTERED_TOO_MANY_CELLS');
+    const warningsForStep = pipelineStatus?.notifications[key]?.filter(({ message }) => message === 'FILTERED_TOO_MANY_CELLS') || [];
     const sampleNamesWithWarning = warningsForStep.map(({ sampleId }) => samples[sampleId]?.name);
 
     const pluralWarnings = sampleNamesWithWarning.length > 1;
 
     const stepWarningMessage = `Sample${pluralWarnings ? 's' : ''} ${sampleNamesWithWarning.join(', ')} ${pluralWarnings ? 'have' : 'has'} warnings in this filtering step. Check the QC plots for ${pluralWarnings ? 'those samples' : 'that sample'} and consider adjusting the thresholds.`;
-    //
+
     return (
       <Space direction='vertical' style={{ width: '100%' }}>
         {
