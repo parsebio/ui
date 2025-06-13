@@ -30,6 +30,17 @@ const plotData2 = generateDataProcessingPlotUuid(sampleId, filterName, 1);
 const filterStatistics = generateDataProcessingPlotUuid(sampleId, filterName, 2);
 
 const noData = {
+  backendStatus: {
+    [experimentId]: {
+      status: {
+        pipeline: {
+          notifications: {
+            [filterName]: [],
+          },
+        },
+      },
+    },
+  },
   experimentSettings: {
     ...initialExperimentState,
   },
