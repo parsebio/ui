@@ -87,6 +87,15 @@ getBackendStatus.mockImplementation(() => () => ({
   status: {
     pipeline: {
       status: 'SUCCEEDED',
+      notifications: {
+        classifier: [
+          {
+            sampleId: 'sample-1',
+            message: 'Classifier filter completed successfully.',
+            type: 'warning',
+          },
+        ],
+      },
       completedSteps: [
         'cellSizeDistribution',
         'mitochondrialContent',

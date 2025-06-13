@@ -54,8 +54,6 @@ import {
   getBackendStatus, getFilterChanges, getSamples, getCellSets,
 } from 'redux/selectors';
 
-import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
-
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadSamples } from 'redux/actions/samples';
 import { runQC } from 'redux/actions/pipeline';
@@ -70,14 +68,6 @@ import { ClipLoader } from 'react-spinners';
 const { Text } = Typography;
 const { Option } = Select;
 
-const filterTablePlotIndex = {
-  classifier: 2,
-  cellSizeDistribution: 3,
-  doubletScores: 1,
-  numGenesVsNumUmis: 1,
-  mitochondrialContent: 2,
-};
-
 const DataProcessingPage = ({ experimentId }) => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
@@ -91,7 +81,6 @@ const DataProcessingPage = ({ experimentId }) => {
   } = useSelector((state) => state.experimentSettings.info);
 
   const samples = useSelector(getSamples(experimentId));
-  const componentConfig = useSelector((state) => state.componentConfig);
 
   const pipelineStatusKey = pipelineStatus?.status;
   const pipelineRunning = pipelineStatusKey === 'RUNNING';
@@ -680,17 +669,13 @@ const DataProcessingPage = ({ experimentId }) => {
         />
       );
     }
-
-    const sampleNamesWithWarning = sampleKeys.filter((sampleKey) => {
-      const plotUuid = generateDataProcessingPlotUuid(sampleKey, key, filterTablePlotIndex[key]);
-      const warnings = componentConfig[plotUuid]?.plotData?.warnings;
-      return warnings?.includes('FILTERED_TOO_MANY_CELLS');
-    }).map((sampleKey) => samples[sampleKey]?.name);
+    const warningsForStep = pipelineStatus?.notifications[key]?.filter(({ message }) => message === 'FILTERED_TOO_MANY_CELLS') || [];
+    const sampleNamesWithWarning = warningsForStep.map(({ sampleId }) => samples[sampleId]?.name);
 
     const pluralWarnings = sampleNamesWithWarning.length > 1;
 
     const stepWarningMessage = `Sample${pluralWarnings ? 's' : ''} ${sampleNamesWithWarning.join(', ')} ${pluralWarnings ? 'have' : 'has'} warnings in this filtering step. Check the QC plots for ${pluralWarnings ? 'those samples' : 'that sample'} and consider adjusting the thresholds.`;
-    //
+
     return (
       <Space direction='vertical' style={{ width: '100%' }}>
         {

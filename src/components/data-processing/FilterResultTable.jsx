@@ -6,7 +6,7 @@ import filterResultWarningMessages from 'utils/filterResultWarningMessages';
 import { Table, Empty, Alert } from 'antd';
 
 const FilterResultTable = (props) => {
-  const { tableData } = props;
+  const { tableData, warnings = [] } = props;
 
   const renderTable = () => {
     // loadPlotConfig returns an empty array in case plot data does not exist
@@ -19,7 +19,7 @@ const FilterResultTable = (props) => {
       return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
     }
 
-    const { before, after, warnings = [] } = tableData;
+    const { before, after } = tableData;
 
     // Rearrange data to fit table
     const titles = {

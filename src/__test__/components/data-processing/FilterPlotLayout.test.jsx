@@ -27,6 +27,17 @@ const plots = {
 };
 const mockStore = configureStore([thunk]);
 const initialState = {
+  backendStatus: {
+    [experimentId]: {
+      status: {
+        pipeline: {
+          notifications: {
+            [filterName]: [],
+          },
+        },
+      },
+    },
+  },
   componentConfig: {
     plotUuid1: { config: {}, plotData: {} },
     plotUuid2: { config: {}, plotData: {} },
