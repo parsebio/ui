@@ -33,7 +33,7 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
     // wrap fetch errors in custom error
     throw new FetchError(e);
   }
-  // Axios puts the status on response.status and data on response.data
+
   if (!response.ok) {
     let data;
     try {

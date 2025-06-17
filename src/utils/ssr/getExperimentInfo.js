@@ -53,14 +53,13 @@ const getExperimentInfo = async (context, store, Auth) => {
     throw e;
   }
 
-  const signInUserSessionJwt = user.getSignInUserSession().getIdToken().getJwtToken();
-
+  const jwt = user.getSignInUserSession().getIdToken().getJwtToken();
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
 
   const experimentDataV2 = await fetchAPI(
     `/v2/experiments/${experimentId}`,
     {},
-    { uiUrl: url, jwt: signInUserSessionJwt },
+    { uiUrl: url, jwt },
   );
 
   const experimentData = toApiV1(experimentDataV2);
