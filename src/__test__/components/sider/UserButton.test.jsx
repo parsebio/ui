@@ -4,7 +4,7 @@ import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 
-import { Auth } from 'aws-amplify';
+import { Auth, Hub } from 'aws-amplify';
 
 import UserButton from 'components/sider/UserButton';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
@@ -25,6 +25,7 @@ const renderUserButton = async (store) => {
 };
 jest.mock('aws-amplify', () => ({
   Auth: jest.fn(),
+  Hub: jest.fn(),
 }));
 
 const userName = 'Mock user';
@@ -51,6 +52,8 @@ describe('UserButton', () => {
     }));
     Auth.signOut = jest.fn(() => { });
     Auth.federatedSignIn = jest.fn(() => { });
+
+    Hub.listen = jest.fn();
 
     store.dispatch(loadUser());
   });
