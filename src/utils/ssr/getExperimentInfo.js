@@ -36,7 +36,6 @@ const getExperimentInfo = async (context, store, Auth) => {
   const { req, query } = context;
   const { experimentId } = query;
 
-  console.log('getExperimentInfoDebug1');
   if (
     store.getState().apiUrl
     && store.getState().experimentSettings.info.experimentId === experimentId
@@ -44,94 +43,29 @@ const getExperimentInfo = async (context, store, Auth) => {
     return;
   }
 
-  console.log('getExperimentInfoDebug2');
-
   let user;
-  console.log('getExperimentInfoDebug3');
   try {
     user = await Auth.currentAuthenticatedUser();
-    console.log('getExperimentInfoDebug4');
   } catch (e) {
     if (e === 'The user is not authenticated') {
       throw new APIError(httpStatusCodes.UNAUTHORIZED);
     }
     throw e;
   }
-  console.log('getExperimentInfoDebug5');
 
   const signInUserSessionJwt = user.getSignInUserSession().getIdToken().getJwtToken();
 
-  console.log('getSignInUserSessionjwtIdDebug');
-  console.log(signInUserSessionJwt);
-
-  const currentSessionIdJwtToken = (await Auth.currentSession()).getIdToken().getJwtToken();
-  console.log('getExperimentInfoDebug6');
-
-  console.log('currentSessionIdJwtTokenDebug');
-  console.log(currentSessionIdJwtToken);
-
   const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-  console.log('getExperimentInfoDebug7');
 
-  let experimentDataV2;
-  try {
-    experimentDataV2 = await fetchAPI(
-      `/v2/experiments/${experimentId}`,
-      {},
-      { uiUrl: url, jwt: signInUserSessionJwt },
-    );
-  } catch (e) {
-    console.error('signInUserSessionJwt failed', e);
-  }
-
-  try {
-    experimentDataV2 = await fetchAPI(
-      `/v2/experiments/${experimentId}`,
-      {},
-      { uiUrl: url, jwt: currentSessionIdJwtToken },
-    );
-  } catch (e) {
-    console.error('currentSessionIdJwtToken failed', e);
-  }
-
-  try {
-    const accessSignInIuser = user.getSignInUserSession().getAccessToken().getJwtToken();
-    console.log('accessSignInIuserDebug');
-    console.log(accessSignInIuser);
-    experimentDataV2 = await fetchAPI(
-      `/v2/experiments/${experimentId}`,
-      {},
-      { uiUrl: url, jwt: accessSignInIuser },
-    );
-  } catch (e) {
-    console.error('signInUserSessionAccessToken failed');
-  }
-
-  try {
-    const currentSessionAccessToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
-    console.log('currentSessionAccessTokenDebug');
-    console.log(currentSessionAccessToken);
-
-    experimentDataV2 = await fetchAPI(
-      `/v2/experiments/${experimentId}`,
-      {},
-      { uiUrl: url, jwt: currentSessionAccessToken },
-    );
-  } catch (e) {
-    console.error('currentSessionAccessToken failed');
-  }
-
-  if (!experimentDataV2) {
-    console.error('Still not working after trying both JWTs and both access tokens');
-  }
-  console.log('getExperimentInfoDebug8');
+  const experimentDataV2 = await fetchAPI(
+    `/v2/experiments/${experimentId}`,
+    {},
+    { uiUrl: url, jwt: signInUserSessionJwt },
+  );
 
   const experimentData = toApiV1(experimentDataV2);
-  console.log('getExperimentInfoDebug9');
 
   store.dispatch(updateExperimentInfo(experimentData));
-  console.log('getExperimentInfoDebug10');
-  return {};
 };
 
 export default getExperimentInfo;

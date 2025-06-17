@@ -83,8 +83,6 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     if (amplifyConfig) {
-      console.log('getConfigDebug');
-      console.log(getConfig());
       const domainName = process.env.NODE_ENV !== 'development'
         ? getConfig().publicRuntimeConfig.domainName
         : 'localhost';
@@ -240,37 +238,22 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
   const { amplifyConfig } = results[1];
 
   try {
-    console.log('SSRcookiesDebug ', JSON.stringify(ctx.req?.headers?.cookie));
     const { withSSRContext } = (await import('aws-amplify'));
 
     const { Auth } = withSSRContext(ctx);
 
-    console.log('AuthPreConfigureDebug');
-    console.log(Auth);
-
     Auth.configure(amplifyConfig.Auth);
-
-    console.log('AuthPostConfigureDebug');
-    console.log(Auth);
-
-    // const user = await Auth.currentAuthenticatedUser();
-
-    // console.log('userDebug');
-    // console.log(user);
 
     if (query?.experimentId) {
       const { default: getExperimentInfo } = (await import('utils/ssr/getExperimentInfo'));
       await getExperimentInfo(ctx, store, Auth);
     }
 
-    console.log('gotHereDebug1');
-
     if (query?.secondaryAnalysisId) {
       const { default: getAnalysisInfo } = (await import('utils/ssr/getAnalysisInfo'));
       await getAnalysisInfo(ctx, store, Auth);
     }
 
-    console.log('gotHereDebug2');
     return { pageProps: { ...pageProps, amplifyConfig } };
   } catch (e) {
     console.error(e);
