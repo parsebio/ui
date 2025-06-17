@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Auth } from '@aws-amplify/auth';
+import { Auth } from 'aws-amplify';
 import {
   Button, Modal, Popconfirm, message,
 } from 'antd';
