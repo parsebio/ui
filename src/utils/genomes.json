@@ -456,6 +456,10 @@
     "species": "Custom Mus musculus (Mouse)"
   },
   {
+    "name": "GRCm39_XTG",
+    "species": "Custom Mus musculus (mouse)"
+  },
+  {
     "name": "GRCg7b_enriched6db",
     "species": "Custom Gallus gallus (Chicken)"
   },
@@ -480,12 +484,16 @@
     "species": "Custom Drosophila melanogaster (Fruit fly) with GFP and RFP"
   },
   {
-    "name": "Macaca_T-cruzi",
-    "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
+    "name": "Mmul_SIVmacL28_C1",
+    "species": "Custom Macaca mulatta (Rhesus monkey)"
   },
   {
-    "name": "Mmul_SIVmacL28_C1",
-    "species": "Custom Macaca mulatta"
+    "name": "Sscrofa11_yu",
+    "species": "Custom Sus scrofa (pig)"
+  },
+  {
+    "name": "Macaca_T-cruzi",
+    "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
   },
   {
     "name": "GRCh38_GRCm39_RI250423",
