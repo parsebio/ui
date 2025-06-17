@@ -40,26 +40,6 @@ ConfigProvider.config({
   },
 });
 
-const mockCredentialsForInframock = () => {
-  // Credentials.get = async () => ({
-  //   expired: false,
-  //   expireTime: null,
-  //   refreshCallbacks: [],
-  //   accessKeyId: 'asd', // pragma: allowlist secret
-  //   secretAccessKey: 'asfdsa', // pragma: allowlist secret
-  //   sessionToken: 'asdfasdf', // pragma: allowlist secret
-  // });
-
-  // Credentials.shear = async () => ({
-  //   expired: false,
-  //   expireTime: null,
-  //   refreshCallbacks: [],
-  //   accessKeyId: 'asd', // pragma: allowlist secret
-  //   secretAccessKey: 'asfdsa', // pragma: allowlist secret
-  //   sessionToken: 'asdfasdf', // pragma: allowlist secret
-  // });
-};
-
 NProgress.configure({ showSpinner: false });
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -118,10 +98,6 @@ const WrappedApp = ({ Component, pageProps }) => {
       };
 
       Amplify.configure(amplifyConfig);
-
-      if (environment === 'development') {
-        mockCredentialsForInframock();
-      }
 
       setAmplifyConfigured(true);
     }
