@@ -4,13 +4,13 @@ import fetchMock from 'jest-fetch-mock';
 import { loadUser } from 'redux/actions/user';
 import { USER_LOADED } from 'redux/actionTypes/user';
 import signIn from 'utils/signIn';
-import { Auth } from '@aws-amplify/auth';
+import { Auth } from 'aws-amplify';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 jest.mock('utils/signIn');
-jest.mock('@aws-amplify/auth', () => ({
+jest.mock('aws-amplify', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
       attributes: {

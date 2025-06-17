@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Auth } from '@aws-amplify/auth';
+import { Auth } from 'aws-amplify';
 
 import {
   Modal, Space, Checkbox, Typography,

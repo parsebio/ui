@@ -17,15 +17,15 @@ const correctInput = {
     row2: 3,
     row3: 4,
   },
-  warnings: [filterResultWarningMessages.FILTERED_TOO_MANY_CELLS],
 };
+const warnings = [filterResultWarningMessages.FILTERED_TOO_MANY_CELLS];
 
 describe('FilterResultTable', () => {
   it('Should show Empty if passed empty or incorrect input', () => {
     const emptyInput = [];
 
     let component = mount(
-      <FilterResultTable tableData={emptyInput} />,
+      <FilterResultTable tableData={emptyInput} warnings={warnings} />,
     );
 
     let table = component.find(Table);
@@ -41,7 +41,7 @@ describe('FilterResultTable', () => {
     };
 
     component = mount(
-      <FilterResultTable tableData={incorrectInput} />,
+      <FilterResultTable tableData={incorrectInput} warnings={warnings} />,
     );
 
     table = component.find(Table);
@@ -54,7 +54,7 @@ describe('FilterResultTable', () => {
 
   it('Should show a Table if passed the correct input', () => {
     const component = mount(
-      <FilterResultTable tableData={correctInput} />,
+      <FilterResultTable tableData={correctInput} warnings={warnings} />,
     );
 
     const table = component.find(Table);
@@ -65,7 +65,7 @@ describe('FilterResultTable', () => {
 
   it('The table should have 4 columns, and n + 1 number of rows', () => {
     const component = mount(
-      <FilterResultTable tableData={correctInput} />,
+      <FilterResultTable tableData={correctInput} warnings={warnings} />,
     );
 
     const numRows = Object.keys(correctInput.after).length;
@@ -82,7 +82,7 @@ describe('FilterResultTable', () => {
 
   it('Should show a Warning if present', () => {
     const component = mount(
-      <FilterResultTable tableData={correctInput} />,
+      <FilterResultTable tableData={correctInput} warnings={warnings} />,
     );
 
     const alert = component.find(Alert);

@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { useRouter } from 'next/router';
 import preloadAll from 'jest-next-dynamic';
-import { Auth } from '@aws-amplify/auth';
+import { Auth } from 'aws-amplify';
 import ContentWrapper from 'components/ContentWrapper';
 import AppRouteProvider from 'utils/AppRouteProvider';
 
@@ -39,7 +39,7 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-jest.mock('@aws-amplify/auth', () => ({
+jest.mock('aws-amplify', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
       attributes: {
@@ -49,6 +49,9 @@ jest.mock('@aws-amplify/auth', () => ({
       },
     })),
     federatedSignIn: jest.fn(),
+  },
+  Hub: {
+    listen: jest.fn(),
   },
 }));
 

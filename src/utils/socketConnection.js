@@ -1,5 +1,5 @@
 import socketIOClient from 'socket.io-client';
-import getApiEndpoint from './apiEndpoint';
+import getApiEndpoint from './getApiEndpoint';
 import { isBrowser } from './deploymentInfo';
 
 const connectionPromise = new Promise((resolve, reject) => {

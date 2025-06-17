@@ -195,11 +195,7 @@ const FileUploadModal = (props) => {
                   aria-label='sampleTechnologySelect'
                   data-testid='uploadTechSelect'
                   defaultValue={selectedTech}
-                  // TODO to enable multitech selection
-                  // - uncomment this line
-                  // - remove the currently enabled disable line
-                  // disabled={currentSelectedTech === sampleTech.SEURAT}
-                  disabled={currentSelectedTech}
+                  disabled={currentSelectedTech === sampleTech.SEURAT}
                   onChange={(value) => setSelectedTech(value)}
                   // Fix the width so that the dropdown doesn't change size when the value changes
                   style={{ width: 180 }}

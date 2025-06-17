@@ -15,10 +15,8 @@ const configure = (userPoolId, identityPoolId, userPoolClientDetails) => {
       identityPoolId,
       userPoolId,
       userPoolWebClientId: userPoolClientDetails.ClientId,
-
       mandatorySignIn: false,
       authenticationFlowType: 'USER_SRP_AUTH',
-
       oauth: {
         domain: userPoolClientDetails.Domain,
         scope: userPoolClientDetails.AllowedOAuthScopes,

@@ -27,6 +27,17 @@ const filterStatistics = generateDataProcessingPlotUuid(sampleId, filterName, 1)
 const initialExperimentState = generateExperimentSettingsMock(sampleIds);
 
 const noData = {
+  backendStatus: {
+    [experimentId]: {
+      status: {
+        pipeline: {
+          notifications: {
+            [filterName]: [],
+          },
+        },
+      },
+    },
+  },
   experimentSettings: {
     ...initialExperimentState,
   },

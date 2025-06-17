@@ -41,7 +41,7 @@ window.location = {
   href: 'http://localhost:3000/experiments/testae48e318dab9a1bd0bexperiment/data-exploration',
 };
 
-jest.mock('@aws-amplify/auth', () => ({
+jest.mock('aws-amplify', () => ({
   Auth: {
     currentAuthenticatedUser: () => Promise.resolve({
       attributes: {
