@@ -50,6 +50,9 @@ jest.mock('aws-amplify', () => ({
     })),
     federatedSignIn: jest.fn(),
   },
+  Hub: {
+    listen: jest.fn(),
+  },
 }));
 
 jest.mock('utils/socketConnection', () => ({
