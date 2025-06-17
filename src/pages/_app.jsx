@@ -215,11 +215,6 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
     store, req, query, res, err,
   } = ctx;
 
-  console.log('reqDebug');
-  console.log(req);
-  console.log('reqDebug');
-  console.log(req.protocol);
-
   // If a render error occurs, NextJS bypasses the normal page rendering
   // and returns `_error.jsx` instead, returning these parameters
   if (err) { return { pageProps: { errorObject: err } }; }
