@@ -52,21 +52,6 @@ const integrationMethodsByAnalysisTool = {
       text: 'No integration',
       disabled: false,
     },
-    {
-      value: 'seuratv3',
-      text: 'Seurat v3',
-      disabled: true,
-    },
-    {
-      value: 'conos',
-      text: 'Conos',
-      disabled: true,
-    },
-    {
-      value: 'liger',
-      text: 'Liger',
-      disabled: true,
-    },
   ],
   [analysisTools.SCANPY]: [
     {
@@ -276,7 +261,6 @@ const CalculationConfig = (props) => {
                           </Tooltip>
                         ) : el.text
                       }
-
                     </Option>
                   ))
                 }

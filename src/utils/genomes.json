@@ -56,6 +56,10 @@
     "species": "Candida Albicans"
   },
   {
+    "name": "ChiLan1",
+    "species": "Chinchilla lanigera (Long-tailed chinchilla)"
+  },
+  {
     "name": "C_sabeus",
     "species": "Chlorocebus sabaeus (Green monkey)"
   },
@@ -425,6 +429,10 @@
   },
   {
     "name": "GRCm39_RI250310_2",
+    "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCm39_RN",
     "species": "Custom Mus musculus (Mouse)"
   },
   {
