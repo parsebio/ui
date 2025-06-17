@@ -1,6 +1,6 @@
 import APIError from 'utils/errors/http/APIError';
 import FetchError from 'utils/errors/http/FetchError';
-import getApiEndpoint from 'utils/apiEndpoint';
+import getApiEndpoint from 'utils/getApiEndpoint';
 import getAuthJWT from 'utils/getAuthJWT';
 import { notAgreedToTermsStatus } from 'utils/constants';
 import { loadUser } from 'redux/actions/user';
