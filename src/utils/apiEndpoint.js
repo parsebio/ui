@@ -1,17 +1,11 @@
 import nextConfig from 'next/config';
 
-const getApiEndpoint = (location, forSocket = false) => {
+const getApiEndpoint = (location) => {
   try {
     const url = new URL(location || window.location.href);
 
     if (url.hostname.includes('staging')) {
-      const basicReplace = url.origin.replace('ui', 'api');
-
-      if (forSocket) {
-        return basicReplace;
-      }
-
-      return basicReplace.replace('http://', 'https://');
+      return url.origin.replace('ui', 'api').replace('http://', 'https://');
     }
 
     if (url.hostname.includes('localhost') || url.hostname.includes('127.0.0.1')) {
