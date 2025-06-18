@@ -5,7 +5,7 @@ const getApiEndpoint = (location) => {
     const url = new URL(location || window.location.href);
 
     if (url.hostname.includes('staging')) {
-      return url.origin.replace('ui', 'api');
+      return url.origin.replace('ui', 'api').replace('http', 'https');
     }
 
     if (url.hostname.includes('localhost') || url.hostname.includes('127.0.0.1')) {
