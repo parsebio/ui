@@ -19,7 +19,7 @@ const connectionPromise = new Promise((resolve, reject) => {
   }
 
   const io = socketIOClient(
-    getApiEndpoint(),
+    getApiEndpoint(undefined, true),
     {
       transports: ['websocket'],
       reconnection: true,

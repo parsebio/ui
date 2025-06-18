@@ -1,6 +1,6 @@
 import nextConfig from 'next/config';
 
-const getApiEndpoint = (location, forSocket) => {
+const getApiEndpoint = (location, forSocket = false) => {
   try {
     const url = new URL(location || window.location.href);
 
