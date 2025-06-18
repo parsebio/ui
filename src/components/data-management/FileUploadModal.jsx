@@ -221,9 +221,18 @@ const FileUploadModal = (props) => {
             </Space>
             <Text>
               <Paragraph style={{ marginBottom: '0.5em' }}>
-                Projects can contain data generated from one or multiple technologies. To upload data from multiple technologies, select one technology and upload the relevant files, then return to this data upload modal to select a second technology. Further instructions are provided in the
+                Projects can contain data generated from one or multiple technologies.
+                To upload data from multiple technologies, select one technology and
+                upload the relevant files, then return to this data upload modal to
+                select a second technology. Further instructions are provided in the
                 {' '}
-                <a href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQ8HQNH0BC12VX54PJR' target='_blank' rel='noopener noreferrer'>user guide</a>
+                <a
+                  href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQ8HQNH0BC12VX54PJR'
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  user guide
+                </a>
                 .
               </Paragraph>
             </Text>
