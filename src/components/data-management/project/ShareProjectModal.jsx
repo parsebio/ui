@@ -6,7 +6,7 @@ import { UserAddOutlined } from '@ant-design/icons';
 import {
   Modal, Button, Space, Row, Col, Card, Avatar, Select, Typography, Popconfirm,
 } from 'antd';
-import { Auth } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
 
 import loadRoles from 'utils/data-management/experimentSharing/loadRoles';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';

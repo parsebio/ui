@@ -3,8 +3,7 @@ import '../../assets/nprogress.css';
 import _ from 'lodash';
 import '../index.css';
 
-import { Amplify } from 'aws-amplify';
-
+import Amplify, { Credentials } from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider } from 'antd';
@@ -12,6 +11,7 @@ import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import { DefaultSeo } from 'next-seo';
+import getConfig from 'next/config';
 
 import { wrapper } from 'redux/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,7 +30,6 @@ import { brandColors, notAgreedToTermsStatus, cookiesAgreedCognitoKey } from 'ut
 import 'antd/dist/antd.variable.min.css';
 import { loadUser } from 'redux/actions/user';
 import { setUpDispatch } from 'utils/http/fetchAPI';
-import getConfig from 'next/config';
 
 ConfigProvider.config({
   theme: {
@@ -39,6 +38,26 @@ ConfigProvider.config({
     warningColor: brandColors.STEEL_PINK,
   },
 });
+
+const mockCredentialsForInframock = () => {
+  Credentials.get = async () => ({
+    expired: false,
+    expireTime: null,
+    refreshCallbacks: [],
+    accessKeyId: 'asd', // pragma: allowlist secret
+    secretAccessKey: 'asfdsa', // pragma: allowlist secret
+    sessionToken: 'asdfasdf', // pragma: allowlist secret
+  });
+
+  Credentials.shear = async () => ({
+    expired: false,
+    expireTime: null,
+    refreshCallbacks: [],
+    accessKeyId: 'asd', // pragma: allowlist secret
+    secretAccessKey: 'asfdsa', // pragma: allowlist secret
+    sessionToken: 'asdfasdf', // pragma: allowlist secret
+  });
+};
 
 NProgress.configure({ showSpinner: false });
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -96,6 +115,10 @@ const WrappedApp = ({ Component, pageProps }) => {
       };
 
       Amplify.configure(amplifyConfig);
+
+      if (environment === 'development') {
+        mockCredentialsForInframock();
+      }
 
       setAmplifyConfigured(true);
     }
@@ -241,7 +264,6 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
     const { withSSRContext } = (await import('aws-amplify'));
 
     const { Auth } = withSSRContext(ctx);
-
     Auth.configure(amplifyConfig.Auth);
 
     if (query?.experimentId) {

@@ -5,7 +5,6 @@ const getApiEndpoint = (location) => {
     const url = new URL(location || window.location.href);
 
     if (url.hostname.includes('staging')) {
-      // Arrives as http because our alb's are set up to do SSL termination
       return url.origin.replace('ui', 'api').replace('http://', 'https://');
     }
 
