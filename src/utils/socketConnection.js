@@ -21,7 +21,7 @@ const connectionPromise = new Promise((resolve, reject) => {
   const io = socketIOClient(
     getApiEndpoint(),
     {
-      transports: ['polling', 'websocket', 'webtransport'],
+      transports: ['polling', 'websocket'],
       reconnection: true,
       reconnectionDelay: 500,
       withCredentials: true,
