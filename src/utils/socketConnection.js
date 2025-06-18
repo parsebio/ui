@@ -24,6 +24,7 @@ const connectionPromise = new Promise((resolve, reject) => {
       transports: ['websocket'],
       reconnection: true,
       reconnectionDelay: 500,
+      withCredentials: true,
     },
   );
 
