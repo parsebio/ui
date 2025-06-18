@@ -110,8 +110,8 @@ const WrappedApp = ({ Component, pageProps }) => {
         domain: domainName,
         path: '/',
         expires: 365,
-        secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'strict',
+        secure: false,
+        sameSite: 'lax',
       };
 
       Amplify.configure(amplifyConfig);
