@@ -111,6 +111,8 @@ const validationFns = {
   [rules.RESERVED_NAME](checkName, input, params) {
     const usesReservedName = params.reservedNames.includes(input);
 
+    console.log('usesReservedNameDebug');
+    console.log(usesReservedName);
     if (usesReservedName) return errorMessages[checkName];
 
     return true;

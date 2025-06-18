@@ -3,7 +3,7 @@ import {
   render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import 'aws-amplify';
+import '@aws-amplify/auth';
 import fetchAPI from 'utils/http/fetchAPI';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
@@ -13,7 +13,7 @@ import '__test__/test-utils/setupTests';
 
 jest.mock('utils/http/fetchAPI');
 
-jest.mock('aws-amplify', () => ({
+jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
     username: 'mockuser',
     attributes: {
