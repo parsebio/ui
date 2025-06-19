@@ -86,3 +86,6 @@ beforeAll(async () => {
 beforeEach(async () => {
   // Add stuff that needs to run before each test
 });
+
+// setImmediate is not available in JSDOM, only on node
+global.setImmediate = jest.useRealTimers;
