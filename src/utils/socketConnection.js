@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import socketIOClient from 'socket.io-client';
 import getApiEndpoint from './apiEndpoint';
 import { isBrowser } from './deploymentInfo';
