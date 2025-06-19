@@ -25,7 +25,6 @@ const connectionPromise = new Promise((resolve, reject) => {
       reconnection: true,
       reconnectionDelay: 500,
       reconnectionAttempts: 10,
-      withCredentials: true,
     },
   );
 
