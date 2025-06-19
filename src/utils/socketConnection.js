@@ -18,8 +18,13 @@ const connectionPromise = new Promise((resolve, reject) => {
     return;
   }
 
+  const endpoint = getApiEndpoint();
+
+  console.log('endpointDebug');
+  console.log(endpoint);
+
   const io = socketIOClient(
-    getApiEndpoint(),
+    endpoint,
     {
       transports: ['websocket'],
       reconnection: true,
