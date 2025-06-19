@@ -21,9 +21,11 @@ const connectionPromise = new Promise((resolve, reject) => {
   const io = socketIOClient(
     getApiEndpoint(),
     {
-      transports: ['websocket'],
+      transports: ['polling', 'websocket'],
       reconnection: true,
       reconnectionDelay: 500,
+      reconnectionAttempts: 10,
+      withCredentials: true,
     },
   );
 
@@ -41,10 +43,14 @@ const connectionPromise = new Promise((resolve, reject) => {
     }, 10);
   });
   io.on('error', (error) => {
+    console.error('io.on error');
+    console.error(error);
     io.close();
     reject(error);
   });
   io.on('connect_error', (error) => {
+    console.error('io.on connect_error');
+    console.error(error);
     io.close();
     reject(error);
   });
