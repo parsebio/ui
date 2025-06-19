@@ -88,5 +88,5 @@ beforeEach(async () => {
 });
 
 // setImmediate is not available in JSDOM, only on node
-// https://github.com/prisma/prisma/issues/8558#issuecomment-1006100001
+// https://github.com/prisma/prisma/issues/8558#issuecomment-1102176746
 global.setImmediate = global.setImmediate || ((fn, ...args) => global.setTimeout(fn, 0, ...args));
