@@ -27,7 +27,7 @@ const connectionPromise = new Promise((resolve, reject) => {
     `${endpoint}/socket.io`,
     {
       transports: ['websocket'],
-      reconnectionDelay: 500,
+      reconnectionDelay: 100,
     },
   );
 
