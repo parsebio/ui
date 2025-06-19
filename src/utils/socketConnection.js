@@ -53,6 +53,8 @@ const connectionPromise = new Promise((resolve, reject) => {
   io.on('connect_error', (error) => {
     console.error('io.on connect_error');
     console.error(error);
+    console.error('error code:', error.code);
+    console.error('error message:', error.message);
     io.close();
     reject(error);
   });
