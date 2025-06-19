@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import socketIOClient from 'socket.io-client';
 import getApiEndpoint from './apiEndpoint';
 import { isBrowser } from './deploymentInfo';
@@ -23,8 +24,10 @@ const connectionPromise = new Promise((resolve, reject) => {
   console.log('endpointDebug');
   console.log(endpoint);
 
+  const copiedEndpoint = _.cloneDeep(endpoint).replace('https://', 'http://');
+
   const io = socketIOClient(
-    endpoint,
+    copiedEndpoint,
     {
       transports: ['websocket'],
       reconnectionDelay: 500,
