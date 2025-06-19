@@ -24,10 +24,8 @@ const connectionPromise = new Promise((resolve, reject) => {
   console.log('endpointDebug');
   console.log(endpoint);
 
-  const copiedEndpoint = _.cloneDeep(endpoint).replace('https://', 'http://');
-
   const io = socketIOClient(
-    copiedEndpoint,
+    `${endpoint}/socket.io`,
     {
       transports: ['websocket'],
       reconnectionDelay: 500,
