@@ -24,7 +24,7 @@ const connectionPromise = new Promise((resolve, reject) => {
   console.log(endpoint);
 
   const io = socketIOClient(
-    endpoint.replace('https://', 'wss://'),
+    `${endpoint}/socket.io`,
     {
       transports: ['websocket'],
       reconnectionDelay: 500,
