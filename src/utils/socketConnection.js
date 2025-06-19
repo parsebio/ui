@@ -24,7 +24,6 @@ const connectionPromise = new Promise((resolve, reject) => {
       transports: ['polling', 'websocket'],
       reconnection: true,
       reconnectionDelay: 500,
-      reconnectionAttempts: 10,
     },
   );
 
