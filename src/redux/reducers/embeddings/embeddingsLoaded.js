@@ -10,13 +10,13 @@ const embeddingsLoaded = produce((draft, action) => {
     loading: false,
   };
 
-  const data = [];
-  jsonData.forEach((value, index) => {
-    if (value) {
-      data[index] = value;
-    }
-  });
-  draft[embeddingType].data = data;
+  // const data = [];
+  // jsonData.forEach((value, index) => {
+  //   if (value) {
+  //     data[index] = value;
+  //   }
+  // });
+  draft[embeddingType].data = jsonData;
 }, initialState);
 
 export default embeddingsLoaded;

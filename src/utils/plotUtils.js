@@ -1,6 +1,8 @@
 import * as vega from 'vega';
 
 import { union } from 'utils/cellSetOperations';
+// import mockEmbedding from './mockEmbedding.json';
+// import smalltest from './smalltest.json';
 
 const colorInterpolator = vega.scheme('purplered');
 
@@ -67,27 +69,39 @@ const colorByGeneExpression = (truncatedExpression, min, max = 4) => {
 };
 
 const convertCellsData = (results, hidden, properties) => {
-  const data = [[], []];
-  console.time('convertCellsData');
+  // results = mockEmbedding;
+
   const obsEmbeddingIndex = [];
+
+  console.time('convertCellsData');
+  // const obsEmbeddingIndex = [];
   console.log('RESULTS ', results);
-  const nonNullResults = results.filter((value) => value);
+  let { xValues, yValues, cellIds } = results;
+  if (!cellIds) {
+    return { obsEmbedding: { data: [[], []], shape: [0, 0] }, obsEmbeddingIndex: [] };
+  }
+
   const hiddenCells = union([...hidden], properties);
-  nonNullResults.forEach((value, key) => {
-    if (hiddenCells.has(key)) {
-      return;
-    }
-    if (value.length !== 2) {
-      throw new Error('Unexpected number of embedding dimensions');
-    }
-    data[0].push(value[0]);
-    data[1].push(value[1]);
-    obsEmbeddingIndex.push(key.toString());
-  });
+  console.log('hiddenCells', hiddenCells);
+  if (hiddenCells.size > 0) {
+    const filteredIndices = [];
+    cellIds?.forEach((cellId, index) => {
+      if (!hiddenCells.has(cellId)) {
+        filteredIndices.push(index);
+      }
+    });
+
+    xValues = filteredIndices.map((index) => xValues[index]);
+    yValues = filteredIndices.map((index) => yValues[index]);
+    cellIds = filteredIndices.map((index) => cellIds[index]);
+  }
+
+  console.log('obsEmbeddingIndex', obsEmbeddingIndex.length);
   console.timeEnd('convertCellsData');
+
   return {
-    obsEmbedding: { data, shape: [data.length, data[0].length] },
-    obsEmbeddingIndex,
+    obsEmbedding: { data: [xValues, yValues], shape: [2, cellIds.length] },
+    obsEmbeddingIndex: cellIds,
   };
 };
 
