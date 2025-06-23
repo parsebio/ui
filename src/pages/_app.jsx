@@ -11,6 +11,7 @@ import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import { DefaultSeo } from 'next-seo';
+import getConfig from 'next/config';
 
 import { wrapper } from 'redux/store';
 import { useDispatch, useSelector } from 'react-redux';
