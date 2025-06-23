@@ -102,17 +102,18 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     if (amplifyConfig) {
-      const domainName = process.env.NODE_ENV !== 'development'
-        ? getConfig().publicRuntimeConfig.domainName
-        : 'localhost';
+      // TEMP remove cookies
+      // const domainName = process.env.NODE_ENV !== 'development'
+      //   ? getConfig().publicRuntimeConfig.domainName
+      //   : 'localhost';
 
-      amplifyConfig.Auth.cookieStorage = {
-        domain: domainName,
-        path: '/',
-        expires: 365,
-        secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'strict',
-      };
+      // amplifyConfig.Auth.cookieStorage = {
+      //   domain: domainName,
+      //   path: '/',
+      //   expires: 365,
+      //   secure: process.env.NODE_ENV !== 'development',
+      //   sameSite: 'strict',
+      // };
 
       Amplify.configure(amplifyConfig);
 
