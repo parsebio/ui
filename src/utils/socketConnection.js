@@ -25,6 +25,7 @@ const connectionPromise = new Promise((resolve, reject) => {
       reconnection: true,
       reconnectionDelay: 500,
       reconnectionAttempts: 10,
+      port: 3000,
       withCredentials: false,
       extraHeaders: {
         cookie: null,
