@@ -11,7 +11,7 @@ import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import { DefaultSeo } from 'next-seo';
-// import getConfig from 'next/config';
+import getConfig from 'next/config';
 
 import { wrapper } from 'redux/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -102,17 +102,17 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     if (amplifyConfig) {
-      // const domainName = process.env.NODE_ENV !== 'development'
-      //   ? getConfig().publicRuntimeConfig.domainName
-      //   : 'localhost';
+      const domainName = process.env.NODE_ENV !== 'development'
+        ? getConfig().publicRuntimeConfig.domainName
+        : 'localhost';
 
-      // amplifyConfig.Auth.cookieStorage = {
-      //   domain: domainName,
-      //   path: '/',
-      //   expires: 365,
-      //   secure: process.env.NODE_ENV !== 'development',
-      //   sameSite: 'strict',
-      // };
+      amplifyConfig.Auth.cookieStorage = {
+        domain: domainName,
+        path: '/',
+        expires: 365,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'strict',
+      };
 
       Amplify.configure(amplifyConfig);
 
@@ -244,6 +244,8 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
 
   // Do nothing if not server-side
   if (!req) { return { pageProps: {} }; }
+
+  console.log('Server received cookie:', JSON.stringify(req.headers.cookie));
 
   const pageProps = Component.getInitialProps
     ? await Component.getInitialProps(ctx)
