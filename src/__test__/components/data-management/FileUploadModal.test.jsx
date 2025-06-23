@@ -169,7 +169,7 @@ describe('FileUploadModal', () => {
 
     selectTech(sampleTech['10X']);
 
-    expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
+    expect(await screen.queryByText(/^To upload$/)).not.toBeInTheDocument();
     // It has a select button to select technology
     const uploadInput = document.querySelector(
       `[data-test-id="${integrationTestConstants.ids.FILE_UPLOAD_INPUT}"]`,
@@ -188,7 +188,7 @@ describe('FileUploadModal', () => {
     });
 
     //  it was valid and shows up
-    expect(await screen.findByText(/To upload/)).toBeInTheDocument();
+    expect(await screen.findByText(/^To upload$/)).toBeInTheDocument();
     expect(await screen.findByText(file.path.slice(1))).toBeInTheDocument();
 
     // upload is enabled
@@ -205,7 +205,7 @@ describe('FileUploadModal', () => {
 
     selectTech(sampleTech.SEURAT);
 
-    expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
+    expect(await screen.queryByText(/^To upload$/)).not.toBeInTheDocument();
 
     // get the dropzone input
     const uploadInput = document.querySelector(
@@ -225,7 +225,7 @@ describe('FileUploadModal', () => {
     });
 
     //  it was valid and shows up
-    expect(await screen.findByText(/To upload/)).toBeInTheDocument();
+    expect(await screen.findByText(/^To upload$/)).toBeInTheDocument();
     expect(await screen.findByText('scdata.rds')).toBeInTheDocument();
 
     // upload is enabled
@@ -242,7 +242,7 @@ describe('FileUploadModal', () => {
 
     selectTech(sampleTech.SEURAT);
 
-    expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
+    expect(await screen.queryByText(/^To upload$/)).not.toBeInTheDocument();
 
     // get the dropzone input
     const uploadInput = document.querySelector(
@@ -262,7 +262,7 @@ describe('FileUploadModal', () => {
     });
 
     //  it was valid and shows up
-    expect(await screen.findByText(/To upload/)).toBeInTheDocument();
+    expect(await screen.findByText(/^To upload$/)).toBeInTheDocument();
     expect(await screen.findByText('scdata.rds')).toBeInTheDocument();
 
     // upload is enabled
@@ -286,7 +286,7 @@ describe('FileUploadModal', () => {
 
     selectTech(sampleTech.SEURAT);
 
-    expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
+    expect(await screen.queryByText(/^To upload$/)).not.toBeInTheDocument();
 
     // get the dropzone input
     const uploadInput = document.querySelector(
@@ -306,7 +306,7 @@ describe('FileUploadModal', () => {
     });
 
     //  it shows up
-    expect(await screen.findByText(/To upload/)).toBeInTheDocument();
+    expect(await screen.findByText(/^To upload$/)).toBeInTheDocument();
     expect(await screen.findByText('scdata.txt')).toBeInTheDocument();
 
     // upload is disabled as the file was invalid
@@ -331,7 +331,7 @@ describe('FileUploadModal', () => {
 
     expect(techInput).toBeDisabled();
 
-    expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
+    expect(await screen.queryByText(/^To upload$/)).not.toBeInTheDocument();
 
     // get the dropzone input
     const uploadInput = document.querySelector(
@@ -400,7 +400,7 @@ describe('FileUploadModal', () => {
       expect(screen.getByText(filename)).toBeInTheDocument();
     });
 
-    expect(await screen.queryByText(/To upload/)).not.toBeInTheDocument();
+    expect(await screen.queryByText(/^To upload$/)).not.toBeInTheDocument();
 
     const uploadInput = document.querySelector(
       `[data-test-id="${integrationTestConstants.ids.FILE_UPLOAD_INPUT}"]`,
@@ -419,7 +419,7 @@ describe('FileUploadModal', () => {
     });
 
     // It shows up as ready to upload
-    expect(await screen.findByText(/To upload/)).toBeInTheDocument();
+    expect(await screen.findByText(/^To upload$/)).toBeInTheDocument();
     expect(await screen.findByText(file.path.slice(1))).toBeInTheDocument();
 
     const uploadButtonText = screen.getAllByText(/Upload/i).pop();
@@ -462,7 +462,7 @@ describe('FileUploadModal', () => {
     });
 
     // Valid files show up
-    expect(await screen.findByText(/To upload/)).toBeInTheDocument();
+    expect(await screen.findByText(/^To upload$/)).toBeInTheDocument();
     expect(await screen.findAllByText('WT13/DGE_unfiltered/all_genes.csv.gz')).toHaveLength(2);
     expect(await screen.findByText('WT14/DGE_filtered/all_genes.csv.gz')).toBeInTheDocument();
     expect(await screen.findByText('WT15/all_genes.csv.gz')).toBeInTheDocument();

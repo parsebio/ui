@@ -1,5 +1,5 @@
 import { init, push } from '@socialgouv/matomo-next';
-import { Auth } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
 import { Environment } from './deploymentInfo';
 import fetchAPI from './http/fetchAPI';
 
