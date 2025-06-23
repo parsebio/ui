@@ -1,5 +1,5 @@
 import socketIOClient from 'socket.io-client';
-import getApiEndpoint from './getApiEndpoint';
+import getApiEndpoint from './apiEndpoint';
 import { isBrowser } from './deploymentInfo';
 
 const connectionPromise = new Promise((resolve, reject) => {
@@ -24,6 +24,7 @@ const connectionPromise = new Promise((resolve, reject) => {
       transports: ['websocket'],
       reconnection: true,
       reconnectionDelay: 500,
+      reconnectionAttempts: 10,
     },
   );
 
@@ -41,10 +42,14 @@ const connectionPromise = new Promise((resolve, reject) => {
     }, 10);
   });
   io.on('error', (error) => {
+    console.error('io.on error');
+    console.error(error);
     io.close();
     reject(error);
   });
   io.on('connect_error', (error) => {
+    console.error('io.on connect_error');
+    console.error(error);
     io.close();
     reject(error);
   });
