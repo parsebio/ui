@@ -32,7 +32,7 @@ jest.mock('react-resize-detector', () => (props) => {
 });
 jest.mock('utils/socketConnection', () => ({
   __esModule: true,
-  default: new Promise((resolve) => {
+  default: () => new Promise((resolve) => {
     resolve({
       emit: jest.fn(),
       on: jest.fn(),
@@ -289,13 +289,15 @@ describe('Pipeline Page', () => {
     });
   });
 
-  it('updates file status from socket message', async () => {
+  it.only('updates file status from socket message', async () => {
     await renderPipelinePage();
 
     const socketMock = await import('utils/socketConnection');
     const message = { file: { id: 'file1', status: 'uploaded' } };
 
-    socketMock.default.then((io) => {
+    console.log('socketMockDebug');
+    console.log(socketMock);
+    socketMock.default().then((io) => {
       io.on.mockImplementationOnce((event, callback) => {
         if (event === `fileUpdates-${mockAnalysisIds.emptyAnalysis}`) {
           callback(message);

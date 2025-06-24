@@ -16,21 +16,6 @@ const clearOldCookies = async () => {
 };
 
 const connectionPromise = new Promise((resolve, reject) => {
-  /**
- * You likely added a static `import ... from socketConnection.js` to the top of a file.
- * These files are automatically run and evaluted at build-time and during SSR-time.
- * This means the server or your development machine will attempt and fail to connect to the API.
- *
- * To avoid this, imports like these are blocked. You must use `async import()` to dynamically
- * import the promise as necessary during runtime.
- */
-  if (!isBrowser) {
-    reject(new Error(
-      'connectionPromise attempted to run on the server. It must be used through a dynamic import. Search in the code for this error for more details.',
-    ));
-    return;
-  }
-
   const io = socketIOClient(
     getApiEndpoint(),
     {
@@ -69,6 +54,20 @@ const connectionPromise = new Promise((resolve, reject) => {
 });
 
 const socketConnection = async () => {
+  /**
+  * You likely added a static `import ... from socketConnection.js` to the top of a file.
+  * These files are automatically run and evaluted at build-time and during SSR-time.
+  * This means the server or your development machine will attempt and fail to connect to the API.
+  *
+  * To avoid this, imports like these are blocked. You must use `async import()` to dynamically
+  * import the promise as necessary during runtime.
+  */
+  if (!isBrowser) {
+    throw new Error(
+      'connectionPromise attempted to run on the server. It must be used through a dynamic import. Search in the code for this error for more details.',
+    );
+  }
+
   await clearOldCookies();
   return await connectionPromise;
 };

@@ -54,7 +54,7 @@ jest.mock('@aws-amplify/auth', () => ({
 
 jest.mock('utils/socketConnection', () => ({
   __esModule: true,
-  default: new Promise((resolve) => {
+  default: () => new Promise((resolve) => {
     resolve({
       emit: jest.fn(), on: jest.fn(), off: jest.fn(), id: '5678',
     });
