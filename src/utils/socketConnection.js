@@ -1,6 +1,19 @@
+import { Auth } from '@aws-amplify/auth';
+import Cookies from 'js-cookie';
+
 import socketIOClient from 'socket.io-client';
 import getApiEndpoint from './apiEndpoint';
 import { isBrowser } from './deploymentInfo';
+
+// Cognito keeps around old cookies, so we need to manually clear them
+// To stop the load balancer from dropping the websocket connections
+const clearOldCookies = async () => {
+  const appClientId = (await Auth.currentSession()).idToken.payload.aud;
+
+  Object.keys(Cookies.get())
+    .filter((key) => key.startsWith('CognitoIdentityServiceProvider.') && !key.includes(`.${appClientId}.`))
+    .forEach((key) => Cookies.remove(key));
+};
 
 const connectionPromise = new Promise((resolve, reject) => {
   /**
@@ -25,12 +38,6 @@ const connectionPromise = new Promise((resolve, reject) => {
       reconnection: true,
       reconnectionDelay: 500,
       reconnectionAttempts: 10,
-      port: 3000,
-      withCredentials: false,
-      extraHeaders: {
-        cookie: null,
-        Cookie: null,
-      },
     },
   );
 
@@ -63,4 +70,9 @@ const connectionPromise = new Promise((resolve, reject) => {
   });
 });
 
-export default connectionPromise;
+const socketConnection = async () => {
+  await clearOldCookies();
+  return await connectionPromise;
+};
+
+export default socketConnection;

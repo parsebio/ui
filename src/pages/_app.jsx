@@ -109,7 +109,7 @@ const WrappedApp = ({ Component, pageProps }) => {
       amplifyConfig.Auth.cookieStorage = {
         domain: domainName,
         path: '/',
-        expires: 365,
+        expires: 3,
         secure: process.env.NODE_ENV !== 'development',
         sameSite: 'strict',
       };
@@ -244,8 +244,6 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
 
   // Do nothing if not server-side
   if (!req) { return { pageProps: {} }; }
-
-  console.log('Server received cookie:', JSON.stringify(req.headers.cookie));
 
   const pageProps = Component.getInitialProps
     ? await Component.getInitialProps(ctx)
