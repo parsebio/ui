@@ -100,18 +100,25 @@ const WrappedApp = ({ Component, pageProps }) => {
     initTracking(environment, cookiesAgreed);
   }, [cookiesAgreed, environment]);
 
+  const getCookieDomain = () => {
+    if (process.env.NODE_ENV === 'development') return 'localhost';
+
+    const { domainName } = getConfig().publicRuntimeConfig;
+
+    if (process.env.K8S_ENV === 'production') {
+      return domainName;
+    }
+
+    if (process.env.K8S_ENV === 'staging') {
+      const sandboxId = process.env.SANDBOX_ID || 'default';
+      return `${sandboxId}.${domainName}`;
+    }
+  };
+
   useEffect(() => {
     if (amplifyConfig) {
-      const domainName = process.env.NODE_ENV !== 'development'
-        ? getConfig().publicRuntimeConfig.domainName
-        : 'localhost';
-
-      const sandboxId = process.env.SANDBOX_ID || 'default';
-
-      const cookieDomain = `${sandboxId}.${domainName}`;
-
       amplifyConfig.Auth.cookieStorage = {
-        domain: cookieDomain,
+        domain: getCookieDomain(),
         path: '/',
         expires: 3,
         secure: process.env.NODE_ENV !== 'development',
