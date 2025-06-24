@@ -5,8 +5,8 @@ import socketIOClient from 'socket.io-client';
 import getApiEndpoint from './apiEndpoint';
 import { isBrowser } from './deploymentInfo';
 
-// Cognito keeps around old cookies, so we need to manually clear them
-// To stop the load balancer from dropping the websocket connections
+// Amplify keeps around old cookies, so we need to manually clear them
+// to stop the load balancer from dropping the websocket connections
 const clearOldCookies = async () => {
   const appClientId = (await Auth.currentSession()).idToken.payload.aud;
 
