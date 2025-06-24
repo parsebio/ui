@@ -103,6 +103,9 @@ const WrappedApp = ({ Component, pageProps }) => {
   const getCookieDomain = () => {
     if (process.env.NODE_ENV === 'development') return 'localhost';
 
+    console.log('getConfigpublicRuntimeConfigDebug');
+    console.log(getConfig().publicRuntimeConfig);
+
     const { domainName } = getConfig().publicRuntimeConfig;
 
     console.log('domainNameDebug');
