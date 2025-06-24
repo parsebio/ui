@@ -106,8 +106,12 @@ const WrappedApp = ({ Component, pageProps }) => {
         ? getConfig().publicRuntimeConfig.domainName
         : 'localhost';
 
+      const sandboxId = process.env.SANDBOX_ID || 'default';
+
+      const cookieDomain = `${sandboxId}.${domainName}`;
+
       amplifyConfig.Auth.cookieStorage = {
-        domain: domainName,
+        domain: cookieDomain,
         path: '/',
         expires: 3,
         secure: process.env.NODE_ENV !== 'development',
