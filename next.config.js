@@ -74,6 +74,7 @@ const nextConfig = {
   },
   publicRuntimeConfig: {
     domainName: process.env.DOMAIN_NAME,
+    sandboxId: process.env.SANDBOX_ID,
     accountId,
   },
   productionBrowserSourceMaps: true,
@@ -88,14 +89,10 @@ const nextConfig = {
       'bn.js': path.join(__dirname, 'node_modules/bn.js/lib/bn.js'),
     };
 
-    const final = webpackConfigSourcemaps(
-      webpackConfigRules(
-        webpackConfigPlugins(
-          config,
-          params,
-        ), params,
-      ), params,
-    );
+    const final = webpackConfigSourcemaps(webpackConfigRules(webpackConfigPlugins(
+      config,
+      params,
+    ), params), params);
 
     if (!dev) {
       console.log('WebPack build configuration:');
