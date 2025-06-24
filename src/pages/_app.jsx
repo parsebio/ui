@@ -126,8 +126,12 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     if (amplifyConfig) {
+      const domain = getCookieDomain();
+      console.log('domainDebug');
+      console.log(domain);
+
       amplifyConfig.Auth.cookieStorage = {
-        domain: getCookieDomain(),
+        domain,
         path: '/',
         expires: 3,
         secure: process.env.NODE_ENV !== 'development',
