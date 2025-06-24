@@ -105,6 +105,9 @@ const WrappedApp = ({ Component, pageProps }) => {
 
     const { domainName } = getConfig().publicRuntimeConfig;
 
+    console.log('domainNameDebug');
+    console.log(domainName);
+
     if (process.env.K8S_ENV === 'production') {
       return domainName;
     }
@@ -113,6 +116,12 @@ const WrappedApp = ({ Component, pageProps }) => {
       const sandboxId = process.env.SANDBOX_ID || 'default';
       return `${sandboxId}.${domainName}`;
     }
+
+    console.log('processenvK8S_ENVDebug');
+    console.log(process.env.K8S_ENV);
+
+    console.log('domainNameDebug');
+    console.log(domainName);
   };
 
   useEffect(() => {
