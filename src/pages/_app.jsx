@@ -121,11 +121,7 @@ const WrappedApp = ({ Component, pageProps }) => {
       return `${sandboxId}.${domainName}`;
     }
 
-    console.log('k8sEnvDebug');
-    console.log(k8sEnv);
-
-    console.log('domainNameDebug');
-    console.log(domainName);
+    throw new Error(`Unknown k8sEnv: ${k8sEnv}`);
   };
 
   useEffect(() => {
