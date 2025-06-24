@@ -63,8 +63,6 @@ const connectionPromise = new Promise((resolve, reject) => {
   io.on('connect_error', (error) => {
     console.error('io.on connect_error');
     console.error(error);
-    console.log('errorreqheadersDebug');
-    console.log(error.req.headers);
     io.close();
     reject(error);
   });
