@@ -101,6 +101,8 @@ const WrappedApp = ({ Component, pageProps }) => {
   }, [cookiesAgreed, environment]);
 
   const getCookieDomain = () => {
+    console.log('processenvNODE_ENVDebug');
+    console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV === 'development') return 'localhost';
 
     console.log('getConfigpublicRuntimeConfigDebug');
@@ -108,8 +110,8 @@ const WrappedApp = ({ Component, pageProps }) => {
 
     const { domainName, sandboxId, k8sEnv } = getConfig().publicRuntimeConfig;
 
-    console.log('domainNameDebug');
-    console.log(domainName);
+    console.log('domainNamesandboxIdk8sEnvDebug');
+    console.log({ domainName, sandboxId, k8sEnv });
 
     if (k8sEnv === 'production') {
       return domainName;
