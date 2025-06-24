@@ -189,21 +189,15 @@ const generateData = (
     ? (cellId) => coloringByCell[cellId]
     : (cellId) => coloringByCell.get(cellId);
 
-  const filteredCells = filterCells(cellSets, selectedSample, embeddingData);
+  const filteredCells = filterCells(cellSets, selectedSample);
+  const { xValues, yValues, cellIds } = embeddingData;
 
-  const cells = embeddingData
-    .map((coordinates, cellId) => ({ cellId, coordinates }))
-    .filter(({ coordinates }) => coordinates !== undefined)
-    .filter(({ cellId }) => filteredCells.has(cellId))
-    .map((data) => {
-      const { cellId, coordinates } = data;
-
-      return {
-        x: coordinates[0],
-        y: coordinates[1],
-        value: getExpression(cellId),
-      };
-    });
+  const cells = cellIds.filter((cellId) => filteredCells.has(cellId))
+    .map((cellId, index) => ({
+      x: xValues[index],
+      y: yValues[index],
+      value: getExpression(cellId),
+    }));
 
   return cells;
 };

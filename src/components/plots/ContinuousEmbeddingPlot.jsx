@@ -56,7 +56,7 @@ const ContinuousEmbeddingPlot = (props) => {
       && config
       && !_.isNil(coloringByCell)
       && cellSets.accessible
-      && embeddingData?.length) {
+      && embeddingData.cellIds?.length) {
       setPlotSpec(
         generateSpec(
           config,

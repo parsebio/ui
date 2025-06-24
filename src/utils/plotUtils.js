@@ -101,7 +101,7 @@ const convertCellsData = (results, hidden, properties) => {
 
   return {
     obsEmbedding: { data: [xValues, yValues], shape: [2, cellIds.length] },
-    obsEmbeddingIndex: cellIds,
+    obsEmbeddingIndex: cellIds.map((cellId) => cellId.toString()),
   };
 };
 

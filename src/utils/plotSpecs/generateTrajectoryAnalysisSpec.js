@@ -688,22 +688,23 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
 
   // Filter array for duplicate cell sets
   selectedCellSetObjects = _.uniqBy(selectedCellSetObjects, 'key');
-
+  // todo faster way to compute this
+  const { xValues, yValues, cellIds: embeddingCellIds } = embedding;
   selectedCellSetObjects.forEach((cellSet) => {
     const { key, name, color } = cellSet;
 
     cellSetsPlotData.push(({ key, name, color }));
 
     cellSet.cellIds.forEach((cellId) => {
-      if (!embedding[cellId]) return;
-
+      if (!embeddingCellIds.includes(cellId)) return;
+      const index = embeddingCellIds.indexOf(cellId);
       plotData.push({
         cellId,
         cellSetKey: key,
         cellSetName: name,
         color,
-        x: embedding[cellId][0],
-        y: embedding[cellId][1],
+        x: xValues[index],
+        y: yValues[index],
       });
     });
   });
