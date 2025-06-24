@@ -75,6 +75,7 @@ const nextConfig = {
   publicRuntimeConfig: {
     domainName: process.env.DOMAIN_NAME,
     sandboxId: process.env.SANDBOX_ID,
+    k8sEnv: process.env.K8S_ENV,
     accountId,
   },
   productionBrowserSourceMaps: true,

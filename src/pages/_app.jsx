@@ -106,22 +106,21 @@ const WrappedApp = ({ Component, pageProps }) => {
     console.log('getConfigpublicRuntimeConfigDebug');
     console.log(getConfig().publicRuntimeConfig);
 
-    const { domainName } = getConfig().publicRuntimeConfig;
+    const { domainName, sandboxId, k8sEnv } = getConfig().publicRuntimeConfig;
 
     console.log('domainNameDebug');
     console.log(domainName);
 
-    if (process.env.K8S_ENV === 'production') {
+    if (k8sEnv === 'production') {
       return domainName;
     }
 
-    if (process.env.K8S_ENV === 'staging') {
-      const sandboxId = process.env.SANDBOX_ID || 'default';
+    if (k8sEnv === 'staging') {
       return `${sandboxId}.${domainName}`;
     }
 
-    console.log('processenvK8S_ENVDebug');
-    console.log(process.env.K8S_ENV);
+    console.log('k8sEnvDebug');
+    console.log(k8sEnv);
 
     console.log('domainNameDebug');
     console.log(domainName);
