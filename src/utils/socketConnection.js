@@ -8,7 +8,18 @@ import { isBrowser } from './deploymentInfo';
 // Amplify keeps around old cookies, so we need to manually clear them
 // to stop the load balancer from dropping the websocket connections
 const clearOldCookies = async () => {
-  const appClientId = (await Auth.currentSession()).idToken.payload.aud;
+  let currentSession;
+  try {
+    currentSession = await Auth.currentSession();
+  } catch (error) {
+    // If there is no current session
+    if (error.name !== 'NotAuthenticated') {
+      console.error('Error getting current session:', error);
+    }
+    return;
+  }
+
+  const appClientId = currentSession.idToken.payload.aud;
 
   Object.keys(Cookies.get())
     .filter((key) => key.startsWith('CognitoIdentityServiceProvider.') && !key.includes(`.${appClientId}.`))
