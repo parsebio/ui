@@ -72,7 +72,7 @@ const getSamples = (...params) => (state) => (
 );
 
 const getHasSeuratTechnology = (...params) => (state) => (
-  samplesSelectors.getHasSeuratTechnology(...params)(state)
+  generalSelectors.getHasSeuratTechnology(...params)(state)
 );
 
 const getHasPermissions = (...params) => (state) => (
