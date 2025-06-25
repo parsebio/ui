@@ -688,7 +688,7 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
 
   // Filter array for duplicate cell sets
   selectedCellSetObjects = _.uniqBy(selectedCellSetObjects, 'key');
-  // todo faster way to compute this
+
   const { xValues, yValues, cellIds: embeddingCellIds } = embedding;
   selectedCellSetObjects.forEach((cellSet) => {
     const { key, name, color } = cellSet;
@@ -696,8 +696,9 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
     cellSetsPlotData.push(({ key, name, color }));
 
     cellSet.cellIds.forEach((cellId) => {
-      if (!embeddingCellIds.includes(cellId)) return;
       const index = embeddingCellIds.indexOf(cellId);
+      if (index === -1) return;
+
       plotData.push({
         cellId,
         cellSetKey: key,

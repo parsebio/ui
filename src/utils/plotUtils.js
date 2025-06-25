@@ -1,8 +1,6 @@
 import * as vega from 'vega';
 
 import { union } from 'utils/cellSetOperations';
-// import mockEmbedding from './mockEmbedding.json';
-// import smalltest from './smalltest.json';
 
 const colorInterpolator = vega.scheme('purplered');
 
@@ -69,20 +67,13 @@ const colorByGeneExpression = (truncatedExpression, min, max = 4) => {
 };
 
 const convertCellsData = (results, hidden, properties) => {
-  // results = mockEmbedding;
-
-  const obsEmbeddingIndex = [];
-
   console.time('convertCellsData');
-  // const obsEmbeddingIndex = [];
-  console.log('RESULTS ', results);
   let { xValues, yValues, cellIds } = results;
   if (!cellIds) {
     return { obsEmbedding: { data: [[], []], shape: [0, 0] }, obsEmbeddingIndex: [] };
   }
 
   const hiddenCells = union([...hidden], properties);
-  console.log('hiddenCells', hiddenCells);
   if (hiddenCells.size > 0) {
     const filteredIndices = [];
     cellIds?.forEach((cellId, index) => {
@@ -96,7 +87,6 @@ const convertCellsData = (results, hidden, properties) => {
     cellIds = filteredIndices.map((index) => cellIds[index]);
   }
 
-  console.log('obsEmbeddingIndex', obsEmbeddingIndex.length);
   console.timeEnd('convertCellsData');
 
   return {
