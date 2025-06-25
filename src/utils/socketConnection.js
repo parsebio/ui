@@ -42,10 +42,12 @@ const clearOldCookies = async () => {
   console.log('domainPrefixdomainNameDebug');
   console.log({ domainPrefix, domainName });
 
+  // Add . to the beginning?
+
   // Step 3: Remove each old Cognito cookie
   oldCognitoCookieKeys.forEach((key) => {
     Cookies.remove(key, {
-      domain: `${domainPrefix}.${domainName}`,
+      domain: domainName,
       path: '/',
       secure: true,
       sameSite: 'Strict',
