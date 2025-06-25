@@ -3,7 +3,7 @@ import '../../assets/nprogress.css';
 import _ from 'lodash';
 import '../index.css';
 
-import Amplify, { Credentials } from '@aws-amplify/core';
+import { Amplify } from 'aws-amplify';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider } from 'antd';
@@ -39,34 +39,10 @@ ConfigProvider.config({
   },
 });
 
-const mockCredentialsForInframock = () => {
-  Credentials.get = async () => ({
-    expired: false,
-    expireTime: null,
-    refreshCallbacks: [],
-    accessKeyId: 'asd', // pragma: allowlist secret
-    secretAccessKey: 'asfdsa', // pragma: allowlist secret
-    sessionToken: 'asdfasdf', // pragma: allowlist secret
-  });
-
-  Credentials.shear = async () => ({
-    expired: false,
-    expireTime: null,
-    refreshCallbacks: [],
-    accessKeyId: 'asd', // pragma: allowlist secret
-    secretAccessKey: 'asfdsa', // pragma: allowlist secret
-    sessionToken: 'asdfasdf', // pragma: allowlist secret
-  });
-};
-
 NProgress.configure({ showSpinner: false });
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
-
-Amplify.configure({
-  ssr: true,
-});
 
 const addDashesToExperimentId = (experimentId) => experimentId.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
 
@@ -139,10 +115,6 @@ const WrappedApp = ({ Component, pageProps }) => {
       };
 
       Amplify.configure(amplifyConfig);
-
-      if (environment === 'development') {
-        mockCredentialsForInframock();
-      }
 
       setAmplifyConfigured(true);
     }
