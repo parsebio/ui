@@ -36,6 +36,12 @@ const clearOldCookies = async () => {
   oldCognitoCookieKeys.forEach((key) => {
     Cookies.remove(key);
   });
+
+  const newOldCognitoCookieKeys = Object.keys(Cookies.get()).filter(
+    (key) => key.startsWith('CognitoIdentityServiceProvider.')
+      && !key.includes(`.${appClientId}.`),
+  );
+  console.log('newOldCognitoCookieKeysDebug', newOldCognitoCookieKeys);
 };
 
 const connectionPromise = new Promise((resolve, reject) => {
