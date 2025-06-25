@@ -21,9 +21,21 @@ const clearOldCookies = async () => {
 
   const appClientId = currentSession.idToken.payload.aud;
 
-  Object.keys(Cookies.get())
-    .filter((key) => key.startsWith('CognitoIdentityServiceProvider.') && !key.includes(`.${appClientId}.`))
-    .forEach((key) => Cookies.remove(key));
+  // Step 1: Get all cookie keys
+  const allCookieKeys = Object.keys(Cookies.get());
+  console.log('allCookieKeysDebug', allCookieKeys);
+
+  // Step 2: Filter for Cognito cookies that do not include the current appClientId
+  const oldCognitoCookieKeys = allCookieKeys.filter(
+    (key) => key.startsWith('CognitoIdentityServiceProvider.')
+      && !key.includes(`.${appClientId}.`),
+  );
+  console.log('oldCognitoCookieKeysDebug', oldCognitoCookieKeys);
+
+  // Step 3: Remove each old Cognito cookie
+  oldCognitoCookieKeys.forEach((key) => {
+    Cookies.remove(key);
+  });
 };
 
 const connectionPromise = new Promise((resolve, reject) => {
