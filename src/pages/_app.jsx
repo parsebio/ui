@@ -89,12 +89,8 @@ const WrappedApp = ({ Component, pageProps }) => {
     console.log('domainNamesandboxIdk8sEnvDebug');
     console.log({ domainName, sandboxId, k8sEnv });
 
-    if (k8sEnv === 'production') {
+    if (k8sEnv === 'production' || k8sEnv === 'staging') {
       return domainName;
-    }
-
-    if (k8sEnv === 'staging') {
-      return `${sandboxId}.${domainName}`;
     }
 
     throw new Error(`Unknown k8sEnv: ${k8sEnv}`);

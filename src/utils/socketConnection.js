@@ -1,7 +1,8 @@
 import { Auth } from 'aws-amplify';
+import getConfig from 'next/config';
 import Cookies from 'js-cookie';
-
 import socketIOClient from 'socket.io-client';
+
 import getApiEndpoint from './apiEndpoint';
 import { isBrowser } from './deploymentInfo';
 
@@ -19,6 +20,8 @@ const clearOldCookies = async () => {
     return;
   }
 
+  const { domainName, k8sEnv } = getConfig().publicRuntimeConfig;
+
   const appClientId = currentSession.idToken.payload.aud;
 
   // Step 1: Get all cookie keys
@@ -32,9 +35,21 @@ const clearOldCookies = async () => {
   );
   console.log('oldCognitoCookieKeysDebug', oldCognitoCookieKeys);
 
+  const domainPrefix = k8sEnv === 'production' ? '.app' : '.staging';
+
+  // .staging
+  // trailmaker.parsebiosciences.com
+  console.log('domainPrefixdomainNameDebug');
+  console.log({ domainPrefix, domainName });
+
   // Step 3: Remove each old Cognito cookie
   oldCognitoCookieKeys.forEach((key) => {
-    Cookies.remove(key);
+    Cookies.remove(key, {
+      domain: `${domainPrefix}.${domainName}`,
+      path: '/',
+      secure: true,
+      sameSite: 'Strict',
+    });
   });
 
   const newOldCognitoCookieKeys = Object.keys(Cookies.get()).filter(
