@@ -44,7 +44,7 @@ jest.mock('react-resize-detector', () => (props) => {
 
 jest.mock('utils/work/fetchWork');
 
-jest.mock('aws-amplify', () => ({}));
+jest.mock('@aws-amplify/auth', () => ({}));
 
 const mockWorkerResponses = {
   DifferentialExpression: mockDiffExprResult,

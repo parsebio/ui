@@ -33,7 +33,7 @@ jest.mock('utils/AppRouteProvider', () => ({
   })),
 }));
 
-jest.mock('aws-amplify', () => ({
+jest.mock('@aws-amplify/auth', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn(() => Promise.resolve({
       attributes: {

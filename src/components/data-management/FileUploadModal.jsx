@@ -219,10 +219,22 @@ const FileUploadModal = (props) => {
                 </Select>
               </Tooltip>
             </Space>
-            <Text type='secondary'>
-              <i>
-                {'Don\'t have data in an accepted format? Reach out to us using the feedback button at the top of the page.'}
-              </i>
+            <Text>
+              <Paragraph style={{ marginBottom: '0.5em' }}>
+                Projects can contain data generated from one or multiple technologies.
+                To upload data from multiple technologies, select one technology and
+                upload the relevant files, then return to this data upload modal to
+                select a second technology. Further instructions are provided in the
+                {' '}
+                <a
+                  href='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide#h_01HZ4VDNQ8HQNH0BC12VX54PJR'
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  user guide
+                </a>
+                .
+              </Paragraph>
             </Text>
           </Space>
         </Col>
@@ -241,6 +253,16 @@ const FileUploadModal = (props) => {
       <Row>
         {/* eslint-disable react/jsx-props-no-spreading */}
         <Col span={24}>
+          <Row>
+            <Col span={24}>
+              <Text type='secondary'>
+                <i>
+                  {'Don\'t have data in an accepted format? Reach out to us at '}
+                  <a href='mailto:support@parsebiosciences.com'>support@parsebiosciences.com</a>
+                </i>
+              </Text>
+            </Col>
+          </Row>
           <Dropzone onDrop={onDrop} multiple>
             {({ getRootProps, getInputProps }) => (
               <div
