@@ -3,7 +3,7 @@ import { sampleTech } from 'utils/constants';
 
 const getHasSeuratTechnology = (experimentId) => (state) => {
   const sampleIds = state.experiments[experimentId]?.sampleIds
-  || state.experimentSettings.info.sampleIds || [];
+  ?? state.experimentSettings.info.sampleIds ?? [];
 
   return sampleIds.some(
     (sampleId) => state.samples[sampleId]?.type === sampleTech.SEURAT,
