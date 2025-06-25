@@ -1,4 +1,4 @@
-import { Auth } from '@aws-amplify/auth';
+import { Auth } from 'aws-amplify';
 import { USER_LOADED } from 'redux/actionTypes/user';
 import signIn from 'utils/signIn';
 

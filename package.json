@@ -42,7 +42,7 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
-    "@aws-amplify/auth": "5.6.4",
+    "@aws-amplify/auth": "^4.3.18",
     "@aws-amplify/core": "^4.7.15",
     "@aws-amplify/ui": "5.6.4",
     "@aws-amplify/ui-react": "^4.6.5",

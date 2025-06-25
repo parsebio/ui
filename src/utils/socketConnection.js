@@ -1,4 +1,4 @@
-import { Auth } from '@aws-amplify/auth';
+import { Auth } from 'aws-amplify';
 import Cookies from 'js-cookie';
 
 import socketIOClient from 'socket.io-client';
