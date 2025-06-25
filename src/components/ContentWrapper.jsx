@@ -206,7 +206,7 @@ const ContentWrapper = (props) => {
   const seuratStatusKey = backendStatus?.seurat?.status;
 
   const isSeurat = seuratStatusKey && hasSeuratTechnology;
-  console.log('isSeurat', isSeurat, seuratStatusKey, hasSeuratTechnology, currentExperimentId);
+
   const [pipelinesRerunStatus, setPipelinesRerunStatus] = useState(null);
   const seuratRunning = seuratStatusKey === 'RUNNING' && isSeurat;
   const seuratRunningError = backendErrors.includes(seuratStatusKey) && isSeurat;
@@ -390,7 +390,6 @@ const ContentWrapper = (props) => {
   ];
 
   const renderContent = () => {
-    console.log('currentStatusScreen', currentStatusScreen);
     if (routeExperimentId) {
       if (
         backendLoading || !backendStatusRequested) {
