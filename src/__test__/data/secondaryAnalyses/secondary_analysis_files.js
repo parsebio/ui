@@ -3,7 +3,7 @@ const mockAnalysisFiles = [
     id: '1000fe51-6a6d-4545-b717-a4c475849b94',
     name: 'S1_R1.fastq.gz',
     size: '70154428',
-    type: 'fastq',
+    type: 'wtFastq',
     upload: {
       status: 'uploaded',
     },
@@ -13,7 +13,7 @@ const mockAnalysisFiles = [
     id: 'd7ba4d40-e1ed-45a0-9eca-8f5caab0dd7b',
     name: 'S1_R2.fastq.gz',
     size: '55879599',
-    type: 'fastq',
+    type: 'wtFastq',
     upload: {
       status: 'uploaded',
     },
@@ -23,7 +23,7 @@ const mockAnalysisFiles = [
     id: 'c28efb10-6459-4107-b9ef-baf6b13968c4',
     name: 'S2_R1.fastq.gz',
     size: '70151802',
-    type: 'fastq',
+    type: 'wtFastq',
     upload: {
       status: 'uploaded',
     },
@@ -33,7 +33,7 @@ const mockAnalysisFiles = [
     id: '0740a094-f020-4c97-aceb-d0a708d0982e',
     name: 'S2_R2.fastq.gz',
     size: '55879479',
-    type: 'fastq',
+    type: 'wtFastq',
     upload: {
       status: 'uploaded',
     },
