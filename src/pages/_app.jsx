@@ -3,7 +3,7 @@ import '../../assets/nprogress.css';
 import _ from 'lodash';
 import '../index.css';
 
-import Amplify from 'aws-amplify';
+import Amplify from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider } from 'antd';
