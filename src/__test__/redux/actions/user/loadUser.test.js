@@ -4,7 +4,7 @@ import fetchMock from 'jest-fetch-mock';
 import { loadUser } from 'redux/actions/user';
 import { USER_LOADED } from 'redux/actionTypes/user';
 import signIn from 'utils/signIn';
-import { Auth } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);

@@ -1,4 +1,4 @@
-import { Auth } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
 import getConfig from 'next/config';
 import Cookies from 'js-cookie';
 import socketIOClient from 'socket.io-client';

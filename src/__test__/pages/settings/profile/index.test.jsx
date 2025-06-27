@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/router';
 import { makeStore } from 'redux/store';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
-import { Auth } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
 
 import ProfileSettings from 'pages/settings/profile';
 import pushNotificationMessage from 'utils/pushNotificationMessage';

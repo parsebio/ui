@@ -3,7 +3,8 @@ import {
   Avatar, Button, Dropdown,
 } from 'antd';
 import Link from 'next/link';
-import { Auth, Hub } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
+import { Hub } from '@aws-amplify/core';
 import endUserMessages from 'utils/endUserMessages';
 import { resetTrackingId } from 'utils/tracking';
 import handleError from 'utils/http/handleError';

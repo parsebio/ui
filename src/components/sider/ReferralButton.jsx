@@ -8,7 +8,7 @@ import {
 } from 'antd';
 import { TeamOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
 import handleError from 'utils/http/handleError';
 import validateInput, { rules } from 'utils/validateInputs';
 

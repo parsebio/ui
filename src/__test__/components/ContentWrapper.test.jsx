@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { useRouter } from 'next/router';
 import preloadAll from 'jest-next-dynamic';
-import { Auth } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
 import ContentWrapper from 'components/ContentWrapper';
 import AppRouteProvider from 'utils/AppRouteProvider';
 

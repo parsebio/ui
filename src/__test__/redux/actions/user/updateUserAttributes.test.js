@@ -1,6 +1,6 @@
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { Auth } from 'aws-amplify';
+import { Auth } from '@aws-amplify/auth';
 import updateUserAttributes from 'redux/actions/user/updateUserAttributes';
 import loadUser from 'redux/actions/user/loadUser';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
