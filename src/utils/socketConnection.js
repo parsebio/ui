@@ -6,6 +6,8 @@ import socketIOClient from 'socket.io-client';
 import getApiEndpoint from './apiEndpoint';
 import { isBrowser } from './deploymentInfo';
 
+let io;
+
 // Amplify keeps around old cookies, so we need to manually clear them
 // to stop the load balancer from dropping the websocket connections
 const clearOldCookies = async () => {
@@ -20,27 +22,18 @@ const clearOldCookies = async () => {
     return;
   }
 
-  const { domainName, k8sEnv } = getConfig().publicRuntimeConfig;
+  const { domainName } = getConfig().publicRuntimeConfig;
 
   const appClientId = currentSession.idToken.payload.aud;
 
   // Step 1: Get all cookie keys
   const allCookieKeys = Object.keys(Cookies.get());
-  console.log('allCookieKeysDebug', allCookieKeys);
 
   // Step 2: Filter for Cognito cookies that do not include the current appClientId
   const oldCognitoCookieKeys = allCookieKeys.filter(
     (key) => key.startsWith('CognitoIdentityServiceProvider.')
       && !key.includes(`.${appClientId}.`),
   );
-  console.log('oldCognitoCookieKeysDebug', oldCognitoCookieKeys);
-
-  const domainPrefix = k8sEnv === 'production' ? '.app' : '.staging';
-
-  // .staging
-  // trailmaker.parsebiosciences.com
-  console.log('domainPrefixdomainNameDebug');
-  console.log({ domainPrefix, domainName });
 
   // Add . to the beginning?
 
@@ -61,8 +54,8 @@ const clearOldCookies = async () => {
   console.log('newOldCognitoCookieKeysDebug', newOldCognitoCookieKeys);
 };
 
-const connectionPromise = new Promise((resolve, reject) => {
-  const io = socketIOClient(
+const generateIo = () => new Promise((resolve, reject) => {
+  io = socketIOClient(
     getApiEndpoint(),
     {
       transports: ['websocket'],
@@ -85,12 +78,14 @@ const connectionPromise = new Promise((resolve, reject) => {
       resolve(io);
     }, 10);
   });
+
   io.on('error', (error) => {
     console.error('io.on error');
     console.error(error);
     io.close();
     reject(error);
   });
+
   io.on('connect_error', (error) => {
     console.error('io.on connect_error');
     console.error(error);
@@ -114,8 +109,16 @@ const socketConnection = async () => {
     );
   }
 
-  await clearOldCookies();
-  return await connectionPromise;
+  if (io) return io;
+
+  try {
+    io = await generateIo();
+  } catch (e) {
+    await clearOldCookies();
+    io = await generateIo();
+  }
+
+  return io;
 };
 
 export default socketConnection;
