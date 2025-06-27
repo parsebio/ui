@@ -90,7 +90,7 @@ const WrappedApp = ({ Component, pageProps }) => {
     console.log({ domainName, sandboxId, k8sEnv });
 
     if (k8sEnv === 'staging') {
-      return `${sandboxId}`;
+      return `.${sandboxId}`;
       // return domainName;
     }
 
