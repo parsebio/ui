@@ -5,7 +5,7 @@ import updateUserAttributes from 'redux/actions/user/updateUserAttributes';
 import loadUser from 'redux/actions/user/loadUser';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 
-jest.mock('aws-amplify', () => ({
+jest.mock('@aws-amplify/auth', () => ({
   Auth: {
     updateUserAttributes: jest.fn(),
   },

@@ -13,7 +13,7 @@ import '__test__/test-utils/setupTests';
 
 jest.mock('utils/http/fetchAPI');
 
-jest.mock('aws-amplify', () => ({
+jest.mock('@aws-amplify/auth', () => ({
   currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
     username: 'mockuser',
     attributes: {

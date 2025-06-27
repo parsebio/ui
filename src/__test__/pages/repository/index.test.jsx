@@ -26,7 +26,7 @@ const renderRepositoryPage = async (store) => {
   });
 };
 
-jest.mock('aws-amplify', () => ({
+jest.mock('@aws-amplify/auth', () => ({
   Auth: jest.fn(),
 }));
 

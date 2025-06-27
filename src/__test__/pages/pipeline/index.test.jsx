@@ -46,7 +46,7 @@ jest.mock('utils/socketConnection', () => ({
   }),
 }));
 jest.mock('redux/actions/secondaryAnalyses/storeLoadedAnalysisFile', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
-jest.mock('aws-amplify', () => ({
+jest.mock('@aws-amplify/auth', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn(() => Promise.resolve({
       attributes: {

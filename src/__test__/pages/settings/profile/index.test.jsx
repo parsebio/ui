@@ -19,7 +19,7 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
   __esModule: true,
 }));
-jest.mock('aws-amplify', () => ({
+jest.mock('@aws-amplify/auth', () => ({
   Auth: jest.fn(),
 }));
 jest.mock('@aws-amplify/ui', () => ({
