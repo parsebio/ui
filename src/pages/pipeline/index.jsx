@@ -160,6 +160,7 @@ const Pipeline = () => {
     import('utils/socketConnection')
       .then(({ default: socketConnection }) => socketConnection())
       .then((io) => {
+        console.log('HOLAHOLADEBUG1');
         // remove previous listeners, in case the secondary analysis has changed
         io.off();
         io.on(`fileUpdates-${activeSecondaryAnalysisId}`, (message) => {

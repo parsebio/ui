@@ -23,6 +23,8 @@ import userEvent from '@testing-library/user-event';
 import endUserMessages from 'utils/endUserMessages';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
 
+import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/secondary_analysis_status_default.json';
+
 const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
 const mockNavigateTo = jest.fn();
 
@@ -289,19 +291,42 @@ describe('Pipeline Page', () => {
     });
   });
 
-  it('updates file status from socket message', async () => {
-    await renderPipelinePage();
+  it.only('updates file status from socket message', async () => {
+    // const emptyMockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.emptyAnalysis);
+    const emptyMockAPIResponses = {
+      ...mockAPIResponses,
+      [`/v2/secondaryAnalysis/${mockAnalysisIds.emptyAnalysis}/executionStatus`]: () => promiseResponse(
+        JSON.stringify(mockSecondaryAnalysisStatusDefault),
+      ),
+      [`/v2/secondaryAnalysis/${mockAnalysisIds.emptyAnalysis}/files`]: () => promiseResponse(JSON.stringify([])),
+    };
 
-    const socketMock = await import('utils/socketConnection');
+    fetchMock
+      .mockReset()
+      .mockIf(/.*/, mockAPI(emptyMockAPIResponses));
+
+    // [`/v2/secondaryAnalysis/${projectId}/files`]: () => promiseResponse(
+    //   JSON.stringify(mockAnalysisFiles),
+    // ),
+
+    console.log('utilsocketConnectionDebug');
+    console.log(await (await import('utils/socketConnection')).default());
+    const io = await (await import('utils/socketConnection')).default();
+
     const message = { file: { id: 'file1', status: 'uploaded' } };
 
-    socketMock.default().then((io) => {
-      io.on.mockImplementationOnce((event, callback) => {
-        if (event === `fileUpdates-${mockAnalysisIds.emptyAnalysis}`) {
-          callback(message);
-        }
-      });
+    console.log('ioDebug');
+    console.log(io);
+
+    io.on.mockImplementationOnce((event, callback) => {
+      console.log('eventDebug');
+      console.log(event);
+      if (event === `fileUpdates-${mockAnalysisIds.emptyAnalysis}`) {
+        callback(message);
+      }
     });
+
+    await renderPipelinePage();
 
     await waitFor(() => {
       expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(
