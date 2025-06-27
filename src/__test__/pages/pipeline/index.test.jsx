@@ -32,12 +32,14 @@ jest.mock('react-resize-detector', () => (props) => {
   const { children } = props;
   return children({ width: 800, height: 600 });
 });
+
+const mockOn = jest.fn();
 jest.mock('utils/socketConnection', () => ({
   __esModule: true,
   default: () => new Promise((resolve) => {
     resolve({
       emit: jest.fn(),
-      on: jest.fn(),
+      on: mockOn,
       off: jest.fn(),
       id: '5678',
     });
@@ -291,8 +293,7 @@ describe('Pipeline Page', () => {
     });
   });
 
-  it.only('updates file status from socket message', async () => {
-    // const emptyMockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.emptyAnalysis);
+  it('updates file status from socket message', async () => {
     const emptyMockAPIResponses = {
       ...mockAPIResponses,
       [`/v2/secondaryAnalysis/${mockAnalysisIds.emptyAnalysis}/executionStatus`]: () => promiseResponse(
@@ -305,22 +306,9 @@ describe('Pipeline Page', () => {
       .mockReset()
       .mockIf(/.*/, mockAPI(emptyMockAPIResponses));
 
-    // [`/v2/secondaryAnalysis/${projectId}/files`]: () => promiseResponse(
-    //   JSON.stringify(mockAnalysisFiles),
-    // ),
-
-    console.log('utilsocketConnectionDebug');
-    console.log(await (await import('utils/socketConnection')).default());
-    const io = await (await import('utils/socketConnection')).default();
-
     const message = { file: { id: 'file1', status: 'uploaded' } };
 
-    console.log('ioDebug');
-    console.log(io);
-
-    io.on.mockImplementationOnce((event, callback) => {
-      console.log('eventDebug');
-      console.log(event);
+    mockOn.mockImplementation((event, callback) => {
       if (event === `fileUpdates-${mockAnalysisIds.emptyAnalysis}`) {
         callback(message);
       }
