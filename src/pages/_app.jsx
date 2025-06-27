@@ -80,39 +80,14 @@ const WrappedApp = ({ Component, pageProps }) => {
     initTracking(environment, cookiesAgreed);
   }, [cookiesAgreed, environment]);
 
-  const getCookieDomain = () => {
-    console.log('processenvNODE_ENVDebug');
-    console.log(process.env.NODE_ENV);
-    if (process.env.NODE_ENV === 'development') return 'localhost';
-
-    console.log('getConfigpublicRuntimeConfigDebug');
-    console.log(getConfig().publicRuntimeConfig);
-
-    const { domainName, sandboxId, k8sEnv } = getConfig().publicRuntimeConfig;
-
-    console.log('domainNamesandboxIdk8sEnvDebug');
-    console.log({ domainName, sandboxId, k8sEnv });
-
-    if (k8sEnv === 'staging') {
-      return `.${domainName}.${sandboxId}`;
-      // return domainName;
-    }
-
-    if (k8sEnv === 'production') {
-      return domainName;
-    }
-
-    throw new Error(`Unknown k8sEnv: ${k8sEnv}`);
-  };
-
   useEffect(() => {
     if (amplifyConfig) {
-      const domain = getCookieDomain();
-      console.log('domainDebug');
-      console.log(domain);
+      const domainName = process.env.NODE_ENV !== 'development'
+        ? getConfig().publicRuntimeConfig.domainName
+        : 'localhost';
 
       amplifyConfig.Auth.cookieStorage = {
-        domain,
+        domain: domainName,
         path: '/',
         expires: 3,
         secure: process.env.NODE_ENV !== 'development',
