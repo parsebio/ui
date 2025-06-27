@@ -9,7 +9,6 @@ import httpStatusCodes from 'utils/http/httpStatusCodes';
 const loadPlotConfig = (experimentId, plotUuid, plotType = null) => async (dispatch) => {
   try {
     const data = await fetchAPI(`/v2/experiments/${experimentId}/plots/${plotUuid}`);
-    console.log('GOT NEW DATA FOR PLOT ', plotUuid, data);
 
     if (plotType) {
       const plotConfig = _.merge({}, initialPlotConfigStates[plotType], data.config);
