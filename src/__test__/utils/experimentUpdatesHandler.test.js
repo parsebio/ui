@@ -5,7 +5,7 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { updateCellSetsClustering, loadCellSets } from 'redux/actions/cellSets';
 import { updateProcessingSettingsFromQC, loadedProcessingConfig, updatePipelineVersion } from 'redux/actions/experimentSettings';
 import { updateBackendStatus } from 'redux/actions/backendStatus';
-import { updatePlotData, replaceLoadedConfigs } from 'redux/actions/componentConfig';
+import { clearPlotData, replaceLoadedConfigs } from 'redux/actions/componentConfig';
 import endUserMessages from 'utils/endUserMessages';
 
 jest.mock('redux/actions/cellSets/updateCellSetsClustering');
@@ -15,7 +15,7 @@ jest.mock('redux/actions/experimentSettings', () => ({
   updatePipelineVersion: jest.fn(),
 }));
 jest.mock('redux/actions/backendStatus/updateBackendStatus');
-jest.mock('redux/actions/componentConfig/updatePlotData');
+jest.mock('redux/actions/componentConfig/clearPlotData');
 jest.mock('redux/actions/cellSets/loadCellSets');
 jest.mock('redux/actions/componentConfig/replaceLoadedConfigs');
 
@@ -53,8 +53,8 @@ const mockQcUpdate = {
         mockProcessingConfigUpdate: 'mockProcessingConfigUpdate',
       },
     },
-    plotData: {
-      mockPlotUuid: 'mockPlotData',
+    plotKeys: {
+      mockPlotUuid: 'mock-s3-key',
     },
   },
   response: {
@@ -203,8 +203,8 @@ describe('ExperimentUpdatesHandler', () => {
     expect(updatePipelineVersion.mock.calls).toMatchSnapshot();
 
     // Dispatch 4 - update plot data
-    expect(updatePlotData).toHaveBeenCalledTimes(1);
-    const plotDataParams = updatePlotData.mock.calls[0];
+    expect(clearPlotData).toHaveBeenCalledTimes(1);
+    const plotDataParams = clearPlotData.mock.calls[0];
     expect(plotDataParams).toMatchSnapshot();
 
     expect(mockDispatch).toHaveBeenCalledTimes(4);
@@ -220,7 +220,7 @@ describe('ExperimentUpdatesHandler', () => {
       ...mockQcUpdate,
       output: {
         ...mockQcUpdate.output,
-        plotData: undefined,
+        plotKeys: undefined,
       },
       response: mockError,
       status: mockBackendStatusError,
@@ -234,7 +234,7 @@ describe('ExperimentUpdatesHandler', () => {
     expect(updatePipelineVersion).toHaveBeenCalledTimes(1);
 
     // Doesn't try to update the plot data
-    expect(updatePlotData).not.toHaveBeenCalled();
+    expect(clearPlotData).not.toHaveBeenCalled();
 
     expect(global.console.error).toHaveBeenCalledTimes(1);
     expect(global.console.error).toMatchSnapshot();
@@ -256,7 +256,7 @@ describe('ExperimentUpdatesHandler', () => {
 
     // Doesn't try to update the plot data or config
     expect(updateProcessingSettingsFromQC).not.toHaveBeenCalled();
-    expect(updatePlotData).not.toHaveBeenCalled();
+    expect(clearPlotData).not.toHaveBeenCalled();
 
     expect(global.console.error).toHaveBeenCalledTimes(1);
     expect(global.console.error).toMatchSnapshot();
@@ -280,8 +280,8 @@ describe('ExperimentUpdatesHandler', () => {
     expect(backendStatus).toMatchSnapshot();
 
     // Dispatch 2 - update plot data
-    expect(updatePlotData).toHaveBeenCalledTimes(1);
-    const plotDataParams = updatePlotData.mock.calls[0];
+    expect(clearPlotData).toHaveBeenCalledTimes(1);
+    const plotDataParams = clearPlotData.mock.calls[0];
     expect(plotDataParams).toMatchSnapshot();
 
     // Dispatch 3 - update pipeline version

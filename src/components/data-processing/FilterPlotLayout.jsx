@@ -16,6 +16,7 @@ import {
 } from 'redux/actions/componentConfig';
 import BasicFilterPlot from 'components/plots/BasicFilterPlot';
 import { getBackendStatus } from 'redux/selectors';
+import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 
 const { Panel } = Collapse;
 
@@ -78,9 +79,9 @@ const FilterPlotLayout = ({
     debounceSave(plots[selectedPlot].plotUuid);
   };
 
-  useEffect(() => {
-    if (!filterTableData) dispatch(loadPlotConfig(experimentId, filterTableUuid, 'filterTable'));
-  }, []);
+  useConditionalEffect(() => {
+    if (!filterTableData?.length) dispatch(loadPlotConfig(experimentId, filterTableUuid, 'filterTable'));
+  }, [filterTableData]);
 
   useEffect(() => {
     Object.values(plots).forEach((obj) => {
@@ -89,6 +90,13 @@ const FilterPlotLayout = ({
       }
     });
   }, []);
+
+  useConditionalEffect(() => {
+    // this condition happens when a filter plotData update arrives from the qc pipeline
+    if (!selectedPlotData?.length) {
+      dispatch(loadPlotConfig(experimentId, plots[selectedPlot].plotUuid));
+    }
+  }, [selectedPlotData]);
 
   useEffect(() => {
     if (selectedConfig && selectedPlotData && filterSettings) {
