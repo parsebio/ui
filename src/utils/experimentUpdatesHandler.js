@@ -1,6 +1,6 @@
 import { updateProcessingSettingsFromQC, loadedProcessingConfig, updatePipelineVersion } from 'redux/actions/experimentSettings';
 import { updateBackendStatus } from 'redux/actions/backendStatus';
-import { replaceLoadedConfigs, updatePlotData } from 'redux/actions/componentConfig';
+import { replaceLoadedConfigs, clearPlotData } from 'redux/actions/componentConfig';
 import { loadCellSets, updateCellSetsClustering } from 'redux/actions/cellSets';
 import { loadSamples } from 'redux/actions/samples';
 import { reloadExperimentInfo } from 'redux/actions/experiments';
@@ -72,9 +72,7 @@ const onQCUpdate = (update, dispatch, experimentId) => {
 
   const plotKeys = Object.keys(plotKeysMap || {});
   if (plotKeys.length > 0) {
-    plotKeys.forEach((plotKey) => {
-      dispatch(updatePlotData(plotKey, []));
-    });
+    dispatch(clearPlotData(plotKeys));
   }
 
   // If the pipeline finished we have a new clustering, so fetch it
