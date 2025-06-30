@@ -6,6 +6,8 @@ import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialS
 import handleError from 'utils/http/handleError';
 import httpStatusCodes from 'utils/http/httpStatusCodes';
 
+// plotType is null when loading plot data without config
+// for example when qc plot updates are received
 const loadPlotConfig = (experimentId, plotUuid, plotType = null) => async (dispatch) => {
   try {
     const data = await fetchAPI(`/v2/experiments/${experimentId}/plots/${plotUuid}`);
