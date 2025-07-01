@@ -1,9 +1,11 @@
 import _ from 'lodash';
-
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Select, Form, Space,
+  Select, Form, Space, Switch, Tooltip,
 } from 'antd';
+import {
+  InfoCircleOutlined,
+} from '@ant-design/icons';
 import propTypes from 'prop-types';
 import kitOptions from 'utils/secondary-analysis/kitOptions.json';
 import SliderWithInput from 'components/SliderWithInput';
@@ -14,9 +16,15 @@ const kitToMaxSublibrariesMap = {
   wt: 8,
   wt_mega: 16,
   wt_mega_384: 16,
+  evercode_tcr_mini: 2,
+  evercode_tcr: 8,
+  evercode_tcr_mega: 16,
+  evercode_bcr_mini: 2,
+  evercode_bcr: 8,
+  evercode_bcr_mega: 16,
 };
 
-const detailsToShow = ['numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+const detailsToShow = ['numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome', 'pairedWt'];
 
 const SecondaryAnalysisSettings = (props) => {
   const { secondaryAnalysisId, onDetailsChanged } = props;
@@ -56,16 +64,27 @@ const SecondaryAnalysisSettings = (props) => {
   const changeKit = useCallback((kit) => {
     calculateMaxSublibraries(kit);
 
-    // changing the kit, changes the default selected number of sublibraries and samples
+    // changing the kit updates defaults for sublibraries and chemistry
     setFormValues((prevFormValues) => {
-      const chemistryVersion = kit === 'wt_mega_384' ? '3' : prevFormValues.chemistryVersion;
+      let { chemistryVersion, pairedWt } = prevFormValues;
 
-      return ({
+      if (kit.startsWith('tcr')) {
+        pairedWt = true;
+        chemistryVersion = '3';
+      } else if (kit.startsWith('bcr')) {
+        pairedWt = true;
+        chemistryVersion = '3';
+      } else if (kit === 'wt_mega_384') {
+        chemistryVersion = '3';
+      }
+
+      return {
         ...prevFormValues,
         numOfSublibraries: 1,
         chemistryVersion,
         kit,
-      });
+        pairedWt,
+      };
     });
   }, [calculateMaxSublibraries]);
 
@@ -92,26 +111,24 @@ const SecondaryAnalysisSettings = (props) => {
             value={formValues.kit}
             onChange={changeKit}
             options={kitOptions}
+            virtual={false}
           />
-
           <Select
             placeholder='Select the chemistry version'
             onChange={(value) => handleValueChange('chemistryVersion', value)}
             value={formValues.chemistryVersion}
             options={[
-              { label: 'v1', value: '1' },
+              { label: 'v1', value: '1', disabled: formValues.kit?.startsWith('evercode_tcr') },
               { label: 'v2', value: '2' },
               { label: 'v3', value: '3' },
             ]}
-            disabled={formValues.kit === 'wt_mega_384'}
+            disabled={formValues.kit === 'wt_mega_384' || formValues.kit?.startsWith('evercode_bcr')}
           />
         </Space>
       </Form.Item>
 
       {formValues.kit && (
-        <Form.Item
-          name='numOfSublibraries'
-        >
+        <Form.Item name='numOfSublibraries'>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <div style={{ marginRight: '5px' }}>
               Number of
@@ -138,6 +155,24 @@ const SecondaryAnalysisSettings = (props) => {
               debounceTime={0}
             />
           </div>
+        </Form.Item>
+      )}
+      {(formValues.kit?.startsWith('tcr') || formValues.kit?.startsWith('bcr')) && (
+        <Form.Item name='pairedWt'>
+          <Space direction='horizontal'>
+            <Switch
+              checked={formValues.pairedWt}
+              onChange={(value) => handleValueChange('pairedWt', value)}
+            />
+            <span style={{ marginRight: '10px' }}>
+              Run the pipeline with paired Whole Transcriptome and immune profiling data
+            </span>
+            <Tooltip title='If you have paired Whole Transcription (WT) and immune profiling (TCR or BCR) FASTQ files, set the toggle to ‘on’.
+             If you only have immune data with no parent WT FASTQ files, set the toggle to ‘off’'
+            >
+              <InfoCircleOutlined />
+            </Tooltip>
+          </Space>
         </Form.Item>
       )}
     </Form>

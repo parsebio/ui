@@ -24,6 +24,7 @@ import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
+import UploadFastqSupportText from './UploadFastqSupportText';
 
 const { Text } = Typography;
 
@@ -61,8 +62,8 @@ const UploadFastqForm = (props) => {
 
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
-  const numOfSublibraries = useSelector(
-    (state) => state.secondaryAnalyses[secondaryAnalysisId].numOfSublibraries,
+  const { numOfSublibraries, kit, pairedWt } = useSelector(
+    (state) => state.secondaryAnalyses[secondaryAnalysisId],
     _.isEqual,
   );
 
@@ -262,46 +263,10 @@ const UploadFastqForm = (props) => {
           <Form.Item
             name='projectName'
           >
-            <div>
-              <b>You must upload exactly one pair of FASTQ files (R1 and R2) per sublibrary.</b>
-              <br />
-              <br />
-
-              If you have more FASTQ file pairs than sublibraries,
-              it is likely that some sublibraries were split over multiple sequencing lanes.
-              Those FASTQ files will share identical Illumina indexes must
-              be concatenated
-              {' '}
-              <b>before</b>
-              {' '}
-              uploading to Trailmaker.
-              Guidance on how to concatenate your files is in
-              {' '}
-              <a
-                target='_blank'
-                href='https://support.parsebiosciences.com/hc/en-us/articles/33176662802708-How-to-handle-multiple-pairs-of-FASTQ-files-per-sublibrary'
-                rel='noreferrer'
-              >
-                this support article
-              </a>
-              .
-              <br />
-              <br />
-
-              Uploading large FASTQ files can take multiple hours or even days.
-              You must keep your computer running and your browser tab open for the duration
-              of the upload.
-              If your internet connection fails, file upload will resume from the last checkpoint.
-              <br />
-              <br />
-
-              Note that FASTQ files are deleted from Trailmaker 30 days after upload.
-              After this time, your Pipeline Run Details and any Outputs will continue to
-              be available but the FASTQ files will be marked as &apos;Expired&apos;.
-
-              <br />
-              <br />
-            </div>
+            <UploadFastqSupportText
+              kit={kit}
+              pairedWt={pairedWt}
+            />
             {warning && (
               <div>
                 <br />
