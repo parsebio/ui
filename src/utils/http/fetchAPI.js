@@ -37,8 +37,6 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
     let data;
     try {
       data = await response.json();
-      console.log('dataDebug');
-      console.log(data);
     } catch (e) {
       // if we can't get extra error info from the response we don't want to fail
       // just return the error code, this happens in many tests
@@ -50,8 +48,6 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
     if (response.status === notAgreedToTermsStatus) {
       dispatch(loadUser());
     }
-
-    console.log('eroir3eoi');
 
     // data.message & data.errors follow error formatting defined in:
     // HTTPError.v1.yaml
