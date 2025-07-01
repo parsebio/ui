@@ -193,7 +193,9 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
       return (
         <PlatformError
           error={plotDataError}
-          onClick={() => { dispatch(loadEmbedding(experimentId, embeddingSettings?.method)); }}
+          onClick={() => {
+            dispatch(getTrajectoryPlotStartingNodes(experimentId, plotUuid, selectedCellSets));
+          }}
         />
       );
     }
