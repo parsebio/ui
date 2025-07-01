@@ -7,6 +7,7 @@ import updatePlotData from 'redux/actions/componentConfig/updatePlotData';
 import resetPlotConfig from 'redux/actions/componentConfig/resetPlotConfig';
 import getDotPlot from 'redux/actions/componentConfig/getDotPlot';
 import downloadNormalizedMatrix from 'redux/actions/componentConfig/downloadNormalizedMatrix';
+import clearPlotData from 'redux/actions/componentConfig/clearPlotData';
 
 export {
   loadPlotConfig,
@@ -18,4 +19,5 @@ export {
   resetPlotConfig,
   getDotPlot,
   downloadNormalizedMatrix,
+  clearPlotData,
 };
