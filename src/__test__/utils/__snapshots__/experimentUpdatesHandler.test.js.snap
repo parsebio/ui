@@ -16,7 +16,7 @@ exports[`ExperimentUpdatesHandler Handles qc errors correctly with config update
               "mockProcessingConfigUpdate": "mockProcessingConfigUpdate",
             },
           },
-          "plotData": undefined,
+          "plotKeys": undefined,
         },
         "pipelineVersion": 2,
         "response": {
@@ -90,8 +90,9 @@ exports[`ExperimentUpdatesHandler Loads cell sets if QC pipeline completes  1`] 
 
 exports[`ExperimentUpdatesHandler Loads cell sets if QC pipeline completes  2`] = `
 [
-  "mockPlotUuid",
-  "mockPlotData",
+  [
+    "mockPlotUuid",
+  ],
 ]
 `;
 
@@ -177,8 +178,9 @@ exports[`ExperimentUpdatesHandler Triggers properly for QC updates  3`] = `
 
 exports[`ExperimentUpdatesHandler Triggers properly for QC updates  4`] = `
 [
-  "mockPlotUuid",
-  "mockPlotData",
+  [
+    "mockPlotUuid",
+  ],
 ]
 `;
 
