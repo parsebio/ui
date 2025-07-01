@@ -2,6 +2,7 @@ import {
   UPDATE_CONFIG, CONFIGS_REPLACED,
   SAVE_CONFIG, LOAD_CONFIG, RESET_CONFIG,
   PLOT_DATA_LOADED, PLOT_DATA_LOADING, PLOT_DATA_ERROR, TRAJECTORY_NODES_SELECTION_UPDATED,
+  PLOT_DATA_CLEARED,
 } from 'redux/actionTypes/componentConfig';
 
 import { CELL_CLASS_DELETE } from 'redux/actionTypes/cellSets';
@@ -16,8 +17,8 @@ import plotDataLoaded from 'redux/reducers/componentConfig/plotDataLoaded';
 import plotDataLoading from 'redux/reducers/componentConfig/plotDataLoading';
 import plotDataError from 'redux/reducers/componentConfig/plotDataError';
 import trajectoryNodesUpdated from 'redux/reducers/componentConfig/trajectoryNodesUpdated';
-
 import cellClassDelete from 'redux/reducers/componentConfig/cellClassDelete';
+import plotDataCleared from 'redux/reducers/componentConfig/plotDataCleared';
 
 const plotsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
@@ -39,9 +40,10 @@ const plotsReducer = (state = initialState, action = {}) => {
       return plotDataError(state, action);
     case TRAJECTORY_NODES_SELECTION_UPDATED:
       return trajectoryNodesUpdated(state, action);
-    case CELL_CLASS_DELETE: {
+    case CELL_CLASS_DELETE:
       return cellClassDelete(state, action);
-    }
+    case PLOT_DATA_CLEARED:
+      return plotDataCleared(state, action);
     default:
       return state;
   }
