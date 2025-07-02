@@ -228,7 +228,7 @@ const ContentWrapper = (props) => {
     if (!samples[experimentData?.sampleIds?.[0]]) dispatch(loadSamples(routeExperimentId));
     if (isBrowser) {
       import('utils/socketConnection')
-        .then(({ default: connectionPromise }) => connectionPromise)
+        .then(({ default: socketConnection }) => socketConnection())
         .then((io) => {
           const cb = experimentUpdatesHandler(dispatch);
 

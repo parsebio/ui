@@ -35,7 +35,7 @@ jest.mock('utils/socketConnection', () => {
 
   return {
     __esModule: true,
-    default: new Promise((resolve) => {
+    default: () => new Promise((resolve) => {
       resolve({ emit: mockEmit, on: mockOn, id: '5678' });
     }),
     mockEmit,
