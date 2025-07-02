@@ -16,12 +16,12 @@ const kitToMaxSublibrariesMap = {
   wt: 8,
   wt_mega: 16,
   wt_mega_384: 16,
-  evercode_tcr_mini: 2,
-  evercode_tcr: 8,
-  evercode_tcr_mega: 16,
-  evercode_bcr_mini: 2,
-  evercode_bcr: 8,
-  evercode_bcr_mega: 16,
+  tcr_mini: 2,
+  tcr: 8,
+  tcr_mega: 16,
+  bcr_mini: 2,
+  bcr: 8,
+  bcr_mega: 16,
 };
 
 const detailsToShow = ['numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome', 'pairedWt'];
