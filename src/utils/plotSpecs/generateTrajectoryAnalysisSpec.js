@@ -665,7 +665,6 @@ const insertPseudotimeSpec = (spec, config, pseudotime) => {
 
 const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) => {
   const plotData = [];
-  const cellSetsPlotData = [];
 
   let selectedCellSetObjects = Object.keys(cellSets.properties)
     .filter((key) => selectedCellSets.includes(key))
@@ -689,20 +688,34 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
   // Filter array for duplicate cell sets
   selectedCellSetObjects = _.uniqBy(selectedCellSetObjects, 'key');
 
+  const cellSetsPlotData = selectedCellSetObjects.map(({ key, name, color }) => (
+    { key, name, color }
+  ));
+
+  const getCellSetForCellId = (cellId) => {
+    const includedCellSets = [];
+    Object.entries(cellSets.properties).forEach(([key, cellSet]) => {
+      if (cellSet.cellIds.has(cellId)) {
+        includedCellSets.push({
+          key,
+          name: cellSet.name,
+          color: cellSet.color,
+        });
+      }
+    });
+    return includedCellSets;
+  };
+
   const { xValues, yValues, cellIds: embeddingCellIds } = embedding;
-  selectedCellSetObjects.forEach((cellSet) => {
-    const { key, name, color } = cellSet;
 
-    cellSetsPlotData.push(({ key, name, color }));
+  embeddingCellIds.forEach((cellId, index) => {
+    const cellSetsForCell = getCellSetForCellId(cellId);
 
-    cellSet.cellIds.forEach((cellId) => {
-      const index = embeddingCellIds.indexOf(cellId);
-      if (index === -1) return;
-
+    cellSetsForCell.forEach(({ key: cellSetKey, name: cellSetName, color }) => {
       plotData.push({
         cellId,
-        cellSetKey: key,
-        cellSetName: name,
+        cellSetKey,
+        cellSetName,
         color,
         x: xValues[index],
         y: yValues[index],

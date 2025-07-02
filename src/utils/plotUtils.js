@@ -67,7 +67,6 @@ const colorByGeneExpression = (truncatedExpression, min, max = 4) => {
 };
 
 const convertCellsData = (results, hidden, properties) => {
-  console.time('convertCellsData');
   let { xValues, yValues, cellIds } = results;
   if (!cellIds) {
     return { obsEmbedding: { data: [[], []], shape: [0, 0] }, obsEmbeddingIndex: [] };
@@ -86,8 +85,6 @@ const convertCellsData = (results, hidden, properties) => {
     yValues = filteredIndices.map((index) => yValues[index]);
     cellIds = filteredIndices.map((index) => cellIds[index]);
   }
-
-  console.timeEnd('convertCellsData');
 
   return {
     obsEmbedding: { data: [xValues, yValues], shape: [2, cellIds.length] },
