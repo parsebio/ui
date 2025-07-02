@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button, Tabs, Alert,
-  Tooltip,
+  Tooltip, Col,
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import UploadStatus from 'utils/upload/UploadStatus';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
-import _ from 'lodash';
+import _, { drop } from 'lodash';
 import PropTypes from 'prop-types';
 
 import ExpandableList from 'components/ExpandableList';
@@ -26,7 +26,7 @@ import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 import UploadFastqSupportText from './UploadFastqSupportText';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const rReadRegex = /_R([12])/;
 const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
@@ -209,6 +209,42 @@ const UploadFastqForm = (props) => {
       console.error('Error picking files:', err);
     }
   };
+
+  const renderDropzoneElements = () => {
+    // todo handle both uploads, use type argument to differentiate
+    const dropzoneComponent = (type) => (
+      <div
+        onClick={handleFileSelection}
+        onKeyDown={handleFileSelection}
+        data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
+        style={{ border: '1px solid #ccc', padding: '2rem 0' }}
+        className='dropzone'
+        id='dropzone'
+      >
+        <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </div>
+    );
+    if (pairedWt && (kit.startsWith('tcr') || kit.startsWith('bcr'))) {
+      return (
+        <Space direction='horizontal' style={{ width: '100%', marginBottom: '1rem' }}>
+          <Space direction='vertical'>
+            <Title level={4} style={{ textAlign: 'center' }}>WT</Title>
+            <div style={{ width: '22.5vw' }}>
+              {dropzoneComponent('wt')}
+            </div>
+          </Space>
+          <Space direction='vertical'>
+            <Title level={4} style={{ textAlign: 'center' }}>Immune</Title>
+            <div style={{ width: '22.5vw' }}>
+              {dropzoneComponent('immune')}
+            </div>
+          </Space>
+        </Space>
+      );
+    }
+    return dropzoneComponent('wt');
+  };
+
   // we save the file handles to the cache
   // The dropzone component couldn't be used as it doesn't support file handle
   const getAllFiles = async (entry) => {
@@ -287,16 +323,7 @@ const UploadFastqForm = (props) => {
                 <br />
               </div>
             )}
-            <div
-              onClick={handleFileSelection}
-              onKeyDown={handleFileSelection}
-              data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
-              style={{ border: '1px solid #ccc', padding: '2rem 0' }}
-              className='dropzone'
-              id='dropzone'
-            >
-              <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            </div>
+            {renderDropzoneElements()}
             {
               fileHandles.invalid.length > 0 && (
                 <div>
