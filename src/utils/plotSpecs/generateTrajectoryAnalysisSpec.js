@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
+import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
 
 const maxLabelLength = 85;
 const maxLabelHeight = 25;
@@ -692,33 +693,25 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
     { key, name, color }
   ));
 
-  const getCellSetForCellId = (cellId) => {
-    const includedCellSets = [];
-    Object.entries(cellSets.properties).forEach(([key, cellSet]) => {
-      if (cellSet.cellIds.has(cellId)) {
-        includedCellSets.push({
-          key,
-          name: cellSet.name,
-          color: cellSet.color,
-        });
-      }
-    });
-    return includedCellSets;
-  };
-
   const { xValues, yValues, cellIds: embeddingCellIds } = embedding;
 
   embeddingCellIds.forEach((cellId, index) => {
-    const cellSetsForCell = getCellSetForCellId(cellId);
+    const cellSetsForCell = getContainingCellSetsProperties(
+      cellId,
+      selectedCellSets,
+      cellSets,
+    );
 
-    cellSetsForCell.forEach(({ key: cellSetKey, name: cellSetName, color }) => {
-      plotData.push({
-        cellId,
-        cellSetKey,
-        cellSetName,
-        color,
-        x: xValues[index],
-        y: yValues[index],
+    Object.keys(cellSetsForCell).forEach((rootNode) => {
+      cellSetsForCell[rootNode].forEach(({ key, name, color }) => {
+        plotData.push({
+          cellId,
+          cellSetKey: key,
+          cellSetName: name,
+          color,
+          x: xValues[index],
+          y: yValues[index],
+        });
       });
     });
   });
@@ -762,22 +755,20 @@ const generatePseudotimeData = (
   const cellsWithPseudotimeValue = [];
   const cellsWithoutPseudotimeValue = [];
 
-  embeddingPlotData
-    .forEach((data) => {
-      const { cellId, x, y } = data;
-      const cellData = {
-        x,
-        y,
-        value: plotData[cellId],
-      };
-
-      if (cellData.value) {
-        cellsWithPseudotimeValue.push(cellData);
-      } else {
-        cellsWithoutPseudotimeValue.push(cellData);
-      }
-    });
-
+  const { xValues, yValues, cellIds } = embeddingPlotData;
+  cellIds.forEach((cellId, index) => {
+    const value = plotData[cellId];
+    const cellData = {
+      x: xValues[index],
+      y: yValues[index],
+      value,
+    };
+    if (value) {
+      cellsWithPseudotimeValue.push(cellData);
+    } else {
+      cellsWithoutPseudotimeValue.push(cellData);
+    }
+  });
   return {
     cellsWithPseudotimeValue,
     cellsWithoutPseudotimeValue,

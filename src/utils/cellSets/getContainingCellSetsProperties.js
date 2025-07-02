@@ -19,7 +19,7 @@ const getContainingCellSetsProperties = (cellId, cellSetClassKeys, cellSets) => 
 
     childrenCellSets.forEach(({ key }) => {
       if (properties[key].cellIds.has(cellId)) {
-        cellClassProperties[rootNode].push(properties[key]);
+        cellClassProperties[rootNode].push({ ...properties[key], key });
       }
     });
   });
