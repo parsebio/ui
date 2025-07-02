@@ -13,8 +13,9 @@ const cancelSecondaryAnalysis = (secondaryAnalysisId) => async (dispatch) => {
       type: SECONDARY_ANALYSIS_STATUS_LOADED,
       payload: { secondaryAnalysisId, status: { current: 'cancelled' } },
     });
-  } catch (error) {
-    const errorMessage = handleError(error, endUserMessages.ERROR_CANCELLING_SECONDARY_ANALYSIS);
+  } catch (e) {
+    console.error(e);
+    const errorMessage = handleError(e, endUserMessages.ERROR_CANCELLING_SECONDARY_ANALYSIS);
     dispatch({
       type: SECONDARY_ANALYSES_ERROR,
       payload: { error: errorMessage },

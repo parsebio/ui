@@ -53,7 +53,7 @@ const waitForWorkRequest = async (
 ) => {
   const { default: connectionPromise } = await import('utils/socketConnection');
 
-  const io = await connectionPromise;
+  const io = await connectionPromise();
 
   // for listGenes, markerHeatmap, & getEmbedding we set a long timeout for the worker
   // after that timeout the worker will skip those requests

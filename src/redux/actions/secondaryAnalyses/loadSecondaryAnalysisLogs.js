@@ -34,6 +34,8 @@ const loadSecondaryAnalysisLogs = (secondaryAnalysisId, task) => async (dispatch
       },
     });
   } catch (e) {
+    console.error(e);
+
     const errorMessage = handleError(e, endUserMessages.ERROR_LOADING_LOGS);
     pushNotificationMessage('error', 'We were unable to get the logs for this task.');
     dispatch({
