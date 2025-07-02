@@ -754,10 +754,9 @@ const generatePseudotimeData = (
 ) => {
   const cellsWithPseudotimeValue = [];
   const cellsWithoutPseudotimeValue = [];
-
   const { xValues, yValues, cellIds } = embeddingPlotData;
   cellIds.forEach((cellId, index) => {
-    const value = plotData[cellId];
+    const value = plotData[index];
     const cellData = {
       x: xValues[index],
       y: yValues[index],

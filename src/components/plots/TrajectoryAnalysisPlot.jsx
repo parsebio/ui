@@ -115,7 +115,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
 
     return generatePseudotimeData(
       startingNodesPlotData.pseudotime,
-      embeddingPlotData,
+      embeddingData,
     );
   }, [
     embeddingPlotData,
