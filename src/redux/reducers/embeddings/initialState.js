@@ -2,7 +2,7 @@
  * The store has the following format:
  * {
  *    embeddingType: {
- *      data: [[5.5, 2.2], [3.3, 4.4]],
+ *      data: {xValues:[1,2], yValues:[5,3], cellIds:[0,3]},
  *      loading: false,
  *      error: false
  *    }
@@ -10,7 +10,7 @@
  */
 
 const initialEmbeddingState = {
-  data: [],
+  data: {},
   loading: true,
   error: false,
 };

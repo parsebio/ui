@@ -165,7 +165,7 @@ const Embedding = (props) => {
   const [convertedCellsData, setConvertedCellsData] = useState();
 
   useEffect(() => {
-    if (!data || !cellSetHidden || !cellSetProperties) return;
+    if (!Object.keys(data ?? {}).length || !cellSetHidden || !cellSetProperties) return;
 
     setConvertedCellsData(convertCellsData(data, cellSetHidden, cellSetProperties));
   }, [data, cellSetHidden, cellSetProperties]);
