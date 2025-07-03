@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import UploadStatus from 'utils/upload/UploadStatus';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
-import _, { drop } from 'lodash';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 
 import ExpandableList from 'components/ExpandableList';
@@ -224,23 +224,26 @@ const UploadFastqForm = (props) => {
         <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </div>
     );
-    if (pairedWt && (kit.startsWith('tcr') || kit.startsWith('bcr'))) {
-      return (
-        <Space direction='horizontal' style={{ width: '100%', marginBottom: '1rem' }}>
-          <Space direction='vertical'>
-            <Title level={4} style={{ textAlign: 'center' }}>WT</Title>
-            <div style={{ width: '22.5vw' }}>
-              {dropzoneComponent('wt')}
-            </div>
+    if (kit.startsWith('tcr') || kit.startsWith('bcr')) {
+      if (pairedWt) {
+        return (
+          <Space direction='horizontal' style={{ width: '100%', marginBottom: '1rem' }}>
+            <Space direction='vertical'>
+              <Title level={4} style={{ textAlign: 'center' }}>WT</Title>
+              <div style={{ width: '22.5vw' }}>
+                {dropzoneComponent('wt')}
+              </div>
+            </Space>
+            <Space direction='vertical'>
+              <Title level={4} style={{ textAlign: 'center' }}>Immune</Title>
+              <div style={{ width: '22.5vw' }}>
+                {dropzoneComponent('immune')}
+              </div>
+            </Space>
           </Space>
-          <Space direction='vertical'>
-            <Title level={4} style={{ textAlign: 'center' }}>Immune</Title>
-            <div style={{ width: '22.5vw' }}>
-              {dropzoneComponent('immune')}
-            </div>
-          </Space>
-        </Space>
-      );
+        );
+      }
+      return dropzoneComponent('immune');
     }
     return dropzoneComponent('wt');
   };
