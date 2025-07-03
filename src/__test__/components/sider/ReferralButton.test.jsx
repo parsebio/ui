@@ -3,7 +3,7 @@ import {
   render, screen, fireEvent, waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import '@aws-amplify/auth';
+import 'aws-amplify';
 import fetchAPI from 'utils/http/fetchAPI';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';

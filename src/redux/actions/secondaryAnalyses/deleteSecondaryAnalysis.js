@@ -31,6 +31,8 @@ const deleteSecondaryAnalysis = (
     // If deleted project is the same as the active project, choose another project
     dispatch(removeSecondaryAnalysis(secondaryAnalysisId));
   } catch (e) {
+    console.error(e);
+
     const errorMessage = handleError(e, endUserMessages.ERROR_DELETING_PROJECT);
 
     dispatch({
