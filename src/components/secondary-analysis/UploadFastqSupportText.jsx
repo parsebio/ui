@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { kitCategories, isKitCategory } from 'utils/secondary-analysis/kitOptions';
 
 // Simple JSX variables for reuse
 const supportArticleLink = (
@@ -51,22 +52,8 @@ const expiryNoticeBase = (
 );
 
 const UploadFastqSupportText = ({ kit, pairedWt }) => {
-  if (kit.startsWith('wt')) {
-    return (
-      <div>
-        <b>You must upload exactly one pair of FASTQ files (R1 and R2) per sublibrary.</b>
-        <br />
-        <br />
-        {concatenateGuidance}
-        {uploadNotice}
-        {expiryNoticeBase}
-        <br />
-        <br />
-      </div>
-    );
-  }
-
-  if (kit.startsWith('tcr') || kit.startsWith('bcr')) {
+  console.log('UploadFastqSupportText', kit, pairedWt, isKitCategory(kit, kitCategories.TCR), isKitCategory(kit, kitCategories.BCR));
+  if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
     if (pairedWt) {
       return (
         <div>
@@ -126,8 +113,18 @@ const UploadFastqSupportText = ({ kit, pairedWt }) => {
       </div>
     );
   }
-
-  return null;
+  return (
+    <div>
+      <b>You must upload exactly one pair of FASTQ files (R1 and R2) per sublibrary.</b>
+      <br />
+      <br />
+      {concatenateGuidance}
+      {uploadNotice}
+      {expiryNoticeBase}
+      <br />
+      <br />
+    </div>
+  );
 };
 
 UploadFastqSupportText.propTypes = {

@@ -7,7 +7,7 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import propTypes from 'prop-types';
-import kitOptions from 'utils/secondary-analysis/kitOptions.json';
+import { kitOptions, isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
 import SliderWithInput from 'components/SliderWithInput';
 import { useSelector } from 'react-redux';
 
@@ -68,10 +68,7 @@ const SecondaryAnalysisSettings = (props) => {
     setFormValues((prevFormValues) => {
       let { chemistryVersion, pairedWt } = prevFormValues;
 
-      if (kit.startsWith('tcr')) {
-        pairedWt = true;
-        chemistryVersion = '3';
-      } else if (kit.startsWith('bcr')) {
+      if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
         pairedWt = true;
         chemistryVersion = '3';
       } else if (kit === 'wt_mega_384') {

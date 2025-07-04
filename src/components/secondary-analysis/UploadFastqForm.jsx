@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import {
   Form, Empty, Divider, List, Space, Typography, Button, Tabs, Alert,
-  Tooltip, Col,
+  Tooltip,
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import {
@@ -18,6 +18,8 @@ import PropTypes from 'prop-types';
 
 import ExpandableList from 'components/ExpandableList';
 import endUserMessages from 'utils/endUserMessages';
+
+import { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
 
 import { getFastqFiles } from 'redux/selectors';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
@@ -224,7 +226,7 @@ const UploadFastqForm = (props) => {
         <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </div>
     );
-    if (kit.startsWith('tcr') || kit.startsWith('bcr')) {
+    if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
       if (pairedWt) {
         return (
           <Space direction='horizontal' style={{ width: '100%', marginBottom: '1rem' }}>

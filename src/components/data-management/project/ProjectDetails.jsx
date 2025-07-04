@@ -10,7 +10,7 @@ import {
   cloneExperiment, updateExperiment, loadExperiments, setActiveExperiment,
 } from 'redux/actions/experiments';
 
-import kitOptions from 'utils/secondary-analysis/kitOptions.json';
+import { kitOptions } from 'utils/secondary-analysis/kitOptions';
 
 import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
