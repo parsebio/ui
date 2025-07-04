@@ -24,27 +24,9 @@ import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
+import { getMatchingPairFor, hasReadPair } from 'utils/fastqUtils';
 
 const { Text } = Typography;
-
-const rReadRegex = /_R([12])/;
-const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
-
-const hasReadPair = (fileName) => (
-  rReadRegex.test(fileName) || underscoreReadRegex.test(fileName)
-);
-
-const getMatchingPairFor = (fileName) => {
-  const matcher = fileName.match(rReadRegex) ? rReadRegex : underscoreReadRegex;
-
-  const matchingPair = fileName.replace(matcher, (match, group1) => {
-    const otherNumber = group1 === '1' ? '2' : '1';
-
-    return match.replace(group1, otherNumber);
-  });
-
-  return matchingPair;
-};
 
 const parseUploadScriptVersion = '1.0.0';
 

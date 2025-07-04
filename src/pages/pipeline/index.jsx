@@ -32,6 +32,7 @@ import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
+import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -357,6 +358,16 @@ const Pipeline = () => {
       renderMainScreenDetails: () => renderMainScreenFileDetails(
         () => renderFastqFilesTable(false),
       ),
+    },
+    {
+      title: 'Match FASTQ files',
+      key: 'Fastq Pairs Matcher',
+      render: () => (
+        <FastqPairsMatcher />
+      ),
+      isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
+      isLoading: filesNotLoadedYet,
+      renderMainScreenDetails: () => <FastqPairsMatcher />,
     },
   ];
   const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
