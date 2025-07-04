@@ -15,9 +15,9 @@ import {
 import PropTypes from 'prop-types';
 
 import ExploreSelect from 'components/repository/ExploreSelect';
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
+import { getTechNameToDisplay } from 'const/enums/SampleTech';
 
 const { Paragraph } = Typography;
 
@@ -35,7 +35,7 @@ const RepositoryTable = (props) => {
     species: row.species,
     sampleCount: row.sampleCount,
     cellCount: row.cellCount,
-    sampleTechnologies: `${row.sampleTechnologies.map((tech) => techNamesToDisplay[tech]).join(', ')}`,
+    sampleTechnologies: `${row.sampleTechnologies.map((tech) => getTechNameToDisplay(tech)).join(', ')}`,
     description: row.description,
   }));
 

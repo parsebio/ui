@@ -9,7 +9,7 @@ import ReactResizeDetector from 'react-resize-detector';
 
 import { loadSamples } from 'redux/actions/samples';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
-import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
+import { getTechNameToDisplay } from 'const/enums/SampleTech';
 
 import SamplesLoader from 'components/data-management/SamplesContainer/SamplesLoader';
 import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
@@ -81,7 +81,7 @@ const SamplesContainer = forwardRef((props, ref) => {
     selectedTechs.forEach((tech) => {
       technologyTabs.push({
         key: tech,
-        label: techNamesToDisplay[tech],
+        label: getTechNameToDisplay(tech),
       });
     });
 

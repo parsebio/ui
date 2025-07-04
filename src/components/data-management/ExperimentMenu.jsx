@@ -4,7 +4,7 @@ import {
   Space, Button, Tooltip,
 } from 'antd';
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import processSampleUpload from 'utils/upload/processSampleUpload';

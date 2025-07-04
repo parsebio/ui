@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import _ from 'lodash';
 
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 
 import { loadExperiments, setActiveExperiment, switchExperiment } from 'redux/actions/experiments';
 

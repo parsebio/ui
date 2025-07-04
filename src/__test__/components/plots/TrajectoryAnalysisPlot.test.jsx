@@ -24,7 +24,7 @@ import getTrajectoryPlotStartingNodes from 'redux/actions/componentConfig/getTra
 
 import _ from 'lodash';
 
-import { plotTypes } from 'utils/constants';
+import { plotTypes } from 'const';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 import { loadEmbedding } from 'redux/actions/embedding';
 

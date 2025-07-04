@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Card, Typography, Space, Button, Divider,
 } from 'antd';
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 import { useAppRouter } from 'utils/AppRouteProvider';
 
 const { Title } = Typography;

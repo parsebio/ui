@@ -6,7 +6,7 @@ import {
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { brandColors } from 'utils/constants';
+import { brandColors } from 'const';
 
 import { updateExperiment, setActiveExperiment, deleteExperiment } from 'redux/actions/experiments';
 import validateInputs, { rules } from 'utils/validateInputs';

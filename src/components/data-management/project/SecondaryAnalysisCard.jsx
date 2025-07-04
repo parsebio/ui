@@ -12,7 +12,7 @@ import PrettyTime from 'components/PrettyTime';
 import { deleteSecondaryAnalysis, updateSecondaryAnalysis } from 'redux/actions/secondaryAnalyses';
 import ProjectDeleteModal from 'components/data-management/project/ProjectDeleteModal';
 import setActiveSecondaryAnalysis from 'redux/actions/secondaryAnalyses/setActiveSecondaryAnalysis';
-import { brandColors } from 'utils/constants';
+import { brandColors } from 'const';
 
 const { Item } = Descriptions;
 

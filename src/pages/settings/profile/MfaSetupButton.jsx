@@ -6,7 +6,7 @@ import {
 } from 'antd';
 
 import TotpSetup from 'pages/settings/profile/TotpSetup';
-import { cognitoMFA } from 'utils/constants';
+import { cognitoMFA } from 'const';
 
 const MfaSetupButton = ({ user }) => {
   const [showTotpSetup, setShowTotpSetup] = useState(false);

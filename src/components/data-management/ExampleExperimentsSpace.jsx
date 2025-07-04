@@ -4,7 +4,7 @@ import {
   Typography, Space, Button, Empty,
 } from 'antd';
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 
 const { Paragraph } = Typography;
 

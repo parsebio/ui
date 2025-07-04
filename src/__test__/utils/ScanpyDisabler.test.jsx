@@ -8,7 +8,7 @@ import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 import { makeStore } from 'redux/store';
 import ScanpyDisabler from 'utils/ScanpyDisabler';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 
 import mockAPI, { generateDefaultMockAPIResponses } from '__test__/test-utils/mockAPI';
 

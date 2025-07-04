@@ -15,7 +15,7 @@ import {
   EXPERIMENT_SETTINGS_INFO_UPDATE,
 } from 'redux/actionTypes/experimentSettings';
 import { makeStore } from 'redux/store';
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 import ExportAsCSV from 'components/plots/ExportAsCSV';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
 import { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';

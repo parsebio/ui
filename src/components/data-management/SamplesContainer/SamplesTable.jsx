@@ -35,8 +35,8 @@ import UploadStatusView from 'components/UploadStatusView';
 import { metadataNameToKey, metadataKeyToName } from 'utils/data-management/metadataUtils';
 import integrationTestConstants from 'utils/integrationTestConstants';
 
-import fileUploadUtils, { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
-import { sampleTech } from 'utils/constants';
+import fileUploadUtils from 'utils/upload/fileUploadUtils';
+import SampleTech, { getTechNameToDisplay } from 'const/enums/SampleTech';
 import { fileTypeToDisplay } from 'utils/sampleFileType';
 import UploadStatus from 'utils/upload/UploadStatus';
 
@@ -75,7 +75,7 @@ const SamplesTable = forwardRef((props, ref) => {
         className: `${integrationTestConstants.classes.SAMPLE_CELL}`,
         index: 1,
         key: 'sample',
-        title: tech === sampleTech.SEURAT ? 'File' : 'Sample',
+        title: tech === SampleTech.SEURAT ? 'File' : 'Sample',
         dataIndex: 'name',
         fixed: 'left',
         render: (text, record, indx) => (
@@ -216,7 +216,7 @@ const SamplesTable = forwardRef((props, ref) => {
           [UPLOADED, UPLOADING].includes(uploadStatus) ? (
             <UploadStatusView status={uploadStatus} />
           ) : (
-            <Tooltip title={`Not all files for this sample are uploaded, go to the ${techNamesToDisplay[record.technology]} tab for details.`}>
+            <Tooltip title={`Not all files for this sample are uploaded, go to the ${getTechNameToDisplay(record.technology)} tab for details.`}>
               <div>
                 <UploadStatusView status={uploadStatus} />
               </div>

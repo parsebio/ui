@@ -6,6 +6,10 @@ import PropTypes from 'prop-types';
 import {
   Space, Typography, Button, Select,
 } from 'antd';
+
+import { layout } from 'const';
+import SampleTech from 'const/enums/SampleTech';
+
 import {
   cloneExperiment, updateExperiment, loadExperiments, setActiveExperiment,
 } from 'redux/actions/experiments';
@@ -14,7 +18,6 @@ import { kitOptions } from 'utils/secondary-analysis/kitOptions';
 
 import SampleOptions from 'components/data-management/SamplesOptions';
 import EditableParagraph from 'components/EditableParagraph';
-import { layout, sampleTech } from 'utils/constants';
 
 // import SamplesTable from 'components/data-management/SamplesContainer/SamplesTable';
 import ExperimentMenu from 'components/data-management/ExperimentMenu';
@@ -37,7 +40,7 @@ const ProjectDetails = ({ width, height }) => {
   const samples = useSelector((state) => state.samples);
 
   const parseTechSample = activeExperiment.sampleIds.filter(
-    (sampleId) => samples[sampleId]?.type === sampleTech.PARSE,
+    (sampleId) => samples[sampleId]?.type === SampleTech.PARSE,
   )[0];
 
   const { kit } = samples[parseTechSample] ?? {};
