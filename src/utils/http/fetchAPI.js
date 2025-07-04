@@ -1,6 +1,6 @@
 import APIError from 'utils/errors/http/APIError';
 import FetchError from 'utils/errors/http/FetchError';
-import getApiEndpoint from 'utils/getApiEndpoint';
+import getApiEndpoint from 'utils/apiEndpoint';
 import getAuthJWT from 'utils/getAuthJWT';
 import { notAgreedToTermsStatus } from 'const';
 import { loadUser } from 'redux/actions/user';
@@ -33,7 +33,6 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
     // wrap fetch errors in custom error
     throw new FetchError(e);
   }
-
   if (!response.ok) {
     let data;
     try {
@@ -50,6 +49,8 @@ const fetchAPI = async (path, params = {}, extras = {}) => {
       dispatch(loadUser());
     }
 
+    // data.message & data.errors follow error formatting defined in:
+    // HTTPError.v1.yaml
     throw new APIError(response.status, data?.message, data?.errors);
   }
 

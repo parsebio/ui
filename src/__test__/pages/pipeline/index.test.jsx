@@ -23,6 +23,8 @@ import userEvent from '@testing-library/user-event';
 import endUserMessages from 'utils/endUserMessages';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
 
+import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/secondary_analysis_status_default.json';
+
 const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
 const mockNavigateTo = jest.fn();
 
@@ -30,19 +32,21 @@ jest.mock('react-resize-detector', () => (props) => {
   const { children } = props;
   return children({ width: 800, height: 600 });
 });
+
+const mockOn = jest.fn();
 jest.mock('utils/socketConnection', () => ({
   __esModule: true,
-  default: new Promise((resolve) => {
+  default: () => new Promise((resolve) => {
     resolve({
       emit: jest.fn(),
-      on: jest.fn(),
+      on: mockOn,
       off: jest.fn(),
       id: '5678',
     });
   }),
 }));
 jest.mock('redux/actions/secondaryAnalyses/storeLoadedAnalysisFile', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
-jest.mock('aws-amplify', () => ({
+jest.mock('@aws-amplify/auth', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn(() => Promise.resolve({
       attributes: {
@@ -290,18 +294,27 @@ describe('Pipeline Page', () => {
   });
 
   it('updates file status from socket message', async () => {
-    await renderPipelinePage();
+    const emptyMockAPIResponses = {
+      ...mockAPIResponses,
+      [`/v2/secondaryAnalysis/${mockAnalysisIds.emptyAnalysis}/executionStatus`]: () => promiseResponse(
+        JSON.stringify(mockSecondaryAnalysisStatusDefault),
+      ),
+      [`/v2/secondaryAnalysis/${mockAnalysisIds.emptyAnalysis}/files`]: () => promiseResponse(JSON.stringify([])),
+    };
 
-    const socketMock = await import('utils/socketConnection');
+    fetchMock
+      .mockReset()
+      .mockIf(/.*/, mockAPI(emptyMockAPIResponses));
+
     const message = { file: { id: 'file1', status: 'uploaded' } };
 
-    socketMock.default.then((io) => {
-      io.on.mockImplementationOnce((event, callback) => {
-        if (event === `fileUpdates-${mockAnalysisIds.emptyAnalysis}`) {
-          callback(message);
-        }
-      });
+    mockOn.mockImplementation((event, callback) => {
+      if (event === `fileUpdates-${mockAnalysisIds.emptyAnalysis}`) {
+        callback(message);
+      }
     });
+
+    await renderPipelinePage();
 
     await waitFor(() => {
       expect(storeLoadedAnalysisFile).toHaveBeenCalledWith(

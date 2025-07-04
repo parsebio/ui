@@ -88,16 +88,10 @@ const nextConfig = {
       'bn.js': path.join(__dirname, 'node_modules/bn.js/lib/bn.js'),
     };
 
-    const final = webpackConfigSourcemaps(
-      webpackConfigRules(
-        webpackConfigPlugins(
-          config,
-          params,
-        ),
-        params,
-      ),
+    const final = webpackConfigSourcemaps(webpackConfigRules(webpackConfigPlugins(
+      config,
       params,
-    );
+    ), params), params);
 
     if (!dev) {
       console.log('WebPack build configuration:');

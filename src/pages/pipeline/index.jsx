@@ -158,7 +158,7 @@ const Pipeline = () => {
 
   useEffect(() => {
     import('utils/socketConnection')
-      .then(({ default: connectionPromise }) => connectionPromise)
+      .then(({ default: socketConnection }) => socketConnection())
       .then((io) => {
         // remove previous listeners, in case the secondary analysis has changed
         io.off();

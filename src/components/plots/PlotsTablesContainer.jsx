@@ -6,7 +6,6 @@ import {
 import Link from 'next/link';
 
 import { plotNames, layout } from 'const';
-import ScanpyDisabler from 'utils/ScanpyDisabler';
 
 const CARD_STYLE = { marginBottom: '1em' };
 const CardItem = (({
@@ -118,10 +117,6 @@ const plots = [
   },
 ];
 
-const disabledByScanpy = [
-  'trajectory-analysis-key',
-];
-
 const PlotsTablesContainer = (props) => {
   const { width, height, experimentId } = props;
 
@@ -158,15 +153,6 @@ const PlotsTablesContainer = (props) => {
                   </Card>
                 </Col>
               );
-
-              if (disabledByScanpy.includes(item.key)) {
-                return (
-                  <ScanpyDisabler>
-                    {card}
-                  </ScanpyDisabler>
-                );
-              }
-
               return card;
             })}
           </Row>

@@ -3,8 +3,7 @@ import '../../assets/nprogress.css';
 import _ from 'lodash';
 import '../index.css';
 
-import { Amplify } from 'aws-amplify';
-
+import Amplify from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider } from 'antd';
@@ -12,6 +11,7 @@ import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import { DefaultSeo } from 'next-seo';
+import getConfig from 'next/config';
 
 import { wrapper } from 'redux/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,7 +30,6 @@ import { brandColors, notAgreedToTermsStatus, cookiesAgreedCognitoKey } from 'co
 import 'antd/dist/antd.variable.min.css';
 import { loadUser } from 'redux/actions/user';
 import { setUpDispatch } from 'utils/http/fetchAPI';
-import getConfig from 'next/config';
 
 ConfigProvider.config({
   theme: {
@@ -90,7 +89,7 @@ const WrappedApp = ({ Component, pageProps }) => {
       amplifyConfig.Auth.cookieStorage = {
         domain: domainName,
         path: '/',
-        expires: 365,
+        expires: 7,
         secure: process.env.NODE_ENV !== 'development',
         sameSite: 'strict',
       };
@@ -241,7 +240,6 @@ WrappedApp.getInitialProps = async ({ Component, ctx }) => {
     const { withSSRContext } = (await import('aws-amplify'));
 
     const { Auth } = withSSRContext(ctx);
-
     Auth.configure(amplifyConfig.Auth);
 
     if (query?.experimentId) {

@@ -17,7 +17,7 @@ import ShareProjectModal from 'components/data-management/project/ShareProjectMo
 import { loadExperiments, removeExperiment } from 'redux/actions/experiments';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 
-jest.mock('aws-amplify', () => ({
+jest.mock('@aws-amplify/auth', () => ({
   Auth: {
     currentAuthenticatedUser: jest.fn().mockImplementation(async () => ({
       username: 'mockuser',

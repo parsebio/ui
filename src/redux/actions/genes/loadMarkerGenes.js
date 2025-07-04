@@ -93,6 +93,7 @@ const loadMarkerGenes = (experimentId, plotUuid, options = {}) => async (dispatc
       },
     });
   } catch (e) {
+    console.error(e);
     if (e.message.includes('No cells found')) {
       dispatch({
         type: MARKER_GENES_LOADED,

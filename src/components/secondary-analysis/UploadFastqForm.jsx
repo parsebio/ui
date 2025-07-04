@@ -116,7 +116,7 @@ const UploadFastqForm = (props) => {
       }
     }));
 
-    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'fastq', dispatch);
+    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'wtFastq', dispatch);
   };
 
   const nonMatchingFastqPairs = useMemo(() => {
