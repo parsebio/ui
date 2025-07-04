@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import Link from 'next/link';
 
-import { plotNames, layout } from 'utils/constants';
+import { plotNames, layout } from 'const';
 
 const CARD_STYLE = { marginBottom: '1em' };
 const CardItem = (({

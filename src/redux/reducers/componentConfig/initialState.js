@@ -1,4 +1,4 @@
-import { plotTypes } from 'utils/constants';
+import { plotTypes } from 'const';
 
 import {
   legendBaseState,

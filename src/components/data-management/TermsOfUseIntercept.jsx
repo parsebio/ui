@@ -17,7 +17,7 @@ import { useDispatch } from 'react-redux';
 import {
   termsOfUseCognitoKey,
   institutionCognitoKey,
-} from 'utils/constants';
+} from 'const';
 import downloadTermsOfUse from 'utils/downloadTermsOfUse';
 import IframeModal from 'utils/IframeModal';
 

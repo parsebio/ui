@@ -5,7 +5,8 @@ import {
 } from 'antd';
 import _ from 'lodash';
 
-import { modules, sampleTech } from 'utils/constants';
+import { modules } from 'const';
+import SampleTech from 'const/enums/SampleTech';
 
 import UploadStatus from 'utils/upload/UploadStatus';
 import integrationTestConstants from 'utils/integrationTestConstants';
@@ -81,7 +82,7 @@ const LaunchAnalysisButton = () => {
     // Check that the samples are loaded
     if (!activeExperiment.sampleIds.every((sampleId) => samples[sampleId])) return false;
     const parseSampleId = activeExperiment.sampleIds.find(
-      (sampleId) => samples[sampleId]?.type === sampleTech.PARSE,
+      (sampleId) => samples[sampleId]?.type === SampleTech.PARSE,
     );
     if (parseSampleId && _.isNil(samples[parseSampleId].kit)) return false;
 

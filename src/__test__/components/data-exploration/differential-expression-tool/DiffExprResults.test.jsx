@@ -16,7 +16,7 @@ import { mockCellSets } from '__test__/test-utils/cellSets.mock';
 
 import Loader from 'components/Loader';
 import fetchWork from 'utils/work/fetchWork';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 
 jest.mock('utils/getTimeoutForWorkerTask', () => ({
   __esModule: true, // this property makes it work

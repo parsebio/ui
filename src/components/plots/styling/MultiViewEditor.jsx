@@ -21,7 +21,7 @@ import {
   updatePlotConfig,
 } from 'redux/actions/componentConfig/index';
 import { generateMultiViewGridPlotUuid } from 'utils/generateCustomPlotUuid';
-import { plotUuids } from 'utils/constants';
+import { plotUuids } from 'const';
 import loadConditionalComponentConfig from 'redux/actions/componentConfig/loadConditionalComponentConfig';
 
 const MultiViewEditor = (props) => {

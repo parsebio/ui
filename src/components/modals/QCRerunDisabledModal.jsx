@@ -9,7 +9,7 @@ import { discardChangedQCFilters } from 'redux/actions/experimentSettings';
 import { cloneExperiment } from 'redux/actions/experiments';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 
 const texts = {
   qcTooOld: (

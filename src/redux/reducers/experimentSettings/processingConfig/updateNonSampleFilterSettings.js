@@ -3,7 +3,7 @@ import _ from 'lodash';
 import produce, { current } from 'immer';
 
 import { mergeObjectReplacingArrays } from 'utils/arrayUtils';
-import { downsamplingMethods } from 'utils/constants';
+import { downsamplingMethods } from 'const';
 import initialState from '../initialState';
 
 const setSeuratV4Compatibility = (step, newConfig) => {

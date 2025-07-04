@@ -24,7 +24,7 @@ import PlotContainer from 'components/plots/PlotContainer';
 import TrajectoryAnalysisPlot from 'components/plots/TrajectoryAnalysisPlot';
 import PlatformError from 'components/PlatformError';
 
-import { plotNames, plotTypes } from 'utils/constants';
+import { plotNames, plotTypes } from 'const';
 import updateTrajectoryPlotSelectedNodes from 'redux/actions/componentConfig/updateTrajectoryPlotSelectedNodes';
 import PlotLegendAlert, { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
 import TrajectoryAnalysisNodeSelector from 'components/plots/helpers/trajectory-analysis/TrajectoryAnalysisNodeSelector';
