@@ -1,4 +1,4 @@
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 
 const plotCsvFilename = (experimentName, plotType, extras) => {
   const cleanExperimentName = experimentName.replace(/ /g, '_');

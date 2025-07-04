@@ -6,7 +6,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import CookieBanner from 'components/CookieBanner';
-import { cookiesAgreedCognitoKey } from 'utils/constants';
+import { cookiesAgreedCognitoKey } from 'const';
 import { updateUserAttributes } from 'redux/actions/user';
 
 jest.mock('redux/actions/user', () => ({

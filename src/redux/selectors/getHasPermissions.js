@@ -1,5 +1,5 @@
 import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
-import { permissions } from 'utils/constants';
+import { permissions } from 'const';
 
 const accessRoles = {
   OWNER: 'owner',

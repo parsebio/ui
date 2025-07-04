@@ -14,7 +14,7 @@ import getInitialState from 'redux/reducers/genes/getInitialState';
 import cellSetsInitialState from 'redux/reducers/cellSets/initialState';
 
 import { mockCellSets } from '__test__/test-utils/cellSets.mock';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 
 jest.mock('components/Loader');
 

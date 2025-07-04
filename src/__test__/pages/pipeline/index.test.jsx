@@ -10,7 +10,7 @@ import Pipeline from 'pages/pipeline/index';
 import {
   updateSecondaryAnalysis, setActiveSecondaryAnalysis, storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 import '__test__/test-utils/setupTests';
 import mockAPI, {
   generateDefaultMockAPIResponses,

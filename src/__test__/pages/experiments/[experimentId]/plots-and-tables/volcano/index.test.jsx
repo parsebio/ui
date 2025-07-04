@@ -26,7 +26,7 @@ import createTestComponentFactory from '__test__/test-utils/testComponentFactory
 import fake from '__test__/test-utils/constants';
 import fetchWork from 'utils/work/fetchWork';
 
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 enableFetchMocks();

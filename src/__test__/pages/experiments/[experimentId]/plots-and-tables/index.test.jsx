@@ -10,7 +10,7 @@ import '__test__/test-utils/mockWorkerBackend';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
 
 import PlotsTablesHome from 'pages/experiments/[experimentId]/plots-and-tables';
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 
 const plotsAndTablesPageFactory = createTestComponentFactory(PlotsTablesHome);
 

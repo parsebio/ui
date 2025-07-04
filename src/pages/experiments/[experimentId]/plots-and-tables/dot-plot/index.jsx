@@ -30,7 +30,7 @@ import {
 } from 'redux/actions/componentConfig';
 
 import { getCellSets } from 'redux/selectors';
-import { plotNames, plotTypes } from 'utils/constants';
+import { plotNames, plotTypes } from 'const';
 import PlatformError from 'components/PlatformError';
 
 import ScrollOnDrag from 'components/plots/ScrollOnDrag';

@@ -26,7 +26,7 @@ import mockAPI, {
 } from '__test__/test-utils/mockAPI';
 
 import fake from '__test__/test-utils/constants';
-import { plotTypes } from 'utils/constants';
+import { plotTypes } from 'const';
 
 enableFetchMocks();
 
