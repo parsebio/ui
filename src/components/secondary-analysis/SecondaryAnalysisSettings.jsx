@@ -115,11 +115,11 @@ const SecondaryAnalysisSettings = (props) => {
             onChange={(value) => handleValueChange('chemistryVersion', value)}
             value={formValues.chemistryVersion}
             options={[
-              { label: 'v1', value: '1', disabled: formValues.kit?.startsWith('evercode_tcr') },
+              { label: 'v1', value: '1', disabled: isKitCategory(formValues.kit, kitCategories.TCR) },
               { label: 'v2', value: '2' },
               { label: 'v3', value: '3' },
             ]}
-            disabled={formValues.kit === 'wt_mega_384' || formValues.kit?.startsWith('evercode_bcr')}
+            disabled={formValues.kit === 'wt_mega_384' || isKitCategory(formValues.kit, kitCategories.BCR)}
           />
         </Space>
       </Form.Item>
@@ -154,7 +154,8 @@ const SecondaryAnalysisSettings = (props) => {
           </div>
         </Form.Item>
       )}
-      {(formValues.kit?.startsWith('tcr') || formValues.kit?.startsWith('bcr')) && (
+      {(isKitCategory(formValues.kit, kitCategories.TCR)
+      || isKitCategory(formValues.kit, kitCategories.BCR)) && (
         <Form.Item name='pairedWt'>
           <Space direction='horizontal'>
             <Switch
