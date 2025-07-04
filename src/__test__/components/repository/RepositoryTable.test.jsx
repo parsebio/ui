@@ -15,7 +15,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import initialState from 'redux/reducers/experiments/initialState';
 import thunk from 'redux-thunk';
 import userEvent from '@testing-library/user-event';
-import { sampleTech } from 'utils/constants';
+import SampleTech from 'const/enums/SampleTech';
 
 jest.mock('utils/http/fetchAPI');
 const mockNavigateTo = jest.fn();
@@ -33,7 +33,7 @@ const experiment1 = {
   species: 'Human',
   sampleCount: '4',
   cellCount: '23000',
-  sampleTechnologies: [sampleTech['10X']],
+  sampleTechnologies: [SampleTech['10X']],
   description: 'A sample experiment for users to try',
 };
 
@@ -92,7 +92,7 @@ describe('RepositoryTable', () => {
   it('renders correctly an experiment with multiple technologies', async () => {
     const experimentWithMultipleTechs = {
       ...experiment1,
-      sampleTechnologies: [sampleTech['10X'], sampleTech.Parse],
+      sampleTechnologies: [SampleTech['10X'], SampleTech.Parse],
     };
 
     await renderRepository(emptyStore, [experimentWithMultipleTechs]);
