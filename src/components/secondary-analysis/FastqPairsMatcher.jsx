@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import _ from 'lodash';
 
 import { Table } from 'antd';
 import { useSelector } from 'react-redux';
@@ -44,7 +45,15 @@ const FastqPairsMatcher = () => {
   const data = useMemo(() => {
     const rows = [];
 
-    Object.entries(pairs[FastqFileType.WT_FASTQ]).forEach(([pairName, fileIds], i) => {
+    Array.from({ length: numOfSublibraries }).forEach((_val, i) => {
+      const entry = Object.entries(pairs[FastqFileType.WT_FASTQ])[i];
+
+      if (_.isNil(entry)) {
+        return;
+      }
+
+      const [pairName, fileIds] = entry;
+
       rows.push({
         key: i,
         sublibrary: i,
@@ -54,7 +63,7 @@ const FastqPairsMatcher = () => {
     });
 
     return rows;
-  }, [pairs]);
+  }, [pairs, numOfSublibraries]);
 
   return <Table tableLayout='auto' columns={columns} dataSource={data} pagination={false} />;
 };
