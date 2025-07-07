@@ -11,7 +11,7 @@ import handleError from 'utils/http/handleError';
 import { loadUser } from 'redux/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 import signIn from 'utils/signIn';
-import { brandColors } from 'utils/constants';
+import { brandColors } from 'const';
 
 const UserButton = () => {
   const dispatch = useDispatch();

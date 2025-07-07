@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import SelectData from 'components/plots/styling/SelectData';
 import MultiViewEditor from 'components/plots/styling/MultiViewEditor';
-import { plotUuids, plotTypes } from 'utils/constants';
+import { plotUuids, plotTypes } from 'const';
 import GeneSearchBar from 'components/plots/GeneSearchBar';
 
 const { Panel } = Collapse;

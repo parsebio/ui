@@ -10,7 +10,7 @@ import configureStore from 'redux-mock-store';
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
 import MarkerGeneSelection from 'components/plots/styling/MarkerGeneSelection';
 import createTestComponentFactory from '__test__/test-utils/testComponentFactory';
-import { plotTypes } from 'utils/constants';
+import { plotTypes } from 'const';
 
 const mockOnUpdate = jest.fn();
 const mockOnReset = jest.fn();

@@ -32,7 +32,7 @@ import Loader from 'components/Loader';
 import SelectData from 'components/plots/styling/SelectData';
 
 import generateVegaData from 'components/plots/helpers/heatmap/vega/generateVegaData';
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 
 import PlotLegendAlert, { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
 

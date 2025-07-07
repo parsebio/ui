@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import { loadExperiments, setActiveExperiment } from 'redux/actions/experiments';
 
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import fetchAPI from 'utils/http/fetchAPI';
 import sendInvites from 'utils/data-management/experimentSharing/sendInvites';

@@ -5,7 +5,7 @@ import {
   Button, Tooltip,
 } from 'antd';
 
-import { permissions } from 'utils/constants';
+import { permissions } from 'const';
 import PermissionsChecker from 'utils/PermissionsChecker';
 import ClusterPopover from 'components/data-exploration/embedding/ClusterPopover';
 

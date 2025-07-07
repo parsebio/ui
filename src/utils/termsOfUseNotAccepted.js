@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { DomainName } from 'utils/deploymentInfo';
-import { termsOfUseCognitoKey, institutionCognitoKey } from 'utils/constants';
+import { termsOfUseCognitoKey, institutionCognitoKey } from 'const';
 
 const termsOfUseNotAccepted = (user, domainName) => {
   const notAccepted = user?.attributes[termsOfUseCognitoKey] !== 'true';

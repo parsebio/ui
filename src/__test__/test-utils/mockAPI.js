@@ -11,7 +11,7 @@ import downloadFromS3 from 'utils/work/downloadFromS3';
 import {
   responseData,
 } from '__test__/test-utils/mockData';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 
 const cellSetsData = require('__test__/data/cell_sets.json');
 

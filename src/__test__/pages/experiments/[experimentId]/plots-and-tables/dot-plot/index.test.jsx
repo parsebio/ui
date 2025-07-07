@@ -35,7 +35,7 @@ import paginatedGeneExpressionData from '__test__/data/paginated_gene_expression
 import cellSetsDataWithScratchpad from '__test__/data/cell_sets_with_scratchpad.json';
 import dotPlotData from '__test__/data/dotplot_plotdata.json';
 import userEvent from '@testing-library/user-event';
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 import ExportAsCSV from 'components/plots/ExportAsCSV';
 
 import waitForComponentToPaint from '__test__/test-utils/waitForComponentToPaint';

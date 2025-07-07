@@ -25,7 +25,7 @@ import UnauthorizedPage from 'pages/401';
 import NotFoundPage from 'pages/404';
 import Error from 'pages/_error';
 import APIError from 'utils/errors/http/APIError';
-import { brandColors, notAgreedToTermsStatus, cookiesAgreedCognitoKey } from 'utils/constants';
+import { brandColors, notAgreedToTermsStatus, cookiesAgreedCognitoKey } from 'const';
 
 import 'antd/dist/antd.variable.min.css';
 import { loadUser } from 'redux/actions/user';

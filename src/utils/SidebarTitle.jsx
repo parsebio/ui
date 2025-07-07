@@ -1,7 +1,8 @@
 import React from 'react';
 import { Tooltip } from 'antd';
 import PropTypes from 'prop-types';
-import { modules } from './constants';
+
+import { modules } from 'const';
 
 // We can't match exactly the tooltips to the module keys because some of the tooltips
 // appear on hover of non-module elements,

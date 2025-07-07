@@ -9,7 +9,7 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import handleError from 'utils/http/handleError';
 import getCellSets from 'redux/selectors/cellSets/getCellSets';
 import { getHasPermissions } from 'redux/selectors';
-import { permissions } from 'utils/constants';
+import { permissions } from 'const';
 import { notAllowedMessage } from 'utils/PermissionsChecker';
 
 const createCellSetJsonMerger = (newCellSet, cellClassKey) => (
