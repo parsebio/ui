@@ -3,7 +3,7 @@ import pushNotificationMessage from 'utils/pushNotificationMessage';
 import endUserMessages from 'utils/endUserMessages';
 import loadUser from './loadUser';
 
-const updateUserAttributes = (user, attributes, onError = () => {}) => async (dispatch) => {
+const updateUserAttributes = (user, attributes, onError = () => { }) => async (dispatch) => {
   try {
     await Auth.updateUserAttributes(user, attributes);
     await dispatch(loadUser());

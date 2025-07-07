@@ -3,15 +3,15 @@ import {
   Avatar, Button, Dropdown,
 } from 'antd';
 import Link from 'next/link';
-import { Hub } from '@aws-amplify/core';
 import { Auth } from '@aws-amplify/auth';
+import { Hub } from '@aws-amplify/core';
 import endUserMessages from 'utils/endUserMessages';
 import { resetTrackingId } from 'utils/tracking';
 import handleError from 'utils/http/handleError';
 import { loadUser } from 'redux/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 import signIn from 'utils/signIn';
-import { brandColors } from 'utils/constants';
+import { brandColors } from 'const';
 
 const UserButton = () => {
   const dispatch = useDispatch();

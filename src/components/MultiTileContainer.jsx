@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Mosaic, MosaicWindow } from 'react-mosaic-component';
 import ReactResizeDetector from 'react-resize-detector';
 import 'react-mosaic-component/react-mosaic-component.css';
-import { layout } from 'utils/constants';
+import { layout } from 'const';
 import { useDragDropManager } from 'react-dnd';
 
 const renderWindow = (tile, width, height, style) => {

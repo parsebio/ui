@@ -17,7 +17,7 @@ import PlatformError from 'components/PlatformError';
 import loadConditionalComponentConfig from 'redux/actions/componentConfig/loadConditionalComponentConfig';
 import Loader from 'components/Loader';
 import { loadPaginatedGeneProperties, loadGeneExpression } from 'redux/actions/genes';
-import { plotTypes, plotUuids } from 'utils/constants';
+import { plotTypes, plotUuids } from 'const';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 
 const PROPERTIES = ['dispersions'];

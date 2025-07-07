@@ -25,7 +25,7 @@ import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
 import usePolling from 'utils/customHooks/usePolling';
 
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
 import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
@@ -158,7 +158,7 @@ const Pipeline = () => {
 
   useEffect(() => {
     import('utils/socketConnection')
-      .then(({ default: connectionPromise }) => connectionPromise)
+      .then(({ default: socketConnection }) => socketConnection())
       .then((io) => {
         // remove previous listeners, in case the secondary analysis has changed
         io.off();

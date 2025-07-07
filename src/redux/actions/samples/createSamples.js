@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import dayjs from 'dayjs';
 
+import SampleTech, { getSampleTechMetadataValue } from 'const/enums/SampleTech';
+
 import {
   SAMPLES_CREATED, SAMPLES_ERROR, SAMPLES_SAVED, SAMPLES_SAVING,
 } from 'redux/actionTypes/samples';
@@ -11,17 +13,8 @@ import endUserMessages from 'utils/endUserMessages';
 
 import { METADATA_DEFAULT_VALUE } from 'redux/reducers/experiments/initialState';
 import { defaultSampleOptions, sampleTemplate } from 'redux/reducers/samples/initialState';
-import { sampleTech } from 'utils/constants';
 import UploadStatus from 'utils/upload/UploadStatus';
 import { createMetadataTrack, updateValuesInMetadataTrack } from '../experiments';
-
-const metadataValuesByTechnology = {
-  [sampleTech.PARSE]: 'Parse Evercode WT',
-  [sampleTech['10X']]: '10X Chromium',
-  [sampleTech.RHAPSODY]: 'BD Rhapsody',
-  [sampleTech.SEURAT]: 'Seurat',
-  [sampleTech.H5]: '10X Chromium - H5',
-};
 
 // If the sample name of new samples coincides with already existing
 // ones we should not create new samples,
@@ -88,7 +81,7 @@ const createSamples = (
 
   const createdDate = dayjs().toISOString();
 
-  if (!Object.values(sampleTech).includes(sampleTechnology)) throw new Error(`Sample technology ${sampleTechnology} is not recognized`);
+  if (!Object.values(SampleTech).includes(sampleTechnology)) throw new Error(`Sample technology ${sampleTechnology} is not recognized`);
 
   let options = defaultSampleOptions[sampleTechnology] || {};
   let kit = null;
@@ -204,7 +197,7 @@ const createSamples = (
     if (technologyMetadataTrackExists) {
       const updates = Object.entries(samplesToUpdateByTechnology)
         .map(([technology, currSamples]) => ({
-          value: metadataValuesByTechnology[technology],
+          value: getSampleTechMetadataValue(technology),
           sampleIds: currSamples.map((sample) => sample.uuid),
         }));
 

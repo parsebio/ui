@@ -6,7 +6,7 @@ import { loadSamples } from 'redux/actions/samples';
 import { reloadExperimentInfo } from 'redux/actions/experiments';
 
 import pushNotificationMessage from 'utils/pushNotificationMessage';
-import { cellSetsUpdatedMessages } from 'utils/constants';
+import { cellSetsUpdatedMessages } from 'const';
 import endUserMessages from 'utils/endUserMessages';
 
 const updateTypes = {

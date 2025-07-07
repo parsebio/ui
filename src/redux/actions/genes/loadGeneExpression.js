@@ -99,6 +99,8 @@ const loadGeneExpression = (
       },
     });
   } catch (error) {
+    console.error(error);
+
     dispatch({
       type: GENES_EXPRESSION_ERROR,
       payload: {

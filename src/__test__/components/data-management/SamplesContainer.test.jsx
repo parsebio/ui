@@ -16,7 +16,7 @@ import {
   SAMPLES_VALIDATING_UPDATED,
 } from 'redux/actionTypes/samples';
 import { samples } from '__test__/test-utils/mockData';
-import { techNamesToDisplay } from 'utils/upload/fileUploadUtils';
+import { getTechNameToDisplay } from 'const/enums/SampleTech';
 import { updateExperimentInfo } from 'redux/actions/experimentSettings';
 
 const experimentId = `${fake.EXPERIMENT_ID}-0`;
@@ -95,7 +95,7 @@ describe('SamplesTableContainer', () => {
     // Determine a tech from our mock data
     const allSamples = Object.values(samples);
     const techType = 'parse';
-    const techLabel = techNamesToDisplay[techType];
+    const techLabel = getTechNameToDisplay(techType);
 
     const matching = allSamples.filter((s) => s.sampleTechnology === techType);
     const nonMatching = allSamples.filter((s) => s.sampleTechnology !== techType);

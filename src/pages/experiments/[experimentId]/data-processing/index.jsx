@@ -50,6 +50,10 @@ import SingleComponentMultipleDataContainer from 'components/SingleComponentMult
 import SelectShownSamplesDropdown from 'components/data-processing/SelectShownSamplesDropdown';
 import StatusIndicator from 'components/data-processing/StatusIndicator';
 import _ from 'lodash';
+
+import { modules } from 'const';
+import SampleTech from 'const/enums/SampleTech';
+
 import {
   getBackendStatus, getFilterChanges, getSamples, getCellSets,
 } from 'redux/selectors';
@@ -59,7 +63,7 @@ import { loadSamples } from 'redux/actions/samples';
 import { runQC } from 'redux/actions/pipeline';
 
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules, sampleTech } from 'utils/constants';
+
 import QCRerunDisabledModal from 'components/modals/QCRerunDisabledModal';
 import isUserAuthorized from 'utils/access/isUserAuthorized';
 import { getURL } from 'redux/actions/pipeline/runQC';
@@ -111,7 +115,7 @@ const DataProcessingPage = ({ experimentId }) => {
   const [runQCModalVisible, setRunQCModalVisible] = useState(false);
   const [inputsList, setInputsList] = useState([]);
   const [shownSampleIds, setShownSampleIds] = useState(sampleKeys);
-  const hasParseTechnology = sampleKeys.some((key) => samples[key]?.type === sampleTech.PARSE);
+  const hasParseTechnology = sampleKeys.some((key) => samples[key]?.type === SampleTech.PARSE);
 
   const cellSets = useSelector(getCellSets());
 

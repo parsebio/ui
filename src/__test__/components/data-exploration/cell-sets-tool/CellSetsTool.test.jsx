@@ -21,7 +21,7 @@ import fetchWork from 'utils/work/fetchWork';
 
 import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloadCellSetsFromS3Mock } from '__test__/test-utils/mockAPI';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
@@ -35,7 +35,7 @@ jest.mock('utils/socketConnection', () => {
 
   return {
     __esModule: true,
-    default: new Promise((resolve) => {
+    default: () => new Promise((resolve) => {
       resolve({ emit: mockEmit, on: mockOn, id: '5678' });
     }),
     mockEmit,

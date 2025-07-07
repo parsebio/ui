@@ -18,6 +18,7 @@ const loadSecondaryAnalyses = () => async (dispatch) => {
       },
     });
   } catch (e) {
+    console.error(e);
     const errorMessage = handleError(e, endUserMessages.ERROR_LOADING_PROJECT);
 
     dispatch({

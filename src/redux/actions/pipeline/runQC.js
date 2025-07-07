@@ -11,7 +11,7 @@ import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { loadEmbedding } from 'redux/actions/embedding';
 import { runCellSetsClustering } from 'redux/actions/cellSets';
 import { getBackendStatus, getFilterChanges } from 'redux/selectors';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 
 const runOnlyConfigureEmbedding = async (experimentId, embeddingMethod, dispatch) => {
   await dispatch(saveProcessingSettings(experimentId, 'configureEmbedding'));

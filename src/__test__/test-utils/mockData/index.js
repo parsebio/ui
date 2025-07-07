@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 import generateMockSamples from './generateMockSamples';
 import generateMockExperiments from './generateMockExperiments';
 import generateMockProcessingConfig from './generateMockProcessingConfig';

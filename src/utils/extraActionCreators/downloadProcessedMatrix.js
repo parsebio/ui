@@ -7,7 +7,7 @@ import writeToFileURL from 'utils/upload/writeToFileURL';
 import downloadFromUrl from 'utils/downloadFromUrl';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 
 const downloadProcessedMatrix = (experimentId) => async (dispatch, getState) => {
   try {

@@ -23,7 +23,7 @@ import getReports from 'pages/pipeline/[secondaryAnalysisId]/status/getReports';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
 import { useAppRouter } from 'utils/AppRouteProvider';
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 import writeToFileURL from 'utils/upload/writeToFileURL';
 import {
   SECONDARY_ANALYSES_UPDATED,

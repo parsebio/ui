@@ -26,7 +26,7 @@ import createTestComponentFactory from '__test__/test-utils/testComponentFactory
 import fake from '__test__/test-utils/constants';
 import fetchWork from 'utils/work/fetchWork';
 
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 
 enableFetchMocks();
@@ -44,7 +44,7 @@ jest.mock('react-resize-detector', () => (props) => {
 
 jest.mock('utils/work/fetchWork');
 
-jest.mock('@aws-amplify/auth', () => ({}));
+jest.mock('aws-amplify', () => ({}));
 
 const mockWorkerResponses = {
   DifferentialExpression: mockDiffExprResult,

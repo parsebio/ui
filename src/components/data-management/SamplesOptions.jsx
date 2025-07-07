@@ -6,7 +6,7 @@ import { Typography, Checkbox, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import updateSamplesOptions from 'redux/actions/experiments/updateSamplesOptions';
 
-import { sampleTech } from 'utils/constants';
+import SampleTech from 'const/enums/SampleTech';
 
 const { Text, Paragraph } = Typography;
 
@@ -60,7 +60,7 @@ const SamplesOptions = () => {
   );
 
   const renderOptions = {
-    [sampleTech.RHAPSODY]: renderRhapsodyOption,
+    [SampleTech.RHAPSODY]: renderRhapsodyOption,
   };
 
   return (
