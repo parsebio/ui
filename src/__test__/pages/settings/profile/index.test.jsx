@@ -11,7 +11,7 @@ import { Auth } from '@aws-amplify/auth';
 import ProfileSettings from 'pages/settings/profile';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import { Provider } from 'react-redux';
-import { cognitoMFA, cookiesAgreedCognitoKey } from 'utils/constants';
+import { cognitoMFA, cookiesAgreedCognitoKey } from 'const';
 import { loadUser } from 'redux/actions/user';
 import loadDeploymentInfo from 'redux/actions/networkResources/loadDeploymentInfo';
 

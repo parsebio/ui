@@ -23,7 +23,7 @@ import { updatePlotConfig, loadPlotConfig } from 'redux/actions/componentConfig'
 import loadCellSets from 'redux/actions/cellSets/loadCellSets';
 
 import plotCsvFilename from 'utils/plotCsvFilename';
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 import PlotContainer from 'components/plots/PlotContainer';
 
 import PlotLegendAlert, { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';

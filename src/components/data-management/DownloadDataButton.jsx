@@ -18,7 +18,7 @@ import Loader from 'components/Loader';
 import { getAnalysisTool, getBackendStatus } from 'redux/selectors';
 import handleError from 'utils/http/handleError';
 import downloadProcessedMatrix from 'utils/extraActionCreators/downloadProcessedMatrix';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 
 const processedMatrixTextByTool = {
   [analysisTools.SEURAT]: 'Processed Seurat object (.rds)',

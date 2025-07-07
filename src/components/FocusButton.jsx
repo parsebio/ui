@@ -8,7 +8,7 @@ import {
 } from 'react-redux';
 
 import { setCellInfoFocus } from 'redux/actions/cellInfo';
-import { brandColors } from 'utils/constants';
+import { brandColors } from 'const';
 
 const FocusButton = (props) => {
   const { store, lookupKey, experimentId } = props;

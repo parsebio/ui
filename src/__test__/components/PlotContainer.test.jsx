@@ -9,7 +9,7 @@ import PlotContainer from 'components/plots/PlotContainer';
 
 import { makeStore } from 'redux/store';
 
-import { plotTypes } from 'utils/constants';
+import { plotTypes } from 'const';
 import fake from '__test__/test-utils/constants';
 import { loadPlotConfig, updatePlotConfig } from 'redux/actions/componentConfig';
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';

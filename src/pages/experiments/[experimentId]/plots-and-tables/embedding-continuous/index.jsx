@@ -18,7 +18,7 @@ import {
 } from 'redux/actions/componentConfig/index';
 import { loadCellSets } from 'redux/actions/cellSets';
 import { getCellSets, getPlotConfigs } from 'redux/selectors';
-import { plotNames, plotUuids, plotTypes } from 'utils/constants';
+import { plotNames, plotUuids, plotTypes } from 'const';
 import GeneSearchBar from 'components/plots/GeneSearchBar';
 import ContinuousEmbeddingReduxWrapper from 'components/plots/ContinuousEmbeddingReduxWrapper';
 

@@ -8,7 +8,7 @@ import mockCellSets from '__test__/data/cell_sets.json';
 import { createHierarchyFromTree, createPropertiesFromTree } from 'redux/reducers/cellSets/helpers';
 import { act } from 'react-dom/test-utils';
 
-import { plotTypes } from 'utils/constants';
+import { plotTypes } from 'const';
 
 const mockOnUpdate = jest.fn();
 

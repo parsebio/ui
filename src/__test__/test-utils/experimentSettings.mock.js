@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import initialState from 'redux/reducers/experimentSettings/initialState';
 import { accessRoles } from 'redux/selectors/getHasPermissions';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 
 const sampleifiedConfig = (sampleIds, configToReplicate) => {
   const result = sampleIds.reduce(

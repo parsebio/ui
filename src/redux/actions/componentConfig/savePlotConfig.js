@@ -2,7 +2,7 @@ import { SAVE_CONFIG } from 'redux/actionTypes/componentConfig';
 import fetchAPI from 'utils/http/fetchAPI';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
-import { permissions } from 'utils/constants';
+import { permissions } from 'const';
 import { getHasPermissions } from 'redux/selectors';
 
 const savePlotConfig = (experimentId, plotUuid) => async (dispatch, getState) => {
