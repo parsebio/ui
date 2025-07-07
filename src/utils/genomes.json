@@ -208,6 +208,10 @@
     "species": "Salmo salar (Atlantic Salmon)"
   },
   {
+    "name": "S_mansoni",
+    "species": "Schistosoma mansoni (Blood fluke)"
+  },
+  {
     "name": "sScyCan1-1",
     "species": "Scyliorhinus canicula (Smaller spotted catshark)"
   },
