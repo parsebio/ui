@@ -21,7 +21,7 @@ import fetchWork from 'utils/work/fetchWork';
 
 import mockAPI, { generateDefaultMockAPIResponses, promiseResponse, setupDownloadCellSetsFromS3Mock } from '__test__/test-utils/mockAPI';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
-import { analysisTools } from 'utils/constants';
+import { analysisTools } from 'const';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 import setMockedExperimentInfo from '__test__/test-utils/setMockedExperimentInfo';
 

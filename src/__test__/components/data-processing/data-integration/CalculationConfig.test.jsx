@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { mockCellSets } from '__test__/test-utils/cellSets.mock';
-import { analysisTools, downsamplingMethods } from 'utils/constants';
+import { analysisTools, downsamplingMethods } from 'const';
 import _ from 'lodash';
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
 import { initialEmbeddingState } from 'redux/reducers/embeddings/initialState';

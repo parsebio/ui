@@ -11,7 +11,7 @@ import {
 import { runGem2s, runSeurat } from 'redux/actions/pipeline';
 
 import PipelineStatus from 'utils/pipelineStatusValues';
-import { sampleTech } from 'utils/constants';
+import SampleTech from 'const/enums/SampleTech';
 import LaunchAnalysisButton from 'components/data-management/LaunchAnalysisButton';
 import initialExperimentsState, { experimentTemplate } from 'redux/reducers/experiments/initialState';
 import initialSamplesState, { sampleTemplate } from 'redux/reducers/samples/initialState';
@@ -107,7 +107,7 @@ const withDataState = {
       name: sample1Name,
       experimentId: experiment1id,
       uuid: sample1Uuid,
-      type: sampleTech['10X'],
+      type: SampleTech['10X'],
       metadata: ['value-1'],
       files: {
         features10x: { valid: true, upload: { status: UploadStatus.UPLOADED } },
@@ -121,7 +121,7 @@ const withDataState = {
       name: sample2Name,
       experimentId: experiment1id,
       uuid: sample2Uuid,
-      type: sampleTech['10X'],
+      type: SampleTech['10X'],
       metadata: ['value-2'],
       files: {
         features10x: { valid: true, upload: { status: UploadStatus.UPLOADED } },
@@ -169,7 +169,7 @@ const withSeuratDataState = {
       name: sample1Name,
       experimentId: experiment1id,
       uuid: sample1Uuid,
-      type: sampleTech.SEURAT,
+      type: SampleTech.SEURAT,
       files: {
         seurat: { valid: true, upload: { status: UploadStatus.UPLOADED } },
       },

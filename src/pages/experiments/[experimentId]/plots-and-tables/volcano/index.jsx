@@ -27,7 +27,7 @@ import Loader from 'components/Loader';
 
 import { generateSpec } from 'utils/plotSpecs/generateVolcanoSpec';
 import calculateVolcanoDataPoints from 'components/plots/helpers/calculateVolcanoDataPoints';
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 import 'vega-webgl-renderer';
 
 dayjs.extend(utc);

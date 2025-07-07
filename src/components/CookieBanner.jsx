@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { cookiesAgreedCognitoKey } from 'utils/constants';
+import { cookiesAgreedCognitoKey } from 'const';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Modal, Button, Checkbox, Divider, Alert, Space,

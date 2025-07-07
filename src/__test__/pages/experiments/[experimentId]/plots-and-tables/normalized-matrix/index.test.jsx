@@ -10,7 +10,7 @@ import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 import endUserMessages from 'utils/endUserMessages';
 
 import { makeStore } from 'redux/store';

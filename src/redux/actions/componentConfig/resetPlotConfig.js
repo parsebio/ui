@@ -4,7 +4,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import handleError from 'utils/http/handleError';
 import endUserMessages from 'utils/endUserMessages';
 import { getHasPermissions } from 'redux/selectors';
-import { permissions } from 'utils/constants';
+import { permissions } from 'const';
 
 const resetPlotConfig = (experimentId, plotUuid, plotType) => async (dispatch, getState) => {
   const defaultConfig = initialPlotConfigStates[plotType];
