@@ -10,16 +10,22 @@ const columns = [
     title: 'Sublibrary',
     dataIndex: 'sublibrary',
     key: 'sublibrary',
+    width: '20%',
+    minWidth: 80,
   },
   {
     title: 'WT FASTQ file pairs',
     dataIndex: 'wtPairs',
     key: 'wtPairs',
+    width: '40%',
+    minWidth: 160,
   },
   {
     title: 'Immune profiling FASTQ file pairs',
     dataIndex: 'immunePairs',
     key: 'immunePairs',
+    width: '40%',
+    minWidth: 160,
   },
 ];
 
@@ -50,8 +56,9 @@ const FastqPairsMatcher = () => {
     return rows;
   }, [pairs]);
 
-  return <Table columns={columns} dataSource={data} pagination={false} />;
+  return <Table tableLayout='auto' columns={columns} dataSource={data} pagination={false} />;
 };
+
 FastqPairsMatcher.propTypes = {
 };
 
