@@ -3,6 +3,7 @@ import React, { useMemo } from 'react';
 import { Table } from 'antd';
 import { useSelector } from 'react-redux';
 import { getPairs } from 'utils/fastqUtils';
+import FastqFileType from 'const/enums/FastqFileType';
 
 const columns = [
   {
@@ -29,29 +30,25 @@ const FastqPairsMatcher = () => {
     return state.secondaryAnalyses[activeSecondaryAnalysisId];
   });
 
-  const pairs = useMemo(() => {
-    const thepairs = getPairs(files.data);
+  const pairs = useMemo(
+    () => getPairs(files.data),
+    [files.data],
+  );
 
-    console.log('pairsDebug');
-    console.log(thepairs);
-  }, [files]);
+  const data = useMemo(() => {
+    const rows = [];
 
-  const wtPairs = useMemo(() => {
+    Object.entries(pairs[FastqFileType.WT_FASTQ]).forEach(([pairName, fileIds], i) => {
+      rows.push({
+        key: i,
+        sublibrary: i,
+        wtPairs: pairName,
+        immunePairs: null,
+      });
+    });
 
-  });
-
-  const immunePairs = useMemo(() => {
-  });
-
-  const data = [];
-  // const data = [
-  //  {
-  //    key: '1',
-  //    sublibrary: 'Sub1',
-  //    wtPairs: 'file1_R1.fastq, file1_R2.fastq',
-  //    immunePairs: 'file2_R1.fastq, file2_R2.fastq'
-  //  },
-  // ];
+    return rows;
+  }, [pairs]);
 
   return <Table columns={columns} dataSource={data} pagination={false} />;
 };

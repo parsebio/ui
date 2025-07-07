@@ -52,7 +52,7 @@ const getPairs = (files) => {
 
     const pairData = sublibraries[file.type][pairName] ||= [];
 
-    pairData.push(file);
+    pairData.push(file.id);
   });
 
   // Validate that every array in sublibraries' values has length 2
