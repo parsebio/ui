@@ -82,18 +82,15 @@ describe('filterCells', () => {
     expect(result).toMatchSnapshot();
   });
 });
-
+const mockEmbeddingData = { xValues: [1, 2, 3], yValues: [4, 5, 6], cellIds: [0, 1, 2] };
 describe('generateData', () => {
   let mockCellSetsReduxObject;
-  let mockEmbeddingData;
 
   beforeEach(() => {
     mockCellSetsReduxObject = getCellSets()({
       properties: createPropertiesFromTree(mockCellSets),
       hierarchy: createHierarchyFromTree(mockCellSets),
     });
-
-    mockEmbeddingData = _.range(30).map(() => [1, 2]);
   });
 
   it('generates correct data with all louvain clusters', () => {
