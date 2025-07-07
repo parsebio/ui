@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { kitCategories, isKitCategory } from 'utils/secondary-analysis/kitOptions';
 
-// Simple JSX variables for reuse
 const supportArticleLink = (
   <a
     target='_blank'
@@ -52,7 +51,6 @@ const expiryNoticeBase = (
 );
 
 const UploadFastqSupportText = ({ kit, pairedWt }) => {
-  console.log('UploadFastqSupportText', kit, pairedWt, isKitCategory(kit, kitCategories.TCR), isKitCategory(kit, kitCategories.BCR));
   if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
     if (pairedWt) {
       return (

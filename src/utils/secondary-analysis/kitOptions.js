@@ -26,4 +26,5 @@ const isKitCategory = (kit, category) => {
   }
 };
 
-export { kitOptions, isKitCategory, kitCategories };
+export default kitOptions;
+export { isKitCategory, kitCategories };

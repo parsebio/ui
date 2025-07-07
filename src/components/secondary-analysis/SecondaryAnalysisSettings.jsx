@@ -7,7 +7,7 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import propTypes from 'prop-types';
-import { kitOptions, isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+import kitOptions, { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
 import SliderWithInput from 'components/SliderWithInput';
 import { useSelector } from 'react-redux';
 
