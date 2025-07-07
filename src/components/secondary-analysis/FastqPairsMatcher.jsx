@@ -5,6 +5,7 @@ import { Table } from 'antd';
 import { useSelector } from 'react-redux';
 import { getPairs } from 'utils/fastqUtils';
 import FastqFileType from 'const/enums/FastqFileType';
+import FastqImmuneSelect from './FastqImmuneSelect';
 
 const columns = [
   {
@@ -58,7 +59,12 @@ const FastqPairsMatcher = () => {
         key: i,
         sublibrary: i,
         wtPairs: pairName,
-        immunePairs: null,
+        immunePairs: (
+          <FastqImmuneSelect
+            sublibraryIndex={i}
+            pairs={pairs[FastqFileType.IMMUNE_FASTQ]}
+          />
+        ),
       });
     });
 
@@ -68,7 +74,6 @@ const FastqPairsMatcher = () => {
   return <Table tableLayout='auto' columns={columns} dataSource={data} pagination={false} />;
 };
 
-FastqPairsMatcher.propTypes = {
-};
+FastqPairsMatcher.propTypes = {};
 
 export default FastqPairsMatcher;

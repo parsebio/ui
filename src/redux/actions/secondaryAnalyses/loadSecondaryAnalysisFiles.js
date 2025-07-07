@@ -19,7 +19,7 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
       },
     });
 
-    const files = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
+    const { files, pairMatches } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
 
     const filesForRedux = await Promise.all(files
       // If it is uploading or queued in redux, then this upload is managed by this client so
@@ -44,6 +44,7 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
       payload: {
         secondaryAnalysisId,
         files: filesForRedux,
+        pairMatches,
       },
     });
   } catch (e) {
