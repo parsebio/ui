@@ -24,7 +24,7 @@ import {
   downloadNormalizedMatrix, loadPlotConfig, updatePlotConfig,
 } from 'redux/actions/componentConfig';
 
-import { plotNames, plotTypes } from 'utils/constants';
+import { plotNames, plotTypes } from 'const';
 import PlatformError from 'components/PlatformError';
 import MultiSelect from 'components/MultiSelect';
 import endUserMessages from 'utils/endUserMessages';

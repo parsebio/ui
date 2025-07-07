@@ -20,7 +20,7 @@ import CategoricalEmbeddingPlot from 'components/plots/CategoricalEmbeddingPlot'
 import PlotContainer from 'components/plots/PlotContainer';
 import SelectData from 'components/plots/styling/embedding-continuous/SelectData';
 import PlotLegendAlert, { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
-import { plotNames } from 'utils/constants';
+import { plotNames } from 'const';
 
 const { Panel } = Collapse;
 

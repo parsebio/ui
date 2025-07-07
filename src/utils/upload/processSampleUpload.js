@@ -2,6 +2,8 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
 
+import SampleTech from 'const/enums/SampleTech';
+
 import {
   createSamples, createSampleFile, updateSampleFileUpload, validateSamples,
 } from 'redux/actions/samples';
@@ -10,7 +12,6 @@ import UploadStatus from 'utils/upload/UploadStatus';
 import { inspectFile, Verdict } from 'utils/upload/fileInspector';
 import fetchAPI from 'utils/http/fetchAPI';
 
-import { sampleTech } from 'utils/constants';
 import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
@@ -107,7 +108,7 @@ const beginSampleFileUpload = async (experimentId, sampleFileId, metadata) => aw
 
 const getMetadata = (fileName, selectedTech) => {
   const metadata = {};
-  if (selectedTech === sampleTech['10X']) {
+  if (selectedTech === SampleTech['10X']) {
     if (fileName.includes('genes')) {
       metadata.cellranger_version = 'v2';
     } else if (fileName.includes('features')) {

@@ -22,7 +22,7 @@ import '__test__/test-utils/setupTests';
 
 import { runQC } from 'redux/actions/pipeline';
 import generateExperimentSettingsMock from '__test__/test-utils/experimentSettings.mock';
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 import { act } from 'react-dom/test-utils';
 import { saveProcessingSettings } from 'redux/actions/experimentSettings';
 import { cloneExperiment } from 'redux/actions/experiments';

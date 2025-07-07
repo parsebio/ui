@@ -6,7 +6,7 @@ import {
   Form, Input, Empty, Row, Col, Button, Space, Divider,
 } from 'antd';
 import { useRouter } from 'next/router';
-import { institutionCognitoKey, cookiesAgreedCognitoKey } from 'utils/constants';
+import { institutionCognitoKey, cookiesAgreedCognitoKey } from 'const';
 
 import handleError from 'utils/http/handleError';
 import { useSelector, useDispatch } from 'react-redux';

@@ -5,7 +5,7 @@ import { Button } from 'antd';
 import { useRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import { makeStore } from 'redux/store';
-import { modules } from 'utils/constants';
+import { modules } from 'const';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import mockAPI, {
