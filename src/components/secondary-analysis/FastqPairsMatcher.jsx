@@ -30,7 +30,10 @@ const FastqPairsMatcher = () => {
   });
 
   const pairs = useMemo(() => {
-    getPairs(files.data);
+    const thepairs = getPairs(files.data);
+
+    console.log('pairsDebug');
+    console.log(thepairs);
   }, [files]);
 
   const wtPairs = useMemo(() => {
