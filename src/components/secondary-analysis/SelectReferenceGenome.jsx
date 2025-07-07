@@ -35,7 +35,7 @@ const SelectReferenceGenome = (props) => {
     }}
     >
       <div>
-        Select the reference genome:
+        Select the reference genome for aligning your whole transcriptome data:
       </div>
       <br />
       <Select
