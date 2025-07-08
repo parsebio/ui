@@ -3,7 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { setImmunePairMatch } from 'redux/actions/secondaryAnalyses';
+import { updatePairMatch } from 'redux/actions/secondaryAnalyses';
 import FastqFileType from 'const/enums/FastqFileType';
 
 const FastqImmuneSelect = ({
@@ -56,7 +56,7 @@ const FastqImmuneSelect = ({
           delete newMatches[selectedImmune];
         }
 
-        dispatch(setImmunePairMatch(
+        dispatch(updatePairMatch(
           secondaryAnalysisId,
           newMatches,
           pairs,
