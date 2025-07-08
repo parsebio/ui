@@ -32,7 +32,6 @@ const columns = [
 ];
 
 const FastqPairsMatcher = () => {
-  console.log('weriufneriufneiu');
   const { files, numOfSublibraries } = useSelector((state) => {
     const { activeSecondaryAnalysisId } = state.secondaryAnalyses.meta;
     return state.secondaryAnalyses[activeSecondaryAnalysisId];
@@ -50,17 +49,17 @@ const FastqPairsMatcher = () => {
       ([pairNameA], [pairNameB]) => pairNameA.localeCompare(pairNameB),
     );
 
-    sortedWtFastqs.forEach(([pairName], i) => {
+    sortedWtFastqs.forEach(([wtPairName], i) => {
       const sublibraryIndex = i + 1;
 
       rows.push({
         key: sublibraryIndex,
         sublibrary: sublibraryIndex,
-        wtPairs: pairName,
+        wtPairs: wtPairName,
         immunePairs: (
           <FastqImmuneSelect
-            sublibraryIndex={i}
-            pairs={pairs[FastqFileType.IMMUNE_FASTQ]}
+            wtPairName={wtPairName}
+            pairs={pairs}
           />
         ),
       });

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { setImmunePairMatch } from 'redux/actions/secondaryAnalyses';
+import FastqFileType from 'const/enums/FastqFileType';
 
 const FastqImmuneSelect = ({
-  sublibraryIndex, pairs,
+  wtPairName,
+  pairs,
 }) => {
   const dispatch = useDispatch();
 
@@ -18,43 +20,46 @@ const FastqImmuneSelect = ({
     state.secondaryAnalyses[secondaryAnalysisId].files.pairMatches
   ));
 
-  const usedOptions = Object.keys(pairMatches).map((pairName) => ({
-    label: <span style={{ color: 'lightgray' }}>{pairName}</span>,
-    value: pairName,
-  }));
-
-  const freeOptions = Object.keys(pairs)
-    .filter((pairName) => _.isNil(pairMatches[pairName]))
-    .map((pairName) => ({
-      label: pairName,
-      value: pairName,
+  const options = useMemo(() => {
+    const usedOptions = Object.keys(pairMatches).map((immunePairName) => ({
+      label: <span style={{ color: 'lightgray' }}>{immunePairName}</span>,
+      value: immunePairName,
     }));
 
-  const options = [...freeOptions, ...usedOptions];
+    const freeOptions = Object.keys(pairs[FastqFileType.IMMUNE_FASTQ])
+      .filter((immunePairName) => _.isNil(pairMatches[immunePairName]))
+      .map((immunePairName) => ({
+        label: immunePairName,
+        value: immunePairName,
+      }));
 
-  const selectedOption = _.findKey(pairMatches, (index) => index === sublibraryIndex);
+    return [...freeOptions, ...usedOptions];
+  });
+
+  const selectedImmune = _.findKey(pairMatches, (wtPairNameIt) => wtPairNameIt === wtPairName);
 
   return (
     <Select
       options={options}
       style={{ width: '100%' }}
       placeholder='Select immune pair'
-      value={selectedOption}
+      value={selectedImmune}
       optionLabelProp='value'
-      onSelect={(pairName) => {
-        if (selectedOption === pairName) return;
+      onSelect={(immunePairName) => {
+        if (selectedImmune === immunePairName) return;
 
         const newMatches = _.clone(pairMatches);
 
-        newMatches[pairName] = sublibraryIndex;
+        newMatches[immunePairName] = wtPairName;
 
-        if (!_.isNil(selectedOption)) {
-          delete newMatches[selectedOption];
+        if (!_.isNil(selectedImmune)) {
+          delete newMatches[selectedImmune];
         }
 
         dispatch(setImmunePairMatch(
           secondaryAnalysisId,
           newMatches,
+          pairs,
         ));
       }}
     />
@@ -63,7 +68,7 @@ const FastqImmuneSelect = ({
 };
 
 FastqImmuneSelect.propTypes = {
-  sublibraryIndex: PropTypes.number.isRequired,
+  wtPairName: PropTypes.string.isRequired,
   pairs: PropTypes.object.isRequired,
 };
 

@@ -40,10 +40,14 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
         return file;
       }));
 
-    const pairMatchesForRedux = pairMatches.reduce((acc, { wtR1FileId, sublibraryIndex }) => {
-      const { name } = filesInRedux[wtR1FileId];
+    const pairMatchesForRedux = pairMatches.reduce((acc, { wtR1FileId, immuneFileR1Id }) => {
+      const { name: wtFileR1Name } = filesInRedux[wtR1FileId];
+      const { name: immuneFileR1Name } = filesInRedux[immuneFileR1Id];
 
-      acc[getSublibraryName(name)] = sublibraryIndex;
+      const wtPairName = getSublibraryName(wtFileR1Name);
+      const immunePairName = getSublibraryName(immuneFileR1Name);
+
+      acc[getSublibraryName(immunePairName)] = wtPairName;
 
       return acc;
     }, {});
