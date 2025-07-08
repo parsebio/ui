@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,33 +18,47 @@ const FastqImmuneSelect = ({
     state.secondaryAnalyses[secondaryAnalysisId].files.pairMatches
   ));
 
-  const options = Object.entries(pairs).map(([pairName, fileIds]) => {
-    console.log('pairMatcheswedwDebug');
-    console.log(pairMatches);
+  const usedOptions = Object.keys(pairMatches).map((pairName) => ({
+    label: <span style={{ color: 'lightgray' }}>{pairName}</span>,
+    value: pairName,
+  }));
 
-    return ({
+  const freeOptions = Object.keys(pairs)
+    .filter((pairName) => _.isNil(pairMatches[pairName]))
+    .map((pairName) => ({
       label: pairName,
       value: pairName,
-      disabled: pairMatches[pairName],
-    });
-  });
+    }));
+
+  const options = [...freeOptions, ...usedOptions];
+
+  const selectedOption = _.findKey(pairMatches, (index) => index === sublibraryIndex);
 
   return (
     <Select
       options={options}
       style={{ width: '100%' }}
       placeholder='Select immune pair'
-      filterOption={(_input, option) => pairMatches[option.value]}
+      value={selectedOption}
+      optionLabelProp='value'
       onSelect={(pairName) => {
+        if (selectedOption === pairName) return;
+
+        const newMatches = _.clone(pairMatches);
+
+        newMatches[pairName] = sublibraryIndex;
+
+        if (!_.isNil(selectedOption)) {
+          delete newMatches[selectedOption];
+        }
+
         dispatch(setImmunePairMatch(
           secondaryAnalysisId,
-          {
-            ...pairMatches,
-            [pairName]: sublibraryIndex,
-          },
+          newMatches,
         ));
       }}
     />
+
   );
 };
 

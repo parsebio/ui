@@ -68,4 +68,6 @@ const getPairs = (files) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export { getPairs, getMatchingPairFor, hasReadPair };
+export {
+  getPairs, getMatchingPairFor, hasReadPair, getSublibraryName,
+};

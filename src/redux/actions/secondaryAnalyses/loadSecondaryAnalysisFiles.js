@@ -4,6 +4,7 @@ import { SECONDARY_ANALYSIS_FILES_LOADED, SECONDARY_ANALYSIS_FILES_LOADING } fro
 import fetchAPI from 'utils/http/fetchAPI';
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
+import { getSublibraryName } from 'utils/fastqUtils';
 
 const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, getState) => {
   const filesInRedux = getState().secondaryAnalyses[secondaryAnalysisId].files?.data ?? {};
@@ -39,12 +40,20 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
         return file;
       }));
 
+    const pairMatchesForRedux = pairMatches.reduce((acc, { wtR1FileId, sublibraryIndex }) => {
+      const { name } = filesInRedux[wtR1FileId];
+
+      acc[getSublibraryName(name)] = sublibraryIndex;
+
+      return acc;
+    }, {});
+
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {
         secondaryAnalysisId,
         files: filesForRedux,
-        pairMatches,
+        pairMatches: pairMatchesForRedux,
       },
     });
   } catch (e) {
