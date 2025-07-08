@@ -5,6 +5,7 @@ import CategoricalEmbedding from 'pages/experiments/[experimentId]/plots-and-tab
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
+import { updateExperimentInfo } from 'redux/actions/experimentSettings';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { makeStore } from 'redux/store';
 import fetchWork from 'utils/work/fetchWork';
@@ -90,6 +91,15 @@ describe('Categorical embedding plot', () => {
     storeState = makeStore();
 
     // Set up state for backend status
+    await storeState.dispatch(
+      updateExperimentInfo({
+        experimentId,
+        experimentName: 'mockedName',
+        sampleIds: ['1', '2'],
+        pipelineVersion: 'v2',
+        accessRole: 'owner',
+      }),
+    );
     await storeState.dispatch(loadBackendStatus(experimentId));
   });
 
