@@ -46,15 +46,11 @@ const FastqPairsMatcher = () => {
   const data = useMemo(() => {
     const rows = [];
 
-    Array.from({ length: numOfSublibraries }).forEach((_val, i) => {
-      const entry = Object.entries(pairs[FastqFileType.WT_FASTQ])[i];
+    const sortedWtFastqs = Object.entries(pairs[FastqFileType.WT_FASTQ]).sort(
+      ([pairNameA], [pairNameB]) => pairNameA.localeCompare(pairNameB),
+    );
 
-      if (_.isNil(entry)) {
-        return;
-      }
-
-      const [pairName, fileIds] = entry;
-
+    sortedWtFastqs.forEach(([pairName], i) => {
       rows.push({
         key: i,
         sublibrary: i,
