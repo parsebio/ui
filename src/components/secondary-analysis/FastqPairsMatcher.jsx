@@ -51,9 +51,11 @@ const FastqPairsMatcher = () => {
     );
 
     sortedWtFastqs.forEach(([pairName], i) => {
+      const sublibraryIndex = i + 1;
+
       rows.push({
-        key: i,
-        sublibrary: i,
+        key: sublibraryIndex,
+        sublibrary: sublibraryIndex,
         wtPairs: pairName,
         immunePairs: (
           <FastqImmuneSelect
