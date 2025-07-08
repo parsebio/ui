@@ -19,14 +19,18 @@ import PropTypes from 'prop-types';
 import ExpandableList from 'components/ExpandableList';
 import endUserMessages from 'utils/endUserMessages';
 
+import { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+
 import { getFastqFiles } from 'redux/selectors';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
-import { getMatchingPairFor, hasReadPair } from 'utils/fastqUtils';
 
-const { Text } = Typography;
+import { getMatchingPairFor, hasReadPair } from 'utils/fastqUtils';
+import UploadFastqSupportText from './UploadFastqSupportText';
+
+const { Text, Title } = Typography;
 
 const parseUploadScriptVersion = '1.0.0';
 
@@ -43,8 +47,8 @@ const UploadFastqForm = (props) => {
 
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
-  const numOfSublibraries = useSelector(
-    (state) => state.secondaryAnalyses[secondaryAnalysisId].numOfSublibraries,
+  const { numOfSublibraries, kit, pairedWt } = useSelector(
+    (state) => state.secondaryAnalyses[secondaryAnalysisId],
     _.isEqual,
   );
 
@@ -190,6 +194,45 @@ const UploadFastqForm = (props) => {
       console.error('Error picking files:', err);
     }
   };
+
+  const renderDropzoneElements = () => {
+    // todo handle both uploads, use type argument to differentiate
+    const dropzoneComponent = () => (
+      <div
+        onClick={handleFileSelection}
+        onKeyDown={handleFileSelection}
+        data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
+        style={{ border: '1px solid #ccc', padding: '2rem 0' }}
+        className='dropzone'
+        id='dropzone'
+      >
+        <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </div>
+    );
+    if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
+      if (pairedWt) {
+        return (
+          <Space direction='horizontal' style={{ width: '100%', marginBottom: '1rem' }}>
+            <Space direction='vertical'>
+              <Title level={4} style={{ textAlign: 'center' }}>WT</Title>
+              <div style={{ width: '22.5vw' }}>
+                {dropzoneComponent('wt')}
+              </div>
+            </Space>
+            <Space direction='vertical'>
+              <Title level={4} style={{ textAlign: 'center' }}>Immune</Title>
+              <div style={{ width: '22.5vw' }}>
+                {dropzoneComponent('immune')}
+              </div>
+            </Space>
+          </Space>
+        );
+      }
+      return dropzoneComponent('immune');
+    }
+    return dropzoneComponent('wt');
+  };
+
   // we save the file handles to the cache
   // The dropzone component couldn't be used as it doesn't support file handle
   const getAllFiles = async (entry) => {
@@ -244,46 +287,10 @@ const UploadFastqForm = (props) => {
           <Form.Item
             name='projectName'
           >
-            <div>
-              <b>You must upload exactly one pair of FASTQ files (R1 and R2) per sublibrary.</b>
-              <br />
-              <br />
-
-              If you have more FASTQ file pairs than sublibraries,
-              it is likely that some sublibraries were split over multiple sequencing lanes.
-              Those FASTQ files will share identical Illumina indexes must
-              be concatenated
-              {' '}
-              <b>before</b>
-              {' '}
-              uploading to Trailmaker.
-              Guidance on how to concatenate your files is in
-              {' '}
-              <a
-                target='_blank'
-                href='https://support.parsebiosciences.com/hc/en-us/articles/33176662802708-How-to-handle-multiple-pairs-of-FASTQ-files-per-sublibrary'
-                rel='noreferrer'
-              >
-                this support article
-              </a>
-              .
-              <br />
-              <br />
-
-              Uploading large FASTQ files can take multiple hours or even days.
-              You must keep your computer running and your browser tab open for the duration
-              of the upload.
-              If your internet connection fails, file upload will resume from the last checkpoint.
-              <br />
-              <br />
-
-              Note that FASTQ files are deleted from Trailmaker 30 days after upload.
-              After this time, your Pipeline Run Details and any Outputs will continue to
-              be available but the FASTQ files will be marked as &apos;Expired&apos;.
-
-              <br />
-              <br />
-            </div>
+            <UploadFastqSupportText
+              kit={kit}
+              pairedWt={pairedWt}
+            />
             {warning && (
               <div>
                 <br />
@@ -304,16 +311,7 @@ const UploadFastqForm = (props) => {
                 <br />
               </div>
             )}
-            <div
-              onClick={handleFileSelection}
-              onKeyDown={handleFileSelection}
-              data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
-              style={{ border: '1px solid #ccc', padding: '2rem 0' }}
-              className='dropzone'
-              id='dropzone'
-            >
-              <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            </div>
+            {renderDropzoneElements()}
             {
               fileHandles.invalid.length > 0 && (
                 <div>
