@@ -18,7 +18,7 @@ import {
   storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
-import kitOptions from 'utils/secondary-analysis/kitOptions.json';
+import kitOptions from 'utils/secondary-analysis/kitOptions';
 import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';

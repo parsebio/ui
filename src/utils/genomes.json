@@ -208,6 +208,10 @@
     "species": "Salmo salar (Atlantic Salmon)"
   },
   {
+    "name": "S_mansoni",
+    "species": "Schistosoma mansoni (Blood fluke)"
+  },
+  {
     "name": "sScyCan1-1",
     "species": "Scyliorhinus canicula (Smaller spotted catshark)"
   },
@@ -328,12 +332,12 @@
     "species": "Custom Homo sapiens (Human)"
   },
   {
-    "name": "GRCm39_KMT2A-MLLT3",
-    "species": "Custom Mus musculus (Mouse) with human KMT2A-MLLT3 fusion gene"
+    "name": "GRCh38_SEOV",
+    "species": "Custom Homo sapiens (Human)"
   },
   {
-    "name": "GRCh38_SEOV",
-    "species": "Custom Homo sapiens"
+    "name": "hg38_EGFP_HSV1",
+    "species": "Custom Homo sapiens (Human)"
   },
   {
     "name": "Mmul_10_MeV_GFP",
@@ -462,6 +466,10 @@
   {
     "name": "GRCm39_XTG",
     "species": "Custom Mus musculus (mouse)"
+  },
+  {
+    "name": "GRCm39_KMT2A-MLLT3",
+    "species": "Custom Mus musculus (Mouse) with human KMT2A-MLLT3 fusion gene"
   },
   {
     "name": "GRCg7b_enriched6db",
