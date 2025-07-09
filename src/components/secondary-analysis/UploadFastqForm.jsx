@@ -61,7 +61,7 @@ const UploadFastqForm = (props) => {
   const [fileHandles, setFileHandles] = useState(emptyFiles);
   const [tokenExists, setTokenExists] = useState(null);
   const [newToken, setNewToken] = useState(null);
-
+  console.log('FILE HANDLES ', fileHandles);
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
   const { numOfSublibraries, kit, pairedWt } = useSelector(
@@ -201,7 +201,7 @@ const UploadFastqForm = (props) => {
     }));
   };
 
-  const handleFileSelection = async () => {
+  const handleFileSelection = async (type) => {
     try {
       const opts = { multiple: true };
       const handles = await window.showOpenFilePicker(opts);
@@ -214,10 +214,10 @@ const UploadFastqForm = (props) => {
 
   const renderDropzoneElements = () => {
     // todo handle both uploads, use type argument to differentiate
-    const dropzoneComponent = () => (
+    const dropzoneComponent = (type) => (
       <div
-        onClick={handleFileSelection}
-        onKeyDown={handleFileSelection}
+        onClick={() => handleFileSelection(type)}
+        onKeyDown={() => handleFileSelection(type)}
         data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
         style={{ border: '1px solid #ccc', padding: '2rem 0' }}
         className='dropzone'
