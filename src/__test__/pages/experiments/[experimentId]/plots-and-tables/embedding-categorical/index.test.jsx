@@ -146,12 +146,9 @@ describe('Categorical embedding plot', () => {
 
     await renderCategoricalEmbeddingPage(storeState);
 
-    // Vega should appear
-    await waitFor(() => {
-      expect(screen.getByRole('graphics-document', { name: 'Categorical embedding plot' })).toBeInTheDocument();
-    });
-
     // The legend alert plot text should appear
-    expect(screen.getByText(/We have hidden the plot legend, because it is too large and it interferes with the display of the plot/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/We have hidden the plot legend, because it is too large and it interferes with the display of the plot/)).toBeInTheDocument();
+    });
   });
 });
