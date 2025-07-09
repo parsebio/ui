@@ -162,6 +162,13 @@ const SampleLTUpload = (props) => {
             .
             <br />
             Other excel files will not work.
+            <br />
+            <br />
+            Note that the sample loading table is only accessible to customers who are processing
+            Parse Biosciences FASTQ files.
+            <br />
+            If you have data generated using other technologies, you should navigate to the Insights
+            module.
           </Text>
           <br />
           <br />
