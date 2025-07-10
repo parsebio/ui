@@ -410,8 +410,7 @@ const Pipeline = () => {
 
   const activeSteps = useMemo(
     () => {
-      const isTcrOrBcr = isKitCategory(kit, kitCategories.TCR)
-        || isKitCategory(kit, kitCategories.BCR);
+      const isTcrOrBcr = isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR]);
 
       const activeStepsKeys = isTcrOrBcr && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys;
 

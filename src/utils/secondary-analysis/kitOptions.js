@@ -18,13 +18,13 @@ const kitCategories = {
   WT: 'wt',
 };
 
-const isKitCategory = (kit, category) => {
-  if (!kit) {
-    return false;
+const isKitCategory = (kit, categoryInput) => {
+  if (!kit) return false;
+
+  if (Array.isArray(categoryInput)) {
+    return categoryInput.some((category) => kit.startsWith(category));
   }
-  if (kit.startsWith(category)) {
-    return true;
-  }
+  return kit.startsWith(categoryInput);
 };
 
 export default kitOptions;

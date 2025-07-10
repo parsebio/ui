@@ -209,7 +209,7 @@ const UploadFastqForm = (props) => {
         <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </div>
     );
-    if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
+    if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
       if (pairedWt) {
         return (
           <Space direction='horizontal' style={{ width: '100%', marginBottom: '1rem' }}>
