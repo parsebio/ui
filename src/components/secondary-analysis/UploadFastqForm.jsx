@@ -264,7 +264,6 @@ const UploadFastqForm = (props) => {
   };
 
   const renderDropzoneElements = () => {
-    // todo handle both uploads, use type argument to differentiate
     const dropzoneComponent = (type) => (
       <div
         onClick={() => handleFileSelection(type)}
