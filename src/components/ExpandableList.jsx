@@ -28,7 +28,6 @@ const ExpandableList = (props) => {
             dataSource={dataSource}
             size='small'
             itemLayout='horizontal'
-            pageSize={2}
             pagination={dataSource.length > 10}
             renderItem={(item) => (
               <List.Item key={getItemText(item)} style={{ height: '100%', width: '100%' }}>
