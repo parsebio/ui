@@ -1,15 +1,18 @@
 import fetchAPI from 'utils/http/fetchAPI';
 import { SECONDARY_ANALYSIS_FILES_DELETE, SECONDARY_ANALYSES_ERROR } from 'redux/actionTypes/secondaryAnalyses';
 import handleError from 'utils/http/handleError';
+import getPairMatchesForRedux from 'utils/secondary-analysis/getPairMatchesForRedux';
 
 const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (dispatch, getState) => {
+  const { data: filesData } = getState().secondaryAnalyses[secondaryAnalysisId].files;
+
   // Abort upload if it is ongoing
   // eslint-disable-next-line no-unused-expressions
-  getState().secondaryAnalyses[secondaryAnalysisId].files.data[fileId].upload
+  filesData[fileId].upload
     .abortController?.abort('File deleted');
 
   try {
-    await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`, {
+    const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -17,11 +20,16 @@ const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (disp
       body: JSON.stringify({ fileId }),
     });
 
+    const { pairMatches } = response;
+
+    // On delete, receive updated pair matches
+    // and update the redux store
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_DELETE,
       payload: {
         secondaryAnalysisId,
         fileId,
+        pairMatches: getPairMatchesForRedux(pairMatches, Object.values(filesData)),
       },
     });
   } catch (e) {

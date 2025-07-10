@@ -30,7 +30,7 @@ const columns = [
   },
 ];
 
-const FastqPairsMatcher = ({ getIsDisabled }) => {
+const FastqPairsMatcher = () => {
   const { files, numOfSublibraries } = useSelector((state) => {
     const { activeSecondaryAnalysisId } = state.secondaryAnalyses.meta;
     return state.secondaryAnalyses[activeSecondaryAnalysisId];

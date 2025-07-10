@@ -4,7 +4,7 @@ import { SECONDARY_ANALYSIS_FILES_LOADED, SECONDARY_ANALYSIS_FILES_LOADING } fro
 import fetchAPI from 'utils/http/fetchAPI';
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
-import { getSublibraryName } from 'utils/fastqUtils';
+import getPairMatchesForRedux from 'utils/secondary-analysis/getPairMatchesForRedux';
 
 const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, getState) => {
   const previousFilesInRedux = getState().secondaryAnalyses[secondaryAnalysisId].files?.data ?? {};
@@ -42,24 +42,12 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
         return file;
       }));
 
-    const pairMatchesForRedux = pairMatches.reduce((acc, { wtFileR1Id, immuneFileR1Id }) => {
-      const { name: wtFileR1Name } = filesForRedux.find(({ id }) => id === wtFileR1Id);
-      const { name: immuneFileR1Name } = filesForRedux.find(({ id }) => id === immuneFileR1Id);
-
-      const wtPairName = getSublibraryName(wtFileR1Name);
-      const immunePairName = getSublibraryName(immuneFileR1Name);
-
-      acc[getSublibraryName(immunePairName)] = wtPairName;
-
-      return acc;
-    }, {});
-
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_LOADED,
       payload: {
         secondaryAnalysisId,
         files: filesForRedux,
-        pairMatches: pairMatchesForRedux,
+        pairMatches: getPairMatchesForRedux(pairMatches, filesForRedux),
       },
     });
   } catch (e) {

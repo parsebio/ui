@@ -34,7 +34,7 @@ const FastqImmuneSelect = ({
       }));
 
     return [...freeOptions, ...usedOptions];
-  });
+  }, [pairs, pairMatches]);
 
   const selectedImmune = _.findKey(pairMatches, (wtPairNameIt) => wtPairNameIt === wtPairName);
 
