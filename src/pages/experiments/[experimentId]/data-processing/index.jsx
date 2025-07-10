@@ -69,6 +69,8 @@ import isUserAuthorized from 'utils/access/isUserAuthorized';
 import { getURL } from 'redux/actions/pipeline/runQC';
 import { ClipLoader } from 'react-spinners';
 
+import filterResultWarningMessages from 'utils/filterResultWarningMessages';
+
 const { Text } = Typography;
 const { Option } = Select;
 
@@ -674,11 +676,14 @@ const DataProcessingPage = ({ experimentId }) => {
       );
     }
     const warningsForStep = pipelineStatus?.notifications[key]?.filter(({ message }) => message === 'FILTERED_TOO_MANY_CELLS') || [];
+
     const sampleNamesWithWarning = warningsForStep.map(({ sampleId }) => samples[sampleId]?.name);
 
     const pluralWarnings = sampleNamesWithWarning.length > 1;
 
     const stepWarningMessage = `Sample${pluralWarnings ? 's' : ''} ${sampleNamesWithWarning.join(', ')} ${pluralWarnings ? 'have' : 'has'} warnings in this filtering step. Check the QC plots for ${pluralWarnings ? 'those samples' : 'that sample'} and consider adjusting the thresholds.`;
+
+    const clusteringWarning = pipelineStatus?.notifications[key]?.filter(({ message }) => message === 'CLUSTERING_BAD_ALLOC') || [];
 
     return (
       <Space direction='vertical' style={{ width: '100%' }}>
@@ -709,6 +714,15 @@ const DataProcessingPage = ({ experimentId }) => {
               showIcon
             />
           ) : null
+        }
+        {
+          clusteringWarning.length > 0 && (
+            <Alert
+              message={filterResultWarningMessages.CLUSTERING_BAD_ALLOC}
+              type='info'
+              showIcon
+            />
+          )
         }
         {
           !checkIfSampleIsEnabled(key) ? (
