@@ -177,7 +177,7 @@ const UploadFastqForm = (props) => {
     });
     return nonMatching;
   }, [fileHandles, secondaryAnalysisFiles]);
-  console.log('NON MATCHING FASTQ PAIRS ', nonMatchingFastqPairs);
+
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
   const validateAndSetFiles = async (fileHandlesList, type) => {
@@ -231,15 +231,27 @@ const UploadFastqForm = (props) => {
       return true;
     });
 
-    setFileHandles((prevState) => ({
-      ...prevState,
-      [type]: {
-        valid: _.uniqBy([...prevState[type].valid, ...newValidFiles], 'name'),
-        invalid: _.uniqBy([...prevState[type].invalid, ...newInvalidFiles], 'name'),
-      },
-    }));
-  };
+    setFileHandles((prevState) => {
+    // Remove files with the same name from all types first
+      const cleanedState = {};
+      Object.entries(prevState).forEach(([currType, { valid, invalid }]) => {
+        cleanedState[currType] = {
+          valid: valid.filter((file) => !newValidFiles
+            .some((newFile) => newFile.name === file.name)),
+          invalid: invalid.filter((file) => !newValidFiles
+            .some((newFile) => newFile.name === file.name)),
+        };
+      });
 
+      return {
+        ...cleanedState,
+        [type]: {
+          valid: [...cleanedState[type].valid, ...newValidFiles],
+          invalid: [...cleanedState[type].invalid, ...newInvalidFiles],
+        },
+      };
+    });
+  };
   const handleFileSelection = async (type) => {
     try {
       const opts = { multiple: true };
@@ -407,39 +419,40 @@ const UploadFastqForm = (props) => {
               )
             }
             {
-              validFiles.length > 0 && (
+              (validFiles.length > 0) && (
                 <>
                   <Divider orientation='center'>To upload</Divider>
-                  <List
-                    dataSource={validFiles}
-                    size='small'
-                    itemLayout='horizontal'
-                    grid='{column: 4}'
-                    renderItem={(file) => (
-                      <List.Item
-                        key={file.name}
-                        style={{ width: '100%' }}
-                      >
-                        <Space>
-                          {!file.errors
-                            ? (
-                              <CheckCircleTwoTone twoToneColor='#52c41a' />
-                            ) : (
-                              <CloseCircleTwoTone twoToneColor='#f5222d' />
-                            )}
-                          <Text
-                            style={{ width: '200px' }}
-                          >
-                            {file.name}
-                          </Text>
-                          <DeleteOutlined style={{ color: 'crimson' }} onClick={() => { removeFile(file.name); }} />
-                        </Space>
-                      </List.Item>
-                    )}
-                  />
+                  {Object.entries(fileHandles).map(([fileType, { valid }]) => (
+                    valid.length > 0 && (
+                      <div key={fileType} style={{ marginBottom: '1rem' }}>
+                        <Title level={5}>{fileTypeToLabel[fileType] || fileType}</Title>
+                        <List
+                          dataSource={valid}
+                          size='small'
+                          itemLayout='horizontal'
+                          grid={{ gutter: 5 }}
+                          renderItem={(file) => (
+                            <List.Item key={file.name} style={{ width: '100%' }}>
+                              <Space>
+                                {!file.errors
+                                  ? <CheckCircleTwoTone twoToneColor='#52c41a' />
+                                  : <CloseCircleTwoTone twoToneColor='#f5222d' />}
+                                <Text style={{ width: '200px' }}>{file.name}</Text>
+                                <DeleteOutlined
+                                  style={{ color: 'crimson' }}
+                                  onClick={() => removeFile(file.name)}
+                                />
+                              </Space>
+                            </List.Item>
+                          )}
+                        />
+                      </div>
+                    )
+                  ))}
                 </>
               )
             }
+
             <br />
             <center>
               <Tooltip title={nonMatchingFastqPairs.length > 0 ? 'Please fix the files without read pair' : null}>
