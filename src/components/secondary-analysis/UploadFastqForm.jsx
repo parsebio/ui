@@ -107,11 +107,13 @@ const UploadFastqForm = (props) => {
     const wtDropzone = document.getElementById('wtFastqDropzone');
     const immuneDropzone = document.getElementById('immuneFastqDropzone');
 
-    wtDropzone.addEventListener('drop', (e) => onDrop(e, 'wtFastq'));
-    immuneDropzone.addEventListener('drop', (e) => onDrop(e, 'immuneFastq'));
+    // some dropzones might not exist, e.g. if the kit is not TCR/BCR
+    wtDropzone?.addEventListener('drop', (e) => onDrop(e, 'wtFastq'));
+    immuneDropzone?.addEventListener('drop', (e) => onDrop(e, 'immuneFastq'));
+
     return () => {
-      wtDropzone.removeEventListener('drop', onDrop);
-      immuneDropzone.removeEventListener('drop', onDrop);
+      wtDropzone?.removeEventListener('drop', onDrop);
+      immuneDropzone?.removeEventListener('drop', onDrop);
     };
   }, [secondaryAnalysisFiles]);
 
@@ -146,7 +148,6 @@ const UploadFastqForm = (props) => {
 
   const nonMatchingFastqPairs = useMemo(() => {
     const fileNames = validFiles.map((file) => file.name);
-    console.log('FILE NAMES ', fileNames);
     const fileNamesSet = new Set(fileNames);
 
     // Files already in process of being uploaded (or already uploaded)
