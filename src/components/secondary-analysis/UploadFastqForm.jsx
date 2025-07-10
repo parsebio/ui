@@ -29,6 +29,10 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 import UploadFastqSupportText from './UploadFastqSupportText';
 
 const { Text, Title } = Typography;
+const emptyFilesByType = {
+  wtFastq: { valid: [], invalid: [] },
+  immuneFastq: { valid: [], invalid: [] },
+};
 
 const rReadRegex = /_R([12])/;
 const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
@@ -57,8 +61,7 @@ const UploadFastqForm = (props) => {
   } = props;
   const dispatch = useDispatch();
 
-  const emptyFiles = { valid: [], invalid: [] };
-  const [fileHandles, setFileHandles] = useState(emptyFiles);
+  const [fileHandles, setFileHandles] = useState(emptyFilesByType);
   const [tokenExists, setTokenExists] = useState(null);
   const [newToken, setNewToken] = useState(null);
   console.log('FILE HANDLES ', fileHandles);
@@ -93,14 +96,23 @@ const UploadFastqForm = (props) => {
     return null;
   }, [fastqsCount]);
 
+  const validFiles = Object.values(fileHandles).flatMap(({ valid }) => valid) || [];
+  const invalidFiles = Object.values(fileHandles).flatMap(({ invalid }) => invalid) || [];
+
   useEffect(() => {
-    setFilesNotUploaded(Boolean(fileHandles.valid.length));
+    setFilesNotUploaded(Boolean(validFiles.length));
   }, [fileHandles]);
 
   useEffect(() => {
-    const dropzone = document.getElementById('dropzone');
-    dropzone.addEventListener('drop', onDrop);
-    return () => dropzone.removeEventListener('drop', onDrop);
+    const wtDropzone = document.getElementById('wtFastqDropzone');
+    const immuneDropzone = document.getElementById('immuneFastqDropzone');
+
+    wtDropzone.addEventListener('drop', (e) => onDrop(e, 'wtFastq'));
+    immuneDropzone.addEventListener('drop', (e) => onDrop(e, 'immuneFastq'));
+    return () => {
+      wtDropzone.removeEventListener('drop', onDrop);
+      immuneDropzone.removeEventListener('drop', onDrop);
+    };
   }, [secondaryAnalysisFiles]);
 
   useEffect(() => {
@@ -108,23 +120,33 @@ const UploadFastqForm = (props) => {
   }, []);
 
   const beginUpload = async () => {
-    const filesList = await Promise.all(fileHandles.valid.map(async (handle) => handle.getFile()));
+    Object.keys(fileHandles).forEach(async (type) => {
+      const filesList = await Promise.all(
+        fileHandles[type].valid.map(async (handle) => handle.getFile()),
+      );
 
-    // Delete already uploaded files before uploading new ones
-    await Promise.all(filesList.map(async (file) => {
-      const uploadedFileId = Object.keys(secondaryAnalysisFiles)
-        .find((key) => secondaryAnalysisFiles[key].name === file.name);
-      if (uploadedFileId) {
-        await dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
-      }
-    }));
+      // Delete already uploaded files before uploading new ones
+      await Promise.all(filesList.map(async (file) => {
+        const uploadedFileId = Object.keys(secondaryAnalysisFiles)
+          .find((key) => secondaryAnalysisFiles[key].name === file.name);
+        if (uploadedFileId) {
+          await dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, uploadedFileId));
+        }
+      }));
 
-    await createAndUploadSecondaryAnalysisFiles(secondaryAnalysisId, filesList, fileHandles.valid, 'wtFastq', dispatch);
+      await createAndUploadSecondaryAnalysisFiles(
+        secondaryAnalysisId,
+        filesList,
+        fileHandles[type].valid,
+        type,
+        dispatch,
+      );
+    });
   };
 
   const nonMatchingFastqPairs = useMemo(() => {
-    const fileNames = fileHandles.valid.map((file) => file.name);
-
+    const fileNames = validFiles.map((file) => file.name);
+    console.log('FILE NAMES ', fileNames);
     const fileNamesSet = new Set(fileNames);
 
     // Files already in process of being uploaded (or already uploaded)
@@ -144,7 +166,7 @@ const UploadFastqForm = (props) => {
 
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
-  const validateAndSetFiles = async (fileHandlesList) => {
+  const validateAndSetFiles = async (fileHandlesList, type) => {
     const countOccurrences = (subStr, str) => {
       const matches = str.match(new RegExp(subStr, 'g'));
       return matches ? matches.length : 0;
@@ -185,19 +207,22 @@ const UploadFastqForm = (props) => {
       },
     ];
 
-    const invalidFiles = [];
-    const validFiles = fileHandlesList.filter((newFile) => {
+    const newInvalidFiles = [];
+    const newValidFiles = fileHandlesList.filter((newFile) => {
       const rejectedValidator = validators.find((validator) => !validator.validate(newFile));
       if (rejectedValidator) {
-        invalidFiles.push({ rejectReason: rejectedValidator.rejectReason, name: newFile.name });
+        newInvalidFiles.push({ rejectReason: rejectedValidator.rejectReason, name: newFile.name });
         return false;
       }
       return true;
     });
 
     setFileHandles((prevState) => ({
-      valid: _.uniqBy([...prevState.valid, ...validFiles], 'name'),
-      invalid: _.uniqBy([...prevState.invalid, ...invalidFiles], 'name'),
+      ...prevState,
+      [type]: {
+        valid: _.uniqBy([...prevState[type].valid, ...newValidFiles], 'name'),
+        invalid: _.uniqBy([...prevState[type].invalid, ...newInvalidFiles], 'name'),
+      },
     }));
   };
 
@@ -206,7 +231,7 @@ const UploadFastqForm = (props) => {
       const opts = { multiple: true };
       const handles = await window.showOpenFilePicker(opts);
       document.getElementById('uploadButton').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return validateAndSetFiles(handles);
+      return validateAndSetFiles(handles, type);
     } catch (err) {
       console.error('Error picking files:', err);
     }
@@ -221,7 +246,7 @@ const UploadFastqForm = (props) => {
         data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
         style={{ border: '1px solid #ccc', padding: '2rem 0' }}
         className='dropzone'
-        id='dropzone'
+        id={`${type}Dropzone`}
       >
         <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </div>
@@ -233,21 +258,21 @@ const UploadFastqForm = (props) => {
             <Space direction='vertical'>
               <Title level={4} style={{ textAlign: 'center' }}>WT</Title>
               <div style={{ width: '22.5vw' }}>
-                {dropzoneComponent('wt')}
+                {dropzoneComponent('wtFastq')}
               </div>
             </Space>
             <Space direction='vertical'>
               <Title level={4} style={{ textAlign: 'center' }}>Immune</Title>
               <div style={{ width: '22.5vw' }}>
-                {dropzoneComponent('immune')}
+                {dropzoneComponent('immuneFastq')}
               </div>
             </Space>
           </Space>
         );
       }
-      return dropzoneComponent('immune');
+      return dropzoneComponent('immuneFastq');
     }
-    return dropzoneComponent('wt');
+    return dropzoneComponent('wtFastq');
   };
 
   // we save the file handles to the cache
@@ -266,7 +291,7 @@ const UploadFastqForm = (props) => {
     return subFiles;
   };
 
-  const onDrop = async (e) => {
+  const onDrop = async (e, type) => {
     e.preventDefault();
     const { items } = e.dataTransfer;
     const newFiles = await Promise.all(Array.from(items).map(async (item) => {
@@ -277,17 +302,19 @@ const UploadFastqForm = (props) => {
 
     document.getElementById('uploadButton').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    return validateAndSetFiles(newFiles.flat());
+    return validateAndSetFiles(newFiles.flat(), type);
   };
 
   const removeFile = (fileName) => {
     setFileHandles((prevState) => {
-      const newValid = _.filter(prevState.valid, (file) => file.name !== fileName);
-
-      return {
-        valid: newValid,
-        invalid: fileHandles.invalid,
-      };
+      const newState = {};
+      Object.entries(prevState).forEach(([type, { valid, invalid }]) => {
+        newState[type] = {
+          valid: valid.filter((file) => file.name !== fileName),
+          invalid: invalid.filter((file) => file.name !== fileName),
+        };
+      });
+      return newState;
     });
   };
 
@@ -330,19 +357,19 @@ const UploadFastqForm = (props) => {
             )}
             {renderDropzoneElements()}
             {
-              fileHandles.invalid.length > 0 && (
+              invalidFiles.length > 0 && (
                 <div>
                   <ExpandableList
                     expandedTitle='Ignored files'
-                    dataSource={fileHandles.invalid}
+                    dataSource={invalidFiles}
                     getItemText={(file) => file.name}
                     getItemExplanation={(file) => file.rejectReason}
                     collapsedExplanation={(
                       <>
-                        {fileHandles.invalid.length}
+                        {invalidFiles.length}
                         {' '}
                         file
-                        {fileHandles.invalid.length > 1 ? 's were' : ' was'}
+                        {invalidFiles.length > 1 ? 's were' : ' was'}
                         {' '}
                         ignored, click to display
                       </>
@@ -363,11 +390,11 @@ const UploadFastqForm = (props) => {
               )
             }
             {
-              fileHandles.valid.length > 0 && (
+              validFiles.length > 0 && (
                 <>
                   <Divider orientation='center'>To upload</Divider>
                   <List
-                    dataSource={fileHandles.valid}
+                    dataSource={validFiles}
                     size='small'
                     itemLayout='horizontal'
                     grid='{column: 4}'
@@ -406,10 +433,10 @@ const UploadFastqForm = (props) => {
                   key='create'
                   block
                   style={{ width: '30%' }}
-                  disabled={!fileHandles.valid.length || nonMatchingFastqPairs.length > 0}
+                  disabled={!validFiles.length || nonMatchingFastqPairs.length > 0}
                   onClick={() => {
                     beginUpload(fileHandles.valid);
-                    setFileHandles(emptyFiles);
+                    setFileHandles(emptyFilesByType);
                   }}
                 >
                   Upload
