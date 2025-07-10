@@ -29,6 +29,12 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 import UploadFastqSupportText from './UploadFastqSupportText';
 
 const { Text, Title } = Typography;
+
+const fileTypeToLabel = {
+  wtFastq: 'WT',
+  immuneFastq: 'Immune',
+};
+
 const emptyFilesByType = {
   wtFastq: { valid: [], invalid: [] },
   immuneFastq: { valid: [], invalid: [] },
@@ -147,24 +153,31 @@ const UploadFastqForm = (props) => {
   };
 
   const nonMatchingFastqPairs = useMemo(() => {
-    const fileNames = validFiles.map((file) => file.name);
-    const fileNamesSet = new Set(fileNames);
+    const nonMatching = [];
+    Object.values(fileHandles).forEach(({ valid }) => {
+      const fileNames = valid.map((file) => file.name);
+      const fileNamesSet = new Set(fileNames);
 
-    // Files already in process of being uploaded (or already uploaded)
-    const alreadyAddedFileNames = new Set(
-      Object.values(secondaryAnalysisFiles).map((file) => file.name),
-    );
+      // Files already in process of being uploaded (or already uploaded)
+      const alreadyAddedFileNames = new Set(
+        Object.values(secondaryAnalysisFiles).map((file) => file.name),
+      );
+      const nonMatchingFiles = fileNames.filter((fileName) => {
+        const matchingPair = getMatchingPairFor(fileName);
 
-    return fileNames.filter((fileName) => {
-      const matchingPair = getMatchingPairFor(fileName);
+        // Matching pair needs to be ready to be added too
+        return !fileNamesSet.has(matchingPair)
+          // Or be already added
+          && !alreadyAddedFileNames.has(matchingPair);
+      });
 
-      // Matching pair needs to be ready to be added too
-      return !fileNamesSet.has(matchingPair)
-        // Or be already added
-        && !alreadyAddedFileNames.has(matchingPair);
+      if (nonMatchingFiles.length > 0) {
+        nonMatching.push(...nonMatchingFiles);
+      }
     });
+    return nonMatching;
   }, [fileHandles, secondaryAnalysisFiles]);
-
+  console.log('NON MATCHING FASTQ PAIRS ', nonMatchingFastqPairs);
   // Passing secondaryAnalysisFilesUpdated because secondaryAnalysisFiles
   // is not updated when used inside a event listener
   const validateAndSetFiles = async (fileHandlesList, type) => {
@@ -306,6 +319,9 @@ const UploadFastqForm = (props) => {
     return validateAndSetFiles(newFiles.flat(), type);
   };
 
+  const getFileType = (fileName) => Object.keys(fileHandles)
+    .find((key) => fileHandles[key].valid.some((file) => file.name === fileName));
+
   const removeFile = (fileName) => {
     setFileHandles((prevState) => {
       const newState = {};
@@ -385,7 +401,7 @@ const UploadFastqForm = (props) => {
                   expandedTitle='Files without read pair'
                   dataSource={nonMatchingFastqPairs}
                   getItemText={(fileName) => fileName}
-                  getItemExplanation={(fileName) => `Either remove this file or add ${getMatchingPairFor(fileName)}.`}
+                  getItemExplanation={(fileName) => `Either remove this file or add the ${getMatchingPairFor(fileName)} ${fileTypeToLabel[getFileType(fileName)]} file.`}
                   collapsedExplanation='Files without read pair, click to display'
                 />
               )
