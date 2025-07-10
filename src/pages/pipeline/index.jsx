@@ -410,9 +410,8 @@ const Pipeline = () => {
 
   const activeSteps = useMemo(
     () => {
-      const isTcrOrBcr = isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR]);
-
-      const activeStepsKeys = isTcrOrBcr && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys;
+      const activeStepsKeys = isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
+        && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys;
 
       return baseWizardSteps.filter(
         ({ key }) => activeStepsKeys.includes(key),
