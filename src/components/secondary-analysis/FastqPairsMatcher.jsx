@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import _ from 'lodash';
 
 import { Table } from 'antd';
 import { useSelector } from 'react-redux';
