@@ -65,22 +65,26 @@ const analysisDetailsKeys = [
   'pairedWt',
 ];
 
-const baseSteps = [
+const baseStepsKeys = [
   'Experimental setup',
   'Sample loading table',
   'Reference genome',
   'Fastq files',
 ];
 
-const pairedWTSteps = [
-  ...baseSteps,
+const pairedWTStepsKeys = [
+  ...baseStepsKeys,
   'Fastq Pairs Matcher',
 ];
 
-const getActiveSteps = (kit, pairedWt) => {
+const getActiveSteps = (kit, pairedWt, baseWizardSteps) => {
   const isTcrOrBcr = isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR);
 
-  return isTcrOrBcr && pairedWt === true ? pairedWTSteps : baseSteps;
+  const activeStepsKeys = isTcrOrBcr && pairedWt === true ? pairedWTStepsKeys : baseWizardSteps;
+
+  return baseWizardSteps.filter(
+    ({ key }) => activeStepsKeys.includes(key),
+  );
 };
 
 const Pipeline = () => {
@@ -394,23 +398,26 @@ const Pipeline = () => {
     {
       title: 'Match FASTQ files',
       key: 'Fastq Pairs Matcher',
-      render: () => (
-        <FastqPairsMatcher />
-      ),
+      render: () => <FastqPairsMatcher />,
       isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => <FastqPairsMatcher />,
-      getIsDisabled: (steps) => {
+      getIsDisabled: () => {
+        const activeSteps = getActiveSteps(kit, pairedWt, baseWizardSteps);
         const stepsToCheck = ['Fastq files', 'Experimental setup'];
 
-        return stepsToCheck.some((stepKey) => !steps[stepKey].isValid);
+        // Disable until the other steps are completed and valid
+        return stepsToCheck.some((stepKey) => {
+          const currentStep = activeSteps.find(({ key }) => key === stepKey);
+          return (
+            !(currentStep && currentStep.isValid)
+          );
+        });
       },
     },
   ];
 
-  const activeWizardSteps = baseWizardSteps.filter(
-    ({ key }) => getActiveSteps(kit, pairedWt).includes(key),
-  );
+  const activeWizardSteps = getActiveSteps(kit, pairedWt, baseWizardSteps);
 
   const isAllValid = activeWizardSteps.every((step) => step.isValid);
 
@@ -636,7 +643,9 @@ const Pipeline = () => {
             </Button>,
           ]}
         >
-          {currentStep.render()}
+          {
+            currentStep.getIsDisabled() ? null : currentStep.render()
+          }
         </Modal>
       )}
       <div data-testid='pipeline-container' style={{ height: '100vh', overflowY: 'auto' }}>

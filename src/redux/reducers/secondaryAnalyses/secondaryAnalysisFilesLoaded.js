@@ -17,7 +17,9 @@ const secondaryAnalysisFilesLoaded = produce((draft, action) => {
     };
   });
 
-  filesDraft.pairMatches = pairMatches;
+  if (pairMatches !== undefined) {
+    filesDraft.pairMatches = pairMatches;
+  }
 });
 
 export default secondaryAnalysisFilesLoaded;
