@@ -30,7 +30,7 @@ import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'const';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
-import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
+import { getSampleLTFile, getFastqFiles, getPairMatchesAreValid } from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
@@ -127,6 +127,8 @@ const Pipeline = () => {
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status?.current,
     _.isEqual,
   );
+
+  const pairMatchesAreValid = useSelector(getPairMatchesAreValid(activeSecondaryAnalysisId));
 
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
   const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
@@ -391,7 +393,7 @@ const Pipeline = () => {
       title: 'Match FASTQ files',
       key: 'Fastq Pairs Matcher',
       render: () => <FastqPairsMatcher />,
-      isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
+      isValid: pairMatchesAreValid,
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => <FastqPairsMatcher />,
       getIsDisabled: () => {

@@ -1,5 +1,5 @@
 import getFastqFiles from './getFastqFiles';
 import getSampleLTFile from './getSampleLTFile';
+import getPairMatchesAreValid from './getPairMatchesAreValid';
 
-/* eslint-disable-next-line import/prefer-default-export */
-export { getFastqFiles, getSampleLTFile };
+export { getFastqFiles, getSampleLTFile, getPairMatchesAreValid };
