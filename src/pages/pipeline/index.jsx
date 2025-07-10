@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect, useMemo, useCallback,
+} from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
@@ -76,16 +78,6 @@ const pairedWTStepsKeys = [
   ...baseStepsKeys,
   'Fastq Pairs Matcher',
 ];
-
-const getActiveSteps = (kit, pairedWt, baseWizardSteps) => {
-  const isTcrOrBcr = isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR);
-
-  const activeStepsKeys = isTcrOrBcr && pairedWt === true ? pairedWTStepsKeys : baseWizardSteps;
-
-  return baseWizardSteps.filter(
-    ({ key }) => activeStepsKeys.includes(key),
-  );
-};
 
 const Pipeline = () => {
   const dispatch = useDispatch();
@@ -403,7 +395,6 @@ const Pipeline = () => {
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => <FastqPairsMatcher />,
       getIsDisabled: () => {
-        const activeSteps = getActiveSteps(kit, pairedWt, baseWizardSteps);
         const stepsToCheck = ['Fastq files', 'Experimental setup'];
 
         // Disable until the other steps are completed and valid
@@ -417,11 +408,23 @@ const Pipeline = () => {
     },
   ];
 
-  const activeWizardSteps = getActiveSteps(kit, pairedWt, baseWizardSteps);
+  const activeSteps = useMemo(
+    () => {
+      const isTcrOrBcr = isKitCategory(kit, kitCategories.TCR)
+        || isKitCategory(kit, kitCategories.BCR);
 
-  const isAllValid = activeWizardSteps.every((step) => step.isValid);
+      const activeStepsKeys = isTcrOrBcr && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys;
 
-  const currentStep = activeWizardSteps[currentStepIndex];
+      return baseWizardSteps.filter(
+        ({ key }) => activeStepsKeys.includes(key),
+      );
+    },
+    [kit, pairedWt, baseWizardSteps],
+  );
+
+  const isAllValid = activeSteps.every((step) => step.isValid);
+
+  const currentStep = activeSteps[currentStepIndex];
   const ANALYSIS_LIST = 'Runs';
   const ANALYSIS_DETAILS = 'Run Details';
 
@@ -574,7 +577,7 @@ const Pipeline = () => {
                     }}
                   />
                   <OverviewMenu
-                    wizardSteps={activeWizardSteps}
+                    wizardSteps={activeSteps}
                     setCurrentStep={setCurrentStepIndex}
                     editable={pipelineCanBeRun}
                   />
@@ -639,7 +642,7 @@ const Pipeline = () => {
               Back
             </Button>,
             <Button key='submit' type='primary' onClick={onNext}>
-              {currentStepIndex === activeWizardSteps.length - 1 ? 'Finish' : 'Next'}
+              {currentStepIndex === activeSteps.length - 1 ? 'Finish' : 'Next'}
             </Button>,
           ]}
         >

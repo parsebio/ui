@@ -1,31 +1,17 @@
 import React from 'react';
 import {
   Typography, Button, Card, Row, Col,
-  Tooltip,
 } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import Disabler from 'utils/Disabler';
 
 const { Text } = Typography;
-
-const Disabler = ({ children, disable }) => {
-  if (!disable) return children;
-
-  return (
-    <Tooltip title='This step is disabled until the previous steps are completed.'>
-      <div>
-        <div disabled style={{ pointerEvents: 'none', opacity: 0.5 }}>
-          {children}
-        </div>
-      </div>
-    </Tooltip>
-  );
-};
 
 const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
   const renderCard = (step, index, isFlex = false) => (
     <Col key={step.key} span={isFlex ? 8 : 24} style={isFlex ? { flex: 0.5, display: 'flex', marginRight: '1vh' } : {}}>
-      <Disabler disable={step.getIsDisabled()}>
+      <Disabler disable={step.getIsDisabled()} tooltipText='This step is disabled until the previous steps are completed.'>
         <Card
           bordered
           style={{ width: '100%' }}
