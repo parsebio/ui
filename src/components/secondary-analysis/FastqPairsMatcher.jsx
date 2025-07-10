@@ -44,6 +44,8 @@ const FastqPairsMatcher = () => {
   const data = useMemo(() => {
     const rows = [];
 
+    // We rely on the order to determine the sublibrary index,
+    // So sorting is VERY important here.
     const sortedWtFastqs = Object.entries(pairs[FastqFileType.WT_FASTQ]).sort(
       ([pairNameA], [pairNameB]) => pairNameA.localeCompare(pairNameB),
     );
