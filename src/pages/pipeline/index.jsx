@@ -18,7 +18,7 @@ import {
   storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
-import kitOptions from 'utils/secondary-analysis/kitOptions';
+import kitOptions, { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
 import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
@@ -54,7 +54,34 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
-const analysisDetailsKeys = ['name', 'description', 'sampleNames', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+const analysisDetailsKeys = [
+  'name',
+  'description',
+  'sampleNames',
+  'numOfSublibraries',
+  'chemistryVersion',
+  'kit',
+  'refGenome',
+  'pairedWt',
+];
+
+const baseSteps = [
+  'Experimental setup',
+  'Sample loading table',
+  'Reference genome',
+  'Fastq files',
+];
+
+const pairedWTSteps = [
+  ...baseSteps,
+  'Fastq Pairs Matcher',
+];
+
+const getActiveSteps = (kit, pairedWt) => {
+  const isTcrOrBcr = isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR);
+
+  return isTcrOrBcr && pairedWt === true ? pairedWTSteps : baseSteps;
+};
 
 const Pipeline = () => {
   const dispatch = useDispatch();
@@ -86,6 +113,7 @@ const Pipeline = () => {
     chemistryVersion,
     kit,
     refGenome,
+    pairedWt,
   } = useSelector(
     (state) => _.pick(
       state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {},
@@ -296,7 +324,7 @@ const Pipeline = () => {
     return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
   };
 
-  const secondaryAnalysisWizardSteps = [
+  const baseWizardSteps = [
     {
       title: 'Provide the details of the experimental setup:',
       key: 'Experimental setup',
@@ -313,6 +341,7 @@ const Pipeline = () => {
           kit: kitTitle, chemistryVersion, numOfSublibraries,
         });
       },
+      getIsDisabled: () => false,
     },
     {
       title: 'Upload your sample loading table:',
@@ -329,6 +358,7 @@ const Pipeline = () => {
       isValid: allFilesUploaded([sampleLTFile]),
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
+      getIsDisabled: () => false,
     },
     {
       title: 'Reference genome',
@@ -341,6 +371,7 @@ const Pipeline = () => {
       ),
       isValid: Boolean(refGenome),
       renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
+      getIsDisabled: () => false,
     },
     {
       title: 'Upload your FASTQ files:',
@@ -358,6 +389,7 @@ const Pipeline = () => {
       renderMainScreenDetails: () => renderMainScreenFileDetails(
         () => renderFastqFilesTable(false),
       ),
+      getIsDisabled: () => false,
     },
     {
       title: 'Match FASTQ files',
@@ -368,11 +400,21 @@ const Pipeline = () => {
       isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => <FastqPairsMatcher />,
+      getIsDisabled: (steps) => {
+        const stepsToCheck = ['Fastq files', 'Experimental setup'];
+
+        return stepsToCheck.some((stepKey) => !steps[stepKey].isValid);
+      },
     },
   ];
-  const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
 
-  const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
+  const activeWizardSteps = baseWizardSteps.filter(
+    ({ key }) => getActiveSteps(kit, pairedWt).includes(key),
+  );
+
+  const isAllValid = activeWizardSteps.every((step) => step.isValid);
+
+  const currentStep = activeWizardSteps[currentStepIndex];
   const ANALYSIS_LIST = 'Runs';
   const ANALYSIS_DETAILS = 'Run Details';
 
@@ -525,7 +567,7 @@ const Pipeline = () => {
                     }}
                   />
                   <OverviewMenu
-                    wizardSteps={secondaryAnalysisWizardSteps}
+                    wizardSteps={activeWizardSteps}
                     setCurrentStep={setCurrentStepIndex}
                     editable={pipelineCanBeRun}
                   />
@@ -590,7 +632,7 @@ const Pipeline = () => {
               Back
             </Button>,
             <Button key='submit' type='primary' onClick={onNext}>
-              {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
+              {currentStepIndex === activeWizardSteps.length - 1 ? 'Finish' : 'Next'}
             </Button>,
           ]}
         >
