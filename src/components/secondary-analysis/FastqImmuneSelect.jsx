@@ -5,6 +5,7 @@ import { Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePairMatch } from 'redux/actions/secondaryAnalyses';
 import FastqFileType from 'const/enums/FastqFileType';
+import { brandColors } from 'const';
 
 const FastqImmuneSelect = ({
   wtPairName,
@@ -22,7 +23,7 @@ const FastqImmuneSelect = ({
 
   const options = useMemo(() => {
     const usedOptions = Object.keys(pairMatches).map((immunePairName) => ({
-      label: <span style={{ color: 'lightgray' }}>{immunePairName}</span>,
+      label: <span style={{ color: brandColors.STEEL_PINK }}>{immunePairName}</span>,
       value: immunePairName,
     }));
 
