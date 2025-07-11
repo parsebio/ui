@@ -402,9 +402,7 @@ const Pipeline = () => {
         // Disable until the other steps are completed and valid
         return stepsToCheck.some((stepKey) => {
           const currentStep = activeSteps.find(({ key }) => key === stepKey);
-          return (
-            !(currentStep && currentStep.isValid)
-          );
+          return !currentStep?.isValid;
         });
       },
     },
