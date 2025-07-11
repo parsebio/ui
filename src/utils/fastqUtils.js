@@ -3,15 +3,6 @@ import FastqFileType from 'const/enums/FastqFileType';
 const rReadRegex = /_R([12])/;
 const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
 
-const getReadNumber = (fileName) => {
-  // Use the regexes to extract the read number from the file name
-  const match = fileName.match(rReadRegex) || fileName.match(underscoreReadRegex);
-  if (match) {
-    return parseInt(match[1], 10); // Return the read number as an integer (1 or 2)
-  }
-  return null; // Return null if no match is found
-};
-
 const getSublibraryName = (fileName) => {
   // Remove the read part (_R1, _R2, _1, _2) and the .fastq/.fq.gz extension from the file name
   let name = fileName;
