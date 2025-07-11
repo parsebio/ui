@@ -322,8 +322,8 @@ const Pipeline = () => {
     return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
   };
 
-  const baseWizardSteps = [
-    {
+  const wizardStepsData = {
+    'Experimental setup': {
       title: 'Provide the details of the experimental setup:',
       key: 'Experimental setup',
       render: () => (
@@ -341,7 +341,7 @@ const Pipeline = () => {
       },
       getIsDisabled: () => false,
     },
-    {
+    'Sample loading table': {
       title: 'Upload your sample loading table:',
       key: 'Sample loading table',
       render: () => (
@@ -358,7 +358,7 @@ const Pipeline = () => {
       renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
       getIsDisabled: () => false,
     },
-    {
+    'Reference genome': {
       title: 'Reference genome',
       key: 'Reference genome',
       render: () => (
@@ -371,7 +371,7 @@ const Pipeline = () => {
       renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
       getIsDisabled: () => false,
     },
-    {
+    'Fastq files': {
       title: 'Upload your FASTQ files:',
       key: 'Fastq files',
       render: () => (
@@ -389,7 +389,7 @@ const Pipeline = () => {
       ),
       getIsDisabled: () => false,
     },
-    {
+    'Fastq Pairs Matcher': {
       title: 'Match FASTQ files',
       key: 'Fastq Pairs Matcher',
       render: () => <FastqPairsMatcher />,
@@ -406,18 +406,16 @@ const Pipeline = () => {
         });
       },
     },
-  ];
+  };
 
   const activeSteps = useMemo(
     () => {
       const activeStepsKeys = isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
         && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys;
 
-      return baseWizardSteps.filter(
-        ({ key }) => activeStepsKeys.includes(key),
-      );
+      return _.pick(wizardStepsData, activeStepsKeys);
     },
-    [kit, pairedWt, baseWizardSteps],
+    [kit, pairedWt, wizardStepsData],
   );
 
   const isAllValid = activeSteps.every((step) => step.isValid);
