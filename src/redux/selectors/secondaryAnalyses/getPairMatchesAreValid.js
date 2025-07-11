@@ -5,9 +5,6 @@ import FastqFileType from 'const/enums/FastqFileType';
 import createMemoizedSelector from '../createMemoizedSelector';
 
 const getPairMatchesAreValid = (secondaryAnalysisId) => (state) => {
-  console.log('state[secondaryAnalysisId]Debug');
-  console.log(state[secondaryAnalysisId]);
-
   if (_.isNil(state[secondaryAnalysisId])) return false;
 
   const {
@@ -15,7 +12,17 @@ const getPairMatchesAreValid = (secondaryAnalysisId) => (state) => {
   } = state[secondaryAnalysisId];
 
   const { pairMatches, data: filesData } = files;
-  const pairs = getPairs(filesData);
+
+  let pairs;
+  try {
+    pairs = getPairs(filesData);
+  } catch (e) {
+    if (e.message === 'Invalid number of files per sulibrary') {
+      return false;
+    }
+
+    throw e;
+  }
 
   const wtPairsSize = _.size(pairs[FastqFileType.WT_FASTQ]);
   const immunePairsSize = _.size(pairs[FastqFileType.IMMUNE_FASTQ]);
