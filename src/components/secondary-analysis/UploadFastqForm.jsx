@@ -2,7 +2,7 @@ import React, {
   useState, useEffect, useCallback, useMemo,
 } from 'react';
 import {
-  Form, Empty, Divider, List, Space, Typography, Button, Tabs, Alert,
+  Form, Divider, List, Space, Typography, Button, Tabs, Alert,
   Tooltip,
 } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
@@ -29,7 +29,7 @@ import FastqDropzones from './FastqDropzones';
 
 const { Text, Title } = Typography;
 
-const fileTypeToLabel = {
+const labelsByFastqType = {
   wtFastq: 'WT',
   immuneFastq: 'Immune',
 };
@@ -69,7 +69,7 @@ const UploadFastqForm = (props) => {
   const [fileHandles, setFileHandles] = useState(emptyFilesByType);
   const [tokenExists, setTokenExists] = useState(null);
   const [newToken, setNewToken] = useState(null);
-  console.log('FILE HANDLES ', fileHandles);
+
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
   const { numOfSublibraries, kit, pairedWt } = useSelector(
@@ -365,7 +365,7 @@ const UploadFastqForm = (props) => {
                   expandedTitle='Files without read pair'
                   dataSource={nonMatchingFastqPairs}
                   getItemText={(fileName) => fileName}
-                  getItemExplanation={(fileName) => `Either remove this file or add the ${getMatchingPairFor(fileName)} ${fileTypeToLabel[getFileType(fileName)]} file.`}
+                  getItemExplanation={(fileName) => `Either remove this file or add the ${getMatchingPairFor(fileName)} ${labelsByFastqType[getFileType(fileName)]} file.`}
                   collapsedExplanation='Files without read pair, click to display'
                 />
               )
@@ -377,7 +377,7 @@ const UploadFastqForm = (props) => {
                   {Object.entries(fileHandles).map(([fileType, { valid }]) => (
                     valid.length > 0 && (
                       <div key={fileType} style={{ marginBottom: '1rem' }}>
-                        <Title level={5}>{fileTypeToLabel[fileType] || fileType}</Title>
+                        <Title level={5}>{labelsByFastqType[fileType] || fileType}</Title>
                         <List
                           dataSource={valid}
                           size='small'
