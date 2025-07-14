@@ -51,11 +51,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
             />
           )}
         >
-          {
-            step.getIsDisabled()
-              ? null
-              : step.renderMainScreenDetails()
-          }
+          {step.getIsDisabled() ? null : step.renderMainScreenDetails()}
         </Card>
       </Disabler>
     </Col>
@@ -71,14 +67,14 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
         {firstRowStepsData.map((step, index) => renderCard(step, index, true))}
       </div>
       <Row gutter={[16, 16]}>
-        {leftoverStepsData.map((step) => renderCard(step, 3))}
+        {leftoverStepsData.map((step, index) => renderCard(step, index + 3))}
       </Row>
     </Card>
   );
 };
 
 OverviewMenu.propTypes = {
-  wizardSteps: PropTypes.array.isRequired,
+  wizardSteps: PropTypes.object.isRequired,
   setCurrentStep: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
 };

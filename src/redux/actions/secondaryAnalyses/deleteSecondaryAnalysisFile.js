@@ -1,7 +1,6 @@
 import fetchAPI from 'utils/http/fetchAPI';
 import { SECONDARY_ANALYSIS_FILES_DELETE, SECONDARY_ANALYSES_ERROR } from 'redux/actionTypes/secondaryAnalyses';
 import handleError from 'utils/http/handleError';
-import getPairMatchesForRedux from 'utils/secondary-analysis/getPairMatchesForRedux';
 
 const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (dispatch, getState) => {
   const { data: filesData } = getState().secondaryAnalyses[secondaryAnalysisId].files;
@@ -12,15 +11,13 @@ const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (disp
     .abortController?.abort('File deleted');
 
   try {
-    const response = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`, {
+    await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ fileId }),
     });
-
-    const { pairMatches } = response;
 
     // On delete, receive updated pair matches
     // and update the redux store
@@ -29,7 +26,6 @@ const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (disp
       payload: {
         secondaryAnalysisId,
         fileId,
-        pairMatches: getPairMatchesForRedux(pairMatches, Object.values(filesData)),
       },
     });
   } catch (e) {

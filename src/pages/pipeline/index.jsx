@@ -405,19 +405,21 @@ const Pipeline = () => {
     },
   };
 
-  const activeSteps = useMemo(
-    () => {
-      const activeStepsKeys = isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
-        && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys;
+  const activeStepsKeys = useMemo(
+    () => (
+      isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
+        && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys),
+    [kit, pairedWt],
+  );
 
-      return _.pick(wizardStepsData, activeStepsKeys);
-    },
-    [kit, pairedWt, wizardStepsData],
+  const activeSteps = useMemo(
+    () => _.pick(wizardStepsData, activeStepsKeys),
+    [activeStepsKeys, wizardStepsData],
   );
 
   const isAllValid = Object.values(activeSteps).every((step) => step.isValid);
 
-  const currentStep = activeSteps[currentStepIndex];
+  const currentStep = activeSteps[activeStepsKeys[currentStepIndex]];
   const ANALYSIS_LIST = 'Runs';
   const ANALYSIS_DETAILS = 'Run Details';
 
@@ -635,7 +637,7 @@ const Pipeline = () => {
               Back
             </Button>,
             <Button key='submit' type='primary' onClick={onNext}>
-              {currentStepIndex === activeSteps.length - 1 ? 'Finish' : 'Next'}
+              {currentStepIndex === _.size(activeSteps) - 1 ? 'Finish' : 'Next'}
             </Button>,
           ]}
         >
