@@ -84,7 +84,8 @@ const FastqFilesTable = (props) => {
       size='small'
       columns={columns}
       dataSource={dataSource}
-      pagination={false}
+      pagination={canEditTable ? false : { pageSize: 4 }}
+      style={{ height: '100%' }}
       scroll={{ y: `calc(90vh - ${500}px)` }}
     />
   );
