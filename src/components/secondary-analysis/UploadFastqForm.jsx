@@ -19,14 +19,13 @@ import PropTypes from 'prop-types';
 import ExpandableList from 'components/ExpandableList';
 import endUserMessages from 'utils/endUserMessages';
 
-import { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
-
 import { getFastqFiles } from 'redux/selectors';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 import UploadFastqSupportText from './UploadFastqSupportText';
+import FastqDropzones from './FastqDropzones';
 
 const { Text, Title } = Typography;
 
@@ -108,20 +107,6 @@ const UploadFastqForm = (props) => {
   useEffect(() => {
     setFilesNotUploaded(Boolean(validFiles.length));
   }, [fileHandles]);
-
-  useEffect(() => {
-    const wtDropzone = document.getElementById('wtFastqDropzone');
-    const immuneDropzone = document.getElementById('immuneFastqDropzone');
-
-    // some dropzones might not exist, e.g. if the kit is not TCR/BCR
-    wtDropzone?.addEventListener('drop', (e) => onDrop(e, 'wtFastq'));
-    immuneDropzone?.addEventListener('drop', (e) => onDrop(e, 'immuneFastq'));
-
-    return () => {
-      wtDropzone?.removeEventListener('drop', onDrop);
-      immuneDropzone?.removeEventListener('drop', onDrop);
-    };
-  }, [secondaryAnalysisFiles]);
 
   useEffect(() => {
     updateApiTokenStatus();
@@ -263,43 +248,6 @@ const UploadFastqForm = (props) => {
     }
   };
 
-  const renderDropzoneElements = () => {
-    const dropzoneComponent = (type) => (
-      <div
-        onClick={() => handleFileSelection(type)}
-        onKeyDown={() => handleFileSelection(type)}
-        data-test-id={integrationTestConstants.ids.FILE_UPLOAD_DROPZONE}
-        style={{ border: '1px solid #ccc', padding: '2rem 0' }}
-        className='dropzone'
-        id={`${type}Dropzone`}
-      >
-        <Empty description='Drag and drop files here or click to browse' image={Empty.PRESENTED_IMAGE_SIMPLE} />
-      </div>
-    );
-    if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
-      if (pairedWt) {
-        return (
-          <Space direction='horizontal' style={{ width: '100%', marginBottom: '1rem' }}>
-            <Space direction='vertical'>
-              <Title level={4} style={{ textAlign: 'center' }}>WT</Title>
-              <div style={{ width: '22.5vw' }}>
-                {dropzoneComponent('wtFastq')}
-              </div>
-            </Space>
-            <Space direction='vertical'>
-              <Title level={4} style={{ textAlign: 'center' }}>Immune</Title>
-              <div style={{ width: '22.5vw' }}>
-                {dropzoneComponent('immuneFastq')}
-              </div>
-            </Space>
-          </Space>
-        );
-      }
-      return dropzoneComponent('immuneFastq');
-    }
-    return dropzoneComponent('wtFastq');
-  };
-
   // we save the file handles to the cache
   // The dropzone component couldn't be used as it doesn't support file handle
   const getAllFiles = async (entry) => {
@@ -383,7 +331,12 @@ const UploadFastqForm = (props) => {
                 <br />
               </div>
             )}
-            {renderDropzoneElements()}
+            <FastqDropzones
+              kit={kit}
+              pairedWt={pairedWt}
+              onDrop={onDrop}
+              handleFileSelection={handleFileSelection}
+            />
             {
               invalidFiles.length > 0 && (
                 <div>
