@@ -1,4 +1,6 @@
 import React from 'react';
+
+import _ from 'lodash';
 import {
   Typography, Button, Card, Row, Col,
 } from 'antd';
@@ -59,13 +61,17 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
     </Col>
   );
 
+  const firstRowSteps = ['Experimental setup', 'Sample loading table', 'Reference genome'];
+  const firstRowStepsData = Object.values(_.pick(wizardSteps, firstRowSteps));
+  const leftoverStepsData = Object.values(_.omit(wizardSteps, firstRowSteps));
+
   return (
     <Card style={{ maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }} size='small'>
       <div style={{ display: 'flex', marginBottom: '1vh' }}>
-        {wizardSteps.slice(0, 3).map((step, index) => renderCard(step, index, true))}
+        {firstRowStepsData.map((step, index) => renderCard(step, index, true))}
       </div>
       <Row gutter={[16, 16]}>
-        {wizardSteps.slice(3).map((step) => renderCard(step, 3))}
+        {leftoverStepsData.map((step) => renderCard(step, 3))}
       </Row>
     </Card>
   );

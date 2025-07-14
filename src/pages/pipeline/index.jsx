@@ -400,10 +400,7 @@ const Pipeline = () => {
         const stepsToCheck = ['Fastq files', 'Experimental setup'];
 
         // Disable until the other steps are completed and valid
-        return stepsToCheck.some((stepKey) => {
-          const currentStep = activeSteps.find(({ key }) => key === stepKey);
-          return !currentStep?.isValid;
-        });
+        return stepsToCheck.some((stepKey) => !activeSteps[stepKey]?.isValid);
       },
     },
   };
@@ -418,7 +415,7 @@ const Pipeline = () => {
     [kit, pairedWt, wizardStepsData],
   );
 
-  const isAllValid = activeSteps.every((step) => step.isValid);
+  const isAllValid = Object.values(activeSteps).every((step) => step.isValid);
 
   const currentStep = activeSteps[currentStepIndex];
   const ANALYSIS_LIST = 'Runs';
