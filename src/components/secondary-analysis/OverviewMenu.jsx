@@ -11,12 +11,12 @@ import Disabler from 'utils/Disabler';
 const { Text } = Typography;
 
 const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
-  const renderCard = (step, index, isFlex = false) => (
-    <Col key={step.key} span={isFlex ? 8 : 24} style={isFlex ? { flex: 0.5, display: 'flex', marginRight: '1vh' } : {}}>
+  const renderCard = (step, index, span, style) => (
+    <Col key={step.key} span={span} style={style}>
       <Disabler disable={step.getIsDisabled()} tooltipText='This step is disabled until the previous steps are completed.'>
         <Card
           bordered
-          style={{ width: '100%' }}
+          style={{ width: '100%', height: '100%' }}
           loading={step.isLoading}
           size='small'
           title={(
@@ -64,10 +64,10 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
   return (
     <Card style={{ maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }} size='small'>
       <div style={{ display: 'flex', marginBottom: '1vh' }}>
-        {firstRowStepsData.map((step, index) => renderCard(step, index, true))}
+        {firstRowStepsData.map((step, index) => renderCard(step, index, 8, { flex: 0.5, display: 'flex', marginRight: '1vh' }))}
       </div>
       <Row gutter={[16, 16]}>
-        {leftoverStepsData.map((step, index) => renderCard(step, index + 3))}
+        {leftoverStepsData.map((step, index) => renderCard(step, index + 3, 24, { maxHeight: '30vh' }))}
       </Row>
     </Card>
   );
