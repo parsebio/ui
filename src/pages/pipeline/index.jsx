@@ -35,6 +35,7 @@ import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
+import FastqFileType from 'const/enums/FastqFileType';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -78,6 +79,10 @@ const pairedWTStepsKeys = [
   ...baseStepsKeys,
   'Fastq Pairs Matcher',
 ];
+
+const getFastqsMatch = (fastqFiles, numOfSublibraries) => (
+  Object.keys(fastqFiles).length === numOfSublibraries * 2
+);
 
 const Pipeline = () => {
   const dispatch = useDispatch();
@@ -131,11 +136,24 @@ const Pipeline = () => {
   const pairMatchesAreValid = useSelector(getPairMatchesAreValid(activeSecondaryAnalysisId));
 
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
-  const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
+  const immuneFastqFiles = useSelector(
+    getFastqFiles(activeSecondaryAnalysisId, FastqFileType.IMMUNE_FASTQ),
+    _.isEqual,
+  );
+
+  const wtFastqFiles = useSelector(
+    getFastqFiles(activeSecondaryAnalysisId, FastqFileType.WT_FASTQ),
+    _.isEqual,
+  );
+
+  const fastqFiles = { ...immuneFastqFiles, ...wtFastqFiles };
 
   const domainName = useSelector((state) => state.networkResources?.domainName);
 
-  const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
+  const fastqsMatch = getFastqsMatch(wtFastqFiles, numOfSublibraries)
+    && (!pairedWt || getFastqsMatch(immuneFastqFiles, numOfSublibraries));
+
+  console.log('fastqsMatchDebug', fastqsMatch);
 
   const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status,
