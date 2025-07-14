@@ -153,8 +153,6 @@ const Pipeline = () => {
   const fastqsMatch = getFastqsMatch(wtFastqFiles, numOfSublibraries)
     && (!pairedWt || getFastqsMatch(immuneFastqFiles, numOfSublibraries));
 
-  console.log('fastqsMatchDebug', fastqsMatch);
-
   const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status,
   ) ?? {};
