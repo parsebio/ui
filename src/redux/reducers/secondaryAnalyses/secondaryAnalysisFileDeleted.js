@@ -34,4 +34,5 @@ const secondaryAnalysisFileDeleted = produce((draft, action) => {
 
   cleanupPairMatches(draft, file, secondaryAnalysisId);
 });
+
 export default secondaryAnalysisFileDeleted;
