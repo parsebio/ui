@@ -56,7 +56,7 @@ describe('OverviewMenu', () => {
     expect(screen.getAllByRole('img', { name: /close-circle/i })).toHaveLength(1);
   });
 
-  it('calls setCurrentStep when edit button is clicked', async () => {
+  it('calls setCurrentStep when edit button is clicked', () => {
     renderComponent();
 
     const editButtons = screen.getAllByRole('button', { name: /edit/i });
