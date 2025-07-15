@@ -12,7 +12,7 @@ const { Text } = Typography;
 
 const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
   const renderCard = (step, index, span, style) => (
-    <Col key={step.key} span={span} style={style}>
+    <div key={step.key} style={style}>
       <Disabler disable={step.getIsDisabled()} tooltipText='This step is disabled until the previous steps are completed.'>
         <Card
           bordered
@@ -54,7 +54,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
           {step.getIsDisabled() ? null : step.renderMainScreenDetails()}
         </Card>
       </Disabler>
-    </Col>
+    </div>
   );
 
   const firstRowSteps = ['Experimental setup', 'Sample loading table', 'Reference genome'];
@@ -66,9 +66,9 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
       <div style={{ display: 'flex', marginBottom: '1vh' }}>
         {firstRowStepsData.map((step, index) => renderCard(step, index, 8, { flex: 0.5, display: 'flex', marginRight: '1vh' }))}
       </div>
-      <Row gutter={[16, 16]}>
-        {leftoverStepsData.map((step, index) => renderCard(step, index + 3, 24, { height: `${66 / leftoverStepsData.length}vh` }))}
-      </Row>
+      <div>
+        {leftoverStepsData.map((step, index) => renderCard(step, index + 3, 24, { marginBottom: '1vh', width: '100%' }))}
+      </div>
     </Card>
   );
 };
