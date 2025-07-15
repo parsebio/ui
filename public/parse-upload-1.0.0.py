@@ -188,6 +188,7 @@ class UploadTracker:
         upload_params,
         current_file_created,
         api_token,
+        fastq_type = 'wtFastq'
     ):
         self.analysis_id = analysis_id
         self.file_paths = file_paths
@@ -196,6 +197,7 @@ class UploadTracker:
         self.completed_parts_by_thread = completed_parts_by_thread
         self.upload_params = upload_params
         self.api_token = api_token
+        self.fastq_type = fastq_type
 
         self.files_lock = Lock()
 
@@ -270,6 +272,7 @@ class UploadTracker:
                 self.analysis_id,
                 self.file_paths[self.current_file_index],
                 self.api_token,
+                self.fastq_type,
             )
             self.current_file_created = True
             self.save_progress()
@@ -545,7 +548,7 @@ def upload_all_files(upload_tracker):
     print("Upload completed successfully!")
 
 
-def begin_multipart_upload(analysis_id, file_path, api_token):
+def begin_multipart_upload(analysis_id, file_path, api_token, fastq_type):
     file_name = os.path.basename(file_path)
     file_size = os.path.getsize(file_path)
 
@@ -554,7 +557,7 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
     response = http_post(
         url,
         {"X-Api-Token": "Bearer {}".format(api_token)},
-        json_data={"name": file_name, "size": file_size},
+        json_data={"name": file_name, "size": file_size, "type": fastq_type},
     )
 
     if response.status_code != 200:
@@ -721,6 +724,14 @@ def check_script_version_is_latest(api_token, resume):
         print("""[Warning] The script you are using is outdated. It is recommended to download the newest version from the browser application and begin the upload from scratch""")
         input("If you want to continue with the current version, press ENTER. Otherwise, press CTRL+C to cancel the upload")
 
+def check_files_validity(files):
+    # Take list of glob patterns and expand and flatten them into a list of files
+    files_list = [file for glob_pattern in files for file in glob.glob(glob_pattern)]
+
+    check_names_are_valid(files_list)
+    check_fastq_pairs_complete(files_list)
+    return files_list
+
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
     non_resumable_args = args.run_id or args.file
@@ -741,8 +752,8 @@ def prepare_upload(args):
         if not args.run_id:
             raise Exception("run_id is required")
 
-        if not args.file:
-            raise Exception("At least one file is required")
+        if not args.immune_files and not args.wt_files:
+            raise Exception("At least one wt or immune file is required")
 
     check_script_version_is_latest(args.token, resume)
 
@@ -750,12 +761,12 @@ def prepare_upload(args):
     if resume:
         upload_tracker = UploadTracker.fromResumeFile(args.token)
     else:
-        # Take list of glob patterns and expand and flatten them into a list of files
-        files = [file for glob_pattern in args.file for file in glob.glob(glob_pattern)]
-
-        check_names_are_valid(files)
-        check_fastq_pairs_complete(files)
-
+        files = []
+        if args.wt_files:
+            files = check_files_validity(args.wt_files)
+        if args.immune_files:
+            files.append(check_files_validity(args.immune_files))
+        print('final files', files)
         upload_tracker = UploadTracker.fromScratch(
             args.run_id, files, args.max_threads_count, args.token
         )
@@ -775,12 +786,22 @@ def main():
         default=os.environ.get("PARSE_CLOUD_TOKEN"),
         help="The upload token, can be obtained from the browser application",
     )
+    # parser.add_argument(
+    #     "-f",
+    #     "--file",
+    #     nargs="*",
+    #     required=False,
+    #     help="A space-separated list of files. You can also select multiple files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
+    # )
     parser.add_argument(
-        "-f",
-        "--file",
+        "--wt_files",
         nargs="*",
-        required=False,
-        help="A space-separated list of files. You can also select multiple files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
+        help="Wildcard paths for WT Fastq files (e.g., path/to/wt/*.fastq.gz)",
+    )
+    parser.add_argument(
+        "--immune_files",
+        nargs="*",
+        help="Wildcard paths for TCR/BCR Fastq files (e.g., path/to/tcr_bcr/*.fastq.gz)",
     )
     parser.add_argument(
         "-tc",
