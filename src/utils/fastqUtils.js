@@ -30,7 +30,7 @@ const hasReadPair = (fileName) => (
 
 // This function assumes that the files are already paired correctly,
 // no checks are done on that end
-const getPairs = (files) => {
+const getPairsForFiles = (files) => {
   const sublibraries = {
     [FastqFileType.IMMUNE_FASTQ]: {},
     [FastqFileType.WT_FASTQ]: {},
@@ -60,5 +60,5 @@ const getPairs = (files) => {
 
 // eslint-disable-next-line import/prefer-default-export
 export {
-  getPairs, getMatchingPairFor, hasReadPair, getSublibraryName,
+  getPairsForFiles, getMatchingPairFor, hasReadPair, getSublibraryName,
 };

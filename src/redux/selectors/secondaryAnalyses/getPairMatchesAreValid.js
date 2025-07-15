@@ -1,28 +1,19 @@
 import _ from 'lodash';
 
-import { getPairs } from 'utils/fastqUtils';
 import FastqFileType from 'const/enums/FastqFileType';
 import createMemoizedSelector from '../createMemoizedSelector';
 
-const getPairMatchesAreValid = (secondaryAnalysisId) => (state) => {
-  if (_.isNil(state[secondaryAnalysisId])) return false;
+import getPairs from './getPairs';
 
-  const {
-    files, numOfSublibraries,
-  } = state[secondaryAnalysisId];
+// eslint-disable-next-line no-unused-vars
+const getPairMatchesAreValid = (secondaryAnalysisId) => (analysisState, pairs) => {
+  if (_.isNil(analysisState) || _.isNil(pairs)) return false;
+
+  const { files, numOfSublibraries } = analysisState;
 
   const { pairMatches, data: filesData } = files;
 
-  let pairs;
-  try {
-    pairs = getPairs(filesData);
-  } catch (e) {
-    if (e.message === 'Invalid number of files per sulibrary') {
-      return false;
-    }
-
-    throw e;
-  }
+  if (filesData === null) return false;
 
   const wtPairsSize = _.size(pairs[FastqFileType.WT_FASTQ]);
   const immunePairsSize = _.size(pairs[FastqFileType.IMMUNE_FASTQ]);
@@ -32,4 +23,19 @@ const getPairMatchesAreValid = (secondaryAnalysisId) => (state) => {
     && numOfSublibraries === wtPairsSize;
 };
 
-export default createMemoizedSelector(getPairMatchesAreValid);
+export default createMemoizedSelector(
+  getPairMatchesAreValid,
+  {
+    inputSelectors: [
+      {
+        func: (secondaryAnalysisId) => (state) => state[secondaryAnalysisId],
+        paramsIngest: (secondaryAnalysisId) => [secondaryAnalysisId],
+      },
+      {
+        func: getPairs,
+        paramsIngest: (secondaryAnalysisId) => [secondaryAnalysisId],
+      },
+
+    ],
+  },
+);

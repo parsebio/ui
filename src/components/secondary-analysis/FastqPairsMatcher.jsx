@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import { Table } from 'antd';
 import { useSelector } from 'react-redux';
-import { getPairs } from 'utils/fastqUtils';
+import { getPairsForFiles } from 'utils/fastqUtils';
 import FastqFileType from 'const/enums/FastqFileType';
 import FastqImmuneSelect from './FastqImmuneSelect';
 
@@ -37,7 +37,7 @@ const FastqPairsMatcher = () => {
   });
 
   const pairs = useMemo(
-    () => getPairs(files.data),
+    () => getPairsForFiles(files.data),
     [files.data],
   );
 
