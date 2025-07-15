@@ -1,9 +1,7 @@
 import React from 'react';
 
 import _ from 'lodash';
-import {
-  Typography, Button, Card, Row, Col,
-} from 'antd';
+import { Typography, Button, Card } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import Disabler from 'utils/Disabler';
