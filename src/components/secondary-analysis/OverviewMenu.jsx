@@ -67,7 +67,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
         {firstRowStepsData.map((step, index) => renderCard(step, index, 8, { flex: 0.5, display: 'flex', marginRight: '1vh' }))}
       </div>
       <Row gutter={[16, 16]}>
-        {leftoverStepsData.map((step, index) => renderCard(step, index + 3, 24, { height: '33vh' }))}
+        {leftoverStepsData.map((step, index) => renderCard(step, index + 3, 24, { height: `${55 / leftoverStepsData.length}vh` }))}
       </Row>
     </Card>
   );
