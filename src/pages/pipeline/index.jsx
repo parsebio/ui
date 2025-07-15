@@ -315,6 +315,7 @@ const Pipeline = () => {
           canEditTable={canEditTable}
           files={fastqFiles}
           secondaryAnalysisId={activeSecondaryAnalysisId}
+          pairedWt={pairedWt}
         />
       );
     }
