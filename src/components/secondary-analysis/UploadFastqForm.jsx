@@ -44,6 +44,23 @@ const emptyFilesByType = {
 
 const parseUploadScriptVersion = '1.0.0';
 
+const checkForSubCountWarnings = (
+  fastqsCount,
+  numOfSublibraries,
+  lessThanMessage,
+  moreThanMessage,
+) => {
+  if (fastqsCount > 0 && fastqsCount < numOfSublibraries * 2) {
+    return lessThanMessage;
+  }
+
+  if (fastqsCount > numOfSublibraries * 2) {
+    return moreThanMessage;
+  }
+
+  return null;
+};
+
 const UploadFastqForm = (props) => {
   const {
     secondaryAnalysisId, renderFastqFilesTable, setFilesNotUploaded,
@@ -78,25 +95,27 @@ const UploadFastqForm = (props) => {
   const immuneFastqsCount = Object.keys(immuneFastqs).length;
 
   const warning = useMemo(() => {
-    if (wtFastqsCount > 0 && wtFastqsCount < numOfSublibraries * 2) {
-      return endUserMessages.ERROR_LESS_WT_FILES_THAN_SUBLIBRARIES;
-    }
+    const wtWarning = checkForSubCountWarnings(
+      wtFastqsCount,
+      numOfSublibraries,
+      endUserMessages.ERROR_LESS_WT_FILES_THAN_SUBLIBRARIES,
+      endUserMessages.ERROR_MORE_WT_FILES_THAN_SUBLIBRARIES,
+    );
 
-    if (wtFastqsCount > numOfSublibraries * 2) {
-      return endUserMessages.ERROR_MORE_WT_FILES_THAN_SUBLIBRARIES;
-    }
+    if (wtWarning) return wtWarning;
 
     if (!pairedWt) {
       return null;
     }
 
-    if (immuneFastqsCount > 0 && immuneFastqsCount < numOfSublibraries * 2) {
-      return endUserMessages.ERROR_LESS_IMMUNE_FILES_THAN_SUBLIBRARIES;
-    }
+    const immuneWarning = checkForSubCountWarnings(
+      immuneFastqsCount,
+      numOfSublibraries,
+      endUserMessages.ERROR_LESS_IMMUNE_FILES_THAN_SUBLIBRARIES,
+      endUserMessages.ERROR_MORE_IMMUNE_FILES_THAN_SUBLIBRARIES,
+    );
 
-    if (immuneFastqsCount > numOfSublibraries * 2) {
-      return endUserMessages.ERROR_MORE_IMMUNE_FILES_THAN_SUBLIBRARIES;
-    }
+    if (immuneWarning) return immuneWarning;
 
     return null;
   }, [wtFastqsCount, immuneFastqsCount]);
