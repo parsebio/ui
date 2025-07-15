@@ -4,6 +4,7 @@ import { Table } from 'antd';
 import { useSelector } from 'react-redux';
 import { getPairsForFiles } from 'utils/fastqUtils';
 import FastqFileType from 'const/enums/FastqFileType';
+import { getPairs } from 'redux/selectors';
 import FastqImmuneSelect from './FastqImmuneSelect';
 
 const columns = [
@@ -31,15 +32,15 @@ const columns = [
 ];
 
 const FastqPairsMatcher = () => {
-  const { files, numOfSublibraries } = useSelector((state) => {
-    const { activeSecondaryAnalysisId } = state.secondaryAnalyses.meta;
-    return state.secondaryAnalyses[activeSecondaryAnalysisId];
-  });
-
-  const pairs = useMemo(
-    () => getPairsForFiles(files.data),
-    [files.data],
+  const activeSecondaryAnalysisId = useSelector(
+    (state) => state.secondaryAnalyses.meta.activeSecondaryAnalysisId,
   );
+
+  const numOfSublibraries = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId].numOfSublibraries,
+  );
+
+  const pairs = useSelector(getPairs(activeSecondaryAnalysisId));
 
   const data = useMemo(() => {
     const rows = [];
