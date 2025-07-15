@@ -115,4 +115,52 @@ describe('FastqPairsMatcher', () => {
     expect(calls[0]).toMatchSnapshot();
     expect(calls[1]).toMatchSnapshot();
   });
+
+  it('Loads the files correctly', async () => {
+    await renderSelect();
+
+    // Two empty selects for immune pairs
+    expect(screen.getAllByText('Select immune pair')).toHaveLength(2);
+
+    // Mock the files endpoint to return pre-filled pairMatches
+    const prefilledPairMatches = {
+      ...mockAnalysisFilesWithImmune,
+      pairMatches: [
+        {
+          wtFileR1Id: '1000fe51-6a6d-4545-b717-a4c475849b94',
+          wtFileR2Id: 'd7ba4d40-e1ed-45a0-9eca-8f5caab0dd7b',
+          immuneFileR1Id: '1000fe51-6a6d-4545-b717-a4c475849b95',
+          immuneFileR2Id: 'd7ba4d40-e1ed-45a0-9eca-8f5caab0dd7c',
+        },
+        {
+          wtFileR1Id: 'c28efb10-6459-4107-b9ef-baf6b13968c4',
+          wtFileR2Id: '0740a094-f020-4c97-aceb-d0a708d0982e',
+          immuneFileR1Id: 'c28efb10-6459-4107-b9ef-baf6b13968c5',
+          immuneFileR2Id: '0740a094-f020-4c97-aceb-d0a708d0982f',
+        },
+      ],
+    };
+
+    // Override fetchMock for this test only
+    fetchMock
+      .mockReset()
+      .mockIf(
+        /.*/,
+        mockAPI({
+          ...mockAPIResponses,
+          [`/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}/files`]: () => promiseResponse(
+            JSON.stringify(prefilledPairMatches),
+          ),
+        }),
+      );
+
+    await act(async () => {
+      await storeState.dispatch(loadSecondaryAnalysisFiles(mockAnalysisIds.readyToLaunch));
+    });
+
+    // Now options are set
+    expect(screen.queryAllByText('Select immune pair').length).toBe(0);
+    expect(screen.queryByText('TCR_S1')).toBeInTheDocument();
+    expect(screen.queryByText('TCR_S2')).toBeInTheDocument();
+  });
 });
