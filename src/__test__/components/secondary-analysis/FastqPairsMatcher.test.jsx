@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  render, screen, fireEvent, within,
+  render, screen, fireEvent,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
@@ -33,10 +33,6 @@ const mockAPIResponses = {
 };
 
 enableFetchMocks();
-
-const openAndSelect = () => {
-
-};
 
 describe('FastqPairsMatcher', () => {
   let storeState;
