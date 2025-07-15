@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
@@ -48,7 +48,17 @@ describe('FastqPairsMatcher', () => {
     });
   });
 
-  it('Renders', async () => {
+  it('Renders correctly', async () => {
     await renderSelect();
+    // Correct sublibrary numbers
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
+
+    // Correct fastq sublibrary numbers
+    expect(screen.getByText('S1')).toBeInTheDocument();
+    expect(screen.getByText('S2')).toBeInTheDocument();
+
+    // Two empty selects for immune pairs
+    expect(screen.getAllByText('Select immune pair')).toHaveLength(2);
   });
 });
