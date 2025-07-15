@@ -26,6 +26,7 @@ import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
 
 import { getMatchingPairFor, hasReadPair } from 'utils/fastqUtils';
+import FastqFileType from 'const/enums/FastqFileType';
 import UploadFastqSupportText from './UploadFastqSupportText';
 import FastqDropzones from './FastqDropzones';
 
@@ -55,6 +56,9 @@ const UploadFastqForm = (props) => {
 
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
 
+  const wtFastqs = useSelector(getFastqFiles(secondaryAnalysisId, FastqFileType.WT_FASTQ));
+  const immuneFastqs = useSelector(getFastqFiles(secondaryAnalysisId, FastqFileType.IMMUNE_FASTQ));
+
   const { numOfSublibraries, kit, pairedWt } = useSelector(
     (state) => state.secondaryAnalyses[secondaryAnalysisId],
     _.isEqual,
@@ -70,19 +74,32 @@ const UploadFastqForm = (props) => {
     setNewToken(token);
   }, []);
 
-  const fastqsCount = Object.keys(secondaryAnalysisFiles).length;
+  const wtFastqsCount = Object.keys(wtFastqs).length;
+  const immuneFastqsCount = Object.keys(immuneFastqs).length;
 
   const warning = useMemo(() => {
-    if (fastqsCount > 0 && fastqsCount < numOfSublibraries * 2) {
-      return endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES;
+    if (wtFastqsCount > 0 && wtFastqsCount < numOfSublibraries * 2) {
+      return endUserMessages.ERROR_LESS_WT_FILES_THAN_SUBLIBRARIES;
     }
 
-    if (fastqsCount > numOfSublibraries * 2) {
-      return endUserMessages.ERROR_MORE_FILES_THAN_SUBLIBRARIES;
+    if (wtFastqsCount > numOfSublibraries * 2) {
+      return endUserMessages.ERROR_MORE_WT_FILES_THAN_SUBLIBRARIES;
+    }
+
+    if (!pairedWt) {
+      return null;
+    }
+
+    if (immuneFastqsCount > 0 && immuneFastqsCount < numOfSublibraries * 2) {
+      return endUserMessages.ERROR_LESS_IMMUNE_FILES_THAN_SUBLIBRARIES;
+    }
+
+    if (immuneFastqsCount > numOfSublibraries * 2) {
+      return endUserMessages.ERROR_MORE_IMMUNE_FILES_THAN_SUBLIBRARIES;
     }
 
     return null;
-  }, [fastqsCount]);
+  }, [wtFastqsCount, immuneFastqsCount]);
 
   const validFiles = Object.values(fileHandles).flatMap(({ valid }) => valid) || [];
   const invalidFiles = Object.values(fileHandles).flatMap(({ invalid }) => invalid) || [];
