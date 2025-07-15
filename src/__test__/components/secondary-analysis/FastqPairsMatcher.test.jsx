@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import {
+  render, screen, fireEvent, within,
+} from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
@@ -31,6 +33,10 @@ const mockAPIResponses = {
 };
 
 enableFetchMocks();
+
+const openAndSelect = () => {
+
+};
 
 describe('FastqPairsMatcher', () => {
   let storeState;
@@ -73,22 +79,24 @@ describe('FastqPairsMatcher', () => {
   it('Selecting functionality works fine', async () => {
     await renderSelect();
 
-    // Open the first immune select dropdown and select the first immune pair
+    // Not selected first
+    expect(document.querySelector('.ant-select-selection-item[title="TCR_S1"]')).not.toBeInTheDocument();
+    expect(document.querySelector('.ant-select-selection-item[title="TCR_S2"]')).not.toBeInTheDocument();
+
     const selects = screen.getAllByRole('combobox');
+
+    // Open the first immune select dropdown and select the first immune pair
     fireEvent.mouseDown(selects[0]);
     const tcrS1Option = screen.getAllByText('TCR_S1')[1];
     fireEvent.click(tcrS1Option);
 
-    // The dropdown value should now be TCR_S1 (selected)
-    const tcrS1Selected = document.querySelector('.ant-select-selection-item[title="TCR_S1"]');
-    expect(tcrS1Selected).toBeInTheDocument();
+    expect(document.querySelector('.ant-select-selection-item[title="TCR_S1"]')).toBeInTheDocument();
 
     // Open the second immune select dropdown and select the second immune pair
     fireEvent.mouseDown(selects[1]);
     const tcrS2Option = screen.getAllByText('TCR_S2')[1];
     fireEvent.click(tcrS2Option);
 
-    const tcrS2Selected = document.querySelector('.ant-select-selection-item[title="TCR_S2"]');
-    expect(tcrS2Selected).toBeInTheDocument();
+    expect(document.querySelector('.ant-select-selection-item[title="TCR_S2"]')).toBeInTheDocument();
   });
 });
