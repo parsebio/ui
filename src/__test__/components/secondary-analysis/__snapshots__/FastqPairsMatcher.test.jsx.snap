@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FastqPairsMatcher Selecting functionality works fine 1`] = `
+[
+  "http://localhost:3000/v2/secondaryAnalysis/868f4a31-da46-41a9-b18a-16b91a58302b/files/pairMatches",
+  {
+    "body": "[{"wtR1FileId":"1000fe51-6a6d-4545-b717-a4c475849b94","wtR2FileId":"d7ba4d40-e1ed-45a0-9eca-8f5caab0dd7b","immuneFileR1Id":"1000fe51-6a6d-4545-b717-a4c475849b95","immuneFileR2Id":"d7ba4d40-e1ed-45a0-9eca-8f5caab0dd7c"}]",
+    "headers": {
+      "Content-Type": "application/json",
+    },
+    "method": "POST",
+  },
+]
+`;
+
+exports[`FastqPairsMatcher Selecting functionality works fine 2`] = `
+[
+  "http://localhost:3000/v2/secondaryAnalysis/868f4a31-da46-41a9-b18a-16b91a58302b/files/pairMatches",
+  {
+    "body": "[{"wtR1FileId":"1000fe51-6a6d-4545-b717-a4c475849b94","wtR2FileId":"d7ba4d40-e1ed-45a0-9eca-8f5caab0dd7b","immuneFileR1Id":"c28efb10-6459-4107-b9ef-baf6b13968c5","immuneFileR2Id":"0740a094-f020-4c97-aceb-d0a708d0982f"}]",
+    "headers": {
+      "Content-Type": "application/json",
+    },
+    "method": "POST",
+  },
+]
+`;

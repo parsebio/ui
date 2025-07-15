@@ -88,15 +88,31 @@ describe('FastqPairsMatcher', () => {
     // Open the first immune select dropdown and select the first immune pair
     fireEvent.mouseDown(selects[0]);
     const tcrS1Option = screen.getAllByText('TCR_S1')[1];
-    fireEvent.click(tcrS1Option);
+
+    await act(() => {
+      fireEvent.click(tcrS1Option);
+    });
 
     expect(document.querySelector('.ant-select-selection-item[title="TCR_S1"]')).toBeInTheDocument();
 
     // Open the second immune select dropdown and select the second immune pair
     fireEvent.mouseDown(selects[1]);
     const tcrS2Option = screen.getAllByText('TCR_S2')[1];
-    fireEvent.click(tcrS2Option);
+
+    await act(() => {
+      fireEvent.click(tcrS2Option);
+    });
 
     expect(document.querySelector('.ant-select-selection-item[title="TCR_S2"]')).toBeInTheDocument();
+
+    // Check that updatePairMatch's URL was called for each selection
+    const calls = fetchMock.mock.calls.filter(([url]) => (
+      url.includes(`${mockAnalysisIds.readyToLaunch}/files/pairMatches`)
+    ));
+
+    expect(calls).toHaveLength(2);
+
+    expect(calls[0]).toMatchSnapshot();
+    expect(calls[1]).toMatchSnapshot();
   });
 });
