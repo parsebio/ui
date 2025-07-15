@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 
 import { Table } from 'antd';
 import { useSelector } from 'react-redux';
-import { getPairsForFiles } from 'utils/fastqUtils';
 import FastqFileType from 'const/enums/FastqFileType';
 import { getPairs } from 'redux/selectors';
 import FastqImmuneSelect from './FastqImmuneSelect';
