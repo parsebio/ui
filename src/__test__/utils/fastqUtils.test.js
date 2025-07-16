@@ -76,6 +76,7 @@ describe('getPairsForFiles', () => {
     const files = {
       a: { id: 'a', name: 'foo_S1_R1.fastq.gz', type: WT_FASTQ },
     };
+
     expect(() => getPairsForFiles(files)).toThrow('Invalid number of files per sulibrary');
   });
 
