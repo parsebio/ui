@@ -5,13 +5,13 @@ const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
 
 const getPairData = (fileName) => {
   let name = fileName;
-
-  const rReadMatch = name.match(rReadRegex);
+  const rReadMatch = name.match(rReadRegex) ?? name.match(underscoreReadRegex);
   const [, readNumberStr] = rReadMatch;
-  name = name.replace(rReadRegex, '');
 
+  name = name.replace(rReadRegex, '');
   name = name.replace(underscoreReadRegex, '');
   name = name.replace(/\.(fastq|fq)\.gz$/, '');
+
   return { name, readNumber: parseInt(readNumberStr, 10) };
 };
 
@@ -52,7 +52,7 @@ const getPairsForFiles = (files) => {
   // Validate that every array in sublibraries' values has length 2
   Object.values(sublibraries).forEach((typeObj) => {
     Object.values(typeObj).forEach((filesArr) => {
-      if (filesArr.length !== 2) {
+      if (filesArr.some((val) => val === null)) {
         throw new Error('Invalid number of files per sulibrary');
       }
     });
