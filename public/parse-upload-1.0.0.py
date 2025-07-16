@@ -35,9 +35,9 @@ PART_COUNT_MAX = 10000
 
 # Staging url
 # default_prod_api_url = "https://api-default.staging.trailmaker.parsebiosciences.com/v2"
-
+default_prod_api_url = "http://localhost:3000/v2"
 # Production url
-default_prod_api_url = "https://api.app.trailmaker.parsebiosciences.com/v2"
+# default_prod_api_url = "https://api.app.trailmaker.parsebiosciences.com/v2"
 
 base_url = os.environ.get("PARSE_API_URL") or default_prod_api_url
 
@@ -75,7 +75,7 @@ def get_resume_params_from_file(version_check=False):
         analysis_id = lines[0]
         upload_params = json.loads(lines[1])
         current_file_created = lines[2] == "True"
-        file_paths = lines[3].split(",")
+        file_list = json.loads(lines[3])
         current_file_index = int(lines[4])
         completed_parts_by_thread = [
             int(offset_str) for offset_str in lines[5].split(",")
@@ -84,7 +84,7 @@ def get_resume_params_from_file(version_check=False):
         return (
             analysis_id,
             upload_params,
-            file_paths,
+            file_list,
             current_file_index,
             completed_parts_by_thread,
             current_file_created
@@ -182,35 +182,37 @@ class UploadTracker:
     def __init__(
         self,
         analysis_id,
-        file_paths,
+        file_list,
         current_file_index,
         completed_parts_by_thread,
         upload_params,
         current_file_created,
         api_token,
-        fastq_type = 'wtFastq'
     ):
         self.analysis_id = analysis_id
-        self.file_paths = file_paths
+        self.file_list = file_list
         self.current_file_index = current_file_index
         self.current_file_created = current_file_created
         self.completed_parts_by_thread = completed_parts_by_thread
         self.upload_params = upload_params
         self.api_token = api_token
-        self.fastq_type = fastq_type
 
         self.files_lock = Lock()
 
     @classmethod
-    def fromScratch(cls, analysis_id, file_paths, threads_count, api_token):
-        # Starting from scratch, so wipe files
+    def fromScratch(cls, analysis_id, file_dict, threads_count, api_token):
+        file_list = []
+        for fastq_type, paths in file_dict.items():
+            for path in paths:
+                file_list.append({"path": path, "type": fastq_type})
+
+        # Starting from scratch, wipe files
         cls.wipe_current_upload()
-
         completed_parts_by_thread = [0] * threads_count
-
+        print('Wiped current upload files, starting from scratch', file_list)
         return cls(
             analysis_id,
-            file_paths,
+            file_list,
             0,
             completed_parts_by_thread,
             None,
@@ -218,12 +220,13 @@ class UploadTracker:
             api_token,
         )
 
+
     @classmethod
     def fromResumeFile(cls, api_token):
         (
             analysis_id,
             upload_params,
-            file_paths,
+            file_list,
             current_file_index,
             completed_parts_by_thread,
             current_file_created,
@@ -231,7 +234,7 @@ class UploadTracker:
 
         return cls(
             analysis_id,
-            file_paths,
+            file_list,
             current_file_index,
             completed_parts_by_thread,
             upload_params,
@@ -258,7 +261,7 @@ class UploadTracker:
                         "{}".format(self.analysis_id),
                         json.dumps(self.upload_params),
                         str(self.current_file_created),
-                        "{}".format(','.join(self.file_paths)),
+                        json.dumps(self.file_list),
                         "{}".format(self.current_file_index),
                         "{}".format(','.join([str(offset) for offset in self.completed_parts_by_thread])),
                         SCRIPT_VERSION,
@@ -270,9 +273,8 @@ class UploadTracker:
         if not self.current_file_created:
             self.upload_params = begin_multipart_upload(
                 self.analysis_id,
-                self.file_paths[self.current_file_index],
+                self.file_list[self.current_file_index],
                 self.api_token,
-                self.fastq_type,
             )
             self.current_file_created = True
             self.save_progress()
@@ -280,10 +282,12 @@ class UploadTracker:
         return self.upload_params
 
     def get_current_progress(self):
+        current_file_info = self.file_list[self.current_file_index]
         return (
             self.analysis_id,
-            self.file_paths[self.current_file_index],
+            current_file_info["path"],
             self.completed_parts_by_thread,
+            current_file_info["type"]
         )
 
     def get_parts_etags(self):
@@ -301,7 +305,7 @@ class UploadTracker:
             ]
 
     def is_finished(self):
-        return self.current_file_index >= len(self.file_paths)
+        return self.current_file_index >= len(self.file_list)
 
     def file_uploaded(self):
         self.current_file_index += 1
@@ -367,7 +371,7 @@ class ProgressDisplayer:
 # Manages the upload of a single file
 class FileUploader:
     def __init__(self, upload_tracker):
-        (analysis_id, current_file, completed_parts_by_thread) = (
+        (analysis_id, current_file, completed_parts_by_thread, fastq_type) = (
             upload_tracker.get_current_progress()
         )
 
@@ -376,6 +380,7 @@ class FileUploader:
         self.upload_tracker = upload_tracker
 
         self.file_path = current_file
+        self.fastq_type = fastq_type
         self.completed_parts_by_thread = completed_parts_by_thread
 
         file_size = os.path.getsize(self.file_path)
@@ -548,7 +553,9 @@ def upload_all_files(upload_tracker):
     print("Upload completed successfully!")
 
 
-def begin_multipart_upload(analysis_id, file_path, api_token, fastq_type):
+def begin_multipart_upload(analysis_id, file, api_token):
+    file_path = file["path"]
+    fastq_type = file["type"]
     file_name = os.path.basename(file_path)
     file_size = os.path.getsize(file_path)
 
@@ -589,7 +596,7 @@ def show_resume_option():
         (
             analysis_id,
             upload_params,
-            file_paths,
+            file_list,
             current_file_index,
             completed_parts_by_thread,
             current_file_created,
@@ -599,7 +606,7 @@ def show_resume_option():
             (
                 analysis_id,
                 upload_params,
-                file_paths,
+                file_list,
                 current_file_index,
                 completed_parts_by_thread,
                 current_file_created,
@@ -614,7 +621,8 @@ def show_resume_option():
         )
         print()
         print("It included the following files:")
-        print("\n".join(file_paths))
+        for file in file_list:
+            print(f"File: {file['path']}, Type: {file['type']}")
         print("")
 
         # Prompt the user to confirm that they want to overwrite the previous upload that can be resumed
@@ -628,14 +636,15 @@ def show_resume_option():
     return False
 
 
-def show_files_to_upload_warning(file_paths):
-    if len(file_paths) == 0:
+def show_files_to_upload_warning(file_list):
+    if len(file_list) == 0:
         raise Exception(
             "No valid files found to upload, please check the --file parameter values or use --help for more information"
         )
 
     print("New upload: the following files will be uploaded:")
-    print("\n".join(file_paths))
+    for file in file_list:
+        print(f"File: {file['path']}, Type: {file['type']}")
     print("")
     print(
         'If these are the correct files, press ENTER. Otherwise write "no" and press ENTER to cancel the upload.'
@@ -761,17 +770,19 @@ def prepare_upload(args):
     if resume:
         upload_tracker = UploadTracker.fromResumeFile(args.token)
     else:
-        files = []
+        files = {}
         if args.wt_files:
-            files = check_files_validity(args.wt_files)
+            wt_files = check_files_validity(args.wt_files)
+            files["wtFastq"] = wt_files
         if args.immune_files:
-            files.append(check_files_validity(args.immune_files))
-        print('final files', files)
+            immune_files = check_files_validity(args.immune_files)
+            files["immuneFastq"] = immune_files
+
         upload_tracker = UploadTracker.fromScratch(
             args.run_id, files, args.max_threads_count, args.token
         )
 
-        show_files_to_upload_warning(upload_tracker.file_paths)
+        show_files_to_upload_warning(upload_tracker.file_list)
 
     return upload_tracker
 
