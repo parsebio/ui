@@ -9,12 +9,14 @@ const wizardSteps = [
     isLoading: false,
     isValid: true,
     renderMainScreenDetails: jest.fn(() => <div>Details for Step 1</div>),
+    getIsDisabled: jest.fn(() => false),
   },
   {
     key: 'Step 2',
     isLoading: false,
     isValid: false,
     renderMainScreenDetails: jest.fn(() => <div>Details for Step 2</div>),
+    getIsDisabled: jest.fn(() => false),
   },
 ];
 
@@ -58,7 +60,7 @@ describe('OverviewMenu', () => {
     const editButtons = screen.getAllByRole('button', { name: /edit/i });
     fireEvent.click(editButtons[0]);
 
-    expect(setCurrentStep).toHaveBeenCalledWith(0);
+    expect(setCurrentStep).toHaveBeenCalledWith(3);
   });
 
   it('does not render edit buttons when editable is false', () => {

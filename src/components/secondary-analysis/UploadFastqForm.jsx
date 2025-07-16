@@ -24,6 +24,9 @@ import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
+
+import { getMatchingPairFor, hasReadPair } from 'utils/fastqUtils';
+import FastqFileType from 'const/enums/FastqFileType';
 import UploadFastqSupportText from './UploadFastqSupportText';
 import FastqDropzones from './FastqDropzones';
 
@@ -39,26 +42,24 @@ const emptyFilesByType = {
   immuneFastq: { valid: [], invalid: [] },
 };
 
-const rReadRegex = /_R([12])/;
-const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
-
-const hasReadPair = (fileName) => (
-  rReadRegex.test(fileName) || underscoreReadRegex.test(fileName)
-);
-
-const getMatchingPairFor = (fileName) => {
-  const matcher = fileName.match(rReadRegex) ? rReadRegex : underscoreReadRegex;
-
-  const matchingPair = fileName.replace(matcher, (match, group1) => {
-    const otherNumber = group1 === '1' ? '2' : '1';
-
-    return match.replace(group1, otherNumber);
-  });
-
-  return matchingPair;
-};
-
 const parseUploadScriptVersion = '1.0.0';
+
+const checkForSubCountWarnings = (
+  fastqsCount,
+  numOfSublibraries,
+  lessThanMessage,
+  moreThanMessage,
+) => {
+  if (fastqsCount > 0 && fastqsCount < numOfSublibraries * 2) {
+    return lessThanMessage;
+  }
+
+  if (fastqsCount > numOfSublibraries * 2) {
+    return moreThanMessage;
+  }
+
+  return null;
+};
 
 const UploadFastqForm = (props) => {
   const {
@@ -71,6 +72,9 @@ const UploadFastqForm = (props) => {
   const [newToken, setNewToken] = useState(null);
 
   const secondaryAnalysisFiles = useSelector(getFastqFiles(secondaryAnalysisId));
+
+  const wtFastqs = useSelector(getFastqFiles(secondaryAnalysisId, FastqFileType.WT_FASTQ));
+  const immuneFastqs = useSelector(getFastqFiles(secondaryAnalysisId, FastqFileType.IMMUNE_FASTQ));
 
   const { numOfSublibraries, kit, pairedWt } = useSelector(
     (state) => state.secondaryAnalyses[secondaryAnalysisId],
@@ -87,19 +91,34 @@ const UploadFastqForm = (props) => {
     setNewToken(token);
   }, []);
 
-  const fastqsCount = Object.keys(secondaryAnalysisFiles).length;
+  const wtFastqsCount = Object.keys(wtFastqs).length;
+  const immuneFastqsCount = Object.keys(immuneFastqs).length;
 
   const warning = useMemo(() => {
-    if (fastqsCount > 0 && fastqsCount < numOfSublibraries * 2) {
-      return endUserMessages.ERROR_LESS_FILES_THAN_SUBLIBRARIES;
+    const wtWarning = checkForSubCountWarnings(
+      wtFastqsCount,
+      numOfSublibraries,
+      endUserMessages.ERROR_LESS_WT_FILES_THAN_SUBLIBRARIES,
+      endUserMessages.ERROR_MORE_WT_FILES_THAN_SUBLIBRARIES,
+    );
+
+    if (wtWarning) return wtWarning;
+
+    if (!pairedWt) {
+      return null;
     }
 
-    if (fastqsCount > numOfSublibraries * 2) {
-      return endUserMessages.ERROR_MORE_FILES_THAN_SUBLIBRARIES;
-    }
+    const immuneWarning = checkForSubCountWarnings(
+      immuneFastqsCount,
+      numOfSublibraries,
+      endUserMessages.ERROR_LESS_IMMUNE_FILES_THAN_SUBLIBRARIES,
+      endUserMessages.ERROR_MORE_IMMUNE_FILES_THAN_SUBLIBRARIES,
+    );
+
+    if (immuneWarning) return immuneWarning;
 
     return null;
-  }, [fastqsCount]);
+  }, [wtFastqsCount, immuneFastqsCount]);
 
   const validFiles = Object.values(fileHandles).flatMap(({ valid }) => valid) || [];
   const invalidFiles = Object.values(fileHandles).flatMap(({ invalid }) => invalid) || [];
@@ -217,7 +236,7 @@ const UploadFastqForm = (props) => {
     });
 
     setFileHandles((prevState) => {
-    // Remove files with the same name from all types first
+      // Remove files with the same name from all types first
       const cleanedState = {};
       Object.entries(prevState).forEach(([currType, { valid, invalid }]) => {
         cleanedState[currType] = {

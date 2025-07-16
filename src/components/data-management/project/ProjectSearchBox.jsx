@@ -18,6 +18,7 @@ const ProjectSearchBox = (props) => {
         const searchBy = value.slice(userPrefix.length).trim();
         searchRegex = await getUserSearchRegex(searchBy, projectType);
       }
+
       onChange(searchRegex);
     }, 400),
     [],

@@ -68,7 +68,7 @@ const SecondaryAnalysisSettings = (props) => {
     setFormValues((prevFormValues) => {
       let { chemistryVersion, pairedWt } = prevFormValues;
 
-      if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
+      if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
         pairedWt = true;
         chemistryVersion = '3';
       } else if (kit === 'wt_mega_384') {
@@ -154,8 +154,7 @@ const SecondaryAnalysisSettings = (props) => {
           </div>
         </Form.Item>
       )}
-      {(isKitCategory(formValues.kit, kitCategories.TCR)
-      || isKitCategory(formValues.kit, kitCategories.BCR)) && (
+      {isKitCategory(formValues.kit, [kitCategories.TCR, kitCategories.BCR]) && (
         <Form.Item name='pairedWt'>
           <Space direction='horizontal'>
             <Switch

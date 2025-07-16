@@ -43,6 +43,14 @@ const getSampleLTFile = (...params) => (state) => (
   secondaryAnalysesSelectors.getSampleLTFile(...params)(state.secondaryAnalyses)
 );
 
+const getPairs = (...params) => (state) => (
+  secondaryAnalysesSelectors.getPairs(...params)(state.secondaryAnalyses)
+);
+
+const getPairMatchesAreValid = (...params) => (state) => (
+  secondaryAnalysesSelectors.getPairMatchesAreValid(...params)(state.secondaryAnalyses)
+);
+
 const getSelectedMetadataTracks = (...params) => (state) => (
   componentConfigSelectors.getSelectedMetadataTracks(...params)(state)
 );
@@ -90,6 +98,8 @@ export {
   getGeneList,
   getFastqFiles,
   getSampleLTFile,
+  getPairs,
+  getPairMatchesAreValid,
   getSelectedMetadataTracks,
   getFilterChanges,
   getAnalysisTool,

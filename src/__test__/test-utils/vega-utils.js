@@ -8,7 +8,7 @@ const expectStringInVegaCanvas = async (str, ocurrences, waitForOptions) => {
     .map((event) => event.props.text);
   const canvas = getCanvas();
   const onTimeout = (error) => {
-    console.log(`Could not find ${ocurrences} ocurrences of "${str}" in the canvas. I found these: ${getCanvasStrings(canvas)}`);
+    console.error(`Could not find ${ocurrences} ocurrences of "${str}" in the canvas. I found these: ${getCanvasStrings(canvas)}`);
     return error;
   };
   await rtl.waitFor(() => {

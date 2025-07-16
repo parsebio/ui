@@ -3,8 +3,9 @@ const kitOptions = [
   { label: 'Evercode WT', value: 'wt' },
   { label: 'Evercode WT Mega', value: 'wt_mega' },
   { label: 'Evercode WT Mega 384', value: 'wt_mega_384' },
-  // { label: 'Evercode TCR Mini', value: 'tcr_mini' },
-  // { label: 'Evercode TCR', value: 'tcr' },
+  // DISABLE THIS BEFORE MERGINGGGGG !!!!!!!!!!
+  { label: 'Evercode TCR Mini', value: 'tcr_mini' },
+  { label: 'Evercode TCR', value: 'tcr' },
   // { label: 'Evercode TCR Mega', value: 'tcr_mega' },
   // { label: 'Evercode BCR Mini', value: 'bcr_mini' },
   // { label: 'Evercode BCR', value: 'bcr' },
@@ -17,13 +18,13 @@ const kitCategories = {
   WT: 'wt',
 };
 
-const isKitCategory = (kit, category) => {
-  if (!kit) {
-    return false;
+const isKitCategory = (kit, categoryInput) => {
+  if (!kit) return false;
+
+  if (Array.isArray(categoryInput)) {
+    return categoryInput.some((category) => kit.startsWith(category));
   }
-  if (kit.startsWith(category)) {
-    return true;
-  }
+  return kit.startsWith(categoryInput);
 };
 
 export default kitOptions;
