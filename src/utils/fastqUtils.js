@@ -4,17 +4,14 @@ const rReadRegex = /_R([12])/;
 const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
 
 const getSublibraryData = (fileName) => {
-  // Remove the read part (_R1, _R2, _1, _2) and the .fastq/.fq.gz extension from the file name
   let name = fileName;
 
-  // Extract the read number (1 or 2) from _R1 or _R2
   const rReadMatch = name.match(rReadRegex);
   const [, readNumber] = rReadMatch;
-  name = name.replace(rReadRegex, ''); // Remove _R1 or _R2
+  name = name.replace(rReadRegex, '');
 
-  // readNumber is available here if needed
-  name = name.replace(underscoreReadRegex, ''); // Remove _1.fastq.gz, _2.fq.gz, etc.
-  name = name.replace(/\.(fastq|fq)\.gz$/, ''); // Remove .fastq.gz or .fq.gz if still present
+  name = name.replace(underscoreReadRegex, '');
+  name = name.replace(/\.(fastq|fq)\.gz$/, '');
   return { name, readNumber };
 };
 
