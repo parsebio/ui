@@ -3,10 +3,10 @@ import _ from 'lodash';
 
 import FastqFileType from 'const/enums/FastqFileType';
 import produce, { current } from 'immer';
-import { getSublibraryData } from 'utils/fastqUtils';
+import { getPairData } from 'utils/fastqUtils';
 
 const cleanupPairMatches = (draft, file, secondaryAnalysisId) => {
-  const { name: subName } = getSublibraryData(file.name);
+  const { name: subName } = getPairData(file.name);
 
   let pairKey = null;
   if (file.type === FastqFileType.IMMUNE_FASTQ) {

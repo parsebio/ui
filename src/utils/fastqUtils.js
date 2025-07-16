@@ -3,7 +3,7 @@ import FastqFileType from 'const/enums/FastqFileType';
 const rReadRegex = /_R([12])/;
 const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
 
-const getSublibraryData = (fileName) => {
+const getPairData = (fileName) => {
   let name = fileName;
 
   const rReadMatch = name.match(rReadRegex);
@@ -41,7 +41,7 @@ const getPairsForFiles = (files) => {
   Object.values(files).forEach((file) => {
     if (file.type === 'samplelt') return;
 
-    const { name: pairName, readNumber } = getSublibraryData(file.name);
+    const { name: pairName, readNumber } = getPairData(file.name);
 
     const pairData = sublibraries[file.type][pairName] ||= [null, null];
 
@@ -62,5 +62,5 @@ const getPairsForFiles = (files) => {
 };
 
 export {
-  getPairsForFiles, getMatchingPairFor, hasReadPair, getSublibraryData,
+  getPairsForFiles, getMatchingPairFor, hasReadPair, getPairData,
 };
