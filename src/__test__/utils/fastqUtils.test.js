@@ -79,26 +79,23 @@ describe('getPairsForFiles', () => {
     expect(() => getPairsForFiles(files)).toThrow('Invalid number of files per sulibrary');
   });
 
-  it(
-    'returns the sublibraries ordered by read number no matter the order in which they are in the input',
-    () => {
-      const files = {
-        c: { id: 'c', name: 'tcr_foo_S1_R1.fastq.gz', type: IMMUNE_FASTQ },
-        d: { id: 'd', name: 'tcr_foo_S1_R2.fastq.gz', type: IMMUNE_FASTQ },
-        b: { id: 'b', name: 'foo_S1_R2.fastq.gz', type: WT_FASTQ },
-        a: { id: 'a', name: 'foo_S1_R1.fastq.gz', type: WT_FASTQ },
-      };
-      const result = getPairsForFiles(files);
-      expect(result).toEqual({
-        [WT_FASTQ]: {
-          foo_S1: ['a', 'b'],
-        },
-        [IMMUNE_FASTQ]: {
-          tcr_foo_S1: ['c', 'd'],
-        },
-      });
-    },
-  );
+  it('Maintains read order', () => {
+    const files = {
+      c: { id: 'c', name: 'tcr_foo_S1_R1.fastq.gz', type: IMMUNE_FASTQ },
+      d: { id: 'd', name: 'tcr_foo_S1_R2.fastq.gz', type: IMMUNE_FASTQ },
+      b: { id: 'b', name: 'foo_S1_R2.fastq.gz', type: WT_FASTQ },
+      a: { id: 'a', name: 'foo_S1_R1.fastq.gz', type: WT_FASTQ },
+    };
+    const result = getPairsForFiles(files);
+    expect(result).toEqual({
+      [WT_FASTQ]: {
+        foo_S1: ['a', 'b'],
+      },
+      [IMMUNE_FASTQ]: {
+        tcr_foo_S1: ['c', 'd'],
+      },
+    });
+  });
 
   it('throws if a pair is missing', () => {
     const files = {
