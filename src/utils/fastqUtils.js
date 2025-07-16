@@ -7,12 +7,12 @@ const getPairData = (fileName) => {
   let name = fileName;
 
   const rReadMatch = name.match(rReadRegex);
-  const [, readNumber] = rReadMatch;
+  const [, readNumberStr] = rReadMatch;
   name = name.replace(rReadRegex, '');
 
   name = name.replace(underscoreReadRegex, '');
   name = name.replace(/\.(fastq|fq)\.gz$/, '');
-  return { name, readNumber };
+  return { name, readNumber: parseInt(readNumberStr, 10) };
 };
 
 const getMatchingPairFor = (fileName) => {
