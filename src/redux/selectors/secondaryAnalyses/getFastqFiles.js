@@ -1,13 +1,17 @@
+import FastqFileType from 'const/enums/FastqFileType';
 import _ from 'lodash';
 
 import createMemoizedSelector from 'redux/selectors/createMemoizedSelector';
 
-const WT_FASTQ = 'wtFastq';
-const IMMUNE_FASTQ = 'immuneFastq';
+const getFastqFiles = (secondaryAnalysisId, fileType = null) => (state) => {
+  const fileTypes = fileType ? [fileType] : [FastqFileType.IMMUNE_FASTQ, FastqFileType.WT_FASTQ];
 
-const getFastqFiles = (secondaryAnalysisId) => (state) => (
-  _.pickBy(state[secondaryAnalysisId]?.files.data, (file) => (
-    [IMMUNE_FASTQ, WT_FASTQ].includes(file.type)))
-);
+  return _.pickBy(
+    state[secondaryAnalysisId]?.files.data,
+    (file) => (
+      fileTypes.includes(file.type)
+    ),
+  );
+};
 
 export default createMemoizedSelector(getFastqFiles);

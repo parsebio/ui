@@ -51,7 +51,7 @@ const expiryNoticeBase = (
 );
 
 const UploadFastqSupportText = ({ kit, pairedWt }) => {
-  if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
+  if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
     if (pairedWt) {
       return (
         <div>

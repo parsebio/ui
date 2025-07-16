@@ -46,7 +46,7 @@ const experimentUpdatesHandler = (dispatch) => (experimentId, update) => {
       return onPlotConfigRefresh(update, dispatch);
     }
     default: {
-      console.log(`Error, unrecognized message type ${update.type}`, update);
+      console.error(`Error, unrecognized message type ${update.type}`, update);
     }
   }
 };

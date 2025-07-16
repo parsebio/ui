@@ -25,7 +25,9 @@ import SelectReferenceGenome from 'components/secondary-analysis/SelectReference
 
 import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/secondary_analysis_status_default.json';
 
-const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
+const readyToLaunchResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
+const emptyAnalysisResponses = generateDefaultMockAPIResponses(mockAnalysisIds.emptyAnalysis);
+const mockAPIResponses = { ...emptyAnalysisResponses, ...readyToLaunchResponses };
 const mockNavigateTo = jest.fn();
 
 jest.mock('react-resize-detector', () => (props) => {
@@ -98,7 +100,9 @@ describe('Pipeline Page', () => {
     });
 
     // filled in analysis should have details shown on the page
-    await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
+    await act(async () => {
+      await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
+    });
     await waitFor(() => {
       expect(screen.getByText(/File name:/i)).toBeInTheDocument();
       expect(screen.getByText(/pbmc_1Mreads sltab.xlsm/i)).toBeInTheDocument();

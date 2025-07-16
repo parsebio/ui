@@ -11,7 +11,9 @@ import PrettyTime from 'components/PrettyTime';
 
 const FastqFilesTable = (props) => {
   const dispatch = useDispatch();
-  const { files, canEditTable, secondaryAnalysisId } = props;
+  const {
+    files, canEditTable, secondaryAnalysisId, pairedWt,
+  } = props;
 
   const dataSource = Object.values(files).map((file) => ({
     key: file.id,
@@ -84,7 +86,8 @@ const FastqFilesTable = (props) => {
       size='small'
       columns={columns}
       dataSource={dataSource}
-      pagination={false}
+      pagination={canEditTable ? false : { pageSize: pairedWt ? 4 : 8, hideOnSinglePage: true }}
+      style={{ height: '100%' }}
       scroll={{ y: `calc(90vh - ${500}px)` }}
     />
   );
@@ -94,6 +97,7 @@ FastqFilesTable.propTypes = {
   files: PropTypes.object.isRequired,
   canEditTable: PropTypes.bool.isRequired,
   secondaryAnalysisId: PropTypes.string.isRequired,
+  pairedWt: PropTypes.bool.isRequired,
 };
 
 export default FastqFilesTable;
