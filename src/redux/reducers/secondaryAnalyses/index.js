@@ -20,6 +20,7 @@ import {
   SECONDARY_ANALYSIS_STATUS_LOADED,
   SECONDARY_ANALYSIS_LOGS_LOADING,
   SECONDARY_ANALYSIS_LOGS_LOADED,
+  SECONDARY_PAIR_MATCHES_UPDATED,
 } from '../../actionTypes/secondaryAnalyses';
 
 import secondaryAnalysesLoading from './secondaryAnalysesLoading';
@@ -42,6 +43,8 @@ import secondaryAnalysisStatusLoaded from './secondaryAnalysisStatusLoaded';
 
 import secondaryAnalysisLogsLoaded from './secondaryAnalysisLogsLoaded';
 import secondaryAnalysisLogsLoading from './secondaryAnalysisLogsLoading';
+
+import pairMatchesUpdated from './pairMatchesUpdated';
 
 const notificationsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
@@ -109,6 +112,10 @@ const notificationsReducer = (state = initialState, action = {}) => {
 
     case SECONDARY_ANALYSIS_LOGS_LOADED: {
       return secondaryAnalysisLogsLoaded(state, action);
+    }
+
+    case SECONDARY_PAIR_MATCHES_UPDATED: {
+      return pairMatchesUpdated(state, action);
     }
 
     case HYDRATE: {

@@ -35,7 +35,7 @@ if (isDev) {
   if (process.env.DEV_ACCOUNT === undefined) {
     const errorMessage = `In local environment, DEV_ACCOUNT is expected to be set, possible values are: ${Object.keys(AccountId)} or "other" for other aws accounts`;
 
-    console.log(errorMessage);
+    console.error(errorMessage);
 
     throw new Error(errorMessage);
   }

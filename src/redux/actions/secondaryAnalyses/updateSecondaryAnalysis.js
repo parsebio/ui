@@ -34,6 +34,7 @@ const updateSecondaryAnalysis = (
       },
     });
   } catch (e) {
+    console.error(e);
     const errorMessage = handleError(e, endUserMessages.ERROR_SAVING);
 
     dispatch({

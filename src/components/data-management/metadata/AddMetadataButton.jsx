@@ -68,7 +68,7 @@ const AddMetadataButton = ({ samplesTableRef }) => {
       );
     } catch (e) {
       pushNotificationMessage('error', 'Something went wrong while uploading your metadata file.');
-      console.log(e);
+      console.error(e);
     }
 
     setCellLevelUploading(false);

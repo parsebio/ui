@@ -3,9 +3,11 @@ import { SECONDARY_ANALYSIS_FILES_DELETE, SECONDARY_ANALYSES_ERROR } from 'redux
 import handleError from 'utils/http/handleError';
 
 const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (dispatch, getState) => {
+  const { data: filesData } = getState().secondaryAnalyses[secondaryAnalysisId].files;
+
   // Abort upload if it is ongoing
   // eslint-disable-next-line no-unused-expressions
-  getState().secondaryAnalyses[secondaryAnalysisId].files.data[fileId].upload
+  filesData[fileId].upload
     .abortController?.abort('File deleted');
 
   try {
@@ -17,6 +19,8 @@ const deleteSecondaryAnalysisFile = (secondaryAnalysisId, fileId) => async (disp
       body: JSON.stringify({ fileId }),
     });
 
+    // On delete, receive updated pair matches
+    // and update the redux store
     dispatch({
       type: SECONDARY_ANALYSIS_FILES_DELETE,
       payload: {

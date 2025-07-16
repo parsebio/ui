@@ -15,6 +15,7 @@ import resumeUploads from './resumeUploads';
 import loadSecondaryAnalysisLogs from './loadSecondaryAnalysisLogs';
 import storeLoadedAnalysisFile from './storeLoadedAnalysisFile';
 import removeSecondaryAnalysis from './removeSecondaryAnalysis';
+import updatePairMatch from './updatePairMatch';
 
 export {
   loadSecondaryAnalyses,
@@ -34,4 +35,5 @@ export {
   loadSecondaryAnalysisLogs,
   storeLoadedAnalysisFile,
   removeSecondaryAnalysis,
+  updatePairMatch,
 };

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect, useMemo,
+} from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
 } from 'antd';
@@ -18,7 +20,7 @@ import {
   storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
-import kitOptions from 'utils/secondary-analysis/kitOptions';
+import kitOptions, { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
 import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
@@ -28,10 +30,12 @@ import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'const';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
-import { getSampleLTFile, getFastqFiles } from 'redux/selectors';
+import { getSampleLTFile, getFastqFiles, getPairMatchesAreValid } from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
+import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
+import FastqFileType from 'const/enums/FastqFileType';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -53,7 +57,32 @@ const pipelineStatusToDisplay = {
   finished: 'Finished',
 };
 
-const analysisDetailsKeys = ['name', 'description', 'sampleNames', 'numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome'];
+const analysisDetailsKeys = [
+  'name',
+  'description',
+  'sampleNames',
+  'numOfSublibraries',
+  'chemistryVersion',
+  'kit',
+  'refGenome',
+  'pairedWt',
+];
+
+const baseStepsKeys = [
+  'Experimental setup',
+  'Sample loading table',
+  'Reference genome',
+  'Fastq files',
+];
+
+const pairedWTStepsKeys = [
+  ...baseStepsKeys,
+  'Fastq Pairs Matcher',
+];
+
+const getFastqsMatch = (fastqFiles, numOfSublibraries) => (
+  Object.keys(fastqFiles).length === numOfSublibraries * 2
+);
 
 const Pipeline = () => {
   const dispatch = useDispatch();
@@ -85,6 +114,7 @@ const Pipeline = () => {
     chemistryVersion,
     kit,
     refGenome,
+    pairedWt,
   } = useSelector(
     (state) => _.pick(
       state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {},
@@ -103,12 +133,25 @@ const Pipeline = () => {
     _.isEqual,
   );
 
+  const pairMatchesAreValid = useSelector(getPairMatchesAreValid(activeSecondaryAnalysisId));
+
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
-  const fastqFiles = useSelector(getFastqFiles(activeSecondaryAnalysisId), _.isEqual);
+  const immuneFastqFiles = useSelector(
+    getFastqFiles(activeSecondaryAnalysisId, FastqFileType.IMMUNE_FASTQ),
+    _.isEqual,
+  );
+
+  const wtFastqFiles = useSelector(
+    getFastqFiles(activeSecondaryAnalysisId, FastqFileType.WT_FASTQ),
+    _.isEqual,
+  );
+
+  const fastqFiles = { ...immuneFastqFiles, ...wtFastqFiles };
 
   const domainName = useSelector((state) => state.networkResources?.domainName);
 
-  const fastqsMatch = Object.keys(fastqFiles).length === numOfSublibraries * 2;
+  const fastqsMatch = getFastqsMatch(wtFastqFiles, numOfSublibraries)
+    && (!pairedWt || getFastqsMatch(immuneFastqFiles, numOfSublibraries));
 
   const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status,
@@ -272,6 +315,7 @@ const Pipeline = () => {
           canEditTable={canEditTable}
           files={fastqFiles}
           secondaryAnalysisId={activeSecondaryAnalysisId}
+          pairedWt={pairedWt}
         />
       );
     }
@@ -295,8 +339,8 @@ const Pipeline = () => {
     return Object.values(files).every((file) => file?.upload?.status?.current === 'uploaded');
   };
 
-  const secondaryAnalysisWizardSteps = [
-    {
+  const wizardStepsData = {
+    'Experimental setup': {
       title: 'Provide the details of the experimental setup:',
       key: 'Experimental setup',
       render: () => (
@@ -312,8 +356,9 @@ const Pipeline = () => {
           kit: kitTitle, chemistryVersion, numOfSublibraries,
         });
       },
+      getIsDisabled: () => false,
     },
-    {
+    'Sample loading table': {
       title: 'Upload your sample loading table:',
       key: 'Sample loading table',
       render: () => (
@@ -328,8 +373,9 @@ const Pipeline = () => {
       isValid: allFilesUploaded([sampleLTFile]),
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(renderSampleLTFileDetails),
+      getIsDisabled: () => false,
     },
-    {
+    'Reference genome': {
       title: 'Reference genome',
       key: 'Reference genome',
       render: () => (
@@ -340,8 +386,9 @@ const Pipeline = () => {
       ),
       isValid: Boolean(refGenome),
       renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
+      getIsDisabled: () => false,
     },
-    {
+    'Fastq files': {
       title: 'Upload your FASTQ files:',
       key: 'Fastq files',
       render: () => (
@@ -357,11 +404,39 @@ const Pipeline = () => {
       renderMainScreenDetails: () => renderMainScreenFileDetails(
         () => renderFastqFilesTable(false),
       ),
+      getIsDisabled: () => false,
     },
-  ];
-  const isAllValid = secondaryAnalysisWizardSteps.every((step) => step.isValid);
+    'Fastq Pairs Matcher': {
+      title: 'Match FASTQ files',
+      key: 'Fastq Pairs Matcher',
+      render: () => <FastqPairsMatcher />,
+      isValid: pairMatchesAreValid,
+      isLoading: filesNotLoadedYet,
+      renderMainScreenDetails: () => <FastqPairsMatcher />,
+      getIsDisabled: () => {
+        const stepsToCheck = ['Fastq files', 'Experimental setup'];
 
-  const currentStep = secondaryAnalysisWizardSteps[currentStepIndex];
+        // Disable until the other steps are completed and valid
+        return stepsToCheck.some((stepKey) => !activeSteps[stepKey]?.isValid);
+      },
+    },
+  };
+
+  const activeStepsKeys = useMemo(
+    () => (
+      isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
+        && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys),
+    [kit, pairedWt],
+  );
+
+  const activeSteps = useMemo(
+    () => _.pick(wizardStepsData, activeStepsKeys),
+    [activeStepsKeys, wizardStepsData],
+  );
+
+  const isAllValid = Object.values(activeSteps).every((step) => step.isValid);
+
+  const currentStep = activeSteps[activeStepsKeys[currentStepIndex]];
   const ANALYSIS_LIST = 'Runs';
   const ANALYSIS_DETAILS = 'Run Details';
 
@@ -514,7 +589,7 @@ const Pipeline = () => {
                     }}
                   />
                   <OverviewMenu
-                    wizardSteps={secondaryAnalysisWizardSteps}
+                    wizardSteps={activeSteps}
                     setCurrentStep={setCurrentStepIndex}
                     editable={pipelineCanBeRun}
                   />
@@ -579,11 +654,13 @@ const Pipeline = () => {
               Back
             </Button>,
             <Button key='submit' type='primary' onClick={onNext}>
-              {currentStepIndex === secondaryAnalysisWizardSteps.length - 1 ? 'Finish' : 'Next'}
+              {currentStepIndex === _.size(activeSteps) - 1 ? 'Finish' : 'Next'}
             </Button>,
           ]}
         >
-          {currentStep.render()}
+          {
+            currentStep.getIsDisabled() ? null : currentStep.render()
+          }
         </Modal>
       )}
       <div data-testid='pipeline-container' style={{ height: '100vh', overflowY: 'auto' }}>

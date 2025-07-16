@@ -4,8 +4,8 @@ import _ from 'lodash';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsScanpy } from 'redux/selectors';
-import { Tooltip } from 'antd';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
+import Disabler from 'utils/Disabler';
 
 const scanpyDisableMessage = 'This feature is only available for Seurat projects.';
 
@@ -25,18 +25,10 @@ const ScanpyDisabler = ({ experimentId: customExperimentId, children }) => {
     }
   }, [isScanpy, experimentId]);
 
-  if (!isScanpy) { return children; }
-
-  // First div is to trigger hover events
-  // Second div is to disable everything under the tooltip without having to clone the children
   return (
-    <Tooltip title={scanpyDisableMessage}>
-      <div>
-        <div disabled style={{ pointerEvents: 'none', opacity: 0.5 }}>
-          {children}
-        </div>
-      </div>
-    </Tooltip>
+    <Disabler disable={isScanpy} tooltipText={scanpyDisableMessage}>
+      {children}
+    </Disabler>
   );
 };
 

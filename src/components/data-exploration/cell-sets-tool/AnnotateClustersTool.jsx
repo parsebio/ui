@@ -110,17 +110,17 @@ const annotationTools = {
   sctype: {
     label: 'ScType',
     tooltip: ScTypeTooltipText,
-    Disabler: ScanpyDisabler,
+    DisablerToUse: ScanpyDisabler,
   },
   decoupler: {
     label: 'Decoupler',
     tooltip: DecouplerTooltipText,
-    Disabler: SeuratDisabler,
+    DisablerToUse: SeuratDisabler,
   },
   celltypist: {
     label: 'CellTypist',
     tooltip: CellTypistTooltipText,
-    Disabler: SeuratDisabler,
+    DisablerToUse: SeuratDisabler,
   },
 };
 
@@ -137,16 +137,16 @@ const AnnotateClustersTool = ({ experimentId, onRunAnnotation }) => {
         style={{ display: 'flex', flexDirection: 'row' }}
       >
         {Object.entries(annotationTools).map(([key, tool]) => {
-          const { Disabler } = tool;
+          const { DisablerToUse } = tool;
           const radio = (
             <Tooltip title={tool.tooltip} key={key} placement='left' mouseEnterDelay={0.5}>
               <Radio value={key}>{tool.label}</Radio>
             </Tooltip>
           );
-          return Disabler ? (
-            <Disabler experimentId={experimentId} key={key}>
+          return DisablerToUse ? (
+            <DisablerToUse experimentId={experimentId} key={key}>
               {radio}
-            </Disabler>
+            </DisablerToUse>
           ) : radio;
         })}
       </Radio.Group>

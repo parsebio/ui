@@ -99,7 +99,7 @@ describe('SamplesTableContainer', () => {
 
     const matching = allSamples.filter((s) => s.sampleTechnology === techType);
     const nonMatching = allSamples.filter((s) => s.sampleTechnology !== techType);
-    console.log('matching', matching, 'nonMatching', nonMatching);
+
     // Click on the tech tab
     userEvent.click(screen.getByRole('tab', { name: techLabel }));
 

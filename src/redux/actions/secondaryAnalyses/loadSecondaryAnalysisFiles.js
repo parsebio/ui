@@ -4,9 +4,24 @@ import { SECONDARY_ANALYSIS_FILES_LOADED, SECONDARY_ANALYSIS_FILES_LOADING } fro
 import fetchAPI from 'utils/http/fetchAPI';
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
+import { getSublibraryName } from 'utils/fastqUtils';
+
+const getPairMatchesForRedux = (pairMatches, reduxFiles) => (
+  pairMatches.reduce((acc, { wtFileR1Id, immuneFileR1Id }) => {
+    const { name: wtFileR1Name } = reduxFiles.find(({ id }) => id === wtFileR1Id);
+    const { name: immuneFileR1Name } = reduxFiles.find(({ id }) => id === immuneFileR1Id);
+
+    const wtPairName = getSublibraryName(wtFileR1Name);
+    const immunePairName = getSublibraryName(immuneFileR1Name);
+
+    acc[getSublibraryName(immunePairName)] = wtPairName;
+
+    return acc;
+  }, {})
+);
 
 const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, getState) => {
-  const filesInRedux = getState().secondaryAnalyses[secondaryAnalysisId].files?.data ?? {};
+  const previousFilesInRedux = getState().secondaryAnalyses[secondaryAnalysisId].files?.data ?? {};
 
   const {
     PAUSED, DROP_AGAIN, UPLOADING, QUEUED,
@@ -19,13 +34,15 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
       },
     });
 
-    const files = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
+    const { files, pairMatches } = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/files`);
 
     const filesForRedux = await Promise.all(files
       // If it is uploading or queued in redux, then this upload is managed by this client so
       // don't overwrite it
       .filter(
-        (file) => ![UPLOADING, QUEUED].includes(filesInRedux[file.id]?.upload?.status.current),
+        (file) => ![UPLOADING, QUEUED].includes(
+          previousFilesInRedux[file.id]?.upload?.status.current,
+        ),
       )
       // If the file upload status is 'uploading' in sql, we need to store something else in redux
       // since that status is not correct if the upload is not performed in this case
@@ -44,6 +61,7 @@ const loadSecondaryAnalysisFiles = (secondaryAnalysisId) => async (dispatch, get
       payload: {
         secondaryAnalysisId,
         files: filesForRedux,
+        pairMatches: getPairMatchesForRedux(pairMatches, filesForRedux),
       },
     });
   } catch (e) {
