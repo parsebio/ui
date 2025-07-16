@@ -701,7 +701,7 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
       selectedCellSets,
       cellSets,
     );
-
+    // usually 1 cellSet for each cellId because most cell sets in a cell class are disjoint
     Object.keys(cellSetsForCell).forEach((rootNode) => {
       cellSetsForCell[rootNode].forEach(({ key, name, color }) => {
         plotData.push({
