@@ -4,7 +4,7 @@ import endUserMessages from 'utils/endUserMessages';
 import fetchAPI from 'utils/http/fetchAPI';
 import handleError from 'utils/http/handleError';
 
-// The ui gets the pair's names from the files (using getSublibraryName from fastqUtils),
+// The ui gets the pair's names from the files (using getSublibraryData from fastqUtils),
 // The api needs the pairs the fileids instead of the pair names,
 // so we need to translate before sending the update.
 const translatePairsToFiles = (matches, pairs) => {

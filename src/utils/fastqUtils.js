@@ -3,13 +3,19 @@ import FastqFileType from 'const/enums/FastqFileType';
 const rReadRegex = /_R([12])/;
 const underscoreReadRegex = /_([12])\.(fastq|fq)\.gz$/;
 
-const getSublibraryName = (fileName) => {
+const getSublibraryData = (fileName) => {
   // Remove the read part (_R1, _R2, _1, _2) and the .fastq/.fq.gz extension from the file name
   let name = fileName;
+
+  // Extract the read number (1 or 2) from _R1 or _R2
+  const rReadMatch = name.match(rReadRegex);
+  const [, readNumber] = rReadMatch;
   name = name.replace(rReadRegex, ''); // Remove _R1 or _R2
+
+  // readNumber is available here if needed
   name = name.replace(underscoreReadRegex, ''); // Remove _1.fastq.gz, _2.fq.gz, etc.
   name = name.replace(/\.(fastq|fq)\.gz$/, ''); // Remove .fastq.gz or .fq.gz if still present
-  return name;
+  return { name, readNumber };
 };
 
 const getMatchingPairFor = (fileName) => {
@@ -17,7 +23,6 @@ const getMatchingPairFor = (fileName) => {
 
   const matchingPair = fileName.replace(matcher, (match, group1) => {
     const otherNumber = group1 === '1' ? '2' : '1';
-
     return match.replace(group1, otherNumber);
   });
 
@@ -39,11 +44,12 @@ const getPairsForFiles = (files) => {
   Object.values(files).forEach((file) => {
     if (file.type === 'samplelt') return;
 
-    const pairName = getSublibraryName(file.name);
+    const { name: pairName, readNumber } = getSublibraryData(file.name);
 
-    const pairData = sublibraries[file.type][pairName] ||= [];
+    const pairData = sublibraries[file.type][pairName] ||= [null, null];
 
-    pairData.push(file.id);
+    // reads are 1 or 2, we want to store them in the array at index 0 or 1
+    pairData[readNumber - 1] = file.id;
   });
 
   // Validate that every array in sublibraries' values has length 2
@@ -60,5 +66,5 @@ const getPairsForFiles = (files) => {
 
 // eslint-disable-next-line import/prefer-default-export
 export {
-  getPairsForFiles, getMatchingPairFor, hasReadPair, getSublibraryName,
+  getPairsForFiles, getMatchingPairFor, hasReadPair, getSublibraryData,
 };
