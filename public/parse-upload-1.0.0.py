@@ -34,8 +34,10 @@ PART_COUNT_MAX = 10000
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
 
 # Staging url
-# default_prod_api_url = "https://api-default.staging.trailmaker.parsebiosciences.com/v2"
-default_prod_api_url = "http://localhost:3000/v2"
+default_prod_api_url = "https://api-default.staging.trailmaker.parsebiosciences.com/v2"
+
+# local url
+# default_prod_api_url = "http://localhost:3000/v2"
 # Production url
 # default_prod_api_url = "https://api.app.trailmaker.parsebiosciences.com/v2"
 
@@ -206,10 +208,11 @@ class UploadTracker:
             for path in paths:
                 file_list.append({"path": path, "type": fastq_type})
 
-        # Starting from scratch, wipe files
+        # Starting from scratch, so wipe files
         cls.wipe_current_upload()
+
         completed_parts_by_thread = [0] * threads_count
-        print('Wiped current upload files, starting from scratch', file_list)
+
         return cls(
             analysis_id,
             file_list,
