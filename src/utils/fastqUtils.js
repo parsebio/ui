@@ -43,7 +43,8 @@ const getPairsForFiles = (files) => {
 
     const { name: pairName, readNumber } = getPairData(file.name);
 
-    const pairData = sublibraries[file.type][pairName] ||= [null, null];
+    // const pairData = sublibraries[file.type][pairName] ??= [];
+    const pairData = sublibraries[file.type][pairName] ||= [];
 
     // reads are 1 or 2, we want to store them in the array at index 0 or 1
     pairData[readNumber - 1] = file.id;
@@ -52,7 +53,7 @@ const getPairsForFiles = (files) => {
   // Validate that every array in sublibraries' values has length 2
   Object.values(sublibraries).forEach((typeObj) => {
     Object.values(typeObj).forEach((filesArr) => {
-      if (filesArr.some((val) => val === null)) {
+      if (filesArr.length !== 2 || filesArr.includes(undefined)) {
         throw new Error('Invalid number of files per sulibrary');
       }
     });

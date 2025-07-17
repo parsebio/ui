@@ -72,9 +72,17 @@ describe('getPairsForFiles', () => {
     });
   });
 
-  it('throws if a pair is missing', () => {
+  it('throws if the second pair is missing', () => {
     const files = {
       a: { id: 'a', name: 'foo_S1_R1.fastq.gz', type: WT_FASTQ },
+    };
+
+    expect(() => getPairsForFiles(files)).toThrow('Invalid number of files per sulibrary');
+  });
+
+  it('throws if the first pair is missing', () => {
+    const files = {
+      a: { id: 'a', name: 'foo_S1_R2.fastq.gz', type: WT_FASTQ },
     };
 
     expect(() => getPairsForFiles(files)).toThrow('Invalid number of files per sulibrary');
