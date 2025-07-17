@@ -4,10 +4,10 @@ import signIn from 'utils/signIn';
 
 const loadUser = () => async (dispatch) => {
   try {
-    const user = await Auth.currentAuthenticatedUser();
+    let user = await Auth.currentAuthenticatedUser();
 
     if (!user.attributes) {
-      throw new Error('User not valid, force sign in');
+      user = await Auth.currentAuthenticatedUser({ bypassCache: true });
     }
 
     dispatch({
