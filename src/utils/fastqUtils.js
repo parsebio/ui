@@ -43,8 +43,7 @@ const getPairsForFiles = (files) => {
 
     const { name: pairName, readNumber } = getPairData(file.name);
 
-    // const pairData = sublibraries[file.type][pairName] ??= [];
-    const pairData = sublibraries[file.type][pairName] ||= [];
+    const pairData = sublibraries[file.type][pairName] ??= [];
 
     // reads are 1 or 2, we want to store them in the array at index 0 or 1
     pairData[readNumber - 1] = file.id;
