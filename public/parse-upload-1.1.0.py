@@ -625,7 +625,7 @@ def show_resume_option():
         print()
         print("It included the following files:")
         for file in file_list:
-            print(f"File: {file['path']}, Type: {file['type']}")
+            print(file['path'])
         print("")
 
         # Prompt the user to confirm that they want to overwrite the previous upload that can be resumed
@@ -647,7 +647,7 @@ def show_files_to_upload_warning(file_list):
 
     print("New upload: the following files will be uploaded:")
     for file in file_list:
-        print(f"File: {file['path']}, Type: {file['type']}")
+        print(file['path'])
     print("")
     print(
         'If these are the correct files, press ENTER. Otherwise write "no" and press ENTER to cancel the upload.'
@@ -800,22 +800,18 @@ def main():
         default=os.environ.get("PARSE_CLOUD_TOKEN"),
         help="The upload token, can be obtained from the browser application",
     )
-    # parser.add_argument(
-    #     "-f",
-    #     "--file",
-    #     nargs="*",
-    #     required=False,
-    #     help="A space-separated list of files. You can also select multiple files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
-    # )
+
     parser.add_argument(
         "--wt_files",
         nargs="*",
-        help="Wildcard paths for WT Fastq files (e.g., path/to/wt/*.fastq.gz)",
+        required=False,
+        help="A space-separated list of files. You can also select multiple files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
     )
     parser.add_argument(
         "--immune_files",
         nargs="*",
-        help="Wildcard paths for TCR/BCR Fastq files (e.g., path/to/tcr_bcr/*.fastq.gz)",
+        required=False,
+        help="A space-separated list of files. You can also select multiple files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
     )
     parser.add_argument(
         "-tc",
