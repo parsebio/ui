@@ -82,18 +82,6 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     if (amplifyConfig) {
-      const domainName = process.env.NODE_ENV !== 'development'
-        ? getConfig().publicRuntimeConfig.domainName
-        : 'localhost';
-
-      amplifyConfig.Auth.cookieStorage = {
-        domain: domainName,
-        path: '/',
-        expires: 7,
-        secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'strict',
-      };
-
       Amplify.configure(amplifyConfig);
 
       setAmplifyConfigured(true);
