@@ -78,6 +78,8 @@ jest.mock('rdndmb-html5-to-touch', () => ({
   HTML5toTouch: {},
 }));
 
+jest.mock('utils/clearCognitoCookies', () => jest.fn());
+
 beforeAll(async () => {
   // Add stuff that needs to run once, before all tests
   await preloadAll();
