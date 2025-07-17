@@ -19,6 +19,7 @@ const loadUser = () => async (dispatch) => {
       payload: { user },
     });
   } catch (e) {
+    console.error(e);
     signIn();
   }
 };
