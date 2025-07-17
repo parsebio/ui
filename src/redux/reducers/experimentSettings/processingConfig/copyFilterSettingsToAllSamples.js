@@ -4,12 +4,6 @@ import produce, { current } from 'immer';
 
 import initialState from '../initialState';
 
-const useDefaultFilterSettings = (draft, step, sampleId) => {
-  draft.processing[step][sampleId].filterSettings = current(
-    draft.processing[step][sampleId].defaultFilterSettings,
-  );
-};
-
 const copyFilterSettingsToAllSamples = produce((draft, action) => {
   const { step, sourceSampleId, sampleIds } = action.payload;
 
