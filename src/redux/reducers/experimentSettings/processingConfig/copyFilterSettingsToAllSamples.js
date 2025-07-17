@@ -17,14 +17,16 @@ const copyFilterSettingsToAllSamples = produce((draft, action) => {
   const samplesToReplace = sampleIds.filter((sampleId) => sampleId !== sourceSampleId);
 
   samplesToReplace.forEach((sampleIdToReplace) => {
-    draft.processing[step][sampleIdToReplace].auto = sourceSettings.auto;
+    const sampleStepConfig = draft.processing[step][sampleIdToReplace];
+
+    sampleStepConfig.auto = sourceSettings.auto;
 
     if (sourceSettings.auto) {
-      useDefaultFilterSettings(draft, step, sampleIdToReplace);
+      sampleStepConfig.filterSettings = current(sampleStepConfig.defaultFilterSettings);
       return;
     }
 
-    draft.processing[step][sampleIdToReplace]
+    sampleStepConfig
       .filterSettings = _.cloneDeep(sourceSettings.filterSettings);
   });
 }, initialState);
