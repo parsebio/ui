@@ -36,6 +36,7 @@ import ShareProjectModal from 'components/data-management/project/ShareProjectMo
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
 import FastqFileType from 'const/enums/FastqFileType';
+import ImmuneDatabase from 'components/secondary-analysis/ImmuneDatabase';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -77,6 +78,42 @@ const baseStepsKeys = [
 
 const pairedWTStepsKeys = [
   ...baseStepsKeys,
+  'Fastq Pairs Matcher',
+  'Immune database',
+];
+
+const normalStepsGrid = [
+  // row0
+  [
+    // col0.0
+    'Experimental setup',
+    // col0.1
+    'Sample loading table',
+    // col0.2
+    'Reference genome',
+  ],
+  // row1
+  'Fastq files',
+];
+
+const pairedWTStepsGrid = [
+  // row0
+  [
+    // col0.0
+    'Experimental setup',
+    // col0.1
+    'Sample loading table',
+    // col0.2
+    [
+      // row0.2.0
+      'Reference genome',
+      // row0.2.1
+      'Immune database',
+    ],
+  ],
+  // row1
+  'Fastq files',
+  // row2
   'Fastq Pairs Matcher',
 ];
 
@@ -388,6 +425,18 @@ const Pipeline = () => {
       renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
       getIsDisabled: () => false,
     },
+    'Immune database': {
+      title: 'Immune database',
+      key: 'Immune database',
+      render: () => (
+        <ImmuneDatabase
+          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
+        />
+      ),
+      isValid: false,
+      renderMainScreenDetails: () => mainScreenDetails({}),
+      getIsDisabled: () => false,
+    },
     'Fastq files': {
       title: 'Upload your FASTQ files:',
       key: 'Fastq files',
@@ -426,6 +475,13 @@ const Pipeline = () => {
     () => (
       isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
         && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys),
+    [kit, pairedWt],
+  );
+
+  const activeStepsGrid = useMemo(
+    () => (
+      isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
+        && pairedWt === true ? pairedWTStepsGrid : normalStepsGrid),
     [kit, pairedWt],
   );
 
@@ -590,6 +646,7 @@ const Pipeline = () => {
                   />
                   <OverviewMenu
                     wizardSteps={activeSteps}
+                    activeStepsGrid={activeStepsGrid}
                     setCurrentStep={setCurrentStepIndex}
                     editable={pipelineCanBeRun}
                   />
