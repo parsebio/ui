@@ -14,21 +14,21 @@ const copyFilterSettingsToAllSamples = produce((draft, action) => {
   const { step, sourceSampleId, sampleIds } = action.payload;
 
   const sourceSettings = current(draft.processing[step][sourceSampleId]);
-  const samplesToReplace = sampleIds.filter((sampleId) => sampleId !== sourceSampleId);
+  const targetSamples = sampleIds.filter((sampleId) => sampleId !== sourceSampleId);
 
-  samplesToReplace.forEach((sampleIdToReplace) => {
-    const sampleToReplaceStepConfig = draft.processing[step][sampleIdToReplace];
+  targetSamples.forEach((targetSampleId) => {
+    const targetSampleStepConfig = draft.processing[step][targetSampleId];
 
-    sampleToReplaceStepConfig.auto = sourceSettings.auto;
+    targetSampleStepConfig.auto = sourceSettings.auto;
 
     if (sourceSettings.auto) {
-      sampleToReplaceStepConfig.filterSettings = current(
-        sampleToReplaceStepConfig.defaultFilterSettings,
+      targetSampleStepConfig.filterSettings = current(
+        targetSampleStepConfig.defaultFilterSettings,
       );
       return;
     }
 
-    sampleToReplaceStepConfig
+    targetSampleStepConfig
       .filterSettings = _.cloneDeep(sourceSettings.filterSettings);
   });
 }, initialState);
