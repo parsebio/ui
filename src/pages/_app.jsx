@@ -81,6 +81,10 @@ const WrappedApp = ({ Component, pageProps }) => {
 
   useEffect(() => {
     if (amplifyConfig && typeof window !== 'undefined') {
+      if (amplifyConfig?.Auth?.cookieStorage) {
+        delete amplifyConfig.Auth.cookieStorage;
+      }
+
       Amplify.configure(amplifyConfig);
 
       setAmplifyConfigured(true);
