@@ -86,6 +86,7 @@ const WrappedApp = ({ Component, pageProps }) => {
       setAmplifyConfigured(true);
     }
   }, [amplifyConfig]);
+
   if (!amplifyConfigured) {
     return null;
   }
