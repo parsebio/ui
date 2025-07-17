@@ -1,14 +1,14 @@
 import getConfig from 'next/config';
 import Cookies from 'js-cookie';
 
-const clearAllCookies = () => {
+const clearCognitoCookies = () => {
   const { domainName } = getConfig().publicRuntimeConfig;
 
   const allCookieKeys = Object.keys(Cookies.get());
 
-  const oldCognitoCookieKeys = allCookieKeys.filter((key) => key.startsWith('CognitoIdentityServiceProvider.'));
+  const cognitoCookieKeys = allCookieKeys.filter((key) => key.startsWith('CognitoIdentityServiceProvider.'));
 
-  oldCognitoCookieKeys.forEach((key) => {
+  cognitoCookieKeys.forEach((key) => {
     Cookies.remove(key, {
       domain: domainName,
       path: '/',
@@ -18,4 +18,4 @@ const clearAllCookies = () => {
   });
 };
 
-export default clearAllCookies;
+export default clearCognitoCookies;
