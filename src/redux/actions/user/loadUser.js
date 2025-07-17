@@ -6,10 +6,10 @@ import signIn from 'utils/signIn';
 
 const loadUser = () => async (dispatch) => {
   try {
+    clearCognitoCookies();
     let user = await Auth.currentAuthenticatedUser();
 
     if (!user.attributes) {
-      clearCognitoCookies();
       user = Auth.currentAuthenticatedUser({ bypassCache: true });
       return;
     }
