@@ -276,11 +276,19 @@ describe('runQC action', () => {
                   minCellSize: 10800,
                   binStep: 200,
                 },
+                defaultFilterSettings: {
+                  minCellSize: 10800,
+                  binStep: 200,
+                },
               },
               sample2: {
                 auto: true,
                 enabled: true,
                 filterSettings: {
+                  minCellSize: 10800,
+                  binStep: 200,
+                },
+                defaultFilterSettings: {
                   minCellSize: 10800,
                   binStep: 200,
                 },
