@@ -34,7 +34,7 @@ PART_COUNT_MAX = 10000
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
 
 # Staging url
-default_prod_api_url = "https://api-default.staging.trailmaker.parsebiosciences.com/v2"
+default_prod_api_url = "https://api-grasp6-api305-ui462.staging.trailmaker.parsebiosciences.com/v2"
 
 # local url
 # default_prod_api_url = "http://localhost:3000/v2"
