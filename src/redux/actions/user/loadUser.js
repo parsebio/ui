@@ -1,13 +1,16 @@
 import { Auth } from '@aws-amplify/auth';
+
 import { USER_LOADED } from 'redux/actionTypes/user';
+import clearAllCookies from 'utils/clearAllCookies';
 import signIn from 'utils/signIn';
 
 const loadUser = () => async (dispatch) => {
   try {
-    const user = await Auth.currentAuthenticatedUser();
+    let user = await Auth.currentAuthenticatedUser();
 
     if (!user.attributes) {
-      Auth.signOut();
+      clearAllCookies();
+      user = Auth.currentAuthenticatedUser({ bypassCache: true });
       return;
     }
 
