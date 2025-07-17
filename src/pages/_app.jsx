@@ -81,7 +81,7 @@ const WrappedApp = ({ Component, pageProps }) => {
   }, [cookiesAgreed, environment]);
 
   useEffect(() => {
-    if (amplifyConfig) {
+    if (amplifyConfig && typeof window !== 'undefined') {
       Amplify.configure(amplifyConfig);
 
       setAmplifyConfigured(true);
