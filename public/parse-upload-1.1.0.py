@@ -22,7 +22,7 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, wait
 from threading import Event, Lock
 
-SCRIPT_VERSION = "1.0.0"
+SCRIPT_VERSION = "1.1.0"
 
 MAX_RETRIES = 8  # Max number of retries to upload each PART_SIZE part
 THREADS_COUNT = 20
