@@ -11,7 +11,6 @@ import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
 import { DefaultSeo } from 'next-seo';
-import getConfig from 'next/config';
 
 import { wrapper } from 'redux/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -81,24 +80,17 @@ const WrappedApp = ({ Component, pageProps }) => {
   }, [cookiesAgreed, environment]);
 
   useEffect(() => {
-    if (amplifyConfig) {
-      const domainName = process.env.NODE_ENV !== 'development'
-        ? getConfig().publicRuntimeConfig.domainName
-        : 'localhost';
-
-      amplifyConfig.Auth.cookieStorage = {
-        domain: domainName,
-        path: '/',
-        expires: 7,
-        secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'strict',
-      };
+    if (amplifyConfig && typeof window !== 'undefined') {
+      if (amplifyConfig?.Auth?.cookieStorage) {
+        delete amplifyConfig.Auth.cookieStorage;
+      }
 
       Amplify.configure(amplifyConfig);
 
       setAmplifyConfigured(true);
     }
   }, [amplifyConfig]);
+
   if (!amplifyConfigured) {
     return null;
   }
