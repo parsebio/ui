@@ -2,6 +2,7 @@
 import React, {
   useState, useEffect, useRef, useMemo, useCallback,
 } from 'react';
+import _ from 'lodash';
 
 import dynamic from 'next/dynamic';
 import {
@@ -165,7 +166,7 @@ const Embedding = (props) => {
   const [convertedCellsData, setConvertedCellsData] = useState();
 
   useEffect(() => {
-    if (!data || !cellSetHidden || !cellSetProperties) return;
+    if (_.isEmpty(data) || !cellSetHidden || !cellSetProperties) return;
 
     setConvertedCellsData(convertCellsData(data, cellSetHidden, cellSetProperties));
   }, [data, cellSetHidden, cellSetProperties]);

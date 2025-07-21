@@ -337,18 +337,13 @@ const filterCells = (cellSets, sampleKey, groupBy) => {
 const generateData = (cellSets, sampleKey, groupBy, embeddingData) => {
   const { filteredCells, cellSetsPlotData } = filterCells(cellSets, sampleKey, groupBy);
 
-  const plotData = embeddingData
-    .map((coordinates, cellId) => ({ cellId, coordinates }))
-    .filter(({ coordinates }) => coordinates !== undefined)
-    .map((data) => {
-      const { cellId, coordinates } = data;
+  const { xValues, yValues, cellIds } = embeddingData;
 
-      return {
-        ...filteredCells[cellId],
-        x: coordinates[0],
-        y: coordinates[1],
-      };
-    });
+  const plotData = cellIds.map((cellId, index) => ({
+    ...filteredCells[cellId],
+    x: xValues[index],
+    y: yValues[index],
+  }));
 
   return { plotData, cellSetsPlotData };
 };
