@@ -155,6 +155,7 @@ const Pipeline = () => {
     kit,
     refGenome,
     pairedWt,
+    immuneDatabase,
   } = useSelector(
     (state) => _.pick(
       state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {},
@@ -435,6 +436,7 @@ const Pipeline = () => {
       render: () => (
         <ImmuneDatabase
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
+          database={immuneDatabase}
         />
       ),
       isValid: false,

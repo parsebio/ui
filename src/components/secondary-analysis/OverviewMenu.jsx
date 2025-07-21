@@ -11,28 +11,9 @@ import Disabler from 'utils/Disabler';
 
 const { Text } = Typography;
 
-const activeStepsGrid = [
-  // row0
-  [
-    // col0.0
-    ['Experimental setup'],
-    // col0.1
-    ['Sample loading table'],
-    // col0.2
-    [
-      // row0.2.0
-      ['Reference genome'],
-      // row0.2.1
-      ['Immune database'],
-    ],
-  ],
-  // row1
-  ['Fastq files'],
-  // row2
-  ['Fastq Pairs Matcher'],
-];
-
-const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
+const OverviewMenu = ({
+  wizardSteps, setCurrentStep, activeStepsGrid, editable,
+}) => {
   const renderCard = (step, wizardIndex, style) => (
     <div key={step.key} style={style}>
       <Disabler disable={step.getIsDisabled()} tooltipText='This step is disabled until the previous steps are completed.'>
@@ -111,11 +92,15 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
     return renderCard(steps[grid], getWizardIndex(), { width: '100%', height: '100%' });
   };
 
+  console.log('activeStepsGridDEbug');
+  console.log(activeStepsGrid);
+
   return renderGrid(activeStepsGrid, wizardSteps);
 };
 
 OverviewMenu.propTypes = {
   wizardSteps: PropTypes.object.isRequired,
+  activeStepsGrid: PropTypes.array.isRequired,
   setCurrentStep: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
 };
