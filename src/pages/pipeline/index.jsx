@@ -282,6 +282,7 @@ const Pipeline = () => {
               fontSize: '1.4vh',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
+              maxWidth: '15vw',
               whiteSpace: 'nowrap',
             }}
             title={value?.length > 20 ? value : ''}

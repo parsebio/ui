@@ -15,7 +15,7 @@ import fetchAPI from 'utils/http/fetchAPI';
 import initialState from 'redux/reducers/experiments/initialState';
 import thunk from 'redux-thunk';
 import userEvent from '@testing-library/user-event';
-import SampleTech from 'const/enums/SampleTech';
+import SampleTech, { getTechNameToDisplay } from 'const/enums/SampleTech';
 
 jest.mock('utils/http/fetchAPI');
 const mockNavigateTo = jest.fn();
@@ -100,8 +100,8 @@ describe('RepositoryTable', () => {
     // Expect there to be no experiments
     Object.keys(experiment1).forEach((key) => {
       if (key === 'sampleTechnologies') {
-        expect(screen.findByText('10x Chromium')).toBeDefined();
-        expect(screen.findByText('Parse Evercode WT')).toBeDefined();
+        expect(screen.findByText(getTechNameToDisplay(SampleTech['10X']))).toBeDefined();
+        expect(screen.findByText(getTechNameToDisplay(SampleTech.PARSE))).toBeDefined();
       } else {
         expect(screen.findByText(experiment1[key])).toBeDefined();
       }

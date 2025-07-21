@@ -3,17 +3,41 @@
 exports[`embeddingsReducer Loading on error condition resets error 1`] = `
 {
   "fghfgdh": {
-    "data": [],
+    "data": {},
     "error": false,
     "loading": true,
   },
 }
 `;
 
+exports[`embeddingsReducer Loads up sparse array for sparse embedding data. 1`] = `
+{
+  "data": {
+    "cellIds": [
+      0,
+      1,
+      2,
+    ],
+    "xValues": [
+      1,
+      2,
+      3,
+    ],
+    "yValues": [
+      2,
+      5,
+      6,
+    ],
+  },
+  "error": false,
+  "loading": false,
+}
+`;
+
 exports[`embeddingsReducer Sets error conditions 1`] = `
 {
   "fghfgdh": {
-    "data": [],
+    "data": {},
     "error": "wow, something really bad happened",
     "loading": false,
   },
@@ -23,7 +47,7 @@ exports[`embeddingsReducer Sets error conditions 1`] = `
 exports[`embeddingsReducer Sets up store for embedding when loading starts 1`] = `
 {
   "fghfgdh": {
-    "data": [],
+    "data": {},
     "error": false,
     "loading": true,
   },

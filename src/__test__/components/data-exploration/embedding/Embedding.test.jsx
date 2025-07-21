@@ -40,7 +40,7 @@ describe('Embedding', () => {
       [initialExperimentState.processing.configureEmbedding.embeddingSettings.method]: {
         ...initialEmbeddingState,
         loading: false,
-        data: [[-13, 32], [6, 7], [43, 9], [57, 3]],
+        data: { xValues: [-13, 6, 43, 57], yValues: [32, 7, 9, 3], cellIds: [0, 1, 2, 3] },
       },
     },
     cellSets: {
@@ -213,7 +213,11 @@ describe('Embedding', () => {
   it('renders CrossHair and CellInfo components when user hovers over cell', () => {
     store = mockStore(initialState);
 
-    const mockProjectFromId = jest.fn((cellId) => store.getState().embeddings.umap.data[cellId]);
+    const mockProjectFromId = jest.fn((cellId) => {
+      const x = store.getState().embeddings.umap.data.xValues[cellId];
+      const y = store.getState().embeddings.umap.data.yValues[cellId];
+      return [x, y];
+    });
 
     const cellCoordinates = {
       projectFromId: mockProjectFromId,
@@ -235,8 +239,8 @@ describe('Embedding', () => {
     expect(crossHairs.length).toEqual(1);
     expect(crossHairs.props().coordinates.current).toEqual(
       {
-        x: store.getState().embeddings.umap.data[2][0],
-        y: store.getState().embeddings.umap.data[2][1],
+        x: store.getState().embeddings.umap.data.xValues[2],
+        y: store.getState().embeddings.umap.data.yValues[2],
         width,
         height,
       },
@@ -248,7 +252,11 @@ describe('Embedding', () => {
   it('does not render CrossHair and CellInfo components when user zooms in or out of the embedding', () => {
     store = mockStore(initialState);
 
-    const mockProjectFromId = jest.fn((cellId) => store.getState().embeddings.umap.data[cellId]);
+    const mockProjectFromId = jest.fn((cellId) => {
+      const x = store.getState().embeddings.umap.data.xValues[cellId];
+      const y = store.getState().embeddings.umap.data.yValues[cellId];
+      return [x, y];
+    });
 
     const cellCoordinates = {
       projectFromId: mockProjectFromId,

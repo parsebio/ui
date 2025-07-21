@@ -46,7 +46,11 @@ describe('embeddingsReducer', () => {
   });
 
   it('Loads up sparse array for sparse embedding data.', () => {
-    const data = [[1, 2], null, [5, 6]];
+    const data = {
+      xValues: [1, 2, 3],
+      yValues: [2, 5, 6],
+      cellIds: [0, 1, 2],
+    };
 
     const newState = embeddingsReducer(initialState, {
       type: EMBEDDINGS_LOADED,
@@ -57,13 +61,7 @@ describe('embeddingsReducer', () => {
       },
     });
 
-    let iterableElements = 0;
-
-    newState[embeddingType].data.forEach(() => {
-      iterableElements += 1;
-    });
-
-    expect(iterableElements).toEqual(2);
+    expect(newState[embeddingType]).toMatchSnapshot();
   });
 
   it('Sets error conditions', () => {
