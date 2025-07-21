@@ -88,7 +88,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
     if (Array.isArray(grid)) {
       // If this is a row (array), render a Row
       return (
-        <Row gutter={[2, 2]} style={{ marginBottom: '1vh' }}>
+        <Row gutter={[2, 2]} style={{ marginBottom: '1vh', height: '100%' }}>
           {grid.map((col, idx) => (
             <Col key={Array.isArray(col) ? `col-${parentIndex.concat(idx).join('-')}` : steps[col]?.key || col} flex={1}>
               {renderGrid(col, steps, parentIndex.concat(idx))}
@@ -100,7 +100,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
     // If this is a string, render the card for the step
     const step = steps[grid];
     if (!step) return null;
-    return renderCard(step, parentIndex[parentIndex.length - 1] || 0, 24, { width: '100%' });
+    return renderCard(step, parentIndex[parentIndex.length - 1] || 0, 24, { width: '100%', height: '100%' });
   };
 
   return renderGrid(activeStepsGrid, wizardSteps);
