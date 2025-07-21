@@ -9,6 +9,8 @@ const sampleifiedConfig = (sampleIds, configToReplicate) => {
     (acum, sampleId) => {
       // eslint-disable-next-line no-param-reassign
       acum[sampleId] = configToReplicate;
+      // eslint-disable-next-line no-param-reassign
+      acum[sampleId].defaultFilterSettings = configToReplicate.filterSettings;
       return acum;
     },
     {},
