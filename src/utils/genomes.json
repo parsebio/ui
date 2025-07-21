@@ -32,6 +32,10 @@
     "species": "Arabidopsis thaliana (Thale cress)"
   },
   {
+    "name": "Af293",
+    "species": "Aspergillus fumigatus Af293 (Aspergillus fumigatus)"
+  },
+  {
     "name": "AstCal1-3",
     "species": "Astatotilapia calliptera (Eastern happy)"
   },
@@ -264,6 +268,10 @@
     "species": "Custom Drosophila melanogaster (Fruit fly)"
   },
   {
+    "name": "GRCh38_CART",
+    "species": "Custom Homo sapiens (Human)"
+  },
+  {
     "name": "GRCh38_mCherry",
     "species": "Custom Homo sapiens (Human)"
   },
@@ -374,6 +382,10 @@
   {
     "name": "GRCm39_BCs1259DJ",
     "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCm39_DsRed_WPRE",
+    "species": "Custom Mus musculus (Mouse) with DsRed and WPRE"
   },
   {
     "name": "GRCm39-GFPh",
