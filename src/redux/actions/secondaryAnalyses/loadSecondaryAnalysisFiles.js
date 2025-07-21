@@ -4,17 +4,17 @@ import { SECONDARY_ANALYSIS_FILES_LOADED, SECONDARY_ANALYSIS_FILES_LOADING } fro
 import fetchAPI from 'utils/http/fetchAPI';
 import UploadStatus from 'utils/upload/UploadStatus';
 import cache from 'utils/cache';
-import { getSublibraryName } from 'utils/fastqUtils';
+import { getPairData } from 'utils/fastqUtils';
 
 const getPairMatchesForRedux = (pairMatches, reduxFiles) => (
   pairMatches.reduce((acc, { wtFileR1Id, immuneFileR1Id }) => {
     const { name: wtFileR1Name } = reduxFiles.find(({ id }) => id === wtFileR1Id);
     const { name: immuneFileR1Name } = reduxFiles.find(({ id }) => id === immuneFileR1Id);
 
-    const wtPairName = getSublibraryName(wtFileR1Name);
-    const immunePairName = getSublibraryName(immuneFileR1Name);
+    const { name: wtPairName } = getPairData(wtFileR1Name);
+    const { name: immunePairName } = getPairData(immuneFileR1Name);
 
-    acc[getSublibraryName(immunePairName)] = wtPairName;
+    acc[immunePairName] = wtPairName;
 
     return acc;
   }, {})

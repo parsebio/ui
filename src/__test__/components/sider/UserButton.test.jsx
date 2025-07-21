@@ -43,20 +43,22 @@ describe('UserButton', () => {
 
     store = makeStore();
 
-    Auth.currentAuthenticatedUser = jest.fn(() => Promise.resolve({
-      attributes: {
-        name: userName,
-        'custom:agreed_terms_v2': 'true',
-      },
-    }));
+    Auth.currentAuthenticatedUser = jest.fn().mockImplementation(
+      () => Promise.resolve({
+        attributes: {
+          name: userName,
+          'custom:agreed_terms_v2': 'true',
+        },
+      }),
+    );
     Auth.signOut = jest.fn(() => { });
     Auth.federatedSignIn = jest.fn(() => { });
-
-    store.dispatch(loadUser());
   });
 
   it('Shows sign in by default', async () => {
-    Auth.currentAuthenticatedUser = jest.fn(() => Promise.resolve(null));
+    Auth.currentAuthenticatedUser.mockReset()
+      .mockImplementation(() => Promise.resolve(null));
+
     store.dispatch(loadUser());
 
     await renderUserButton(store);
@@ -65,6 +67,7 @@ describe('UserButton', () => {
   });
 
   it('Shows the user initial for the ', async () => {
+    store.dispatch(loadUser());
     const userInitial = getUserInitial();
 
     await renderUserButton(store);
@@ -73,6 +76,7 @@ describe('UserButton', () => {
   });
 
   it('Clicking on menu opens up the menu bar', async () => {
+    store.dispatch(loadUser());
     await renderUserButton(store);
 
     const button = getLoginButton();
