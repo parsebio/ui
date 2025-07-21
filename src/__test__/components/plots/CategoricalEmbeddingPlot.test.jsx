@@ -72,7 +72,6 @@ describe('Categorical embedding plot', () => {
 
   it('Renders correctly with data', async () => {
     await renderCategoricalEmbeddingPlot(storeState);
-
     expect(screen.getByRole('graphics-document', { name: 'Categorical embedding plot' })).toBeInTheDocument();
   });
 
