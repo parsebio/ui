@@ -35,6 +35,8 @@ PART_COUNT_MAX = 10000
 
 # Staging url
 default_prod_api_url = "https://api-grasp6-api305-ui462.staging.trailmaker.parsebiosciences.com/v2"
+# default_prod_api_url = "https://api-default.staging.trailmaker.parsebiosciences.com/v2"
+
 
 # local url
 # default_prod_api_url = "http://localhost:3000/v2"
@@ -59,10 +61,8 @@ def wipe_file(file_path):
 def get_resume_params_from_file(version_check=False):
     if not os.path.exists(RESUME_PARAMS_PATH):
         raise Exception("No resume parameters file {} found, try beginning a new upload".format(RESUME_PARAMS_PATH))
-
     with open(RESUME_PARAMS_PATH, "r") as file:
         lines = file.read().splitlines()
-
         if (version_check):
             if (len(lines) < 7 or lines[6] != SCRIPT_VERSION):
                 print("""[WARNING] The upload you are about to resume seems to have been begun with an older script than the one you are using now.
@@ -77,7 +77,16 @@ def get_resume_params_from_file(version_check=False):
         analysis_id = lines[0]
         upload_params = json.loads(lines[1])
         current_file_created = lines[2] == "True"
-        file_list = json.loads(lines[3])
+        file_list = []
+        # resume file might be in the old format
+        # todo remove after some time when we are sure no one uses the old format
+        try:
+            file_list = json.loads(lines[3])
+        except json.JSONDecodeError:
+            files = lines[3].split(",")
+            for file in files:
+                file_list.append({"path": file, "type": "wtFastq"})
+
         current_file_index = int(lines[4])
         completed_parts_by_thread = [
             int(offset_str) for offset_str in lines[5].split(",")
@@ -732,10 +741,6 @@ def check_script_version_is_latest(api_token, resume):
     if (outdated and not resume):
         raise Exception("The script you are using is outdated. Please download the latest version from the browser application")
 
-    if outdated and resume:
-        print("""[Warning] The script you are using is outdated. It is recommended to download the newest version from the browser application and begin the upload from scratch""")
-        input("If you want to continue with the current version, press ENTER. Otherwise, press CTRL+C to cancel the upload")
-
 def check_files_validity(files):
     # Take list of glob patterns and expand and flatten them into a list of files
     files_list = [file for glob_pattern in files for file in glob.glob(glob_pattern)]
@@ -746,7 +751,7 @@ def check_files_validity(files):
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
-    non_resumable_args = args.run_id or args.file
+    non_resumable_args = args.run_id or args.wt_files or args.immune_files
 
     if non_resumable_args and args.resume:
         raise Exception(
@@ -822,7 +827,7 @@ def main():
         default=THREADS_COUNT,
     )
     parser.add_argument(
-        "-r", "--resume", action="store_true", help="Resume an interrupted upload"
+        "-r", "--resume", action="store_true", help="Resume an interrupted upload", required=False
     )
 
     args = parser.parse_args()
