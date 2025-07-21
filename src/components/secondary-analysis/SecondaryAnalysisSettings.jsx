@@ -75,6 +75,10 @@ const SecondaryAnalysisSettings = (props) => {
         chemistryVersion = '3';
       }
 
+      if (isKitCategory(kit, kitCategories.WT)) {
+        pairedWt = false;
+      }
+
       return {
         ...prevFormValues,
         numOfSublibraries: 1,
