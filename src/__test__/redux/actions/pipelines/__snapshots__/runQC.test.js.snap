@@ -13,7 +13,7 @@ exports[`runQC action Dispatches events properly 2`] = `
 [
   "http://localhost:3000/v2/experiments/experiment-id/qc",
   {
-    "body": "{"processingConfigDiff":{"cellSizeDistribution":{"sample1":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200}},"sample2":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200}}}}}",
+    "body": "{"processingConfigDiff":{"cellSizeDistribution":{"sample1":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200},"defaultFilterSettings":{"minCellSize":10800,"binStep":200}},"sample2":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200},"defaultFilterSettings":{"minCellSize":10800,"binStep":200}}}}}",
     "headers": {
       "Content-Type": "application/json",
     },
@@ -108,7 +108,7 @@ exports[`runQC action Triggers qc correctly when an error happened and running w
 [
   "http://localhost:3000/v2/experiments/experiment-id/qc",
   {
-    "body": "{"processingConfigDiff":{"cellSizeDistribution":{"sample1":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200}},"sample2":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200}}}}}",
+    "body": "{"processingConfigDiff":{"cellSizeDistribution":{"sample1":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200},"defaultFilterSettings":{"minCellSize":10800,"binStep":200}},"sample2":{"auto":true,"enabled":true,"filterSettings":{"minCellSize":10800,"binStep":200},"defaultFilterSettings":{"minCellSize":10800,"binStep":200}}}}}",
     "headers": {
       "Content-Type": "application/json",
     },

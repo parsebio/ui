@@ -83,6 +83,10 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "cellSizeDistribution": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 200,
+          "minCellSize": 10800,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 200,
@@ -93,6 +97,9 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "classifier": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "FDR": 0.1,
+        },
         "enabled": true,
         "filterSettings": {
           "FDR": 0.1,
@@ -158,6 +165,10 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "doubletScores": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 0.05,
+          "probabilityThreshold": 0.2,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 0.05,
@@ -174,6 +185,15 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "mitochondrialContent": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "method": "absoluteThreshold",
+          "methodSettings": {
+            "absoluteThreshold": {
+              "binStep": 200,
+              "maxFraction": 0.1,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "method": "absoluteThreshold",
@@ -189,6 +209,14 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "numGenesVsNumUmis": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "regressionType": "gam",
+          "regressionTypeSettings": {
+            "gam": {
+              "p.level": 0.00009,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "regressionType": "gam",
@@ -205,6 +233,10 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "cellSizeDistribution": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 200,
+          "minCellSize": 10800,
+        },
         "enabled": false,
         "filterSettings": {
           "binStep": 200,
@@ -215,6 +247,9 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "classifier": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "FDR": 0.1,
+        },
         "enabled": true,
         "filterSettings": {
           "FDR": 0.1,
@@ -280,6 +315,10 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "doubletScores": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 0.05,
+          "probabilityThreshold": 0.2,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 0.05,
@@ -298,6 +337,15 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "mitochondrialContent": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "method": "absoluteThreshold",
+          "methodSettings": {
+            "absoluteThreshold": {
+              "binStep": 200,
+              "maxFraction": 0.1,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "method": "absoluteThreshold",
@@ -313,6 +361,14 @@ exports[`experimentSettingsReducer Changing filter enabled property updates samp
     "numGenesVsNumUmis": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "regressionType": "gam",
+          "regressionTypeSettings": {
+            "gam": {
+              "p.level": 0.00009,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "regressionType": "gam",
@@ -341,6 +397,10 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "cellSizeDistribution": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 200,
+          "minCellSize": 10800,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 200,
@@ -351,6 +411,9 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "classifier": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "FDR": 0.1,
+        },
         "enabled": true,
         "filterSettings": {
           "FDR": 0.1,
@@ -416,6 +479,10 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "doubletScores": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 0.05,
+          "probabilityThreshold": 0.2,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 0.05,
@@ -432,6 +499,15 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "mitochondrialContent": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "method": "absoluteThreshold",
+          "methodSettings": {
+            "absoluteThreshold": {
+              "binStep": 200,
+              "maxFraction": 0.1,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "method": "absoluteThreshold",
@@ -447,6 +523,14 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "numGenesVsNumUmis": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "regressionType": "gam",
+          "regressionTypeSettings": {
+            "gam": {
+              "p.level": 0.00009,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "regressionType": "gam",
@@ -463,6 +547,10 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "cellSizeDistribution": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 200,
+          "minCellSize": 10800,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 200,
@@ -473,6 +561,9 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "classifier": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "FDR": 0.1,
+        },
         "enabled": true,
         "filterSettings": {
           "FDR": 0.1,
@@ -538,6 +629,10 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "doubletScores": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 0.05,
+          "probabilityThreshold": 0.2,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 0.05,
@@ -554,6 +649,15 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "mitochondrialContent": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "method": "absoluteThreshold",
+          "methodSettings": {
+            "absoluteThreshold": {
+              "binStep": 200,
+              "maxFraction": 0.1,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "method": "absoluteThreshold",
@@ -569,6 +673,14 @@ exports[`experimentSettingsReducer Correctly updates pipelineVersion 1`] = `
     "numGenesVsNumUmis": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "regressionType": "gam",
+          "regressionTypeSettings": {
+            "gam": {
+              "p.level": 0.00009,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "regressionType": "gam",
@@ -629,6 +741,10 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "cellSizeDistribution": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 200,
+          "minCellSize": 10800,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 200,
@@ -639,6 +755,9 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "classifier": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "FDR": 0.1,
+        },
         "enabled": true,
         "filterSettings": {
           "FDR": 0.1,
@@ -704,6 +823,10 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "doubletScores": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 0.05,
+          "probabilityThreshold": 0.2,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 0.05,
@@ -720,6 +843,15 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "mitochondrialContent": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "method": "absoluteThreshold",
+          "methodSettings": {
+            "absoluteThreshold": {
+              "binStep": 200,
+              "maxFraction": 0.1,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "method": "absoluteThreshold",
@@ -735,6 +867,14 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "numGenesVsNumUmis": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "regressionType": "gam",
+          "regressionTypeSettings": {
+            "gam": {
+              "p.level": 0.00009,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "regressionType": "gam",
@@ -751,6 +891,10 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "cellSizeDistribution": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 200,
+          "minCellSize": 10800,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 400,
@@ -761,6 +905,9 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "classifier": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "FDR": 0.1,
+        },
         "enabled": true,
         "filterSettings": {
           "FDR": 0.1,
@@ -826,6 +973,10 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "doubletScores": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "binStep": 0.05,
+          "probabilityThreshold": 0.2,
+        },
         "enabled": true,
         "filterSettings": {
           "binStep": 0.05,
@@ -842,6 +993,15 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "mitochondrialContent": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "method": "absoluteThreshold",
+          "methodSettings": {
+            "absoluteThreshold": {
+              "binStep": 200,
+              "maxFraction": 0.1,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "method": "absoluteThreshold",
@@ -857,6 +1017,14 @@ exports[`experimentSettingsReducer Updates sample settings properly 1`] = `
     "numGenesVsNumUmis": {
       "sample-KO": {
         "auto": true,
+        "defaultFilterSettings": {
+          "regressionType": "gam",
+          "regressionTypeSettings": {
+            "gam": {
+              "p.level": 0.00009,
+            },
+          },
+        },
         "enabled": true,
         "filterSettings": {
           "regressionType": "gam",

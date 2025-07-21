@@ -47,6 +47,7 @@ const MockCalculationConfig = (props) => {
     </div>
   );
 };
+
 describe('CalculationConfigContainer', () => {
   let store = null;
   const onConfigChange = jest.fn();
@@ -73,6 +74,7 @@ describe('CalculationConfigContainer', () => {
       </Provider>,
     );
   });
+
   const setRadioButton = (value) => {
     const label = value[0].toUpperCase() + value.slice(1);
     userEvent.click(screen.getByText(label));
@@ -87,22 +89,26 @@ describe('CalculationConfigContainer', () => {
     testRadioButton('automatic');
     testRadioButton('manual');
   });
+
   it('displays a warning when the auto setting is changed', () => {
     expect(screen.queryAllByText(ALERT_TEXT, { exact: false }).length).toBe(0);
     setRadioButton('manual');
     expect(screen.queryAllByText(ALERT_TEXT, { exact: false }).length).toBe(1);
   });
+
   it('displays a warning when contained components notifies a change', () => {
     expect(screen.queryAllByText(ALERT_TEXT, { exact: false }).length).toBe(0);
     userEvent.click(screen.getByText('Mock update'));
     expect(screen.queryAllByText(ALERT_TEXT, { exact: false }).length).toBe(1);
   });
+
   it('removes the warning when the values are applied to all samples', () => {
     userEvent.click(screen.getByText('Mock update'));
     expect(screen.queryAllByText(ALERT_TEXT, { exact: false }).length).toBe(1);
     userEvent.click(screen.getByText('Copy to all samples'));
     expect(screen.queryAllByText(ALERT_TEXT, { exact: false }).length).toBe(0);
   });
+
   it('updates the redux store for all samples when the values are applied to all samples', () => {
     let state = store.getState().experimentSettings.processing;
     setRadioButton('manual');
@@ -110,6 +116,7 @@ describe('CalculationConfigContainer', () => {
     state = store.getState().experimentSettings.processing;
     expect(state[filterName][sampleIds[0]]).toEqual(state[filterName][sampleIds[1]]);
   });
+
   it('updates the redux store for all samples when auto is applied to one sample and then copied to all', () => {
     let state = store.getState().experimentSettings.processing;
 

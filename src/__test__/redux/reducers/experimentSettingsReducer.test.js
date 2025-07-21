@@ -125,6 +125,10 @@ describe('experimentSettingsReducer', () => {
           minCellSize: 10800,
           binStep: 400,
         },
+        defaultFilterSettings: {
+          minCellSize: 10800,
+          binStep: 200,
+        },
       },
     };
 
@@ -153,6 +157,10 @@ describe('experimentSettingsReducer', () => {
         auto: true,
         enabled: false,
         filterSettings: {
+          minCellSize: 10800,
+          binStep: 200,
+        },
+        defaultFilterSettings: {
           minCellSize: 10800,
           binStep: 200,
         },
