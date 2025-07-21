@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
+import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
 
 const maxLabelLength = 85;
 const maxLabelHeight = 25;
@@ -665,7 +666,6 @@ const insertPseudotimeSpec = (spec, config, pseudotime) => {
 
 const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) => {
   const plotData = [];
-  const cellSetsPlotData = [];
 
   let selectedCellSetObjects = Object.keys(cellSets.properties)
     .filter((key) => selectedCellSets.includes(key))
@@ -689,21 +689,29 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
   // Filter array for duplicate cell sets
   selectedCellSetObjects = _.uniqBy(selectedCellSetObjects, 'key');
 
-  selectedCellSetObjects.forEach((cellSet) => {
-    const { key, name, color } = cellSet;
+  const cellSetsPlotData = selectedCellSetObjects.map(({ key, name, color }) => (
+    { key, name, color }
+  ));
 
-    cellSetsPlotData.push(({ key, name, color }));
+  const { xValues, yValues, cellIds: embeddingCellIds } = embedding;
 
-    cellSet.cellIds.forEach((cellId) => {
-      if (!embedding[cellId]) return;
-
-      plotData.push({
-        cellId,
-        cellSetKey: key,
-        cellSetName: name,
-        color,
-        x: embedding[cellId][0],
-        y: embedding[cellId][1],
+  embeddingCellIds.forEach((cellId, index) => {
+    const cellSetsForCell = getContainingCellSetsProperties(
+      cellId,
+      selectedCellSets,
+      cellSets,
+    );
+    // usually 1 cellSet for each cellId because most cell sets in a cell class are disjoint
+    Object.keys(cellSetsForCell).forEach((rootNode) => {
+      cellSetsForCell[rootNode].forEach(({ key, name, color }) => {
+        plotData.push({
+          cellId,
+          cellSetKey: key,
+          cellSetName: name,
+          color,
+          x: xValues[index],
+          y: yValues[index],
+        });
       });
     });
   });
@@ -746,23 +754,20 @@ const generatePseudotimeData = (
 ) => {
   const cellsWithPseudotimeValue = [];
   const cellsWithoutPseudotimeValue = [];
-
-  embeddingPlotData
-    .forEach((data) => {
-      const { cellId, x, y } = data;
-      const cellData = {
-        x,
-        y,
-        value: plotData[cellId],
-      };
-
-      if (cellData.value) {
-        cellsWithPseudotimeValue.push(cellData);
-      } else {
-        cellsWithoutPseudotimeValue.push(cellData);
-      }
-    });
-
+  const { xValues, yValues, cellIds } = embeddingPlotData;
+  cellIds.forEach((cellId, index) => {
+    const value = plotData[index];
+    const cellData = {
+      x: xValues[index],
+      y: yValues[index],
+      value,
+    };
+    if (value) {
+      cellsWithPseudotimeValue.push(cellData);
+    } else {
+      cellsWithoutPseudotimeValue.push(cellData);
+    }
+  });
   return {
     cellsWithPseudotimeValue,
     cellsWithoutPseudotimeValue,

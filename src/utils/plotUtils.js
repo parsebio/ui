@@ -67,25 +67,25 @@ const colorByGeneExpression = (truncatedExpression, min, max = 4) => {
 };
 
 const convertCellsData = (results, hidden, properties) => {
-  const data = [[], []];
-  const obsEmbeddingIndex = [];
+  let { xValues, yValues, cellIds } = results;
 
   const hiddenCells = union([...hidden], properties);
-  results.forEach((value, key) => {
-    if (hiddenCells.has(key)) {
-      return;
-    }
-    if (value.length !== 2) {
-      throw new Error('Unexpected number of embedding dimensions');
-    }
-    data[0].push(value[0]);
-    data[1].push(value[1]);
-    obsEmbeddingIndex.push(key.toString());
-  });
+  if (hiddenCells.size > 0) {
+    const filteredIndices = [];
+    cellIds.forEach((cellId, index) => {
+      if (!hiddenCells.has(cellId)) {
+        filteredIndices.push(index);
+      }
+    });
+
+    xValues = filteredIndices.map((index) => xValues[index]);
+    yValues = filteredIndices.map((index) => yValues[index]);
+    cellIds = filteredIndices.map((index) => cellIds[index]);
+  }
 
   return {
-    obsEmbedding: { data, shape: [data.length, data[0].length] },
-    obsEmbeddingIndex,
+    obsEmbedding: { data: [xValues, yValues], shape: [2, cellIds.length] },
+    obsEmbeddingIndex: cellIds.map((cellId) => cellId.toString()),
   };
 };
 

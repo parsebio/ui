@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Vega } from 'react-vega';
+import _ from 'lodash';
 
 import { generateSpec, generateData } from 'utils/plotSpecs/generateEmbeddingCategoricalSpec';
 import { loadEmbedding } from 'redux/actions/embedding';
@@ -50,7 +51,7 @@ const CategoricalEmbeddingPlot = (props) => {
   useEffect(() => {
     if (!config || !cellSets.accessible) return;
 
-    if (embeddingData?.length) {
+    if (!_.isEmpty(embeddingData)) {
       const {
         plotData,
         cellSetsPlotData,
