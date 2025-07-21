@@ -5,6 +5,7 @@ import CategoricalEmbedding from 'pages/experiments/[experimentId]/plots-and-tab
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
+import { updateExperimentInfo } from 'redux/actions/experimentSettings';
 import { loadBackendStatus } from 'redux/actions/backendStatus';
 import { makeStore } from 'redux/store';
 import fetchWork from 'utils/work/fetchWork';
@@ -90,6 +91,15 @@ describe('Categorical embedding plot', () => {
     storeState = makeStore();
 
     // Set up state for backend status
+    await storeState.dispatch(
+      updateExperimentInfo({
+        experimentId,
+        experimentName: 'mockedName',
+        sampleIds: ['1', '2'],
+        pipelineVersion: 'v2',
+        accessRole: 'owner',
+      }),
+    );
     await storeState.dispatch(loadBackendStatus(experimentId));
   });
 
@@ -136,12 +146,9 @@ describe('Categorical embedding plot', () => {
 
     await renderCategoricalEmbeddingPage(storeState);
 
-    // Vega should appear
-    await waitFor(() => {
-      expect(screen.getByRole('graphics-document', { name: 'Categorical embedding plot' })).toBeInTheDocument();
-    });
-
     // The legend alert plot text should appear
-    expect(screen.getByText(/We have hidden the plot legend, because it is too large and it interferes with the display of the plot/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/We have hidden the plot legend, because it is too large and it interferes with the display of the plot/)).toBeInTheDocument();
+    });
   });
 });

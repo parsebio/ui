@@ -91,7 +91,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
       !config
       || !cellSets.accessible
       || cellSets.error
-      || !embeddingData?.length
+      || !embeddingData?.cellIds.length
     ) return {};
 
     return generateTrajectoryEmbeddingData(cellSets, embeddingData, config.selectedCellSets);
@@ -115,7 +115,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
 
     return generatePseudotimeData(
       startingNodesPlotData.pseudotime,
-      embeddingPlotData,
+      embeddingData,
     );
   }, [
     embeddingPlotData,
@@ -129,12 +129,12 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
 
   const xExtent = useMemo(() => {
     if (!embeddingData) return [-10, 10];
-    return extent(embeddingData.filter((data) => data !== undefined).map((data) => data[0]));
+    return extent(embeddingData.xValues);
   }, [embeddingData]);
 
   const yExtent = useMemo(() => {
     if (!embeddingData) return [-10, 10];
-    return extent(embeddingData.filter((data) => data !== undefined).map((data) => data[1]));
+    return extent(embeddingData.yValues);
   }, [embeddingData]);
 
   useImperativeHandle(ref, () => ({
