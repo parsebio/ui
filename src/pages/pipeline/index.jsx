@@ -77,9 +77,12 @@ const baseStepsKeys = [
 ];
 
 const pairedWTStepsKeys = [
-  ...baseStepsKeys,
-  'Fastq Pairs Matcher',
+  'Experimental setup',
+  'Sample loading table',
+  'Reference genome',
   'Immune database',
+  'Fastq files',
+  'Fastq Pairs Matcher',
 ];
 
 const normalStepsGrid = [

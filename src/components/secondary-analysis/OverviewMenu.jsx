@@ -33,7 +33,7 @@ const activeStepsGrid = [
 ];
 
 const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
-  const renderCard = (step, index, span, style) => (
+  const renderCard = (step, wizardIndex, style) => (
     <div key={step.key} style={style}>
       <Disabler disable={step.getIsDisabled()} tooltipText='This step is disabled until the previous steps are completed.'>
         <Card
@@ -67,7 +67,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
               icon={<EditOutlined />}
               onClick={(event) => {
                 event.stopPropagation();
-                setCurrentStep(index);
+                setCurrentStep(wizardIndex);
               }}
               type='link'
             />
@@ -79,42 +79,39 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
     </div>
   );
 
-  const firstRowSteps = ['Experimental setup', 'Sample loading table', 'Reference genome', 'Immune database'];
-  const firstRowStepsData = Object.values(_.pick(wizardSteps, firstRowSteps));
-  const leftoverStepsData = Object.values(_.omit(wizardSteps, firstRowSteps));
+  let wizardIndex = -1;
+  const getWizardIndex = () => {
+    wizardIndex += 1;
+    return wizardIndex;
+  };
 
   // Helper to recursively render grid rows/cols
-  const renderGrid = (grid, steps, parentIndex = []) => {
+  const renderGrid = (grid, steps, isRow = true) => {
     if (Array.isArray(grid)) {
-      // If this is a row (array), render a Row
+      if (isRow) {
+        return (
+          grid.map((col) => (
+            <Row gutter={[2, 2]} style={{ height: `${100 / grid.length}%` }}>
+              {renderGrid(col, steps, !isRow)}
+            </Row>
+          ))
+        );
+      }
+
       return (
-        <Row gutter={[2, 2]} style={{ marginBottom: '1vh', height: '100%' }}>
-          {grid.map((col, idx) => (
-            <Col key={Array.isArray(col) ? `col-${parentIndex.concat(idx).join('-')}` : steps[col]?.key || col} flex={1}>
-              {renderGrid(col, steps, parentIndex.concat(idx))}
-            </Col>
-          ))}
-        </Row>
+        grid.map((col) => (
+          <Col flex={1}>
+            {renderGrid(col, steps, !isRow)}
+          </Col>
+        ))
       );
     }
+
     // If this is a string, render the card for the step
-    const step = steps[grid];
-    if (!step) return null;
-    return renderCard(step, parentIndex[parentIndex.length - 1] || 0, 24, { width: '100%', height: '100%' });
+    return renderCard(steps[grid], getWizardIndex(), { width: '100%', height: '100%' });
   };
 
   return renderGrid(activeStepsGrid, wizardSteps);
-
-  // return (
-  //   <Card style={{ maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }} size='small'>
-  //     <div style={{ display: 'flex', marginBottom: '1vh' }}>
-  //       {firstRowStepsData.map((step, index) => renderCard(step, index, 8, { flex: 0.5, display: 'flex', marginRight: '1vh' }))}
-  //     </div>
-  //     <div>
-  //       {leftoverStepsData.map((step, index) => renderCard(step, index + 3, 24, { marginBottom: '1vh', width: '100%' }))}
-  //     </div>
-  //   </Card>
-  // );
 };
 
 OverviewMenu.propTypes = {
