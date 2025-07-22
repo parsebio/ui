@@ -18,7 +18,7 @@ const FastqFilesTable = (props) => {
     files, canEditTable, secondaryAnalysisId, pairedWt, kit,
   } = props;
 
-  const filterFilesByCondition = (fileType) => {
+  const getFastqIsActive = (fileType) => {
     if (isKitCategory(kit, [kitCategories.WT])) {
       return fileType === WT_FASTQ;
     } if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR]) && !pairedWt) {
@@ -27,7 +27,7 @@ const FastqFilesTable = (props) => {
     return true;
   };
 
-  const filteredFiles = Object.values(files).filter((file) => filterFilesByCondition(file.type));
+  const filteredFiles = Object.values(files).filter((file) => getFastqIsActive(file.type));
 
   filteredFiles.sort((a) => {
     if (a.type === WT_FASTQ) return -1;
