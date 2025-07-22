@@ -328,7 +328,7 @@ const UploadFastqForm = (props) => {
   }
 
   const consoleUploadCommand = `python parse-upload-${parseUploadScriptVersion}.py \\
-  --token ${newToken || 'YOUR_TOKEN'} \\
+  --token ${newToken ?? 'YOUR_TOKEN'} \\
   --run_id ${secondaryAnalysisId} \\
   ${uploadCommandFileParameters}
   `;
