@@ -34,14 +34,13 @@ PART_COUNT_MAX = 10000
 # To run other than in production, run the following environment command: export PARSE_API_URL=<api-base-url>
 
 # Staging url
-default_prod_api_url = "https://api-grasp6-api305-ui462.staging.trailmaker.parsebiosciences.com/v2"
 # default_prod_api_url = "https://api-default.staging.trailmaker.parsebiosciences.com/v2"
 
 
 # local url
 # default_prod_api_url = "http://localhost:3000/v2"
 # Production url
-# default_prod_api_url = "https://api.app.trailmaker.parsebiosciences.com/v2"
+default_prod_api_url = "https://api.app.trailmaker.parsebiosciences.com/v2"
 
 base_url = os.environ.get("PARSE_API_URL") or default_prod_api_url
 
@@ -179,10 +178,11 @@ def http_post(url, headers, json_data={}):
         request = urllib.request.Request(url, data=data, headers=headers, method="POST")
         with urllib.request.urlopen(request) as response:
             return HTTPResponse(response, response.read())
-
-    except Exception as e:
+    except urllib.error.HTTPError as e:
         error_body = e.read()
         return HTTPResponse(e, error_body)
+    except Exception as e:
+        return HTTPResponse(e)
 
 # Manages
 # - the parameters required for upload,
