@@ -198,8 +198,7 @@ const SecondaryAnalysisSettings = (props) => {
             <Switch
               checked={formValues.pairedWt}
               onChange={(value) => {
-                if (!value && secondaryAnalysisDetails.pairedWt
-                  && Object.keys(wtFiles).length > 0) {
+                if (!value && Object.keys(wtFiles).length > 0) {
                   Modal.confirm({
                     title: 'You have WT Fastq files uploaded.',
                     content: 'Do you want to disable paired WT mode? Your files will not be deleted.',
