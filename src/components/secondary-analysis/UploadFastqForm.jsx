@@ -24,6 +24,7 @@ import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
+import { labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 
 import { getMatchingPairFor, hasReadPair } from 'utils/fastqUtils';
 import FastqFileType from 'const/enums/FastqFileType';
@@ -32,14 +33,9 @@ import FastqDropzones from './FastqDropzones';
 
 const { Text, Title } = Typography;
 
-const labelsByFastqType = {
-  wtFastq: 'WT',
-  immuneFastq: 'Immune',
-};
-
 const emptyFilesByType = {
-  wtFastq: { valid: [], invalid: [] },
-  immuneFastq: { valid: [], invalid: [] },
+  [FastqFileType.WT_FASTQ]: { valid: [], invalid: [] },
+  [FastqFileType.IMMUNE_FASTQ]: { valid: [], invalid: [] },
 };
 
 const parseUploadScriptVersion = '1.0.0';
