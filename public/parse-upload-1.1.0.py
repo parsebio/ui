@@ -121,7 +121,6 @@ class HTTPResponse:
         self._response = response
         self._response_data = response_data
         self._is_error = isinstance(self._response, Exception)
-
     def json(self):
         if self._response_data == None:
             raise Exception("Internal error, please try again.")
@@ -178,12 +177,12 @@ def http_post(url, headers, json_data={}):
 
     try:
         request = urllib.request.Request(url, data=data, headers=headers, method="POST")
-
         with urllib.request.urlopen(request) as response:
             return HTTPResponse(response, response.read())
 
     except Exception as e:
-        return HTTPResponse(e)
+        error_body = e.read()
+        return HTTPResponse(e, error_body)
 
 # Manages
 # - the parameters required for upload,
@@ -581,8 +580,8 @@ def begin_multipart_upload(analysis_id, file, api_token):
 
     if response.status_code != 200:
         if response.status_code == 400:
-            print("responseDebug")
-            print(response)
+            error = response.json()
+            raise Exception(error["message"])
         if response.status_code == 401:
             raise Exception(
                 "Not authorized to upload files to this run, please verify your --run_id and --token"
