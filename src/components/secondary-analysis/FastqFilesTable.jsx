@@ -121,6 +121,7 @@ const FastqFilesTable = (props) => {
 
 FastqFilesTable.defaultProps = {
   pairedWt: null,
+  kit: null,
 };
 
 FastqFilesTable.propTypes = {
@@ -128,7 +129,7 @@ FastqFilesTable.propTypes = {
   canEditTable: PropTypes.bool.isRequired,
   secondaryAnalysisId: PropTypes.string.isRequired,
   pairedWt: PropTypes.bool,
-  kit: PropTypes.string.isRequired,
+  kit: PropTypes.string,
 };
 
 export default FastqFilesTable;
