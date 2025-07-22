@@ -61,8 +61,8 @@ const FastqDropzones = ({
 };
 
 FastqDropzones.propTypes = {
-  kit: PropTypes.string.isRequired,
-  pairedWt: PropTypes.bool.isRequired,
+  kit: PropTypes.oneOfType([() => null, PropTypes.string]).isRequired,
+  pairedWt: PropTypes.oneOfType([() => null, PropTypes.bool]).isRequired,
   onDrop: PropTypes.func.isRequired,
   handleFileSelection: PropTypes.func.isRequired,
 };
