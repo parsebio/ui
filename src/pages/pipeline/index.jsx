@@ -164,6 +164,11 @@ const Pipeline = () => {
     _.isEqual,
   );
 
+  const pairMatches = useSelector(
+    (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files?.pairMatches,
+    _.isEqual,
+  );
+
   const filesNotLoadedYet = useSelector(
     (state) => _.isNil(state.secondaryAnalyses[activeSecondaryAnalysisId]?.files?.data),
     _.isEqual,
@@ -231,6 +236,8 @@ const Pipeline = () => {
     chemistryVersion,
     numOfSublibraries,
     refGenome,
+    pairedWt,
+    pairMatches,
   ]);
 
   // Poll for status
