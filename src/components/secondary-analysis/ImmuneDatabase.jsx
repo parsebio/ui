@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Select,
   Typography,
@@ -14,7 +14,7 @@ const immuneDbToDisplay = {
   transgenic_mouse: 'Transgenic mouse',
 };
 
-const optionsByImmuneDb = {
+const optionsByImmuneType = {
   [FastqFileType.BCR]: ['human', 'mouse', 'transgenic_mouse'],
   [FastqFileType.TCR]: ['human', 'mouse'],
 };
@@ -24,13 +24,24 @@ const { Text } = Typography;
 const ImmuneDatabase = (props) => {
   const { database, immuneType, onDetailsChanged } = props;
 
+  const [localDatabase, setLocalDatabase] = useState(database);
+
   const options = useMemo(
-    () => optionsByImmuneDb[immuneType].map((type) => ({
+    () => optionsByImmuneType[immuneType].map((type) => ({
       label: immuneDbToDisplay[type],
       value: type,
     })),
     [immuneType],
   );
+
+  const updateImmuneDatabase = (value) => {
+    setLocalDatabase(value);
+    onDetailsChanged({ immuneDatabase: value });
+  };
+
+  useEffect(() => {
+    setLocalDatabase(database);
+  }, [database]);
 
   return (
     <div style={{
@@ -44,9 +55,9 @@ const ImmuneDatabase = (props) => {
       <Select
         showSearch
         style={{ width: '90%' }}
-        value={database}
+        value={localDatabase}
         placeholder='Select the database'
-        onChange={(value) => onDetailsChanged({ immuneDatabase: value })}
+        onChange={updateImmuneDatabase}
         options={options}
         filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
       />
