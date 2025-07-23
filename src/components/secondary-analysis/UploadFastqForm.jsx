@@ -25,11 +25,10 @@ import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
-import { labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 
 import { getMatchingPairFor, hasReadPair } from 'utils/fastqUtils';
 import FastqFileType from 'const/enums/FastqFileType';
-import { kitCategories, isKitCategory } from 'utils/secondary-analysis/kitOptions';
+import { kitCategories, isKitCategory, labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 import UploadFastqSupportText from './UploadFastqSupportText';
 import FastqDropzones from './FastqDropzones';
 
