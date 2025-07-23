@@ -70,12 +70,14 @@ const FastqFilesTable = (props) => {
         </div>
       ),
     },
-    pairedWt ? {
-      title: 'Type',
-      dataIndex: 'type',
-      width: '20%',
-      render: (type) => labelsByFastqType[type],
-    } : {},
+    ...(pairedWt ? [
+      {
+        title: 'Type',
+        dataIndex: 'type',
+        width: '20%',
+        render: (type) => labelsByFastqType[type],
+      },
+    ] : []),
     {
       title: 'Size',
       dataIndex: 'size',
@@ -102,7 +104,6 @@ const FastqFilesTable = (props) => {
         />
       ),
     },
-
   ];
 
   const handleDelete = (key) => {
