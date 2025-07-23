@@ -4,14 +4,14 @@ import { Slider, InputNumber, Space } from 'antd';
 
 import _ from 'lodash';
 
-import useConfigUpdateDebounced from 'utils/customHooks/useConfigUpdateDebounced';
+import useConfigUpdate from 'utils/customHooks/useConfigUpdate';
 
 const SliderWithInput = (props) => {
   const {
     min, max, value, onUpdate, disabled, step, debounceTime, sliderMaxWidth,
   } = props;
 
-  const [, handleChange] = useConfigUpdateDebounced(onUpdate, value, debounceTime);
+  const [, handleChange] = useConfigUpdate(onUpdate, value, debounceTime);
 
   const [localValue, setLocalValue] = useState(value);
 

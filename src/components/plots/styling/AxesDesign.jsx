@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import {
   Slider, Form, Input, Switch,
 } from 'antd';
-import useConfigUpdateDebounced from 'utils/customHooks/useConfigUpdateDebounced';
+import useConfigUpdate from 'utils/customHooks/useConfigUpdate';
 
 const AxesDesign = (props) => {
   const { onUpdate, config } = props;
-  const [newConfig, handleChange] = useConfigUpdateDebounced(onUpdate, config, 200);
+  const [newConfig, handleChange] = useConfigUpdate(onUpdate, config, 200);
 
   return (
     <Form

@@ -4,11 +4,11 @@ import {
   Slider, Form,
   Radio, Space,
 } from 'antd';
-import useConfigUpdateDebounced from 'utils/customHooks/useConfigUpdateDebounced';
+import useConfigUpdate from 'utils/customHooks/useConfigUpdate';
 
 const PointDesign = (props) => {
   const { onUpdate, config, showShapeType } = props;
-  const [newConfig, handleChange] = useConfigUpdateDebounced(onUpdate, config);
+  const [newConfig, handleChange] = useConfigUpdate(onUpdate, config);
 
   return (
     <Space direction='vertical' style={{ width: '80%' }}>
