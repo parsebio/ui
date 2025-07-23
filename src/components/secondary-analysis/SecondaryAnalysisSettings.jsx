@@ -201,7 +201,7 @@ const SecondaryAnalysisSettings = (props) => {
                 if (!value && Object.keys(wtFiles).length > 0) {
                   Modal.confirm({
                     title: 'You have WT Fastq files uploaded.',
-                    content: 'Do you want to disable paired WT mode? Your files will not be deleted.',
+                    content: 'Do you want to disable paired WT mode? Your uploaded WT files will not be deleted, but they will be hidden and not used in your pipeline run.',
                     okText: 'Yes, disable',
                     cancelText: 'Cancel',
                     onOk: () => handleValueChange('pairedWt', false),
