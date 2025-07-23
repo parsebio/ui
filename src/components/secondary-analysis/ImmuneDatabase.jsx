@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   Select,
   Typography,
@@ -7,6 +7,7 @@ import {
 import propTypes from 'prop-types';
 
 import FastqFileType from 'const/enums/FastqFileType';
+import useLocalState from 'utils/customHooks/useLocalState';
 
 const immuneDbToDisplay = {
   human: 'Human',
@@ -24,7 +25,11 @@ const { Text } = Typography;
 const ImmuneDatabase = (props) => {
   const { database, immuneType, onDetailsChanged } = props;
 
-  const [localDatabase, setLocalDatabase] = useState(database);
+  const [localDatabase, updateDatabase] = useLocalState(
+    (value) => onDetailsChanged({ immuneDatabase: value }),
+    database,
+    0,
+  );
 
   const options = useMemo(
     () => optionsByImmuneType[immuneType].map((type) => ({
@@ -33,15 +38,6 @@ const ImmuneDatabase = (props) => {
     })),
     [immuneType],
   );
-
-  const updateImmuneDatabase = (value) => {
-    setLocalDatabase(value);
-    onDetailsChanged({ immuneDatabase: value });
-  };
-
-  useEffect(() => {
-    setLocalDatabase(database);
-  }, [database]);
 
   return (
     <div style={{
@@ -57,7 +53,7 @@ const ImmuneDatabase = (props) => {
         style={{ width: '90%' }}
         value={localDatabase}
         placeholder='Select the database'
-        onChange={updateImmuneDatabase}
+        onChange={updateDatabase}
         options={options}
         filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
       />
