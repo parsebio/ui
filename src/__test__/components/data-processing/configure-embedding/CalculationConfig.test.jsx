@@ -12,7 +12,7 @@ import { act } from 'react-dom/test-utils';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import { initialEmbeddingState } from 'redux/reducers/embeddings/initialState';
-import CalculationConfig from 'components/data-processing/ConfigureEmbedding/CalculationConfig';
+import ConfigureEmbeddingConfig from 'components/data-processing/ConfigureEmbedding/ConfigureEmbeddingConfig';
 import generateExperimentSettingsMock from '../../../test-utils/experimentSettings.mock';
 import '__test__/test-utils/setupTests';
 
@@ -72,7 +72,7 @@ describe('Data Processing CalculationConfig', () => {
 
     const component = mount(
       <Provider store={store}>
-        <CalculationConfig
+        <ConfigureEmbeddingConfig
           experimentId='1234'
           width={50}
           height={50}
@@ -93,7 +93,7 @@ describe('Data Processing CalculationConfig', () => {
 
     const component = mount(
       <Provider store={store}>
-        <CalculationConfig
+        <ConfigureEmbeddingConfig
           experimentId='1234'
           width={50}
           height={50}
@@ -119,7 +119,7 @@ describe('Data Processing CalculationConfig', () => {
 
     const component = mount(
       <Provider store={store}>
-        <CalculationConfig
+        <ConfigureEmbeddingConfig
           experimentId='1234'
           width={50}
           height={50}
@@ -139,7 +139,7 @@ describe('Data Processing CalculationConfig', () => {
 
     const component = mount(
       <Provider store={store}>
-        <CalculationConfig
+        <ConfigureEmbeddingConfig
           experimentId='1234'
           width={50}
           height={50}

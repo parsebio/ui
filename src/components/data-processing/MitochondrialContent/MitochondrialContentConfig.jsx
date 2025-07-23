@@ -6,7 +6,7 @@ import {
 
 import SliderWithInput from '../../SliderWithInput';
 
-const CalculationConfig = (props) => {
+const MitochondrialContentConfig = (props) => {
   const {
     config, disabled, plotType, updateSettings,
   } = props;
@@ -50,16 +50,16 @@ const CalculationConfig = (props) => {
     </>
   );
 };
-CalculationConfig.defaultProps = {
-  updateSettings: () => {},
+MitochondrialContentConfig.defaultProps = {
+  updateSettings: () => { },
   config: {},
   disabled: false,
 };
-CalculationConfig.propTypes = {
+MitochondrialContentConfig.propTypes = {
   updateSettings: PropTypes.func,
   config: PropTypes.object,
   plotType: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
 };
 
-export default CalculationConfig;
+export default MitochondrialContentConfig;
