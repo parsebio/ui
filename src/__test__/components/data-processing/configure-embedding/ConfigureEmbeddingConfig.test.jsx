@@ -21,7 +21,7 @@ const mockStore = configureStore([thunk]);
 
 const initialExperimentState = generateExperimentSettingsMock([]);
 
-describe('Data Processing CalculationConfig', () => {
+describe('Configure Embedding CalculationConfig', () => {
   const storeState = {
     embeddings: initialEmbeddingState,
     experimentSettings: {
