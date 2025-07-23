@@ -8,16 +8,15 @@ import propTypes from 'prop-types';
 
 import FastqFileType from 'const/enums/FastqFileType';
 
-const optionsByImmuneType = {
-  [FastqFileType.BCR]: [
-    { label: 'Human', value: 'human' },
-    { label: 'Mouse', value: 'mouse' },
-    { label: 'Transgenic mouse', value: 'transgenic_mouse' },
-  ],
-  [FastqFileType.TCR]: [
-    { label: 'Human', value: 'human' },
-    { label: 'Mouse', value: 'mouse' },
-  ],
+const immuneDbToDisplay = {
+  human: 'Human',
+  mouse: 'Mouse',
+  transgenic_mouse: 'Transgenic mouse',
+};
+
+const optionsByImmuneDb = {
+  [FastqFileType.BCR]: ['human', 'mouse', 'transgenic_mouse'],
+  [FastqFileType.TCR]: ['human', 'mouse'],
 };
 
 const { Text } = Typography;
@@ -26,8 +25,10 @@ const ImmuneDatabase = (props) => {
   const { database, immuneType, onDetailsChanged } = props;
 
   const options = useMemo(
-    () => (
-      optionsByImmuneType[immuneType]),
+    () => optionsByImmuneDb[immuneType].map((type) => ({
+      label: immuneDbToDisplay[type],
+      value: type,
+    })),
     [immuneType],
   );
 
@@ -70,3 +71,5 @@ ImmuneDatabase.propTypes = {
 };
 
 export default ImmuneDatabase;
+
+export { immuneDbToDisplay };

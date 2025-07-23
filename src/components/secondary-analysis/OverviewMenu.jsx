@@ -92,9 +92,6 @@ const OverviewMenu = ({
     return renderCard(steps[grid], getWizardIndex(), { width: '100%', height: '100%' });
   };
 
-  console.log('activeStepsGridDEbug');
-  console.log(activeStepsGrid);
-
   return renderGrid(activeStepsGrid, wizardSteps);
 };
 

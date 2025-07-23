@@ -36,7 +36,7 @@ import ShareProjectModal from 'components/data-management/project/ShareProjectMo
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
 import FastqFileType from 'const/enums/FastqFileType';
-import ImmuneDatabase from 'components/secondary-analysis/ImmuneDatabase';
+import ImmuneDatabase, { immuneDbToDisplay } from 'components/secondary-analysis/ImmuneDatabase';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -67,6 +67,7 @@ const analysisDetailsKeys = [
   'kit',
   'refGenome',
   'pairedWt',
+  'immuneDatabase',
 ];
 
 const baseStepsKeys = [
@@ -448,7 +449,7 @@ const Pipeline = () => {
         />
       ),
       isValid: false,
-      renderMainScreenDetails: () => mainScreenDetails({}),
+      renderMainScreenDetails: () => mainScreenDetails({ immuneDatabase: immuneDbToDisplay[immuneDatabase] || 'Not selected' }),
       getIsDisabled: () => false,
     },
     'Fastq files': {
