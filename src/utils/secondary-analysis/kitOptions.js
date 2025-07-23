@@ -1,3 +1,5 @@
+import FastqFileType from 'const/enums/FastqFileType';
+
 const kitOptions = [
   { label: 'Evercode WT Mini', value: 'wt_mini' },
   { label: 'Evercode WT', value: 'wt' },
@@ -10,6 +12,11 @@ const kitOptions = [
   // { label: 'Evercode BCR', value: 'bcr' },
   // { label: 'Evercode BCR Mega', value: 'bcr_mega' },
 ];
+
+const labelsByFastqType = {
+  [FastqFileType.WT_FASTQ]: 'WT',
+  [FastqFileType.IMMUNE_FASTQ]: 'Immune',
+};
 
 const kitCategories = {
   TCR: 'tcr',
@@ -27,4 +34,4 @@ const isKitCategory = (kit, categoryInput) => {
 };
 
 export default kitOptions;
-export { isKitCategory, kitCategories };
+export { isKitCategory, kitCategories, labelsByFastqType };

@@ -22,7 +22,7 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, wait
 from threading import Event, Lock
 
-SCRIPT_VERSION = "1.0.0"
+SCRIPT_VERSION = "1.1.0"
 
 MAX_RETRIES = 8  # Max number of retries to upload each PART_SIZE part
 THREADS_COUNT = 20
@@ -36,6 +36,9 @@ PART_COUNT_MAX = 10000
 # Staging url
 # default_prod_api_url = "https://api-default.staging.trailmaker.parsebiosciences.com/v2"
 
+
+# local url
+# default_prod_api_url = "http://localhost:3000/v2"
 # Production url
 default_prod_api_url = "https://api.app.trailmaker.parsebiosciences.com/v2"
 
@@ -57,10 +60,8 @@ def wipe_file(file_path):
 def get_resume_params_from_file(version_check=False):
     if not os.path.exists(RESUME_PARAMS_PATH):
         raise Exception("No resume parameters file {} found, try beginning a new upload".format(RESUME_PARAMS_PATH))
-
     with open(RESUME_PARAMS_PATH, "r") as file:
         lines = file.read().splitlines()
-
         if (version_check):
             if (len(lines) < 7 or lines[6] != SCRIPT_VERSION):
                 print("""[WARNING] The upload you are about to resume seems to have been begun with an older script than the one you are using now.
@@ -75,7 +76,16 @@ def get_resume_params_from_file(version_check=False):
         analysis_id = lines[0]
         upload_params = json.loads(lines[1])
         current_file_created = lines[2] == "True"
-        file_paths = lines[3].split(",")
+        file_list = []
+        # resume file might be in the old format
+        # todo remove after some time when we are sure no one uses the old format
+        try:
+            file_list = json.loads(lines[3])
+        except json.JSONDecodeError:
+            files = lines[3].split(",")
+            for file in files:
+                file_list.append({"path": file, "type": "wtFastq"})
+
         current_file_index = int(lines[4])
         completed_parts_by_thread = [
             int(offset_str) for offset_str in lines[5].split(",")
@@ -84,7 +94,7 @@ def get_resume_params_from_file(version_check=False):
         return (
             analysis_id,
             upload_params,
-            file_paths,
+            file_list,
             current_file_index,
             completed_parts_by_thread,
             current_file_created
@@ -110,7 +120,6 @@ class HTTPResponse:
         self._response = response
         self._response_data = response_data
         self._is_error = isinstance(self._response, Exception)
-
     def json(self):
         if self._response_data == None:
             raise Exception("Internal error, please try again.")
@@ -167,10 +176,11 @@ def http_post(url, headers, json_data={}):
 
     try:
         request = urllib.request.Request(url, data=data, headers=headers, method="POST")
-
         with urllib.request.urlopen(request) as response:
             return HTTPResponse(response, response.read())
-
+    except urllib.error.HTTPError as e:
+        error_body = e.read()
+        return HTTPResponse(e, error_body)
     except Exception as e:
         return HTTPResponse(e)
 
@@ -182,7 +192,7 @@ class UploadTracker:
     def __init__(
         self,
         analysis_id,
-        file_paths,
+        file_list,
         current_file_index,
         completed_parts_by_thread,
         upload_params,
@@ -190,7 +200,7 @@ class UploadTracker:
         api_token,
     ):
         self.analysis_id = analysis_id
-        self.file_paths = file_paths
+        self.file_list = file_list
         self.current_file_index = current_file_index
         self.current_file_created = current_file_created
         self.completed_parts_by_thread = completed_parts_by_thread
@@ -200,7 +210,12 @@ class UploadTracker:
         self.files_lock = Lock()
 
     @classmethod
-    def fromScratch(cls, analysis_id, file_paths, threads_count, api_token):
+    def fromScratch(cls, analysis_id, file_dict, threads_count, api_token):
+        file_list = []
+        for fastq_type, paths in file_dict.items():
+            for path in paths:
+                file_list.append({"path": path, "type": fastq_type})
+
         # Starting from scratch, so wipe files
         cls.wipe_current_upload()
 
@@ -208,7 +223,7 @@ class UploadTracker:
 
         return cls(
             analysis_id,
-            file_paths,
+            file_list,
             0,
             completed_parts_by_thread,
             None,
@@ -216,12 +231,13 @@ class UploadTracker:
             api_token,
         )
 
+
     @classmethod
     def fromResumeFile(cls, api_token):
         (
             analysis_id,
             upload_params,
-            file_paths,
+            file_list,
             current_file_index,
             completed_parts_by_thread,
             current_file_created,
@@ -229,7 +245,7 @@ class UploadTracker:
 
         return cls(
             analysis_id,
-            file_paths,
+            file_list,
             current_file_index,
             completed_parts_by_thread,
             upload_params,
@@ -256,7 +272,7 @@ class UploadTracker:
                         "{}".format(self.analysis_id),
                         json.dumps(self.upload_params),
                         str(self.current_file_created),
-                        "{}".format(','.join(self.file_paths)),
+                        json.dumps(self.file_list),
                         "{}".format(self.current_file_index),
                         "{}".format(','.join([str(offset) for offset in self.completed_parts_by_thread])),
                         SCRIPT_VERSION,
@@ -268,7 +284,7 @@ class UploadTracker:
         if not self.current_file_created:
             self.upload_params = begin_multipart_upload(
                 self.analysis_id,
-                self.file_paths[self.current_file_index],
+                self.file_list[self.current_file_index],
                 self.api_token,
             )
             self.current_file_created = True
@@ -277,10 +293,12 @@ class UploadTracker:
         return self.upload_params
 
     def get_current_progress(self):
+        current_file_info = self.file_list[self.current_file_index]
         return (
             self.analysis_id,
-            self.file_paths[self.current_file_index],
+            current_file_info["path"],
             self.completed_parts_by_thread,
+            current_file_info["type"]
         )
 
     def get_parts_etags(self):
@@ -298,7 +316,7 @@ class UploadTracker:
             ]
 
     def is_finished(self):
-        return self.current_file_index >= len(self.file_paths)
+        return self.current_file_index >= len(self.file_list)
 
     def file_uploaded(self):
         self.current_file_index += 1
@@ -364,7 +382,7 @@ class ProgressDisplayer:
 # Manages the upload of a single file
 class FileUploader:
     def __init__(self, upload_tracker):
-        (analysis_id, current_file, completed_parts_by_thread) = (
+        (analysis_id, current_file, completed_parts_by_thread, fastq_type) = (
             upload_tracker.get_current_progress()
         )
 
@@ -373,6 +391,7 @@ class FileUploader:
         self.upload_tracker = upload_tracker
 
         self.file_path = current_file
+        self.fastq_type = fastq_type
         self.completed_parts_by_thread = completed_parts_by_thread
 
         file_size = os.path.getsize(self.file_path)
@@ -545,7 +564,9 @@ def upload_all_files(upload_tracker):
     print("Upload completed successfully!")
 
 
-def begin_multipart_upload(analysis_id, file_path, api_token):
+def begin_multipart_upload(analysis_id, file, api_token):
+    file_path = file["path"]
+    fastq_type = file["type"]
     file_name = os.path.basename(file_path)
     file_size = os.path.getsize(file_path)
 
@@ -554,13 +575,13 @@ def begin_multipart_upload(analysis_id, file_path, api_token):
     response = http_post(
         url,
         {"X-Api-Token": "Bearer {}".format(api_token)},
-        json_data={"name": file_name, "size": file_size},
+        json_data={"name": file_name, "size": file_size, "type": fastq_type},
     )
 
     if response.status_code != 200:
         if response.status_code == 400:
-            print("responseDebug")
-            print(response)
+            error = response.json()
+            raise Exception(error["message"])
         if response.status_code == 401:
             raise Exception(
                 "Not authorized to upload files to this run, please verify your --run_id and --token"
@@ -586,7 +607,7 @@ def show_resume_option():
         (
             analysis_id,
             upload_params,
-            file_paths,
+            file_list,
             current_file_index,
             completed_parts_by_thread,
             current_file_created,
@@ -596,7 +617,7 @@ def show_resume_option():
             (
                 analysis_id,
                 upload_params,
-                file_paths,
+                file_list,
                 current_file_index,
                 completed_parts_by_thread,
                 current_file_created,
@@ -611,7 +632,8 @@ def show_resume_option():
         )
         print()
         print("It included the following files:")
-        print("\n".join(file_paths))
+        for file in file_list:
+            print(file['path'])
         print("")
 
         # Prompt the user to confirm that they want to overwrite the previous upload that can be resumed
@@ -625,14 +647,15 @@ def show_resume_option():
     return False
 
 
-def show_files_to_upload_warning(file_paths):
-    if len(file_paths) == 0:
+def show_files_to_upload_warning(file_list):
+    if len(file_list) == 0:
         raise Exception(
             "No valid files found to upload, please check the --file parameter values or use --help for more information"
         )
 
     print("New upload: the following files will be uploaded:")
-    print("\n".join(file_paths))
+    for file in file_list:
+        print(file['path'])
     print("")
     print(
         'If these are the correct files, press ENTER. Otherwise write "no" and press ENTER to cancel the upload.'
@@ -717,13 +740,17 @@ def check_script_version_is_latest(api_token, resume):
     if (outdated and not resume):
         raise Exception("The script you are using is outdated. Please download the latest version from the browser application")
 
-    if outdated and resume:
-        print("""[Warning] The script you are using is outdated. It is recommended to download the newest version from the browser application and begin the upload from scratch""")
-        input("If you want to continue with the current version, press ENTER. Otherwise, press CTRL+C to cancel the upload")
+def check_files_validity(files):
+    # Take list of glob patterns and expand and flatten them into a list of files
+    files_list = [file for glob_pattern in files for file in glob.glob(glob_pattern)]
+
+    check_names_are_valid(files_list)
+    check_fastq_pairs_complete(files_list)
+    return files_list
 
 # Performs all of the pre-upload validation and parameter checks
 def prepare_upload(args):
-    non_resumable_args = args.run_id or args.file
+    non_resumable_args = args.run_id or args.wt_files or args.immune_files
 
     if non_resumable_args and args.resume:
         raise Exception(
@@ -741,8 +768,8 @@ def prepare_upload(args):
         if not args.run_id:
             raise Exception("run_id is required")
 
-        if not args.file:
-            raise Exception("At least one file is required")
+        if not args.immune_files and not args.wt_files:
+            raise Exception("At least one wt or immune file is required")
 
     check_script_version_is_latest(args.token, resume)
 
@@ -750,17 +777,19 @@ def prepare_upload(args):
     if resume:
         upload_tracker = UploadTracker.fromResumeFile(args.token)
     else:
-        # Take list of glob patterns and expand and flatten them into a list of files
-        files = [file for glob_pattern in args.file for file in glob.glob(glob_pattern)]
-
-        check_names_are_valid(files)
-        check_fastq_pairs_complete(files)
+        files = {}
+        if args.wt_files:
+            wt_files = check_files_validity(args.wt_files)
+            files["wtFastq"] = wt_files
+        if args.immune_files:
+            immune_files = check_files_validity(args.immune_files)
+            files["immuneFastq"] = immune_files
 
         upload_tracker = UploadTracker.fromScratch(
             args.run_id, files, args.max_threads_count, args.token
         )
 
-        show_files_to_upload_warning(upload_tracker.file_paths)
+        show_files_to_upload_warning(upload_tracker.file_list)
 
     return upload_tracker
 
@@ -775,9 +804,15 @@ def main():
         default=os.environ.get("PARSE_CLOUD_TOKEN"),
         help="The upload token, can be obtained from the browser application",
     )
+
     parser.add_argument(
-        "-f",
-        "--file",
+        "--wt_files",
+        nargs="*",
+        required=False,
+        help="A space-separated list of files. You can also select multiple files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
+    )
+    parser.add_argument(
+        "--immune_files",
         nargs="*",
         required=False,
         help="A space-separated list of files. You can also select multiple files by using *. For example, path/to/files/*.fastq.gz will pick all files in the path that end with .fastq.gz",
@@ -791,7 +826,7 @@ def main():
         default=THREADS_COUNT,
     )
     parser.add_argument(
-        "-r", "--resume", action="store_true", help="Resume an interrupted upload"
+        "-r", "--resume", action="store_true", help="Resume an interrupted upload", required=False
     )
 
     args = parser.parse_args()
