@@ -70,10 +70,18 @@ const analysisDetailsKeys = [
   'immuneDatabase',
 ];
 
-const baseStepsKeys = [
+const wtStepsKeys = [
   'Experimental setup',
   'Sample loading table',
   'Reference genome',
+  'Fastq files',
+];
+
+const tcrStepsKeys = [
+  'Experimental setup',
+  'Sample loading table',
+  'Reference genome',
+  'Immune database',
   'Fastq files',
 ];
 
@@ -86,7 +94,7 @@ const pairedWTStepsKeys = [
   'Fastq Pairs Matcher',
 ];
 
-const normalStepsGrid = [
+const wtStepsGrid = [
   // row0
   [
     // col0.0
@@ -95,6 +103,25 @@ const normalStepsGrid = [
     'Sample loading table',
     // col0.2
     'Reference genome',
+  ],
+  // row1
+  'Fastq files',
+];
+
+const tcrStepsGrid = [
+  // row0
+  [
+    // col0.0
+    'Experimental setup',
+    // col0.1
+    'Sample loading table',
+    // col0.2
+    [
+      // row0.2.0
+      'Reference genome',
+      // row0.2.1
+      'Immune database',
+    ],
   ],
   // row1
   'Fastq files',
@@ -448,7 +475,7 @@ const Pipeline = () => {
           database={immuneDatabase}
         />
       ),
-      isValid: false,
+      isValid: Boolean(immuneDatabase),
       renderMainScreenDetails: () => mainScreenDetails({ immuneDatabase: immuneDbToDisplay[immuneDatabase] || 'Not selected' }),
       getIsDisabled: () => false,
     },
@@ -463,7 +490,6 @@ const Pipeline = () => {
         />
       ),
       isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
-
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(
         () => renderFastqFilesTable(false),
@@ -487,16 +513,22 @@ const Pipeline = () => {
   };
 
   const activeStepsKeys = useMemo(
-    () => (
-      isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
-        && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys),
+    () => {
+      if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
+        return pairedWt === true ? pairedWTStepsKeys : tcrStepsKeys;
+      }
+      return wtStepsKeys;
+    },
     [kit, pairedWt],
   );
 
   const activeStepsGrid = useMemo(
-    () => (
-      isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
-        && pairedWt === true ? pairedWTStepsGrid : normalStepsGrid),
+    () => {
+      if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
+        return pairedWt === true ? pairedWTStepsGrid : tcrStepsGrid;
+      }
+      return wtStepsGrid;
+    },
     [kit, pairedWt],
   );
 
