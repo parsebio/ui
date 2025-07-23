@@ -32,7 +32,9 @@ const secondaryAnalysisFileDeleted = produce((draft, action) => {
 
   delete draft[secondaryAnalysisId].files.data[fileId];
 
-  cleanupPairMatches(draft, file, secondaryAnalysisId);
+  if ([FastqFileType.IMMUNE_FASTQ, FastqFileType.WT_FASTQ].includes(file.type)) {
+    cleanupPairMatches(draft, file, secondaryAnalysisId);
+  }
 });
 
 export default secondaryAnalysisFileDeleted;
