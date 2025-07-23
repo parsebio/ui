@@ -14,6 +14,7 @@ import UploadStatus from 'utils/upload/UploadStatus';
 
 import integrationTestConstants from 'utils/integrationTestConstants';
 import _ from 'lodash';
+
 import PropTypes from 'prop-types';
 
 import ExpandableList from 'components/ExpandableList';
@@ -24,10 +25,10 @@ import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import getApiTokenExists from 'utils/apiToken/getApiTokenExists';
 import generateApiToken from 'utils/apiToken/generateApiToken';
 import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecondaryUpload';
-import { labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 
 import { getMatchingPairFor, hasReadPair } from 'utils/fastqUtils';
 import FastqFileType from 'const/enums/FastqFileType';
+import { kitCategories, isKitCategory, labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 import UploadFastqSupportText from './UploadFastqSupportText';
 import FastqDropzones from './FastqDropzones';
 
@@ -38,7 +39,7 @@ const emptyFilesByType = {
   [FastqFileType.IMMUNE_FASTQ]: { valid: [], invalid: [] },
 };
 
-const parseUploadScriptVersion = '1.0.0';
+const parseUploadScriptVersion = '1.1.0';
 
 const checkForSubCountWarnings = (
   fastqsCount,
@@ -309,6 +310,24 @@ const UploadFastqForm = (props) => {
     });
   };
 
+  let uploadCommandFileParameters = '';
+  if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
+    if (pairedWt) {
+      uploadCommandFileParameters = `--immune_files /path/to/fastq/file_1 /path/to/fastq/file_2 \\
+  --wt_files /path/to/fastq/file_3 /path/to/fastq/file_4`;
+    } else {
+      uploadCommandFileParameters = '--immune_files /path/to/fastq/file_1 /path/to/fastq/file_2 ';
+    }
+  } else {
+    uploadCommandFileParameters = '--wt_files /path/to/fastq/file_1 /path/to/fastq/file_2 ';
+  }
+
+  const consoleUploadCommand = `python parse-upload-${parseUploadScriptVersion}.py \\
+  --token ${newToken ?? 'YOUR_TOKEN'} \\
+  --run_id ${secondaryAnalysisId} \\
+  ${uploadCommandFileParameters}
+  `;
+
   const uploadTabItems = [
     {
       key: 'ui',
@@ -496,18 +515,10 @@ const UploadFastqForm = (props) => {
             <br />
             <pre>
               <Paragraph copyable={{
-                text: `python parse-upload-${parseUploadScriptVersion}.py \\
-  --token ${newToken || 'YOUR_TOKEN'} \\
-  --run_id ${secondaryAnalysisId} \\
-  --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
-  `,
+                text: consoleUploadCommand,
               }}
               >
-                {`python parse-upload-${parseUploadScriptVersion}.py \\
-  --token ${newToken || 'YOUR_TOKEN'} \\
-  --run_id ${secondaryAnalysisId} \\
-  --file /path/to/fastq/file_1 /path/to/fastq/file_2 ...
-  `}
+                {consoleUploadCommand}
               </Paragraph>
             </pre>
           </Text>
