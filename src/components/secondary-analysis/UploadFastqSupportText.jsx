@@ -124,13 +124,10 @@ const UploadFastqSupportText = ({ kit, pairedWt }) => {
     </div>
   );
 };
-UploadFastqSupportText.defaultProps = {
-  pairedWt: false,
-};
 
 UploadFastqSupportText.propTypes = {
-  kit: PropTypes.string.isRequired,
-  pairedWt: PropTypes.bool,
+  kit: PropTypes.oneOfType([() => null, PropTypes.string]).isRequired,
+  pairedWt: PropTypes.oneOfType([() => null, PropTypes.bool]).isRequired,
 };
 
 export default UploadFastqSupportText;

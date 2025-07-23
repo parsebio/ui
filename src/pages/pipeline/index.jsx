@@ -317,6 +317,7 @@ const Pipeline = () => {
           files={fastqFiles}
           secondaryAnalysisId={activeSecondaryAnalysisId}
           pairedWt={pairedWt}
+          kit={kit}
         />
       );
     }

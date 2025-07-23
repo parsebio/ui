@@ -4,24 +4,44 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import bytesToSize from 'utils/styling/bytesToSize';
+import { labelsByFastqType, isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+import FastqFileType from 'const/enums/FastqFileType';
 import { DeleteOutlined } from '@ant-design/icons';
 import UploadStatusView from 'components/UploadStatusView';
 import UploadStatus from 'utils/upload/UploadStatus';
 import PrettyTime from 'components/PrettyTime';
 
+const { IMMUNE_FASTQ, WT_FASTQ } = FastqFileType;
 const FastqFilesTable = (props) => {
   const dispatch = useDispatch();
   const {
-    files, canEditTable, secondaryAnalysisId, pairedWt,
+    files, canEditTable, secondaryAnalysisId, pairedWt, kit,
   } = props;
 
-  const dataSource = Object.values(files).map((file) => ({
+  const getFastqIsActive = (fileType) => {
+    if (isKitCategory(kit, [kitCategories.WT])) {
+      return fileType === WT_FASTQ;
+    } if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR]) && !pairedWt) {
+      return fileType === IMMUNE_FASTQ;
+    }
+    return true;
+  };
+
+  const filteredFiles = Object.values(files).filter((file) => getFastqIsActive(file.type));
+
+  filteredFiles.sort((a) => {
+    if (a.type === WT_FASTQ) return -1;
+    return 1;
+  });
+
+  const dataSource = filteredFiles.map((file) => ({
     key: file.id,
     name: file.name,
     size: bytesToSize(file.size),
     status: file.upload.status,
     createdAt: file.createdAt,
     progress: file.upload.percentProgress,
+    type: pairedWt ? file.type : undefined,
   }));
 
   const columns = [
@@ -75,6 +95,12 @@ const FastqFilesTable = (props) => {
         />
       ),
     },
+    pairedWt ? {
+      title: 'Type',
+      dataIndex: 'type',
+      width: '20%',
+      render: (type) => labelsByFastqType[type],
+    } : {},
   ];
 
   const handleDelete = (key) => {
@@ -97,7 +123,8 @@ FastqFilesTable.propTypes = {
   files: PropTypes.object.isRequired,
   canEditTable: PropTypes.bool.isRequired,
   secondaryAnalysisId: PropTypes.string.isRequired,
-  pairedWt: PropTypes.bool.isRequired,
+  pairedWt: PropTypes.oneOfType([() => null, PropTypes.bool]).isRequired,
+  kit: PropTypes.oneOfType([() => null, PropTypes.string]).isRequired,
 };
 
 export default FastqFilesTable;

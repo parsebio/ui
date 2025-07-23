@@ -1,14 +1,16 @@
 import _ from 'lodash';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Select, Form, Space, Switch, Tooltip,
+  Select, Form, Space, Switch, Tooltip, Modal,
 } from 'antd';
 import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import propTypes from 'prop-types';
 import kitOptions, { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+import { getFastqFiles } from 'redux/selectors';
 import SliderWithInput from 'components/SliderWithInput';
+import FastqFileType from 'const/enums/FastqFileType';
 import { useSelector } from 'react-redux';
 
 const kitToMaxSublibrariesMap = {
@@ -37,6 +39,16 @@ const SecondaryAnalysisSettings = (props) => {
     _.isEqual,
   );
 
+  const wtFiles = useSelector(
+    getFastqFiles(secondaryAnalysisId, FastqFileType.WT_FASTQ),
+    _.isEqual,
+  );
+
+  const immuneFiles = useSelector(
+    getFastqFiles(secondaryAnalysisId, FastqFileType.IMMUNE_FASTQ),
+    _.isEqual,
+  );
+
   useEffect(() => {
     setFormValues(secondaryAnalysisDetails);
     calculateMaxSublibraries(secondaryAnalysisDetails.kit);
@@ -60,6 +72,27 @@ const SecondaryAnalysisSettings = (props) => {
     setMaxSublibraries(newMaxSublibraries);
     return newMaxSublibraries;
   }, []);
+  const onKitChange = useCallback(
+    (newKit) => {
+      // if switching to WT category and there are immune FASTQ files already uploaded
+      if (
+        isKitCategory(newKit, [kitCategories.WT])
+        && Object.keys(immuneFiles).length > 0
+      ) {
+        Modal.confirm({
+          title: 'You have immune profiling FASTQ files uploaded.',
+          content:
+            'If you switch back to a WT‐only kit, those files won’t be processed. Do you still want to continue? Your files will not be deleted.',
+          okText: 'Yes, switch kit',
+          cancelText: 'No, keep current kit',
+          onOk: () => changeKit(newKit),
+        });
+      } else {
+        changeKit(newKit);
+      }
+    },
+    [immuneFiles, changeKit],
+  );
 
   const changeKit = useCallback((kit) => {
     calculateMaxSublibraries(kit);
@@ -73,6 +106,10 @@ const SecondaryAnalysisSettings = (props) => {
         chemistryVersion = '3';
       } else if (kit === 'wt_mega_384') {
         chemistryVersion = '3';
+      }
+
+      if (isKitCategory(kit, kitCategories.WT)) {
+        pairedWt = false;
       }
 
       return {
@@ -106,10 +143,11 @@ const SecondaryAnalysisSettings = (props) => {
           <Select
             placeholder='Select the kit you used in your experiment'
             value={formValues.kit}
-            onChange={changeKit}
+            onChange={onKitChange}
             options={kitOptions}
             virtual={false}
           />
+
           <Select
             placeholder='Select the chemistry version'
             onChange={(value) => handleValueChange('chemistryVersion', value)}
@@ -159,7 +197,19 @@ const SecondaryAnalysisSettings = (props) => {
           <Space direction='horizontal'>
             <Switch
               checked={formValues.pairedWt}
-              onChange={(value) => handleValueChange('pairedWt', value)}
+              onChange={(value) => {
+                if (!value && Object.keys(wtFiles).length > 0) {
+                  Modal.confirm({
+                    title: 'You have WT Fastq files uploaded.',
+                    content: 'Do you want to disable paired WT mode? Your files will not be deleted.',
+                    okText: 'Yes, disable',
+                    cancelText: 'Cancel',
+                    onOk: () => handleValueChange('pairedWt', false),
+                  });
+                } else {
+                  handleValueChange('pairedWt', value);
+                }
+              }}
             />
             <span style={{ marginRight: '10px' }}>
               Run the pipeline with paired Whole Transcriptome and immune profiling data
