@@ -4,13 +4,13 @@ import {
   Slider, Form,
   Radio, Input, Space,
 } from 'antd';
-import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
+import useConfigUpdateDebounced from 'utils/customHooks/useConfigUpdateDebounced';
 
 const TitleDesign = (props) => {
   const {
     onUpdate, config, allowTitleChange, placeHolder,
   } = props;
-  const [newConfig, handleChange] = useUpdateDebounced(onUpdate, config);
+  const [newConfig, handleChange] = useConfigUpdateDebounced(onUpdate, config);
   return (
     <Space direction='vertical' style={{ width: '80%' }}>
       <Form

@@ -4,7 +4,7 @@ import {
 } from 'react';
 
 // A custom hook for the sliders in plot styling for throttling the dispatching of updates to redux
-const useUpdateDebounced = (onUpdate, value, debounceTime = 1000) => {
+const useConfigUpdateDebounced = (onUpdate, value, debounceTime = 1000) => {
   const updateDebounced = useCallback(_.debounce((obj) => onUpdate(obj), debounceTime), [onUpdate]);
   const [newValue, setNewValue] = useState(value);
   // if the config is changed - update the newConfig too
@@ -22,4 +22,4 @@ const useUpdateDebounced = (onUpdate, value, debounceTime = 1000) => {
   };
   return [newValue, update];
 };
-export default useUpdateDebounced;
+export default useConfigUpdateDebounced;
