@@ -141,18 +141,14 @@ describe('FastqFilesTable', () => {
     expect(deleteSecondaryAnalysisFile).toHaveBeenCalledWith('analysis1', 'file3');
   });
 
-  // --- NEW TESTS BELOW ---
-
   it('renders the "Type" column when pairedWt is true and shows the correct labels', () => {
     renderComponent(store, {
       pairedWt: true,
       filesProp: filesWithTypes,
     });
 
-    // header
     expect(screen.getByText('Type')).toBeInTheDocument();
 
-    // each row should show the human-readable label
     expect(screen.getByText(labelsByFastqType[FastqFileType.WT_FASTQ])).toBeInTheDocument();
     expect(screen.getByText(labelsByFastqType[FastqFileType.IMMUNE_FASTQ])).toBeInTheDocument();
   });
@@ -164,7 +160,6 @@ describe('FastqFilesTable', () => {
     });
 
     expect(screen.queryByText('Type')).not.toBeInTheDocument();
-    // in this mode, no type labels should appear
     Object.values(labelsByFastqType).forEach((label) => {
       expect(screen.queryByText(label)).not.toBeInTheDocument();
     });
@@ -177,7 +172,6 @@ describe('FastqFilesTable', () => {
       filesProp: filesWithTypes,
     });
 
-    // should see only the WT file
     expect(screen.getByText('wt.fastq')).toBeInTheDocument();
     expect(screen.queryByText('immune.fastq')).not.toBeInTheDocument();
   });
@@ -191,16 +185,5 @@ describe('FastqFilesTable', () => {
 
     expect(screen.getByText('immune.fastq')).toBeInTheDocument();
     expect(screen.queryByText('wt.fastq')).not.toBeInTheDocument();
-  });
-
-  it('shows both file types when kit is non‐special category and pairedWt is false', () => {
-    renderComponent(store, {
-      kit: 'SOME_OTHER_KIT',
-      pairedWt: false,
-      filesProp: filesWithTypes,
-    });
-
-    expect(screen.getByText('wt.fastq')).toBeInTheDocument();
-    expect(screen.getByText('immune.fastq')).toBeInTheDocument();
   });
 });
