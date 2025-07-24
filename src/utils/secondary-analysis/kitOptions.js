@@ -1,5 +1,9 @@
 import FastqFileType from 'const/enums/FastqFileType';
 
+// A lot of pieces of code rely on cehcking startsWith against the values
+// (for example, the KitCategory.fromKit function).
+// So be careful if changing them.
+// Migrate to explicit "includes" checks if this begins causing issues.
 const kitOptions = [
   { label: 'Evercode WT Mini', value: 'wt_mini' },
   { label: 'Evercode WT', value: 'wt' },
@@ -18,42 +22,5 @@ const labelsByFastqType = {
   [FastqFileType.IMMUNE_FASTQ]: 'Immune',
 };
 
-const kitCategories = {
-  TCR: 'tcr',
-  BCR: 'bcr',
-  WT: 'wt',
-};
-
-const immuneDbOptionsByKitCategory = {
-  [kitCategories.BCR]: ['human', 'mouse', 'transgenic_mouse'],
-  [kitCategories.TCR]: ['human', 'mouse'],
-  [kitCategories.WT]: [],
-};
-
-const isKitCategory = (kit, categoryInput) => {
-  if (!kit) return false;
-
-  if (Array.isArray(categoryInput)) {
-    return categoryInput.some((category) => kit.startsWith(category));
-  }
-  return kit.startsWith(categoryInput);
-};
-
-const getKitCategory = (kit) => {
-  if (kit.startsWith(kitCategories.TCR)) {
-    return kitCategories.TCR;
-  }
-  if (kit.startsWith(kitCategories.BCR)) {
-    return kitCategories.BCR;
-  }
-  if (kit.startsWith(kitCategories.WT)) {
-    return kitCategories.WT;
-  }
-
-  throw new Error(`Unknown kit: ${kit}`);
-};
-
 export default kitOptions;
-export {
-  isKitCategory, getKitCategory, kitCategories, labelsByFastqType, immuneDbOptionsByKitCategory,
-};
+export { labelsByFastqType };

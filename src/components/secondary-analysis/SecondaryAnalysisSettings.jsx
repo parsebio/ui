@@ -7,11 +7,12 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import propTypes from 'prop-types';
-import kitOptions, { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+import kitOptions from 'utils/secondary-analysis/kitOptions';
 import { getFastqFiles } from 'redux/selectors';
 import SliderWithInput from 'components/SliderWithInput';
 import FastqFileType from 'const/enums/FastqFileType';
 import { useSelector } from 'react-redux';
+import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
 
 const kitToMaxSublibrariesMap = {
   wt_mini: 2,
@@ -76,7 +77,7 @@ const SecondaryAnalysisSettings = (props) => {
     (newKit) => {
       // if switching to WT category and there are immune FASTQ files already uploaded
       if (
-        isKitCategory(newKit, [kitCategories.WT])
+        isKitCategory(newKit, [KitCategory.WT])
         && Object.keys(immuneFiles).length > 0
       ) {
         Modal.confirm({
@@ -101,14 +102,14 @@ const SecondaryAnalysisSettings = (props) => {
     setFormValues((prevFormValues) => {
       let { chemistryVersion, pairedWt } = prevFormValues;
 
-      if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
+      if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
         pairedWt = true;
         chemistryVersion = '3';
       } else if (kit === 'wt_mega_384') {
         chemistryVersion = '3';
       }
 
-      if (isKitCategory(kit, kitCategories.WT)) {
+      if (isKitCategory(kit, KitCategory.WT)) {
         pairedWt = false;
       }
 
@@ -153,11 +154,11 @@ const SecondaryAnalysisSettings = (props) => {
             onChange={(value) => handleValueChange('chemistryVersion', value)}
             value={formValues.chemistryVersion}
             options={[
-              { label: 'v1', value: '1', disabled: isKitCategory(formValues.kit, kitCategories.TCR) },
+              { label: 'v1', value: '1', disabled: isKitCategory(formValues.kit, KitCategory.TCR) },
               { label: 'v2', value: '2' },
               { label: 'v3', value: '3' },
             ]}
-            disabled={formValues.kit === 'wt_mega_384' || isKitCategory(formValues.kit, kitCategories.BCR)}
+            disabled={formValues.kit === 'wt_mega_384' || isKitCategory(formValues.kit, KitCategory.BCR)}
           />
         </Space>
       </Form.Item>
@@ -192,7 +193,7 @@ const SecondaryAnalysisSettings = (props) => {
           </div>
         </Form.Item>
       )}
-      {isKitCategory(formValues.kit, [kitCategories.TCR, kitCategories.BCR]) && (
+      {isKitCategory(formValues.kit, [KitCategory.TCR, KitCategory.BCR]) && (
         <Form.Item name='pairedWt'>
           <Space direction='horizontal'>
             <Switch

@@ -5,13 +5,13 @@ import {
   SECONDARY_ANALYSES_SAVING, SECONDARY_ANALYSES_UPDATED, SECONDARY_ANALYSES_ERROR,
 } from 'redux/actionTypes/secondaryAnalyses';
 import endUserMessages from 'utils/endUserMessages';
-import { getKitCategory, immuneDbOptionsByKitCategory } from 'utils/secondary-analysis/kitOptions';
+import KitCategory, { immuneDbOptionsByKitCategory } from 'const/enums/KitCategory';
 
 const withSideEffects = (diff, secondaryState) => {
   const sideEffectsDiff = {};
 
   if (diff.kit) {
-    const kitCategory = getKitCategory(diff.kit);
+    const kitCategory = KitCategory.fromKit(diff.kit);
 
     if (!immuneDbOptionsByKitCategory[kitCategory].includes(secondaryState.immuneDatabase)) {
       sideEffectsDiff.immuneDatabase = null;

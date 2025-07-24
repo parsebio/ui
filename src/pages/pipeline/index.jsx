@@ -20,7 +20,7 @@ import {
   storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
-import kitOptions, { getKitCategory, isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+import kitOptions from 'utils/secondary-analysis/kitOptions';
 import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
@@ -37,6 +37,7 @@ import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
 import FastqFileType from 'const/enums/FastqFileType';
 import ImmuneDatabase, { immuneDbToDisplay } from 'components/secondary-analysis/ImmuneDatabase';
+import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -473,7 +474,7 @@ const Pipeline = () => {
         <ImmuneDatabase
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
           database={immuneDatabase}
-          kitCategory={getKitCategory(kit)}
+          kitCategory={KitCategory.fromKit(kit)}
         />
       ),
       isValid: Boolean(immuneDatabase),
@@ -515,7 +516,7 @@ const Pipeline = () => {
 
   const activeStepsKeys = useMemo(
     () => {
-      if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
+      if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
         return pairedWt === true ? pairedWTStepsKeys : tcrStepsKeys;
       }
       return wtStepsKeys;
@@ -525,7 +526,7 @@ const Pipeline = () => {
 
   const activeStepsGrid = useMemo(
     () => {
-      if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
+      if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
         return pairedWt === true ? pairedWTStepsGrid : tcrStepsGrid;
       }
       return wtStepsGrid;

@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import bytesToSize from 'utils/styling/bytesToSize';
-import { labelsByFastqType, isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+import { labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 import FastqFileType from 'const/enums/FastqFileType';
 import { DeleteOutlined } from '@ant-design/icons';
 import UploadStatusView from 'components/UploadStatusView';
 import UploadStatus from 'utils/upload/UploadStatus';
 import PrettyTime from 'components/PrettyTime';
+import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
 
 const { IMMUNE_FASTQ, WT_FASTQ } = FastqFileType;
 const FastqFilesTable = (props) => {
@@ -19,9 +20,9 @@ const FastqFilesTable = (props) => {
   } = props;
 
   const getFastqIsActive = (fileType) => {
-    if (isKitCategory(kit, [kitCategories.WT])) {
+    if (isKitCategory(kit, [KitCategory.WT])) {
       return fileType === WT_FASTQ;
-    } if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR]) && !pairedWt) {
+    } if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR]) && !pairedWt) {
       return fileType === IMMUNE_FASTQ;
     }
     return true;

@@ -7,7 +7,7 @@ import {
 import propTypes from 'prop-types';
 
 import useLocalState from 'utils/customHooks/useLocalState';
-import { immuneDbOptionsByKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+import KitCategory, { immuneDbOptionsByKitCategory } from 'const/enums/KitCategory';
 
 const immuneDbToDisplay = {
   human: 'Human',
@@ -69,7 +69,7 @@ const ImmuneDatabase = (props) => {
 ImmuneDatabase.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
   database: propTypes.string.isRequired,
-  kitCategory: propTypes.oneOf([kitCategories.TCR, kitCategories.BCR]).isRequired,
+  kitCategory: propTypes.oneOf([KitCategory.TCR, KitCategory.BCR]).isRequired,
 };
 
 export default ImmuneDatabase;
