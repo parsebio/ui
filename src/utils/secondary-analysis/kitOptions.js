@@ -9,7 +9,7 @@ const kitOptions = [
   { label: 'Evercode TCR', value: 'tcr' },
   // { label: 'Evercode TCR Mega', value: 'tcr_mega' },
   // { label: 'Evercode BCR Mini', value: 'bcr_mini' },
-  // { label: 'Evercode BCR', value: 'bcr' },
+  { label: 'Evercode BCR', value: 'bcr' },
   // { label: 'Evercode BCR Mega', value: 'bcr_mega' },
 ];
 
@@ -33,5 +33,21 @@ const isKitCategory = (kit, categoryInput) => {
   return kit.startsWith(categoryInput);
 };
 
+const getKitCategory = (kit) => {
+  if (kit.startsWith(kitCategories.TCR)) {
+    return kitCategories.TCR;
+  }
+  if (kit.startsWith(kitCategories.BCR)) {
+    return kitCategories.BCR;
+  }
+  if (kit.startsWith(kitCategories.WT)) {
+    return kitCategories.WT;
+  }
+
+  throw new Error(`Unknown kit: ${kit}`);
+};
+
 export default kitOptions;
-export { isKitCategory, kitCategories, labelsByFastqType };
+export {
+  isKitCategory, getKitCategory, kitCategories, labelsByFastqType,
+};

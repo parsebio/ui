@@ -6,8 +6,8 @@ import {
 } from 'antd';
 import propTypes from 'prop-types';
 
-import FastqFileType from 'const/enums/FastqFileType';
 import useLocalState from 'utils/customHooks/useLocalState';
+import { kitCategories } from 'utils/secondary-analysis/kitOptions';
 
 const immuneDbToDisplay = {
   human: 'Human',
@@ -15,15 +15,15 @@ const immuneDbToDisplay = {
   transgenic_mouse: 'Transgenic mouse',
 };
 
-const optionsByImmuneType = {
-  [FastqFileType.BCR]: ['human', 'mouse', 'transgenic_mouse'],
-  [FastqFileType.TCR]: ['human', 'mouse'],
+const optionsByKitCategory = {
+  [kitCategories.BCR]: ['human', 'mouse', 'transgenic_mouse'],
+  [kitCategories.TCR]: ['human', 'mouse'],
 };
 
 const { Text } = Typography;
 
 const ImmuneDatabase = (props) => {
-  const { database, immuneType, onDetailsChanged } = props;
+  const { database, kitCategory, onDetailsChanged } = props;
 
   const [localDatabase, updateDatabase] = useLocalState(
     (value) => onDetailsChanged({ immuneDatabase: value }),
@@ -32,11 +32,11 @@ const ImmuneDatabase = (props) => {
   );
 
   const options = useMemo(
-    () => optionsByImmuneType[immuneType].map((type) => ({
+    () => optionsByKitCategory[kitCategory].map((type) => ({
       label: immuneDbToDisplay[type],
       value: type,
     })),
-    [immuneType],
+    [kitCategory],
   );
 
   return (
@@ -74,7 +74,7 @@ const ImmuneDatabase = (props) => {
 ImmuneDatabase.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
   database: propTypes.string.isRequired,
-  immuneType: propTypes.oneOf([FastqFileType.TCR, FastqFileType.BCR]).isRequired,
+  kitCategory: propTypes.oneOf([kitCategories.TCR, kitCategories.BCR]).isRequired,
 };
 
 export default ImmuneDatabase;

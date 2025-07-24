@@ -20,7 +20,7 @@ import {
   storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
-import kitOptions, { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+import kitOptions, { getKitCategory, isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
 import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
@@ -473,6 +473,7 @@ const Pipeline = () => {
         <ImmuneDatabase
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
           database={immuneDatabase}
+          kitCategory={getKitCategory(kit)}
         />
       ),
       isValid: Boolean(immuneDatabase),
