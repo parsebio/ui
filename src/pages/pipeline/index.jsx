@@ -267,6 +267,7 @@ const Pipeline = () => {
     refGenome,
     pairedWt,
     pairMatches,
+    immuneDatabase,
   ]);
 
   // Poll for status
