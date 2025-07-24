@@ -7,17 +7,12 @@ import {
 import propTypes from 'prop-types';
 
 import useLocalState from 'utils/customHooks/useLocalState';
-import { kitCategories } from 'utils/secondary-analysis/kitOptions';
+import { immuneDbOptionsByKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
 
 const immuneDbToDisplay = {
   human: 'Human',
   mouse: 'Mouse',
   transgenic_mouse: 'Transgenic mouse',
-};
-
-const optionsByKitCategory = {
-  [kitCategories.BCR]: ['human', 'mouse', 'transgenic_mouse'],
-  [kitCategories.TCR]: ['human', 'mouse'],
 };
 
 const { Text } = Typography;
@@ -32,7 +27,7 @@ const ImmuneDatabase = (props) => {
   );
 
   const options = useMemo(
-    () => optionsByKitCategory[kitCategory].map((type) => ({
+    () => immuneDbOptionsByKitCategory[kitCategory].map((type) => ({
       label: immuneDbToDisplay[type],
       value: type,
     })),

@@ -24,6 +24,12 @@ const kitCategories = {
   WT: 'wt',
 };
 
+const immuneDbOptionsByKitCategory = {
+  [kitCategories.BCR]: ['human', 'mouse', 'transgenic_mouse'],
+  [kitCategories.TCR]: ['human', 'mouse'],
+  [kitCategories.WT]: [],
+};
+
 const isKitCategory = (kit, categoryInput) => {
   if (!kit) return false;
 
@@ -49,5 +55,5 @@ const getKitCategory = (kit) => {
 
 export default kitOptions;
 export {
-  isKitCategory, getKitCategory, kitCategories, labelsByFastqType,
+  isKitCategory, getKitCategory, kitCategories, labelsByFastqType, immuneDbOptionsByKitCategory,
 };
