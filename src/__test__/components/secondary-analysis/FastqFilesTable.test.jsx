@@ -7,11 +7,14 @@ import thunk from 'redux-thunk';
 import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
+import FastqFileType from 'const/enums/FastqFileType';
+import { kitCategories, labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 
 jest.mock('redux/actions/secondaryAnalyses/deleteSecondaryAnalysisFile', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
 
 const mockStore = configureMockStore([thunk]);
 
+// base files without types, used for existing tests
 const files = {
   file1: {
     id: 'file1',
@@ -33,13 +36,49 @@ const files = {
   },
 };
 
-const renderComponent = (store, canEditTable = true) => {
-  render(
-    <Provider store={store}>
-      <FastqFilesTable files={files} canEditTable={canEditTable} secondaryAnalysisId='analysis1' />
-    </Provider>,
-  );
+const filesWithTypes = {
+  wt: {
+    id: 'wt',
+    name: 'wt.fastq',
+    size: 111111,
+    type: FastqFileType.WT_FASTQ,
+    upload: {
+      status: { current: 'uploaded' },
+      percentProgress: 100,
+    },
+  },
+  immune: {
+    id: 'immune',
+    name: 'immune.fastq',
+    size: 222222,
+    type: FastqFileType.IMMUNE_FASTQ,
+    upload: {
+      status: { current: 'uploaded' },
+      percentProgress: 100,
+    },
+  },
 };
+
+const renderComponent = (
+  store,
+  {
+    canEditTable = true,
+    pairedWt = false,
+    kit = null,
+    filesProp = files,
+    secondaryAnalysisId = 'analysis1',
+  } = {},
+) => render(
+  <Provider store={store}>
+    <FastqFilesTable
+      files={filesProp}
+      canEditTable={canEditTable}
+      secondaryAnalysisId={secondaryAnalysisId}
+      pairedWt={pairedWt}
+      kit={kit}
+    />
+  </Provider>,
+);
 
 describe('FastqFilesTable', () => {
   let store;
@@ -75,7 +114,7 @@ describe('FastqFilesTable', () => {
   });
 
   it('does not render delete buttons when canEditTable is false', () => {
-    renderComponent(store, false);
+    renderComponent(store, { canEditTable: false });
 
     expect(screen.queryAllByRole('img', { name: 'delete' })).toHaveLength(0);
   });
@@ -94,14 +133,74 @@ describe('FastqFilesTable', () => {
       },
     };
 
-    render(
-      <Provider store={store}>
-        <FastqFilesTable files={expiredFiles} canEditTable secondaryAnalysisId='analysis1' />
-      </Provider>,
-    );
+    renderComponent(store, { filesProp: expiredFiles, canEditTable: true });
 
+    // the third delete icon corresponds to file3
     fireEvent.click(screen.getAllByRole('img', { name: 'delete' })[2]);
 
     expect(deleteSecondaryAnalysisFile).toHaveBeenCalledWith('analysis1', 'file3');
+  });
+
+  // --- NEW TESTS BELOW ---
+
+  it('renders the "Type" column when pairedWt is true and shows the correct labels', () => {
+    renderComponent(store, {
+      pairedWt: true,
+      filesProp: filesWithTypes,
+    });
+
+    // header
+    expect(screen.getByText('Type')).toBeInTheDocument();
+
+    // each row should show the human-readable label
+    expect(screen.getByText(labelsByFastqType[FastqFileType.WT_FASTQ])).toBeInTheDocument();
+    expect(screen.getByText(labelsByFastqType[FastqFileType.IMMUNE_FASTQ])).toBeInTheDocument();
+  });
+
+  it('does not render the "Type" column when pairedWt is false', () => {
+    renderComponent(store, {
+      pairedWt: false,
+      filesProp: filesWithTypes,
+    });
+
+    expect(screen.queryByText('Type')).not.toBeInTheDocument();
+    // in this mode, no type labels should appear
+    Object.values(labelsByFastqType).forEach((label) => {
+      expect(screen.queryByText(label)).not.toBeInTheDocument();
+    });
+  });
+
+  it('only shows WT_FASTQ files when kit is WT category, regardless of pairedWt', () => {
+    renderComponent(store, {
+      kit: kitCategories.WT,
+      pairedWt: false,
+      filesProp: filesWithTypes,
+    });
+
+    // should see only the WT file
+    expect(screen.getByText('wt.fastq')).toBeInTheDocument();
+    expect(screen.queryByText('immune.fastq')).not.toBeInTheDocument();
+  });
+
+  it('only shows IMMUNE_FASTQ files when kit is TCR and pairedWt is false', () => {
+    renderComponent(store, {
+      kit: kitCategories.TCR,
+      pairedWt: false,
+      filesProp: filesWithTypes,
+    });
+
+    expect(screen.getByText('immune.fastq')).toBeInTheDocument();
+    expect(screen.queryByText('wt.fastq')).not.toBeInTheDocument();
+  });
+
+  it('shows both file types when kit is non‐special category and pairedWt is false', () => {
+    renderComponent(store, {
+      kit: 'SOME_OTHER_KIT',
+      pairedWt: false,
+      filesProp: filesWithTypes,
+    });
+
+    expect(screen.getByText('wt.fastq')).toBeInTheDocument();
+    expect(screen.getByText('immune.fastq')).toBeInTheDocument();
   });
 });
