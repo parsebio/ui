@@ -484,6 +484,10 @@
     "species": "Custom Mus musculus (Mouse) with human KMT2A-MLLT3 fusion gene"
   },
   {
+    "name": "GRCm39-toplevel",
+    "species": "Custom Mus Musculus (mouse) using toplevel fasta, release 114"
+  },
+  {
     "name": "GRCg7b_enriched6db",
     "species": "Custom Gallus gallus (Chicken)"
   },
