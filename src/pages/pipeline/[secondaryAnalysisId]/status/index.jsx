@@ -107,6 +107,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     const hasWT = isKitCategory(kit, kitCategories.WT) || pairedWt;
     const hasImmune = isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR]);
     if (hasWT) {
+      // older runs have different output file structure
+      // thats why the options are fetched from the api
       const wtOptions = await fetchAPI(
         `/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadOptions`,
       );
