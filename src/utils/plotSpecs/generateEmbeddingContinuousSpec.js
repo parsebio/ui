@@ -192,13 +192,16 @@ const generateData = (
   const filteredCells = filterCells(cellSets, selectedSample);
   const { xValues, yValues, cellIds } = embeddingData;
 
-  const cells = cellIds.filter((cellId) => filteredCells.has(cellId))
-    .map((cellId, index) => ({
-      x: xValues[index],
-      y: yValues[index],
-      value: getExpression(cellId),
-    }));
-
+  const cells = [];
+  cellIds.forEach((cellId, index) => {
+    if (filteredCells.has(cellId)) {
+      cells.push({
+        x: xValues[index],
+        y: yValues[index],
+        value: getExpression(cellId),
+      });
+    }
+  });
   return cells;
 };
 
