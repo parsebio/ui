@@ -65,7 +65,6 @@ const OverviewMenu = ({
     return wizardIndex;
   };
 
-  // Helper to recursively render grid rows/cols
   const renderGrid = (grid, steps, isRow = true) => {
     if (Array.isArray(grid)) {
       if (isRow) {
@@ -87,7 +86,6 @@ const OverviewMenu = ({
       );
     }
 
-    // If this is a string, render the card for the step
     return renderCard(steps[grid], getWizardIndex(), { width: '100%', height: '100%' });
   };
 
