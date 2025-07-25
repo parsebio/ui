@@ -616,14 +616,14 @@ const Pipeline = () => {
     },
     [ANALYSIS_DETAILS]: {
       toolbarControls: [],
-      component: () => (
+      component: (width, height) => (
         <div style={{
-          display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
+          display: 'flex', flexDirection: 'column', height: height - 60, width: '100%',
         }}
         >
           {
             activeSecondaryAnalysisId ? (
-              <>
+              <div style={{ height: '100%' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
                   <Space direction='vertical'>
                     <Title level={4}>{analysisName}</Title>
@@ -701,7 +701,7 @@ const Pipeline = () => {
                     editable={pipelineCanBeRun}
                   />
                 </div>
-              </>
+              </div>
             ) : <Empty description='Create a new run to get started' />
           }
         </div>
