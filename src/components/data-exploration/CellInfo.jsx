@@ -58,7 +58,7 @@ const CellInfo = (props) => {
           </div>
         ) : null}
         {cellInfo.cellSets?.length > 0 ? cellInfo.cellSets.map((cellSetName) => (
-          <div key={`${cellSetName}-key`} style={cellInfoStyle}>
+          <div style={cellInfoStyle}>
             {cellSetName}
           </div>
         )) : null}
