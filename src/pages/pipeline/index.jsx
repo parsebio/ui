@@ -752,9 +752,7 @@ const Pipeline = () => {
             </Button>,
           ]}
         >
-          {
-            currentStep.getIsDisabled() ? null : currentStep.render()
-          }
+          {currentStep.getIsDisabled() ? null : currentStep.render()}
         </Modal>
       )}
       <div data-testid='pipeline-container' style={{ height: '100vh', overflowY: 'auto' }}>
