@@ -82,10 +82,9 @@ const SecondaryAnalysisSettings = (props) => {
       ) {
         Modal.confirm({
           title: 'You have immune profiling FASTQ files uploaded.',
-          content:
-            'If you switch back to a WT‐only kit, those files won’t be processed. Do you still want to continue? Your files will not be deleted.',
-          okText: 'Yes, switch kit',
-          cancelText: 'No, keep current kit',
+          content: 'By selecting a WT kit, your uploaded immune profiling files will not be processed.',
+          okText: 'OK',
+          cancelText: 'Cancel',
           onOk: () => changeKit(newKit),
         });
       } else {
@@ -202,8 +201,8 @@ const SecondaryAnalysisSettings = (props) => {
                 if (!value && Object.keys(wtFiles).length > 0) {
                   Modal.confirm({
                     title: 'You have WT Fastq files uploaded.',
-                    content: 'Do you want to disable paired WT mode? Your files will not be deleted.',
-                    okText: 'Yes, disable',
+                    content: 'By disabling this toggle, your uploaded WT files will not be processed.',
+                    okText: 'OK',
                     cancelText: 'Cancel',
                     onOk: () => handleValueChange('pairedWt', false),
                   });
