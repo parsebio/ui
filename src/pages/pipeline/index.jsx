@@ -618,6 +618,9 @@ const Pipeline = () => {
       toolbarControls: [],
       component: (width, height) => (
         <div style={{
+          // Remove header 60 from height calculation
+          // TODO move this calculation to a dynamic version in the MultiTileContainer,
+          // since we receive an inaccurate height right now
           display: 'flex', flexDirection: 'column', height: height - 60, width: '100%',
         }}
         >
