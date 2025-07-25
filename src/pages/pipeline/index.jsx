@@ -71,30 +71,6 @@ const analysisDetailsKeys = [
   'immuneDatabase',
 ];
 
-const wtStepsKeys = [
-  'Experimental setup',
-  'Sample loading table',
-  'Reference genome',
-  'Fastq files',
-];
-
-const tcrStepsKeys = [
-  'Experimental setup',
-  'Sample loading table',
-  'Reference genome',
-  'Immune database',
-  'Fastq files',
-];
-
-const pairedWTStepsKeys = [
-  'Experimental setup',
-  'Sample loading table',
-  'Reference genome',
-  'Immune database',
-  'Fastq files',
-  'Fastq Pairs Matcher',
-];
-
 const wtStepsGrid = [
   // row0
   [
@@ -148,6 +124,22 @@ const pairedWTStepsGrid = [
   // row2
   'Fastq Pairs Matcher',
 ];
+
+const flattenedToKeys = (grid) => {
+  const result = [];
+
+  const dfs = (node) => {
+    if (Array.isArray(node)) {
+      node.forEach(dfs);
+    } else if (typeof node === 'string') {
+      result.push(node);
+    }
+  };
+
+  dfs(grid);
+
+  return result;
+};
 
 const getFastqsMatch = (fastqFiles, numOfSublibraries) => (
   Object.keys(fastqFiles).length === numOfSublibraries * 2
@@ -515,16 +507,6 @@ const Pipeline = () => {
     },
   };
 
-  const activeStepsKeys = useMemo(
-    () => {
-      if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
-        return pairedWt === true ? pairedWTStepsKeys : tcrStepsKeys;
-      }
-      return wtStepsKeys;
-    },
-    [kit, pairedWt],
-  );
-
   const activeStepsGrid = useMemo(
     () => {
       if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
@@ -534,6 +516,8 @@ const Pipeline = () => {
     },
     [kit, pairedWt],
   );
+
+  const activeStepsKeys = useMemo(() => flattenedToKeys(activeStepsGrid), [activeStepsGrid]);
 
   const activeSteps = useMemo(
     () => _.pick(wizardStepsData, activeStepsKeys),
