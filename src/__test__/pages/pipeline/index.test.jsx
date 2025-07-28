@@ -333,7 +333,7 @@ describe('Pipeline Page', () => {
 
     render(
       <SelectReferenceGenome
-        previousGenome={undefined}
+        genome={undefined}
         onDetailsChanged={mockOnDetailsChanged}
       />,
     );
