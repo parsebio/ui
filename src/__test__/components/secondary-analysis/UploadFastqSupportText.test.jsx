@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import UploadFastqSupportText from 'components/secondary-analysis/UploadFastqSupportText';
 import { isKitCategory } from 'const/enums/KitCategory';
 
-jest.mock('utils/secondary-analysis/kitOptions', () => ({
+jest.mock('const/enums/KitCategory', () => ({
   isKitCategory: jest.fn(),
 }));
 
