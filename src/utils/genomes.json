@@ -404,6 +404,10 @@
     "species": "Custom Mus musculus (Mouse)"
   },
   {
+    "name": "GRCm39_RN2",
+    "species": "Custom Mus musculus (Mouse)"
+  },
+  {
     "name": "GRCm39_tagBFP_tdTom",
     "species": "Custom Mus musculus (Mouse) with tagBFP and tdTom"
   },
