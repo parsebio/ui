@@ -110,22 +110,6 @@ const pairedWTStepsGrid = [
   'Fastq Pairs Matcher',
 ];
 
-const flattenedToKeys = (grid) => {
-  const result = [];
-
-  const dfs = (node) => {
-    if (Array.isArray(node)) {
-      node.forEach(dfs);
-    } else if (typeof node === 'string') {
-      result.push(node);
-    }
-  };
-
-  dfs(grid);
-
-  return result;
-};
-
 const getFastqsMatch = (fastqFiles, numOfSublibraries) => (
   Object.keys(fastqFiles).length === numOfSublibraries * 2
 );
@@ -502,7 +486,7 @@ const Pipeline = () => {
     [kit, pairedWt],
   );
 
-  const activeStepsKeys = useMemo(() => flattenedToKeys(activeStepsGrid), [activeStepsGrid]);
+  const activeStepsKeys = useMemo(() => _.flatMapDeep(activeStepsGrid), [activeStepsGrid]);
 
   const activeSteps = useMemo(
     () => _.pick(wizardStepsData, activeStepsKeys),
