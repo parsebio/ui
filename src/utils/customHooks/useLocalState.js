@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {
-  useState, useCallback, useEffect,
+  useState, useEffect,
 } from 'react';
 
 /**
@@ -13,18 +13,9 @@ import {
  *
  * @param {*} onUpdate external update function
  * @param {*} value external value
- * @param {*} options options for the hook
- * @param {number} options.debounce time in milliseconds to debounce the call to onUpdate
  * @returns
  */
-const useLocalState = (onUpdate, value, options = {}) => {
-  const { debounce = 0 } = options;
-
-  const updateDebounced = useCallback(
-    _.debounce((obj) => onUpdate(obj), debounce),
-    [onUpdate],
-  );
-
+const useLocalState = (onUpdate, value) => {
   const [localValue, setLocalValue] = useState(value);
 
   useEffect(() => {
@@ -35,9 +26,10 @@ const useLocalState = (onUpdate, value, options = {}) => {
 
   const update = (newValue) => {
     setLocalValue(newValue);
-    updateDebounced(newValue);
+    onUpdate(newValue);
   };
 
   return [localValue, update];
 };
+
 export default useLocalState;

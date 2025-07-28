@@ -14,6 +14,7 @@ const options = genomes.map((genome) => ({ label: `${genome.name}: ${genome.spec
 
 const SelectReferenceGenome = (props) => {
   const { previousGenome, onDetailsChanged } = props;
+
   const [refGenome, setRefGenome] = useState();
 
   useEffect(() => {

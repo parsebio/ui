@@ -23,7 +23,6 @@ const ImmuneDatabase = (props) => {
   const [localDatabase, updateDatabase] = useLocalState(
     (value) => onDetailsChanged({ immuneDatabase: value }),
     database,
-    0,
   );
 
   const options = useMemo(
