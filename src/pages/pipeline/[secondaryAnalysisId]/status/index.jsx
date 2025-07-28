@@ -143,10 +143,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       };
     };
 
-    const categories = Object.keys(outputOptions);
-    const menuItems = categories.length === 1
-      ? outputOptions[categories[0]].map(makeOptionItem)
-      : categories.map((category) => ({
+    const subMenus = Object.keys(outputOptions);
+    const menuItems = subMenus.length === 1
+      ? outputOptions[subMenus[0]].map(makeOptionItem)
+      : subMenus.map((category) => ({
         label: category,
         key: category,
         children: outputOptions[category].map(makeOptionItem),
