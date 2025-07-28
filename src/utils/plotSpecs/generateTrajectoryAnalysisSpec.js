@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
-import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
 
 const maxLabelLength = 85;
 const maxLabelHeight = 25;
