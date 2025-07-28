@@ -8,7 +8,8 @@ import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
 import FastqFileType from 'const/enums/FastqFileType';
-import { kitCategories, labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
+import { labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
+import KitCategory from 'const/enums/KitCategory';
 
 jest.mock('redux/actions/secondaryAnalyses/deleteSecondaryAnalysisFile', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
 
@@ -167,7 +168,7 @@ describe('FastqFilesTable', () => {
 
   it('only shows WT_FASTQ files when kit is WT category, regardless of pairedWt', () => {
     renderComponent(store, {
-      kit: kitCategories.WT,
+      kit: KitCategory.WT,
       pairedWt: false,
       filesProp: filesWithTypes,
     });
@@ -178,7 +179,7 @@ describe('FastqFilesTable', () => {
 
   it('only shows IMMUNE_FASTQ files when kit is TCR and pairedWt is false', () => {
     renderComponent(store, {
-      kit: kitCategories.TCR,
+      kit: KitCategory.TCR,
       pairedWt: false,
       filesProp: filesWithTypes,
     });
