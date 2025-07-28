@@ -6,7 +6,7 @@ import {
 } from 'antd';
 
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
-import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
+import ExperimentalSetup from 'components/secondary-analysis/ExperimentalSetup';
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
 import { useSelector, useDispatch } from 'react-redux';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
@@ -385,7 +385,7 @@ const Pipeline = () => {
       title: 'Provide the details of the experimental setup:',
       key: 'Experimental setup',
       render: () => (
-        <SecondaryAnalysisSettings
+        <ExperimentalSetup
           secondaryAnalysisId={activeSecondaryAnalysisId}
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />

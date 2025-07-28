@@ -29,7 +29,7 @@ const kitToMaxSublibrariesMap = {
 
 const detailsToShow = ['numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome', 'pairedWt'];
 
-const SecondaryAnalysisSettings = (props) => {
+const ExperimentalSetup = (props) => {
   const { secondaryAnalysisId, onDetailsChanged } = props;
 
   const [maxSublibraries, setMaxSublibraries] = useState();
@@ -226,9 +226,9 @@ const SecondaryAnalysisSettings = (props) => {
   );
 };
 
-SecondaryAnalysisSettings.propTypes = {
+ExperimentalSetup.propTypes = {
   secondaryAnalysisId: propTypes.string.isRequired,
   onDetailsChanged: propTypes.func.isRequired,
 };
 
-export default SecondaryAnalysisSettings;
+export default ExperimentalSetup;
