@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import _ from 'lodash';
-import getContainingCellSetsProperties from 'utils/cellSets/getContainingCellSetsProperties';
 
 const maxLabelLength = 85;
 const maxLabelHeight = 25;
@@ -694,25 +693,19 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
   ));
 
   const { xValues, yValues, cellIds: embeddingCellIds } = embedding;
-
   embeddingCellIds.forEach((cellId, index) => {
-    const cellSetsForCell = getContainingCellSetsProperties(
-      cellId,
-      selectedCellSets,
-      cellSets,
-    );
     // usually 1 cellSet for each cellId because most cell sets in a cell class are disjoint
-    Object.keys(cellSetsForCell).forEach((rootNode) => {
-      cellSetsForCell[rootNode].forEach(({ key, name, color }) => {
+    selectedCellSetObjects.forEach((cellSet) => {
+      if (cellSet.cellIds.has(cellId)) {
         plotData.push({
           cellId,
-          cellSetKey: key,
-          cellSetName: name,
-          color,
+          cellSetKey: cellSet.key,
+          cellSetName: cellSet.name,
+          color: cellSet.color,
           x: xValues[index],
           y: yValues[index],
         });
-      });
+      }
     });
   });
 
