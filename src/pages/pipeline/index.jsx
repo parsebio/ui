@@ -105,22 +105,7 @@ const tcrStepsGrid = [
 ];
 
 const pairedWTStepsGrid = [
-  // row0
-  [
-    // col0.0
-    'Experimental setup',
-    // col0.1
-    'Sample loading table',
-    // col0.2
-    [
-      // row0.2.0
-      'Reference genome',
-      // row0.2.1
-      'Immune database',
-    ],
-  ],
-  // row1
-  'Fastq files',
+  ..._.cloneDeep(tcrStepsGrid),
   // row2
   'Fastq Pairs Matcher',
 ];

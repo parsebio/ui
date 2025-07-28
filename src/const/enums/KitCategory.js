@@ -4,13 +4,13 @@ const KitCategory = {
   WT: 'wt',
   fromKit: (kit) => {
     // Using startsWith instead of explicitly checking is a bit brittle so be careful with kit names
-    if (kit.startsWith(KitCategory.TCR)) {
+    if (isKitCategory(kit, KitCategory.TCR)) {
       return KitCategory.TCR;
     }
-    if (kit.startsWith(KitCategory.BCR)) {
+    if (isKitCategory(kit, KitCategory.BCR)) {
       return KitCategory.BCR;
     }
-    if (kit.startsWith(KitCategory.WT)) {
+    if (isKitCategory(kit, KitCategory.WT)) {
       return KitCategory.WT;
     }
     throw new Error(`Unknown kit: ${kit}`);
@@ -23,6 +23,7 @@ const isKitCategory = (kit, categoryInput) => {
   if (Array.isArray(categoryInput)) {
     return categoryInput.some((category) => kit.startsWith(category));
   }
+
   return kit.startsWith(categoryInput);
 };
 
