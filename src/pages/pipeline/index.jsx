@@ -422,7 +422,7 @@ const Pipeline = () => {
       render: () => (
         <SelectReferenceGenome
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          previousGenome={refGenome}
+          genome={refGenome}
         />
       ),
       isValid: Boolean(refGenome),

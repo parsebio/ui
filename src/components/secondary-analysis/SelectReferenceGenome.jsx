@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Select,
   Typography,
@@ -7,28 +7,19 @@ import {
 import propTypes from 'prop-types';
 
 import genomes from 'utils/genomes.json';
+import useLocalState from 'utils/customHooks/useLocalState';
 
 const { Text } = Typography;
 
 const options = genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name }));
 
 const SelectReferenceGenome = (props) => {
-  const { previousGenome, onDetailsChanged } = props;
+  const { genome, onDetailsChanged } = props;
 
-  const [refGenome, setRefGenome] = useState();
-
-  useEffect(() => {
-    setRefGenome(previousGenome);
-  }, []);
-
-  const changeRefGenome = (value) => {
-    let newDiff = {};
-    if (previousGenome !== value) {
-      newDiff = { refGenome: value };
-    }
-    onDetailsChanged(newDiff);
-    setRefGenome(value);
-  };
+  const [localGenome, updateGenome] = useLocalState(
+    (value) => onDetailsChanged({ refGenome: value }),
+    genome,
+  );
 
   return (
     <div style={{
@@ -42,9 +33,9 @@ const SelectReferenceGenome = (props) => {
       <Select
         showSearch
         style={{ width: '90%' }}
-        value={refGenome}
+        value={localGenome}
         placeholder='Select the reference genome'
-        onChange={changeRefGenome}
+        onChange={updateGenome}
         options={options}
         filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
       />
@@ -62,11 +53,11 @@ const SelectReferenceGenome = (props) => {
   );
 };
 SelectReferenceGenome.defaultProps = {
-  previousGenome: undefined,
+  genome: undefined,
 };
 SelectReferenceGenome.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
-  previousGenome: propTypes.string,
+  genome: propTypes.string,
 };
 
 export default SelectReferenceGenome;
