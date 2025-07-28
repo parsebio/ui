@@ -105,7 +105,7 @@ const tcrStepsGrid = [
 ];
 
 const pairedWTStepsGrid = [
-  ..._.cloneDeep(tcrStepsGrid),
+  ...tcrStepsGrid,
   // row2
   'Fastq Pairs Matcher',
 ];
