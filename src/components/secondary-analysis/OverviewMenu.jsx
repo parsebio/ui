@@ -79,7 +79,7 @@ const OverviewMenu = ({
 
       return (
         grid.map((col) => (
-          <Col flex={1}>
+          <Col flex={1} style={{ width: `${100 / grid.length}%` }}>
             {renderGrid(col, steps, !isRow)}
           </Col>
         ))
