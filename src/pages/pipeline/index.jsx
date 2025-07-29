@@ -636,7 +636,7 @@ const Pipeline = () => {
                   </Space>
                 </div>
                 <Text strong>Description:</Text>
-                <div style={{ flex: 1, overflowY: 'auto' }}>
+                <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
                   <EditableParagraph
                     value={analysisDescription ?? ''}
                     onUpdate={(text) => {
