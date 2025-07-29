@@ -9,7 +9,7 @@ import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
 import kneePlotSpecGenerator from 'utils/plotSpecs/generateCellSizeDistributionKneePlot';
 import generateHistogramSpec from 'utils/plotSpecs/generateCellSizeDistributionHistogram';
-import CalculationConfig from 'components/data-processing/CellSizeDistribution/CalculationConfig';
+import CellSizeDistributionConfig from 'components/data-processing/CellSizeDistribution/CellSizeDistributionConfig';
 
 const HIGHEST_UMI_DEFAULT = 17000;
 const filterName = 'cellSizeDistribution';
@@ -74,7 +74,7 @@ const CellSizeDistribution = ({
     }];
 
   const renderCalculationConfig = () => (
-    <CalculationConfig highestUmi={highestUmi} />);
+    <CellSizeDistributionConfig highestUmi={highestUmi} />);
   return (
     <FilterPlotLayout
       experimentId={experimentId}

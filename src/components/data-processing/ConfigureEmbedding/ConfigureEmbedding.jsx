@@ -24,7 +24,7 @@ import loadCellMeta from 'redux/actions/cellMeta';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import Loader from 'components/Loader';
 import { getCellSets } from 'redux/selectors';
-import CalculationConfig from 'components/data-processing/ConfigureEmbedding/CalculationConfig';
+import ConfigureEmbeddingConfig from 'components/data-processing/ConfigureEmbedding/ConfigureEmbeddingConfig';
 import PlotLegendAlert, { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
 import EmptyPlot from 'components/plots/helpers/EmptyPlot';
 
@@ -491,7 +491,7 @@ const ConfigureEmbedding = (props) => {
             </Panel>
           </Collapse>
 
-          <CalculationConfig
+          <ConfigureEmbeddingConfig
             experimentId={experimentId}
             onConfigChange={onConfigChange}
             disabled={controlsDisabledForViolin}

@@ -26,7 +26,7 @@ import EmptyPlot from 'components/plots/helpers/EmptyPlot';
 import PlotStyling from 'components/plots/styling/PlotStyling';
 import { getIsUnisample } from 'utils/experimentPredicates';
 import PlotLegendAlert, { MAX_LEGEND_ITEMS } from 'components/plots/helpers/PlotLegendAlert';
-import CalculationConfig from './CalculationConfig';
+import DataIntegrationConfig from 'components/data-processing/DataIntegration/DataIntegrationConfig';
 
 const { Panel } = Collapse;
 const DataIntegration = (props) => {
@@ -327,7 +327,7 @@ const DataIntegration = (props) => {
               </Radio.Group>
             </Panel>
           </Collapse>
-          <CalculationConfig
+          <DataIntegrationConfig
             experimentId={experimentId}
             onConfigChange={onConfigChange}
             config={calculationConfig}

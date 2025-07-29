@@ -6,7 +6,7 @@ import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import generateKneePlotSpec from 'utils/plotSpecs/generateClassifierKneePlot';
 import generateEmptyDropsSpec from 'utils/plotSpecs/generateClassifierEmptyDropsPlot';
 import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
-import CalculationConfig from './CalculationConfig';
+import ClassifierConfig from './ClassifierConfig';
 
 const filterName = 'classifier';
 
@@ -57,7 +57,7 @@ const Classifier = ({
     },
   ];
 
-  const renderCalculationConfig = () => <CalculationConfig />;
+  const renderCalculationConfig = () => <ClassifierConfig />;
 
   return (
     <FilterPlotLayout

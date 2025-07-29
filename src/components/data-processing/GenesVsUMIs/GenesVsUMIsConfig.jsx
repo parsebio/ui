@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
-import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
+import useConfigUpdate from 'utils/customHooks/useConfigUpdate';
 
 const { Option } = Select;
 
@@ -22,7 +22,7 @@ const GenesVsUMIsConfig = (props) => {
     config, updateSettings, disabled, rerunRequired, onQCRunClick,
   } = props;
 
-  const [newConfig, handleChange] = useUpdateDebounced(updateSettings, config);
+  const [newConfig, handleChange] = useConfigUpdate(updateSettings, config);
 
   const defaultPredictionInterval = 1 - config.regressionTypeSettings[config.regressionType]['p.level'];
 
@@ -142,11 +142,11 @@ const GenesVsUMIsConfig = (props) => {
   );
 };
 GenesVsUMIsConfig.defaultProps = {
-  updateSettings: () => {},
+  updateSettings: () => { },
   config: {},
   disabled: false,
   rerunRequired: false,
-  onQCRunClick: () => {},
+  onQCRunClick: () => { },
 };
 
 GenesVsUMIsConfig.propTypes = {

@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 
 import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
+import MitochondrialContentConfig from 'components/data-processing/MitochondrialContent/MitochondrialContentConfig';
+
 import generateFractionHistogramSpec from 'utils/plotSpecs/generateMitochondrialFractionHistogram';
 import generateFractionScatterplotSpec from 'utils/plotSpecs/generateMitochondrialFractionScatterplot';
-import CalculationConfig from './CalculationConfig';
 
 const filterName = 'mitochondrialContent';
 
@@ -54,7 +55,7 @@ const MitochondrialContent = (props) => {
     },
   ];
 
-  const renderCalculationConfig = () => <CalculationConfig />;
+  const renderCalculationConfig = () => <MitochondrialContentConfig />;
 
   return (
     <FilterPlotLayout

@@ -9,7 +9,7 @@ import { Table } from 'antd';
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import DoubletScores from 'components/data-processing/DoubletScores/DoubletScores';
-import CalculationConfig from 'components/data-processing/DoubletScores/CalculationConfig';
+import DoubletScoresConfig from 'components/data-processing/DoubletScores/DoubletScoresConfig';
 import generateExperimentSettingsMock from '../../../test-utils/experimentSettings.mock';
 
 import filterStatisticsMock from '../../../test-utils/plotData.mock';
@@ -92,7 +92,7 @@ describe('DoubletScores', () => {
     );
 
     const page = component.find(DoubletScores).at(0);
-    const calculationConfig = page.find(CalculationConfig);
+    const calculationConfig = page.find(DoubletScoresConfig);
 
     // There is a config element
     expect(calculationConfig.length).toEqual(1);
@@ -119,7 +119,7 @@ describe('DoubletScores', () => {
     );
 
     const page = component.find(DoubletScores).at(0);
-    const calculationConfig = page.find(CalculationConfig);
+    const calculationConfig = page.find(DoubletScoresConfig);
 
     // There is a config element
     expect(calculationConfig.length).toEqual(1);

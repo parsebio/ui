@@ -6,7 +6,7 @@ import {
 } from 'antd';
 
 import ProjectsListContainer from 'components/data-management/project/ProjectsListContainer';
-import SecondaryAnalysisSettings from 'components/secondary-analysis/SecondaryAnalysisSettings';
+import ExperimentalSetup from 'components/secondary-analysis/ExperimentalSetup';
 import SampleLTUpload from 'components/secondary-analysis/SampleLTUpload';
 import { useSelector, useDispatch } from 'react-redux';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
@@ -20,7 +20,7 @@ import {
   storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import EditableParagraph from 'components/EditableParagraph';
-import kitOptions, { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
+import kitOptions from 'utils/secondary-analysis/kitOptions';
 import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
@@ -36,6 +36,8 @@ import ShareProjectModal from 'components/data-management/project/ShareProjectMo
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
 import FastqFileType from 'const/enums/FastqFileType';
+import ImmuneDatabase, { immuneDbToDisplay } from 'components/secondary-analysis/ImmuneDatabase';
+import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -66,17 +68,45 @@ const analysisDetailsKeys = [
   'kit',
   'refGenome',
   'pairedWt',
+  'immuneDatabase',
 ];
 
-const baseStepsKeys = [
-  'Experimental setup',
-  'Sample loading table',
-  'Reference genome',
+const wtStepsGrid = [
+  // row0
+  [
+    // col0.0
+    'Experimental setup',
+    // col0.1
+    'Sample loading table',
+    // col0.2
+    'Reference genome',
+  ],
+  // row1
   'Fastq files',
 ];
 
-const pairedWTStepsKeys = [
-  ...baseStepsKeys,
+const tcrStepsGrid = [
+  // row0
+  [
+    // col0.0
+    'Experimental setup',
+    // col0.1
+    'Sample loading table',
+    // col0.2
+    [
+      // row0.2.0
+      'Reference genome',
+      // row0.2.1
+      'Immune database',
+    ],
+  ],
+  // row1
+  'Fastq files',
+];
+
+const pairedWTStepsGrid = [
+  ...tcrStepsGrid,
+  // row2
   'Fastq Pairs Matcher',
 ];
 
@@ -115,6 +145,7 @@ const Pipeline = () => {
     kit,
     refGenome,
     pairedWt,
+    immuneDatabase,
   } = useSelector(
     (state) => _.pick(
       state.secondaryAnalyses[activeSecondaryAnalysisId] ?? {},
@@ -197,6 +228,7 @@ const Pipeline = () => {
     refGenome,
     pairedWt,
     pairMatches,
+    immuneDatabase,
   ]);
 
   // Poll for status
@@ -353,7 +385,7 @@ const Pipeline = () => {
       title: 'Provide the details of the experimental setup:',
       key: 'Experimental setup',
       render: () => (
-        <SecondaryAnalysisSettings
+        <ExperimentalSetup
           secondaryAnalysisId={activeSecondaryAnalysisId}
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />
@@ -390,11 +422,25 @@ const Pipeline = () => {
       render: () => (
         <SelectReferenceGenome
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          previousGenome={refGenome}
+          genome={refGenome}
         />
       ),
       isValid: Boolean(refGenome),
       renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
+      getIsDisabled: () => false,
+    },
+    'Immune database': {
+      title: 'Immune database',
+      key: 'Immune database',
+      render: () => (
+        <ImmuneDatabase
+          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
+          database={immuneDatabase}
+          kitCategory={KitCategory.fromKit(kit)}
+        />
+      ),
+      isValid: Boolean(immuneDatabase),
+      renderMainScreenDetails: () => mainScreenDetails({ immuneDatabase: immuneDbToDisplay[immuneDatabase] || 'Not selected' }),
       getIsDisabled: () => false,
     },
     'Fastq files': {
@@ -408,7 +454,6 @@ const Pipeline = () => {
         />
       ),
       isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
-
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(
         () => renderFastqFilesTable(false),
@@ -431,12 +476,17 @@ const Pipeline = () => {
     },
   };
 
-  const activeStepsKeys = useMemo(
-    () => (
-      isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])
-        && pairedWt === true ? pairedWTStepsKeys : baseStepsKeys),
+  const activeStepsGrid = useMemo(
+    () => {
+      if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
+        return pairedWt === true ? pairedWTStepsGrid : tcrStepsGrid;
+      }
+      return wtStepsGrid;
+    },
     [kit, pairedWt],
   );
+
+  const activeStepsKeys = useMemo(() => _.flatMapDeep(activeStepsGrid), [activeStepsGrid]);
 
   const activeSteps = useMemo(
     () => _.pick(wizardStepsData, activeStepsKeys),
@@ -519,14 +569,17 @@ const Pipeline = () => {
     },
     [ANALYSIS_DETAILS]: {
       toolbarControls: [],
-      component: () => (
+      component: (width, height) => (
         <div style={{
-          display: 'flex', flexDirection: 'column', height: '100%', width: '100%',
+          // Remove header 60 from height calculation
+          // TODO move this calculation to a dynamic version in the MultiTileContainer,
+          // since we receive an inaccurate height right now
+          display: 'flex', flexDirection: 'column', height: height - 60, width: '100%',
         }}
         >
           {
             activeSecondaryAnalysisId ? (
-              <>
+              <div style={{ height: '100%' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', overflowY: 'auto' }}>
                   <Space direction='vertical'>
                     <Title level={4}>{analysisName}</Title>
@@ -583,7 +636,7 @@ const Pipeline = () => {
                   </Space>
                 </div>
                 <Text strong>Description:</Text>
-                <div style={{ flex: 1, overflowY: 'auto' }}>
+                <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
                   <EditableParagraph
                     value={analysisDescription ?? ''}
                     onUpdate={(text) => {
@@ -599,11 +652,12 @@ const Pipeline = () => {
                   />
                   <OverviewMenu
                     wizardSteps={activeSteps}
+                    activeStepsGrid={activeStepsGrid}
                     setCurrentStep={setCurrentStepIndex}
                     editable={pipelineCanBeRun}
                   />
                 </div>
-              </>
+              </div>
             ) : <Empty description='Create a new run to get started' />
           }
         </div>
@@ -667,9 +721,7 @@ const Pipeline = () => {
             </Button>,
           ]}
         >
-          {
-            currentStep.getIsDisabled() ? null : currentStep.render()
-          }
+          {currentStep.getIsDisabled() ? null : currentStep.render()}
         </Modal>
       )}
       <div data-testid='pipeline-container' style={{ height: '100vh', overflowY: 'auto' }}>

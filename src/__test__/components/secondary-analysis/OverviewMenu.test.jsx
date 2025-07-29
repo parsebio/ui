@@ -26,6 +26,7 @@ const renderComponent = (editable = true) => {
   render(
     <OverviewMenu
       wizardSteps={wizardSteps}
+      activeStepsGrid={[0, 1]}
       setCurrentStep={setCurrentStep}
       editable={editable}
     />,
@@ -60,7 +61,7 @@ describe('OverviewMenu', () => {
     const editButtons = screen.getAllByRole('button', { name: /edit/i });
     fireEvent.click(editButtons[0]);
 
-    expect(setCurrentStep).toHaveBeenCalledWith(3);
+    expect(setCurrentStep).toHaveBeenCalledWith(0);
   });
 
   it('does not render edit buttons when editable is false', () => {

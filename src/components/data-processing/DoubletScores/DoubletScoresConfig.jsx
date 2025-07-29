@@ -33,8 +33,9 @@ const DoubletScoresConfig = (props) => {
     </>
   );
 };
+
 DoubletScoresConfig.defaultProps = {
-  updateSettings: () => {},
+  updateSettings: () => { },
   config: {},
   disabled: false,
 };

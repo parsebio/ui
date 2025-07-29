@@ -4,11 +4,11 @@ import {
   Radio, Form, Slider,
   Tooltip,
 } from 'antd';
-import useUpdateDebounced from 'utils/customHooks/useUpdateDebounced';
+import useConfigUpdate from 'utils/customHooks/useConfigUpdate';
 
 const LabelsDesign = (props) => {
   const { config, onUpdate } = props;
-  const [newConfig, handleChange] = useUpdateDebounced(onUpdate, config);
+  const [newConfig, handleChange] = useConfigUpdate(onUpdate, config);
   const minLabelSize = 0;
   const maxLabelSize = 50;
 
