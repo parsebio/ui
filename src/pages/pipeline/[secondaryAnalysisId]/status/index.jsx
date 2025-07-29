@@ -100,37 +100,35 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       await loadAssociatedExperiment();
     }
 
-    const outputFileDownloadOptions = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadOptions`);
+    const outputOptions = await fetchAPI(
+      `/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadOptions`,
+    );
 
-    const menuLinks = outputFileDownloadOptions.map((option) => {
-      const commonLabel = (
-        <Tooltip
-          title={option.description}
-          placement='left'
-          mouseEnterDelay={0.05}
-        >
-          <Space>
-            {option.label}
-          </Space>
+    const makeOptionItem = (opt) => {
+      const label = (
+        <Tooltip title={opt.description} placement='left' mouseEnterDelay={0.05}>
+          <Space>{opt.label}</Space>
         </Tooltip>
       );
 
-      if (option.copySignedUrl) {
+      if (opt.copySignedUrl) {
         return {
-          label: commonLabel,
-          key: option.key,
+          label,
+          key: opt.key,
           children: [
             {
               label: 'Download',
-              key: `${option.key}-download`,
-              onClick: () => downloadOutput(option.key),
+              key: `${opt.key}-download`,
+              onClick: () => downloadOutput(opt.key),
             },
             {
               label: 'Copy resumable download command',
-              key: `${option.key}-copy`,
+              key: `${opt.key}-copy`,
               onClick: async () => {
-                const signedUrl = await getSignedUrl(option.key);
-                navigator.clipboard.writeText(`curl -C - -o ${secondaryAnalysisId}_${option.key} "${signedUrl}"`);
+                const signedUrl = await getSignedUrl(opt.key);
+                navigator.clipboard.writeText(
+                  `curl -C - -o ${secondaryAnalysisId}_${opt.key} "${signedUrl}"`,
+                );
                 pushNotificationMessage('success', 'Resumable download command copied.');
               },
             },
@@ -139,13 +137,22 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       }
 
       return {
-        label: commonLabel,
-        key: option.key,
-        onClick: () => downloadOutput(option.key),
+        label,
+        key: opt.key,
+        onClick: () => downloadOutput(opt.key),
       };
-    });
+    };
 
-    setDownloadOptionsMenuItems(menuLinks);
+    const subMenus = Object.keys(outputOptions);
+    const menuItems = subMenus.length === 1
+      ? outputOptions[subMenus[0]].map(makeOptionItem)
+      : subMenus.map((category) => ({
+        label: category,
+        key: category,
+        children: outputOptions[category].map(makeOptionItem),
+      }));
+
+    setDownloadOptionsMenuItems(menuItems);
 
     const htmlUrls = await getReports(secondaryAnalysisId);
 
@@ -166,7 +173,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       ? defaultReport
       : Object.keys(sortedHtmlUrls)[0];
     setSelectedReport(defaultReportKey);
-  }, [secondaryAnalysisId]);
+  }, [secondaryAnalysisId, associatedExperimentId, secondaryAnalysis]);
 
   useEffect(() => {
     if (secondaryAnalysis?.status.current !== 'finished') return;
