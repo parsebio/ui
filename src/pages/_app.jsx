@@ -3,7 +3,7 @@ import '../../assets/nprogress.css';
 import _ from 'lodash';
 import '../index.css';
 
-import Amplify from '@aws-amplify/core';
+import Amplify, { Credentials } from '@aws-amplify/core';
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider } from 'antd';
@@ -37,6 +37,26 @@ ConfigProvider.config({
     warningColor: brandColors.STEEL_PINK,
   },
 });
+
+const mockCredentialsForInframock = () => {
+  Credentials.get = async () => ({
+    expired: false,
+    expireTime: null,
+    refreshCallbacks: [],
+    accessKeyId: 'asd', // pragma: allowlist secret
+    secretAccessKey: 'asfdsa', // pragma: allowlist secret
+    sessionToken: 'asdfasdf', // pragma: allowlist secret
+  });
+
+  Credentials.shear = async () => ({
+    expired: false,
+    expireTime: null,
+    refreshCallbacks: [],
+    accessKeyId: 'asd', // pragma: allowlist secret
+    secretAccessKey: 'asfdsa', // pragma: allowlist secret
+    sessionToken: 'asdfasdf', // pragma: allowlist secret
+  });
+};
 
 NProgress.configure({ showSpinner: false });
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -86,6 +106,10 @@ const WrappedApp = ({ Component, pageProps }) => {
       }
 
       Amplify.configure(amplifyConfig);
+
+      if (environment === 'development') {
+        mockCredentialsForInframock();
+      }
 
       setAmplifyConfigured(true);
     }
