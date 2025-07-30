@@ -383,19 +383,24 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
 
         {renderDownloadOutputButton()}
         {associatedExperimentId && (
-          <Button
-            onClick={async () => {
-              navigateTo(
-                modules.DATA_PROCESSING,
-                { experimentId: associatedExperimentId },
-                false,
-                true,
-              );
-            }}
-            type='primary'
+          <Tooltip title={secondaryAnalysis.status.pairMatchesIds?.length > 0
+            ? 'Trailmaker Insights module does not currently support immune profiling data analysis. Only the WT outputs from this Run are available in the Insights module for downstream analysis and visualization.'
+            : null}
           >
-            Go to Insights downstream analysis
-          </Button>
+            <Button
+              onClick={async () => {
+                navigateTo(
+                  modules.DATA_PROCESSING,
+                  { experimentId: associatedExperimentId },
+                  false,
+                  true,
+                );
+              }}
+              type='primary'
+            >
+              Go to Insights downstream analysis
+            </Button>
+          </Tooltip>
         )}
       </Space>
       <Divider style={{ width: '100%', margin: '0' }} />
