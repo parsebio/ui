@@ -14,7 +14,7 @@ import '__test__/test-utils/setupTests';
 
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CalculationConfig from 'components/data-processing/DataIntegration/CalculationConfig';
+import DataIntegrationConfig from 'components/data-processing/DataIntegration/DataIntegrationConfig';
 import fake from '__test__/test-utils/constants';
 import { EXPERIMENT_SETTINGS_NON_SAMPLE_FILTER_UPDATE } from 'redux/actionTypes/experimentSettings';
 import { getIsScanpy } from 'redux/selectors';
@@ -83,7 +83,7 @@ describe('DataIntegration.CalculationConfig', () => {
     mockedStore = mockStore(storeState);
     return await render(
       <Provider store={mockedStore}>
-        <CalculationConfig
+        <DataIntegrationConfig
           experimentId={fake.EXPERIMENT_ID}
           changedFilters={{ current: new Set() }}
           onConfigChange={jest.fn()}

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { kitCategories, isKitCategory } from 'utils/secondary-analysis/kitOptions';
+import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
 
 const supportArticleLink = (
   <a
@@ -51,7 +51,7 @@ const expiryNoticeBase = (
 );
 
 const UploadFastqSupportText = ({ kit, pairedWt }) => {
-  if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
+  if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
     if (pairedWt) {
       return (
         <div>

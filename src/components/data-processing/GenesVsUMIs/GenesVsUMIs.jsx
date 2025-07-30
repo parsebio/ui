@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import { useSelector } from 'react-redux';
 
+import GenesVsUMIsConfig from 'components/data-processing/GenesVsUMIs/GenesVsUMIsConfig';
 import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
 import generateSpec from 'utils/plotSpecs/generateFeaturesVsUMIsScatterplot';
 import transformOldFeaturesVsUMIsPlotData from 'components/plots/helpers/transformOldFeaturesVsUMIsPlotData';
-import CalculationConfig from './CalculationConfig';
 
 const GenesVsUMIs = ({
   experimentId, sampleId, sampleIds, onConfigChange, stepDisabled, stepHadErrors, onQCRunClick,
@@ -69,7 +69,7 @@ const GenesVsUMIs = ({
   ];
 
   const renderCalculationConfig = () => (
-    <CalculationConfig
+    <GenesVsUMIsConfig
       rerunRequired={plotData?.linesData && !plotData?.linesData[0]?.length}
       onQCRunClick={onQCRunClick}
     />

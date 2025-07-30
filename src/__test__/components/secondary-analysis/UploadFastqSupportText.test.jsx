@@ -1,14 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { isKitCategory } from 'utils/secondary-analysis/kitOptions';
 import UploadFastqSupportText from 'components/secondary-analysis/UploadFastqSupportText';
+import { isKitCategory } from 'const/enums/KitCategory';
 
-jest.mock('utils/secondary-analysis/kitOptions', () => ({
-  kitCategories: {
-    TCR: 'tcr',
-    BCR: 'bcr',
-  },
+jest.mock('const/enums/KitCategory', () => ({
   isKitCategory: jest.fn(),
 }));
 

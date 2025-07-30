@@ -1,24 +1,36 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Select,
   Typography,
 } from 'antd';
 import propTypes from 'prop-types';
 
-import genomes from 'utils/genomes.json';
 import useLocalState from 'utils/customHooks/useLocalState';
+import KitCategory, { immuneDbOptionsByKitCategory } from 'const/enums/KitCategory';
+
+const immuneDbToDisplay = {
+  human: 'Human',
+  mouse: 'Mouse',
+  transgenic_mouse: 'Transgenic mouse',
+};
 
 const { Text } = Typography;
 
-const options = genomes.map((genome) => ({ label: `${genome.name}: ${genome.species}`, value: genome.name }));
+const ImmuneDatabase = (props) => {
+  const { database, kitCategory, onDetailsChanged } = props;
 
-const SelectReferenceGenome = (props) => {
-  const { genome, onDetailsChanged } = props;
+  const [localDatabase, updateDatabase] = useLocalState(
+    (value) => onDetailsChanged({ immuneDatabase: value }),
+    database,
+  );
 
-  const [localGenome, updateGenome] = useLocalState(
-    (value) => onDetailsChanged({ refGenome: value }),
-    genome,
+  const options = useMemo(
+    () => immuneDbOptionsByKitCategory[kitCategory].map((type) => ({
+      label: immuneDbToDisplay[type],
+      value: type,
+    })),
+    [kitCategory],
   );
 
   return (
@@ -27,15 +39,15 @@ const SelectReferenceGenome = (props) => {
     }}
     >
       <div>
-        Select the reference genome for aligning your whole transcriptome data:
+        Select the database:
       </div>
       <br />
       <Select
         showSearch
         style={{ width: '90%' }}
-        value={localGenome}
-        placeholder='Select the reference genome'
-        onChange={updateGenome}
+        value={localDatabase}
+        placeholder='Select the database'
+        onChange={updateDatabase}
         options={options}
         filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
       />
@@ -52,12 +64,13 @@ const SelectReferenceGenome = (props) => {
     </div>
   );
 };
-SelectReferenceGenome.defaultProps = {
-  genome: undefined,
-};
-SelectReferenceGenome.propTypes = {
+
+ImmuneDatabase.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
-  genome: propTypes.string,
+  database: propTypes.string.isRequired,
+  kitCategory: propTypes.oneOf([KitCategory.TCR, KitCategory.BCR]).isRequired,
 };
 
-export default SelectReferenceGenome;
+export default ImmuneDatabase;
+
+export { immuneDbToDisplay };

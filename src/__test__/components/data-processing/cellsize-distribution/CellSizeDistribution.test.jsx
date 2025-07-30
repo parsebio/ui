@@ -9,7 +9,7 @@ import { Table } from 'antd';
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import CellSizeDistribution from 'components/data-processing/CellSizeDistribution/CellSizeDistribution';
-import CalculationConfig from 'components/data-processing/CellSizeDistribution/CalculationConfig';
+import CellSizeDistributionConfig from 'components/data-processing/CellSizeDistribution/CellSizeDistributionConfig';
 import SliderWithInput from 'components/SliderWithInput';
 import generateExperimentSettingsMock from '../../../test-utils/experimentSettings.mock';
 
@@ -119,7 +119,7 @@ describe('CellSizeDistribution', () => {
     );
 
     const page = component.find(CellSizeDistribution).at(0);
-    const calculationConfig = page.find(CalculationConfig);
+    const calculationConfig = page.find(CellSizeDistributionConfig);
 
     // There is a config element
     expect(calculationConfig.length).toEqual(1);
@@ -147,7 +147,7 @@ describe('CellSizeDistribution', () => {
     );
 
     const page = component.find(CellSizeDistribution).at(0);
-    const calculationConfig = page.find(CalculationConfig);
+    const calculationConfig = page.find(CellSizeDistributionConfig);
 
     // There is a config element
     expect(calculationConfig.length).toEqual(1);
@@ -182,7 +182,7 @@ describe('CellSizeDistribution', () => {
     );
 
     const page = component.find(CellSizeDistribution).at(0);
-    const calculationConfig = page.find(CalculationConfig);
+    const calculationConfig = page.find(CellSizeDistributionConfig);
     const sliderWithInput = calculationConfig.find(SliderWithInput);
     expect(sliderWithInput.props().disabled).toBe(true);
   });

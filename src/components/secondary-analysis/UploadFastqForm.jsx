@@ -17,6 +17,8 @@ import _ from 'lodash';
 
 import PropTypes from 'prop-types';
 
+import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
+
 import ExpandableList from 'components/ExpandableList';
 import endUserMessages from 'utils/endUserMessages';
 
@@ -28,7 +30,7 @@ import { createAndUploadSecondaryAnalysisFiles } from 'utils/upload/processSecon
 
 import { getMatchingPairFor, hasReadPair } from 'utils/fastqUtils';
 import FastqFileType from 'const/enums/FastqFileType';
-import { kitCategories, isKitCategory, labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
+import { labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 import UploadFastqSupportText from './UploadFastqSupportText';
 import FastqDropzones from './FastqDropzones';
 
@@ -311,7 +313,7 @@ const UploadFastqForm = (props) => {
   };
 
   let uploadCommandFileParameters = '';
-  if (isKitCategory(kit, [kitCategories.TCR, kitCategories.BCR])) {
+  if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
     if (pairedWt) {
       uploadCommandFileParameters = `--immune_files /path/to/fastq/file_1 /path/to/fastq/file_2 \\
   --wt_files /path/to/fastq/file_3 /path/to/fastq/file_4`;

@@ -1,15 +1,19 @@
 import React from 'react';
 
-import _ from 'lodash';
-import { Typography, Button, Card } from 'antd';
+import {
+  Typography, Button, Card, Row,
+  Col,
+} from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import Disabler from 'utils/Disabler';
 
 const { Text } = Typography;
 
-const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
-  const renderCard = (step, index, span, style) => (
+const OverviewMenu = ({
+  wizardSteps, setCurrentStep, activeStepsGrid, editable,
+}) => {
+  const renderCard = (step, wizardIndex, style) => (
     <div key={step.key} style={style}>
       <Disabler disable={step.getIsDisabled()} tooltipText='This step is disabled until the previous steps are completed.'>
         <Card
@@ -43,7 +47,7 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
               icon={<EditOutlined />}
               onClick={(event) => {
                 event.stopPropagation();
-                setCurrentStep(index);
+                setCurrentStep(wizardIndex);
               }}
               type='link'
             />
@@ -55,24 +59,42 @@ const OverviewMenu = ({ wizardSteps, setCurrentStep, editable }) => {
     </div>
   );
 
-  const firstRowSteps = ['Experimental setup', 'Sample loading table', 'Reference genome'];
-  const firstRowStepsData = Object.values(_.pick(wizardSteps, firstRowSteps));
-  const leftoverStepsData = Object.values(_.omit(wizardSteps, firstRowSteps));
+  let wizardIndex = -1;
+  const getWizardIndex = () => {
+    wizardIndex += 1;
+    return wizardIndex;
+  };
 
-  return (
-    <Card style={{ maxHeight: '80vh', overflowY: 'auto', overflowX: 'hidden' }} size='small'>
-      <div style={{ display: 'flex', marginBottom: '1vh' }}>
-        {firstRowStepsData.map((step, index) => renderCard(step, index, 8, { flex: 0.5, display: 'flex', marginRight: '1vh' }))}
-      </div>
-      <div>
-        {leftoverStepsData.map((step, index) => renderCard(step, index + 3, 24, { marginBottom: '1vh', width: '100%' }))}
-      </div>
-    </Card>
-  );
+  const renderGrid = (grid, steps, isRow = true) => {
+    if (Array.isArray(grid)) {
+      if (isRow) {
+        return (
+          grid.map((col) => (
+            <Row gutter={[2, 2]} style={{ height: `${100 / grid.length}%` }}>
+              {renderGrid(col, steps, !isRow)}
+            </Row>
+          ))
+        );
+      }
+
+      return (
+        grid.map((col) => (
+          <Col flex={1} style={{ width: `${100 / grid.length}%` }}>
+            {renderGrid(col, steps, !isRow)}
+          </Col>
+        ))
+      );
+    }
+
+    return renderCard(steps[grid], getWizardIndex(), { width: '100%', height: '100%' });
+  };
+
+  return renderGrid(activeStepsGrid, wizardSteps);
 };
 
 OverviewMenu.propTypes = {
   wizardSteps: PropTypes.object.isRequired,
+  activeStepsGrid: PropTypes.array.isRequired,
   setCurrentStep: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
 };

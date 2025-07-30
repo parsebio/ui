@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Empty, Space, Typography } from 'antd';
 import PropTypes from 'prop-types';
-import { isKitCategory, kitCategories } from 'utils/secondary-analysis/kitOptions';
 import integrationTestConstants from 'utils/integrationTestConstants';
+import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
 
 const { Title } = Typography;
 
@@ -35,7 +35,7 @@ const FastqDropzones = ({
     </div>
   );
 
-  if (isKitCategory(kit, kitCategories.TCR) || isKitCategory(kit, kitCategories.BCR)) {
+  if (isKitCategory(kit, KitCategory.TCR) || isKitCategory(kit, KitCategory.BCR)) {
     if (pairedWt) {
       return (
         <Space direction='horizontal' style={{ width: '100%', marginBottom: '1rem' }}>

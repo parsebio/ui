@@ -9,7 +9,7 @@ import { Table } from 'antd';
 import { initialPlotConfigStates } from 'redux/reducers/componentConfig/initialState';
 import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 import Classifier from 'components/data-processing/Classifier/Classifier';
-import CalculationConfig from 'components/data-processing/Classifier/CalculationConfig';
+import ClassifierConfig from 'components/data-processing/Classifier/ClassifierConfig';
 import generateExperimentSettingsMock from '../../../test-utils/experimentSettings.mock';
 
 import filterStatisticsMock from '../../../test-utils/plotData.mock';
@@ -123,7 +123,7 @@ describe('Classifier', () => {
     );
 
     const page = component.find(Classifier).at(0);
-    const calculationConfig = page.find(CalculationConfig);
+    const calculationConfig = page.find(ClassifierConfig);
 
     // There is a config element
     expect(calculationConfig.length).toEqual(1);
@@ -150,7 +150,7 @@ describe('Classifier', () => {
     );
 
     const page = component.find(Classifier).at(0);
-    const calculationConfig = page.find(CalculationConfig);
+    const calculationConfig = page.find(ClassifierConfig);
 
     // There is a config element
     expect(calculationConfig.length).toEqual(1);

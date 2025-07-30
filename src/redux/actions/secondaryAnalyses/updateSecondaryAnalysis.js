@@ -5,11 +5,30 @@ import {
   SECONDARY_ANALYSES_SAVING, SECONDARY_ANALYSES_UPDATED, SECONDARY_ANALYSES_ERROR,
 } from 'redux/actionTypes/secondaryAnalyses';
 import endUserMessages from 'utils/endUserMessages';
+import KitCategory, { immuneDbOptionsByKitCategory } from 'const/enums/KitCategory';
+
+const withSideEffects = (diff, secondaryState) => {
+  const sideEffectsDiff = {};
+
+  if (diff.kit) {
+    const kitCategory = KitCategory.fromKit(diff.kit);
+
+    if (!immuneDbOptionsByKitCategory[kitCategory].includes(secondaryState.immuneDatabase)) {
+      sideEffectsDiff.immuneDatabase = null;
+    }
+  }
+
+  return { ...diff, ...sideEffectsDiff };
+};
 
 const updateSecondaryAnalysis = (
   secondaryAnalysisId,
-  secondaryAnalysisDiff,
-) => async (dispatch) => {
+  diff,
+) => async (dispatch, getState) => {
+  const secondaryState = getState().secondaryAnalyses[secondaryAnalysisId];
+
+  const fullDiff = withSideEffects(diff, secondaryState);
+
   dispatch({
     type: SECONDARY_ANALYSES_SAVING,
   });
@@ -22,7 +41,7 @@ const updateSecondaryAnalysis = (
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(secondaryAnalysisDiff),
+        body: JSON.stringify(fullDiff),
       },
     );
 
@@ -30,7 +49,7 @@ const updateSecondaryAnalysis = (
       type: SECONDARY_ANALYSES_UPDATED,
       payload: {
         secondaryAnalysisId,
-        secondaryAnalysis: secondaryAnalysisDiff,
+        secondaryAnalysis: fullDiff,
       },
     });
   } catch (e) {

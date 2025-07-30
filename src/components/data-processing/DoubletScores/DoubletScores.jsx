@@ -4,7 +4,7 @@ import { generateDataProcessingPlotUuid } from 'utils/generateCustomPlotUuid';
 
 import FilterPlotLayout from 'components/data-processing/FilterPlotLayout';
 import generateSpec from 'utils/plotSpecs/generateDoubletScoreHistogram';
-import CalculationConfig from 'components/data-processing/DoubletScores/CalculationConfig';
+import DoubletScoresConfig from 'components/data-processing/DoubletScores/DoubletScoresConfig';
 
 const DoubletScores = ({
   experimentId, sampleId, sampleIds, onConfigChange, stepDisabled, stepHadErrors,
@@ -41,7 +41,7 @@ const DoubletScores = ({
     },
   ];
 
-  const renderCalculationConfig = () => <CalculationConfig />;
+  const renderCalculationConfig = () => <DoubletScoresConfig />;
   return (
     <FilterPlotLayout
       experimentId={experimentId}

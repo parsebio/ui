@@ -1,5 +1,9 @@
 import FastqFileType from 'const/enums/FastqFileType';
 
+// A lot of pieces of code rely on cehcking startsWith against the values
+// (for example, the KitCategory.fromKit function).
+// So be careful if changing them.
+// Migrate to explicit "includes" checks if this begins causing issues.
 const kitOptions = [
   { label: 'Evercode WT Mini', value: 'wt_mini' },
   { label: 'Evercode WT', value: 'wt' },
@@ -18,20 +22,5 @@ const labelsByFastqType = {
   [FastqFileType.IMMUNE_FASTQ]: 'Immune',
 };
 
-const kitCategories = {
-  TCR: 'tcr',
-  BCR: 'bcr',
-  WT: 'wt',
-};
-
-const isKitCategory = (kit, categoryInput) => {
-  if (!kit) return false;
-
-  if (Array.isArray(categoryInput)) {
-    return categoryInput.some((category) => kit.startsWith(category));
-  }
-  return kit.startsWith(categoryInput);
-};
-
 export default kitOptions;
-export { isKitCategory, kitCategories, labelsByFastqType };
+export { labelsByFastqType };

@@ -30,7 +30,7 @@ const EMBEDD_METHOD_TEXT = 'Reducing the dimensionality does lose some informati
   + 'It is usually a good idea to have a look at both types. '
   + 't-SNE and UMAP are stochastic and very much dependent on choice of parameters (t-SNE even more than UMAP) and can yield different results in different runs. ';
 
-const CalculationConfig = (props) => {
+const ConfigureEmbeddingConfig = (props) => {
   const { onConfigChange, disabled } = props;
   const FILTER_UUID = 'configureEmbedding';
   const dispatch = useDispatch();
@@ -361,13 +361,13 @@ const CalculationConfig = (props) => {
   );
 };
 
-CalculationConfig.propTypes = {
+ConfigureEmbeddingConfig.propTypes = {
   onConfigChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
 };
 
-CalculationConfig.defaultProps = {
+ConfigureEmbeddingConfig.defaultProps = {
   disabled: false,
 };
 
-export default CalculationConfig;
+export default ConfigureEmbeddingConfig;
