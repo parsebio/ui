@@ -30,7 +30,6 @@ const multiViewUuid = plotUuids.getMultiPlotUuid(plotType);
 
 const ContinuousEmbeddingPage = ({ experimentId }) => {
   const dispatch = useDispatch();
-  const config = useSelector((state) => state.componentConfig[multiViewUuid]?.config);
   const cellSets = useSelector(getCellSets());
   const multiViewConfig = useSelector((state) => state.componentConfig[multiViewUuid]?.config);
   const multiViewPlotUuids = multiViewConfig?.plotUuids;
@@ -128,7 +127,7 @@ const ContinuousEmbeddingPage = ({ experimentId }) => {
       </Panel>
       <Panel header='Select data' key='select-data'>
         <SelectData
-          config={config}
+          config={plotConfigs[selectedPlotUuid]}
           onUpdate={updateAll ? updateAllWithChanges : updatePlotWithChanges}
           cellSets={cellSets}
         />
