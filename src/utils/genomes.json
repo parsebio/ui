@@ -528,6 +528,10 @@
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
   },
   {
+    "name": "GRCh38_GRCm39_custom",
+    "species": "Custom Mixed Homo sapiens (Human) with CAR-T ORF sequences and Mus musculus (Mouse)"
+  },
+  {
     "name": "GRCh38_GRCm39_RI250423",
     "species": "Custom Mixed Homo sapiens (Human) with Mus musculus (Mouse)"
   },
