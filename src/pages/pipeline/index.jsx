@@ -127,8 +127,6 @@ const getFastqsMatchNumOfSublibraries = (
   const wtApproved = !(isKitCategory(kit, [KitCategory.WT]) || pairedWt)
     || getFastqsMatch(wtFastqFiles, numOfSublibraries);
 
-  console.log({ wtApproved, immuneApproved });
-
   return immuneApproved && wtApproved;
 };
 
