@@ -103,7 +103,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
     const outputOptions = await fetchAPI(
       `/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadOptions`,
     );
-    console.log('OUTPUT OPTIONS', outputOptions);
+
     const makeOptionItem = (opt) => {
       const label = (
         <Tooltip title={opt.description} placement='left' mouseEnterDelay={0.05}>
