@@ -384,8 +384,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         {renderDownloadOutputButton()}
         {associatedExperimentId && (
           <Tooltip title={secondaryAnalysis.status.pairMatchesIds?.length > 0
-            ? 'Trailmaker Insights module does not currently support immune profiling data analysis. Only the WT outputs from this Run are available in the Insights module for downstream analysis and visualization.'
-            : null}
+            && 'Trailmaker Insights module does not currently support immune profiling data analysis. Only the WT outputs from this Run are available in the Insights module for downstream analysis and visualization.'}
           >
             <Button
               onClick={async () => {
