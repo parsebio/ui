@@ -20,6 +20,7 @@ import {
   cancelSecondaryAnalysis,
 } from 'redux/actions/secondaryAnalyses';
 import getReports from 'pages/pipeline/[secondaryAnalysisId]/status/getReports';
+import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
 import PreloadContent from 'components/PreloadContent';
 import { fastLoad } from 'components/Loader';
 import { useAppRouter } from 'utils/AppRouteProvider';
@@ -153,8 +154,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       }));
 
     setDownloadOptionsMenuItems(menuItems);
-
-    const htmlUrls = await getReports(secondaryAnalysisId);
+    const reportsFolder = (isKitCategory(secondaryAnalysis?.kit, [KitCategory.TCR, KitCategory.BCR])
+      && !secondaryAnalysis?.pairedWt)
+      ? 'immune_output' : 'output';
+    const htmlUrls = await getReports(secondaryAnalysisId, reportsFolder);
 
     // natural sort reports
     const sortedKeys = Object.keys(htmlUrls)
@@ -229,7 +232,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         </Space>
       ),
       created: (
-        <div>
+        <Card>
           {fastLoad('')}
           <Title level={3}>The pipeline is launching... </Title>
           <Text type='secondary'>You can wait or leave this screen and check again later.</Text>
@@ -257,7 +260,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               )}
             />
           </Space>
-        </div>
+        </Card>
       ),
       failed: (
         <Card>
@@ -384,8 +387,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         {renderDownloadOutputButton()}
         {associatedExperimentId && (
           <Tooltip title={secondaryAnalysis.status.pairMatchesIds?.length > 0
-            ? 'Trailmaker Insights module does not currently support immune profiling data analysis. Only the WT outputs from this Run are available in the Insights module for downstream analysis and visualization.'
-            : null}
+            && 'Trailmaker Insights module does not currently support immune profiling data analysis. Only the WT outputs from this Run are available in the Insights module for downstream analysis and visualization.'}
           >
             <Button
               onClick={async () => {
