@@ -114,6 +114,22 @@ const getFastqsMatch = (fastqFiles, numOfSublibraries) => (
   Object.keys(fastqFiles).length === numOfSublibraries * 2
 );
 
+const getFastqsMatchNumOfSublibraries = (
+  kit,
+  pairedWt,
+  wtFastqFiles,
+  immuneFastqFiles,
+  numOfSublibraries,
+) => {
+  const immuneApproved = !isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])
+    || getFastqsMatch(immuneFastqFiles, numOfSublibraries);
+
+  const wtApproved = !(isKitCategory(kit, [KitCategory.WT]) || pairedWt)
+    || getFastqsMatch(wtFastqFiles, numOfSublibraries);
+
+  return immuneApproved && wtApproved;
+};
+
 const Pipeline = () => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
@@ -186,8 +202,13 @@ const Pipeline = () => {
 
   const domainName = useSelector((state) => state.networkResources?.domainName);
 
-  const fastqsMatch = getFastqsMatch(wtFastqFiles, numOfSublibraries)
-    && (!pairedWt || getFastqsMatch(immuneFastqFiles, numOfSublibraries));
+  const fastqsMatch = getFastqsMatchNumOfSublibraries(
+    kit,
+    pairedWt,
+    wtFastqFiles,
+    immuneFastqFiles,
+    numOfSublibraries,
+  );
 
   const { loading: statusLoading, current: currentStatus, shouldRerun } = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.status,
