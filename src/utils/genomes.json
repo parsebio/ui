@@ -72,6 +72,10 @@
     "species": "Columba livia (Rock pigeon)"
   },
   {
+    "name": "ASM1834038v1",
+    "species": "Cyprinus carpio (Common Carp)"
+  },
+  {
     "name": "ASM2113471v1",
     "species": "Daphnia pulex (Common Water Flea)"
   },
@@ -526,6 +530,10 @@
   {
     "name": "Macaca_T-cruzi",
     "species": "Custom Mixed Macaca mulatta (Rhesus monkey) with Trypanosoma cruzi"
+  },
+  {
+    "name": "GRCh38_GRCm39_custom",
+    "species": "Custom Mixed Homo sapiens (Human) with CAR-T ORF sequences and Mus musculus (Mouse)"
   },
   {
     "name": "GRCh38_GRCm39_RI250423",

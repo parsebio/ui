@@ -789,7 +789,8 @@ def prepare_upload(args):
             args.run_id, files, args.max_threads_count, args.token
         )
 
-        show_files_to_upload_warning(upload_tracker.file_list)
+        if (not args.yes):
+            show_files_to_upload_warning(upload_tracker.file_list)
 
     return upload_tracker
 
@@ -827,6 +828,13 @@ def main():
     )
     parser.add_argument(
         "-r", "--resume", action="store_true", help="Resume an interrupted upload", required=False
+    )
+    parser.add_argument(
+        "-y",
+        "--yes",
+        action="store_true",
+        help="Skip prompts and pre-upload checks",
+        required=False
     )
 
     args = parser.parse_args()
