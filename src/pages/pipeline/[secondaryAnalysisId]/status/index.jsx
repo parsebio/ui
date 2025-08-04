@@ -229,7 +229,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
         </Space>
       ),
       created: (
-        <div>
+        <Card>
           {fastLoad('')}
           <Title level={3}>The pipeline is launching... </Title>
           <Text type='secondary'>You can wait or leave this screen and check again later.</Text>
@@ -257,7 +257,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               )}
             />
           </Space>
-        </div>
+        </Card>
       ),
       failed: (
         <Card>
