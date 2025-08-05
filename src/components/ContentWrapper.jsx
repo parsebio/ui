@@ -85,7 +85,6 @@ const BigLogo = () => (
         <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
       </defs>
       <g transform='translate(20, 25)'>
-
         {/* provided by? TBD */}
         <image href='/Parse_icon_white.png' x='-5' y='-20' width='18%' />
         <text
@@ -100,6 +99,20 @@ const BigLogo = () => (
           x='35'
         >
           Trailmaker
+        </text>
+        <text
+          style={{ outlineStyle: 'none' }}
+          fontWeight='400'
+          textRendering='geometricPrecision'
+          fontFamily='M Plus 2'
+          fill='#F0F2F5'
+          fontSize='12.00px'
+          textAnchor='start'
+          dominantBaseline='middle'
+          x='35'
+          y='18'
+        >
+          by Parse Biosciences
         </text>
       </g>
     </svg>
