@@ -52,7 +52,6 @@ import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import SidebarButton from 'utils/SidebarButton';
 import CookieBanner from './CookieBanner';
 import FeedbackButton from './sider/FeedbackButton';
-import ReferralButton from './sider/ReferralButton';
 import UserButton from './sider/UserButton';
 
 const { Sider } = Layout;
@@ -582,7 +581,6 @@ const ContentWrapper = (props) => {
             </Menu>
             <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: collapsed ? 'center' : 'left' }}>
               <FeedbackButton buttonType='text' collapsed={collapsed} />
-              <ReferralButton collapsed={collapsed} />
               <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
               <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
                 <UserButton />
