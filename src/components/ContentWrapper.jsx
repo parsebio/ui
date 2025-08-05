@@ -50,10 +50,11 @@ import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipeli
 
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
 import SidebarTitle from 'utils/SidebarTitle';
-import CookieBanner from './CookieBanner';
-import FeedbackButton from './sider/FeedbackButton';
-import ReferralButton from './sider/ReferralButton';
-import UserButton from './sider/UserButton';
+
+import CookieBanner from 'components/banners/CookieBanner';
+import FeedbackButton from 'components/sider/FeedbackButton';
+import ReferralButton from 'components/sider/ReferralButton';
+import UserButton from 'components/sider/UserButton';
 
 const { Sider } = Layout;
 const { Text } = Typography;
