@@ -55,6 +55,7 @@ import CookieBanner from 'components/banners/CookieBanner';
 import FeedbackButton from 'components/sider/FeedbackButton';
 import ReferralButton from 'components/sider/ReferralButton';
 import UserButton from 'components/sider/UserButton';
+import NonParseBanner from './banners/NonParseBanner';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -591,6 +592,7 @@ const ContentWrapper = (props) => {
 
         </Sider>
         <CookieBanner />
+        <NonParseBanner />
 
         <Layout
           style={!collapsed ? { marginLeft: '210px' } : { marginLeft: '80px' }} // this is the collapsed width for our sider
