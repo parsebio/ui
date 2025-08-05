@@ -387,14 +387,24 @@ const ContentWrapper = (props) => {
         {
           module: modules.DATA_EXPLORATION,
           icon: <FundViewOutlined />,
-          name: <SidebarMenuTitle type={modules.DATA_EXPLORATION}>Data Exploration</SidebarMenuTitle>,
+          name: (
+            <SidebarMenuTitle
+              type={modules.DATA_EXPLORATION}
+            >
+              Data Exploration
+            </SidebarMenuTitle>
+          ),
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.PLOTS_AND_TABLES,
           icon: <BarChartOutlined />,
-          name: <SidebarMenuTitle type={modules.PLOTS_AND_TABLES}>Plots and Tables</SidebarMenuTitle>,
+          name: (
+            <SidebarMenuTitle type={modules.PLOTS_AND_TABLES}>
+              Plots and Tables
+            </SidebarMenuTitle>
+          ),
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
         },
       ],
