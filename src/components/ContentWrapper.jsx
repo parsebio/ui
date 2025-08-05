@@ -557,7 +557,7 @@ const ContentWrapper = (props) => {
   const isUserInModule = (module, items) => currentModule === module
     || items.some((item) => item.module === currentModule);
 
-  const expandedWidth = 210;
+  const expandedWidth = 230;
 
   return (
     <DndProvider options={HTML5toTouch}>
@@ -612,6 +612,12 @@ const ContentWrapper = (props) => {
                     <sup style={{ fontSize: '0.6em', verticalAlign: 'top' }}>TM</sup>
                   </>
                 )}
+              />
+              <LinkButton
+                icon={<ReadOutlined />}
+                link=''
+                collapsed={collapsed}
+                text='Talk to a single cell expert'
               />
               <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
               <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
