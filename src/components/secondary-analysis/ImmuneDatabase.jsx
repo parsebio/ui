@@ -1,9 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useMemo } from 'react';
-import {
-  Select,
-  Typography,
-} from 'antd';
+import { Select } from 'antd';
 import propTypes from 'prop-types';
 
 import useLocalState from 'utils/customHooks/useLocalState';
@@ -14,8 +11,6 @@ const immuneDbToDisplay = {
   mouse: 'Mouse',
   transgenic_mouse: 'Transgenic mouse',
 };
-
-const { Text } = Typography;
 
 const ImmuneDatabase = (props) => {
   const { database, kitCategory, onDetailsChanged } = props;
@@ -35,7 +30,7 @@ const ImmuneDatabase = (props) => {
 
   return (
     <div style={{
-      display: 'flex', flexDirection: 'column', height: '17vh',
+      display: 'flex', flexDirection: 'column',
     }}
     >
       <div>
@@ -51,16 +46,6 @@ const ImmuneDatabase = (props) => {
         options={options}
         filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
       />
-      <div style={{ marginTop: 'auto', marginBottom: '0.1em' }}>
-        <Text type='secondary'>
-          <i>
-            If the genome you require is not available, please contact us at
-            {' '}
-            <a href='mailto:support@parsebiosciences.com'>support@parsebiosciences.com</a>
-            .
-          </i>
-        </Text>
-      </div>
     </div>
   );
 };
