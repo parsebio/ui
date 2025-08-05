@@ -19,13 +19,13 @@ import {
   FileDoneOutlined,
   DotChartOutlined,
   ReadOutlined,
+  ExperimentOutlined,
 } from '@ant-design/icons';
 import {
   Layout,
   Menu,
   Typography,
   Divider,
-  Button,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
@@ -557,6 +557,8 @@ const ContentWrapper = (props) => {
   const isUserInModule = (module, items) => currentModule === module
     || items.some((item) => item.module === currentModule);
 
+  const expandedWidth = 210;
+
   return (
     <DndProvider options={HTML5toTouch}>
       {/* Privacy policy only for biomage deployment */}
@@ -570,7 +572,7 @@ const ContentWrapper = (props) => {
           style={{
             background: brandColors.BLACK_INDIGO, overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
           }}
-          width={210}
+          width={expandedWidth}
           theme='dark'
           mode='inline'
           collapsible
@@ -597,8 +599,20 @@ const ContentWrapper = (props) => {
                 icon={<ReadOutlined />}
                 link='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide'
                 collapsed={collapsed}
+                text='User guide'
               />
               <FeedbackButton buttonType='text' collapsed={collapsed} />
+              <LinkButton
+                icon={<ExperimentOutlined />}
+                link='https://www.parsebiosciences.com/technology/'
+                collapsed={collapsed}
+                text={(
+                  <>
+                    Learn about Evercode
+                    <sup style={{ fontSize: '0.6em', verticalAlign: 'top' }}>TM</sup>
+                  </>
+                )}
+              />
               <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
               <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
                 <UserButton />
@@ -621,7 +635,7 @@ const ContentWrapper = (props) => {
         <CookieBanner />
 
         <Layout
-          style={!collapsed ? { marginLeft: '210px' } : { marginLeft: '80px' }} // this is the collapsed width for our sider
+          style={!collapsed ? { marginLeft: `${expandedWidth}px` } : { marginLeft: '80px' }} // this is the collapsed width for our sider
         >
           {renderContent()}
         </Layout>
