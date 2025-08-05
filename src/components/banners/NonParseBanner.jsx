@@ -23,7 +23,8 @@ const NonParseBanner = () => {
       }}
     >
       <span>
-        Evercode™ split-pool combinatorial barcoding enables you to scale up your single cell projects
+        Evercode™ split-pool combinatorial barcoding enables
+        you to scale up your single cell projects
         to millions of cells or nuclei.
         {' '}
         <a
