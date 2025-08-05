@@ -93,7 +93,7 @@ const sidebarTooltipTexts = {
   ),
 };
 
-const SidebarButton = (props) => {
+const SidebarMenuTitle = (props) => {
   const { type, children } = props;
 
   return (
@@ -114,9 +114,9 @@ const SidebarButton = (props) => {
   );
 };
 
-SidebarButton.propTypes = {
+SidebarMenuTitle.propTypes = {
   type: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
 };
 
-export default SidebarButton;
+export default SidebarMenuTitle;

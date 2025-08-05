@@ -49,7 +49,7 @@ import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
-import SidebarButton from 'utils/SidebarButton';
+import SidebarMenuTitle from 'utils/SidebarMenuTitle';
 import CookieBanner from './CookieBanner';
 import FeedbackButton from './sider/FeedbackButton';
 import UserButton from './sider/UserButton';
@@ -346,16 +346,16 @@ const ContentWrapper = (props) => {
     {
       module: modules.SECONDARY_ANALYSIS,
       icon: <NodeExpandOutlined />,
-      name: <SidebarButton type={modules.SECONDARY_ANALYSIS}>Pipeline</SidebarButton>,
+      name: <SidebarMenuTitle type={modules.SECONDARY_ANALYSIS}>Pipeline</SidebarMenuTitle>,
       selectedProjectText: secondaryAnalysisName || 'No run selected',
       isDisabled: false,
       items: [
         {
           module: modules.SECONDARY_ANALYSIS_OUTPUT,
           name: (
-            <SidebarButton type={modules.SECONDARY_ANALYSIS_OUTPUT}>
+            <SidebarMenuTitle type={modules.SECONDARY_ANALYSIS_OUTPUT}>
               Pipeline Output
-            </SidebarButton>
+            </SidebarMenuTitle>
           ),
           icon: <FileDoneOutlined />,
           get isDisabled() {
@@ -373,28 +373,28 @@ const ContentWrapper = (props) => {
     {
       module: modules.DATA_MANAGEMENT,
       icon: <DotChartOutlined />,
-      name: <SidebarButton type={modules.DATA_MANAGEMENT}>Insights</SidebarButton>,
+      name: <SidebarMenuTitle type={modules.DATA_MANAGEMENT}>Insights</SidebarMenuTitle>,
       selectedProjectText: experimentName || 'No project selected',
       get isDisabled() { return getTertiaryModuleDisabled(this.module); },
       items: [
         {
           module: modules.DATA_PROCESSING,
           icon: <BuildOutlined />,
-          name: <SidebarButton type={modules.DATA_PROCESSING}>Data Processing</SidebarButton>,
+          name: <SidebarMenuTitle type={modules.DATA_PROCESSING}>Data Processing</SidebarMenuTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.DATA_EXPLORATION,
           icon: <FundViewOutlined />,
-          name: <SidebarButton type={modules.DATA_EXPLORATION}>Data Exploration</SidebarButton>,
+          name: <SidebarMenuTitle type={modules.DATA_EXPLORATION}>Data Exploration</SidebarMenuTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.PLOTS_AND_TABLES,
           icon: <BarChartOutlined />,
-          name: <SidebarButton type={modules.PLOTS_AND_TABLES}>Plots and Tables</SidebarButton>,
+          name: <SidebarMenuTitle type={modules.PLOTS_AND_TABLES}>Plots and Tables</SidebarMenuTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
         },
       ],
