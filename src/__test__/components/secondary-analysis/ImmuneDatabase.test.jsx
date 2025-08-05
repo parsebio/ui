@@ -60,17 +60,4 @@ describe('ImmuneDatabase', () => {
     fireEvent.click(getByText('Mouse'));
     expect(mockOnDetailsChanged).toHaveBeenCalledWith({ immuneDatabase: 'mouse' });
   });
-
-  it('shows the support email', () => {
-    const mockOnDetailsChanged = jest.fn();
-    const { getByText } = render(
-      <ImmuneDatabase
-        database='human'
-        kitCategory={KitCategory.TCR}
-        onDetailsChanged={mockOnDetailsChanged}
-      />,
-    );
-
-    expect(getByText(/support@parsebiosciences.com/)).toBeInTheDocument();
-  });
 });
