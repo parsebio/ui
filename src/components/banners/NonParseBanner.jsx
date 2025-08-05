@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { CloseOutlined } from '@ant-design/icons';
 
 const NonParseBanner = () => {
-  const a = 1;
+  const [visible, setVisible] = useState(true);
+  if (!visible) return null;
 
   return (
     <div
@@ -20,20 +22,41 @@ const NonParseBanner = () => {
         boxShadow: '0 -2px 8px rgba(0,0,0,0.08)',
       }}
     >
-      Evercode™ split-pool combinatorial barcoding enables you to scale up your single cell projects
-      to millions of cells or nuclei.
-      {' '}
-      <a
-        href='https://www.parsebiosciences.com/technology/'
-        target='_blank'
-        rel='noopener noreferrer'
-        style={{ color: '#1976d2', textDecoration: 'underline', fontWeight: 500 }}
+      <span>
+        Evercode™ split-pool combinatorial barcoding enables you to scale up your single cell projects
+        to millions of cells or nuclei.
+        {' '}
+        <a
+          href='https://www.parsebiosciences.com/technology/'
+          target='_blank'
+          rel='noopener noreferrer'
+          style={{ color: '#1976d2', textDecoration: 'underline', fontWeight: 500 }}
+        >
+          Learn more
+        </a>
+        {' '}
+        about how the technology uniquely labels cells without
+        ever needing to isolate individual cells.
+      </span>
+      <span
+        style={{
+          position: 'absolute',
+          right: 16,
+          top: 12,
+          cursor: 'pointer',
+        }}
+        onClick={() => setVisible(false)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            setVisible(false);
+          }
+        }}
+        aria-label='Close banner'
+        role='button'
+        tabIndex={0}
       >
-        Learn more
-      </a>
-      {' '}
-      about how the technology uniquely labels cells without
-      ever needing to isolate individual cells.
+        <CloseOutlined style={{ fontSize: '18px', color: '#333' }} />
+      </span>
     </div>
   );
 };
