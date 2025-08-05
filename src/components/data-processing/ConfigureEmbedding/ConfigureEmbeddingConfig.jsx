@@ -127,6 +127,7 @@ const ConfigureEmbeddingConfig = (props) => {
           value={umapSettings.minimumDistance}
           min={0}
           step={0.1}
+          max={1}
           onChange={(value) => setMinimumDistance(value)}
           onStep={(value) => setMinimumDistance(value)}
           onPressEnter={(e) => e.preventDefault()}
