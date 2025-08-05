@@ -616,7 +616,7 @@ const ContentWrapper = (props) => {
               />
               <LinkButton
                 icon={<CommentOutlined />}
-                link=''
+                link='https://www.parsebiosciences.com/lets-connect/'
                 collapsed={collapsed}
                 text='Talk to a single cell expert'
               />
