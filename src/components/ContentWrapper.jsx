@@ -20,6 +20,7 @@ import {
   DotChartOutlined,
   ReadOutlined,
   ExperimentOutlined,
+  CommentOutlined,
 } from '@ant-design/icons';
 import {
   Layout,
@@ -614,7 +615,7 @@ const ContentWrapper = (props) => {
                 )}
               />
               <LinkButton
-                icon={<ReadOutlined />}
+                icon={<CommentOutlined />}
                 link=''
                 collapsed={collapsed}
                 text='Talk to a single cell expert'
