@@ -18,12 +18,14 @@ import {
   NodeExpandOutlined,
   FileDoneOutlined,
   DotChartOutlined,
+  ReadOutlined,
 } from '@ant-design/icons';
 import {
   Layout,
   Menu,
   Typography,
   Divider,
+  Button,
 } from 'antd';
 
 import pipelineErrorUserMessages from 'utils/pipelineErrorUserMessages';
@@ -53,6 +55,7 @@ import SidebarMenuTitle from 'utils/SidebarMenuTitle';
 import CookieBanner from './CookieBanner';
 import FeedbackButton from './sider/FeedbackButton';
 import UserButton from './sider/UserButton';
+import LinkButton from './sider/LinkButton';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -590,6 +593,11 @@ const ContentWrapper = (props) => {
               {menuItems}
             </Menu>
             <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: collapsed ? 'center' : 'left' }}>
+              <LinkButton
+                icon={<ReadOutlined />}
+                link='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide'
+                collapsed={collapsed}
+              />
               <FeedbackButton buttonType='text' collapsed={collapsed} />
               <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
               <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
