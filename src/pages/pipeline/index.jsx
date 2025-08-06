@@ -40,7 +40,6 @@ import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
 import FastqFileType from 'const/enums/FastqFileType';
 import ImmuneDatabase, { immuneDbToDisplay } from 'components/secondary-analysis/ImmuneDatabase';
 import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
-import Disabler from 'utils/Disabler';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
