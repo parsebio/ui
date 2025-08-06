@@ -89,7 +89,7 @@ const BigLogo = () => (
       </defs>
       <g transform='translate(20, 25)'>
         {/* provided by? TBD */}
-        <image href='/Parse_icon_white.png' x='-5' y='-20' width='18%' />
+        <image href='/Parse_icon_white.png' x='-12' y='-17' width='22%' />
         <text
           style={{ outlineStyle: 'none' }}
           fontWeight='900'
