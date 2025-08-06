@@ -87,7 +87,7 @@ const BigLogo = () => (
       <defs id='svg_document_defs'>
         <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
       </defs>
-      <g transform='translate(20, 25)'>
+      <g transform='translate(20, 21)'>
         {/* provided by? TBD */}
         <image href='/Parse_icon_white.png' x='-12' y='-17' width='22%' />
         <text
