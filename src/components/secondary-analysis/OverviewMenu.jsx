@@ -46,7 +46,7 @@ const OverviewMenu = ({
             )}
             extra={editable && (
               <Button
-                data-testid={`edit - button - ${step.key} `}
+                data-testid={`edit-button-${step.key} `}
                 icon={<EditOutlined />}
                 onClick={(event) => {
                   event.stopPropagation();
