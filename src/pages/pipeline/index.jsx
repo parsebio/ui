@@ -116,13 +116,6 @@ const getFastqsMatch = (fastqFiles, numOfSublibraries) => (
   Object.keys(fastqFiles).length === numOfSublibraries * 2
 );
 
-// allFilesUploaded(fastqFiles) && fastqsMatchSublibraries && pairsAreValid,
-const fastqsInvalidReasonsToDisplay = {
-  allFilesUploaded: 'All FASTQ files are uploaded successfully.',
-  fastqsMatchSublibraries: 'The number of uploaded WT FASTQ files is equal to the number of uploaded immune FASTQ files.',
-  pairsAreValid: 'There are exactly 4 FASTQ files per sublibrary (WT R1, WT R2, immune R1, immune R2), specified in the experimental setup section.',
-};
-
 const getFastqsMatchNumOfSublibraries = (
   kit,
   pairedWt,
@@ -500,14 +493,15 @@ const Pipeline = () => {
       renderMainScreenDetails: () => <FastqPairsMatcher />,
       getDisableText: () => {
         const reasons = [];
+
         if (!allFilesUploaded(fastqFiles)) {
-          reasons.push(fastqsInvalidReasonsToDisplay.allFilesUploaded);
+          reasons.push('All FASTQ files are uploaded successfully.');
         }
         if (!fastqsMatchSublibraries) {
-          reasons.push(fastqsInvalidReasonsToDisplay.fastqsMatchSublibraries);
+          reasons.push('The number of uploaded WT FASTQ files is equal to the number of uploaded immune FASTQ files.');
         }
         if (!pairsAreValid) {
-          reasons.push(fastqsInvalidReasonsToDisplay.pairsAreValid);
+          reasons.push('There are exactly 4 FASTQ files per sublibrary (WT R1, WT R2, immune R1, immune R2), specified in the experimental setup section.');
         }
 
         if (_.isEmpty(reasons)) {
