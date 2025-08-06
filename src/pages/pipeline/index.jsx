@@ -30,7 +30,9 @@ import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'const';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
-import { getSampleLTFile, getFastqFiles, getPairMatchesAreValid } from 'redux/selectors';
+import {
+  getSampleLTFile, getFastqFiles, getPairMatchesAreValid, getPairs,
+} from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
@@ -185,6 +187,7 @@ const Pipeline = () => {
     _.isEqual,
   );
 
+  const pairsAreValid = useSelector(getPairs(activeSecondaryAnalysisId)) !== null;
   const pairMatchesAreValid = useSelector(getPairMatchesAreValid(activeSecondaryAnalysisId));
 
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
@@ -474,7 +477,7 @@ const Pipeline = () => {
           setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
-      isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
+      isValid: allFilesUploaded(fastqFiles) && fastqsMatch && pairsAreValid,
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(
         () => renderFastqFilesTable(false),
