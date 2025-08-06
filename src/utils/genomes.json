@@ -48,6 +48,10 @@
     "species": "Bos taurus (Cow)"
   },
   {
+    "name": "B_diazoefficiens",
+    "species": "Bradyrhizobium diazoefficiens (Bacteria)"
+  },
+  {
     "name": "c_elegans.PRJEB28388.WS293",
     "species": "Caenorhabditis elegans (Roundworm)"
   },
@@ -430,6 +434,10 @@
   {
     "name": "GRCm39_CRE",
     "species": "Custom Mus musculus (Mouse) with CRE"
+  },
+  {
+    "name": "GRCm39_creEGFP_RFP",
+    "species": "Custom Mus musculus (Mouse)"
   },
   {
     "name": "GRCm39_eGFP",
