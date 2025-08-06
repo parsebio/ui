@@ -205,7 +205,7 @@ const Pipeline = () => {
 
   const domainName = useSelector((state) => state.networkResources?.domainName);
 
-  const fastqsMatch = getFastqsMatchNumOfSublibraries(
+  const fastqsMatchSublibraries = getFastqsMatchNumOfSublibraries(
     kit,
     pairedWt,
     wtFastqFiles,
@@ -477,7 +477,7 @@ const Pipeline = () => {
           setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
-      isValid: allFilesUploaded(fastqFiles) && fastqsMatch && pairsAreValid,
+      isValid: allFilesUploaded(fastqFiles) && fastqsMatchSublibraries && pairsAreValid,
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(
         () => renderFastqFilesTable(false),
@@ -629,9 +629,9 @@ const Pipeline = () => {
                       />
                     )}
                     <Tooltip
-                      title={!isAllValid && fastqsMatch
+                      title={!isAllValid && fastqsMatchSublibraries
                         ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                        : !fastqsMatch
+                        : !fastqsMatchSublibraries
                           ? 'All sections must be completed to run the pipeline. You should upload exactly one pair of FASTQ files per sublibrary - check that the number of FASTQ file pairs matches the number of sublibraries specified in the Experimental setup section.'
                           : ''}
                       placement='left'
