@@ -517,7 +517,7 @@ const Pipeline = () => {
 
         const disableText = (
           <>
-            This step is disabled until the previous steps are completed.
+            <b>This step is disabled until the previous steps are completed.</b>
             <br />
             <br />
             Check that:
