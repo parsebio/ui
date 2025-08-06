@@ -69,4 +69,29 @@ describe('OverviewMenu', () => {
 
     expect(screen.queryAllByRole('button', { name: /edit/i })).toHaveLength(0);
   });
+
+  it('renders the disable text in the tooltip on hover', async () => {
+    const customDisableText = 'Custom disabled message.';
+    const wizardStepsWithDisableText = [
+      {
+        key: 'Step 1',
+        isLoading: false,
+        isValid: true,
+        renderMainScreenDetails: jest.fn(() => <div>Details for Step 1</div>),
+        getIsDisabled: jest.fn(() => true),
+        getDisableText: jest.fn(() => customDisableText),
+      },
+    ];
+    render(
+      <OverviewMenu
+        wizardSteps={wizardStepsWithDisableText}
+        activeStepsGrid={[0]}
+        setCurrentStep={setCurrentStep}
+        editable
+      />,
+    );
+
+    fireEvent.mouseOver(screen.getByText('Step 1'));
+    expect(await screen.findByText(customDisableText)).toBeInTheDocument();
+  });
 });

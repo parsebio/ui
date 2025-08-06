@@ -30,7 +30,9 @@ import usePolling from 'utils/customHooks/usePolling';
 import { modules } from 'const';
 import { useAppRouter } from 'utils/AppRouteProvider';
 import launchSecondaryAnalysis from 'redux/actions/secondaryAnalyses/launchSecondaryAnalysis';
-import { getSampleLTFile, getFastqFiles, getPairMatchesAreValid } from 'redux/selectors';
+import {
+  getSampleLTFile, getFastqFiles, getPairMatchesAreValid, getPairs,
+} from 'redux/selectors';
 import useConditionalEffect from 'utils/customHooks/useConditionalEffect';
 import ShareProjectModal from 'components/data-management/project/ShareProjectModal';
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
@@ -185,6 +187,7 @@ const Pipeline = () => {
     _.isEqual,
   );
 
+  const pairsAreValid = useSelector(getPairs(activeSecondaryAnalysisId)) !== null;
   const pairMatchesAreValid = useSelector(getPairMatchesAreValid(activeSecondaryAnalysisId));
 
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
@@ -202,7 +205,7 @@ const Pipeline = () => {
 
   const domainName = useSelector((state) => state.networkResources?.domainName);
 
-  const fastqsMatch = getFastqsMatchNumOfSublibraries(
+  const fastqsMatchSublibraries = getFastqsMatchNumOfSublibraries(
     kit,
     pairedWt,
     wtFastqFiles,
@@ -474,7 +477,7 @@ const Pipeline = () => {
           setFilesNotUploaded={setFilesNotUploaded}
         />
       ),
-      isValid: allFilesUploaded(fastqFiles) && fastqsMatch,
+      isValid: allFilesUploaded(fastqFiles) && fastqsMatchSublibraries && pairsAreValid,
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => renderMainScreenFileDetails(
         () => renderFastqFilesTable(false),
@@ -488,6 +491,38 @@ const Pipeline = () => {
       isValid: pairMatchesAreValid,
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => <FastqPairsMatcher />,
+      getDisableText: () => {
+        const reasons = [];
+
+        if (!allFilesUploaded(fastqFiles)) {
+          reasons.push('All FASTQ files are uploaded successfully.');
+        }
+        if (!fastqsMatchSublibraries) {
+          reasons.push('The number of uploaded WT FASTQ files is equal to the number of uploaded immune FASTQ files.');
+        }
+        if (!pairsAreValid) {
+          reasons.push('There are exactly 4 FASTQ files per sublibrary (WT R1, WT R2, immune R1, immune R2), specified in the experimental setup section.');
+        }
+
+        if (_.isEmpty(reasons)) {
+          return 'This step is disabled until the previous steps are completed.';
+        }
+
+        const disableText = (
+          <>
+            <b>This step is disabled until the previous steps are completed.</b>
+            <br />
+            <br />
+            Check that:
+            <ul>
+              {reasons.map((reason) => (
+                <li key={reason}>{reason}</li>
+              ))}
+            </ul>
+          </>
+        );
+        return disableText;
+      },
       getIsDisabled: () => {
         const stepsToCheck = ['Fastq files', 'Experimental setup'];
 
@@ -626,9 +661,9 @@ const Pipeline = () => {
                       />
                     )}
                     <Tooltip
-                      title={!isAllValid && fastqsMatch
+                      title={!isAllValid && fastqsMatchSublibraries
                         ? 'Ensure that all sections are completed in order to proceed with running the pipeline.'
-                        : !fastqsMatch
+                        : !fastqsMatchSublibraries
                           ? 'All sections must be completed to run the pipeline. You should upload exactly one pair of FASTQ files per sublibrary - check that the number of FASTQ file pairs matches the number of sublibraries specified in the Experimental setup section.'
                           : ''}
                       placement='left'
@@ -742,7 +777,11 @@ const Pipeline = () => {
             </Button>,
           ]}
         >
-          {currentStep.getIsDisabled() ? null : currentStep.render()}
+          {currentStep.getIsDisabled()
+            ? (
+              currentStep.getDisableText?.() ?? 'This step is disabled until the previous steps are completed.'
+            )
+            : currentStep.render()}
         </Modal>
       )}
       <div data-testid='pipeline-container' style={{ height: '100vh', overflowY: 'auto' }}>
