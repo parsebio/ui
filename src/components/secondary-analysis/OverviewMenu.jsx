@@ -13,51 +13,55 @@ const { Text } = Typography;
 const OverviewMenu = ({
   wizardSteps, setCurrentStep, activeStepsGrid, editable,
 }) => {
-  const renderCard = (step, wizardIndex, style) => (
-    <div key={step.key} style={style}>
-      <Disabler disable={step.getIsDisabled()} tooltipText='This step is disabled until the previous steps are completed.'>
-        <Card
-          bordered
-          style={{ width: '100%', height: '100%' }}
-          loading={step.isLoading}
-          size='small'
-          title={(
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Text
-                strong
-                style={{
-                  fontSize: '1.62vh',
-                  overflowX: 'auto',
-                }}
-              >
-                {step.key}
-              </Text>
-              <div>
-                {step.isValid ? (
-                  <CheckCircleOutlined style={{ color: 'green', marginLeft: '10px', fontSize: '17px' }} />
-                ) : (
-                  <CloseCircleOutlined style={{ color: 'red', marginLeft: '10px', fontSize: '17px' }} />
-                )}
+  const renderCard = (step, wizardIndex, style) => {
+    const disableText = step.getDisableText?.() ?? 'This step is disabled until the previous steps are completed.';
+
+    return (
+      <div key={step.key} style={style}>
+        <Disabler disable={step.getIsDisabled()} tooltipText={disableText}>
+          <Card
+            bordered
+            style={{ width: '100%', height: '100%' }}
+            loading={step.isLoading}
+            size='small'
+            title={(
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Text
+                  strong
+                  style={{
+                    fontSize: '1.62vh',
+                    overflowX: 'auto',
+                  }}
+                >
+                  {step.key}
+                </Text>
+                <div>
+                  {step.isValid ? (
+                    <CheckCircleOutlined style={{ color: 'green', marginLeft: '10px', fontSize: '17px' }} />
+                  ) : (
+                    <CloseCircleOutlined style={{ color: 'red', marginLeft: '10px', fontSize: '17px' }} />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-          extra={editable && (
-            <Button
-              data-testid={`edit-button-${step.key}`}
-              icon={<EditOutlined />}
-              onClick={(event) => {
-                event.stopPropagation();
-                setCurrentStep(wizardIndex);
-              }}
-              type='link'
-            />
-          )}
-        >
-          {step.getIsDisabled() ? null : step.renderMainScreenDetails()}
-        </Card>
-      </Disabler>
-    </div>
-  );
+            )}
+            extra={editable && (
+              <Button
+                data-testid={`edit - button - ${step.key} `}
+                icon={<EditOutlined />}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setCurrentStep(wizardIndex);
+                }}
+                type='link'
+              />
+            )}
+          >
+            {step.getIsDisabled() ? null : step.renderMainScreenDetails()}
+          </Card>
+        </Disabler>
+      </div>
+    );
+  };
 
   let wizardIndex = -1;
   const getWizardIndex = () => {
@@ -70,7 +74,7 @@ const OverviewMenu = ({
       if (isRow) {
         return (
           grid.map((col) => (
-            <Row gutter={[2, 2]} style={{ height: `${100 / grid.length}%` }}>
+            <Row gutter={[2, 2]} style={{ height: `${100 / grid.length}% ` }}>
               {renderGrid(col, steps, !isRow)}
             </Row>
           ))
@@ -79,7 +83,7 @@ const OverviewMenu = ({
 
       return (
         grid.map((col) => (
-          <Col flex={1} style={{ width: `${100 / grid.length}%` }}>
+          <Col flex={1} style={{ width: `${100 / grid.length}% ` }}>
             {renderGrid(col, steps, !isRow)}
           </Col>
         ))

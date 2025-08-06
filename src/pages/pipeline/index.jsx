@@ -40,6 +40,7 @@ import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
 import FastqFileType from 'const/enums/FastqFileType';
 import ImmuneDatabase, { immuneDbToDisplay } from 'components/secondary-analysis/ImmuneDatabase';
 import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
+import Disabler from 'utils/Disabler';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -115,6 +116,13 @@ const pairedWTStepsGrid = [
 const getFastqsMatch = (fastqFiles, numOfSublibraries) => (
   Object.keys(fastqFiles).length === numOfSublibraries * 2
 );
+
+// allFilesUploaded(fastqFiles) && fastqsMatchSublibraries && pairsAreValid,
+const fastqsInvalidReasonsToDisplay = {
+  allFilesUploaded: 'All FASTQ files are uploaded successfully.',
+  fastqsMatchSublibraries: 'The number of uploaded WT FASTQ files is equal to the number of uploaded immune FASTQ files.',
+  pairsAreValid: 'There are exactly 4 FASTQ files per sublibrary (WT R1, WT R2, immune R1, immune R2), specified in the experimental setup section.',
+};
 
 const getFastqsMatchNumOfSublibraries = (
   kit,
@@ -491,6 +499,37 @@ const Pipeline = () => {
       isValid: pairMatchesAreValid,
       isLoading: filesNotLoadedYet,
       renderMainScreenDetails: () => <FastqPairsMatcher />,
+      getDisableText: () => {
+        const reasons = [];
+        if (!allFilesUploaded(fastqFiles)) {
+          reasons.push(fastqsInvalidReasonsToDisplay.allFilesUploaded);
+        }
+        if (!fastqsMatchSublibraries) {
+          reasons.push(fastqsInvalidReasonsToDisplay.fastqsMatchSublibraries);
+        }
+        if (!pairsAreValid) {
+          reasons.push(fastqsInvalidReasonsToDisplay.pairsAreValid);
+        }
+
+        if (_.isEmpty(reasons)) {
+          return 'This step is disabled until the previous steps are completed.';
+        }
+
+        const disableText = (
+          <>
+            This step is disabled until the previous steps are completed.
+            <br />
+            <br />
+            Check that:
+            <ul>
+              {reasons.map((reason) => (
+                <li key={reason}>{reason}</li>
+              ))}
+            </ul>
+          </>
+        );
+        return disableText;
+      },
       getIsDisabled: () => {
         const stepsToCheck = ['Fastq files', 'Experimental setup'];
 
@@ -745,7 +784,11 @@ const Pipeline = () => {
             </Button>,
           ]}
         >
-          {currentStep.getIsDisabled() ? null : currentStep.render()}
+          {currentStep.getIsDisabled()
+            ? (
+              currentStep.getDisableText?.() ?? 'This step is disabled until the previous steps are completed.'
+            )
+            : currentStep.render()}
         </Modal>
       )}
       <div data-testid='pipeline-container' style={{ height: '100vh', overflowY: 'auto' }}>
