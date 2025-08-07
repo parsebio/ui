@@ -1,17 +1,19 @@
-const secondaryAnalysisUpdated = (state, action) => {
-  const { secondaryAnalysisId, secondaryAnalysis } = action.payload;
+/* eslint-disable no-param-reassign */
+import produce from 'immer';
 
-  return {
-    ...state,
-    meta: {
-      ...state.meta,
-      saving: false,
-    },
-    [secondaryAnalysisId]: {
-      ...state[secondaryAnalysisId],
-      ...secondaryAnalysis,
-    },
+const secondaryAnalysisUpdated = produce((draft, action) => {
+  const { secondaryAnalysisId, secondaryAnalysis, updatedFiles } = action.payload;
+
+  draft.meta.saving = false;
+  draft[secondaryAnalysisId] = {
+    ...draft[secondaryAnalysisId],
+    ...secondaryAnalysis,
   };
-};
+
+  updatedFiles.forEach(({ id, type }) => {
+    console.log({ id, type });
+    draft[secondaryAnalysisId].files.data[id].type = type;
+  });
+});
 
 export default secondaryAnalysisUpdated;
