@@ -73,6 +73,7 @@ const ExperimentalSetup = (props) => {
     setMaxSublibraries(newMaxSublibraries);
     return newMaxSublibraries;
   }, []);
+
   const onKitChange = useCallback(
     (newKit) => {
       // if switching to WT category and there are immune FASTQ files already uploaded
