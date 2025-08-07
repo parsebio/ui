@@ -276,6 +276,10 @@
     "species": "Custom Drosophila melanogaster (Fruit fly)"
   },
   {
+    "name": "GRCh38_Af293",
+    "species": "Custom Homo sapiens (Human) with Aspergillus fumigatus"
+  },
+  {
     "name": "GRCh38_CART",
     "species": "Custom Homo sapiens (Human)"
   },
@@ -396,6 +400,10 @@
     "species": "Custom Mus musculus (Mouse) with DsRed and WPRE"
   },
   {
+    "name": "GRCm39_GFP",
+    "species": "Custom Mus musculus (Mouse) with GFP"
+  },
+  {
     "name": "GRCm39-GFPh",
     "species": "Custom Mus musculus (Mouse) with GFPh"
   },
@@ -409,6 +417,10 @@
   },
   {
     "name": "GRCm39_MCLab",
+    "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCm39_PWK_WSB",
     "species": "Custom Mus musculus (Mouse)"
   },
   {
