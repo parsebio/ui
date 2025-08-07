@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
 
 const NonParseBanner = () => {
+  const dispatch = useDispatch();
+
   const [visible, setVisible] = useState(true);
   if (!visible) return null;
 
