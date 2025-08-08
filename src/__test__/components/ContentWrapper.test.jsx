@@ -265,7 +265,7 @@ describe('ContentWrapper', () => {
 
     const { container } = await renderContentWrapper();
 
-    const expandedWidth = '210px';
+    const expandedWidth = '230px';
     const collapsedWidth = '80px';
 
     // Click so the sidebar collapse

@@ -18,6 +18,9 @@ import {
   NodeExpandOutlined,
   FileDoneOutlined,
   DotChartOutlined,
+  ReadOutlined,
+  ExperimentOutlined,
+  CommentOutlined,
 } from '@ant-design/icons';
 import {
   Layout,
@@ -49,11 +52,11 @@ import { loadSamples } from 'redux/actions/samples';
 import calculatePipelinesRerunStatus from 'utils/data-management/calculatePipelinesRerunStatus';
 
 import termsOfUseNotAccepted from 'utils/termsOfUseNotAccepted';
-import SidebarTitle from 'utils/SidebarTitle';
+import SidebarMenuTitle from 'utils/SidebarMenuTitle';
 import CookieBanner from './CookieBanner';
 import FeedbackButton from './sider/FeedbackButton';
-import ReferralButton from './sider/ReferralButton';
 import UserButton from './sider/UserButton';
+import LinkButton from './sider/LinkButton';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -84,10 +87,9 @@ const BigLogo = () => (
       <defs id='svg_document_defs'>
         <style id='M Plus 2_Google_Webfont_import'>@import url(https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap);</style>
       </defs>
-      <g transform='translate(20, 25)'>
-
+      <g transform='translate(20, 21)'>
         {/* provided by? TBD */}
-        <image href='/Parse_icon_white.png' x='-5' y='-20' width='18%' />
+        <image href='/Parse_icon_white.png' x='-12' y='-17' width='22%' />
         <text
           style={{ outlineStyle: 'none' }}
           fontWeight='900'
@@ -100,6 +102,20 @@ const BigLogo = () => (
           x='35'
         >
           Trailmaker
+        </text>
+        <text
+          style={{ outlineStyle: 'none' }}
+          fontWeight='400'
+          textRendering='geometricPrecision'
+          fontFamily='M Plus 2'
+          fill='#F0F2F5'
+          fontSize='12.00px'
+          textAnchor='start'
+          dominantBaseline='middle'
+          x='35'
+          y='18'
+        >
+          by Parse Biosciences
         </text>
       </g>
     </svg>
@@ -334,16 +350,16 @@ const ContentWrapper = (props) => {
     {
       module: modules.SECONDARY_ANALYSIS,
       icon: <NodeExpandOutlined />,
-      name: <SidebarTitle type={modules.SECONDARY_ANALYSIS}>Pipeline</SidebarTitle>,
+      name: <SidebarMenuTitle type={modules.SECONDARY_ANALYSIS}>Pipeline</SidebarMenuTitle>,
       selectedProjectText: secondaryAnalysisName || 'No run selected',
       isDisabled: false,
       items: [
         {
           module: modules.SECONDARY_ANALYSIS_OUTPUT,
           name: (
-            <SidebarTitle type={modules.SECONDARY_ANALYSIS_OUTPUT}>
+            <SidebarMenuTitle type={modules.SECONDARY_ANALYSIS_OUTPUT}>
               Pipeline Output
-            </SidebarTitle>
+            </SidebarMenuTitle>
           ),
           icon: <FileDoneOutlined />,
           get isDisabled() {
@@ -361,28 +377,38 @@ const ContentWrapper = (props) => {
     {
       module: modules.DATA_MANAGEMENT,
       icon: <DotChartOutlined />,
-      name: <SidebarTitle type={modules.DATA_MANAGEMENT}>Insights</SidebarTitle>,
+      name: <SidebarMenuTitle type={modules.DATA_MANAGEMENT}>Insights</SidebarMenuTitle>,
       selectedProjectText: experimentName || 'No project selected',
       get isDisabled() { return getTertiaryModuleDisabled(this.module); },
       items: [
         {
           module: modules.DATA_PROCESSING,
           icon: <BuildOutlined />,
-          name: <SidebarTitle type={modules.DATA_PROCESSING}>Data Processing</SidebarTitle>,
+          name: <SidebarMenuTitle type={modules.DATA_PROCESSING}>Data Processing</SidebarMenuTitle>,
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.DATA_EXPLORATION,
           icon: <FundViewOutlined />,
-          name: <SidebarTitle type={modules.DATA_EXPLORATION}>Data Exploration</SidebarTitle>,
+          name: (
+            <SidebarMenuTitle
+              type={modules.DATA_EXPLORATION}
+            >
+              Data Exploration
+            </SidebarMenuTitle>
+          ),
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
 
         },
         {
           module: modules.PLOTS_AND_TABLES,
           icon: <BarChartOutlined />,
-          name: <SidebarTitle type={modules.PLOTS_AND_TABLES}>Plots and Tables</SidebarTitle>,
+          name: (
+            <SidebarMenuTitle type={modules.PLOTS_AND_TABLES}>
+              Plots and Tables
+            </SidebarMenuTitle>
+          ),
           get isDisabled() { return getTertiaryModuleDisabled(this.module); },
         },
       ],
@@ -532,6 +558,8 @@ const ContentWrapper = (props) => {
   const isUserInModule = (module, items) => currentModule === module
     || items.some((item) => item.module === currentModule);
 
+  const expandedWidth = 230;
+
   return (
     <DndProvider options={HTML5toTouch}>
       {/* Privacy policy only for biomage deployment */}
@@ -545,7 +573,7 @@ const ContentWrapper = (props) => {
           style={{
             background: brandColors.BLACK_INDIGO, overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
           }}
-          width={210}
+          width={expandedWidth}
           theme='dark'
           mode='inline'
           collapsible
@@ -568,8 +596,30 @@ const ContentWrapper = (props) => {
               {menuItems}
             </Menu>
             <div style={{ marginTop: 'auto', marginBottom: '0.5em', textAlign: collapsed ? 'center' : 'left' }}>
+              <LinkButton
+                icon={<ReadOutlined />}
+                link='https://support.parsebiosciences.com/hc/en-us/articles/27076682137236-Trailmaker-User-Guide'
+                collapsed={collapsed}
+                text='User guide'
+              />
               <FeedbackButton buttonType='text' collapsed={collapsed} />
-              <ReferralButton collapsed={collapsed} />
+              <LinkButton
+                icon={<ExperimentOutlined />}
+                link='https://www.parsebiosciences.com/technology/'
+                collapsed={collapsed}
+                text={(
+                  <>
+                    Learn about Evercode
+                    <sup style={{ fontSize: '0.6em', verticalAlign: 'top' }}>TM</sup>
+                  </>
+                )}
+              />
+              <LinkButton
+                icon={<CommentOutlined />}
+                link='https://www.parsebiosciences.com/lets-connect/'
+                collapsed={collapsed}
+                text='Talk to a single cell expert'
+              />
               <Divider style={{ backgroundColor: 'hsla(0, 0%, 100%, .65)', height: '0.5px' }} />
               <div style={{ margin: '0.5em 0', textAlign: 'center' }}>
                 <UserButton />
@@ -592,7 +642,7 @@ const ContentWrapper = (props) => {
         <CookieBanner />
 
         <Layout
-          style={!collapsed ? { marginLeft: '210px' } : { marginLeft: '80px' }} // this is the collapsed width for our sider
+          style={!collapsed ? { marginLeft: `${expandedWidth}px` } : { marginLeft: '80px' }} // this is the collapsed width for our sider
         >
           {renderContent()}
         </Layout>
