@@ -11,7 +11,6 @@ const secondaryAnalysisUpdated = produce((draft, action) => {
   };
 
   updatedFiles.forEach(({ id, type }) => {
-    console.log({ id, type });
     draft[secondaryAnalysisId].files.data[id].type = type;
   });
 });

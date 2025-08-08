@@ -11,6 +11,7 @@ import UploadStatusView from 'components/UploadStatusView';
 import UploadStatus from 'utils/upload/UploadStatus';
 import PrettyTime from 'components/PrettyTime';
 import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
+import FastqTypeButton from './FastqTypeButton';
 
 const { IMMUNE_FASTQ, WT_FASTQ } = FastqFileType;
 const FastqFilesTable = (props) => {
@@ -76,7 +77,12 @@ const FastqFilesTable = (props) => {
         title: 'Type',
         dataIndex: 'type',
         width: '20%',
-        render: (type) => labelsByFastqType[type],
+        render: (_, { key }) => (
+          <FastqTypeButton
+            secondaryAnalysisId={secondaryAnalysisId}
+            fileId={key}
+          />
+        ),
       },
     ] : []),
     {

@@ -58,7 +58,7 @@ const updateSecondaryAnalysis = (
     const errorMessage = handleError(e, endUserMessages.ERROR_SAVING);
 
     dispatch({
-      type: SECONDARY_ANALYSES_ERROR,
+      type: SECONDARY_ANALYSES_,
       payload: {
         error: errorMessage,
       },
