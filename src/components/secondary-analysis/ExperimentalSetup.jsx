@@ -83,7 +83,7 @@ const ExperimentalSetup = (props) => {
       ) {
         Modal.confirm({
           title: 'You have immune profiling FASTQ files uploaded.',
-          content: 'By selecting a WT kit, your uploaded immune profiling files will not be processed.',
+          content: 'By selecting a WT kit, your uploaded immune profiling files will be recategorized to WT files.',
           okText: 'OK',
           cancelText: 'Cancel',
           onOk: () => changeKit(newKit),
@@ -202,7 +202,7 @@ const ExperimentalSetup = (props) => {
                 if (!value && Object.keys(wtFiles).length > 0) {
                   Modal.confirm({
                     title: 'You have WT Fastq files uploaded.',
-                    content: 'By disabling this toggle, your uploaded WT files will not be processed.',
+                    content: 'By disabling this toggle, your uploaded WT files will be recategorized to immune profiling files.',
                     okText: 'OK',
                     cancelText: 'Cancel',
                     onOk: () => handleValueChange('pairedWt', false),
