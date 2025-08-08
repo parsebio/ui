@@ -84,7 +84,6 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
 
   const cellSets = useSelector(getCellSets());
   const isScanpy = useSelector(getIsScanpy());
-  const plotInfo = isScanpy ? scanpyPlotInfo : seuratPlotInfo;
 
   const cellSetsHierarchy = useSelector(getCellSetsHierarchy());
 
@@ -382,7 +381,7 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
         setDisplaySettings(initialDisplaySettings);
         resetZoomRef.current.resetZoom();
       }}
-      plotInfo={plotInfo}
+      plotInfo={isScanpy ? scanpyPlotInfo : seuratPlotInfo}
     >
       {render()}
     </PlotContainer>
