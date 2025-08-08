@@ -564,6 +564,10 @@
     "species": "Custom Mixed Mus musculus (Mouse) with Trypanosoma brucei and tdTomato"
   },
   {
+    "name": "Suscrofa11p1_v142",
+    "species": "Custom Sus scrofa (Boar)"
+  },
+  {
     "name": "Panubis1.0_genomic_SIVmac251",
     "species": "Custom Papio anubis (Olive baboon) with SIV"
   },
