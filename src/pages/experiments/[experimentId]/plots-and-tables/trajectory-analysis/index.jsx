@@ -16,7 +16,9 @@ import Loader from 'components/Loader';
 import { loadEmbedding } from 'redux/actions/embedding';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 import { loadCellSets } from 'redux/actions/cellSets';
-import { getCellSets, getCellSetsHierarchy, getCellSetsHierarchyByKeys } from 'redux/selectors';
+import {
+  getCellSets, getCellSetsHierarchy, getCellSetsHierarchyByKeys, getIsScanpy,
+} from 'redux/selectors';
 
 import getTrajectoryPlotStartingNodes from 'redux/actions/componentConfig/getTrajectoryPlotStartingNodes';
 
@@ -43,6 +45,34 @@ const initialDisplaySettings = {
   hasRunPseudotime: false,
 };
 
+const seuratPlotInfo = (
+  <div>
+    Trajectory inference (TI) or pseudotemporal ordering is a computational technique
+    used in single-cell transcriptomics to determine the pattern of a dynamic process
+    experienced by cells and then arrange cells based on their progression through the
+    process by projecting the cells onto an axis called pseudotime. A “trajectory”
+    shows the path of the progression. For Seurat projects, Trajectory Analysis is
+    implemented using the
+    {' '}
+    <a target='_blank' href='https://cole-trapnell-lab.github.io/monocle3/' rel='noreferrer'> Monocle3 method</a>
+  </div>
+);
+
+const scanpyPlotInfo = (
+  <div>
+    Trajectory inference (TI) or pseudotemporal ordering is a computational technique
+    used in single-cell transcriptomics to determine the pattern of a dynamic process
+    experienced by cells and then arrange cells based on their progression through the
+    process by projecting the cells onto an axis called pseudotime. A “trajectory”
+    shows the path of the progression. For Scanpy projects, Trajectory Analysis is
+    implemented using the
+    {' '}
+    <a target='_blank' href='https://scanpy-tutorials.readthedocs.io/en/latest/paga-paul15.html' rel='noreferrer'>
+      Partition-based graph abstraction (PAGA) method
+    </a>
+  </div>
+);
+
 const TrajectoryAnalysisPage = ({ experimentId }) => {
   const dispatch = useDispatch();
   const [displaySettings, setDisplaySettings] = useState(initialDisplaySettings);
@@ -53,6 +83,9 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
   const embeddingMethod = 'umap';
 
   const cellSets = useSelector(getCellSets());
+  const isScanpy = useSelector(getIsScanpy());
+  const plotInfo = isScanpy ? scanpyPlotInfo : seuratPlotInfo;
+
   const cellSetsHierarchy = useSelector(getCellSetsHierarchy());
 
   const plotLoading = useSelector((state) => state.componentConfig[plotUuid]?.loading);
@@ -349,21 +382,7 @@ const TrajectoryAnalysisPage = ({ experimentId }) => {
         setDisplaySettings(initialDisplaySettings);
         resetZoomRef.current.resetZoom();
       }}
-      plotInfo={(
-        <>
-          Trajectory inference (TI) or pseudotemporal ordering is a
-          computational technique used in single-cell transcriptomics to
-          determine the pattern of a dynamic process experienced by cells and
-          then arrange cells based on their progression through the process by
-          projecting the cells onto an axis called pseudotime. A “trajectory”
-          shows the path of the progression. Currently, Trajectory Analysis
-          is implemented using the
-          {' '}
-          <a href='https://cole-trapnell-lab.github.io/monocle3/'> Monocle3 </a>
-          {' '}
-          workflow.
-        </>
-      )}
+      plotInfo={plotInfo}
     >
       {render()}
     </PlotContainer>
