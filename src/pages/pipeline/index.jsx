@@ -46,6 +46,7 @@ const keyToTitle = {
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
   kit: 'Kit type',
+  pairedWt: 'WT parent',
   name: 'File name',
   status: 'Status',
   createdAt: 'Uploaded at',
@@ -427,9 +428,14 @@ const Pipeline = () => {
       isValid: (numOfSublibraries && chemistryVersion && kit),
       renderMainScreenDetails: () => {
         const kitTitle = kitOptions.find((option) => option.value === kit)?.label;
-        return mainScreenDetails({
-          kit: kitTitle, chemistryVersion, numOfSublibraries,
-        });
+
+        const details = { kit: kitTitle, chemistryVersion, numOfSublibraries };
+
+        if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
+          details.pairedWt = pairedWt ? 'Yes' : 'No';
+        }
+
+        return mainScreenDetails(details);
       },
       getIsDisabled: () => false,
     },
