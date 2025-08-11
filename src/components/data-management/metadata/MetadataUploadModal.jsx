@@ -86,7 +86,7 @@ const MetadataUploadModal = (props) => {
       return;
     }
 
-    setFilesList([file]);
+    setFilesList([data]);
   };
 
   const removeFile = (fileName) => {
