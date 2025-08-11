@@ -7,7 +7,7 @@ import loadExperiments from './loadExperiments';
 const withCleanWhitespaceKeys = (data) => (
   data.split('\n').map((line) => {
     const [sampleName, key, value] = line.trim().split('\t');
-    return `${sampleName}\t${key.replace(' ', '_')}\t${value}`;
+    return `${sampleName}\t${key.replaceAll(' ', '_')}\t${value}`;
   }).join('\n')
 );
 
