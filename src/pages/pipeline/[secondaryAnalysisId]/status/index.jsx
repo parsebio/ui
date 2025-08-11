@@ -154,9 +154,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       }));
 
     setDownloadOptionsMenuItems(menuItems);
-    const reportsFolder = (isKitCategory(secondaryAnalysis?.kit, [KitCategory.TCR, KitCategory.BCR])
-      && !secondaryAnalysis?.pairedWt)
-      ? 'immune_output' : 'output';
+    const reportsFolder = isKitCategory(secondaryAnalysis?.kit, [KitCategory.TCR, KitCategory.BCR]) ? 'immune_output' : 'output';
     const htmlUrls = await getReports(secondaryAnalysisId, reportsFolder);
 
     // natural sort reports
