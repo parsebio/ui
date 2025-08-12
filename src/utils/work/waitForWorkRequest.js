@@ -6,6 +6,7 @@ import WorkTimeoutError from 'utils/errors/http/WorkTimeoutError';
 import WorkResponseError from 'utils/errors/http/WorkResponseError';
 
 import { updateBackendStatus } from 'redux/actions/backendStatus';
+import { getDisplayText } from 'const/enums/WorkerStatusCode';
 
 const timeoutIds = {};
 
@@ -76,10 +77,15 @@ const waitForWorkRequest = async (
         setOrRefreshTimeout(request, timeout, reject, ETag);
       }
 
+      const {
+        statusCode,
+        taskName,
+      } = message;
+
       const status = {
         worker: {
-          statusCode: message.status_code,
-          userMessage: message.user_message,
+          statusCode,
+          userMessage: getDisplayText(statusCode, taskName),
         },
       };
       dispatch(updateBackendStatus(experimentId, status));
