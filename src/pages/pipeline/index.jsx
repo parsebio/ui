@@ -46,6 +46,7 @@ const keyToTitle = {
   numOfSublibraries: 'Number of sublibraries',
   chemistryVersion: 'Chemistry version',
   kit: 'Kit type',
+  pairedWt: 'WT parent',
   name: 'File name',
   status: 'Status',
   createdAt: 'Uploaded at',
@@ -95,6 +96,20 @@ const tcrStepsGrid = [
     // col0.1
     'Sample loading table',
     // col0.2
+    'Immune database',
+  ],
+  // row1
+  'Fastq files',
+];
+
+const pairedWTStepsGrid = [
+  // row0
+  [
+    // col0.0
+    'Experimental setup',
+    // col0.1
+    'Sample loading table',
+    // col0.2
     [
       // row0.2.0
       'Reference genome',
@@ -104,10 +119,6 @@ const tcrStepsGrid = [
   ],
   // row1
   'Fastq files',
-];
-
-const pairedWTStepsGrid = [
-  ...tcrStepsGrid,
   // row2
   'Fastq Pairs Matcher',
 ];
@@ -417,9 +428,14 @@ const Pipeline = () => {
       isValid: (numOfSublibraries && chemistryVersion && kit),
       renderMainScreenDetails: () => {
         const kitTitle = kitOptions.find((option) => option.value === kit)?.label;
-        return mainScreenDetails({
-          kit: kitTitle, chemistryVersion, numOfSublibraries,
-        });
+
+        const details = { kit: kitTitle, chemistryVersion, numOfSublibraries };
+
+        if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR])) {
+          details.pairedWt = pairedWt ? 'Yes' : 'No';
+        }
+
+        return mainScreenDetails(details);
       },
       getIsDisabled: () => false,
     },
