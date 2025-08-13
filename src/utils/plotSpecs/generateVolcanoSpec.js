@@ -1,5 +1,38 @@
 import _ from 'lodash';
 
+const getLabelsConfig = (config) => {
+  const labelsConfig = ({
+    type: 'text',
+    clip: true,
+    from: { data: 'labels' },
+    encode: {
+      enter: {
+        x: { scale: 'x', field: 'logFC' },
+        y: { scale: 'y', field: 'neglogpvalue' },
+        fill: { value: config.colour.masterColour },
+        text: { field: 'gene_names' },
+      },
+      transform: [
+        { type: 'label', size: ['width', 'height'] },
+      ],
+    },
+  });
+
+  if (config?.labelsOverlapRepel > 0.0) {
+    const repel = config?.labelsOverlapRepel;
+    labelsConfig.transform = [
+      {
+        type: 'force',
+        forces: [
+          { force: 'collide', radius: { expr: `datum.fontSize / 1.5 * ${repel}` } },
+        ],
+      },
+    ];
+  }
+
+  return labelsConfig;
+};
+
 const generateSpec = (configSrc, plotData) => {
   const config = _.cloneDeep(configSrc);
 
@@ -97,7 +130,7 @@ const generateSpec = (configSrc, plotData) => {
         ],
       },
       {
-        name: 'dex2',
+        name: 'labels',
         source: 'data',
         transform: [
           {
@@ -222,22 +255,7 @@ const generateSpec = (configSrc, plotData) => {
           },
         },
       },
-      {
-        type: 'text',
-        clip: true,
-        from: { data: 'dex2' },
-        encode: {
-          enter: {
-            x: { scale: 'x', field: 'logFC' },
-            y: { scale: 'y', field: 'neglogpvalue' },
-
-            fill: { value: config.colour.masterColour },
-            text: { field: 'gene_names' },
-          },
-          transform: [
-            { type: 'label', size: ['width', 'height'] }],
-        },
-      },
+      getLabelsConfig(config),
       {
         type: 'rule',
         clip: true,
