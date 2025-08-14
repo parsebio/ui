@@ -1,5 +1,4 @@
 import waitForWorkRequest from 'utils/work/waitForWorkRequest';
-import WorkTimeoutError from 'utils/errors/http/WorkTimeoutError';
 import WorkResponseError from 'utils/errors/http/WorkResponseError';
 
 jest.mock('utils/socketConnection', () => ({
