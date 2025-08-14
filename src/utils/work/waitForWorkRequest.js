@@ -100,10 +100,10 @@ const waitForWorkRequest = async (
         const { response } = res;
 
         if (response.error) {
-          const { errorCode, userMessage } = response;
+          const { userMessage } = response;
 
           return reject(
-            new WorkResponseError(errorCode, userMessage, request),
+            new WorkResponseError(userMessage, request),
           );
         }
 
