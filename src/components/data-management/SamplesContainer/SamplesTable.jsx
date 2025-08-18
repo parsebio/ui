@@ -223,7 +223,7 @@ const SamplesTable = forwardRef((props, ref) => {
       {
         index: 2,
         key: 'uploadStatus',
-        title: 'Upload Status',
+        title: <center>Upload Status</center>,
         dataIndex: 'uploadStatus',
         render: (uploadStatus, record) => (
           [UPLOADED, UPLOADING].includes(uploadStatus) ? (
