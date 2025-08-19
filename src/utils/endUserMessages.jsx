@@ -82,6 +82,6 @@ export default {
   ERROR_LAUNCHING_SECONDARY_ANALYSIS: 'There was a problem launching the pipeline.',
   ERROR_FASTQS_INCORRECTLY_PAIRED: 'Some fastqs are missing their corresponding read pairs.',
   ERROR_CANCELLING_SECONDARY_ANALYSIS: 'There was a problem cancelling your analysis.',
-  ERROR_CELL_SETS_ANNOTATION_FAILED: 'ScType annotation unsuccessful. Please ensure dataset contains gene symbols.',
+  ERROR_CELL_SETS_ANNOTATION_FAILED: 'Clusters annotation unsuccessful. Please ensure dataset contains gene symbols.',
   ERROR_UPDATING_FASTQ_PAIRS: 'Error updating Fastq pair matches',
 };
