@@ -15,7 +15,7 @@ const helpTextByAnalysisTool = {
     <>
       Select a cluster to use as root node by
       {' '}
-      <strong>clicking on the white points</strong>
+      <strong>clicking on the white point that corresponds to it</strong>
       .
       Move around the plot by panning (click and drag) and zooming (pinch and zoom/scroll).
       Deselect node by clicking on a selected node, or by clicking Clear selection.
