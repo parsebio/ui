@@ -172,6 +172,60 @@ const Embedding = (props) => {
   }, [data, cellSetHidden, cellSetProperties]);
 
   useEffect(() => {
+    if (!convertedCellsData?.obsEmbeddingIndex || !cellSetHierarchy || !cellSetProperties) return;
+
+    const embIds = convertedCellsData.obsEmbeddingIndex.map((x) => Number(x));
+
+    const universe = unionByCellClass('louvain', cellSetHierarchy, cellSetProperties);
+
+    const hiddenIds = new Set();
+    Object.entries(cellSetHidden || {}).forEach(([key, hidden]) => {
+      if (hidden && cellSetProperties[key]?.cellIds) {
+        cellSetProperties[key].cellIds.forEach((id) => hiddenIds.add(Number(id)));
+      }
+    });
+
+    const visibleIds = [...universe]
+      .map((id) => Number(id))
+      .filter((id) => !hiddenIds.has(id))
+      .sort((a, b) => a - b);
+
+    const embSet = new Set(embIds);
+    const visSet = new Set(visibleIds);
+
+    const missingInEmbedding = visibleIds.filter((id) => !embSet.has(id));
+    const extraInEmbedding = embIds.filter((id) => !visSet.has(id));
+
+    let firstOrderMismatchAt = -1;
+    if (missingInEmbedding.length === 0 && extraInEmbedding.length === 0) {
+      const N = Math.min(embIds.length, visibleIds.length);
+      for (let i = 0; i < N; i += 1) {
+        if (embIds[i] !== visibleIds[i]) {
+          firstOrderMismatchAt = i;
+          break;
+        }
+      }
+    }
+
+    if (missingInEmbedding.length || extraInEmbedding.length) {
+      console.error('***[Embedding check] Membership mismatch', {
+        embCount: embIds.length,
+        visibleCount: visibleIds.length,
+        missingInEmbedding: missingInEmbedding.slice(0, 50),
+        extraInEmbedding: extraInEmbedding.slice(0, 50),
+      });
+    } else if (firstOrderMismatchAt !== -1) {
+      console.warn('***[Embedding check] Order mismatch', {
+        index: firstOrderMismatchAt,
+        embeddingId: embIds[firstOrderMismatchAt],
+        visibleId: visibleIds[firstOrderMismatchAt],
+      });
+    } else {
+      console.info(`***[Embedding check] ✔ IDs match and order aligns (n=${embIds.length}).`);
+    }
+  }, [convertedCellsData, cellSetHierarchy, cellSetProperties, cellSetHidden]);
+
+  useEffect(() => {
     if (selectedCell) {
       let expressionToDispatch;
       let geneName;
