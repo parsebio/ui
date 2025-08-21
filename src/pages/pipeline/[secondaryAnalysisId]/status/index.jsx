@@ -127,8 +127,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               key: `${opt.key}-copy`,
               onClick: async () => {
                 const signedUrl = await getSignedUrl(opt.key);
+
+                const targetFilePath = opt.key.replaceAll('/', '_');
                 navigator.clipboard.writeText(
-                  `curl -C - -o ${secondaryAnalysisId}_${opt.key} "${signedUrl}"`,
+                  `curl -C - -o ${secondaryAnalysisId}_${targetFilePath} "${signedUrl}"`,
                 );
                 pushNotificationMessage('success', 'Resumable download command copied.');
               },
