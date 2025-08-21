@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import produce, { original } from 'immer';
+import _ from 'lodash';
 
 const trajectoryNodesSelectionUpdated = produce((draft, action) => {
   const { plotUuid, nodes, action: updateAction } = action.payload;
@@ -11,9 +12,9 @@ const trajectoryNodesSelectionUpdated = produce((draft, action) => {
     newNodes = [...new Set([...nodes, ...original(draft[plotUuid]).config.selectedNodes])];
     plotConfig.selectedNodes = newNodes;
   } else if (updateAction === 'replace') {
-    plotConfig.selectedNodes = [nodes];
+    plotConfig.selectedNodes = nodes;
   } else if (updateAction === 'remove') {
-    plotConfig.selectedNodes = plotConfig.selectedNodes.filter((node) => !nodes.includes(node));
+    plotConfig.selectedNodes = _.difference(original(plotConfig.selectedNodes), nodes);
   }
 
   draft[plotUuid].outstandingChanges = true;
