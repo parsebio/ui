@@ -259,7 +259,10 @@ const Embedding = (props) => {
         cellSetProperties[key].cellIds.forEach((id) => hiddenIds.add(Number(id)));
       }
     });
-    const visibleIds = [...universe].map(Number).filter((id) => !hiddenIds.has(id)).sort((a, b) => a - b);
+    const visibleIds = [...universe]
+      .map(Number)
+      .filter((id) => !hiddenIds.has(id))
+      .sort((a, b) => a - b);
 
     const embSet = new Set(embIds);
     const visSet = new Set(visibleIds);
