@@ -225,6 +225,60 @@ const Embedding = (props) => {
     }
   }, [convertedCellsData, cellSetHierarchy, cellSetProperties, cellSetHidden]);
 
+  console.log('[Sanity] x/y/id lengths', {
+    x: data?.xValues?.length,
+    y: data?.yValues?.length,
+    ids: data?.cellIds?.length,
+  });
+
+  (() => {
+    if (!convertedCellsData?.obsEmbeddingIndex) return;
+    const embIds = convertedCellsData.obsEmbeddingIndex.map(Number);
+    const counts = new Map();
+    let firstDupAt = -1;
+    for (let i = 0; i < embIds.length; i += 1) {
+      const c = (counts.get(embIds[i]) || 0) + 1;
+      counts.set(embIds[i], c);
+      if (c === 2 && firstDupAt === -1) firstDupAt = i;
+    }
+    const dups = [...counts.entries()]
+      .filter(([, c]) => c > 1)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5);
+    console.warn('[Sanity] duplicate ids (top 5)', { dups, firstDupAt });
+  })();
+
+  (() => {
+    if (!convertedCellsData?.obsEmbeddingIndex) return;
+
+    const embIds = convertedCellsData.obsEmbeddingIndex.map(Number);
+    const universe = unionByCellClass('louvain', cellSetHierarchy, cellSetProperties);
+    const hiddenIds = new Set();
+    Object.entries(cellSetHidden || {}).forEach(([key, hidden]) => {
+      if (hidden && cellSetProperties[key]?.cellIds) {
+        cellSetProperties[key].cellIds.forEach((id) => hiddenIds.add(Number(id)));
+      }
+    });
+    const visibleIds = [...universe].map(Number).filter((id) => !hiddenIds.has(id)).sort((a, b) => a - b);
+
+    const embSet = new Set(embIds);
+    const visSet = new Set(visibleIds);
+    const missing = visibleIds.filter((id) => !embSet.has(id));
+    const extra = embIds.filter((id) => !visSet.has(id));
+
+    if (missing.length || extra.length) {
+      const probe = missing[0] ?? Number.POSITIVE_INFINITY;
+      const i = embIds.findIndex((id) => id >= probe - 10 && id <= probe + 10);
+      const j = visibleIds.findIndex((id) => id >= probe - 10 && id <= probe + 10);
+
+      console.warn('[Boundary]', {
+        probe,
+        embSlice: embIds.slice(Math.max(0, i - 10), i + 20),
+        visSlice: visibleIds.slice(Math.max(0, j - 10), j + 20),
+      });
+    }
+  })();
+
   useEffect(() => {
     if (selectedCell) {
       let expressionToDispatch;
