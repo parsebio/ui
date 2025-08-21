@@ -18,7 +18,7 @@ import { loadEmbedding } from 'redux/actions/embedding';
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
-import { getCellSets } from 'redux/selectors';
+import { getAnalysisTool, getCellSets } from 'redux/selectors';
 
 import { Alert } from 'antd';
 
@@ -55,6 +55,8 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
   const embeddingSettings = useSelector(
     (state) => state.experimentSettings.originalProcessing?.configureEmbedding?.embeddingSettings,
   );
+
+  const analysisTool = useSelector(getAnalysisTool());
 
   const {
     config,
@@ -197,6 +199,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
       config.selectedNodes,
       startingNodesPlotData?.nodes,
       embeddingMethod,
+      analysisTool,
     );
 
     return spec;

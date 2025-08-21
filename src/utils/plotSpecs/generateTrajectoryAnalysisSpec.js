@@ -1,11 +1,19 @@
 /* eslint-disable no-param-reassign */
+import { analysisTools } from 'const';
 import _ from 'lodash';
+
+const { SCANPY, SEURAT } = analysisTools;
 
 const maxLabelLength = 85;
 const maxLabelHeight = 25;
 const paddingSize = 5;
 const characterSizeVertical = 11;
 const xTickSize = 40;
+
+const rootNodeSizeByAnalysisTool = {
+  [SCANPY]: 300,
+  [SEURAT]: 40,
+};
 
 const generatePadding = (plotConfig, numClusters) => {
   const showLegend = plotConfig.legend.enabled;
@@ -59,7 +67,8 @@ const generateBaseSpec = (
   embeddingData,
   viewState,
   numClusters,
-  method,
+  embeddingMethod,
+  analysisTool,
 ) => ({
   $schema: 'https://vega.github.io/schema/vega/v5.json',
   description: 'Trajectory analysis plot',
@@ -207,6 +216,10 @@ const generateBaseSpec = (
       update: `max(${config.marker.size * 40} / span(xdom), ${config.marker.size})`,
     },
     {
+      name: 'rootNodeSize',
+      update: `max(${config.marker.size * rootNodeSizeByAnalysisTool[analysisTool]} / span(xdom), ${config.marker.size})`,
+    },
+    {
       name: 'domUpdates',
       on: [
         {
@@ -242,7 +255,7 @@ const generateBaseSpec = (
       grid: true,
       domain: true,
       orient: 'bottom',
-      title: config?.axes.xAxisText || `${method} 1`,
+      title: config?.axes.xAxisText || `${embeddingMethod} 1`,
       titleFont: config?.fontStyle.font,
       labelFont: config?.fontStyle.font,
       labelColor: config?.colour.masterColour,
@@ -269,7 +282,7 @@ const generateBaseSpec = (
       gridWidth: ((config?.axes.gridWidth ?? 0) / 20),
       tickColor: config?.colour.masterColour,
       offset: config?.axes.offset,
-      title: config?.axes.yAxisText || `${method} 2`,
+      title: config?.axes.yAxisText || `${embeddingMethod} 2`,
       titleFont: config?.fontStyle.font,
       labelFont: config?.fontStyle.font,
       labelColor: config?.colour.masterColour,
@@ -526,7 +539,7 @@ const insertTrajectorySpec = (
         update: {
           x: { scale: 'xscale', field: 'x' },
           y: { scale: 'yscale', field: 'y' },
-          size: { signal: 'size' },
+          size: { signal: 'rootNodeSize' },
           stroke: { value: 'black' },
           strokeOpacity: [
             { test: 'isValid(datum.x)', value: 1 },
@@ -550,7 +563,7 @@ const insertTrajectorySpec = (
         update: {
           x: { scale: 'xscale', field: 'x' },
           y: { scale: 'yscale', field: 'y' },
-          size: { signal: 'size' },
+          size: { signal: 'rootNodeSize' },
           fill: { value: 'red ' },
           shape: { value: 'circle' },
         },
@@ -718,11 +731,16 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
 // Data returned from the trajectory analysis worker is 0 centered
 // This has to be remapped onto the embedding
 const generateStartingNodesData = (nodes) => {
+  // TODO cleanup
+  const clonedNodes = _.cloneDeep(nodes);
   const {
     connectedNodes,
     x,
     y,
-  } = nodes;
+  } = clonedNodes;
+
+  // TODO cleanup
+  connectedNodes[1].push(...[8, 9, 10, 11]);
 
   const trajectoryNodes = [];
 
@@ -777,6 +795,7 @@ const generateTrajectoryAnalysisSpec = (
   selectedNodeIds,
   nodesData,
   embeddingMethod,
+  analysisTool,
 ) => {
   const spec = generateBaseSpec(
     config,
@@ -784,6 +803,7 @@ const generateTrajectoryAnalysisSpec = (
     viewState,
     cellSetsPlotData.length,
     embeddingMethod,
+    analysisTool,
   );
 
   if (displaySettings.showPseudotimeValues && pseudotimeData) {
