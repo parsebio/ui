@@ -22,6 +22,8 @@ import { getAnalysisTool, getCellSets } from 'redux/selectors';
 
 import { Alert } from 'antd';
 
+import { analysisTools } from 'const';
+
 const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
   // Currenty monocle3 trajectory analysis only supports
   // UMAP embedding. Therefore, this embedding is specifically fetched.
@@ -233,32 +235,35 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
 
       onClickNode('remove', nodeId);
     },
-    lassoSelection: (eventName, payload) => {
-      const [x1, y1, x2, y2] = payload;
+    ...(analysisTool === analysisTools.SCANPY) ? {} : {
+      lassoSelection: (eventName, payload) => {
+        const [x1, y1, x2, y2] = payload;
 
-      const xStart = Math.min(x1, x2);
-      const xEnd = Math.max(x1, x2);
-      const yStart = Math.min(y1, y2);
-      const yEnd = Math.max(y1, y2);
+        const xStart = Math.min(x1, x2);
+        const xEnd = Math.max(x1, x2);
+        const yStart = Math.min(y1, y2);
+        const yEnd = Math.max(y1, y2);
 
-      const { x, y } = startingNodesPlotData.nodes;
+        const { x, y } = startingNodesPlotData.nodes;
 
-      const isInSelection = (nodeIdx) => {
-        const inRange = (number, start, end) => start <= number && number <= end;
+        const isInSelection = (nodeIdx) => {
+          const inRange = (number, start, end) => start <= number && number <= end;
 
-        return inRange(x[nodeIdx], xStart, xEnd) && inRange(y[nodeIdx], yStart, yEnd);
-      };
+          return inRange(x[nodeIdx], xStart, xEnd) && inRange(y[nodeIdx], yStart, yEnd);
+        };
 
-      const selection = [];
+        const selection = [];
 
-      x.forEach((currX, index) => {
-        if (isInSelection(index)) {
-          selection.push(index);
-        }
-      });
+        x.forEach((currX, index) => {
+          if (isInSelection(index)) {
+            selection.push(index);
+          }
+        });
 
-      onLassoSelection(selection);
+        onLassoSelection(selection);
+      },
     },
+
   };
 
   const render = () => (
