@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import FastqFileType from 'const/enums/FastqFileType';
 import { updateFastqType } from 'redux/actions/secondaryAnalyses';
+import { labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
+
+const { WT_FASTQ, IMMUNE_FASTQ } = FastqFileType;
 
 const FastqTypeButton = (props) => {
   const { secondaryAnalysisId, fileId } = props;
@@ -24,10 +27,12 @@ const FastqTypeButton = (props) => {
       value={type}
       onChange={handleButtonClick}
       style={{ width: '100%' }}
-      options={[
-        { value: FastqFileType.WT_FASTQ, label: 'WT' },
-        { value: FastqFileType.IMMUNE_FASTQ, label: 'Immune' },
-      ]}
+      options={
+        [WT_FASTQ, IMMUNE_FASTQ].map((fastqType) => ({
+          value: fastqType,
+          label: labelsByFastqType[fastqType],
+        }))
+      }
     />
   );
 };
