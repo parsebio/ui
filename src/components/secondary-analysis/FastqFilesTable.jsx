@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 import bytesToSize from 'utils/styling/bytesToSize';
-import { labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 import FastqFileType from 'const/enums/FastqFileType';
 import { DeleteOutlined } from '@ant-design/icons';
 import UploadStatusView from 'components/UploadStatusView';
