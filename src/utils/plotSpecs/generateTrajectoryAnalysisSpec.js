@@ -15,6 +15,69 @@ const rootNodeSizeByAnalysisTool = {
   [SEURAT]: 40,
 };
 
+const extraSignalsByByAnalysisTool = {
+  [SCANPY]: [],
+  [SEURAT]: [
+    {
+      name: 'lassoSelection',
+      value: null,
+      on: [
+        {
+          events: 'mouseup[event.shiftKey]',
+          update: "[invert('xscale', lassoStart[0]), invert('yscale', lassoStart[1]), invert('xscale', lassoEnd[0]), invert('yscale', lassoEnd[1])]",
+        },
+      ],
+    },
+    {
+      name: 'lassoStart',
+      value: null,
+      on: [
+        { events: 'mousedown[event.shiftKey]', update: 'xy()' },
+        { events: 'mouseup[event.shiftKey]', update: 'null' },
+      ],
+    },
+    {
+      name: 'lassoEnd',
+      value: [0, 0],
+      on: [
+        {
+          events: [
+            {
+              source: 'window',
+              type: 'mousemove',
+              between: [
+                { type: 'mousedown', filter: 'event.shiftKey' },
+                { source: 'window', type: 'mouseup' },
+              ],
+            },
+          ],
+          update: 'lassoStart ? xy() : [0,0]',
+        },
+      ],
+    },
+  ],
+};
+
+const extraMarksByByAnalysisTool = {
+  [SCANPY]: [],
+  [SEURAT]: [
+    {
+      name: 'selection',
+      type: 'rect',
+      encode: {
+        update: {
+          fillOpacity: { value: 0.20 },
+          fill: { value: 'grey' },
+          x: { signal: 'lassoStart && lassoStart[0]' },
+          x2: { signal: 'lassoStart && lassoEnd[0]' },
+          y: { signal: 'lassoStart && lassoStart[1]' },
+          y2: { signal: 'lassoStart && lassoEnd[1]' },
+        },
+      },
+    },
+  ],
+};
+
 const generatePadding = (plotConfig, numClusters) => {
   const showLegend = plotConfig.legend.enabled;
   const legendPosition = plotConfig.legend.position;
@@ -435,6 +498,7 @@ const insertTrajectorySpec = (
   pathData,
   selectedNodes,
   nodesData,
+  analysisTool,
 ) => {
   spec.description = `${spec.description} with trajectory`;
 
@@ -473,43 +537,7 @@ const insertTrajectorySpec = (
       name: 'removeNode',
       on: [{ events: '@selectedNodes:click', update: 'datum', force: true }],
     },
-    {
-      name: 'lassoSelection',
-      value: null,
-      on: [
-        {
-          events: 'mouseup[event.shiftKey]',
-          update: "[invert('xscale', lassoStart[0]), invert('yscale', lassoStart[1]), invert('xscale', lassoEnd[0]), invert('yscale', lassoEnd[1])]",
-        },
-      ],
-    },
-    {
-      name: 'lassoStart',
-      value: null,
-      on: [
-        { events: 'mousedown[event.shiftKey]', update: 'xy()' },
-        { events: 'mouseup[event.shiftKey]', update: 'null' },
-      ],
-    },
-    {
-      name: 'lassoEnd',
-      value: [0, 0],
-      on: [
-        {
-          events: [
-            {
-              source: 'window',
-              type: 'mousemove',
-              between: [
-                { type: 'mousedown', filter: 'event.shiftKey' },
-                { source: 'window', type: 'mouseup' },
-              ],
-            },
-          ],
-          update: 'lassoStart ? xy() : [0,0]',
-        },
-      ],
-    },
+    ...extraSignalsByByAnalysisTool[analysisTool],
   ];
 
   spec.marks[0].marks = [
@@ -569,20 +597,7 @@ const insertTrajectorySpec = (
         },
       },
     },
-    {
-      name: 'selection',
-      type: 'rect',
-      encode: {
-        update: {
-          fillOpacity: { value: 0.20 },
-          fill: { value: 'grey' },
-          x: { signal: 'lassoStart && lassoStart[0]' },
-          x2: { signal: 'lassoStart && lassoEnd[0]' },
-          y: { signal: 'lassoStart && lassoStart[1]' },
-          y2: { signal: 'lassoStart && lassoEnd[1]' },
-        },
-      },
-    },
+    ...extraMarksByByAnalysisTool[analysisTool],
   ];
 };
 
@@ -818,6 +833,7 @@ const generateTrajectoryAnalysisSpec = (
       startingNodesData,
       selectedNodeIds,
       nodesData,
+      analysisTool,
     );
   }
 

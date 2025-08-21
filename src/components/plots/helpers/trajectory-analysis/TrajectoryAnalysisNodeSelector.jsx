@@ -7,6 +7,7 @@ import {
 } from 'antd';
 import { updatePlotConfig } from 'redux/actions/componentConfig';
 import getTrajectoryPlotPseudoTime from 'redux/actions/componentConfig/getTrajectoryPlotPseudoTime';
+import { getAnalysisTool } from 'redux/selectors';
 
 const TrajectoryAnalysisNodeSelector = (props) => {
   const {
@@ -26,6 +27,8 @@ const TrajectoryAnalysisNodeSelector = (props) => {
   const selectedCellSets = useSelector(
     (state) => state.componentConfig[plotUuid]?.config?.selectedCellSets,
   );
+
+  const analysisTool = useSelector(getAnalysisTool());
 
   const render = () => {
     if (!rootNodes) {
