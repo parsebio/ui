@@ -10,7 +10,9 @@ const trajectoryNodesSelectionUpdated = produce((draft, action) => {
   if (updateAction === 'add') {
     newNodes = [...new Set([...nodes, ...original(draft[plotUuid]).config.selectedNodes])];
     plotConfig.selectedNodes = newNodes;
-  } else {
+  } else if (updateAction === 'replace') {
+    plotConfig.selectedNodes = [nodes];
+  } else if (updateAction === 'remove') {
     plotConfig.selectedNodes = plotConfig.selectedNodes.filter((node) => !nodes.includes(node));
   }
 
