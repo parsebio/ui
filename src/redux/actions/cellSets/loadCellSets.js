@@ -31,8 +31,13 @@ const loadCellSets = (experimentId, forceReload = false) => async (dispatch, get
     const cellSetsData = await downloadFromS3('CellSets', signedUrl);
 
     // Debug: flag any cell sets containing non-numeric IDs
-    const badSets = Object.entries(cellSetsData.cellSets?.properties ?? {})
-      .filter(([, { cellIds } = {}]) => Array.from(cellIds ?? []).some((id) => !Number.isInteger(id)));
+    const props = cellSetsData?.cellSets?.properties ?? {};
+    const entries = Object.entries(props);
+
+    const hasNonNumeric = (ids) => Array.from(ids ?? []).some((id) => !Number.isInteger(id));
+
+    const badSets = entries.filter(([, { cellIds } = {}]) => hasNonNumeric(cellIds));
+
     console.log(badSets.length ? badSets : '*** All cellIds are numeric');
 
     dispatch({
