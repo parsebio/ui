@@ -754,9 +754,6 @@ const generateStartingNodesData = (nodes) => {
     y,
   } = clonedNodes;
 
-  // TODO cleanup
-  connectedNodes[1].push(...[8, 9, 10, 11]);
-
   const trajectoryNodes = [];
 
   Object.values(nodes.x).forEach((nodeIdxX, nodeIdx) => {
