@@ -2,15 +2,19 @@ import React from 'react';
 import { Table, Popconfirm } from 'antd';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
-import bytesToSize from 'utils/styling/bytesToSize';
-import FastqFileType from 'const/enums/FastqFileType';
 import { DeleteOutlined } from '@ant-design/icons';
-import UploadStatusView from 'components/UploadStatusView';
-import UploadStatus from 'utils/upload/UploadStatus';
+
 import PrettyTime from 'components/PrettyTime';
+import UploadStatusView from 'components/UploadStatusView';
+import FastqTypeButton from 'components/secondary-analysis/FastqTypeButton';
+
+import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
+
+import FastqFileType from 'const/enums/FastqFileType';
 import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
-import FastqTypeButton from './FastqTypeButton';
+
+import bytesToSize from 'utils/styling/bytesToSize';
+import UploadStatus from 'utils/upload/UploadStatus';
 
 const { IMMUNE_FASTQ, WT_FASTQ } = FastqFileType;
 const FastqFilesTable = (props) => {
