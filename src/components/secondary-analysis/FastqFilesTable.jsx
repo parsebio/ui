@@ -80,6 +80,7 @@ const FastqFilesTable = (props) => {
           <FastqTypeButton
             secondaryAnalysisId={secondaryAnalysisId}
             fileId={key}
+            editable={canEditTable}
           />
         ),
       },

@@ -10,7 +10,7 @@ import { labelsByFastqType } from 'utils/secondary-analysis/kitOptions';
 const { WT_FASTQ, IMMUNE_FASTQ } = FastqFileType;
 
 const FastqTypeButton = (props) => {
-  const { secondaryAnalysisId, fileId } = props;
+  const { secondaryAnalysisId, fileId, editable } = props;
 
   const dispatch = useDispatch();
 
@@ -21,6 +21,10 @@ const FastqTypeButton = (props) => {
   const handleButtonClick = (newType) => {
     dispatch(updateFastqType(secondaryAnalysisId, newType, [fileId]));
   };
+
+  if (!editable) {
+    return labelsByFastqType[type];
+  }
 
   return (
     <Select
@@ -40,6 +44,11 @@ const FastqTypeButton = (props) => {
 FastqTypeButton.propTypes = {
   secondaryAnalysisId: propTypes.string.isRequired,
   fileId: propTypes.string.isRequired,
+  editable: propTypes.bool,
+};
+
+FastqTypeButton.defaultProps = {
+  editable: true,
 };
 
 export default FastqTypeButton;
