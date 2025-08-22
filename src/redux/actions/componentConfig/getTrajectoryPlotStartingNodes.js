@@ -57,7 +57,12 @@ const getTrajectoryPlotStartingNodes = (
       },
     });
   } catch (e) {
-    const errorMessage = handleError(e, endUserMessages.ERROR_FETCHING_PLOT_DATA);
+    let endUserMessage = endUserMessages.ERROR_FETCHING_PLOT_DATA;
+    if (e.message === 'Too few clusters.') {
+      endUserMessage = endUserMessages.ERROR_TRAJ_STARTING_NODES_TOO_FEW_CLUSTERS;
+    }
+
+    const errorMessage = handleError(e, endUserMessage);
 
     dispatch({
       type: PLOT_DATA_ERROR,
