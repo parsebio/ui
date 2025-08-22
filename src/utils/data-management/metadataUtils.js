@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
-const metadataKeyToName = (key) => key.replace('_', ' ');
+const metadataKeyToName = (key) => key.replaceAll('_', ' ');
 
-const metadataNameToKey = (name) => `${name.trim().replace(/\s+/g, '_')}`;
+const metadataNameToKey = (name) => `${name.trim().replaceAll(' ', '_')}`;
 
 export {
   metadataKeyToName,

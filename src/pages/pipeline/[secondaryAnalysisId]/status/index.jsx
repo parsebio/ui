@@ -127,8 +127,10 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
               key: `${opt.key}-copy`,
               onClick: async () => {
                 const signedUrl = await getSignedUrl(opt.key);
+
+                const targetFilePath = opt.key.replaceAll('/', '_');
                 navigator.clipboard.writeText(
-                  `curl -C - -o ${secondaryAnalysisId}_${opt.key} "${signedUrl}"`,
+                  `curl -C - -o ${secondaryAnalysisId}_${targetFilePath} "${signedUrl}"`,
                 );
                 pushNotificationMessage('success', 'Resumable download command copied.');
               },
@@ -154,9 +156,7 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
       }));
 
     setDownloadOptionsMenuItems(menuItems);
-    const reportsFolder = (isKitCategory(secondaryAnalysis?.kit, [KitCategory.TCR, KitCategory.BCR])
-      && !secondaryAnalysis?.pairedWt)
-      ? 'immune_output' : 'output';
+    const reportsFolder = isKitCategory(secondaryAnalysis?.kit, [KitCategory.TCR, KitCategory.BCR]) ? 'immune_output' : 'output';
     const htmlUrls = await getReports(secondaryAnalysisId, reportsFolder);
 
     // natural sort reports
