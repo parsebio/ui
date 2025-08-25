@@ -93,7 +93,7 @@ const Embedding = (props) => {
 
   const showLoader = useMemo(() => {
     const dataIsLoaded = !data || loading;
-    const expressionIsLoading = expressionLoading && focusData.store === 'genes';
+    const expressionIsLoading = !_.isEmpty(expressionLoading) && focusData.store === 'genes';
     const geneLoadedIfNecessary = focusData.store === 'genes' && !expressionMatrix.geneIsLoaded(focusData.key);
 
     return dataIsLoaded || geneLoadedIfNecessary || expressionIsLoading;
