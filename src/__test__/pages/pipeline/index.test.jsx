@@ -27,7 +27,7 @@ import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/
 
 const readyToLaunchResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
 const emptyAnalysisResponses = generateDefaultMockAPIResponses(mockAnalysisIds.emptyAnalysis);
-const mockAPIResponses = { ...emptyAnalysisResponses, ...readyToLaunchResponses };
+const mockAPIResponses = { ...readyToLaunchResponses, ...emptyAnalysisResponses };
 const mockNavigateTo = jest.fn();
 
 jest.mock('react-resize-detector', () => (props) => {
