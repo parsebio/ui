@@ -67,8 +67,12 @@ const Embedding = (props) => {
   } = cellSets;
 
   const selectedCell = useSelector((state) => state.cellInfo.cellId);
-  const expressionLoading = useSelector((state) => state.genes.expression.full.loading);
-  const expressionMatrix = useSelector((state) => state.genes.expression.full.matrix);
+
+  const {
+    loading: expressionLoading,
+    matrix: expressionMatrix,
+    error: expressionError,
+  } = useSelector((state) => state.genes.expression.full);
 
   const cellCoordinatesRef = useRef({ x: 200, y: 300 });
   const [cellInfoTooltip, setCellInfoTooltip] = useState();
@@ -89,9 +93,10 @@ const Embedding = (props) => {
 
   const showLoader = useMemo(() => {
     const dataIsLoaded = !data || loading;
+    const expressionIsLoading = expressionLoading && focusData.store === 'genes';
     const geneLoadedIfNecessary = focusData.store === 'genes' && !expressionMatrix.geneIsLoaded(focusData.key);
 
-    return dataIsLoaded || geneLoadedIfNecessary;
+    return dataIsLoaded || geneLoadedIfNecessary || expressionIsLoading;
   });
 
   // Load embedding settings if they aren't already.
@@ -271,6 +276,15 @@ const Embedding = (props) => {
       <PlatformError
         error={error}
         onClick={() => dispatch(loadEmbedding(experimentId, embeddingType))}
+      />
+    );
+  }
+
+  if (expressionError && focusData.store === 'genes') {
+    return (
+      <PlatformError
+        error={expressionError}
+        onClick={() => dispatch(loadGeneExpression(experimentId, [focusData.key], 'embedding'))}
       />
     );
   }
