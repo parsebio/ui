@@ -746,13 +746,11 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
 // Data returned from the trajectory analysis worker is 0 centered
 // This has to be remapped onto the embedding
 const generateStartingNodesData = (nodes) => {
-  // TODO cleanup
-  const clonedNodes = _.cloneDeep(nodes);
   const {
     connectedNodes,
     x,
     y,
-  } = clonedNodes;
+  } = nodes;
 
   const trajectoryNodes = [];
 
