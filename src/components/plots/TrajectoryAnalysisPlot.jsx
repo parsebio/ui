@@ -18,11 +18,9 @@ import { loadEmbedding } from 'redux/actions/embedding';
 import { loadCellSets } from 'redux/actions/cellSets';
 import { loadProcessingSettings } from 'redux/actions/experimentSettings';
 
-import { getAnalysisTool, getCellSets } from 'redux/selectors';
+import { getAnalysisTool, getCellSets, getIsScanpy } from 'redux/selectors';
 
 import { Alert } from 'antd';
-
-import { analysisTools } from 'const';
 
 const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
   // Currenty monocle3 trajectory analysis only supports
@@ -59,6 +57,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
   );
 
   const analysisTool = useSelector(getAnalysisTool());
+  const isScanpy = useSelector(getIsScanpy());
 
   const {
     config,
@@ -235,7 +234,7 @@ const TrajectoryAnalysisPlot = forwardRef((props, ref) => {
 
       onClickNode('remove', nodeId);
     },
-    ...(analysisTool === analysisTools.SCANPY) ? {} : {
+    ...isScanpy ? {} : {
       lassoSelection: (eventName, payload) => {
         const [x1, y1, x2, y2] = payload;
 
