@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { Provider } from 'react-redux';
 import {
   render, screen, waitFor, fireEvent,
@@ -24,10 +25,12 @@ import endUserMessages from 'utils/endUserMessages';
 import SelectReferenceGenome from 'components/secondary-analysis/SelectReferenceGenome';
 
 import mockSecondaryAnalysisStatusDefault from '__test__/data/secondaryAnalyses/secondary_analysis_status_default.json';
+import FastqFileType from 'const/enums/FastqFileType';
+import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
 
 const readyToLaunchResponses = generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch);
 const emptyAnalysisResponses = generateDefaultMockAPIResponses(mockAnalysisIds.emptyAnalysis);
-const mockAPIResponses = { ...emptyAnalysisResponses, ...readyToLaunchResponses };
+const mockAPIResponses = { ...readyToLaunchResponses, ...emptyAnalysisResponses };
 const mockNavigateTo = jest.fn();
 
 jest.mock('react-resize-detector', () => (props) => {
@@ -364,6 +367,100 @@ describe('Pipeline Page', () => {
     await waitFor(() => {
       expect(screen.queryByText('GRCh38: Homo sapiens (Human)')).not.toBeInTheDocument();
       expect(screen.queryByText('thisIsNotAGenome')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Experiments setup', () => {
+    const setKitType = async (kit, pairedWt) => {
+      // Open Experimental setup wizard step
+      await act(() => {
+        userEvent.click(screen.getByTestId('edit-button-Experimental setup'));
+      });
+
+      // Open the select
+      await act(() => {
+        fireEvent.mouseDown(screen.getByTestId('experimental-setup-kit-select').firstElementChild);
+      });
+
+      await waitFor(() => expect(screen.getByText(kit)).toBeDefined());
+
+      await act(() => {
+        fireEvent.click(screen.getByText(kit));
+      });
+
+      if (pairedWt === false && !isKitCategory(kit, [KitCategory.WT])) {
+        await act(() => {
+          fireEvent.click(screen.getByTestId('pairedwt-switch'));
+        });
+
+        await waitFor(() => {
+          expect(screen.getByText('By disabling this toggle, your uploaded WT files will be recategorized to immune profiling files.')).toBeInTheDocument();
+        });
+
+        await act(async () => {
+          // Click antd modal's button saying ok
+          userEvent.click(screen.getByTestId('pairedwt-false-confirm-button'));
+        });
+
+        // Wait for switch to set to false
+        await waitFor(() => {
+          expect(screen.getByTestId('pairedwt-switch')).toHaveAttribute('aria-checked', 'false');
+        });
+      }
+
+      await act(async () => {
+        // click the button to close the modal to trigger update
+        userEvent.click(screen.getByLabelText('Close'));
+      });
+    };
+
+    it('Updates fastq types as necessary when updating kits', async () => {
+      const patchedTypeResponse = {
+        ...generateDefaultMockAPIResponses(mockAnalysisIds.readyToLaunch),
+        [`/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}`]: () => promiseResponse(
+          JSON.stringify([
+            { id: '1000fe51-6a6d-4545-b717-a4c475849b94', type: FastqFileType.IMMUNE_FASTQ },
+            { id: 'd7ba4d40-e1ed-45a0-9eca-8f5caab0dd7b', type: FastqFileType.IMMUNE_FASTQ },
+            { id: 'c28efb10-6459-4107-b9ef-baf6b13968c4', type: FastqFileType.IMMUNE_FASTQ },
+            { id: '0740a094-f020-4c97-aceb-d0a708d0982e', type: FastqFileType.IMMUNE_FASTQ },
+          ]),
+        ),
+      };
+
+      fetchMock.mockIf(/.*/, mockAPI(patchedTypeResponse));
+
+      await renderPipelinePage();
+
+      // Wait for selected secondary to be loaded
+      await waitFor(() => {
+        expect(screen.getByText(/Evercode WT/i)).toBeInTheDocument();
+      });
+
+      // All files are not immune (so wt or sample loading)
+      const fileTypesPre = _.map(Object.values(storeState.getState().secondaryAnalyses[mockAnalysisIds.readyToLaunch].files.data), 'type');
+      expect(fileTypesPre).toEqual([...new Array(4).fill(FastqFileType.WT_FASTQ), 'samplelt']);
+
+      await setKitType('Evercode TCR Mini', false);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledWith(
+          `http://localhost:3000/v2/secondaryAnalysis/${mockAnalysisIds.readyToLaunch}`,
+          expect.objectContaining({
+            method: 'PATCH',
+            body: JSON.stringify({
+              numOfSublibraries: 1,
+              chemistryVersion: '3',
+              kit: 'tcr_mini',
+              pairedWt: false,
+              immuneDatabase: null,
+            }),
+          }),
+        );
+      });
+
+      // Now all files are not wt (so immune or sample loading)
+      const fileTypesPost = _.map(Object.values(storeState.getState().secondaryAnalyses[mockAnalysisIds.readyToLaunch].files.data), 'type');
+      expect(fileTypesPost).toEqual([...new Array(4).fill(FastqFileType.IMMUNE_FASTQ), 'samplelt']);
     });
   });
 
