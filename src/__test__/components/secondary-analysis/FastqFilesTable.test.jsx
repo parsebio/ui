@@ -200,27 +200,4 @@ describe('FastqFilesTable', () => {
     expect(screen.getAllByText(labelsByFastqType[FastqFileType.WT_FASTQ])).toHaveLength(2);
     expect(screen.getAllByText(labelsByFastqType[FastqFileType.IMMUNE_FASTQ])).toHaveLength(2);
   });
-
-  // TODO Clean this up, no longer necessary
-  // it('only shows WT_FASTQ files when kit is WT category, regardless of pairedWt', () => {
-  //   renderComponent({
-  //     kit: KitCategory.WT,
-  //     pairedWt: false,
-  //     files: filesWithTypes,
-  //   });
-
-  //   expect(screen.getByText('wt.fastq')).toBeInTheDocument();
-  //   expect(screen.queryByText('immune.fastq')).not.toBeInTheDocument();
-  // });
-
-  // it('only shows IMMUNE_FASTQ files when kit is TCR and pairedWt is false', () => {
-  //   renderComponent({
-  //     kit: KitCategory.TCR,
-  //     pairedWt: false,
-  //     files: filesWithTypes,
-  //   });
-
-  //   expect(screen.getByText('immune.fastq')).toBeInTheDocument();
-  //   expect(screen.queryByText('wt.fastq')).not.toBeInTheDocument();
-  // });
 });
