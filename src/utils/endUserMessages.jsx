@@ -85,4 +85,5 @@ export default {
   ERROR_CANCELLING_SECONDARY_ANALYSIS: 'There was a problem cancelling your analysis.',
   ERROR_CELL_SETS_ANNOTATION_FAILED: 'Clusters annotation unsuccessful. Please ensure dataset contains gene symbols.',
   ERROR_UPDATING_FASTQ_PAIRS: 'Error updating Fastq pair matches',
+  ERROR_UPDATING_FASTQ_TYPE: 'Error updating Fastq type',
 };

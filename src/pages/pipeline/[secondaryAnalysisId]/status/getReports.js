@@ -28,7 +28,7 @@ const getHtmlUrlsFromZip = async (fileBlob) => {
 
 const getReports = async (secondaryAnalysisId, reportsFolder, retries = 3) => {
   try {
-    const fileName = encodeURIComponent(`${reportsFolder}/output_combined/all_summaries.zip`);
+    const fileName = encodeURIComponent(`${reportsFolder}/${reportsFolder}_combined/all_summaries.zip`);
     const signedUrl = await fetchAPI(`/v2/secondaryAnalysis/${secondaryAnalysisId}/getOutputDownloadLink?fileKey=${fileName}`);
 
     const response = await fetch(signedUrl);
