@@ -52,6 +52,10 @@
     "species": "Bos taurus (Cow)"
   },
   {
+    "name": "ARS-UCD2",
+    "species": "Bos taurus (Cow), Ensembl release 114"
+  },
+  {
     "name": "B_diazoefficiens",
     "species": "Bradyrhizobium diazoefficiens (Bacteria)"
   },
