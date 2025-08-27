@@ -6,6 +6,7 @@ import {
 import Link from 'next/link';
 
 import { plotNames, layout } from 'const';
+import Disabler from 'utils/Disabler';
 
 const CARD_STYLE = { marginBottom: '1em' };
 const CardItem = (({
@@ -149,7 +150,9 @@ const PlotsTablesContainer = (props) => {
                     bodyStyle={{ padding: '0' }}
                     style={CARD_STYLE}
                   >
-                    <CardItem item={item} experimentId={experimentId} />
+                    <Disabler disable={item.name === 'Trajectory Analysis'}>
+                      <CardItem item={item} experimentId={experimentId} />
+                    </Disabler>
                   </Card>
                 </Col>
               );
