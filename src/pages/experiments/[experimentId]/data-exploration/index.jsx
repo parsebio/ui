@@ -53,7 +53,7 @@ const ExplorationViewPage = ({ experimentId }) => {
 
     const genesToLoad = getHighestDispersionGenes(geneData, nGenesToLoad);
 
-    dispatch(loadGeneExpression(experimentId, genesToLoad, 'embedding'));
+    dispatch(loadGeneExpression(experimentId, genesToLoad, 'geneListTool'));
   }, [geneData, analysisTool]);
 
   const methodUppercase = method ? method.toUpperCase() : ' ';
