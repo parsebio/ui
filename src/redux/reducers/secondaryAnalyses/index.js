@@ -21,6 +21,7 @@ import {
   SECONDARY_ANALYSIS_LOGS_LOADING,
   SECONDARY_ANALYSIS_LOGS_LOADED,
   SECONDARY_PAIR_MATCHES_UPDATED,
+  SECONDARY_ANALYSIS_FILES_FASTQ_TYPE_UPDATED,
 } from '../../actionTypes/secondaryAnalyses';
 
 import secondaryAnalysesLoading from './secondaryAnalysesLoading';
@@ -45,6 +46,7 @@ import secondaryAnalysisLogsLoaded from './secondaryAnalysisLogsLoaded';
 import secondaryAnalysisLogsLoading from './secondaryAnalysisLogsLoading';
 
 import pairMatchesUpdated from './pairMatchesUpdated';
+import secondaryAnalysisFastqTypeUpdated from './secondaryAnalysisFastqTypeUpdated';
 
 const notificationsReducer = (state = initialState, action = {}) => {
   switch (action.type) {
@@ -96,6 +98,10 @@ const notificationsReducer = (state = initialState, action = {}) => {
 
     case SECONDARY_ANALYSIS_FILES_DELETE: {
       return secondaryAnalysisFileDeleted(state, action);
+    }
+
+    case SECONDARY_ANALYSIS_FILES_FASTQ_TYPE_UPDATED: {
+      return secondaryAnalysisFastqTypeUpdated(state, action);
     }
 
     case SECONDARY_ANALYSIS_STATUS_LOADING: {
