@@ -142,19 +142,19 @@ const PlotsTablesContainer = (props) => {
             </Col>
             {section.plots.map((item) => {
               const card = (
-                <Col className='plot-card' key={item.key}>
-                  <Card
-                    size='small'
-                    hoverable
-                    title={item.name}
-                    bodyStyle={{ padding: '0' }}
-                    style={CARD_STYLE}
-                  >
-                    <Disabler disable={item.name === 'Trajectory Analysis'}>
+                <Disabler disable={item.name === 'Trajectory Analysis'}>
+                  <Col className='plot-card' key={item.key}>
+                    <Card
+                      size='small'
+                      hoverable
+                      title={item.name}
+                      bodyStyle={{ padding: '0' }}
+                      style={CARD_STYLE}
+                    >
                       <CardItem item={item} experimentId={experimentId} />
-                    </Disabler>
-                  </Card>
-                </Col>
+                    </Card>
+                  </Col>
+                </Disabler>
               );
               return card;
             })}
