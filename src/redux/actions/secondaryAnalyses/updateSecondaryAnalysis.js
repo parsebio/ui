@@ -34,7 +34,7 @@ const updateSecondaryAnalysis = (
   });
 
   try {
-    await fetchAPI(
+    const updatedFiles = await fetchAPI(
       `/v2/secondaryAnalysis/${secondaryAnalysisId}`,
       {
         method: 'PATCH',
@@ -50,6 +50,7 @@ const updateSecondaryAnalysis = (
       payload: {
         secondaryAnalysisId,
         secondaryAnalysis: fullDiff,
+        updatedFiles,
       },
     });
   } catch (e) {

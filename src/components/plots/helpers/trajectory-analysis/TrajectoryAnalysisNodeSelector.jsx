@@ -7,6 +7,46 @@ import {
 } from 'antd';
 import { updatePlotConfig } from 'redux/actions/componentConfig';
 import getTrajectoryPlotPseudoTime from 'redux/actions/componentConfig/getTrajectoryPlotPseudoTime';
+import { getAnalysisTool } from 'redux/selectors';
+import { analysisTools } from 'const';
+
+const helpTextByAnalysisTool = {
+  [analysisTools.SCANPY]: (
+    <>
+      Select a cluster to use as root node by
+      {' '}
+      <strong>clicking on the white point that corresponds to it</strong>
+      .
+      Move around the plot by panning (click and drag) and zooming (pinch and zoom/scroll).
+      Deselect node by clicking on a selected node, or by clicking Clear selection.
+    </>
+  ),
+  [analysisTools.SEURAT]: (
+    <>
+      <p>
+        Select root nodes by
+        {' '}
+        <strong>clicking on the white points</strong>
+        . You can select multiple nodes at once by drawing a selection. To do this,
+        {' '}
+        <strong>
+          hold down the Shift key, and then click and drag
+        </strong>
+        . Nodes inside the selection will be added to the selection.
+      </p>
+      <p>
+        Move around the plot by panning
+        (click and drag) and zooming (pinch and zoom/scroll).
+      </p>
+      <p>
+        Deselect nodes by clicking on a selected node, or by clicking
+        {' '}
+        <strong>Clear selection</strong>
+        .
+      </p>
+    </>
+  ),
+};
 
 const TrajectoryAnalysisNodeSelector = (props) => {
   const {
@@ -26,6 +66,8 @@ const TrajectoryAnalysisNodeSelector = (props) => {
   const selectedCellSets = useSelector(
     (state) => state.componentConfig[plotUuid]?.config?.selectedCellSets,
   );
+
+  const analysisTool = useSelector(getAnalysisTool());
 
   const render = () => {
     if (!rootNodes) {
@@ -69,31 +111,7 @@ const TrajectoryAnalysisNodeSelector = (props) => {
       <Space direction='vertical' style={{ width: '100%' }}>
         <Alert
           type='info'
-          message={(
-            <>
-              <p>
-                Select root nodes by
-                {' '}
-                <strong>clicking on the white points</strong>
-                . You can select multiple nodes at once by drawing a selection. To do this,
-                {' '}
-                <strong>
-                  hold down the Shift key, and then click and drag
-                </strong>
-                . Nodes inside the selection will be added to the selection.
-              </p>
-              <p>
-                Move around the plot by panning
-                (click and drag) and zooming (pinch and zoom/scroll).
-              </p>
-              <p>
-                Deselect nodes by clicking on a selected node, or by clicking
-                {' '}
-                <strong>Clear selection</strong>
-                .
-              </p>
-            </>
-          )}
+          message={helpTextByAnalysisTool[analysisTool]}
         />
         <strong>{`${selectedNodes.length} nodes selected`}</strong>
         <Button

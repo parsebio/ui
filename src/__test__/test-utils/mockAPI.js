@@ -87,15 +87,33 @@ const generateDefaultMockAPIResponses = (projectId, analysisTool = analysisTools
     JSON.stringify(fake.CLONED_EXPERIMENT_ID),
   ),
   [`/v2/workRequest/${projectId}`]: () => statusResponse(200, 'OK'),
-  '/v2/secondaryAnalysis$': () => promiseResponse(
-    JSON.stringify(mockSecondaryAnalyses),
-  ),
+  '/v2/secondaryAnalysis$': () => {
+    const mockedMainSecondary = _.cloneDeep(mockSecondaryAnalyses[1]);
+    mockedMainSecondary.id = projectId;
+
+    return promiseResponse(
+      JSON.stringify([
+        mockedMainSecondary,
+        ...mockSecondaryAnalyses,
+      ]),
+    );
+  },
   [`/v2/secondaryAnalysis/${projectId}/executionStatus`]: () => promiseResponse(
     JSON.stringify(mockSecondaryAnalysisStatusDefault),
   ),
-  [`/v2/secondaryAnalysis/${projectId}/files`]: () => promiseResponse(
-    JSON.stringify(mockAnalysisFiles),
-  ),
+  [`/v2/secondaryAnalysis/${projectId}/files`]: (req) => {
+    if (req.method === 'GET') {
+      return promiseResponse(
+        JSON.stringify(mockAnalysisFiles),
+      );
+    }
+
+    if (req.method === 'POST') {
+      return promiseResponse(
+        JSON.stringify({ fileId: 'mockFileId' }),
+      );
+    }
+  },
   [`/v2/projects/${projectId}/upload/.*/part/\\d+/signedUrl$`]: (req) => {
     const partNumber = req.url.match(/part\/(\d+)\/signedUrl/)[1];
     return promiseResponse(JSON.stringify(`mockSignedUrl${partNumber}`));
