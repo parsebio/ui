@@ -1227,7 +1227,6 @@ exports[`genesReducer Multiple components loading some of same expression trigge
         },
       },
     },
-    "error": false,
     "full": {
       "error": false,
       "loading": [
@@ -2231,7 +2230,6 @@ exports[`genesReducer Sets loading state on expression loading action 1`] = `
         },
       },
     },
-    "error": false,
     "full": {
       "error": false,
       "loading": [

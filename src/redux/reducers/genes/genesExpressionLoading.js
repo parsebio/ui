@@ -20,8 +20,8 @@ const genesExpressionLoading = (state, action) => {
       full: {
         ...state.expression.full,
         loading: _.union(state.expression.full.loading, genes),
+        error: false,
       },
-      error: false,
     },
   };
 };

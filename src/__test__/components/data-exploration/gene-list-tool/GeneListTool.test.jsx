@@ -35,7 +35,7 @@ let store;
 
 const experimentId = '1234';
 
-const TEST_UUID = 'testList';
+const TEST_UUID = 'geneListTool';
 
 const backendStatus = {
   [experimentId]: {
