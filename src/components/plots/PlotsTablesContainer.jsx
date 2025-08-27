@@ -142,7 +142,7 @@ const PlotsTablesContainer = (props) => {
             </Col>
             {section.plots.map((item) => {
               const card = (
-                <Disabler disable={item.name === 'Trajectory Analysis'}>
+                <Disabler disable={item.name === 'Trajectory Analysis'} tooltipText='This plot is not available'>
                   <Col className='plot-card' key={item.key}>
                     <Card
                       size='small'
