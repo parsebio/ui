@@ -4,16 +4,14 @@ import {
 } from 'react-redux';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 import { loadPaginatedGeneProperties } from 'redux/actions/genes';
 import GeneTable from '../generic-gene-table/GeneTable';
 
+const tableUuid = 'geneListTool';
 const GeneListTool = (props) => {
   const {
-    experimentId, width, height, uuid,
+    experimentId, width, height,
   } = props;
-
-  const [tableUuid] = useState(uuid);
 
   const dispatch = useDispatch();
   const properties = useSelector((state) => state.genes.properties.data);
@@ -111,13 +109,8 @@ const GeneListTool = (props) => {
   );
 };
 
-GeneListTool.defaultProps = {
-  uuid: uuidv4(),
-};
-
 GeneListTool.propTypes = {
   experimentId: PropTypes.string.isRequired,
-  uuid: PropTypes.string,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
 };
