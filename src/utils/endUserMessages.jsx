@@ -16,6 +16,7 @@ export default {
   ERROR_FETCHING_EXPERIMENTS: 'We couldn\'t get the list of experiments.',
   ERROR_FETCHING_PLOT_CONFIG: 'We couldn\'t get the plot settings.',
   ERROR_FETCHING_PLOT_DATA: 'We couldn\'t get the plot data.',
+  ERROR_TRAJ_STARTING_NODES_TOO_FEW_CLUSTERS: 'Please add more cell sets to your selection.',
   ERROR_FETCHING_NORMALIZED_EXPRESSION_MATRIX: 'We couldn\'t download the normalized expression matrix.',
   ERROR_NO_MATCHING_CELLS_NORMALIZED_EXPRESSION_MATRIX: 'No cells match requested filters.',
   ERROR_FETCHING_PROCESSING: 'We couldn\'t get the filter settings.',
@@ -84,4 +85,5 @@ export default {
   ERROR_CANCELLING_SECONDARY_ANALYSIS: 'There was a problem cancelling your analysis.',
   ERROR_CELL_SETS_ANNOTATION_FAILED: 'Clusters annotation unsuccessful. Please ensure dataset contains gene symbols.',
   ERROR_UPDATING_FASTQ_PAIRS: 'Error updating Fastq pair matches',
+  ERROR_UPDATING_FASTQ_TYPE: 'Error updating Fastq type',
 };

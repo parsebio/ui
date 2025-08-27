@@ -73,26 +73,6 @@ const ExperimentalSetup = (props) => {
     setMaxSublibraries(newMaxSublibraries);
     return newMaxSublibraries;
   }, []);
-  const onKitChange = useCallback(
-    (newKit) => {
-      // if switching to WT category and there are immune FASTQ files already uploaded
-      if (
-        isKitCategory(newKit, [KitCategory.WT])
-        && Object.keys(immuneFiles).length > 0
-      ) {
-        Modal.confirm({
-          title: 'You have immune profiling FASTQ files uploaded.',
-          content: 'By selecting a WT kit, your uploaded immune profiling files will not be processed.',
-          okText: 'OK',
-          cancelText: 'Cancel',
-          onOk: () => changeKit(newKit),
-        });
-      } else {
-        changeKit(newKit);
-      }
-    },
-    [immuneFiles, changeKit],
-  );
 
   const changeKit = useCallback((kit) => {
     calculateMaxSublibraries(kit);
@@ -122,6 +102,27 @@ const ExperimentalSetup = (props) => {
     });
   }, [calculateMaxSublibraries]);
 
+  const onKitChange = useCallback(
+    (newKit) => {
+      // if switching to WT category and there are immune FASTQ files already uploaded
+      if (
+        isKitCategory(newKit, [KitCategory.WT])
+        && Object.keys(immuneFiles).length > 0
+      ) {
+        Modal.confirm({
+          title: 'You have immune profiling FASTQ files uploaded.',
+          content: 'By selecting a WT kit, your uploaded immune profiling files will be recategorized to WT files.',
+          okText: 'OK',
+          cancelText: 'Cancel',
+          onOk: () => changeKit(newKit),
+        });
+      } else {
+        changeKit(newKit);
+      }
+    },
+    [immuneFiles, changeKit],
+  );
+
   const handleValueChange = useCallback((key, value) => {
     setFormValues((prevFormValues) => ({
       ...prevFormValues,
@@ -141,6 +142,7 @@ const ExperimentalSetup = (props) => {
       >
         <Space direction='vertical' style={{ width: '92%' }}>
           <Select
+            data-testid='experimental-setup-kit-select'
             placeholder='Select the kit you used in your experiment'
             value={formValues.kit}
             onChange={onKitChange}
@@ -196,13 +198,15 @@ const ExperimentalSetup = (props) => {
         <Form.Item name='pairedWt'>
           <Space direction='horizontal'>
             <Switch
+              data-testid='pairedwt-switch'
               checked={formValues.pairedWt}
               onChange={(value) => {
                 if (!value && Object.keys(wtFiles).length > 0) {
                   Modal.confirm({
                     title: 'You have WT Fastq files uploaded.',
-                    content: 'By disabling this toggle, your uploaded WT files will not be processed.',
+                    content: 'By disabling this toggle, your uploaded WT files will be recategorized to immune profiling files.',
                     okText: 'OK',
+                    okButtonProps: { 'data-testid': 'pairedwt-false-confirm-button' },
                     cancelText: 'Cancel',
                     onOk: () => handleValueChange('pairedWt', false),
                   });

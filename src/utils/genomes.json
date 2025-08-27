@@ -28,6 +28,10 @@
     "species": "Anopheles gambiae (African malaria mosquito, PEST)"
   },
   {
+    "name": "Agam_VB68",
+    "species": "Anopheles gambiae (African malaria mosquito, PEST), VectorBase Release 68"
+  },
+  {
     "name": "TAIR10",
     "species": "Arabidopsis thaliana (Thale cress)"
   },
@@ -46,6 +50,10 @@
   {
     "name": "ARS-UCD1.3",
     "species": "Bos taurus (Cow)"
+  },
+  {
+    "name": "ARS-UCD2",
+    "species": "Bos taurus (Cow), Ensembl release 114"
   },
   {
     "name": "B_diazoefficiens",
@@ -502,6 +510,10 @@
   {
     "name": "mm10_rfp_srk",
     "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCm39_luciferase",
+    "species": "Custom Mus musculus (mouse) with luciferase reporter gene"
   },
   {
     "name": "GRCm39_XTG",

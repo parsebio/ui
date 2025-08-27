@@ -16,6 +16,7 @@ import loadSecondaryAnalysisLogs from './loadSecondaryAnalysisLogs';
 import storeLoadedAnalysisFile from './storeLoadedAnalysisFile';
 import removeSecondaryAnalysis from './removeSecondaryAnalysis';
 import updatePairMatch from './updatePairMatch';
+import updateFastqType from './updateFastqType';
 
 export {
   loadSecondaryAnalyses,
@@ -36,4 +37,5 @@ export {
   storeLoadedAnalysisFile,
   removeSecondaryAnalysis,
   updatePairMatch,
+  updateFastqType,
 };
