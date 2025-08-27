@@ -721,12 +721,12 @@ const generateTrajectoryEmbeddingData = (cellSets, embedding, selectedCellSets) 
   ));
 
   const { xValues, yValues, cellIds: embeddingCellIds } = embedding;
-  embeddingCellIds.forEach((cellId, index) => {
+  embeddingCellIds.forEach((embeddingCellId, index) => {
     // usually 1 cellSet for each cellId because most cell sets in a cell class are disjoint
     selectedCellSetObjects.forEach((cellSet) => {
-      if (cellSet.cellIds.has(cellId)) {
+      if (cellSet.cellIds.has(embeddingCellId)) {
         plotData.push({
-          cellId,
+          cellId: embeddingCellId,
           cellSetKey: cellSet.key,
           cellSetName: cellSet.name,
           color: cellSet.color,
@@ -773,21 +773,47 @@ const generatePseudotimeData = (
   plotData,
   embeddingPlotData,
 ) => {
+  console.log('plotDataDEbug');
+  console.log(plotData);
+
+  console.log('embeddingPlotDataDEbug');
+  console.log(embeddingPlotData);
+  const cellsInSquare = [];
   const cellsWithPseudotimeValue = [];
   const cellsWithoutPseudotimeValue = [];
   embeddingPlotData.forEach((cell, index) => {
+    // if (cell.cellId !== index) {
+    //   console.log('cellDebug');
+    //   console.log(cell);
+    //   console.log('indexDebug');
+    //   console.log(index);
+    // }
+
+    // const value = plotData[index];
+
+    // console.log('cellxDebug');
+    // console.log(cell.x);
     const value = plotData[index];
     const cellData = {
       x: cell.x,
       y: cell.y,
       value,
     };
+
+    if (cell.y > 12.0 && cell.y < 13.5 && cell.x > 3.5 && cell.x < 5.0) {
+      cellsInSquare.push({ ...cellData, cellId: cell.cellId });
+    }
+
     if (value) {
       cellsWithPseudotimeValue.push(cellData);
     } else {
       cellsWithoutPseudotimeValue.push(cellData);
     }
   });
+
+  console.log('cellsInSquareDebug');
+  console.log(cellsInSquare);
+
   return {
     cellsWithPseudotimeValue,
     cellsWithoutPseudotimeValue,

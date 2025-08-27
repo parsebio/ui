@@ -57,6 +57,9 @@ const Embedding = (props) => {
 
   const { data, loading, error } = useSelector((state) => state.embeddings[embeddingType]) || {};
 
+  console.log('dataDebug');
+  console.log(data);
+
   const focusData = useSelector((state) => state.cellInfo.focus);
 
   const cellSets = useSelector(getCellSets());
