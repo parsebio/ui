@@ -42,6 +42,18 @@ import UploadStatus from 'utils/upload/UploadStatus';
 
 const { UPLOADED, INCOMPLETE, UPLOADING } = UploadStatus;
 
+const getSampleUploadProgress = (filesInSample) => {
+  const progresses = filesInSample.map(([, value]) => {
+    const { status, progress } = value.upload;
+
+    return status === UPLOADING ? progress ?? 0
+      : status === UPLOADED ? 100
+        : 0;
+  });
+
+  return _.mean(progresses).toFixed(2);
+};
+
 const SamplesTable = forwardRef((props, ref) => {
   const { size, selectedTable, selectedTechs } = props;
 
@@ -191,6 +203,7 @@ const SamplesTable = forwardRef((props, ref) => {
       selectedTableData.push({
         ...item,
         uploadStatus: status,
+        uploadProgress: getSampleUploadProgress(filesInSample),
         technology: samples[item.uuid].type,
       });
     });
@@ -210,15 +223,15 @@ const SamplesTable = forwardRef((props, ref) => {
       {
         index: 2,
         key: 'uploadStatus',
-        title: 'Upload Status',
+        title: <center>Upload Status</center>,
         dataIndex: 'uploadStatus',
         render: (uploadStatus, record) => (
           [UPLOADED, UPLOADING].includes(uploadStatus) ? (
-            <UploadStatusView status={uploadStatus} />
+            <UploadStatusView status={uploadStatus} progress={record.uploadProgress} />
           ) : (
             <Tooltip title={`Not all files for this sample are uploaded, go to the ${getTechNameToDisplay(record.technology)} tab for details.`}>
               <div>
-                <UploadStatusView status={uploadStatus} />
+                <UploadStatusView status={uploadStatus} progress={record.uploadProgress} />
               </div>
             </Tooltip>
           )
