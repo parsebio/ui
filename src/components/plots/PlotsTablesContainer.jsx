@@ -6,6 +6,7 @@ import {
 import Link from 'next/link';
 
 import { plotNames, layout } from 'const';
+import Disabler from 'utils/Disabler';
 
 const CARD_STYLE = { marginBottom: '1em' };
 const CardItem = (({
@@ -141,17 +142,19 @@ const PlotsTablesContainer = (props) => {
             </Col>
             {section.plots.map((item) => {
               const card = (
-                <Col className='plot-card' key={item.key}>
-                  <Card
-                    size='small'
-                    hoverable
-                    title={item.name}
-                    bodyStyle={{ padding: '0' }}
-                    style={CARD_STYLE}
-                  >
-                    <CardItem item={item} experimentId={experimentId} />
-                  </Card>
-                </Col>
+                <Disabler disable={item.name === 'Trajectory Analysis'} tooltipText='This plot is not available'>
+                  <Col className='plot-card' key={item.key}>
+                    <Card
+                      size='small'
+                      hoverable
+                      title={item.name}
+                      bodyStyle={{ padding: '0' }}
+                      style={CARD_STYLE}
+                    >
+                      <CardItem item={item} experimentId={experimentId} />
+                    </Card>
+                  </Col>
+                </Disabler>
               );
               return card;
             })}
