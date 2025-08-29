@@ -16,8 +16,6 @@ import fileUploadUtils from 'utils/upload/fileUploadUtils';
 import endUserMessages from 'utils/endUserMessages';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
-import UploadsCoordinatorError from 'utils/errors/upload/UploadsCoordinatorError';
-import FileUploaderError from 'utils/errors/upload/FileUploaderError';
 
 const createAndUploadSampleFile = async (
   file,

@@ -84,10 +84,14 @@ class PartUploader {
 
   #getSignedUrlForPart = async (partNumber) => {
     const {
-      projectId, uploadId, bucket, key,
+      projectId, uploadId, bucket, key, type,
     } = this.#uploadParams;
+    console.log('TYPE ', type);
+    let url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
 
-    const url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
+    if (type === 'genome') {
+      url = `/v2/genomes/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
+    }
 
     return await fetchAPI(
       url,

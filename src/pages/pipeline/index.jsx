@@ -461,6 +461,7 @@ const Pipeline = () => {
       key: 'Reference genome',
       render: () => (
         <SelectReferenceGenome
+          secondaryAnalysisId={activeSecondaryAnalysisId}
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
           genome={refGenome}
         />
