@@ -244,6 +244,10 @@
     "species": "Sus scrofa (Pig)"
   },
   {
+    "name": "T_gondii",
+    "species": "Toxoplasma gondii"
+  },
+  {
     "name": "trichuris_muris.PRJEB126.WBPS19",
     "species": "Trichuris muris"
   },
@@ -513,11 +517,11 @@
   },
   {
     "name": "GRCm39_luciferase",
-    "species": "Custom Mus musculus (mouse) with luciferase reporter gene"
+    "species": "Custom Mus musculus (Mouse) with luciferase reporter gene"
   },
   {
     "name": "GRCm39_XTG",
-    "species": "Custom Mus musculus (mouse)"
+    "species": "Custom Mus musculus (Mouse)"
   },
   {
     "name": "GRCm39_KMT2A-MLLT3",
@@ -525,7 +529,11 @@
   },
   {
     "name": "GRCm39-toplevel",
-    "species": "Custom Mus Musculus (mouse) using toplevel fasta, release 114"
+    "species": "Custom Mus Musculus (Mouse) using toplevel fasta, release 114"
+  },
+  {
+    "name": "B_taurus_viral",
+    "species": "Custom Bos taurus (Cow)"
   },
   {
     "name": "GRCg7b_enriched6db",
@@ -557,7 +565,7 @@
   },
   {
     "name": "Sscrofa11_yu",
-    "species": "Custom Sus scrofa (pig)"
+    "species": "Custom Sus scrofa (Pig)"
   },
   {
     "name": "Macaca_T-cruzi",
