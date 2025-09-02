@@ -2,7 +2,7 @@
 import produce from 'immer';
 
 const secondaryAnalysisUpdated = produce((draft, action) => {
-  const { secondaryAnalysisId, secondaryAnalysis, updatedFiles } = action.payload;
+  const { secondaryAnalysisId, secondaryAnalysis, updatedFiles = [] } = action.payload;
 
   draft.meta.saving = false;
   draft[secondaryAnalysisId] = {
