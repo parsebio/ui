@@ -3,14 +3,15 @@ import produce from 'immer';
 
 const genomeFileUpdated = produce((draft, action) => {
   const { fileId, genomeId, diff } = action.payload;
-  if (!draft[genomeId]?.files) {
-    draft[genomeId].files = {};
+
+  if (!draft.custom[genomeId]?.files) {
+    draft.custom[genomeId].files = {};
   }
-  if (!draft[genomeId].files[fileId]) {
-    draft[genomeId].files[fileId] = {};
+  if (!draft.custom[genomeId].files[fileId]) {
+    draft.custom[genomeId].files[fileId] = {};
   }
-  draft[genomeId].files[fileId] = {
-    ...draft[genomeId].files[fileId],
+  draft.custom[genomeId].files[fileId] = {
+    ...draft.custom[genomeId].files[fileId],
     ...diff,
   };
 });

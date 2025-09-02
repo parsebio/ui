@@ -17,13 +17,15 @@ const createGenome = (name, description, secondaryAnalysisId) => async (dispatch
     dispatch({
       type: GENOMES_LOADED,
       payload: {
-        genomes: [{
-          id: genomeId,
-          name,
-          description,
-          files: [],
-          createdAt: (new Date()).toISOString(),
-        }],
+        genomes: {
+          custom: [{
+            id: genomeId,
+            name,
+            description,
+            files: [],
+            createdAt: (new Date()).toISOString(),
+          }],
+        },
       },
     });
     return genomeId;

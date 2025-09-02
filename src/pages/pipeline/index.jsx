@@ -40,6 +40,7 @@ import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
 import FastqFileType from 'const/enums/FastqFileType';
 import ImmuneDatabase, { immuneDbToDisplay } from 'components/secondary-analysis/ImmuneDatabase';
 import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
+import { getGenomeById } from 'redux/selectors/genomes';
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -148,6 +149,7 @@ const Pipeline = () => {
   const { navigateTo } = useAppRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
   const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
+  const [genomeDetailsDiff, setGenomeDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
@@ -182,6 +184,8 @@ const Pipeline = () => {
     ),
     _.isEqual,
   );
+
+  const refGenomeName = useSelector(getGenomeById(refGenome), _.isEqual)?.name;
 
   const pairMatches = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files?.pairMatches,
@@ -293,6 +297,10 @@ const Pipeline = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
       dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
       setSecondaryAnalysisDetailsDiff({});
+    }
+    if (Object.keys(genomeDetailsDiff).length) {
+      dispatch(updateGenome(activeSecondaryAnalysisId, genomeDetailsDiff));
+      setGenomeDetailsDiff({});
     }
   };
 
@@ -463,11 +471,12 @@ const Pipeline = () => {
         <SelectReferenceGenome
           secondaryAnalysisId={activeSecondaryAnalysisId}
           onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          genome={refGenome}
+          onGenomeChanged={setGenomeDetailsDiff}
+          genomeId={refGenome}
         />
       ),
       isValid: Boolean(refGenome),
-      renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
+      renderMainScreenDetails: () => mainScreenDetails({ refGenomeName }),
       getIsDisabled: () => false,
     },
     'Immune database': {

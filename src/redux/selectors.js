@@ -10,6 +10,7 @@ import * as secondaryAnalysesSelectors from './selectors/secondaryAnalyses';
 import * as experimentSettingsSelectors from './selectors/experimentSettings';
 import * as samplesSelectors from './selectors/samples';
 import * as generalSelectors from './selectors/generalSelectors';
+import * as genomeSelectors from './selectors/genomes';
 
 const getBackendStatus = (...params) => (state) => (
   backendSelectors.getBackendStatus(...params)(state.backendStatus));
@@ -87,6 +88,14 @@ const getHasPermissions = (...params) => (state) => (
   generalSelectors.getHasPermissions(...params)(state)
 );
 
+const getSelectedGenome = (...params) => (state) => (
+  genomeSelectors.getSelectedGenome(...params)(state)
+);
+
+const getGenomeById = (...params) => (state) => (
+  genomeSelectors.getGenomeById(...params)(state)
+);
+
 export {
   getBackendStatus,
   getCellSets,
@@ -109,4 +118,6 @@ export {
   getSamples,
   getHasPermissions,
   getHasSeuratTechnology,
+  getSelectedGenome,
+  getGenomeById,
 };

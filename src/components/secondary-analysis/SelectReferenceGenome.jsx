@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { v4 as uuidv4 } from 'uuid';
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAndUploadGenomeFile, createGenome, loadGenomes } from 'redux/actions/genomes';
 import {
   Form,
-  Select,
   Typography,
   Divider,
   Input,
@@ -14,14 +14,15 @@ import {
   Button,
   Tooltip,
   List,
+  Select,
 } from 'antd';
 import { InfoCircleOutlined, DeleteOutlined } from '@ant-design/icons';
+import { getGenomeById } from 'redux/selectors';
 
 import Dropzone from 'react-dropzone';
 import propTypes from 'prop-types';
 import integrationTestConstants from 'utils/integrationTestConstants';
 
-import hardCodedGenomes from 'utils/genomes.json';
 import useLocalState from 'utils/customHooks/useLocalState';
 
 // Import ExpandableList for ignored files
@@ -29,25 +30,31 @@ import ExpandableList from 'components/ExpandableList';
 
 const { Text, Title } = Typography;
 
-const options = hardCodedGenomes.map((genome) => ({
-  label: `${genome.name}: ${genome.species}`,
-  value: genome.name,
-}));
-
 // Supported extensions for FASTA and annotation files
 const fastaExtensions = ['.fa', '.fasta', '.fa.gz', '.fasta.gz', '.fna', '.fna.gz'];
 const annotationExtensions = ['.gtf', '.gff3', '.gtf.gz', '.gff3.gz'];
 
 const SelectReferenceGenome = (props) => {
-  const { genome, onDetailsChanged, secondaryAnalysisId } = props;
+  const { genomeId, onDetailsChanged, secondaryAnalysisId } = props;
   const dispatch = useDispatch();
 
   const [localGenome, updateGenome] = useLocalState(
     (value) => onDetailsChanged({ refGenome: value }),
-    genome,
+    genomeId,
   );
 
-  const genomes = useSelector((state) => state.genomes);
+  const { public: publicGenomes, custom: customGenomes } = useSelector((state) => state.genomes);
+
+  const options = [...Object.values(publicGenomes),
+    ...Object.values(customGenomes)].map((currentGenome) => ({
+    label: `${currentGenome.name}: ${currentGenome.description}`,
+    value: currentGenome.id,
+  }));
+
+  // an genome is stored if has any uploaded input files
+  const selectedGenome = useSelector(getGenomeById(localGenome));
+  const isCustomGenomeSaved = selectedGenome
+  && !selectedGenome.built && !_.isEmpty(selectedGenome.files);
 
   // Track valid file pairs and invalid files (with reasons)
   const [filePairs, setFilePairs] = useState([]);
@@ -58,6 +65,20 @@ const SelectReferenceGenome = (props) => {
   const [genomeDescriptionInput, setGenomeDescriptionInput] = useState('');
 
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    console.log('Selected genome changed:', selectedGenome);
+    if (!selectedGenome) return;
+    if (!selectedGenome.built) {
+      setGenomeNameInput(selectedGenome.name);
+      form.setFieldsValue({ genomeName: selectedGenome.name });
+      setGenomeDescriptionInput(selectedGenome.description);
+    } else {
+      setGenomeNameInput('');
+      form.setFieldsValue({ genomeName: '' });
+      setGenomeDescriptionInput('');
+    }
+  }, [selectedGenome]);
 
   useEffect(() => {
     dispatch(loadGenomes());
@@ -76,30 +97,30 @@ const SelectReferenceGenome = (props) => {
   };
 
   const createNewGenome = async () => {
-    const genomeId = await dispatch(createGenome(
+    const newGenomeId = await dispatch(createGenome(
       genomeNameInput,
       genomeDescriptionInput,
       secondaryAnalysisId,
     ));
-    onDetailsChanged({ refGenome: genomeId });
-    return genomeId;
+    onDetailsChanged({ refGenome: newGenomeId });
+    return newGenomeId;
   };
 
   const uploadPairs = async () => {
-    let genomeId = genome;
-    if (!genomes[genome]) {
-      genomeId = await createNewGenome();
+    let selectedGenomeId = genomeId;
+    if (!customGenomes[genomeId]) {
+      selectedGenomeId = await createNewGenome();
     }
     filePairs.forEach((pair) => {
       const pairFileId = uuidv4();
       dispatch(createAndUploadGenomeFile(
-        genomeId,
+        selectedGenomeId,
         pair.fasta,
         'fasta',
         pairFileId,
       ));
       dispatch(createAndUploadGenomeFile(
-        genomeId,
+        selectedGenomeId,
         pair.annotation,
         'annotation',
         pairFileId,
@@ -190,6 +211,7 @@ const SelectReferenceGenome = (props) => {
         showSearch
         style={{ width: '90%' }}
         value={localGenome}
+        disable={isCustomGenomeSaved}
         placeholder='Select the reference genome'
         onChange={updateGenome}
         options={options}
@@ -216,6 +238,7 @@ const SelectReferenceGenome = (props) => {
               <Input
                 placeholder='Specify genome name'
                 maxLength={20}
+                value={genomeNameInput}
                 onChange={(e) => setGenomeNameInput(e.target.value)}
               />
             </Form.Item>
@@ -227,23 +250,14 @@ const SelectReferenceGenome = (props) => {
             </Tooltip>
           </div>
           <div style={{ display: 'flex' }}>
-            <Form.Item
-              name='genomeDescription'
-              rules={[
-                {
-                  required: true,
-                  message: 'Genome description is required.',
-                },
-              ]}
-              style={{ flex: 1, marginBottom: 0 }}
-            >
-              <Input
-                placeholder='Specify genome description'
-                style={{ flex: 1 }}
-                maxLength={50}
-                onChange={(e) => setGenomeDescriptionInput(e.target.value)}
-              />
-            </Form.Item>
+
+            <Input
+              placeholder='Specify genome description'
+              style={{ flex: 1 }}
+              maxLength={50}
+              value={genomeDescriptionInput}
+              onChange={(e) => setGenomeDescriptionInput(e.target.value)}
+            />
             <Tooltip
               overlay={(
                 <div>
@@ -368,12 +382,12 @@ const SelectReferenceGenome = (props) => {
 };
 
 SelectReferenceGenome.defaultProps = {
-  genome: undefined,
+  genomeId: undefined,
 };
 
 SelectReferenceGenome.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
-  genome: propTypes.string,
+  genomeId: propTypes.string,
   secondaryAnalysisId: propTypes.string.isRequired,
 };
 
