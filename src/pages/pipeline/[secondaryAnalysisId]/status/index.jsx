@@ -93,7 +93,8 @@ const AnalysisDetails = ({ secondaryAnalysisId }) => {
   }, [secondaryAnalysisId]);
 
   const setupReports = useCallback(async () => {
-    if (!associatedExperimentId) {
+    if (!associatedExperimentId
+      && (isKitCategory(secondaryAnalysis?.kit, [KitCategory.WT]) || secondaryAnalysis.pairedWt)) {
       // if you stay in the loading screen when the pipeline finishes
       // the associated experimentId doesnt get loaded unless you refresh the page
       // because that happens onNavigate and in that case the user is in the same page
