@@ -64,7 +64,7 @@ describe('UploadDetailsModal', () => {
     renderUploadDetailsModal({
       data: {
         ...defaultProps.data,
-        upload: { ...defaultProps.data.upload, status: UploadStatus.ERROR },
+        upload: { ...defaultProps.data.upload, status: UploadStatus.UPLOAD_ERROR },
         fileObject: [1, 2, 3, 4, 5, 6],
       },
     });

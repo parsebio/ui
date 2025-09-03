@@ -57,7 +57,7 @@ const DataIntegration = (props) => {
       title: 'Embedding coloured by sample',
       plotUuid: generateDataProcessingPlotUuid(null, configureEmbeddingFilterName, 1),
       plotType: 'dataIntegrationEmbedding',
-      plot: (config, plotData, actions) => (
+      plot: (config, plotUuid, plotType, actions) => (
         <Space direction='vertical'>
           {config?.legend?.showAlert && <PlotLegendAlert />}
           <CategoricalEmbeddingPlot
@@ -83,7 +83,7 @@ const DataIntegration = (props) => {
       title: 'Frequency plot coloured by sample',
       plotUuid: 'dataIntegrationFrequency',
       plotType: 'dataIntegrationFrequency',
-      plot: (config, plotData, actions) => (
+      plot: (config, plotUuid, plotType, actions) => (
         <Space direction='vertical'>
           {config?.legend?.showAlert && <PlotLegendAlert />}
           <FrequencyPlot
@@ -99,10 +99,12 @@ const DataIntegration = (props) => {
       title: 'Elbow plot showing principal components',
       plotUuid: generateDataProcessingPlotUuid(null, filterName, 1),
       plotType: 'dataIntegrationElbow',
-      plot: (config, plotData, actions) => (
+      plot: (config, plotUuid, plotType, actions) => (
         <ElbowPlot
+          experimentId={experimentId}
           config={config}
-          plotData={plotData}
+          plotUuid={plotUuid}
+          plotType={plotType}
           actions={actions}
           numPCs={calculationConfig?.dimensionalityReduction.numPCs}
         />
@@ -212,10 +214,6 @@ const DataIntegration = (props) => {
     return plotConfigsToReturn;
   });
 
-  const plotData = useSelector(
-    (state) => state.componentConfig[plots[selectedPlot].plotUuid]?.plotData,
-  );
-
   const { plotUuid: activePlotUuid, plotType: activePlotType } = plots[selectedPlot];
   const selectedConfig = plotConfigs[activePlotUuid];
 
@@ -238,6 +236,7 @@ const DataIntegration = (props) => {
     .status?.pipeline?.completedSteps;
 
   const configureEmbeddingFinished = useRef(null);
+
   useEffect(() => {
     configureEmbeddingFinished.current = completedSteps?.includes('configureEmbedding');
   }, [completedSteps]);
@@ -263,9 +262,18 @@ const DataIntegration = (props) => {
     }
 
     if (cellSets.accessible && selectedConfig) {
-      setPlot(plots[selectedPlot].plot(selectedConfig, plotData, true));
+      const { plotUuid, plotType } = plots[selectedPlot];
+
+      setPlot(
+        plots[selectedPlot].plot(
+          selectedConfig,
+          plotUuid,
+          plotType,
+          true,
+        ),
+      );
     }
-  }, [selectedConfig, cellSets, plotData, calculationConfig]);
+  }, [selectedConfig, cellSets, calculationConfig]);
 
   const renderPlot = () => {
     const disabledByConfigEmbedding = plots[selectedPlot].blockedByConfigureEmbedding
