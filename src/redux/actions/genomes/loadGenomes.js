@@ -7,9 +7,10 @@ const loadGenomes = () => async (dispatch) => {
   );
   // store uploadStatus as upload: {status: current:{} }
   //  for consistency with other file upload states
+
   const customGenomesForRedux = genomes.custom.map((genome) => ({
     ...genome,
-    files: genome.files.reduce((acc, file) => {
+    files: Object.values(genome.files).reduce((acc, file) => {
       const { id, uploadStatus, ...rest } = file;
       acc[id] = {
         ...rest,

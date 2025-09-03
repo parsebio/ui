@@ -42,6 +42,9 @@ import FastqFileType from 'const/enums/FastqFileType';
 import ImmuneDatabase, { immuneDbToDisplay } from 'components/secondary-analysis/ImmuneDatabase';
 import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
 import { getGenomeById } from 'redux/selectors/genomes';
+import UploadStatus from 'utils/upload/UploadStatus';
+
+const { UPLOADED, INCOMPLETE, UPLOADING } = UploadStatus;
 
 const { IMMUNE_FASTQ, WT_FASTQ } = FastqFileType;
 
@@ -304,7 +307,7 @@ const Pipeline = () => {
       dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
       setSecondaryAnalysisDetailsDiff({});
     }
-    if (Object.keys(genomeDetailsDiff).length && refGenome) {
+    if (refGenome && Object.keys(genomeDetailsDiff).length) {
       dispatch(updateGenome(refGenomeId, genomeDetailsDiff));
       setGenomeDetailsDiff({});
     }
@@ -344,6 +347,35 @@ const Pipeline = () => {
       );
     });
     return view;
+  };
+
+  const renderReferenceGenomeDetails = () => {
+    if (!refGenome || refGenome.built) return mainScreenDetails({ refGenome: refGenome?.name });
+
+    const allUploaded = Object.values(refGenome.files)
+      .every((value) => value.upload.status.current === UPLOADED);
+
+    const anyUploading = Object.values(refGenome.files)
+      .every((value) => [UPLOADING, UPLOADED].includes(value.upload.status.current));
+    const status = allUploaded ? UPLOADED : anyUploading ? UPLOADING : INCOMPLETE;
+
+    return mainScreenDetails({
+      genome: (
+        <Text>
+          New genome:
+          {refGenome.name}
+        </Text>
+      ),
+      status: <UploadStatusView
+        status={status}
+      />,
+      files: (
+        <b>
+          {Object.entries(refGenome.files).length}
+          {' '}
+          files
+        </b>),
+    });
   };
 
   const renderSampleLTFileDetails = () => {
@@ -497,7 +529,7 @@ const Pipeline = () => {
         />
       ),
       isValid: Boolean(refGenomeId),
-      renderMainScreenDetails: () => mainScreenDetails({ refGenome: refGenome?.name }),
+      renderMainScreenDetails: renderReferenceGenomeDetails,
       getIsDisabled: () => false,
     },
     'Immune database': {
