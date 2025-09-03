@@ -187,7 +187,7 @@ const SelectReferenceGenome = (props) => {
 
   // Remove a file pair by index
   const removePair = (index) => {
-    setFilePairs((prev) => prev.filter((_, i) => i !== index));
+    setFilePairs((prev) => prev.filter((pair, i) => i !== index));
   };
   const genomeNamePattern = /^[A-Za-z0-9_.-]+$/;
   // Determine whether the upload button should be disabled
@@ -264,7 +264,7 @@ const SelectReferenceGenome = (props) => {
               overlay={(
                 <div>
                   Add a short description for your genome. An example is “Custom
-                  Mus musculus (Mouse) with GFP”. (Character limit is 50.) It's
+                  Mus musculus (Mouse) with GFP”. (Character limit is 50.) It&apos;s
                   currently only possible to generate single species custom
                   genomes in Trailmaker. If you are working with mixed species,
                   reach out to
