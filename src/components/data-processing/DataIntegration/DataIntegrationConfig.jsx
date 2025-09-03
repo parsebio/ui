@@ -226,18 +226,7 @@ const CalculationConfig = (props) => {
                 value={analysisTool}
               >
                 <Radio value={analysisTools.SEURAT}>Seurat</Radio>
-                <Radio value={analysisTools.SCANPY}>
-                  Scanpy (
-                  <a
-                    href='https://support.parsebiosciences.com/hc/en-us/articles/35875038451476-Trailmaker-new-feature-Scanpy-beta-mode'
-                    target='_blank'
-                    rel='noreferrer'
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    beta
-                  </a>
-                  )
-                </Radio>
+                <Radio value={analysisTools.SCANPY}>Scanpy</Radio>
               </Radio.Group>
             </Form.Item>
           </div>
