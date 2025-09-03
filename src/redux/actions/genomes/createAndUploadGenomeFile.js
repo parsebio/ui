@@ -11,7 +11,6 @@ const createAndUploadGenomeFile = (
   type,
   pairFileId,
 ) => async (dispatch) => {
-  console.log('CREATING GENOME FILE', genomeId, file, type, pairFileId);
   const { name, size } = file;
   const body = {
     name,
@@ -32,7 +31,7 @@ const createAndUploadGenomeFile = (
       },
     );
     genomeFileId = uploadUrlParams.fileId;
-    console.log('RECEIVED UPLOAD PARAMS', uploadUrlParams, genomeFileId);
+
     const abortController = new AbortController();
     dispatch({
       type: GENOME_FILE_UPDATE,
@@ -40,7 +39,12 @@ const createAndUploadGenomeFile = (
         genomeId,
         fileId: genomeFileId,
         diff: {
-          upload: { uploadStatus: UploadStatus.UPLOADING, progress: 0, abortController },
+          createdAt: new Date().toISOString(),
+          upload: {
+            status: { current: UploadStatus.UPLOADING },
+            percentProgress: 0,
+            abortController,
+          },
           name,
           size,
           type,
@@ -59,8 +63,6 @@ const createAndUploadGenomeFile = (
     const options = {
       compress: await getShouldCompress(file),
     };
-
-    console.log('will compress ', options.compress);
 
     await UploadsCoordinator.get().uploadFile([
       genomeId,

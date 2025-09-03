@@ -10,36 +10,16 @@ import FastqTypeButton from 'components/secondary-analysis/FastqTypeButton';
 
 import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
 
-import FastqFileType from 'const/enums/FastqFileType';
-import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
-
 import bytesToSize from 'utils/styling/bytesToSize';
 import UploadStatus from 'utils/upload/UploadStatus';
 
-const { IMMUNE_FASTQ, WT_FASTQ } = FastqFileType;
-const FastqFilesTable = (props) => {
+const FilesUploadTable = (props) => {
   const dispatch = useDispatch();
   const {
-    files, canEditTable, secondaryAnalysisId, pairedWt, kit,
+    files, canEditTable, secondaryAnalysisId, pairedWt,
   } = props;
 
-  const getFastqIsActive = (fileType) => {
-    if (isKitCategory(kit, [KitCategory.WT])) {
-      return fileType === WT_FASTQ;
-    } if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR]) && !pairedWt) {
-      return fileType === IMMUNE_FASTQ;
-    }
-    return true;
-  };
-
-  const filteredFiles = Object.values(files).filter((file) => getFastqIsActive(file.type));
-
-  filteredFiles.sort((a) => {
-    if (a.type === WT_FASTQ) return -1;
-    return 1;
-  });
-
-  const dataSource = filteredFiles.map((file) => ({
+  const dataSource = files.map((file) => ({
     key: file.id,
     name: file.name,
     size: bytesToSize(file.size),
@@ -133,12 +113,11 @@ const FastqFilesTable = (props) => {
   );
 };
 
-FastqFilesTable.propTypes = {
+FilesUploadTable.propTypes = {
   files: PropTypes.object.isRequired,
   canEditTable: PropTypes.bool.isRequired,
   secondaryAnalysisId: PropTypes.string.isRequired,
   pairedWt: PropTypes.oneOfType([() => null, PropTypes.bool]).isRequired,
-  kit: PropTypes.oneOfType([() => null, PropTypes.string]).isRequired,
 };
 
-export default FastqFilesTable;
+export default FilesUploadTable;

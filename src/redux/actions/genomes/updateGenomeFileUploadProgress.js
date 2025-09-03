@@ -33,7 +33,7 @@ const updateGenomeFileUploadProgress = (
           genomeId,
           fileId,
           diff: {
-            upload: { uploadStatus: UploadStatus.UPLOAD_ERROR },
+            upload: { status: { current: UploadStatus.UPLOAD_ERROR } },
           },
         },
       });
@@ -49,17 +49,12 @@ const updateGenomeFileUploadProgress = (
       fileId,
       diff: {
         upload: {
-          uploadStatus,
-          progress,
+          status: { current: uploadStatus },
+          percentProgress: progress,
         },
       },
     },
   });
-
-  return {
-    type: GENOME_FILE_UPDATE,
-    payload: progress,
-  };
 };
 
 export default updateGenomeFileUploadProgress;

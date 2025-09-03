@@ -86,7 +86,7 @@ class PartUploader {
     const {
       projectId, uploadId, bucket, key, type,
     } = this.#uploadParams;
-    console.log('TYPE ', type);
+
     let url = `/v2/projects/${projectId}/upload/${uploadId}/part/${partNumber}/signedUrl`;
 
     if (type === 'genome') {

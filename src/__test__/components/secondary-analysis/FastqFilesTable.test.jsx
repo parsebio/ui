@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
+import FastqFilesTable from 'components/secondary-analysis/FilesUploadTable';
 import {
   createSecondaryAnalysisFile, deleteSecondaryAnalysisFile,
   loadSecondaryAnalyses, loadSecondaryAnalysisFiles,

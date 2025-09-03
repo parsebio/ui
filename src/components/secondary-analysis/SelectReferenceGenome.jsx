@@ -22,6 +22,7 @@ import { getGenomeById } from 'redux/selectors';
 import Dropzone from 'react-dropzone';
 import propTypes from 'prop-types';
 import integrationTestConstants from 'utils/integrationTestConstants';
+import FilesUploadTable from 'components/secondary-analysis/FilesUploadTable';
 
 import useLocalState from 'utils/customHooks/useLocalState';
 
@@ -35,7 +36,9 @@ const fastaExtensions = ['.fa', '.fasta', '.fa.gz', '.fasta.gz', '.fna', '.fna.g
 const annotationExtensions = ['.gtf', '.gff3', '.gtf.gz', '.gff3.gz'];
 
 const SelectReferenceGenome = (props) => {
-  const { genomeId, onDetailsChanged, secondaryAnalysisId } = props;
+  const {
+    genomeId, onDetailsChanged, onGenomeDetailsChanged, secondaryAnalysisId,
+  } = props;
   const dispatch = useDispatch();
 
   const [localGenome, updateGenome] = useLocalState(
@@ -53,21 +56,24 @@ const SelectReferenceGenome = (props) => {
 
   // an genome is stored if has any uploaded input files
   const selectedGenome = useSelector(getGenomeById(localGenome));
+  const [genomeNameInput, setGenomeNameInput] = useLocalState(
+    (value) => onGenomeDetailsChanged({ name: value }),
+    '',
+  );
+  const [genomeDescriptionInput, setGenomeDescriptionInput] = useLocalState(
+    (value) => onGenomeDetailsChanged({ description: value }),
+    '',
+  );
+
   const isCustomGenomeSaved = selectedGenome
   && !selectedGenome.built && !_.isEmpty(selectedGenome.files);
 
   // Track valid file pairs and invalid files (with reasons)
   const [filePairs, setFilePairs] = useState([]);
   const [invalidFiles, setInvalidFiles] = useState([]); // {name, reason}
-
-  // Local state for genome name/description
-  const [genomeNameInput, setGenomeNameInput] = useState('');
-  const [genomeDescriptionInput, setGenomeDescriptionInput] = useState('');
-
   const [form] = Form.useForm();
 
   useEffect(() => {
-    console.log('Selected genome changed:', selectedGenome);
     if (!selectedGenome) return;
     if (!selectedGenome.built) {
       setGenomeNameInput(selectedGenome.name);
@@ -79,10 +85,6 @@ const SelectReferenceGenome = (props) => {
       setGenomeDescriptionInput('');
     }
   }, [selectedGenome]);
-
-  useEffect(() => {
-    dispatch(loadGenomes());
-  }, []);
 
   // Determine file type based on extension
   const getFileType = (fileName) => {
@@ -102,7 +104,7 @@ const SelectReferenceGenome = (props) => {
       genomeDescriptionInput,
       secondaryAnalysisId,
     ));
-    onDetailsChanged({ refGenome: newGenomeId });
+    updateGenome(newGenomeId);
     return newGenomeId;
   };
 
@@ -211,7 +213,7 @@ const SelectReferenceGenome = (props) => {
         showSearch
         style={{ width: '90%' }}
         value={localGenome}
-        disable={isCustomGenomeSaved}
+        disabled={isCustomGenomeSaved}
         placeholder='Select the reference genome'
         onChange={updateGenome}
         options={options}
@@ -368,6 +370,14 @@ const SelectReferenceGenome = (props) => {
           Upload
         </Button>
       </center>
+      {selectedGenome && !selectedGenome?.built && !_.isEmpty(selectedGenome.files) && (
+        <FilesUploadTable
+          files={Object.values(selectedGenome.files)}
+          canEditTable
+          secondaryAnalysisId={secondaryAnalysisId}
+          pairedWt={false}
+        />
+      )}
       {/* <div style={{ marginTop: 'auto', marginBottom: '0.1em' }}>
         <Text type='secondary'>
           <i>
@@ -389,6 +399,7 @@ SelectReferenceGenome.propTypes = {
   onDetailsChanged: propTypes.func.isRequired,
   genomeId: propTypes.string,
   secondaryAnalysisId: propTypes.string.isRequired,
+  onGenomeDetailsChanged: propTypes.func.isRequired,
 };
 
 export default SelectReferenceGenome;
