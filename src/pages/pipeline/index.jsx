@@ -352,10 +352,11 @@ const Pipeline = () => {
   const renderReferenceGenomeDetails = () => {
     if (!refGenome || refGenome.built) return mainScreenDetails({ refGenome: refGenome?.name });
 
-    const allUploaded = Object.values(refGenome.files)
-      .every((value) => value.upload.status.current === UPLOADED);
+    const genomeFiles = Object.values(refGenome.files);
+    const allUploaded = genomeFiles
+      .every((value) => value.upload.status.current === UPLOADED) && genomeFiles.length > 0;
 
-    const anyUploading = Object.values(refGenome.files)
+    const anyUploading = genomeFiles
       .every((value) => [UPLOADING, UPLOADED].includes(value.upload.status.current));
     const status = allUploaded ? UPLOADED : anyUploading ? UPLOADING : INCOMPLETE;
 

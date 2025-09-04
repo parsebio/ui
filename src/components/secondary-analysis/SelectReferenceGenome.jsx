@@ -68,9 +68,9 @@ const SelectReferenceGenome = (props) => {
   const isCustomGenomeSaved = selectedGenome
   && !selectedGenome.built && !_.isEmpty(selectedGenome.files);
 
-  // Track valid file pairs and invalid files (with reasons)
-  const [filePairs, setFilePairs] = useState([]);
-  const [invalidFiles, setInvalidFiles] = useState([]); // {name, reason}
+  // Track a single valid file pair and invalid files (with reasons)
+  const [filePair, setFilePair] = useState(null); // { fasta, annotation }
+  const [invalidFiles, setInvalidFiles] = useState([]); // [{name, reason}]
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -109,91 +109,78 @@ const SelectReferenceGenome = (props) => {
   };
 
   const uploadPairs = async () => {
+    if (!filePair) return;
+
     let selectedGenomeId = genomeId;
     if (!customGenomes[genomeId]) {
       selectedGenomeId = await createNewGenome();
     }
-    filePairs.forEach((pair) => {
-      const pairFileId = uuidv4();
-      dispatch(createAndUploadGenomeFile(
-        selectedGenomeId,
-        pair.fasta,
-        'fasta',
-        pairFileId,
-      ));
-      dispatch(createAndUploadGenomeFile(
-        selectedGenomeId,
-        pair.annotation,
-        'annotation',
-        pairFileId,
-      ));
-    });
-    setFilePairs([]);
+
+    const pairFileId = uuidv4();
+    dispatch(createAndUploadGenomeFile(
+      selectedGenomeId,
+      filePair.fasta,
+      'fasta',
+      pairFileId,
+    ));
+    dispatch(createAndUploadGenomeFile(
+      selectedGenomeId,
+      filePair.annotation,
+      'annotation',
+      pairFileId,
+    ));
+
+    setFilePair(null);
     setInvalidFiles([]);
   };
 
   // Handle dropped files from the dropzone
+  // Simple behavior: take the FIRST TWO files only and try to use them
   const onDrop = (acceptedFiles) => {
     setInvalidFiles([]);
-    // Set of existing filenames (both valid and invalid) to filter duplicates
-    const existingNames = new Set([
-      ...filePairs.flatMap((pair) => [pair.fasta.name, pair.annotation.name]),
-      ...invalidFiles.map((file) => file.name),
-    ]);
 
-    // Filter out files that are already dropped
-    const newFiles = acceptedFiles.filter((file) => !existingNames.has(file.name));
+    const picked = acceptedFiles.slice(0, 2);
 
-    const fastaFiles = [];
-    const annotationFiles = [];
-    const unknownFiles = [];
+    if (picked.length < 2) {
+      setFilePair(null);
+      setInvalidFiles(picked.map((f) => ({
+        name: f.name,
+        reason: 'Select two files: one FASTA and one annotation.',
+      })));
+      return;
+    }
 
-    newFiles.forEach((file) => {
-      const type = getFileType(file.name);
-      if (type === 'fasta') fastaFiles.push(file);
-      else if (type === 'annotation') annotationFiles.push(file);
-      else unknownFiles.push(file);
-    });
+    const [a, b] = picked;
+    const typeA = getFileType(a.name);
+    const typeB = getFileType(b.name);
 
-    // Pair fasta and annotation files one by one
-    const numPairs = Math.min(fastaFiles.length, annotationFiles.length);
-    const newPairs = [];
-    fastaFiles.slice(0, numPairs).forEach((fastaFile, index) => {
-      newPairs.push({ fasta: fastaFile, annotation: annotationFiles[index] });
-    });
-
-    // Unmatched or unknown files become invalid with reasons
-    const leftoverFasta = fastaFiles.slice(numPairs);
-    const leftoverAnnotation = annotationFiles.slice(numPairs);
-
-    const newlyInvalid = [
-      ...leftoverFasta.map((file) => ({
-        name: file.name,
-        reason: 'Missing annotation file pair',
-      })),
-      ...leftoverAnnotation.map((file) => ({
-        name: file.name,
-        reason: 'Missing FASTA file pair',
-      })),
-      ...unknownFiles.map((file) => ({
-        name: file.name,
-        reason: 'Unsupported file type',
-      })),
-    ];
-
-    setFilePairs((prev) => [...prev, ...newPairs]);
-    setInvalidFiles((prev) => [...prev, ...newlyInvalid]);
+    // Validate: exactly one fasta and one annotation
+    if ((typeA === 'fasta' && typeB === 'annotation') || (typeA === 'annotation' && typeB === 'fasta')) {
+      setFilePair({
+        fasta: typeA === 'fasta' ? a : b,
+        annotation: typeA === 'annotation' ? a : b,
+      });
+      setInvalidFiles([]);
+    } else {
+      setFilePair(null);
+      const reason = 'Need one FASTA (*.fa/*.fasta/*.fna[.gz]) and one annotation (*.gtf/*.gff3[.gz]) file.';
+      setInvalidFiles([
+        { name: a.name, reason },
+        { name: b.name, reason },
+      ]);
+    }
   };
 
-  // Remove a file pair by index
-  const removePair = (index) => {
-    setFilePairs((prev) => prev.filter((pair, i) => i !== index));
+  // Remove the currently selected pair
+  const removePair = () => {
+    setFilePair(null);
   };
+
   const genomeNamePattern = /^[A-Za-z0-9_.-]+$/;
   // Determine whether the upload button should be disabled
   const isUploadDisabled = !genomeNameInput
     || !genomeDescriptionInput
-    || filePairs.length === 0
+    || !filePair
     || !genomeNamePattern.test(genomeNameInput);
 
   return (
@@ -283,9 +270,9 @@ const SelectReferenceGenome = (props) => {
         </Space>
       </Form>
       <Text style={{ marginTop: '1vh', marginBottom: '1vh' }}>
-        Upload one pair of matched Fasta/Annotation files at a time.
+        Upload a single matched FASTA and annotation file.
         <br />
-        Multiple pairs can be uploaded sequentially.
+        Only the first two files you select will be used.
         <br />
         The expected files are one of each of the following:
         <br />
@@ -308,24 +295,24 @@ const SelectReferenceGenome = (props) => {
               {...getInputProps()}
             />
             <Empty
-              description='Drag and drop fasta and annotation files here or click to browse'
+              description='Drag and drop two files (one FASTA and one annotation) here or click to browse'
               image={Empty.PRESENTED_IMAGE_SIMPLE}
             />
           </div>
         )}
       </Dropzone>
-      {filePairs.length > 0 && (
+      {filePair && (
         <>
-          <Divider>Pairs to be uploaded</Divider>
+          <Divider>Files to be uploaded</Divider>
           <List
             size='small'
-            dataSource={filePairs}
-            renderItem={(pair, index) => (
+            dataSource={[filePair]}
+            renderItem={(pair) => (
               <List.Item
                 actions={[
                   <DeleteOutlined
                     key='delete'
-                    onClick={() => removePair(index)}
+                    onClick={removePair}
                     style={{ color: 'crimson' }}
                   />,
                 ]}
