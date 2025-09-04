@@ -50,16 +50,17 @@ const loadEmbedding = (
     const data = await fetchWork(experimentId, body, getState, dispatch, { timeout });
 
     // Temporary fix, remove this whole if when the seurat worker is fixed
-    if (isSeurat) {
-      data.cellIds = data.cellIds.map((id) => Number(id));
-    }
+    const fixedCellIds = isSeurat ? data.cellIds.map((id) => Number(id)) : data.cellIds;
 
     return dispatch({
       type: EMBEDDINGS_LOADED,
       payload: {
         experimentId,
         embeddingType,
-        data,
+        data: {
+          ...data,
+          cellIds: fixedCellIds,
+        },
       },
     });
   } catch (error) {
