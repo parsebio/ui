@@ -49,7 +49,11 @@ describe('loadEmbedding action', () => {
 
     fetchWork
       .mockReset()
-      .mockImplementationOnce(() => workerDataResult([[1, 2], [3, 4]]));
+      .mockImplementationOnce(() => workerDataResult({
+        cellIds: [0, 1, 2, 3],
+        xValues: [1, 2],
+        yValues: [3, 4],
+      }));
   });
 
   it('Dispatches if not loaded', async () => {
@@ -75,10 +79,11 @@ describe('loadEmbedding action', () => {
           [embeddingType]: {
             ...initialEmbeddingState,
             loading: false,
-            data: [
-              [1, 2],
-              [3, 4],
-            ],
+            data: {
+              cellIds: [0, 1, 2, 3],
+              xValues: [1, 2],
+              yValues: [3, 4],
+            },
           },
         },
       },

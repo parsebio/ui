@@ -32,16 +32,22 @@ exports[`loadEmbedding action Dispatches on a previous error condition 1`] = `
 exports[`loadEmbedding action Dispatches on a previous error condition 2`] = `
 {
   "payload": {
-    "data": [
-      [
+    "data": {
+      "cellIds": [
+        0,
+        1,
+        2,
+        3,
+      ],
+      "xValues": [
         1,
         2,
       ],
-      [
+      "yValues": [
         3,
         4,
       ],
-    ],
+    },
     "embeddingType": "umap",
     "experimentId": "1234",
   },
@@ -61,16 +67,22 @@ exports[`loadEmbedding action Dispatches on a previously unseen embedding 1`] = 
 exports[`loadEmbedding action Dispatches on a previously unseen embedding 2`] = `
 {
   "payload": {
-    "data": [
-      [
+    "data": {
+      "cellIds": [
+        0,
+        1,
+        2,
+        3,
+      ],
+      "xValues": [
         1,
         2,
       ],
-      [
+      "yValues": [
         3,
         4,
       ],
-    ],
+    },
     "embeddingType": "umap",
     "experimentId": "1234",
   },
@@ -90,16 +102,22 @@ exports[`loadEmbedding action Dispatches on if forceReload is set to true 1`] = 
 exports[`loadEmbedding action Dispatches on if forceReload is set to true 2`] = `
 {
   "payload": {
-    "data": [
-      [
+    "data": {
+      "cellIds": [
+        0,
+        1,
+        2,
+        3,
+      ],
+      "xValues": [
         1,
         2,
       ],
-      [
+      "yValues": [
         3,
         4,
       ],
-    ],
+    },
     "embeddingType": "umap",
     "experimentId": "1234",
   },

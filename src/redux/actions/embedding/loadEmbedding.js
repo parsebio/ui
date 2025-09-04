@@ -11,7 +11,7 @@ const loadEmbedding = (
   // If a previous load was initiated, hold off on it until that one is executed.
   if (!forceReload && (
     getState().embeddings[embeddingType]?.loading
-    || getState().embeddings[embeddingType]?.data.length
+    || getState().embeddings[embeddingType]?.data?.xValues?.length
   )) {
     return null;
   }
