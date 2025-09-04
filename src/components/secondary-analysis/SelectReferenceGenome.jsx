@@ -183,7 +183,7 @@ const SelectReferenceGenome = (props) => {
 
   // Remove a file pair by index
   const removePair = (index) => {
-    setFilePairs((prev) => prev.filter((_, i) => i !== index));
+    setFilePairs((prev) => prev.filter((pair, i) => i !== index));
   };
 
   const genomeNamePattern = /^[A-Za-z0-9_.-]+$/;
