@@ -54,7 +54,7 @@ const SelectReferenceGenome = (props) => {
     value: currentGenome.id,
   }));
 
-  // an genome is stored if has any uploaded input files
+  // a genome is stored if it has any uploaded input files
   const selectedGenome = useSelector(getGenomeById(localGenome));
   const [genomeNameInput, setGenomeNameInput] = useLocalState(
     (value) => onGenomeDetailsChanged({ name: value }),
@@ -66,9 +66,9 @@ const SelectReferenceGenome = (props) => {
   );
 
   const isCustomGenomeSaved = selectedGenome
-  && !selectedGenome.built && !_.isEmpty(selectedGenome.files);
+    && !selectedGenome.built && !_.isEmpty(selectedGenome.files);
 
-  const [filePair, setFilePair] = useState(null);
+  const [filePairs, setFilePairs] = useState([]);
   const [invalidFiles, setInvalidFiles] = useState([]);
   const [form] = Form.useForm();
 
@@ -88,12 +88,8 @@ const SelectReferenceGenome = (props) => {
   // Determine file type based on extension
   const getFileType = (fileName) => {
     const lower = fileName.toLowerCase();
-    if (fastaExtensions.some((ext) => lower.endsWith(ext))) {
-      return 'fasta';
-    }
-    if (annotationExtensions.some((ext) => lower.endsWith(ext))) {
-      return 'annotation';
-    }
+    if (fastaExtensions.some((ext) => lower.endsWith(ext))) return 'fasta';
+    if (annotationExtensions.some((ext) => lower.endsWith(ext))) return 'annotation';
     return 'unknown';
   };
 
@@ -108,78 +104,92 @@ const SelectReferenceGenome = (props) => {
   };
 
   const uploadPairs = async () => {
-    if (!filePair) return;
+    if (filePairs.length === 0) return;
 
     let selectedGenomeId = genomeId;
     if (!customGenomes[genomeId]) {
       selectedGenomeId = await createNewGenome();
     }
 
-    const pairFileId = uuidv4();
-    dispatch(createAndUploadGenomeFile(
-      selectedGenomeId,
-      filePair.fasta,
-      'fasta',
-      pairFileId,
-    ));
-    dispatch(createAndUploadGenomeFile(
-      selectedGenomeId,
-      filePair.annotation,
-      'annotation',
-      pairFileId,
-    ));
+    filePairs.forEach((pair) => {
+      const pairFileId = uuidv4();
+      dispatch(createAndUploadGenomeFile(
+        selectedGenomeId,
+        pair.fasta,
+        'fasta',
+        pairFileId,
+      ));
+      dispatch(createAndUploadGenomeFile(
+        selectedGenomeId,
+        pair.annotation,
+        'annotation',
+        pairFileId,
+      ));
+    });
 
-    setFilePair(null);
+    setFilePairs([]);
     setInvalidFiles([]);
   };
 
-  // Handle dropped files from the dropzone
-  // Simple behavior: take the FIRST TWO files only and try to use them
+  // Handle dropped files: accept at most ONE valid pair per drop
   const onDrop = (acceptedFiles) => {
-    setInvalidFiles([]);
+    const newInvalids = [];
+    // We allow only 1 pair to be dropped at a time
+    const existingNames = new Set(
+      filePairs.flatMap((p) => [p.fasta.name, p.annotation.name]),
+    );
 
-    const picked = acceptedFiles.slice(0, 2);
+    let fastaFile = null;
+    let annotationFile = null;
 
-    if (picked.length < 2) {
-      setFilePair(null);
-      setInvalidFiles(picked.map((f) => ({
-        name: f.name,
-        reason: 'Select two files: one FASTA and one annotation.',
-      })));
-      return;
-    }
+    acceptedFiles.forEach((f) => {
+      const type = getFileType(f.name);
 
-    const [a, b] = picked;
-    const typeA = getFileType(a.name);
-    const typeB = getFileType(b.name);
+      // Track unknowns as invalid
+      if (type === 'unknown') {
+        newInvalids.push({ name: f.name, reason: 'Unsupported file type' });
+        return;
+      }
 
-    // Validate: exactly one fasta and one annotation
-    if ((typeA === 'fasta' && typeB === 'annotation') || (typeA === 'annotation' && typeB === 'fasta')) {
-      setFilePair({
-        fasta: typeA === 'fasta' ? a : b,
-        annotation: typeA === 'annotation' ? a : b,
-      });
-      setInvalidFiles([]);
+      // Skip duplicates
+      if (existingNames.has(f.name)) {
+        newInvalids.push({ name: f.name, reason: 'Duplicate of a selected file' });
+        return;
+      }
+
+      if (!fastaFile && type === 'fasta') {
+        fastaFile = f;
+      } else if (!annotationFile && type === 'annotation') {
+        annotationFile = f;
+      }
+    });
+
+    if (fastaFile && annotationFile) {
+      setFilePairs((prev) => [...prev, { fasta: fastaFile, annotation: annotationFile }]);
     } else {
-      setFilePair(null);
-      const reason = 'Need one FASTA (*.fa/*.fasta/*.fna[.gz]) and one annotation (*.gtf/*.gff3[.gz]) file.';
-      setInvalidFiles([
-        { name: a.name, reason },
-        { name: b.name, reason },
-      ]);
+      const tried = acceptedFiles.slice(0, 2);
+      newInvalids.push(
+        ...tried
+          .filter((f) => !newInvalids.find((i) => i.name === f.name))
+          .map((f) => ({
+            name: f.name,
+            reason: 'Need one FASTA (*.fa/*.fasta/*.fna[.gz]) and one annotation (*.gtf/*.gff3[.gz]) file.',
+          })),
+      );
     }
+
+    setInvalidFiles((prev) => [...prev, ...newInvalids]);
   };
 
-  // Remove the currently selected pair
-  const removePair = () => {
-    setFilePair(null);
+  // Remove a file pair by index
+  const removePair = (index) => {
+    setFilePairs((prev) => prev.filter((_, i) => i !== index));
   };
 
   const genomeNamePattern = /^[A-Za-z0-9_.-]+$/;
-  // Determine whether the upload button should be disabled
   const isUploadDisabled = !genomeNameInput
     || !genomeDescriptionInput
-    || !filePair
+    || filePairs.length === 0
     || !genomeNamePattern.test(genomeNameInput);
 
   return (
@@ -238,7 +248,6 @@ const SelectReferenceGenome = (props) => {
             </Tooltip>
           </div>
           <div style={{ display: 'flex' }}>
-
             <Input
               placeholder='Specify genome description'
               style={{ flex: 1 }}
@@ -269,11 +278,11 @@ const SelectReferenceGenome = (props) => {
         </Space>
       </Form>
       <Text style={{ marginTop: '1vh', marginBottom: '1vh' }}>
-        Upload a single matched FASTA and annotation file.
+        Upload one matched FASTA/annotation pair per drop.
         <br />
-        Only the first two files you select will be used.
+        You can add multiple pairs by dropping again.
         <br />
-        The expected files are one of each of the following:
+        Expected files (one of each):
         <br />
         *.fasta or *.fasta.gz or *.fa or *.fa.gz or *.fna or *.fna.gz
         <br />
@@ -294,24 +303,24 @@ const SelectReferenceGenome = (props) => {
               {...getInputProps()}
             />
             <Empty
-              description='Drag and drop two files (one FASTA and one annotation) here or click to browse'
+              description='Drag and drop one pair (one FASTA + one annotation) here, or click to browse'
               image={Empty.PRESENTED_IMAGE_SIMPLE}
             />
           </div>
         )}
       </Dropzone>
-      {filePair && (
+      {filePairs.length > 0 && (
         <>
-          <Divider>Files to be uploaded</Divider>
+          <Divider>Pairs to be uploaded</Divider>
           <List
             size='small'
-            dataSource={[filePair]}
-            renderItem={(pair) => (
+            dataSource={filePairs}
+            renderItem={(pair, index) => (
               <List.Item
                 actions={[
                   <DeleteOutlined
                     key='delete'
-                    onClick={removePair}
+                    onClick={() => removePair(index)}
                     style={{ color: 'crimson' }}
                   />,
                 ]}

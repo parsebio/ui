@@ -19,7 +19,9 @@ const putInS3 = async (
 ) => {
   try {
     const signedUrl = await signedUrlGenerator();
-
+    console.log('Uploading to S3 with URL: ', signedUrl);
+    console.log('Attempt number: ', currentRetry + 1);
+    console.log('blob: ', blob);
     return await axios.request({
       method: 'put',
       data: blob,
