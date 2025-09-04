@@ -1,6 +1,7 @@
 import { EMBEDDINGS_LOADING, EMBEDDINGS_LOADED, EMBEDDINGS_ERROR } from 'redux/actionTypes/embeddings';
 import fetchWork from 'utils/work/fetchWork';
 import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
+import { getIsSeurat } from 'redux/selectors';
 
 const loadEmbedding = (
   experimentId,
@@ -26,6 +27,8 @@ const loadEmbedding = (
 
   const { methodSettings, useSaved } = embeddingState;
 
+  const isSeurat = getIsSeurat()(getState());
+
   // Set up loading state.
   dispatch({
     type: EMBEDDINGS_LOADING,
@@ -45,6 +48,12 @@ const loadEmbedding = (
 
   try {
     const data = await fetchWork(experimentId, body, getState, dispatch, { timeout });
+
+    // Temporary fix, remove this whole if when the seurat worker is fixed
+    if (isSeurat) {
+      data.cellIds = data.cellIds.map((id) => Number(id));
+    }
+
     return dispatch({
       type: EMBEDDINGS_LOADED,
       payload: {
