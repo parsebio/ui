@@ -1,6 +1,8 @@
 import fetchAPI from 'utils/http/fetchAPI';
 import { GENOMES_LOADED } from 'redux/actionTypes/genomes';
+import UploadStatus from 'utils/upload/UploadStatus';
 
+const { UPLOADING, UPLOAD_ERROR } = UploadStatus;
 const loadGenomes = () => async (dispatch) => {
   const genomes = await fetchAPI(
     '/v2/genome',
@@ -14,7 +16,7 @@ const loadGenomes = () => async (dispatch) => {
       const { id, uploadStatus, ...rest } = file;
       acc[id] = {
         ...rest,
-        upload: { status: { current: uploadStatus } },
+        upload: { status: { current: uploadStatus === UPLOADING ? UPLOAD_ERROR : uploadStatus } },
       };
       return acc;
     }, {}),

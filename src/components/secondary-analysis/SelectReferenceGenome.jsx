@@ -68,9 +68,8 @@ const SelectReferenceGenome = (props) => {
   const isCustomGenomeSaved = selectedGenome
   && !selectedGenome.built && !_.isEmpty(selectedGenome.files);
 
-  // Track a single valid file pair and invalid files (with reasons)
-  const [filePair, setFilePair] = useState(null); // { fasta, annotation }
-  const [invalidFiles, setInvalidFiles] = useState([]); // [{name, reason}]
+  const [filePair, setFilePair] = useState(null);
+  const [invalidFiles, setInvalidFiles] = useState([]);
   const [form] = Form.useForm();
 
   useEffect(() => {
