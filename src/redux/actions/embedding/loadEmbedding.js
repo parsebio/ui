@@ -1,7 +1,6 @@
 import { EMBEDDINGS_LOADING, EMBEDDINGS_LOADED, EMBEDDINGS_ERROR } from 'redux/actionTypes/embeddings';
 import fetchWork from 'utils/work/fetchWork';
 import getTimeoutForWorkerTask from 'utils/getTimeoutForWorkerTask';
-import { getIsSeurat } from 'redux/selectors';
 
 const loadEmbedding = (
   experimentId,
@@ -26,8 +25,6 @@ const loadEmbedding = (
   if (!embeddingState) return null;
 
   const { methodSettings, useSaved } = embeddingState;
-
-  const isSeurat = getIsSeurat()(getState());
 
   // Set up loading state.
   dispatch({
