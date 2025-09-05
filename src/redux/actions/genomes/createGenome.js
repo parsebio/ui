@@ -1,5 +1,5 @@
 import fetchAPI from 'utils/http/fetchAPI';
-import { GENOMES_LOADED, GENOMES_ERROR } from 'redux/actionTypes/genomes';
+import { GENOMES_ERROR, GENOMES_CREATED } from 'redux/actionTypes/genomes';
 import pushNotificationMessage from 'utils/pushNotificationMessage';
 
 const createGenome = (name, description, secondaryAnalysisId) => async (dispatch) => {
@@ -15,24 +15,19 @@ const createGenome = (name, description, secondaryAnalysisId) => async (dispatch
       },
     );
     dispatch({
-      type: GENOMES_LOADED,
+      type: GENOMES_CREATED,
       payload: {
-        genomes: {
-          custom: [{
-            id: genomeId,
-            name,
-            description,
-            files: {},
-            createdAt: new Date().toISOString(),
-          }],
-        },
+        id: genomeId,
+        name,
+        description,
       },
     });
     return genomeId;
   } catch (e) {
+    console.error(e);
     dispatch({
       type: GENOMES_ERROR,
-      payload: { error: e },
+      payload: { error: true },
     });
     pushNotificationMessage('error', 'Error creating genome');
     throw e;

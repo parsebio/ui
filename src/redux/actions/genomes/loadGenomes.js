@@ -7,9 +7,9 @@ const loadGenomes = () => async (dispatch) => {
   const genomes = await fetchAPI(
     '/v2/genome',
   );
+
   // store uploadStatus as upload: {status: current:{} }
   //  for consistency with other file upload states
-
   const customGenomesForRedux = genomes.custom.map((genome) => ({
     ...genome,
     files: Object.values(genome.files).reduce((acc, file) => {

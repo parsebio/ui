@@ -114,7 +114,7 @@ const FilesUploadTable = (props) => {
 };
 
 FilesUploadTable.propTypes = {
-  files: PropTypes.object.isRequired,
+  files: PropTypes.array.isRequired,
   canEditTable: PropTypes.bool.isRequired,
   secondaryAnalysisId: PropTypes.string.isRequired,
   pairedWt: PropTypes.oneOfType([() => null, PropTypes.bool]).isRequired,
