@@ -72,6 +72,10 @@
     "species": "Candida Albicans"
   },
   {
+    "name": "C_lupus",
+    "species": "Canis lupus familiaris (Domestic dog)"
+  },
+  {
     "name": "ChiLan1",
     "species": "Chinchilla lanigera (Long-tailed chinchilla)"
   },
@@ -146,6 +150,10 @@
   {
     "name": "H_glaber_male",
     "species": "Heterocephalus glaber (Naked Mole Rat, male)"
+  },
+  {
+    "name": "kcLamFluv2_2a",
+    "species": "Lampetra fluviatilis (European river lamprey)"
   },
   {
     "name": "Mmul10",
