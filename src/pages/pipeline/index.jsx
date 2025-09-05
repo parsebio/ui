@@ -22,7 +22,8 @@ import {
 import { updateGenome, loadGenomes } from 'redux/actions/genomes';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions';
-import FilesUploadTable from 'components/secondary-analysis/FilesUploadTable';
+// import FilesUploadTable from 'components/secondary-analysis/FilesUploadTable';
+import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
 import _ from 'lodash';
@@ -76,7 +77,7 @@ const analysisDetailsKeys = [
   'numOfSublibraries',
   'chemistryVersion',
   'kit',
-  'refGenome',
+  'refGenomeId',
   'pairedWt',
   'immuneDatabase',
 ];
@@ -180,7 +181,7 @@ const Pipeline = () => {
     numOfSublibraries,
     chemistryVersion,
     kit,
-    refGenome: refGenomeId,
+    refGenomeId,
     pairedWt,
     immuneDatabase,
   } = useSelector(
@@ -432,25 +433,10 @@ const Pipeline = () => {
 
   const renderFastqFilesTable = (canEditTable) => {
     if (Object?.keys(fastqFiles)?.length) {
-      const getFastqIsActive = (fileType) => {
-        if (isKitCategory(kit, [KitCategory.WT])) {
-          return fileType === WT_FASTQ;
-        } if (isKitCategory(kit, [KitCategory.TCR, KitCategory.BCR]) && !pairedWt) {
-          return fileType === IMMUNE_FASTQ;
-        }
-        return true;
-      };
-
-      const filteredFiles = Object.values(fastqFiles).filter((file) => getFastqIsActive(file.type));
-
-      filteredFiles.sort((a) => {
-        if (a.type === WT_FASTQ) return -1;
-        return 1;
-      });
       return (
-        <FilesUploadTable
+        <FastqFilesTable
           canEditTable={canEditTable}
-          files={filteredFiles}
+          fastqFiles={fastqFiles}
           secondaryAnalysisId={activeSecondaryAnalysisId}
           pairedWt={pairedWt}
           kit={kit}
@@ -524,7 +510,7 @@ const Pipeline = () => {
       render: () => (
         <SelectReferenceGenome
           secondaryAnalysisId={activeSecondaryAnalysisId}
-          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
+          onGenomeSelected={setSecondaryAnalysisDetailsDiff}
           onGenomeDetailsChanged={setGenomeDetailsDiff}
           genomeId={refGenomeId}
         />

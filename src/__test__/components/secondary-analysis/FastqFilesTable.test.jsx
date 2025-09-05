@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import FastqFilesTable from 'components/secondary-analysis/FilesUploadTable';
+import FilesUploadTable from 'components/secondary-analysis/FilesUploadTable';
 import {
   createSecondaryAnalysisFile, deleteSecondaryAnalysisFile,
   loadSecondaryAnalyses, loadSecondaryAnalysisFiles,
@@ -57,7 +57,7 @@ const renderComponent = (
 
   render(
     <Provider store={store}>
-      <FastqFilesTable
+      <FilesUploadTable
         files={fastqFiles}
         canEditTable={canEditTable}
         secondaryAnalysisId={secondaryAnalysisId}
@@ -70,7 +70,7 @@ const renderComponent = (
 
 const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisId);
 
-describe('FastqFilesTable', () => {
+describe('FilesUploadTable', () => {
   const fillStore = async () => {
     await store.dispatch(loadSecondaryAnalyses());
     await store.dispatch(loadSecondaryAnalysisFiles(mockAnalysisId));
@@ -84,7 +84,7 @@ describe('FastqFilesTable', () => {
     fetchMock.mockIf(/.*/, mockAPI(mockAPIResponses));
   });
 
-  it('renders the FastqFilesTable component correctly', async () => {
+  it('renders the FilesUploadTable component correctly', async () => {
     await fillStore();
 
     renderComponent();

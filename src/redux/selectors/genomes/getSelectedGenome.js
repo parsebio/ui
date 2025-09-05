@@ -5,7 +5,7 @@ const getSelectedGenome = (secondaryAnalysisId = null) => (state) => {
   const selectedSecondaryAnalysisId = secondaryAnalysisId
   ?? state.secondaryAnalyses.meta.activeSecondaryAnalysisId;
 
-  const genomeId = state.secondaryAnalyses[selectedSecondaryAnalysisId]?.refGenome;
+  const genomeId = state.secondaryAnalyses[selectedSecondaryAnalysisId]?.refGenomeId;
   return getGenomeById(genomeId)(state);
 };
 

@@ -25,8 +25,6 @@ import integrationTestConstants from 'utils/integrationTestConstants';
 import FilesUploadTable from 'components/secondary-analysis/FilesUploadTable';
 
 import useLocalState from 'utils/customHooks/useLocalState';
-
-// Import ExpandableList for ignored files
 import ExpandableList from 'components/ExpandableList';
 
 const { Text, Title } = Typography;
@@ -37,12 +35,12 @@ const annotationExtensions = ['.gtf', '.gff3', '.gtf.gz', '.gff3.gz'];
 
 const SelectReferenceGenome = (props) => {
   const {
-    genomeId, onDetailsChanged, onGenomeDetailsChanged, secondaryAnalysisId,
+    genomeId, onGenomeSelected, onGenomeDetailsChanged, secondaryAnalysisId,
   } = props;
   const dispatch = useDispatch();
 
   const [localGenome, updateGenome] = useLocalState(
-    (value) => onDetailsChanged({ refGenome: value }),
+    (value) => onGenomeSelected({ refGenomeId: value }),
     genomeId,
   );
 
@@ -391,7 +389,7 @@ SelectReferenceGenome.defaultProps = {
 };
 
 SelectReferenceGenome.propTypes = {
-  onDetailsChanged: propTypes.func.isRequired,
+  onGenomeSelected: propTypes.func.isRequired,
   genomeId: propTypes.string,
   secondaryAnalysisId: propTypes.string.isRequired,
   onGenomeDetailsChanged: propTypes.func.isRequired,
