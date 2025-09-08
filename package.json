@@ -69,7 +69,6 @@
     "cross-env": "^7.0.3",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.7",
-    "detect-secrets": "^1.0.6",
     "express": "^4.19.2",
     "fflate": "^0.6.9",
     "file-saver": "^2.0.5",
