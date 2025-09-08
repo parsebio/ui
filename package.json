@@ -23,7 +23,7 @@
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand",
     "test:fast": "jest --silent",
     "lint": "eslint ./src",
-    "detect-secrets": "test -d .ds-venv || python3 -m venv .ds-venv; ./.ds-venv/bin/pip -q install detect-secrets; git diff -z --staged --name-only | xargs -0 ./.ds-venv/bin/detect-secrets-hook --baseline .secrets.baseline",// pragma: allowlist secret
+    "detect-secrets": "test -d .ds-venv || python3 -m venv .ds-venv; ./.ds-venv/bin/pip -q install detect-secrets; git diff -z --staged --name-only | xargs -0 ./.ds-venv/bin/detect-secrets-hook --baseline .secrets.baseline",
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
