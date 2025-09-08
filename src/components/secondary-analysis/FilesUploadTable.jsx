@@ -1,22 +1,18 @@
 import React from 'react';
 import { Table, Popconfirm } from 'antd';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 import { DeleteOutlined } from '@ant-design/icons';
 
 import PrettyTime from 'components/PrettyTime';
 import UploadStatusView from 'components/UploadStatusView';
 import FastqTypeButton from 'components/secondary-analysis/FastqTypeButton';
 
-import { deleteSecondaryAnalysisFile } from 'redux/actions/secondaryAnalyses';
-
 import bytesToSize from 'utils/styling/bytesToSize';
 import UploadStatus from 'utils/upload/UploadStatus';
 
 const FilesUploadTable = (props) => {
-  const dispatch = useDispatch();
   const {
-    files, canEditTable, secondaryAnalysisId, pairedWt,
+    files, canEditTable, secondaryAnalysisId, pairedWt, handleDelete,
   } = props;
 
   const dataSource = files.map((file) => ({
@@ -97,10 +93,6 @@ const FilesUploadTable = (props) => {
     },
   ];
 
-  const handleDelete = (key) => {
-    dispatch(deleteSecondaryAnalysisFile(secondaryAnalysisId, key));
-  };
-
   return (
     <Table
       size='small'
@@ -113,11 +105,17 @@ const FilesUploadTable = (props) => {
   );
 };
 
+FilesUploadTable.defaultProps = {
+  secondaryAnalysisId: null,
+  pairedWt: null,
+};
+
 FilesUploadTable.propTypes = {
   files: PropTypes.array.isRequired,
   canEditTable: PropTypes.bool.isRequired,
-  secondaryAnalysisId: PropTypes.string.isRequired,
-  pairedWt: PropTypes.oneOfType([() => null, PropTypes.bool]).isRequired,
+  secondaryAnalysisId: PropTypes.string,
+  pairedWt: PropTypes.oneOfType([() => null, PropTypes.bool]),
+  handleDelete: PropTypes.func.isRequired,
 };
 
 export default FilesUploadTable;

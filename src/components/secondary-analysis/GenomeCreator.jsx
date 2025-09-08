@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAndUploadGenomeFile, createGenome } from 'redux/actions/genomes';
+import { createAndUploadGenomeFile, createGenome, deleteGenomeInputFile } from 'redux/actions/genomes';
 import {
   Form,
   Typography,
@@ -116,6 +116,10 @@ const GenomeCreator = (props) => {
 
     setFilePairs([]);
     setInvalidFiles([]);
+  };
+
+  const deleteGenomeInputPair = (fileId) => {
+    dispatch(deleteGenomeInputFile(selectedGenome.id, fileId));
   };
 
   // Handle dropped files: accept at most ONE valid pair per drop
@@ -350,6 +354,7 @@ const GenomeCreator = (props) => {
             canEditTable
             secondaryAnalysisId={secondaryAnalysisId}
             pairedWt={false}
+            handleDelete={deleteGenomeInputPair}
           />
         )}
       </Space>

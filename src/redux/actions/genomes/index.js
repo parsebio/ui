@@ -3,6 +3,7 @@ import updateGenomeFileUploadProgress from 'redux/actions/genomes/updateGenomeFi
 import createGenome from 'redux/actions/genomes/createGenome';
 import loadGenomes from 'redux/actions/genomes/loadGenomes';
 import updateGenome from 'redux/actions/genomes/updateGenome';
+import deleteGenomeInputFile from './deleteGenomeInputFile';
 
 export {
   createGenome,
@@ -10,4 +11,5 @@ export {
   updateGenomeFileUploadProgress,
   loadGenomes,
   updateGenome,
+  deleteGenomeInputFile,
 };
