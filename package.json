@@ -23,7 +23,7 @@
     "test:debug": "node --inspect node_modules/.bin/jest --runInBand",
     "test:fast": "jest --silent",
     "lint": "eslint ./src",
-    "detect-secrets": "pip3 install detect-secrets && git diff --staged --name-only | xargs detect-secrets-hook --baseline .secrets.baseline",
+    "detect-secrets": "test -d .ds-venv || python3 -m venv .ds-venv; ./.ds-venv/bin/pip -q install detect-secrets; git diff -z --staged --name-only | xargs -0 ./.ds-venv/bin/detect-secrets-hook --baseline .secrets.baseline",// pragma: allowlist secret
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
@@ -69,6 +69,7 @@
     "cross-env": "^7.0.3",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.7",
+    "detect-secrets": "^1.0.6",
     "express": "^4.19.2",
     "fflate": "^0.6.9",
     "file-saver": "^2.0.5",
