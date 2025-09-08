@@ -241,13 +241,18 @@ const Pipeline = () => {
 
   const pipelineCanBeRun = !['created', 'running'].includes(currentStatus);
   const pipelineRunAccessible = currentStatus !== 'not_created';
+  const allGenomes = useSelector((state) => state.genomes);
+  useEffect(() => {
+    if (_.isEmpty(allGenomes.public)) {
+      dispatch(loadGenomes());
+    }
+  }, []);
 
   useConditionalEffect(() => {
     if (termsOfUseNotAccepted(user, domainName)) return;
 
     if (initialLoadPending) {
       dispatch(loadSecondaryAnalyses());
-      dispatch(loadGenomes());
     }
   }, [user]);
 
@@ -308,7 +313,7 @@ const Pipeline = () => {
       dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
       setSecondaryAnalysisDetailsDiff({});
     }
-    if (refGenome && Object.keys(genomeDetailsDiff).length) {
+    if (refGenome && Object.keys(genomeDetailsDiff).length && !refGenome.built) {
       dispatch(updateGenome(refGenomeId, genomeDetailsDiff));
       setGenomeDetailsDiff({});
     }
