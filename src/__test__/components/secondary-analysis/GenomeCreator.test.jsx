@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import {
   render, screen, fireEvent,
@@ -7,6 +9,7 @@ import '@testing-library/jest-dom';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import { Provider } from 'react-redux';
 import { makeStore } from 'redux/store';
+import { mockAnalysisIds } from '__test__/data/secondaryAnalyses/secondary_analyses';
 
 import loadGenomes from 'redux/actions/genomes/loadGenomes';
 import mockAPI, {
@@ -62,20 +65,16 @@ enableFetchMocks();
 
 const makeFile = (name, content = 'x') => new File([content], name, { type: 'application/octet-stream' });
 
-const renderWithStore = (store, props = {}) => {
-  const defaultProps = {
-    genomeId: undefined,
-    updateGenome: jest.fn(),
-    secondaryAnalysisId: 'secondary-123',
-    onGenomeDetailsChanged: jest.fn(),
-  };
-
-  return render(
-    <Provider store={store}>
-      <GenomeCreator {...defaultProps} {...props} />
-    </Provider>,
-  );
-};
+const renderWithStore = (store, props = {}) => render(
+  <Provider store={store}>
+    <GenomeCreator
+      updateGenome={jest.fn()}
+      secondaryAnalysisId={mockAnalysisIds.readyToLaunch}
+      onGenomeDetailsChanged={jest.fn()}
+      {...props}
+    />
+  </Provider>,
+);
 
 beforeAll(() => {
   window.HTMLElement.prototype.scrollIntoView = jest.fn();
@@ -163,7 +162,7 @@ describe('GenomeCreator (integration style with store + API mocks)', () => {
     expect(createGenome).toHaveBeenCalledWith(
       'My_Genome-1.0',
       'Something descriptive',
-      'secondary-123',
+      mockAnalysisIds.readyToLaunch,
     );
 
     expect(updateGenome).toHaveBeenCalledTimes(1);
