@@ -51,7 +51,8 @@ jest.mock('components/ExpandableList', () => ({
       <div data-testid='expandable-collapsed'>{collapsedExplanation}</div>
       <div>
         {dataSource.map((item, i) => (
-          <div key={i} data-testid='invalid-item'>
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={`invalid-item-${i}`} data-testid='invalid-item'>
             <span data-testid='invalid-item-name'>{getItemText(item)}</span>
             <span data-testid='invalid-item-reason'>{getItemExplanation(item)}</span>
           </div>
