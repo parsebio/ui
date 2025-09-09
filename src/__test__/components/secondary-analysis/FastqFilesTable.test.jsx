@@ -8,10 +8,12 @@ import _ from 'lodash';
 
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import FilesUploadTable from 'components/secondary-analysis/FilesUploadTable';
+import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import {
-  createSecondaryAnalysisFile, deleteSecondaryAnalysisFile,
-  loadSecondaryAnalyses, loadSecondaryAnalysisFiles,
+  createSecondaryAnalysisFile,
+  deleteSecondaryAnalysisFile,
+  loadSecondaryAnalyses,
+  loadSecondaryAnalysisFiles,
   updateSecondaryAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
 import UploadStatus from 'utils/upload/UploadStatus';
@@ -29,7 +31,14 @@ import mockAnalysisFiles from '__test__/data/secondaryAnalyses/secondary_analysi
 
 enableFetchMocks();
 
-jest.mock('redux/actions/secondaryAnalyses/deleteSecondaryAnalysisFile', () => jest.fn(() => ({ type: 'MOCK_ACTION' })));
+// IMPORTANT: mock the aggregator module that the component imports from
+jest.mock('redux/actions/secondaryAnalyses', () => {
+  const actual = jest.requireActual('redux/actions/secondaryAnalyses');
+  return {
+    ...actual,
+    deleteSecondaryAnalysisFile: jest.fn(() => ({ type: 'MOCK_ACTION' })),
+  };
+});
 
 const mockAnalysisId = 'analysis1';
 
@@ -57,9 +66,9 @@ const renderComponent = (
 
   render(
     <Provider store={store}>
-      <FilesUploadTable
-        files={fastqFiles}
+      <FastqFilesTable
         canEditTable={canEditTable}
+        fastqFiles={fastqFiles}
         secondaryAnalysisId={secondaryAnalysisId}
         pairedWt={pairedWt}
         kit={kit}
@@ -70,7 +79,7 @@ const renderComponent = (
 
 const mockAPIResponses = generateDefaultMockAPIResponses(mockAnalysisId);
 
-describe('FilesUploadTable', () => {
+describe('FastqFilesTable', () => {
   const fillStore = async () => {
     await store.dispatch(loadSecondaryAnalyses());
     await store.dispatch(loadSecondaryAnalysisFiles(mockAnalysisId));
@@ -84,7 +93,7 @@ describe('FilesUploadTable', () => {
     fetchMock.mockIf(/.*/, mockAPI(mockAPIResponses));
   });
 
-  it('renders the FilesUploadTable component correctly', async () => {
+  it('renders the FastqFilesTable component correctly', async () => {
     await fillStore();
 
     renderComponent();
@@ -129,10 +138,14 @@ describe('FilesUploadTable', () => {
 
     renderComponent();
 
+    // open confirm for first file and confirm
     fireEvent.click(screen.getAllByRole('img', { name: 'delete' })[0]);
     fireEvent.click(screen.getByText('Yes'));
 
-    expect(deleteSecondaryAnalysisFile).toHaveBeenCalledWith(mockAnalysisId, '0740a094-f020-4c97-aceb-d0a708d0982e');
+    expect(deleteSecondaryAnalysisFile).toHaveBeenCalledWith(
+      mockAnalysisId,
+      '0740a094-f020-4c97-aceb-d0a708d0982e',
+    );
   });
 
   it('does not render delete buttons when canEditTable is false', async () => {
@@ -164,10 +177,13 @@ describe('FilesUploadTable', () => {
 
     renderComponent({ canEditTable: true });
 
-    // the last delete icon corresponds to file3
+    // click delete icon; expired should bypass Popconfirm
     fireEvent.click(screen.getAllByRole('img', { name: 'delete' })[0]);
 
-    expect(deleteSecondaryAnalysisFile).toHaveBeenCalledWith(mockAnalysisId, '0740a094-f020-4c97-aceb-d0a708d0982e');
+    expect(deleteSecondaryAnalysisFile).toHaveBeenCalledWith(
+      mockAnalysisId,
+      '0740a094-f020-4c97-aceb-d0a708d0982e',
+    );
   });
 
   it('renders the "Type" column when pairedWt is true and shows the correct labels', async () => {
@@ -197,6 +213,7 @@ describe('FilesUploadTable', () => {
 
     expect(screen.getByText('Type')).toBeInTheDocument();
 
+    // If FastqTypeButton renders the label text, these will pass:
     expect(screen.getAllByText(labelsByFastqType[FastqFileType.WT_FASTQ])).toHaveLength(2);
     expect(screen.getAllByText(labelsByFastqType[FastqFileType.IMMUNE_FASTQ])).toHaveLength(2);
   });

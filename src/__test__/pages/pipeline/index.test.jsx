@@ -8,6 +8,7 @@ import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 import Pipeline from 'pages/pipeline/index';
+import { loadGenomes } from 'redux/actions/genomes';
 import {
   updateSecondaryAnalysis, setActiveSecondaryAnalysis, storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
@@ -106,6 +107,7 @@ describe('Pipeline Page', () => {
     await act(async () => {
       await storeState.dispatch(setActiveSecondaryAnalysis(mockAnalysisIds.readyToLaunch));
     });
+
     await waitFor(() => {
       expect(screen.getByText(/File name:/i)).toBeInTheDocument();
       expect(screen.getByText(/pbmc_1Mreads sltab.xlsm/i)).toBeInTheDocument();
@@ -119,7 +121,7 @@ describe('Pipeline Page', () => {
     expect(screen.getByText(/Evercode WT/i)).toBeInTheDocument();
     expect(screen.getByText(/Chemistry version:/i)).toBeInTheDocument();
     expect(screen.getByText(/Number of sublibraries:/i)).toBeInTheDocument();
-    expect(screen.getByText(/Mmul10/i)).toBeInTheDocument();
+    expect(screen.getByText(/GRCh38/i)).toBeInTheDocument();
 
     // sample names are shown on click
     fireEvent.click(screen.getByText(/View sample names/i));
@@ -333,12 +335,15 @@ describe('Pipeline Page', () => {
 
   it('Searches genomes correctly in SelectReferenceGenome component', async () => {
     const mockOnDetailsChanged = jest.fn();
-
-    render(
-      <SelectReferenceGenome
-        genome={undefined}
-        onDetailsChanged={mockOnDetailsChanged}
-      />,
+    await storeState.dispatch(loadGenomes());
+    await render(
+      <Provider store={storeState}>
+        <SelectReferenceGenome
+          genome={undefined}
+          onGenomeSelected={mockOnDetailsChanged}
+          secondaryAnalysisId={mockAnalysisIds.emptyAnalysis}
+        />
+      </Provider>,
     );
 
     const searchInput = document.querySelector('.ant-select-selection-search input');

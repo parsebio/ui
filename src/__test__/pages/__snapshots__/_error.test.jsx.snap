@@ -232,6 +232,12 @@ exports[`ErrorPage Should post error to Slack if environment is production 1`] =
       },
       "selected": [],
     },
+    "genomes": {
+      "custom": {},
+      "error": false,
+      "loading": false,
+      "public": {},
+    },
     "layout": {
       "panel": "Gene list",
       "windows": {
@@ -511,6 +517,12 @@ exports[`ErrorPage Should post error to Slack if environment is staging 1`] = `
         "views": {},
       },
       "selected": [],
+    },
+    "genomes": {
+      "custom": {},
+      "error": false,
+      "loading": false,
+      "public": {},
     },
     "layout": {
       "panel": "Gene list",
