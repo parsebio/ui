@@ -359,12 +359,16 @@ const Pipeline = () => {
     if (!refGenome || refGenome.built) return mainScreenDetails({ refGenome: refGenome?.name });
 
     const genomeFiles = Object.values(refGenome.files);
-    const allUploaded = genomeFiles
-      .every((value) => value.upload.status.current === UPLOADED) && genomeFiles.length > 0;
+    let status = INCOMPLETE;
+    if (!_.isEmpty(genomeFiles)) {
+      const allUploaded = genomeFiles
+        .every((value) => value.upload.status.current === UPLOADED) && genomeFiles.length > 0;
 
-    const anyUploading = genomeFiles
-      .every((value) => [UPLOADING, UPLOADED].includes(value.upload.status.current));
-    const status = allUploaded ? UPLOADED : anyUploading ? UPLOADING : INCOMPLETE;
+      const anyUploading = genomeFiles
+        .every((value) => [UPLOADING, UPLOADED].includes(value.upload.status.current));
+
+      status = allUploaded ? UPLOADED : anyUploading ? UPLOADING : INCOMPLETE;
+    }
 
     return mainScreenDetails({
       genome: (

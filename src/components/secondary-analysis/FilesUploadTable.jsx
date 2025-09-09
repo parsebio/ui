@@ -12,7 +12,7 @@ import UploadStatus from 'utils/upload/UploadStatus';
 
 const FilesUploadTable = (props) => {
   const {
-    files, canEditTable, secondaryAnalysisId, pairedWt, handleDelete,
+    files, canEditTable, secondaryAnalysisId, pairedWt, handleDelete, deleteAlertText,
   } = props;
 
   const dataSource = files.map((file) => ({
@@ -37,7 +37,7 @@ const FilesUploadTable = (props) => {
           {canEditTable && (
             record.status.current !== UploadStatus.EXPIRED ? (
               <Popconfirm
-                title='Are you sure you want to delete this file?'
+                title={deleteAlertText}
                 onConfirm={() => handleDelete(record.key)}
                 okText='Yes'
                 cancelText='No'
@@ -108,9 +108,11 @@ const FilesUploadTable = (props) => {
 FilesUploadTable.defaultProps = {
   secondaryAnalysisId: null,
   pairedWt: null,
+  deleteAlertText: 'Are you sure you want to delete this file?',
 };
 
 FilesUploadTable.propTypes = {
+  deleteAlertText: PropTypes.string,
   files: PropTypes.array.isRequired,
   canEditTable: PropTypes.bool.isRequired,
   secondaryAnalysisId: PropTypes.string,

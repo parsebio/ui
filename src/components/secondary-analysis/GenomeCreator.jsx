@@ -351,9 +351,8 @@ const GenomeCreator = (props) => {
         {selectedGenome && !selectedGenome?.built && !_.isEmpty(selectedGenome.files) && (
           <FilesUploadTable
             files={Object.values(selectedGenome.files)}
+            deleteAlertText='This action will also delete the corresponding file in the genome pair. Are you sure you want to delete this pair of files?'
             canEditTable
-            secondaryAnalysisId={secondaryAnalysisId}
-            pairedWt={false}
             handleDelete={deleteGenomeInputPair}
           />
         )}
