@@ -297,6 +297,12 @@ exports[`switch experiment  Then updates the experiment info 1`] = `
     },
     "selected": [],
   },
+  "genomes": {
+    "custom": {},
+    "error": false,
+    "loading": false,
+    "public": {},
+  },
   "layout": {
     "panel": "Gene list",
     "windows": {
@@ -742,6 +748,12 @@ exports[`switch experiment  switches the experiment to its initial values 1`] = 
       "views": {},
     },
     "selected": [],
+  },
+  "genomes": {
+    "custom": {},
+    "error": false,
+    "loading": false,
+    "public": {},
   },
   "layout": {
     "panel": "Gene list",
