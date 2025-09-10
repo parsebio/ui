@@ -60,7 +60,7 @@
     "@zip.js/zip.js": "^2.7.37",
     "antd": "^4.24.8",
     "aws-amplify": "^5.3.19",
-    "axios": "^1.6.2",
+    "axios": "^1.8.2",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-import": "^1.13.6",
