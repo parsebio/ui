@@ -344,6 +344,10 @@
     "species": "Custom Homo sapiens (Human) with H3N2"
   },
   {
+    "name": "GRCh38_herpesvirus_5",
+    "species": "Custom Homo sapiens (Human)"
+  },
+  {
     "name": "GRCh38_HIV",
     "species": "Custom Homo sapiens (Human) with HIV"
   },
