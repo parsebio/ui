@@ -2,6 +2,7 @@ const GENOMES = 'genomes';
 const GENOME_FILES = 'genomeFiles';
 
 const GENOME_FILE_UPDATE = `${GENOME_FILES}/update`;
+const GENOME_FILE_CREATED = `${GENOME_FILES}/created`;
 
 const GENOMES_LOADING = `${GENOMES}/loading`;
 const GENOMES_CREATED = `${GENOMES}/created`;
@@ -10,6 +11,7 @@ const GENOMES_UPDATED = `${GENOMES}/updated`;
 const GENOMES_ERROR = `${GENOMES}/error`;
 
 export {
+  GENOME_FILE_CREATED,
   GENOME_FILE_UPDATE,
   GENOMES_LOADING,
   GENOMES_LOADED,
