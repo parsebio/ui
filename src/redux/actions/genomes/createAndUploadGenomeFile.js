@@ -39,6 +39,7 @@ const createAndUploadGenomeFile = (
         genomeId,
         fileId: genomeFileId,
         diff: {
+          id: genomeFileId,
           createdAt: new Date().toISOString(),
           upload: {
             status: { current: UploadStatus.UPLOADING },

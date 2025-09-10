@@ -23,7 +23,6 @@ import propTypes from 'prop-types';
 import integrationTestConstants from 'utils/integrationTestConstants';
 import FilesUploadTable from 'components/secondary-analysis/FilesUploadTable';
 
-import useLocalState from 'utils/customHooks/useLocalState';
 import ExpandableList from 'components/ExpandableList';
 
 const { Text } = Typography;
@@ -31,44 +30,39 @@ const { Text } = Typography;
 // Supported extensions for FASTA and annotation files
 const fastaExtensions = ['.fa', '.fasta', '.fa.gz', '.fasta.gz', '.fna', '.fna.gz'];
 const annotationExtensions = ['.gtf', '.gff3', '.gtf.gz', '.gff3.gz'];
+const genomeNamePattern = /^[A-Za-z0-9_.-]+$/;
 
 const GenomeCreator = (props) => {
   const {
     genomeId,
     updateGenome,
     secondaryAnalysisId,
-    onGenomeDetailsChanged,
+    genomeDiffRef,
   } = props;
 
   const dispatch = useDispatch();
 
   const { custom: customGenomes } = useSelector((state) => state.genomes);
 
-  const selectedGenome = useSelector(getGenomeById(genomeId));
-
-  const [genomeNameInput, setGenomeNameInput] = useLocalState(
-    (value) => onGenomeDetailsChanged({ name: value }),
-    '',
-  );
-  const [genomeDescriptionInput, setGenomeDescriptionInput] = useLocalState(
-    (value) => onGenomeDetailsChanged({ description: value }),
-    '',
-  );
+  const selectedGenome = useSelector(getGenomeById(genomeId), _.isEqual);
 
   const [filePairs, setFilePairs] = useState([]);
   const [invalidFiles, setInvalidFiles] = useState([]);
   const [form] = Form.useForm();
 
+  const genomeName = Form.useWatch('nameInput', form) || '';
+  const genomeDescription = Form.useWatch('descriptionInput', form) || '';
+
   useEffect(() => {
     if (!selectedGenome) return;
+
     if (!selectedGenome.built) {
-      setGenomeNameInput(selectedGenome.name);
-      form.setFieldsValue({ genomeName: selectedGenome.name });
-      setGenomeDescriptionInput(selectedGenome.description);
+      form.setFieldsValue({
+        nameInput: selectedGenome.name,
+        descriptionInput: selectedGenome.description,
+      });
     } else {
-      setGenomeNameInput('');
-      form.setFieldsValue({ genomeName: '' });
-      setGenomeDescriptionInput('');
+      form.setFieldsValue({ nameInput: '', descriptionInput: '' });
     }
   }, [selectedGenome]);
 
@@ -82,8 +76,8 @@ const GenomeCreator = (props) => {
 
   const createNewGenome = async () => {
     const newGenomeId = await dispatch(createGenome(
-      genomeNameInput,
-      genomeDescriptionInput,
+      genomeName,
+      genomeDescription,
       secondaryAnalysisId,
     ));
     updateGenome(newGenomeId);
@@ -178,20 +172,30 @@ const GenomeCreator = (props) => {
     setFilePairs((prev) => prev.filter((pair, i) => i !== index));
   };
 
-  const genomeNamePattern = /^[A-Za-z0-9_.-]+$/;
-  const isUploadDisabled = !genomeNameInput
-    || !genomeDescriptionInput
-    || filePairs.length === 0
-    || !genomeNamePattern.test(genomeNameInput);
+  const validGenomeName = genomeName && genomeNamePattern.test(genomeName);
+  const isUploadDisabled = !validGenomeName
+    || !genomeDescription
+    || filePairs.length === 0;
+
+  const handleValuesChange = (changedValue) => {
+    const { nameInput, descriptionInput } = changedValue;
+    if (nameInput && genomeNamePattern.test(nameInput)) {
+      genomeDiffRef.current.name = nameInput;
+    }
+
+    if (descriptionInput) {
+      genomeDiffRef.current.description = descriptionInput;
+    }
+  };
 
   return (
     <>
-      <Form form={form} component={false}>
+      <Form form={form} component={false} onValuesChange={handleValuesChange}>
         {/* Form fields: name and description, with validation */}
         <Space direction='vertical'>
           <div style={{ display: 'flex' }}>
             <Form.Item
-              name='genomeName'
+              name='nameInput'
               rules={[
                 {
                   pattern: genomeNamePattern,
@@ -205,8 +209,6 @@ const GenomeCreator = (props) => {
               <Input
                 placeholder='Specify genome name'
                 maxLength={20}
-                value={genomeNameInput}
-                onChange={(e) => setGenomeNameInput(e.target.value)}
               />
             </Form.Item>
             <Tooltip
@@ -217,13 +219,15 @@ const GenomeCreator = (props) => {
             </Tooltip>
           </div>
           <div style={{ display: 'flex' }}>
-            <Input
-              placeholder='Specify genome description'
-              style={{ flex: 1 }}
-              maxLength={50}
-              value={genomeDescriptionInput}
-              onChange={(e) => setGenomeDescriptionInput(e.target.value)}
-            />
+            <Form.Item
+              name='descriptionInput'
+              style={{ flex: 1, marginBottom: 0 }}
+            >
+              <Input
+                placeholder='Specify genome description'
+                maxLength={50}
+              />
+            </Form.Item>
             <Tooltip
               overlay={(
                 <div>
@@ -328,9 +332,9 @@ const GenomeCreator = (props) => {
         <center>
           <Tooltip
             title={isUploadDisabled ? (
-              !genomeNameInput
+              !genomeName
                 ? 'Specify a valid genome name.'
-                : !genomeDescriptionInput
+                : !genomeDescription
                   ? 'Specify a genome description.'
                   : filePairs.length === 0
                     ? 'Add at least one valid FASTA/annotation file pair.'
@@ -378,7 +382,9 @@ GenomeCreator.propTypes = {
   updateGenome: propTypes.func.isRequired,
   genomeId: propTypes.string,
   secondaryAnalysisId: propTypes.string.isRequired,
-  onGenomeDetailsChanged: propTypes.func.isRequired,
+  genomeDiffRef: propTypes.shape({
+    current: propTypes.object,
+  }).isRequired,
 };
 
 export default GenomeCreator;
