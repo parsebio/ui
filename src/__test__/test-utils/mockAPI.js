@@ -119,6 +119,7 @@ const generateDefaultMockAPIResponses = (projectId, analysisTool = analysisTools
     return promiseResponse(JSON.stringify(`mockSignedUrl${partNumber}`));
   },
   '/v2/cliUpload/token$': () => promiseResponse(JSON.stringify('token')),
+  '/v2/genome$': () => promiseResponse(JSON.stringify(responseData.genomes)),
 });
 
 const mockAPI = (apiMapping) => (req) => {

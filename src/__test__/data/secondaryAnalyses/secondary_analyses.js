@@ -24,7 +24,7 @@ const mockSecondaryAnalyses = [
     id: mockAnalysisIds.readyToLaunch,
     name: 'ready to launch',
     description: '',
-    refGenomeId: 'Mmul10',
+    refGenomeId: '421c3887-bb07-46a4-bbec-f84bb5b00a94',
     createdAt: '2024-07-02 15:59:34.868158+00',
     kit: 'wt',
     chemistryVersion: '2',

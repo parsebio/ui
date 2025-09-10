@@ -1,7 +1,7 @@
 import {
   GENOME_FILE_UPDATE, GENOMES_UPDATED,
   GENOMES_LOADED, GENOMES_ERROR, GENOMES_CREATED,
-  GENOME_FILE_DELETED,
+  GENOME_FILE_DELETED, GENOME_FILE_CREATED,
 } from 'redux/actionTypes/genomes';
 import initialState from 'redux/reducers/genomes/initialState';
 import genomeFileUpdated from 'redux/reducers/genomes/genomeFileUpdated';
@@ -13,7 +13,8 @@ import genomeFilesDeleted from 'redux/reducers/genomes/genomeFilesDeleted';
 
 const genomesReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case GENOME_FILE_UPDATE: {
+    case GENOME_FILE_UPDATE:
+    case GENOME_FILE_CREATED: {
       return genomeFileUpdated(state, action);
     }
     case GENOME_FILE_DELETED: {

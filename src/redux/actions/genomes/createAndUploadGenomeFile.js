@@ -1,5 +1,5 @@
 import fetchAPI from 'utils/http/fetchAPI';
-import { GENOME_FILE_UPDATE } from 'redux/actionTypes/genomes';
+import { GENOME_FILE_CREATED } from 'redux/actionTypes/genomes';
 import { updateGenomeFileUploadProgress } from 'redux/actions/genomes';
 import { getShouldCompress } from 'utils/upload/fileInspector';
 import UploadsCoordinator from 'utils/upload/UploadsCoordinator';
@@ -34,7 +34,7 @@ const createAndUploadGenomeFile = (
 
     const abortController = new AbortController();
     dispatch({
-      type: GENOME_FILE_UPDATE,
+      type: GENOME_FILE_CREATED,
       payload: {
         genomeId,
         fileId: genomeFileId,
