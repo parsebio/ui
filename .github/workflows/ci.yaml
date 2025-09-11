@@ -9,7 +9,7 @@ on:
   pull_request:
     branches:
       - master
-      - delete-genomes
+      - custom-genomes-ui
     types:
       - labeled
       - unlabeled
