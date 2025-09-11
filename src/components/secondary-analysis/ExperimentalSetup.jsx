@@ -30,7 +30,7 @@ const kitToMaxSublibrariesMap = {
 const detailsToShow = ['numOfSublibraries', 'chemistryVersion', 'kit', 'refGenomeId', 'pairedWt'];
 
 const ExperimentalSetup = (props) => {
-  const { secondaryAnalysisId, onDetailsChanged } = props;
+  const { secondaryAnalysisId, secondaryAnalysisDiffRef } = props;
 
   const [maxSublibraries, setMaxSublibraries] = useState();
   const [formValues, setFormValues] = useState({});
@@ -62,8 +62,9 @@ const ExperimentalSetup = (props) => {
         fieldsToUpdate[key] = formValues[key];
       }
     });
-    onDetailsChanged(fieldsToUpdate);
-  }, [formValues, onDetailsChanged]);
+
+    secondaryAnalysisDiffRef.current = fieldsToUpdate;
+  }, [formValues, secondaryAnalysisDiffRef.current]);
 
   const calculateMaxSublibraries = useCallback((kit) => {
     const newMaxSublibraries = kitToMaxSublibrariesMap[kit];
@@ -232,7 +233,7 @@ const ExperimentalSetup = (props) => {
 
 ExperimentalSetup.propTypes = {
   secondaryAnalysisId: propTypes.string.isRequired,
-  onDetailsChanged: propTypes.func.isRequired,
+  secondaryAnalysisDiffRef: propTypes.func.isRequired,
 };
 
 export default ExperimentalSetup;

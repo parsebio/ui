@@ -74,7 +74,7 @@ const OverviewMenu = ({
       if (isRow) {
         return (
           grid.map((col) => (
-            <Row gutter={[2, 2]} style={{ height: `${100 / grid.length}%` }}>
+            <Row gutter={[2, 2]} key={col} style={{ height: `${100 / grid.length}%` }}>
               {renderGrid(col, steps, !isRow)}
             </Row>
           ))
@@ -83,7 +83,7 @@ const OverviewMenu = ({
 
       return (
         grid.map((col) => (
-          <Col flex={1} style={{ width: `${100 / grid.length}%` }}>
+          <Col flex={1} key={col} style={{ width: `${100 / grid.length}%` }}>
             {renderGrid(col, steps, !isRow)}
           </Col>
         ))
