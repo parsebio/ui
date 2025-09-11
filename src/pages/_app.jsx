@@ -101,6 +101,10 @@ const WrappedApp = ({ Component, pageProps }) => {
       return <Component {...pageProps} />;
     }
 
+    if (router.pathname === '/confirm-user') {
+      return <Component {...pageProps} />;
+    }
+
     // If there was an error querying the API, display an error state.
     if (httpError) {
       if (httpError === 404) {
