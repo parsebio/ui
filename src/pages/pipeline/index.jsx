@@ -155,8 +155,7 @@ const Pipeline = () => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
-  // const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
-  const secondaryAnalysisDetailsDiffRef = useRef({});
+  const secondaryAnalysisDiffRef = useRef({});
   const genomeDiffRef = useRef({});
 
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
@@ -311,19 +310,19 @@ const Pipeline = () => {
   }, [activeSecondaryAnalysisId]);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
-    const currentSecondaryRef = secondaryAnalysisDetailsDiffRef.current;
-    const currentGenomeRef = genomeDiffRef.current;
+    const currentSecondaryAnalysisDetails = secondaryAnalysisDiffRef.current;
+    const currentGenomeDetails = genomeDiffRef.current;
 
-    if (Object.keys(currentSecondaryRef).length) {
+    if (Object.keys(currentSecondaryAnalysisDetails).length) {
       dispatch(updateSecondaryAnalysis(
         activeSecondaryAnalysisId,
-        currentSecondaryRef,
+        currentSecondaryAnalysisDetails,
       ));
-      secondaryAnalysisDetailsDiffRef.current = {};
+      secondaryAnalysisDiffRef.current = {};
     }
 
-    if (refGenome && Object.keys(currentGenomeRef).length && !refGenome.built) {
-      dispatch(updateGenome(refGenomeId, currentGenomeRef));
+    if (refGenome && Object.keys(currentGenomeDetails).length && !refGenome.built) {
+      dispatch(updateGenome(refGenomeId, currentGenomeDetails));
       genomeDiffRef.current = {};
     }
   };
@@ -502,7 +501,7 @@ const Pipeline = () => {
       render: () => (
         <ExperimentalSetup
           secondaryAnalysisId={activeSecondaryAnalysisId}
-          secondaryAnalysisDiffRef={secondaryAnalysisDetailsDiffRef}
+          secondaryAnalysisDiffRef={secondaryAnalysisDiffRef}
         />
       ),
       isValid: (numOfSublibraries && chemistryVersion && kit),
@@ -541,7 +540,7 @@ const Pipeline = () => {
       render: () => (
         <SelectReferenceGenome
           secondaryAnalysisId={activeSecondaryAnalysisId}
-          secondaryAnalysisDiffRef={secondaryAnalysisDetailsDiffRef}
+          secondaryAnalysisDiffRef={secondaryAnalysisDiffRef}
           genomeDiffRef={genomeDiffRef}
           genomeId={refGenomeId}
         />
@@ -555,7 +554,7 @@ const Pipeline = () => {
       key: 'Immune database',
       render: () => (
         <ImmuneDatabase
-          secondaryAnalysisDiffRef={secondaryAnalysisDetailsDiffRef}
+          secondaryAnalysisDiffRef={secondaryAnalysisDiffRef}
           database={immuneDatabase}
           kitCategory={KitCategory.fromKit(kit)}
         />
