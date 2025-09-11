@@ -465,7 +465,7 @@ const Pipeline = () => {
   };
 
   const getIsGenomeValid = () => {
-    if (!refGenomeId || refGenome) return false;
+    if (!refGenomeId || !refGenome) return false;
     if (refGenome.built) return true;
 
     // If genome is to be built, check all fields
