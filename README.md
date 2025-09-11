@@ -13,29 +13,23 @@ We highly recommend using VSCode for development, if you don't have it, make sur
 - `dbaeumer.vscode-eslint` for syntax linting & format errors in VS Code,
 - `markis.code-coverage` highlights which lines are covered in unit tests and which aren’t.
 
-#### installing node 14 on macOS
+#### installing node 20 on macOS
 
-Easiest way to do it is using homebrew. Instructions based on [this SO answer](https://apple.stackexchange.com/a/207883).
-
-```shell
-brew install node@14
-```
-
-If you already have a newer `node` version installed, you have to unlink it, and
-link `node@14`, which creates symlinks in `/usr/local/bin`.
+Easiest way to do it is by first installing `nvm`
 
 ```shell
-brew unlink node
-brew link node@14
+brew install nvm
 ```
 
-You may have to force the linking, with the `--force` and `--overwrite` options.
-(if you want you could use `--dry-run` to check what would be overwritten).
-
+and then installing:
 ```shell
-brew link node@14 --force --overwrite
+nvm install v20
 ```
 
+and selecting node 20:
+```shell
+nvm use v20
+```
 
 ### Running locally
 
@@ -60,22 +54,6 @@ Once you have everything running on the backend, go to <http://localhost:5000> i
 You will get redirected to an authentication page. You will have to create a staging account by clicking
 through "Sign up" link (even if you have an existing production account).
 
-### Remote debugging with VS Code
-
-Remote debugging is enabled for all staging and production environments. For
-remote debugging, the best approach is to use VS Code's native debugger capatibilites.
-
-First, you need to ensure you have the correct website to debug. You can go to
-`.vscode/launch.json` and find an object with the `name` set to `Debug develop in Chrome`.
-
-You can edit the `url` to match your staged or production environment. Then you can use the VS
-Code debugger, select `Debug develop in Chrome` and start the debug session.
-A Chrome window should spin up and you can control it using the debugger in VS Code.
-
-**Note:** For debugging to work reliably, the code used on the environment must be the
-same version as the code open in VS Code. This is needed so line numbers from VS Code
-can be mapped to remote code on the server.
-
 ### Remote debugging with Chrome DevTools
 
 Alternatively, you can use Google Chrome's built-in DevTools. When it is open
@@ -92,6 +70,10 @@ the same version as the code on the environment.
 
 ### How to run tests in debug mode
 
+`npm test`
+
+`npm test -- --no-silent` to see the log's outputs
+
 The workspace comes with a preset for debugging tests. You can enter the Debugger
 in Visual Studio Code, find `Run and Debug` and find the preset `Test and debug`.
 Running the debugger using this configuration will automatically launch the test suite
@@ -107,15 +89,6 @@ Alternatively, you can use `npm run analyze:server` or `npm run analyze:client` 
 bundle sizes for just server-side rendered and client-side scripts.
 
 The script will produce HTML artifacts that will open in your default browser as a Voronoi treemap.
-
-### Browser cache
-
-Browser cache enabled by default in production environment. This can be disabled by adding the entry
-"disableCache" to "true" via the console using the command:
-
-    localStorage.setItem("disableCache", "true")
-
-Browser cache makes it hard to develop as it can hide changes from the backend, so cache is disabled by default in development. This can be changed by modifying `disableCache` in `localStorage` manually.
 
 ### Troubleshooting
 
