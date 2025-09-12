@@ -1,0 +1,146 @@
+{
+  "public": [
+    {
+      "id": "421c3887-bb07-46a4-bbec-f84bb5b00a94",
+      "name": "GRCh38",
+      "description": "Homo sapiens (Human)",
+      "built": true
+    },
+    {
+      "id": "ac902c3d-c46d-438d-8566-a30a4fbd0d8e",
+      "name": "GRCm39",
+      "description": "Mus musculus (Mouse)",
+      "built": true
+    },
+    {
+      "id": "a05c4fe8-67f5-4122-b2f3-edfbf8fe23f6",
+      "name": "GRCm38",
+      "description": "Mus musculus (Mouse) - Release 102",
+      "built": true
+    }
+  ],
+  "custom": [
+    {
+      "id": "d54fbb58-d1c4-40dd-b2c6-1da13018adda",
+      "name": "zxczxczxc",
+      "description": "asdasdas",
+      "built": false,
+      "files": [
+        {
+          "id": "272879a0-3f25-4a2a-9fce-4afdb4f9fc8c",
+          "name": "Alien_Genome.fa.gz",
+          "size": "881211416",
+          "type": "fasta",
+          "uploadStatus": "uploaded",
+          "pairFileId": "6b2a6626-1fcd-4a41-a17e-e795bd807db2",
+          "createdAt": "2025-09-08 09:48:07.839+00"
+        },
+        {
+          "id": "a5019b8f-847a-42cf-bde5-7a79ca65f567",
+          "name": "ALien_GENOME.gtf.gz",
+          "size": "54258835",
+          "type": "annotation",
+          "uploadStatus": "uploaded",
+          "pairFileId": "6b2a6626-1fcd-4a41-a17e-e795bd807db2",
+          "createdAt": "2025-09-08 09:48:07.84+00"
+        }
+      ]
+    },
+    {
+      "id": "5065ab18-f3c8-49fa-a80f-606a28c9b450",
+      "name": "thisisgenome",
+      "description": "asdasdasdas",
+      "built": false,
+      "files": [
+        {
+          "id": "7e60dd60-e340-44d7-8ba2-6dc162831e40",
+          "name": "Alien_Genome.fa.gz",
+          "size": "881211416",
+          "type": "fasta",
+          "uploadStatus": "uploaded",
+          "pairFileId": "0b1cfb7b-b885-4e59-9a3f-6be239022e7c",
+          "createdAt": "2025-09-08 10:13:03.495+00"
+        },
+        {
+          "id": "45d8742a-d3d6-49cc-b1d1-31c2b35a675c",
+          "name": "ALien_GENOME.gtf.gz",
+          "size": "54258835",
+          "type": "annotation",
+          "uploadStatus": "uploaded",
+          "pairFileId": "0b1cfb7b-b885-4e59-9a3f-6be239022e7c",
+          "createdAt": "2025-09-08 10:13:03.497+00"
+        },
+        {
+          "id": "8f163656-79f3-4769-a789-cfceeb2ce58f",
+          "name": "Homo_sapiens.GRCh38.109.gtf.gz",
+          "size": "54258835",
+          "type": "annotation",
+          "uploadStatus": "uploaded",
+          "pairFileId": "257226be-8009-4b89-8020-149e7ae7980e",
+          "createdAt": "2025-09-08 10:15:49.522+00"
+        },
+        {
+          "id": "9822d4ff-bec2-438d-8d52-ad1e834b639a",
+          "name": "Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz",
+          "size": "881211416",
+          "type": "fasta",
+          "uploadStatus": "uploaded",
+          "pairFileId": "257226be-8009-4b89-8020-149e7ae7980e",
+          "createdAt": "2025-09-08 10:15:49.521+00"
+        }
+      ]
+    },
+    {
+      "id": "6beda901-cb42-4a3d-afbb-9021ee5c8c50",
+      "name": "asdasdgenome",
+      "description": "bestgenomeasd",
+      "built": false,
+      "files": [
+        {
+          "id": "89ff1e09-be1b-48fc-beb6-ff8c8a7ea045",
+          "name": "Homo_sapiens.GRCh38.109.gtf.gz",
+          "size": "54258835",
+          "type": "annotation",
+          "uploadStatus": "uploaded",
+          "pairFileId": "02e68886-be91-4509-836e-566307758ee0",
+          "createdAt": "2025-09-08 09:47:10.665+00"
+        },
+        {
+          "id": "0aa76364-3c02-4da7-9864-c90078e8838f",
+          "name": "Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz",
+          "size": "881211416",
+          "type": "fasta",
+          "uploadStatus": "uploaded",
+          "pairFileId": "02e68886-be91-4509-836e-566307758ee0",
+          "createdAt": "2025-09-08 09:47:10.662+00"
+        }
+      ]
+    },
+    {
+      "id": "5cabe675-9cae-4154-9ea3-e7f77b772cdf",
+      "name": "sadlkasld",
+      "description": "askldaksjldakls",
+      "built": false,
+      "files": [
+        {
+          "id": "747071ab-35f4-45a2-a15a-bdcaa239f059",
+          "name": "Alien_Genome.fa.gz",
+          "size": "881211416",
+          "type": "fasta",
+          "uploadStatus": "uploading",
+          "pairFileId": "00ab841c-b807-40c8-b0e2-899086749db2",
+          "createdAt": "2025-09-08 10:17:53.435+00"
+        },
+        {
+          "id": "775d7a46-445c-498d-81f5-a52d46a7a9ac",
+          "name": "ALien_GENOME.gtf.gz",
+          "size": "54258835",
+          "type": "annotation",
+          "uploadStatus": "uploading",
+          "pairFileId": "00ab841c-b807-40c8-b0e2-899086749db2",
+          "createdAt": "2025-09-08 10:17:53.438+00"
+        }
+      ]
+    }
+  ]
+}

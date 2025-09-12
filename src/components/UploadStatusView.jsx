@@ -31,13 +31,17 @@ const UploadStatusView = ({
   const [fileInCache, setFileInCache] = useState(null);
 
   useEffect(() => {
-    if (fileId && secondaryAnalysisId && [
-      UploadStatus.UPLOAD_ERROR,
-      UploadStatus.PAUSED,
-    ].includes(status)) {
-      const file = cache.get(fileId) ?? null;
-      setFileInCache(file);
-    }
+    const fetchFile = async () => {
+      if (fileId && secondaryAnalysisId && [
+        UploadStatus.UPLOAD_ERROR,
+        UploadStatus.PAUSED,
+      ].includes(status)) {
+        const file = await cache.get(fileId) ?? null;
+        setFileInCache(file);
+      }
+    };
+
+    fetchFile();
   }, [fileId, status]);
 
   if (fileInCache && [

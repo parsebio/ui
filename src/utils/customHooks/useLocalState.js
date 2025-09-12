@@ -5,12 +5,7 @@ import {
 
 /**
  *
- * Acts as a middle man between an external value and a its local representation.
- * It's useful for cases where we want the local and external states no to be completely in sync.
- * In particular,
- * - the external state can "lag" behind the local one
- * - the local state updates immediately when the external one changes.
- *
+ * Adds a side effect to a local state update, to call an additional external update function
  * @param {*} onUpdate external update function
  * @param {*} value external value
  * @returns

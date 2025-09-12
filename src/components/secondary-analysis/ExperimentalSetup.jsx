@@ -27,7 +27,7 @@ const kitToMaxSublibrariesMap = {
   bcr_mega: 16,
 };
 
-const detailsToShow = ['numOfSublibraries', 'chemistryVersion', 'kit', 'refGenome', 'pairedWt'];
+const detailsToShow = ['numOfSublibraries', 'chemistryVersion', 'kit', 'refGenomeId', 'pairedWt'];
 
 const ExperimentalSetup = (props) => {
   const { secondaryAnalysisId, onDetailsChanged } = props;

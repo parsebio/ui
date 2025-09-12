@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { analysisTools } from 'const';
+import mockGenomeResponseData from './genomes.json';
 import generateMockSamples from './generateMockSamples';
 import generateMockExperiments from './generateMockExperiments';
 import generateMockProcessingConfig from './generateMockProcessingConfig';
@@ -19,6 +20,7 @@ responseData.samples = [generateMockSamples(
 
 responseData.processingConfigSeurat = generateMockProcessingConfig(analysisTools.SEURAT, 3);
 responseData.processingConfigScanpy = generateMockProcessingConfig(analysisTools.SCANPY, 3);
+responseData.genomes = mockGenomeResponseData;
 
 // Add samples to first experiment
 const samples = responseData.samples[0];

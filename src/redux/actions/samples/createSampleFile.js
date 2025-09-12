@@ -43,7 +43,7 @@ const createSampleFile = (
         fileDiff: {
           ...fileForRedux,
           upload: {
-            status: UploadStatus.UPLOADING, progress: 0, abortController,
+            status: UploadStatus.UPLOADING, percentProgress: 0, abortController,
           },
         },
       },

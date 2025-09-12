@@ -19,8 +19,10 @@ import {
   createSecondaryAnalysis, loadSecondaryAnalysisFiles, loadSecondaryAnalysisStatus,
   storeLoadedAnalysisFile,
 } from 'redux/actions/secondaryAnalyses';
+import { updateGenome, loadGenomes } from 'redux/actions/genomes';
 import EditableParagraph from 'components/EditableParagraph';
 import kitOptions from 'utils/secondary-analysis/kitOptions';
+// import FilesUploadTable from 'components/secondary-analysis/FilesUploadTable';
 import FastqFilesTable from 'components/secondary-analysis/FastqFilesTable';
 import UploadStatusView from 'components/UploadStatusView';
 import PrettyTime from 'components/PrettyTime';
@@ -40,6 +42,12 @@ import FastqPairsMatcher from 'components/secondary-analysis/FastqPairsMatcher';
 import FastqFileType from 'const/enums/FastqFileType';
 import ImmuneDatabase, { immuneDbToDisplay } from 'components/secondary-analysis/ImmuneDatabase';
 import KitCategory, { isKitCategory } from 'const/enums/KitCategory';
+import { getGenomeById } from 'redux/selectors/genomes';
+import UploadStatus from 'utils/upload/UploadStatus';
+
+const { UPLOADED, INCOMPLETE, UPLOADING } = UploadStatus;
+
+const { IMMUNE_FASTQ, WT_FASTQ } = FastqFileType;
 
 const { Text, Title } = Typography;
 const keyToTitle = {
@@ -69,7 +77,7 @@ const analysisDetailsKeys = [
   'numOfSublibraries',
   'chemistryVersion',
   'kit',
-  'refGenome',
+  'refGenomeId',
   'pairedWt',
   'immuneDatabase',
 ];
@@ -148,6 +156,7 @@ const Pipeline = () => {
   const { navigateTo } = useAppRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
   const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
+  const [genomeDetailsDiff, setGenomeDetailsDiff] = useState({});
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
@@ -172,7 +181,7 @@ const Pipeline = () => {
     numOfSublibraries,
     chemistryVersion,
     kit,
-    refGenome,
+    refGenomeId,
     pairedWt,
     immuneDatabase,
   } = useSelector(
@@ -182,6 +191,8 @@ const Pipeline = () => {
     ),
     _.isEqual,
   );
+
+  const refGenome = useSelector(getGenomeById(refGenomeId), _.isEqual);
 
   const pairMatches = useSelector(
     (state) => state.secondaryAnalyses[activeSecondaryAnalysisId]?.files?.pairMatches,
@@ -203,12 +214,12 @@ const Pipeline = () => {
 
   const sampleLTFile = useSelector(getSampleLTFile(activeSecondaryAnalysisId), _.isEqual);
   const immuneFastqFiles = useSelector(
-    getFastqFiles(activeSecondaryAnalysisId, FastqFileType.IMMUNE_FASTQ),
+    getFastqFiles(activeSecondaryAnalysisId, IMMUNE_FASTQ),
     _.isEqual,
   );
 
   const wtFastqFiles = useSelector(
-    getFastqFiles(activeSecondaryAnalysisId, FastqFileType.WT_FASTQ),
+    getFastqFiles(activeSecondaryAnalysisId, WT_FASTQ),
     _.isEqual,
   );
 
@@ -230,11 +241,19 @@ const Pipeline = () => {
 
   const pipelineCanBeRun = !['created', 'running'].includes(currentStatus);
   const pipelineRunAccessible = currentStatus !== 'not_created';
+  const allGenomes = useSelector((state) => state.genomes);
+  useEffect(() => {
+    if (_.isEmpty(allGenomes.public)) {
+      dispatch(loadGenomes());
+    }
+  }, []);
 
   useConditionalEffect(() => {
     if (termsOfUseNotAccepted(user, domainName)) return;
 
-    if (initialLoadPending) dispatch(loadSecondaryAnalyses());
+    if (initialLoadPending) {
+      dispatch(loadSecondaryAnalyses());
+    }
   }, [user]);
 
   useEffect(() => {
@@ -260,7 +279,7 @@ const Pipeline = () => {
     kit,
     chemistryVersion,
     numOfSublibraries,
-    refGenome,
+    refGenomeId,
     pairedWt,
     pairMatches,
     immuneDatabase,
@@ -293,6 +312,10 @@ const Pipeline = () => {
     if (Object.keys(secondaryAnalysisDetailsDiff).length) {
       dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
       setSecondaryAnalysisDetailsDiff({});
+    }
+    if (refGenome && Object.keys(genomeDetailsDiff).length && !refGenome.built) {
+      dispatch(updateGenome(refGenomeId, genomeDetailsDiff));
+      setGenomeDetailsDiff({});
     }
   };
 
@@ -330,6 +353,36 @@ const Pipeline = () => {
       );
     });
     return view;
+  };
+
+  const renderReferenceGenomeDetails = () => {
+    if (!refGenome || refGenome.built) return mainScreenDetails({ refGenome: refGenome?.name });
+
+    const genomeFiles = Object.values(refGenome.files);
+    const allUploaded = genomeFiles
+      .every((value) => value.upload.status.current === UPLOADED) && genomeFiles.length > 0;
+
+    const anyUploading = genomeFiles
+      .every((value) => [UPLOADING, UPLOADED].includes(value.upload.status.current));
+    const status = allUploaded ? UPLOADED : anyUploading ? UPLOADING : INCOMPLETE;
+
+    return mainScreenDetails({
+      genome: (
+        <Text>
+          New genome:
+          {refGenome.name}
+        </Text>
+      ),
+      status: <UploadStatusView
+        status={status}
+      />,
+      files: (
+        <b>
+          {Object.entries(refGenome.files).length}
+          {' '}
+          files
+        </b>),
+    });
   };
 
   const renderSampleLTFileDetails = () => {
@@ -388,7 +441,7 @@ const Pipeline = () => {
       return (
         <FastqFilesTable
           canEditTable={canEditTable}
-          files={fastqFiles}
+          fastqFiles={fastqFiles}
           secondaryAnalysisId={activeSecondaryAnalysisId}
           pairedWt={pairedWt}
           kit={kit}
@@ -461,12 +514,14 @@ const Pipeline = () => {
       key: 'Reference genome',
       render: () => (
         <SelectReferenceGenome
-          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
-          genome={refGenome}
+          secondaryAnalysisId={activeSecondaryAnalysisId}
+          onGenomeSelected={setSecondaryAnalysisDetailsDiff}
+          onGenomeDetailsChanged={setGenomeDetailsDiff}
+          genomeId={refGenomeId}
         />
       ),
-      isValid: Boolean(refGenome),
-      renderMainScreenDetails: () => mainScreenDetails({ refGenome }),
+      isValid: Boolean(refGenomeId),
+      renderMainScreenDetails: renderReferenceGenomeDetails,
       getIsDisabled: () => false,
     },
     'Immune database': {

@@ -73,6 +73,7 @@ class UploadsCoordinator {
         projectId,
         uploadId,
         bucket,
+        type,
         key,
       };
 
