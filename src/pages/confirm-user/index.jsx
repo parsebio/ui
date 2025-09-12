@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Auth } from '@aws-amplify/auth';
 
 const userMessages = {
-  // CodeMismatchException: 'Invalid code provided, please try again.',
   expiredCode: 'This verification code has expired, it might be because your account is already confirmed. If not, please request a new code.',
-  userAlreadyConfirmed: 'This user is already confirmed!',
+  userAlreadyConfirmed: 'This account is already confirmed!',
   confirmedSuccessfully: 'Your account has been confirmed successfully! You can now log in.',
 };
 
@@ -20,22 +19,25 @@ const confirmUserPage = () => {
       await Auth.confirmSignUp(username, code);
       setStatusMessage(userMessages.confirmedSuccessfully);
     } catch (e) {
-      console.error('errorDebug');
       console.error(e);
 
       if (e.code === 'ExpiredCodeException') {
         setStatusMessage(userMessages.expiredCode);
+        return;
       }
 
       if (e.code === 'NotAuthorizedException' && e.message === 'User cannot be confirmed. Current status is CONFIRMED') {
         setStatusMessage(userMessages.userAlreadyConfirmed);
+        return;
       }
 
       setStatusMessage(e.message);
     }
   });
 
-  confirmSignup();
+  useEffect(() => {
+    confirmSignup();
+  }, []);
 
   return <div>{statusMessage}</div>;
 };
