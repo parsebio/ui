@@ -26,7 +26,6 @@ const updateGenome = (genomeId, diff) => async (dispatch) => {
     pushNotificationMessage('error', 'Error updating genome');
     dispatch({
       type: GENOMES_ERROR,
-      payload: { error: e },
     });
   }
 };

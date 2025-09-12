@@ -27,7 +27,6 @@ const createGenome = (name, description, secondaryAnalysisId) => async (dispatch
     console.error(e);
     dispatch({
       type: GENOMES_ERROR,
-      payload: { error: true },
     });
     pushNotificationMessage('error', 'Error creating genome');
     throw e;

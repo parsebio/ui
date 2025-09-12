@@ -29,7 +29,6 @@ const deleteGenomeInputFile = (genomeId, fileId) => async (dispatch, getState) =
     pushNotificationMessage('error', 'Error deleting genome input file');
     dispatch({
       type: GENOMES_ERROR,
-      payload: { error: true },
     });
   }
 };
