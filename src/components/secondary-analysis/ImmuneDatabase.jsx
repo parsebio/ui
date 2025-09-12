@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-return-assign */
 import React, { useMemo } from 'react';
 import { Select } from 'antd';
 import propTypes from 'prop-types';
@@ -13,10 +13,10 @@ const immuneDbToDisplay = {
 };
 
 const ImmuneDatabase = (props) => {
-  const { database, kitCategory, onDetailsChanged } = props;
+  const { database, kitCategory, secondaryAnalysisDiffRef } = props;
 
   const [localDatabase, updateDatabase] = useLocalState(
-    (value) => onDetailsChanged({ immuneDatabase: value }),
+    (value) => secondaryAnalysisDiffRef.current = { immuneDatabase: value },
     database,
   );
 
@@ -51,7 +51,9 @@ const ImmuneDatabase = (props) => {
 };
 
 ImmuneDatabase.propTypes = {
-  onDetailsChanged: propTypes.func.isRequired,
+  secondaryAnalysisDiffRef: propTypes.shape({
+    current: propTypes.object,
+  }).isRequired,
   database: propTypes.string.isRequired,
   kitCategory: propTypes.oneOf([KitCategory.TCR, KitCategory.BCR]).isRequired,
 };

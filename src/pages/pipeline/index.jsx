@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useMemo,
+  useState, useEffect, useMemo, useRef,
 } from 'react';
 import {
   Modal, Button, Empty, Typography, Space, Tooltip, Popconfirm, Popover,
@@ -155,8 +155,9 @@ const Pipeline = () => {
   const dispatch = useDispatch();
   const { navigateTo } = useAppRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(null);
-  const [secondaryAnalysisDetailsDiff, setSecondaryAnalysisDetailsDiff] = useState({});
-  const [genomeDetailsDiff, setGenomeDetailsDiff] = useState({});
+  const secondaryAnalysisDiffRef = useRef({});
+  const genomeDiffRef = useRef({});
+
   const [NewProjectModalVisible, setNewProjectModalVisible] = useState(false);
   const [filesNotUploaded, setFilesNotUploaded] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
@@ -309,13 +310,20 @@ const Pipeline = () => {
   }, [activeSecondaryAnalysisId]);
 
   const handleUpdateSecondaryAnalysisDetails = () => {
-    if (Object.keys(secondaryAnalysisDetailsDiff).length) {
-      dispatch(updateSecondaryAnalysis(activeSecondaryAnalysisId, secondaryAnalysisDetailsDiff));
-      setSecondaryAnalysisDetailsDiff({});
+    const currentSecondaryAnalysisDetails = secondaryAnalysisDiffRef.current;
+    const currentGenomeDetails = genomeDiffRef.current;
+
+    if (Object.keys(currentSecondaryAnalysisDetails).length) {
+      dispatch(updateSecondaryAnalysis(
+        activeSecondaryAnalysisId,
+        currentSecondaryAnalysisDetails,
+      ));
+      secondaryAnalysisDiffRef.current = {};
     }
-    if (refGenome && Object.keys(genomeDetailsDiff).length && !refGenome.built) {
-      dispatch(updateGenome(refGenomeId, genomeDetailsDiff));
-      setGenomeDetailsDiff({});
+
+    if (refGenome && Object.keys(currentGenomeDetails).length && !refGenome.built) {
+      dispatch(updateGenome(refGenomeId, currentGenomeDetails));
+      genomeDiffRef.current = {};
     }
   };
 
@@ -356,15 +364,20 @@ const Pipeline = () => {
   };
 
   const renderReferenceGenomeDetails = () => {
+    // TODO WHEN ITS PAIRED FILES DOESNT HAVE SPACE TO BE SHOWN ON THE SCREEN
     if (!refGenome || refGenome.built) return mainScreenDetails({ refGenome: refGenome?.name });
 
     const genomeFiles = Object.values(refGenome.files);
-    const allUploaded = genomeFiles
-      .every((value) => value.upload.status.current === UPLOADED) && genomeFiles.length > 0;
+    let status = INCOMPLETE;
+    if (!_.isEmpty(genomeFiles)) {
+      const allUploaded = genomeFiles
+        .every((value) => value.upload.status.current === UPLOADED) && genomeFiles.length > 0;
 
-    const anyUploading = genomeFiles
-      .every((value) => [UPLOADING, UPLOADED].includes(value.upload.status.current));
-    const status = allUploaded ? UPLOADED : anyUploading ? UPLOADING : INCOMPLETE;
+      const anyUploading = genomeFiles
+        .every((value) => [UPLOADING, UPLOADED].includes(value.upload.status.current));
+
+      status = allUploaded ? UPLOADED : anyUploading ? UPLOADING : INCOMPLETE;
+    }
 
     return mainScreenDetails({
       genome: (
@@ -451,6 +464,19 @@ const Pipeline = () => {
     return null;
   };
 
+  const getIsGenomeValid = () => {
+    if (!refGenomeId || !refGenome) return false;
+    if (refGenome.built) return true;
+
+    // If genome is to be built, check all fields
+    const { name, description, files } = refGenome;
+    if (name && description && Object.values(files)
+      .every((file) => file.upload.status.current === UPLOADED)) {
+      return true;
+    }
+    return false;
+  };
+
   const renderMainScreenFileDetails = (renderFunc) => renderFunc() || (
     window.innerHeight > 768 ? (
       <Empty
@@ -475,7 +501,7 @@ const Pipeline = () => {
       render: () => (
         <ExperimentalSetup
           secondaryAnalysisId={activeSecondaryAnalysisId}
-          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
+          secondaryAnalysisDiffRef={secondaryAnalysisDiffRef}
         />
       ),
       isValid: (numOfSublibraries && chemistryVersion && kit),
@@ -501,7 +527,6 @@ const Pipeline = () => {
           renderUploadedFileDetails={renderSampleLTFileDetails}
           uploadedFileId={sampleLTFile?.id}
           setFilesNotUploaded={setFilesNotUploaded}
-          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
         />
       ),
       isValid: allFilesUploaded([sampleLTFile]),
@@ -515,12 +540,12 @@ const Pipeline = () => {
       render: () => (
         <SelectReferenceGenome
           secondaryAnalysisId={activeSecondaryAnalysisId}
-          onGenomeSelected={setSecondaryAnalysisDetailsDiff}
-          onGenomeDetailsChanged={setGenomeDetailsDiff}
+          secondaryAnalysisDiffRef={secondaryAnalysisDiffRef}
+          genomeDiffRef={genomeDiffRef}
           genomeId={refGenomeId}
         />
       ),
-      isValid: Boolean(refGenomeId),
+      isValid: getIsGenomeValid(),
       renderMainScreenDetails: renderReferenceGenomeDetails,
       getIsDisabled: () => false,
     },
@@ -529,7 +554,7 @@ const Pipeline = () => {
       key: 'Immune database',
       render: () => (
         <ImmuneDatabase
-          onDetailsChanged={setSecondaryAnalysisDetailsDiff}
+          secondaryAnalysisDiffRef={secondaryAnalysisDiffRef}
           database={immuneDatabase}
           kitCategory={KitCategory.fromKit(kit)}
         />

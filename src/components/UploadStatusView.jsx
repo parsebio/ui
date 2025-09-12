@@ -65,8 +65,9 @@ const UploadStatusView = ({
     );
   }
   if (status === UploadStatus.EXPIRED) {
+    const title = secondaryAnalysisId ? 'Fastq files expire after 30 days. Delete or re-upload expired files to run the pipeline.' : 'This file has expired. Please re-upload to use this file.';
     return (
-      <Tooltip title='Fastq files expire after 30 days. Delete or re-upload expired files to run the pipeline.'>
+      <Tooltip title={title}>
         <div style={uploadDivStyle}>
           <Text type='danger'>{messageForStatus(status)}</Text>
         </div>

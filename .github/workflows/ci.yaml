@@ -9,7 +9,7 @@ on:
   pull_request:
     branches:
       - master
-      - secondary-analysis-master
+      - custom-genomes-ui
     types:
       - labeled
       - unlabeled

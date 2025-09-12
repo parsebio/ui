@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-param-reassign */
 import React from 'react';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -16,12 +16,14 @@ const { Title } = Typography;
 
 const SelectReferenceGenome = ({
   genomeId,
-  onGenomeSelected,
-  onGenomeDetailsChanged,
+  secondaryAnalysisDiffRef,
+  genomeDiffRef,
   secondaryAnalysisId,
 }) => {
   const [localGenome, updateGenome] = useLocalState(
-    (value) => onGenomeSelected({ refGenomeId: value }),
+    (value) => {
+      secondaryAnalysisDiffRef.current = { refGenomeId: value };
+    },
     genomeId,
   );
 
@@ -68,7 +70,7 @@ const SelectReferenceGenome = ({
       <GenomeCreator
         genomeId={localGenome}
         updateGenome={updateGenome}
-        onGenomeDetailsChanged={onGenomeDetailsChanged}
+        genomeDiffRef={genomeDiffRef}
         secondaryAnalysisId={secondaryAnalysisId}
       />
     </div>
@@ -80,10 +82,12 @@ SelectReferenceGenome.defaultProps = {
 };
 
 SelectReferenceGenome.propTypes = {
-  onGenomeSelected: propTypes.func.isRequired,
+  secondaryAnalysisDiffRef: propTypes.func.isRequired,
   genomeId: propTypes.string,
   secondaryAnalysisId: propTypes.string.isRequired,
-  onGenomeDetailsChanged: propTypes.func.isRequired,
+  genomeDiffRef: propTypes.shape({
+    current: propTypes.object,
+  }).isRequired,
 };
 
 export default SelectReferenceGenome;

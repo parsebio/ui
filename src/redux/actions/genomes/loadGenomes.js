@@ -13,8 +13,8 @@ const loadGenomes = () => async (dispatch) => {
   const customGenomesForRedux = genomes.custom.map((genome) => ({
     ...genome,
     files: Object.values(genome.files).reduce((acc, file) => {
-      const { id, uploadStatus, ...rest } = file;
-      acc[id] = {
+      const { uploadStatus, ...rest } = file;
+      acc[file.id] = {
         ...rest,
         upload: { status: { current: uploadStatus === UPLOADING ? UPLOAD_ERROR : uploadStatus } },
       };
