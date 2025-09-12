@@ -91,7 +91,10 @@ const getAuthenticationInfo = async () => {
   const amplifyConfig = configure(
     userPoolId,
     identityPoolId,
-    { ...userPoolClientDetails, Domain: `${Domain}.auth.${getAWSRegion()}.amazoncognito.com` },
+    {
+      ...userPoolClientDetails,
+      Domain: `${Domain}.auth.${getAWSRegion()}.amazoncognito.com`,
+    },
   );
 
   const result = {
