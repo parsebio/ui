@@ -168,6 +168,10 @@
     "species": "Macropus eugenii (Tammar wallaby)"
   },
   {
+    "name": "UMD2a",
+    "species": "Maylandia zebra (Zebra mbuna), Ensembl release 115"
+  },
+  {
     "name": "MustPutFur",
     "species": "Mustela furo (Ferret)"
   },
@@ -474,6 +478,10 @@
   {
     "name": "GRCm39_creEGFP_RFP",
     "species": "Custom Mus musculus (Mouse)"
+  },
+  {
+    "name": "GRCm39_CreERT2_SoxC",
+    "species": "Custom Mus musculus (Mouse) with CreERT2 and SoxC genes"
   },
   {
     "name": "GRCm39_eGFP",
